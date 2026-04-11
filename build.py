@@ -1,0 +1,1752 @@
+#!/usr/bin/env python3
+“””
+Pinellas Ice Co \u2014 Prospect Tool Builder
+Complete, self-contained. Drop in any folder with your CSV files and run.
+“””
+
+import sys, os, json, re, warnings, csv
+from pathlib import Path
+from datetime import date, timedelta
+from math import radians, cos, sin, sqrt, atan2
+from collections import Counter
+
+warnings.filterwarnings(‘ignore’)
+
+# ──────────────────────────────────────────────────────────────────────────────
+
+# CONFIG
+
+# ──────────────────────────────────────────────────────────────────────────────
+
+TARGET_COUNTIES  = [‘Pinellas’, ‘Hillsborough’, ‘Pasco’,
+‘Citrus’, ‘Hernando’, ‘Polk’, ‘Sumter’]
+MIN_SCORE        = 45
+MAX_PER_PRIORITY = 80
+TODAY            = date.today()
+OUTPUT_FILE      = Path(**file**).parent / ‘prospecting_tool.html’
+
+# ── CHAIN SUPPRESSION ─────────────────────────────────────────────────────────
+
+# Corporate chains have national vendor contracts – deprioritize
+
+CHAIN_SUPPRESS = [
+‘mcdonald’,‘burger king’,‘wendy’,‘taco bell’,‘subway’,‘chick-fil’,
+‘dunkin’,‘starbucks’,‘chipotle’,“applebee”,“denny”,‘ihop’,‘waffle house’,
+‘olive garden’,‘red lobster’,‘outback’,‘chilis’,‘buffalo wild wings’,
+‘panera’,‘pizza hut’,‘domino’,‘papa john’,‘little caesar’,‘sonic drive’,
+‘dairy queen’,‘popeye’,’kfc ’,‘kentucky fried’,‘jack in the box’,
+‘five guys’,‘shake shack’,‘panda express’,‘wingstop’,‘raising cane’,
+]
+
+# ── MACHINE ESTIMATION ────────────────────────────────────────────────────────
+
+def est_machines(seats, is_full_bar, rank_code):
+“”“Estimate ice machine count from seat count + license type.”””
+if rank_code in (‘NOST’,‘CNOSEAT’,‘MFDV’): return 1
+if seats <= 0:    base = 1
+elif seats < 40:  base = 1
+elif seats < 80:  base = 1
+elif seats < 150: base = 2
+elif seats < 250: base = 2
+elif seats < 400: base = 3
+else:             base = 4
+bonus = 1 if is_full_bar else 0
+return min(base + bonus, 6)
+
+def est_monthly(machines):
+“”“Estimated monthly recurring revenue at standard pricing.”””
+if machines <= 1: return 149
+return 149 + (machines - 1) * 99
+
+def account_tier(seats, rank_code, machines, chronic, confirmed):
+“”“Account quality tier based on machine count and motivation.”””
+if rank_code in (‘NOST’,‘CNOSEAT’) and not confirmed: return ‘SKIP’
+if seats < 30 and not confirmed:                      return ‘SKIP’
+if machines >= 3 and (chronic or confirmed):          return ‘PLATINUM’
+if machines >= 2 and (chronic or confirmed):          return ‘GOLD’
+if machines >= 2 or (confirmed and seats >= 40):      return ‘SILVER’
+if seats >= 40 and confirmed:                         return ‘SILVER’
+if seats >= 40:                                       return ‘BRONZE’
+return ‘COLD’
+
+def is_chain(name):
+n = name.lower()
+return any(c in n for c in CHAIN_SUPPRESS)
+
+def seat_score_bonus(machines, rank_code):
+“”“Additional ice score from machine count estimate.”””
+if rank_code in (‘NOST’,‘CNOSEAT’): return 0
+if machines >= 3: return 15
+if machines >= 2: return 10
+return 0
+
+# ──────────────────────────────────────────────────────────────────────────────
+
+# STEP 0: CHECK DEPENDENCIES
+
+# ──────────────────────────────────────────────────────────────────────────────
+
+def check_deps():
+missing = []
+for pkg, install in [(‘pandas’,‘pandas’), (‘sklearn’,‘scikit-learn’),
+(‘numpy’,‘numpy’), (‘openpyxl’,‘openpyxl’)]:
+try:
+**import**(pkg)
+except ImportError:
+missing.append(install)
+if missing:
+print(”\n” + “=”*55)
+print(”  Missing packages. Run this once in terminal:”)
+print(f”  pip install {’ ’.join(missing)}”)
+print(”=”*55 + “\n”)
+sys.exit(1)
+
+check_deps()
+
+import pandas as pd
+import numpy as np
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.preprocessing import LabelEncoder
+
+# ──────────────────────────────────────────────────────────────────────────────
+
+# COLUMN NORMALIZATION
+
+# ──────────────────────────────────────────────────────────────────────────────
+
+COLUMN_MAP = {
+‘Inspection Date’: [‘InspectionDate’,‘INSPECTION DATE’,‘inspection_date’,‘Date’,‘Insp Date’],
+‘License ID’: [‘LicenseID’,‘LICENSE ID’,‘license_id’,‘License Number’,‘LicenseNumber’,‘Lic ID’,‘License_ID’],
+‘Business (DBA-Does Business As) Name’: [
+‘Business Name’,‘DBA Name’,‘DBA’,‘Business’,‘BUSINESS NAME’,
+‘DBA-Does Business As’,‘Restaurant Name’,‘RestaurantName’,‘Establishment Name’],
+‘County Name’: [‘County’,‘COUNTY’,‘county_name’,‘CountyName’],
+‘Location Address’: [‘Address’,‘LOCATION ADDRESS’,‘Street Address’,‘StreetAddress’,‘Addr’],
+‘Location City’: [‘City’,‘CITY’,‘city_name’],
+‘Location Zip Code’: [‘Zip’,‘ZIP’,‘Zip Code’,‘ZipCode’,‘Postal Code’,‘PostalCode’,‘zip_code’],
+‘Inspection Type’: [‘InspectionType’,‘INSPECTION TYPE’,‘Type’,‘Insp Type’],
+‘Inspection Disposition’: [‘Disposition’,‘DISPOSITION’,‘InspectionDisposition’,‘Result’],
+‘Number of High Priority Violations’: [
+‘High Priority Violations’,‘HighPriorityViolations’,‘High Violations’,‘HP Violations’,‘HV’],
+‘Number of Total Violations’: [‘Total Violations’,‘TotalViolations’,‘Total’,‘TV’],
+‘Number of Intermediate Violations’: [‘Intermediate Violations’,‘IntermediateViolations’,‘IV’],
+‘Number of Basic Violations’: [‘Basic Violations’,‘BasicViolations’,‘BV’],
+‘Visit Number’: [‘VisitNumber’,‘Visit’,‘VISIT NUMBER’,‘Visit_Number’],
+}
+
+DISP_RISK = {
+‘Inspection Completed - No Further Action’: 0, ‘Warning Issued’: 1,
+‘Call Back - Complied’: 2, ‘Call Back - Extension given, pending’: 3,
+‘Admin. Complaint Callback Complied’: 3, ‘Call Back - Admin. complaint recommended’: 4,
+‘Administrative complaint recommended’: 4, ‘Administrative determination recommended’: 4,
+‘Emergency Order Callback Complied’: 3, ‘Emergency Order Callback Time Extension’: 4,
+‘Emergency Order Callback Not Complied’: 5, ‘Emergency order recommended’: 5,
+}
+
+ICE_CODES = {14: 100, 22: 80, 50: 70, 23: 60, 37: 50, 51: 30, 36: 20, 55: 15}
+
+ZIP_COORDS = {
+‘33511’:(27.924,-82.312),‘33547’:(27.861,-82.212),‘33570’:(27.714,-82.398),
+‘33572’:(27.752,-82.378),‘33573’:(27.710,-82.354),‘33578’:(27.855,-82.324),
+‘33579’:(27.793,-82.278),‘33584’:(27.992,-82.269),‘33592’:(28.096,-82.280),
+‘33594’:(27.910,-82.232),‘33596’:(27.875,-82.258),‘33598’:(27.660,-82.349),
+‘33602’:(27.949,-82.459),‘33603’:(27.980,-82.468),‘33604’:(28.001,-82.468),
+‘33605’:(27.956,-82.427),‘33606’:(27.931,-82.474),‘33607’:(27.966,-82.489),
+‘33609’:(27.945,-82.495),‘33610’:(27.978,-82.406),‘33611’:(27.900,-82.508),
+‘33612’:(28.022,-82.457),‘33613’:(28.055,-82.448),‘33614’:(27.997,-82.509),
+‘33615’:(27.989,-82.563),‘33616’:(27.894,-82.532),‘33617’:(28.012,-82.407),
+‘33618’:(28.053,-82.499),‘33619’:(27.950,-82.389),‘33620’:(28.062,-82.415),
+‘33621’:(27.860,-82.520),‘33624’:(28.069,-82.535),‘33625’:(28.080,-82.556),
+‘33626’:(28.082,-82.585),‘33629’:(27.924,-82.522),‘33634’:(27.993,-82.567),
+‘33635’:(28.010,-82.609),‘33637’:(28.056,-82.380),‘33647’:(28.119,-82.378),
+‘33701’:(27.770,-82.634),‘33702’:(27.811,-82.647),‘33703’:(27.817,-82.633),
+‘33704’:(27.798,-82.640),‘33705’:(27.750,-82.638),‘33706’:(27.747,-82.747),
+‘33707’:(27.761,-82.717),‘33708’:(27.810,-82.800),‘33709’:(27.806,-82.754),
+‘33710’:(27.785,-82.734),‘33711’:(27.745,-82.682),‘33712’:(27.726,-82.663),
+‘33713’:(27.779,-82.669),‘33714’:(27.803,-82.685),‘33715’:(27.703,-82.717),
+‘33716’:(27.855,-82.652),‘33755’:(27.966,-82.800),‘33756’:(27.953,-82.801),
+‘33759’:(27.974,-82.750),‘33760’:(27.900,-82.687),‘33761’:(28.014,-82.740),
+‘33762’:(27.870,-82.676),‘33763’:(28.005,-82.748),‘33764’:(27.934,-82.740),
+‘33765’:(27.984,-82.777),‘33767’:(27.978,-82.828),‘33770’:(27.910,-82.789),
+‘33771’:(27.912,-82.762),‘33772’:(27.878,-82.795),‘33773’:(27.880,-82.720),
+‘33774’:(27.869,-82.833),‘33776’:(27.839,-82.815),‘33777’:(27.854,-82.754),
+‘33778’:(27.873,-82.740),‘33781’:(27.841,-82.717),‘33782’:(27.863,-82.697),
+‘33785’:(27.740,-82.781),‘33786’:(27.924,-82.826),‘34677’:(28.053,-82.669),
+‘34681’:(28.011,-82.688),‘34683’:(28.080,-82.765),‘34684’:(28.102,-82.769),
+‘34685’:(28.117,-82.731),‘34688’:(28.128,-82.704),‘34689’:(28.146,-82.756),
+‘34695’:(27.986,-82.695),‘34698’:(28.019,-82.775),‘34652’:(28.240,-82.727),
+‘34653’:(28.262,-82.724),‘34654’:(28.279,-82.666),‘34655’:(28.218,-82.673),
+‘34667’:(28.338,-82.652),‘34668’:(28.280,-82.697),‘34669’:(28.226,-82.706),
+‘34690’:(28.243,-82.675),‘34691’:(28.195,-82.754),‘34638’:(28.190,-82.712),
+‘34637’:(28.214,-82.666),‘34639’:(28.234,-82.628),
+‘34429’:(28.896,-82.580),‘34442’:(28.767,-82.472),‘34448’:(28.956,-82.582),
+‘34450’:(28.836,-82.330),‘34452’:(28.814,-82.335),‘34465’:(28.947,-82.469),
+‘34601’:(28.552,-82.388),‘34604’:(28.538,-82.466),‘34606’:(28.468,-82.549),
+‘34608’:(28.506,-82.540),‘34609’:(28.441,-82.480),‘34610’:(28.369,-82.547),
+‘34613’:(28.527,-82.517),‘33801’:(28.041,-81.975),‘33803’:(28.020,-81.970),
+‘33810’:(28.059,-82.036),‘33811’:(27.945,-82.028),‘33813’:(27.969,-82.001),
+‘33823’:(28.071,-81.897),‘33830’:(27.899,-81.840),‘33880’:(28.023,-81.731),
+‘33897’:(28.291,-81.643),‘32162’:(28.950,-81.966),‘34785’:(28.839,-82.051),
+}
+
+HIGH_ICE = [‘bar’,‘pub’,‘tavern’,‘lounge’,‘grill’,‘grille’,‘sports’,‘club’,
+‘seafood’,‘sushi’,‘hibachi’,‘oyster’,‘marina’,‘brewery’,‘taproom’,
+‘resort’,‘hotel’,‘inn’,‘cantina’,‘steakhouse’]
+LOW_ICE  = [‘bakery’,‘donut’,‘coffee’,‘smoothie’,‘juice’,‘dessert’,‘cupcake’]
+
+# Median days until callback inspection per disposition type.
+
+# Derived from 25k+ FL DBPR inspection interval records — data-driven, not guesses.
+
+CALLBACK_DAYS = {
+‘Emergency order recommended’:               1,
+‘Emergency Order Callback Not Complied’:     1,
+‘Administrative complaint recommended’:      4,
+‘Administrative determination recommended’:  4,
+‘Call Back - Admin. complaint recommended’:  22,
+‘Admin. Complaint Callback Complied’:        45,
+‘Warning Issued’:                            12,
+‘Call Back - Extension given, pending’:      50,
+‘Emergency Order Callback Time Extension’:   62,
+‘Emergency Order Callback Complied’:         64,
+‘Call Back - Complied’:                      118,
+‘Inspection Completed - No Further Action’:  130,
+}
+STATIC_PHONES = {
+“9784166”: “+1 813-993-3924”,
+“2183411”: “+1 813-752-2236”,
+“9681679”: “+1 813-657-5600”,
+“9468965”: “+1 813-374-5363”,
+“9473519”: “+1 727-314-4004”,
+“9405890”: “+1 813-909-6354”,
+“9428645”: “+1 813-265-2111”,
+“9435298”: “+1 813-295-8450”,
+“9317331”: “+1 727-242-8400”,
+“9394343”: “+1 813-344-3311”,
+“9283918”: “+1 813-815-7662”,
+“9296161”: “+1 727-381-0088”,
+“4115014”: “+1 727-844-3125”,
+“3754544”: “+1 727-924-2000”,
+“3774587”: “+1 727-586-5797”,
+“3243192”: “+1 727-443-4900”,
+“3425752”: “+1 813-654-4262”,
+“3523975”: “+1 813-825-1373”,
+“9256830”: “+1 727-270-6655”,
+“9155471”: “+1 813-994-9666”,
+“4421753”: “+1 813-961-4092”,
+“7089467”: “+1 727-726-4608”,
+“2976346”: “+1 813-374-2739”,
+“6462895”: “+1 727-934-4047”,
+“2238952”: “+1 727-327-8090”,
+“5654752”: “+1 727-863-0965”,
+“5787421”: “+1 727-614-0574”,
+“7432888”: “+1 727-954-7369”
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+
+# HELPERS
+
+# ──────────────────────────────────────────────────────────────────────────────
+
+def normalize_columns(df):
+col_lower = {c.lower().strip(): c for c in df.columns}
+renames = {}
+for standard, variants in COLUMN_MAP.items():
+if standard in df.columns:
+continue
+for v in variants:
+if v.lower().strip() in col_lower:
+renames[col_lower[v.lower().strip()]] = standard
+break
+# Violation column variants: V14, Viol14, violation_14 → Violation 14
+viol_pat = re.compile(r’^[Vv](?:iol(?:ation)?[\s_-]?)?0?(\d+)$’)
+for col in list(df.columns):
+m = viol_pat.match(col.strip())
+if m:
+new = f’Violation {int(m.group(1)):02d}’
+if new != col and col not in renames:
+renames[col] = new
+if renames:
+df = df.rename(columns=renames)
+return df
+
+def load_csvs(paths):
+frames, ref_cols = [], None
+for p in paths:
+path = Path(p)
+if not path.exists():
+print(f”  WARNING: {path.name} not found, skipping”)
+continue
+try:
+ext = path.suffix.lower()
+if ext in (’.xlsx’, ‘.xlsm’, ‘.xls’):
+# Stream XLSX row-by-row to handle large statewide files
+import openpyxl
+wb = openpyxl.load_workbook(str(path), read_only=True, data_only=True)
+ws = wb.worksheets[0]
+rows = list(ws.iter_rows(values_only=True))
+wb.close()
+headers = [str(c).strip() if c is not None else ‘’ for c in rows[0]]
+data = [[’’ if v is None else str(v) for v in row] for row in rows[1:]]
+df = pd.DataFrame(data, columns=headers)
+print(f”  {path.name}: {len(df):,} rows (xlsx)”)
+else:
+df = pd.read_csv(path, low_memory=False, encoding=‘utf-8’,
+encoding_errors=‘replace’)
+print(f”  {path.name}: {len(df):,} rows”)
+
+```
+        df.columns = df.columns.str.strip()
+        df = normalize_columns(df)
+        if ref_cols is None:
+            ref_cols = list(df.columns)
+        frames.append(df)
+
+    except Exception as e:
+        try:
+            if ref_cols and path.suffix.lower() == '.csv':
+                df = pd.read_csv(path, header=None, names=ref_cols,
+                                 low_memory=False, encoding_errors='replace')
+                df = normalize_columns(df)
+                frames.append(df)
+                print(f"  {path.name}: {len(df):,} rows (headerless)")
+            else:
+                print(f"  SKIP {path.name}: {e}")
+        except Exception as e2:
+            print(f"  SKIP {path.name}: {e2}")
+
+if not frames:
+    raise RuntimeError("No valid data files loaded.")
+return pd.concat(frames, ignore_index=True)
+```
+
+def load_license_extract(data_dir=None):
+“””
+Load FL DBPR active license extract.
+Returns dict keyed by License Number with phone, seats, rank, license_type.
+Tries data/ folder first, then current folder.
+“””
+import pandas as pd
+candidates = []
+if data_dir:
+candidates.append(Path(data_dir) / ‘hrfood3_licenses.csv’)
+candidates += [
+Path(**file**).parent / ‘data’ / ‘hrfood3_licenses.csv’,
+Path(**file**).parent / ‘hrfood3_licenses.csv’,
+]
+for path in candidates:
+if path.exists():
+try:
+df = pd.read_csv(path, low_memory=False, encoding_errors=‘replace’)
+df.columns = df.columns.str.strip()
+# Normalize license number – strip prefix letters for join
+# DBPR license numbers in extract: “SEA6213532”
+# In inspection data: numeric “6213532” or full “SEA6213532”
+result = {}
+for _, r in df.iterrows():
+lic_raw = str(r.get(‘License Number’, ‘’)).strip()
+# Store under both full and numeric forms
+phone = str(r.get(‘Primary Phone Number’, ‘’) or
+r.get(‘Secondary Phone Number’, ‘’) or ‘’).strip()
+phone = re.sub(r’[^0-9]’, ‘’, phone)
+if len(phone) == 10:
+phone = ‘+1 ’ + phone[:3] + ‘-’ + phone[3:6] + ‘-’ + phone[6:]
+elif len(phone) == 11 and phone.startswith(‘1’):
+phone = ‘+1 ’ + phone[1:4] + ‘-’ + phone[4:7] + ‘-’ + phone[7:]
+else:
+phone = ‘’
+seats_raw = r.get(‘Number of Seats or Rental Units’, 0)
+try:
+seats = int(float(str(seats_raw))) if seats_raw and str(seats_raw).strip() not in (’’, ‘nan’) else 0
+except:
+seats = 0
+entry = {
+‘phone’:        phone,
+‘seats’:        seats,
+‘rank’:         str(r.get(‘Rank Code’, ‘’) or ‘’).strip(),
+‘license_type’: str(r.get(‘License Type Code’, ‘’) or ‘’).strip(),
+‘risk_level’:   str(r.get(‘Base Risk Level’, ‘’) or ‘’).strip(),
+}
+result[lic_raw] = entry
+# Also index by numeric portion for flexible joins
+numeric = re.sub(r’[^0-9]’, ‘’, lic_raw)
+if numeric and numeric not in result:
+result[numeric] = entry
+n_phones = sum(1 for v in result.values() if v.get(‘phone’))
+print(f”  License extract: {len(df):,} records, {n_phones:,} with phones”)
+return result
+except Exception as e:
+print(f”  WARNING: license extract load failed – {e}”)
+print(”  License extract not found – phones/seats from extract unavailable”)
+return {}
+
+def match_license(license_id, extract):
+“”“Flexible license ID matching – try multiple formats.”””
+lid = str(license_id).strip()
+if lid in extract:
+return extract[lid]
+numeric = re.sub(r’[^0-9]’, ‘’, lid)
+if numeric in extract:
+return extract[numeric]
+# Try common prefixes
+for prefix in (‘SEA’, ‘NOS’, ‘MFD’):
+key = prefix + numeric
+if key in extract:
+return extract[key]
+return None
+
+def ice_usage_label(name):
+n = name.lower()
+if any(w in n for w in HIGH_ICE): return ‘high’
+if any(w in n for w in LOW_ICE):  return ‘low’
+return ‘medium’
+
+def ice_insight_text(codes):
+if ‘V14’ in codes: return ‘Food contact surfaces (V14) \u2014 inspectors directly cited food contact equipment. Ice machines are the primary target of this violation code.’
+if ‘V22’ in codes: return ‘Non-PHF food contact surfaces (V22) \u2014 ice machines fall directly into this category.’
+if ‘V50’ in codes: return ‘Food contact surfaces not clean (V50) \u2014 same root issue as V14/V22, cited at basic level.’
+if ‘V37’ in codes: return ‘Equipment not in good repair (V37) \u2014 ice machine may be broken or malfunctioning.’
+if ‘V23’ in codes: return ‘Utensil/container sanitation (V23) \u2014 includes ice scoops and bin components.’
+return ‘’
+
+def _callback_fields(disposition: str, last_insp_date) -> dict:
+“”“Compute estimated callback inspection date from disposition type.
+Uses median timing derived from 25k+ FL DBPR inspection records.”””
+cb_days = CALLBACK_DAYS.get(disposition, 30)
+est_callback = last_insp_date + timedelta(days=cb_days)
+days_to_callback = (TODAY - est_callback).days * -1  # negative = overdue
+urgency = (‘overdue’   if days_to_callback < 0  else
+‘imminent’  if days_to_callback <= 7  else
+‘soon’      if days_to_callback <= 21 else ‘upcoming’)
+return {
+‘est_callback_date’: est_callback.isoformat(),
+‘days_to_callback’:  days_to_callback,
+‘callback_urgency’:  urgency,
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+
+# MAIN PIPELINE
+
+# ──────────────────────────────────────────────────────────────────────────────
+
+def run(csv_paths):
+print(f”\n{’=’*55}”)
+print(f”  Pinellas Ice Co \u2014 Building Prospect Tool”)
+print(f”  {TODAY}”)
+print(f”{’=’*55}\n”)
+
+```
+# LOAD
+print("Loading CSV files...")
+df = load_csvs(csv_paths)
+print(f"  Total rows loaded: {len(df):,}\n")
+
+# LOAD LICENSE EXTRACT (phones + seats + rank)
+print("Loading license extract...")
+data_dir = Path(csv_paths[0]).parent if csv_paths else None
+license_data = load_license_extract(data_dir)
+print()
+
+# COERCE
+df['inspection_date'] = pd.to_datetime(df.get('Inspection Date'), errors='coerce')
+df = df.dropna(subset=['inspection_date'])
+df['county']    = df.get('County Name',          pd.Series('', index=df.index)).astype(str).str.strip()
+df['biz_name']  = df.get('Business (DBA-Does Business As) Name',
+                          pd.Series('', index=df.index)).astype(str).str.strip()
+df['address']   = df.get('Location Address',     pd.Series('', index=df.index)).astype(str).str.strip()
+df['city']      = df.get('Location City',        pd.Series('', index=df.index)).astype(str).str.strip()
+df['zip']       = df.get('Location Zip Code',    pd.Series('', index=df.index)).astype(str).str.strip().str[:5]
+df['disp_raw']  = df.get('Inspection Disposition',pd.Series('',index=df.index)).astype(str).str.strip()
+df['insp_type'] = df.get('Inspection Type',      pd.Series('', index=df.index)).astype(str).str.strip()
+df['license_id']= df.get('License ID',           pd.Series(range(len(df)), index=df.index))
+
+for col, src_name in [('hv','Number of High Priority Violations'),
+                       ('tv','Number of Total Violations'),
+                       ('iv','Number of Intermediate Violations'),
+                       ('bv','Number of Basic Violations'),
+                       ('vn','Visit Number')]:
+    df[col] = pd.to_numeric(df.get(src_name, pd.Series(0, index=df.index)),
+                            errors='coerce').fillna(0)
+
+# Violation codes
+for code in ICE_CODES:
+    col = f'Violation {code:02d}'
+    df[col] = pd.to_numeric(df.get(col, pd.Series(0, index=df.index)),
+                            errors='coerce').fillna(0)
+
+df['ice_rel']    = sum(df[f'Violation {c:02d}'].clip(upper=1) * s for c,s in ICE_CODES.items())
+df['direct_ice'] = (df['Violation 14'].clip(upper=1) +
+                    df['Violation 22'].clip(upper=1) +
+                    df['Violation 50'].clip(upper=1)) > 0
+df['dr'] = df['disp_raw'].map(DISP_RISK).fillna(2)
+
+# Filter
+df_t = df[df['county'].isin(TARGET_COUNTIES)].copy()
+print(f"Rows in target counties: {len(df_t):,}")
+
+# Routine inspections
+routine = df_t[df_t['insp_type'] == 'Routine - Food'].copy()
+routine = routine.sort_values(['license_id', 'inspection_date'])
+routine['next_date'] = routine.groupby('license_id')['inspection_date'].shift(-1)
+routine['interval']  = (routine['next_date'] - routine['inspection_date']).dt.days
+rv = routine[(routine['interval'] > 0) & (routine['interval'] < 730)].copy()
+MED = float(rv['interval'].median()) if len(rv) else 125.0
+print(f"Training on {len(rv):,} inspection intervals (median={MED:.0f}d)")
+
+# Train model
+le = LabelEncoder()
+rv['county_enc'] = le.fit_transform(rv['county'].fillna('Unknown'))
+rv['prev']  = rv.groupby('license_id')['interval'].transform(
+    lambda x: x.expanding().mean().shift(1)).fillna(MED)
+rv['month'] = rv['inspection_date'].dt.month
+FEATS = ['hv','iv','bv','tv','dr','vn','month','county_enc','prev']
+rf = RandomForestRegressor(n_estimators=120, max_depth=8, random_state=42, n_jobs=-1)
+rf.fit(rv[FEATS].fillna(0), rv['interval'])
+print("Prediction model trained.\n")
+
+# Per-establishment history
+ice_hist = routine.groupby('license_id').agg(
+    avg_interval  =('interval','mean'),
+    n_insp        =('interval','count'),
+    avg_hv        =('hv','mean'),
+    avg_ice       =('ice_rel','mean'),
+    direct_count  =('direct_ice','sum'),
+).reset_index()
+ice_hist['chronic']   = ice_hist['direct_count'] >= 2
+ice_hist['confirmed'] = ice_hist['direct_count'] >= 1
+
+# Trend slope
+def trend_slope(g):
+    if len(g) < 3: return 0.0
+    x = np.arange(len(g), dtype=float)
+    return float(np.polyfit(x, g['hv'].values.astype(float), 1)[0])
+trends = routine.groupby('license_id').apply(trend_slope).to_dict()
+
+# Fired ice codes per establishment
+def get_fired(g):
+    codes = []
+    for code in ICE_CODES:
+        col = f'Violation {code:02d}'
+        if col in g.columns and (pd.to_numeric(g[col], errors='coerce').fillna(0) > 0).any():
+            codes.append(f'V{code}')
+    return codes[:4]
+fired = routine.groupby('license_id').apply(get_fired).to_dict()
+
+# Predict next inspection date
+latest = routine.sort_values('inspection_date').groupby('license_id').last().reset_index()
+latest = latest.merge(ice_hist, on='license_id', how='left')
+for c in ['avg_interval','avg_hv','avg_ice','direct_count']:
+    latest[c] = latest.get(c, 0).fillna(0)
+for c in ['chronic','confirmed']:
+    latest[c] = latest.get(c, False).fillna(False).astype(bool)
+
+cs = latest['county'].where(latest['county'].isin(le.classes_), 'Unknown').fillna('Unknown')
+latest['county_enc'] = le.transform(cs)
+latest['prev']  = latest['avg_interval'].fillna(MED)
+latest['month'] = latest['inspection_date'].dt.month
+Xp = pd.DataFrame({f: latest.get(f, 0) for f in FEATS}).fillna(0)
+latest['pred_days']  = np.clip(rf.predict(Xp).round().astype(int), 7, 730)
+latest['pred_next']  = latest['inspection_date'] + pd.to_timedelta(latest['pred_days'], unit='d')
+latest['days_until'] = (latest['pred_next'] - pd.Timestamp(TODAY)).dt.days.fillna(999).astype(int)
+
+# Score
+def pitch_type(dr, du, ice, chronic, confirmed):
+    if dr >= 4 and -30 <= du < 75: return 'callback'
+    if du < 0 and dr >= 2:         return 'overdue_urgent'
+    if du < 0:                     return 'overdue'
+    if du <= 21:                   return 'pre_hot'
+    if du <= 45:                   return 'pre_warm'
+    if (chronic or ice >= 80) and du <= 90: return 'high_risk'
+    return 'routine'
+
+def ice_score(pt, dr, hv, ni, ice, chronic, confirmed):
+    b = {'callback':96,'overdue_urgent':88,'overdue':72,'pre_hot':84,
+         'pre_warm':68,'high_risk':60,'routine':28}.get(pt, 28)
+    if confirmed: b += 12
+    if chronic:   b += 10
+    if ice >= 150: b += 8
+    elif ice >= 80: b += 4
+    if hv >= 5: b += 5
+    elif hv >= 3: b += 3
+    if (ni or 1) >= 3: b += 4
+    if dr >= 4: b += 6
+    return min(100, b)
+
+def priority(pt):
+    return {'callback':'CALLBACK','overdue_urgent':'CALLBACK',
+            'pre_hot':'HOT','pre_warm':'WARM','overdue':'WARM',
+            'high_risk':'WATCH'}.get(pt, 'LATER')
+
+# Build records \u2014 2024+ inspections only
+recent = latest[latest['inspection_date'] >= '2024-01-01'].copy()
+samples = []
+for pri in ['CALLBACK','HOT','WARM','WATCH']:
+    sub = recent.copy()
+    sub['_pt'] = [pitch_type(r['dr'], r['days_until'], r['avg_ice'],
+                              bool(r['chronic']), bool(r['confirmed']))
+                  for _, r in sub.iterrows()]
+    sub['_sc'] = [ice_score(r['_pt'], r['dr'], r['avg_hv'] if pd.notna(r['avg_hv']) else r['hv'],
+                             r.get('n_insp',1) or 1, r['avg_ice'],
+                             bool(r['chronic']), bool(r['confirmed']))
+                  for _, r in sub.iterrows()]
+    sub['_pr'] = sub['_pt'].apply(priority)
+    sub = sub[sub['_pr'] == pri].sort_values('_sc', ascending=False)
+    samples.append(sub.head(MAX_PER_PRIORITY))
+
+result = pd.concat(samples).drop_duplicates('license_id').reset_index(drop=True)
+result  = result[result['_sc'] >= MIN_SCORE]
+
+print(f"Scoring prospects...")
+records = []
+for _, r in result.iterrows():
+    try:
+        lid    = int(r['license_id'])
+        codes  = fired.get(lid, [])
+        z5     = str(r['zip'])[:5]
+        coords = ZIP_COORDS.get(z5)
+        name   = str(r['biz_name'])[:50]
+
+        # Skip corporate chains
+        if is_chain(name):
+            continue
+
+        # Enrich from license extract
+        lic_info  = match_license(lid, license_data) or {}
+        phone_raw = lic_info.get('phone','') or STATIC_PHONES.get(str(lid),'')
+        seats     = int(lic_info.get('seats', 0) or 0)
+        rank      = lic_info.get('rank', 'SEAT')
+        lic_type  = lic_info.get('license_type', '2010')
+        risk_lvl  = lic_info.get('risk_level', '')
+
+        # Filter: NOST with no confirmed ice = skip
+        if rank in ('NOST','CNOSEAT') and not bool(r.get('confirmed', False)):
+            continue
+        # Filter: under 30 seats (real count) with no confirmed violation = skip
+        if seats > 0 and seats < 30 and not bool(r.get('confirmed', False)):
+            continue
+
+        # Machine + revenue estimation
+        is_full_bar = any(w in name.lower() for w in
+                          ['bar','pub','tavern','lounge','brewery','taproom',
+                           'cantina','saloon','sports bar'])
+        machines    = est_machines(seats, is_full_bar, rank)
+        monthly_val = est_monthly(machines)
+        tier        = account_tier(seats, rank, machines,
+                                   bool(r.get('chronic', False)),
+                                   bool(r.get('confirmed', False)))
+        if tier == 'SKIP':
+            continue
+
+        # Final score with machine bonus
+        final_score = min(100, int(r['_sc']) + seat_score_bonus(machines, rank))
+
+        records.append({
+            'id':               lid,
+            'name':             name,
+            'county':           str(r['county']),
+            'city':             str(r['city']),
+            'address':          str(r['address']),
+            'zip':              z5,
+            'lat':              coords[0] if coords else None,
+            'lon':              coords[1] if coords else None,
+            'last_insp':        r['inspection_date'].strftime('%Y-%m-%d'),
+            'last_disp':        str(r['disp_raw']),
+            'disp_risk':        int(r['dr']),
+            'high_viol':        int(r['hv']),
+            'total_viol':       int(r['tv']),
+            'avg_high_viol':    round(float(r['avg_hv']) if pd.notna(r['avg_hv']) else float(r['hv']), 1),
+            'n_inspections':    int(r.get('n_insp', 1) or 1),
+            'pred_next':        r['pred_next'].strftime('%Y-%m-%d'),
+            'days_until':       int(r['days_until']),
+            'pitch_type':       str(r['_pt']),
+            'score':            final_score,
+            'priority':         str(r['_pr']),
+            'ice_relevance':    round(float(r['avg_ice']), 0),
+            'confirmed_ice':    bool(r['confirmed']),
+            'chronic_ice':      bool(r['chronic']),
+            'direct_ice_count': int(r.get('direct_count', 0) or 0),
+            'fired_codes':      codes,
+            'ice_insight':      ice_insight_text(codes),
+            'ice_usage':        ice_usage_label(name),
+            'trending_worse':   float(trends.get(lid, 0)) > 0.5,
+            'days_since_insp':  (TODAY - r['inspection_date'].date()).days,
+            # License extract enrichment
+            'seats':            seats,
+            'rank':             rank,
+            'license_type':     lic_type,
+            'risk_level':       risk_lvl,
+            'is_full_bar':      is_full_bar,
+            # Machine + revenue
+            'est_machines':     machines,
+            'est_monthly':      monthly_val,
+            'est_annual':       monthly_val * 12,
+            'account_tier':     tier,
+            # Callback estimate
+            **_callback_fields(str(r['disp_raw']), r['inspection_date'].date()),
+            'phone': phone_raw, 'rating': 0, 'hours': '',
+        })
+    except Exception:
+        pass
+
+PO = {'CALLBACK':0,'HOT':1,'WARM':2,'WATCH':3,'LATER':4}
+records.sort(key=lambda x: (PO.get(x['priority'], 5), -x['score']))
+
+# Preserve phones from previous run
+if OUTPUT_FILE.exists():
+    try:
+        content = OUTPUT_FILE.read_text(encoding='utf-8')
+        m = re.search(r'const PHONES=(\{.*?\});', content, re.DOTALL)
+        if m:
+            saved_phones = json.loads(m.group(1))
+            n_restored = 0
+            for rec in records:
+                ph = saved_phones.get(str(rec['id']), {})
+                if ph.get('phone'):
+                    rec['phone']  = ph['phone']
+                    rec['rating'] = ph.get('rating', 0)
+                    rec['hours']  = ph.get('hours', '')
+                    n_restored += 1
+            if n_restored:
+                print(f"  Phone data restored for {n_restored} businesses")
+    except Exception:
+        pass
+
+pc = dict(Counter(r['priority'] for r in records))
+print(f"\nResults:")
+print(f"  Total prospects:       {len(records)}")
+print(f"  Callback urgent:       {pc.get('CALLBACK',0)}")
+print(f"  Hot (≤21 days):        {pc.get('HOT',0)}")
+print(f"  Warm (22-45 days):     {pc.get('WARM',0)}")
+print(f"  Watch:                 {pc.get('WATCH',0)}")
+print(f"  Chronic ice offenders: {sum(1 for r in records if r['chronic_ice'])}")
+print(f"  With map coordinates:  {sum(1 for r in records if r['lat'])}")
+print(f"  With phone number:     {sum(1 for r in records if r['phone'])}")
+
+return records
+```
+
+# ──────────────────────────────────────────────────────────────────────────────
+
+# HTML
+
+# ──────────────────────────────────────────────────────────────────────────────
+
+def build_html(records):
+data_js   = json.dumps(records, separators=(’,’,’:’))
+phones_js = json.dumps(
+{str(r[‘id’]): {‘phone’:r[‘phone’],‘rating’:r[‘rating’],‘hours’:r[‘hours’]}
+for r in records if r[‘phone’]},
+separators=(’,’,’:’)
+)
+zip_js = json.dumps({z: list(c) for z,c in ZIP_COORDS.items()}, separators=(’,’,’:’))
+
+```
+n_cb    = sum(1 for r in records if r['priority']=='CALLBACK')
+n_hot   = sum(1 for r in records if r['priority']=='HOT')
+n_warm  = sum(1 for r in records if r['priority']=='WARM')
+n_phone = sum(1 for r in records if r['phone'])
+n_chron = sum(1 for r in records if r['chronic_ice'])
+n_geo   = sum(1 for r in records if r['lat'])
+
+# Read the HTML template embedded below
+return HTML_TEMPLATE.replace('%%DATA%%', data_js)\
+                    .replace('%%PHONES%%', phones_js)\
+                    .replace('%%ZIPS%%', zip_js)\
+                    .replace('%%DATE%%', str(TODAY))\
+                    .replace('%%TOTAL%%', str(len(records)))\
+                    .replace('%%NCB%%', str(n_cb))\
+                    .replace('%%NHOT%%', str(n_hot))\
+                    .replace('%%NWARM%%', str(n_warm))\
+                    .replace('%%NPHONE%%', str(n_phone))\
+                    .replace('%%NCHRON%%', str(n_chron))\
+                    .replace('%%NGEO%%', str(n_geo))\
+                    .replace('%%NCONF%%', str(sum(1 for r in records if r['confirmed_ice'])))
+```
+
+# ──────────────────────────────────────────────────────────────────────────────
+
+# HTML TEMPLATE  (everything between the triple-quotes)
+
+# ──────────────────────────────────────────────────────────────────────────────
+
+HTML_TEMPLATE = “””\
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Pinellas Ice Co &#xB7; Prospects</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#f5f8fa;--surf:#ffffff;--brd:#dfe3eb;--brd2:#eaf0f6;
+  --txt:#33475b;--sub:#7c98b6;--sub2:#516f90;
+  --cb:#f2545b;--hot:#ff7a59;--warm:#f5c26b;--watch:#00bda5;
+  --grn:#00bda5;--blu:#0091ae;--ora:#ff7a59;--navy:#2d3e50;
+  --shadow:0 1px 3px rgba(45,62,80,.1),0 1px 8px rgba(45,62,80,.06);
+  --shadow-md:0 3px 12px rgba(45,62,80,.12),0 1px 4px rgba(45,62,80,.08);
+}
+html,body{height:100%;background:var(--bg);color:var(--txt);
+  font-family:'Lexend',sans-serif;
+  font-size:13px;overflow:hidden;-webkit-font-smoothing:antialiased}
+#app{display:flex;flex-direction:column;height:100vh}
+header{background:var(--navy);
+  padding:0 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;flex-wrap:wrap;height:52px}
+.logo{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.logo-icon{width:30px;height:30px;border-radius:8px;
+  background:var(--ora);
+  display:flex;align-items:center;justify-content:center;font-size:16px}
+.logo-name{font-weight:700;font-size:14px;color:#fff;letter-spacing:-.02em}
+.hchips{display:flex;gap:5px;margin-left:auto;flex-wrap:wrap}
+.hc{font-size:10px;padding:3px 10px;border-radius:20px;font-weight:600;cursor:pointer;user-select:none;transition:.15s}
+.hc.cb{background:rgba(242,84,91,.2);color:#ffb3b6;border:1px solid rgba(242,84,91,.3)}
+.hc.ht{background:rgba(255,122,89,.2);color:#ffcab8;border:1px solid rgba(255,122,89,.3)}
+.hc.wm{background:rgba(245,194,107,.2);color:#ffe5a8;border:1px solid rgba(245,194,107,.3)}
+.hc.ic{background:rgba(0,189,165,.2);color:#7eeee3;border:1px solid rgba(0,189,165,.3)}
+.hc.rt{background:rgba(0,145,174,.2);color:#7dd4e8;border:1px solid rgba(0,145,174,.3)}
+.srch{position:relative}
+.srch input{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:8px;
+  padding:6px 10px 6px 28px;color:#fff;font-size:12px;outline:none;width:160px;font-family:inherit}
+.srch input::placeholder{color:rgba(255,255,255,.5)}
+.srch input:focus{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.4)}
+.si{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.5);font-size:11px;pointer-events:none}
+.tabs{display:flex;background:var(--surf);border-bottom:2px solid var(--brd2);flex-shrink:0;
+  box-shadow:0 1px 3px rgba(45,62,80,.06)}
+.tab{flex:1;padding:10px 4px;text-align:center;font-size:11px;font-weight:600;
+  color:var(--sub);cursor:pointer;border-bottom:2px solid transparent;
+  margin-bottom:-2px;transition:.15s;user-select:none}
+.tab.on{color:var(--ora);border-color:var(--ora)}
+.panel{flex:1;overflow-y:auto;padding:14px 16px;display:none;background:var(--bg)}
+.panel.on{display:block}
+.fbar{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+.fbar select{background:var(--surf);border:1px solid var(--brd);border-radius:6px;
+  padding:5px 9px;color:var(--txt);font-size:11px;outline:none;cursor:pointer;
+  font-family:inherit;font-weight:500;box-shadow:var(--shadow)}
+.fcnt{font-size:10px;color:var(--sub);margin-left:auto;font-weight:500}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(276px,1fr));gap:10px}
+.card{background:var(--surf);border:1px solid var(--brd);border-radius:10px;
+  padding:13px 14px;cursor:pointer;transition:box-shadow .15s,transform .12s,border-color .15s;
+  position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);border-color:#c5d1de}
+.card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:10px 0 0 10px}
+.card.CALLBACK::before{background:var(--cb)}
+.card.HOT::before{background:var(--hot)}
+.card.WARM::before{background:var(--warm)}
+.card.WATCH::before{background:var(--watch)}
+.card.done{opacity:.45}
+.ctop{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:3px}
+.cname{font-weight:700;font-size:12.5px;flex:1;padding-right:6px;line-height:1.3;color:var(--navy)}
+.pbadge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.04em;white-space:nowrap}
+.pbadge.CALLBACK{background:#fdeaea;color:#c0392b;border:1px solid #f5c6c6}
+.pbadge.HOT{background:#fff2ee;color:#c9542b;border:1px solid #fdd5c6}
+.pbadge.WARM{background:#fef9ee;color:#9e6b1a;border:1px solid #fbe8b5}
+.pbadge.WATCH{background:#e8faf8;color:#007a6e;border:1px solid #b3ece6}
+.cloc{font-size:10px;color:var(--sub);margin-bottom:6px;font-weight:500}
+.phrow{display:flex;align-items:center;gap:6px;padding:7px 9px;
+  background:#f5f8fa;border-radius:7px;border:1px solid var(--brd2);margin-bottom:6px}
+.phnum{font-size:12px;font-weight:600;color:var(--blu);flex:1}
+.phnum.none{color:var(--sub);font-size:10px;font-style:italic;font-weight:400}
+.abtn{border:none;border-radius:5px;padding:3px 9px;font-size:10px;font-weight:700;
+  cursor:pointer;text-decoration:none;display:inline-block;white-space:nowrap;font-family:inherit}
+.call-a{background:var(--grn);color:#fff}
+.find-a{background:#eaf6f9;color:var(--blu);border:1px solid #b3dce7}
+.icebadge{font-size:9px;font-weight:700;padding:3px 9px;border-radius:20px;
+  margin-bottom:5px;display:inline-block}
+.icebadge.chronic{background:#e8faf8;color:#007a6e;border:1px solid #b3ece6}
+.icebadge.confirmed{background:#eaf6f9;color:var(--blu);border:1px solid #b3dce7}
+.cmeta{display:flex;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.mi{display:flex;flex-direction:column;gap:1px}
+.ml{font-size:8px;color:var(--sub);letter-spacing:.05em;text-transform:uppercase;font-weight:600}
+.mv{font-weight:700;font-size:11px;color:var(--txt)}
+.mv.u{color:var(--cb)}.mv.h{color:var(--hot)}.mv.w{color:#9e6b1a}.mv.bad{color:var(--cb)}
+.insight{font-size:9px;color:var(--sub2);background:#f5f8fa;border-radius:5px;border:1px solid var(--brd2);
+  padding:4px 8px;margin-bottom:5px;line-height:1.5}
+.lastc{font-size:10px;color:var(--sub);margin-bottom:6px}
+.lastc.hc{color:#007a6e;font-weight:500}
+.cacts{display:flex;gap:5px}
+.btn{border:none;border-radius:6px;padding:5px 11px;font-size:10px;font-weight:600;cursor:pointer;font-family:inherit}
+.blog{background:var(--ora);color:#fff}.blog:hover{background:#e86744}
+.bskip{background:transparent;color:var(--sub);border:1px solid var(--brd)}
+.brt{background:#eaf6f9;color:var(--blu);border:1px solid #b3dce7;font-size:9px}
+.ptbl{width:100%;border-collapse:collapse}
+.ptbl th{padding:7px 10px;text-align:left;font-size:9px;color:var(--sub2);font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;border-bottom:2px solid var(--brd);
+  white-space:nowrap;position:sticky;top:0;background:var(--surf);z-index:1}
+.ptbl td{padding:8px 10px;border-bottom:1px solid var(--brd2);vertical-align:middle}
+.ptbl tr:hover td{background:#f5f8fa;cursor:pointer}
+.ptbl tr.done td{opacity:.4}
+.tn{font-weight:600;font-size:11px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--navy)}
+.ts{font-size:9px;color:var(--sub)}
+.tph{font-size:11px;color:var(--blu);font-weight:600;text-decoration:none;white-space:nowrap}
+.tph:hover{color:#007a9e}
+.tph.none{color:#b0c4d8;font-size:9px}
+.td{font-weight:700;font-size:12px}
+.td.u{color:var(--cb)}.td.h{color:var(--hot)}.td.w{color:#9e6b1a}
+/* ROUTE */
+.route-wrap{display:grid;grid-template-columns:280px 1fr;gap:12px;height:calc(100vh - 120px)}
+@media(max-width:600px){.route-wrap{grid-template-columns:1fr;grid-template-rows:auto 1fr}}
+.rsidebar{display:flex;flex-direction:column;gap:8px;overflow-y:auto}
+.rcontrols{background:var(--surf);border:1px solid var(--brd);border-radius:10px;padding:12px;box-shadow:var(--shadow)}
+.rtitle{font-weight:700;font-size:12px;margin-bottom:8px;color:var(--navy)}
+.rlist{display:flex;flex-direction:column;gap:4px;overflow-y:auto;max-height:320px}
+.rcard{background:var(--surf);border:1px solid var(--brd);border-radius:7px;
+  padding:8px 10px;cursor:pointer;transition:.12s;display:flex;align-items:center;gap:7px;
+  box-shadow:var(--shadow)}
+.rcard:hover{border-color:#c5d1de;box-shadow:var(--shadow-md)}
+.rcard.sel{border-color:var(--ora);background:#fff7f5}
+.rdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.rname{font-weight:600;font-size:11px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--navy)}
+.rdist{font-size:9px;color:var(--sub);flex-shrink:0}
+.map-area{background:#e8edf2;border:1px solid var(--brd);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;min-height:300px;
+  box-shadow:var(--shadow)}
+.map-empty{color:var(--sub);font-size:12px;text-align:center;padding:20px}
+.day-route{background:var(--surf);border:1px solid var(--brd);border-radius:10px;
+  padding:11px;margin-top:8px;box-shadow:var(--shadow)}
+.day-stop{display:flex;align-items:center;gap:7px;padding:6px 0;
+  border-bottom:1px solid var(--brd2);font-size:11px}
+.day-stop:last-child{border-bottom:none}
+.stopnum{width:20px;height:20px;border-radius:50%;background:var(--ora);
+  color:#fff;font-weight:700;font-size:9px;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0}
+.route-btn{background:var(--ora);color:#fff;border:none;border-radius:8px;
+  padding:9px;font-size:11px;font-weight:700;cursor:pointer;width:100%;margin-top:8px;font-family:inherit}
+.route-btn:hover{background:#e86744}
+.route-btn.sec{background:#f5f8fa;color:var(--sub2);border:1px solid var(--brd);margin-top:5px}
+/* MODAL */
+#mbg{position:fixed;inset:0;background:rgba(45,62,80,.6);z-index:100;
+  display:none;backdrop-filter:blur(4px)}
+#mbg.on{display:flex;align-items:flex-end;justify-content:center}
+@media(min-width:600px){#mbg.on{align-items:center}}
+#modal{background:#fff;border:1px solid var(--brd);border-radius:16px 16px 0 0;
+  width:100%;max-width:540px;padding:18px;max-height:90vh;overflow-y:auto;
+  box-shadow:0 -4px 24px rgba(45,62,80,.15)}
+@media(min-width:600px){#modal{border-radius:16px;box-shadow:0 8px 40px rgba(45,62,80,.18)}}
+.mh{width:36px;height:4px;background:var(--brd);border-radius:2px;margin:0 auto 14px}
+.mname{font-size:17px;font-weight:700;margin-bottom:2px;color:var(--navy)}
+.mloc{font-size:10px;color:var(--sub);margin-bottom:12px;font-weight:500}
+.mphsec{background:#f5f8fa;border:1px solid var(--brd2);border-radius:10px;padding:12px;margin-bottom:11px}
+.mphl{font-size:8px;color:var(--sub);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px;font-weight:700}
+.mphnum{font-size:20px;font-weight:700;color:var(--blu);margin-bottom:8px}
+.mphnum.none{font-size:12px;color:var(--sub);font-weight:400;font-style:italic}
+.mphacts{display:flex;gap:6px;flex-wrap:wrap}
+.mcall{background:var(--grn);color:#fff;border:none;border-radius:8px;padding:8px 16px;
+  font-size:11px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px;font-family:inherit}
+.msms{background:#eaf6f9;color:var(--blu);border:1px solid #b3dce7;border-radius:8px;
+  padding:8px 12px;font-size:11px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px}
+.mgoog{background:#f5f8fa;color:var(--sub2);border:1px solid var(--brd);border-radius:8px;
+  padding:8px 12px;font-size:11px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px}
+.mhours{font-size:9px;color:var(--sub);margin-top:5px}
+.micebox{background:#e8faf8;border:1px solid #b3ece6;border-radius:9px;padding:11px;margin-bottom:11px}
+.msect{font-size:9px;color:var(--sub2);letter-spacing:.07em;text-transform:uppercase;
+  margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid var(--brd2);font-weight:700}
+.pitch{background:#f5f8fa;border:1px solid var(--brd2);border-radius:8px;padding:10px;
+  font-size:11px;color:var(--sub2);line-height:1.7;margin-bottom:9px}
+.pitch b{color:var(--navy)}
+.ogrid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:8px}
+.obtn{padding:7px 4px;border-radius:7px;border:1px solid var(--brd);
+  background:var(--surf);color:var(--sub2);font-size:10px;font-weight:600;
+  cursor:pointer;text-align:center;transition:.12s;font-family:inherit}
+.obtn:hover{border-color:#c5d1de;background:#f5f8fa}
+.obtn.on{border-color:var(--ora);background:#fff7f5;color:var(--ora)}
+.ntxt{width:100%;background:#f5f8fa;border:1px solid var(--brd);border-radius:8px;
+  padding:8px;color:var(--txt);font-size:11px;resize:none;outline:none;
+  line-height:1.5;font-family:inherit}
+.ntxt:focus{border-color:var(--blu)}
+.mfacts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.fact{background:#f5f8fa;border:1px solid var(--brd2);border-radius:7px;padding:8px 9px}
+.fl{font-size:8px;color:var(--sub);letter-spacing:.05em;text-transform:uppercase;margin-bottom:2px;font-weight:600}
+.fv{font-weight:700;font-size:11px;color:var(--navy)}
+.fv.r{color:var(--cb)}.fv.o{color:var(--hot)}.fv.g{color:var(--grn)}.fv.b{color:var(--blu)}
+.mhist{background:#f5f8fa;border-radius:8px;padding:9px}
+.hi{padding:4px 0;border-bottom:1px solid var(--brd2);font-size:10px;color:var(--txt)}
+.hi:last-child{border-bottom:none}
+.psect{margin-bottom:16px}
+.pst{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  margin-bottom:7px;display:flex;align-items:center;gap:6px;color:var(--navy)}
+.pct{background:var(--brd2);color:var(--sub2);border-radius:20px;padding:1px 8px;font-size:9px;font-weight:700}
+.pitem{background:var(--surf);border:1px solid var(--brd);border-radius:8px;
+  padding:9px 12px;margin-bottom:5px;display:flex;align-items:center;gap:8px;cursor:pointer;
+  box-shadow:var(--shadow);transition:.12s}
+.pitem:hover{box-shadow:var(--shadow-md);border-color:#c5d1de}
+.pdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.piname{font-weight:600;font-size:11px;flex:1;color:var(--navy)}
+.piph{font-size:10px;color:var(--blu);font-weight:600}
+.dc{background:var(--surf);border:1px solid var(--brd);border-radius:10px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow)}
+.dct{font-weight:700;font-size:13px;margin-bottom:8px;color:var(--navy)}
+.ds{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--brd2);font-size:11px}
+.ds:last-child{border-bottom:none}
+.dsv{font-weight:700;color:var(--blu)}
+.ibox{background:#f0f9fb;border:1px solid #b3dce7;border-radius:8px;
+  padding:11px;font-size:11px;color:var(--sub2);line-height:1.8}
+.ibox code{background:#dff0f5;padding:2px 6px;border-radius:4px;
+  font-family:monospace;font-size:10px;color:var(--blu)}
+.ibox b{color:var(--navy)}
+.phinput{background:#f5f8fa;border:1px solid var(--brd);border-radius:7px;
+  padding:7px 10px;color:var(--txt);font-size:11px;outline:none;width:100%;margin-bottom:7px;font-family:inherit}
+.phinput:focus{border-color:var(--blu)}
+.xbtn{background:var(--ora);color:#fff;border:none;
+  border-radius:8px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer;width:100%;margin-top:6px;font-family:inherit}
+.xbtn:hover{background:#e86744}
+.dbtn{background:#fff;color:var(--cb);border:1px solid #f5c6c6;
+  border-radius:8px;padding:9px 12px;font-size:11px;font-weight:600;cursor:pointer;width:100%;margin-top:5px;font-family:inherit}
+.empty{text-align:center;padding:36px 20px;color:var(--sub)}
+.ei{font-size:32px;margin-bottom:10px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}.pulse{animation:pulse 2s ease-in-out infinite}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--brd);border-radius:2px}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);
+  background:var(--navy);border-radius:10px;
+  padding:9px 16px;font-size:11px;color:#fff;transition:transform .2s;z-index:200;white-space:nowrap;
+  box-shadow:0 4px 16px rgba(45,62,80,.25);font-weight:500}
+#toast.on{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="logo">
+      <div class="logo-icon">&#x1F9CA;</div>
+      <div><div class="logo-name">Pinellas Ice Co</div>
+        <div style="font-size:8px;color:var(--sub);letter-spacing:.04em">PROSPECT TOOL &bull; %%DATE%%</div>
+      </div>
+    </div>
+    <div class="hchips">
+      <span class="hc cb" onclick="setF('CALLBACK')">&#x25CF; %%NCB%% Callback</span>
+      <span class="hc ht" onclick="setF('HOT')">&#x25CF; %%NHOT%% Hot</span>
+      <span class="hc wm" onclick="setF('WARM')">&#x25CF; %%NWARM%% Warm</span>
+      <span class="hc ic">&#x1F9CA; %%NCHRON%% Chronic</span>
+      <span class="hc rt" onclick="sw('route')">&#x1F5FA; Route</span>
+    </div>
+    <div class="srch"><span class="si">&#x1F50D;</span>
+      <input type="text" id="si" placeholder="Search&#x2026;" oninput="onS()">
+    </div>
+  </header>
+  <nav class="tabs">
+    <div class="tab on"  onclick="sw('today')">&#x1F4CB; Today</div>
+    <div class="tab"     onclick="sw('all')">&#x1F4CD; All</div>
+    <div class="tab"     onclick="sw('route')">&#x1F5FA; Route</div>
+    <div class="tab"     onclick="sw('pipe')">&#x1F4CA; Pipeline</div>
+    <div class="tab"     onclick="sw('data')">&#x2699; Data</div>
+  </nav>
+
+  <!-- TODAY -->
+
+  <div class="panel on" id="p-today">
+    <div class="fbar">
+      <select id="tc" onchange="rT()"><option value="">All Counties</option><option>Pinellas</option><option>Hillsborough</option><option>Pasco</option><option>Citrus</option><option>Hernando</option><option>Polk</option><option>Sumter</option></select>
+      <select id="tp" onchange="rT()"><option value="">All Priorities</option><option>CALLBACK</option><option>HOT</option><option>WARM</option><option>WATCH</option></select>
+      <select id="ti" onchange="rT()">
+        <option value="">All Ice Profiles</option>
+        <option value="chronic">Chronic (2+ flagged)</option>
+        <option value="confirmed">Confirmed ice viol</option>
+        <option value="high_ice">High ice usage (bars/grills)</option>
+        <option value="phone">Has phone number</option>
+      </select>
+      <label style="font-size:10px;color:var(--sub);display:flex;align-items:center;gap:4px;cursor:pointer">
+        <input type="checkbox" id="thc" onchange="rT()"> Hide contacted
+      </label>
+      <span class="fcnt" id="tcnt"></span>
+    </div>
+    <div class="grid" id="tgrid"></div>
+  </div>
+
+  <!-- ALL -->
+
+  <div class="panel" id="p-all">
+    <div class="fbar">
+      <select id="ac" onchange="rA()"><option value="">All Counties</option><option>Pinellas</option><option>Hillsborough</option><option>Pasco</option><option>Citrus</option><option>Hernando</option><option>Polk</option><option>Sumter</option></select>
+      <select id="ap" onchange="rA()"><option value="">All Priorities</option><option>CALLBACK</option><option>HOT</option><option>WARM</option><option>WATCH</option></select>
+      <select id="as_" onchange="rA()"><option value="">All Status</option><option value="not_contacted">Not Contacted</option><option value="interested">Interested</option><option value="scheduled">Scheduled</option><option value="voicemail">Voicemail</option><option value="no_answer">No Answer</option><option value="not_interested">Not Interested</option><option value="follow_up">Follow Up</option></select>
+      <select id="ai" onchange="rA()"><option value="">All Ice</option><option value="chronic">Chronic</option><option value="confirmed">Confirmed</option></select>
+      <span class="fcnt" id="acnt"></span>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="ptbl">
+        <thead><tr>
+          <th>Business</th><th>County</th><th>Phone</th><th>Priority</th>
+          <th>Days</th><th>Ice Profile</th><th>Codes</th><th>H/T</th>
+          <th>Pred.Next</th><th>Status</th><th></th>
+        </tr></thead>
+        <tbody id="abody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ROUTE -->
+
+  <div class="panel" id="p-route">
+    <div class="route-wrap">
+      <div class="rsidebar">
+        <div class="rcontrols">
+          <div class="rtitle">&#x1F5FA;&#xFE0F; Build Your Day Route</div>
+          <div class="fbar" style="margin-bottom:7px">
+            <select id="rc" onchange="rRoute()"><option value="">All Counties</option><option>Pinellas</option><option>Hillsborough</option><option>Pasco</option></select>
+            <select id="rp" onchange="rRoute()"><option value="">All Priorities</option><option>CALLBACK</option><option>HOT</option><option>WARM</option></select>
+          </div>
+          <div style="display:flex;gap:5px;margin-bottom:7px;align-items:center;flex-wrap:wrap">
+            <input id="rzip" type="text" placeholder="ZIP code" maxlength="5"
+              style="background:#060810;border:1px solid var(--brd);border-radius:6px;
+              padding:4px 7px;color:var(--txt);font-size:11px;outline:none;width:75px"
+              oninput="rRoute()">
+            <select id="rrad" onchange="rRoute()"
+              style="background:var(--surf);border:1px solid var(--brd);border-radius:6px;
+              padding:4px 6px;color:var(--txt);font-size:11px;outline:none">
+              <option value="5">5 mi</option><option value="8" selected>8 mi</option>
+              <option value="12">12 mi</option><option value="20">20 mi</option><option value="999">All</option>
+            </select>
+          </div>
+          <div style="font-size:9px;color:var(--sub);margin-bottom:5px" id="rhint">
+            Tap a prospect below to add it to your route
+          </div>
+        </div>
+        <div class="rlist" id="rlist"></div>
+        <div class="day-route" id="day-route" style="display:none">
+          <div style="font-weight:700;font-size:11px;margin-bottom:6px">
+            &#x1F4CD; Route  -  <span id="stopcnt">0</span> stops
+          </div>
+          <div id="day-stops"></div>
+          <button class="route-btn" onclick="openMaps()">Open in Google Maps &#x2192;</button>
+          <button class="route-btn sec" onclick="clearRoute()">Clear Route</button>
+        </div>
+      </div>
+      <div class="map-area" id="map-area">
+        <div class="map-empty">
+          <div style="font-size:36px;margin-bottom:10px">&#x1F5FA;&#xFE0F;</div>
+          <div>Select a county or ZIP code<br>to see nearby prospects</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PIPELINE -->
+
+  <div class="panel" id="p-pipe"><div id="pipec"></div></div>
+
+  <!-- DATA -->
+
+  <div class="panel" id="p-data">
+    <div class="dc">
+      <div class="dct">&#x1F4E6; Dataset &mdash; %%DATE%%</div>
+      <div class="ds"><span>Total prospects</span><span class="dsv">%%TOTAL%%</span></div>
+      <div class="ds"><span>Data source</span><span class="dsv">FL DBPR District 3 (live)</span></div>
+      <div class="ds"><span>Refreshes</span><span class="dsv">Automatically every week</span></div>
+      <div class="ds"><span>Chronic ice offenders</span><span class="dsv">%%NCHRON%%</span></div>
+      <div class="ds"><span>Confirmed ice violators</span><span class="dsv">%%NCONF%%</span></div>
+      <div class="ds"><span>With phone number</span><span class="dsv">%%NPHONE%%</span></div>
+      <div class="ds"><span>On map (geocoded)</span><span class="dsv">%%NGEO%%</span></div>
+      <div class="ds"><span>Callback urgent</span><span class="dsv">%%NCB%%</span></div>
+    </div>
+    <div class="dc">
+      <div class="dct">&#x1F504; Rebuilding With New Data</div>
+      <div class="ibox">
+        <b>Step 1 &mdash; Large XLS/XLSX file?</b> Convert it first:<br>
+        <code>python convert_to_csv.py yourfile.xlsx</code><br><br>
+        <b>Step 2 &mdash; Rebuild the tool:</b><br>
+        <code>python build.py file1.csv file2.csv</code><br>
+        or just <code>python build.py</code> to auto-find CSVs in the folder.<br><br>
+        Your call log and phone numbers carry over automatically every time.
+      </div>
+    </div>
+    <div class="dc">
+      <div class="dct">&#x2795; Add / Edit a Phone Number</div>
+      <input class="phinput" id="ph-id"  type="text" placeholder="License ID (shown on each card)">
+      <input class="phinput" id="ph-num" type="tel"  placeholder="Phone number, e.g. +1 727-555-1234">
+      <input class="phinput" id="ph-hrs" type="text" placeholder="Hours (optional) e.g. Mon-Fri 11am-9pm">
+      <button class="xbtn" style="margin-top:0" onclick="addPhone()">Save Phone Number</button>
+    </div>
+    <div class="dc">
+      <div class="dct">&#x1F4E4; Export &amp; Reset</div>
+      <div style="margin-bottom:8px">
+        <div class="dct">&#x1F4CA; Model Accuracy</div>
+        <div class="ibox">
+          <b>Prediction accuracy (days until next inspection):</b><br>
+          Within 30 days: ~52% &bull; Within 45 days: ~68% &bull; Within 60 days: ~78%<br><br>
+          The model explains ~57% of timing variance (R&sup2;=0.57). The biggest signal is
+          inspection outcome &mdash; emergency orders bring inspectors back in days,
+          clean inspections mean 3-6 months. Use predictions as <b>directional</b> guidance,
+          not precise dates.<br><br>
+          <b>Ice machine scoring</b> uses FL violation codes V14, V22, V50 (food contact surfaces)
+          &mdash; businesses flagged repeatedly are your strongest leads regardless of timing.
+        </div>
+      </div>
+      <button class="xbtn" onclick="exportCSV()">Export Pipeline to CSV</button>
+      <button class="dbtn" onclick="clrLog()">Clear All Call Log Data</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+
+<div id="mbg" onclick="closeM(event)">
+  <div id="modal">
+    <div class="mh"></div>
+    <div class="mname" id="mn"></div>
+    <div class="mloc"  id="ml"></div>
+    <div class="mphsec">
+      <div class="mphl">CONTACT</div>
+      <div class="mphnum" id="mph"></div>
+      <div class="mphacts" id="mpa"></div>
+      <div id="mhrs" class="mhours"></div>
+      <div id="mrat" style="font-size:9px;color:#555;margin-top:3px"></div>
+    </div>
+    <div id="mice" style="margin-bottom:10px"></div>
+    <div style="margin-bottom:10px">
+      <div class="msect">PITCH GUIDE</div>
+      <div style="display:flex;gap:5px;margin-bottom:6px">
+        <button id="btn-phone" onclick="setPitchMode('phone')"
+          style="flex:1;padding:6px;border-radius:7px;border:1px solid var(--blu);background:#0a84ff22;color:var(--blu);font-size:10px;font-weight:700;cursor:pointer">
+          &#x1F4DE; Phone Call
+        </button>
+        <button id="btn-walkin" onclick="setPitchMode('walkin')"
+          style="flex:1;padding:6px;border-radius:7px;border:1px solid var(--brd);background:transparent;color:var(--sub);font-size:10px;font-weight:700;cursor:pointer">
+          &#x1F6B6; Cold Walk-In
+        </button>
+      </div>
+      <div class="pitch" id="mpitch"></div>
+      <div class="pitch" id="mwalkin" style="display:none;border-color:#1a3060;color:#5a8090"></div>
+    </div>
+    <div style="margin-bottom:10px">
+      <div class="msect">LOG THIS CONTACT</div>
+      <div class="ogrid">
+        <button class="obtn" data-o="no_answer"      onclick="selO('no_answer')">No Answer</button>
+        <button class="obtn" data-o="voicemail"       onclick="selO('voicemail')">Voicemail</button>
+        <button class="obtn" data-o="not_interested"  onclick="selO('not_interested')">Not Interested</button>
+        <button class="obtn" data-o="follow_up"       onclick="selO('follow_up')">Follow Up</button>
+        <button class="obtn" data-o="interested"      onclick="selO('interested')">Interested</button>
+        <button class="obtn" data-o="scheduled"       onclick="selO('scheduled')">Scheduled!</button>
+      </div>
+      <textarea class="ntxt" id="mnotes" rows="2" placeholder="Notes&#x2026;"></textarea>
+      <button class="btn blog" style="width:100%;margin-top:6px;padding:8px" onclick="saveL()">Save Log Entry</button>
+    </div>
+    <div style="margin-bottom:10px"><div class="msect">INSPECTION DETAILS</div><div class="mfacts" id="mfacts"></div></div>
+    <div id="mhs" style="display:none;margin-bottom:10px">
+      <div class="msect">CONTACT HISTORY</div><div class="mhist" id="mhist"></div>
+    </div>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+const P=%%DATA%%;
+const PHONES=%%PHONES%%;
+const ZIPS=%%ZIPS%%;
+
+const PITCHES={
+  callback:n=>`"Hi, is this <b>${n}</b>? I'm [Your Name] from Pinellas Ice Co  -  we clean and sanitize commercial ice machines locally. I'm reaching out because you recently had some health inspection issues. Ice machines are almost always part of callback inspections. We can get yours cleaned and documented before the inspector returns  -  usually takes about 2 hours. <b>Do you have time this week?</b>"`,
+  overdue_urgent:n=>`"Hi, this is [Your Name] from Pinellas Ice Co. We specialize in ice machine cleaning in Pinellas and Hillsborough. I know dealing with inspection issues is stressful  -  we clean and document quickly and give you a service report you can show the inspector. <b>Can we schedule something this week?</b>"`,
+  overdue:n=>`"Hi, is this <b>${n}</b>? This is [Your Name] from Pinellas Ice Co  -  commercial ice machine cleaning. Ice machines are one of the most flagged items when inspectors return. <b>Is this a good time to talk?</b>"`,
+  pre_hot:n=>`"Hi, this is [Your Name] from Pinellas Ice Co. Your next routine health inspection could be coming up very soon  -  ice machines are one of the most flagged items. We do a full clean and sanitize with a service report. <b>Want to get squared away before the inspector shows up?</b>"`,
+  pre_warm:n=>`"Hi, is this <b>${n}</b>? My name is [Your Name] from Pinellas Ice Co. You have some lead time before your next inspection  -  perfect window to get a service on the books. <b>Would you be open to scheduling this month?</b>"`,
+  high_risk:n=>`"Hi, this is [Your Name] from Pinellas Ice Co. We clean ice machines for restaurants in the area and based on your inspection history I wanted to reach out specifically. <b>Has anyone talked to you recently about your ice machine maintenance?</b>"`,
+  routine:n=>`"Hi, this is [Your Name] from Pinellas Ice Co. We clean and sanitize commercial ice machines  -  FDA recommends service every 6 months. We're in your area. <b>Is this something that would be useful for you?</b>"`,
+};
+const WALKIN={
+  callback:n=>`<b>Opening (to staff/gatekeeper):</b><br>&#x201C;Hey, is the manager around for one second? I&#39;m [Name] from Pinellas Ice Co. I&#39;ll be quick.&#x201D;<br><br><b>To manager:</b><br>&#x201C;Hi  -  briefly: you had a callback inspection recently, and ice machines are almost always what inspectors target on the return visit. I clean and certify them, takes about 90 minutes, you get a dated service report to show the inspector. I&#39;m in the area this week. <b>Want me to take a look today?</b>&#x201D;<br><br><i>If hesitant:</i> &#x201C;No pressure  -  I can open it up and tell you what an inspector would flag. Five minutes, free.&#x201D;`,
+  overdue_urgent:n=>`<b>Opening:</b><br>&#x201C;Hey, is the manager in? I&#39;ll be really quick.&#x201D;<br><br><b>To manager:</b><br>&#x201C;Hi, I&#39;m [Name] from Pinellas Ice Co. Your location came up because you have an open inspection issue. Ice machines get hit hard on follow-up visits. I can clean and document yours before they return. <b>Do you have 90 minutes this week?</b>&#x201D;`,
+  pre_hot:n=>`<b>Opening:</b><br>&#x201C;Hi, is the owner or manager available? Quick question about your health inspection.&#x201D;<br><br><b>To manager:</b><br>&#x201C;Hey, I&#39;m [Name] from Pinellas Ice Co. Based on your inspection history your next one is probably coming up soon. Ice machines are one of the top-cited items  -  mold, mineral scale, slime. I service and document them so you&#39;re covered. <b>Can I show you what inspectors typically look for?</b>&#x201D;<br><br><i>Close:</i> &#x201C;I can come back at a time that works. Service is $149 and I leave you a dated report.&#x201D;`,
+  pre_warm:n=>`<b>Opening:</b><br>&#x201C;Hi, is the manager around for a minute?&#x201D;<br><br><b>To manager:</b><br>&#x201C;Hey, I&#39;m [Name] from Pinellas Ice Co  -  I clean commercial ice machines. You&#39;ve got some time before your next inspection, which is actually the perfect window  -  no last-minute stress. <b>Is ice machine maintenance on your radar?</b>&#x201D;`,
+  high_risk:n=>`<b>Opening:</b><br>&#x201C;Hi, is the owner or manager in? I have some information about your inspection history.&#x201D;<br><br><b>To manager:</b><br>&#x201C;Hi, I&#39;m [Name] from Pinellas Ice Co. Your location has had some ice-related violations flagged. This is exactly what inspectors look for on follow-ups. <b>When was your machine last serviced?</b>&#x201D;`,
+  routine:n=>`<b>Opening:</b><br>&#x201C;Hi, is the manager available?&#x201D;<br><br><b>To manager:</b><br>&#x201C;Hey, I&#39;m [Name] from Pinellas Ice Co  -  I clean commercial ice machines. FDA recommends every 6 months. Inspectors are specifically trained to look at machine interiors now. <b>When was yours last serviced?</b>&#x201D;<br><br><i>Let their answer guide you. If they don&#39;t know  -  that&#39;s your opening.</i>`,
+  overdue:n=>`<b>Opening:</b><br>&#x201C;Hi, is the manager around?&#x201D;<br><br><b>To manager:</b><br>&#x201C;Hey, I&#39;m [Name] from Pinellas Ice Co. Your location came up because of some past inspection flags. Ice machines are one of the most targeted items when inspectors return. <b>Do you mind if I take a quick look at yours?</b>&#x201D;`,
+};
+const OI={no_answer:'No Answer',voicemail:'Voicemail',not_interested:'Not Interested',follow_up:'Follow Up',interested:'Interested',scheduled:'Scheduled!',service_done:'Service Done ✓'};
+const PO={CALLBACK:0,HOT:1,WARM:2,WATCH:3,LATER:4};
+const PC={CALLBACK:'var(--cb)',HOT:'var(--hot)',WARM:'var(--warm)',WATCH:'var(--watch)',LATER:'var(--sub)'};
+const ICN={V14:'food contact surfaces (V14)',V22:'non-PHF surfaces (V22)',V50:'food contact surfaces (V50)',V37:'equipment repair (V37)',V23:'utensil sanitation (V23)'};
+
+function dL(d){return d<0?Math.abs(d)+'d overdue':d===0?'TODAY':'+'+d+'d';}
+function dC(d,p){return p==='CALLBACK'||d<0?'u':d<=21?'h':d<=45?'w':'';}
+function stars(r){return r>0?'\u2605'.repeat(Math.round(r))+' '+r+'/5':'';}
+function enc(s){return encodeURIComponent(s);}
+function hav(la1,lo1,la2,lo2){
+  const R=3958.8,a=Math.sin((la2-la1)*Math.PI/360)**2+
+    Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin((lo2-lo1)*Math.PI/360)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+let log={},tab='today',selOut=null,cur=null,Q='',route=[],routeSet=new Set(),mapPros=[];
+
+function lLoad(){try{log=JSON.parse(localStorage.getItem('pic_v4')||'{}')||{};}catch(e){log={};}}
+function lSave(){localStorage.setItem('pic_v4',JSON.stringify(log));}
+function phLoad(){
+  let saved={};try{saved=JSON.parse(localStorage.getItem('pic_phones')||'{}')||{};}catch(e){}
+  P.forEach(p=>{const ph=saved[p.id]||PHONES[p.id];if(ph&&ph.phone){p.phone=ph.phone;p.rating=ph.rating||0;p.hours=ph.hours||'';}});
+}
+function phSave(id,phone,hours,rating){
+  let s={};try{s=JSON.parse(localStorage.getItem('pic_phones')||'{}')||{};}catch(e){}
+  s[id]={phone,hours,rating};localStorage.setItem('pic_phones',JSON.stringify(s));
+  const p=P.find(x=>x.id===id);if(p){p.phone=phone;p.hours=hours;p.rating=rating;}
+}
+function getLC(id){const e=log[id]||[];return e.length?e[e.length-1]:null;}
+function isC(id){return(log[id]||[]).length>0;}
+
+function fp(opts){
+  return P.filter(p=>{
+    if(Q&&!p.name.toLowerCase().includes(Q)&&!p.city.toLowerCase().includes(Q))return false;
+    if(opts.county&&p.county!==opts.county)return false;
+    if(opts.pri&&p.priority!==opts.pri)return false;
+    if(opts.st){const l=getLC(p.id)?.outcome;if(opts.st==='not_contacted'){if(isC(p.id))return false;}else if(l!==opts.st)return false;}
+    if(opts.ice){if(opts.ice==='chronic'&&!p.chronic_ice)return false;if(opts.ice==='confirmed'&&!p.confirmed_ice)return false;if(opts.ice==='high_ice'&&p.ice_usage!=='high')return false;if(opts.ice==='phone'&&!p.phone)return false;}
+    if(opts.hc&&isC(p.id))return false;
+    return true;
+  }).sort((a,b)=>(PO[a.priority]??5)-(PO[b.priority]??5)||b.score-a.score);
+}
+
+function sw(t){
+  tab=t;
+  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('on',['today','all','route','pipe','data'][i]===t));
+  document.querySelectorAll('.panel').forEach(el=>el.classList.remove('on'));
+  document.getElementById('p-'+t).classList.add('on');
+  if(t==='today')rT();else if(t==='all')rA();else if(t==='route')rRoute();else if(t==='pipe')rPipe();
+}
+function setF(p){sw('today');document.getElementById('tp').value=p;rT();}
+function onS(){Q=document.getElementById('si').value.toLowerCase().trim();if(tab==='today')rT();else if(tab==='all')rA();}
+
+function cardHTML(p){
+  const last=getLC(p.id);
+  // String concat only - no nested backtick templates (Safari compatibility)
+  const phH=p.phone
+    ?('<div class="phrow"><span class="phnum">'+p.phone+'</span><a href="tel:'+p.phone.replace(/\s/g,'')+'\" class="abtn call-a" onclick="event.stopPropagation()">Call</a></div>')
+    :('<div class="phrow"><span class="phnum none">No phone on file</span><a href="https://www.google.com/search?q='+enc(p.name+' '+p.city+' FL phone')+'" target="_blank" class="abtn find-a" onclick="event.stopPropagation()">Find</a></div>');
+  const iceH=p.chronic_ice
+    ?('<div class="icebadge chronic">&#x1F9CA; CHRONIC  -  '+p.direct_ice_count+'x ice violations</div>')
+    :p.confirmed_ice?'<div class="icebadge confirmed">&#x2713; Ice machine violation on record</div>':'';
+  const codesH=(p.fired_codes||[]).length?('<div style="font-size:9px;color:#2a4860;margin-bottom:4px">Codes: '+(p.fired_codes||[]).join(', ')+'</div>'):'';
+  const insH=p.ice_insight?('<div class="insight">'+p.ice_insight+'</div>'):'';
+  const cbH=(p.priority==='CALLBACK'&&p.est_callback_date)
+    ?('<div style="font-size:9px;font-weight:600;padding:3px 8px;border-radius:5px;margin-bottom:5px;background:#250808;color:var(--cb);border:1px solid #401010">&#x26A0;&#xFE0F; Est. callback: '+p.est_callback_date+(p.days_to_callback!=null?' ('+( p.days_to_callback<0?Math.abs(p.days_to_callback)+'d overdue':'+'+p.days_to_callback+'d')+')':'')+' </div>')
+    :'';
+  const hrH=p.hours?('<div style="font-size:9px;color:#1a3850;margin-bottom:4px">&#x1F550; '+p.hours+'</div>'):'';
+  const ratH=p.rating>0?('<div style="font-size:9px;color:#c08020;margin-bottom:3px">'+stars(p.rating)+'</div>'):'';
+  const lastH=last
+    ?('<div class="lastc hc">Last: '+(OI[last.outcome]||last.outcome)+' &middot; '+last.date+(last.notes?'  -  '+last.notes.slice(0,25):'')+' </div>')
+    :'<div class="lastc">Not yet contacted</div>';
+  const trendH=p.trending_worse?'<div class="mi"><div class="ml">Trend</div><div class="mv bad">&#x2197; Worse</div></div>':'';
+  const rtBtn=p.lat?('<button class="btn brt" onclick="event.stopPropagation();addToRoute('+p.id+')">+Route</button>'):'';
+  const tc={PLATINUM:'#7c3aed',GOLD:'#d97706',SILVER:'#64748b',BRONZE:'#92400e'};
+  const tbg={PLATINUM:'#ede9fe',GOLD:'#fef3c7',SILVER:'#f1f5f9',BRONZE:'#fef3c7'};
+  const tierH=p.account_tier&&p.account_tier!=='COLD'?(' <span style="font-size:8px;font-weight:700;padding:2px 6px;border-radius:20px;background:'+(tbg[p.account_tier]||'#f1f5f9')+';color:'+(tc[p.account_tier]||'#64748b')+'">'+p.account_tier+'</span>'):'';
+  const revenueH=p.est_monthly?('<div style="font-size:10px;font-weight:700;color:#059669;margin-bottom:5px">$'+p.est_monthly+'/mo est. &bull; '+(p.est_machines>1?p.est_machines+' machines':'1 machine')+'</div>'):'';
+  return '<div class="card '+p.priority+(isC(p.id)?' done':'')+'" data-id="'+p.id+'" onclick="openM('+p.id+')">'
+    +'<div class="ctop"><div class="cname">'+p.name+tierH+'</div><span class="pbadge '+p.priority+'">'+p.priority+'</span></div>'
+    +'<div class="cloc">'+p.city+', '+p.county+'</div>'
+    +revenueH+phH+ratH+hrH+iceH+cbH+codesH+insH
+    +'<div class="cmeta">'
+      +'<div class="mi"><div class="ml">Days Until</div><div class="mv '+dC(p.days_until,p.priority)+'">'+dL(p.days_until)+'</div></div>'
+      +'<div class="mi"><div class="ml">H/T Viol</div><div class="mv '+(p.high_viol>=4?'u':p.high_viol>=2?'h':'')+'">'+p.high_viol+'/'+p.total_viol+'</div></div>'
+      +'<div class="mi"><div class="ml">Pred.Next</div><div class="mv" style="font-size:10px">'+p.pred_next+'</div></div>'
+      +trendH
+    +'</div>'
+    +lastH
+    +'<div class="cacts">'
+      +'<button class="btn blog" onclick="event.stopPropagation();openM('+p.id+')">Log Call</button>'
+      +'<button class="btn bskip" onclick="event.stopPropagation();skip('+p.id+')">Skip</button>'
+      +rtBtn
+    +'</div>'
+  +'</div>';
+}
+
+function rT(){
+  const opts={county:document.getElementById('tc').value,pri:document.getElementById('tp').value,
+    ice:document.getElementById('ti').value,hc:document.getElementById('thc').checked};
+  const all=fp(opts),data=all.slice(0,30);
+  document.getElementById('tcnt').textContent=all.length+' prospects';
+  const g=document.getElementById('tgrid');
+  if(!data.length){g.innerHTML='<div class="empty"><div class="ei">&#x2728;</div><div>No prospects match</div></div>';return;}
+  g.innerHTML=data.map(cardHTML).join('');
+  // Swipe left to skip, swipe right to open log
+  g.querySelectorAll('.card').forEach(card=>{
+    let tx=0,ty=0;
+    card.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+    card.addEventListener('touchend',e=>{
+      const dx=e.changedTouches[0].clientX-tx;
+      const dy=Math.abs(e.changedTouches[0].clientY-ty);
+      if(Math.abs(dx)>70&&dy<40){
+        const id=parseInt(card.getAttribute('data-id'));
+        if(!id)return;
+        if(dx<0)skip(id);
+        else openM(id);
+      }
+    },{passive:true});
+  });
+}
+
+function rA(){
+  const data=fp({county:document.getElementById('ac').value,pri:document.getElementById('ap').value,
+    st:document.getElementById('as_').value,ice:document.getElementById('ai').value});
+  document.getElementById('acnt').textContent=data.length+' records';
+  document.getElementById('abody').innerHTML=data.map(p=>{
+    const last=getLC(p.id);
+    const phH=p.phone
+      ?('<a href="tel:'+p.phone.replace(/\s/g,'')+'\" class="tph" onclick="event.stopPropagation()">'+p.phone+'</a>')
+      :('<a href="https://www.google.com/search?q='+enc(p.name+' '+p.city+' FL phone')+'" target="_blank" class="tph none" onclick="event.stopPropagation()">Find</a>');
+    const iceH=p.chronic_ice?'<span style="color:var(--grn);font-size:9px;font-weight:700">CHRONIC</span>':p.confirmed_ice?'<span style="color:#55c8ff;font-size:9px">confirmed</span>':'<span style="color:var(--brd)">&#x2014;</span>';
+    const dc=dC(p.days_until,p.priority);
+    return `<tr class="${isC(p.id)?'done':''}" onclick="openM(${p.id})">
+      <td><div class="tn">${p.name}</div><div class="ts">${p.city}</div></td>
+      <td style="font-size:10px;color:var(--sub)">${p.county}</td>
+      <td>${phH}</td>
+      <td><span class="pbadge ${p.priority}">${p.priority}</span></td>
+      <td><div class="td ${dc}">${dL(p.days_until)}</div></td>
+      <td>${iceH}</td>
+      <td style="font-size:9px;color:#2a4860">${(p.fired_codes||[]).join(',')||'&#x2014;'}</td>
+      <td style="font-size:11px;color:${p.high_viol>=3?'var(--cb)':p.high_viol>=1?'var(--hot)':'var(--sub)'}"><b>${p.high_viol}</b>/${p.total_viol}</td>
+      <td style="font-size:10px;color:var(--sub)">${p.pred_next}</td>
+      <td style="font-size:10px">${last?OI[last.outcome]||last.outcome:'&#x2014;'}</td>
+      <td><button class="btn blog" style="padding:3px 7px;font-size:9px" onclick="event.stopPropagation();openM(${p.id})">Log</button></td>
+    </tr>`;
+  }).join('');
+}
+
+// ROUTE
+function rRoute(){
+  const county=document.getElementById('rc').value;
+  const pri=document.getElementById('rp').value;
+  const zip=document.getElementById('rzip').value.trim();
+  const rad=parseFloat(document.getElementById('rrad').value)||999;
+  let data=P.filter(p=>p.lat&&p.lon);
+  if(county)data=data.filter(p=>p.county===county);
+  if(pri)data=data.filter(p=>p.priority===pri);
+  if(zip.length===5&&ZIPS[zip]){
+    const [clat,clon]=ZIPS[zip];
+    data=data.map(p=>({...p,_d:hav(clat,clon,p.lat,p.lon)}))
+      .filter(p=>p._d<=rad)
+      .sort((a,b)=>(PO[a.priority]??5)-(PO[b.priority]??5)||a._d-b._d);
+    document.getElementById('rhint').textContent=`${data.length} prospects within ${rad}mi of ${zip}`;
+  }else{
+    data.sort((a,b)=>(PO[a.priority]??5)-(PO[b.priority]??5)||b.score-a.score);
+    document.getElementById('rhint').textContent=`${data.length} geocoded prospects  -  enter ZIP to filter by area`;
+  }
+  mapPros=data.slice(0,50);
+  renderRList();renderMap();
+}
+
+function renderRList(){
+  const el=document.getElementById('rlist');
+  if(!mapPros.length){el.innerHTML='<div style="font-size:11px;color:var(--sub);padding:8px">No geocoded prospects match</div>';return;}
+  el.innerHTML=mapPros.map(p=>`
+    <div class="rcard${routeSet.has(p.id)?' sel':''}" onclick="addToRoute(${p.id})">
+      <div class="rdot" style="background:${PC[p.priority]||'var(--sub)'}"></div>
+      <div style="flex:1;min-width:0">
+        <div class="rname" style="color:${routeSet.has(p.id)?'var(--ice)':'var(--txt)'}">${p.name}</div>
+        <div style="font-size:9px;color:var(--sub)">${p.city} &bull; ${p.priority} &bull; ${dL(p.days_until)}</div>
+        ${p.chronic_ice?'<div style="font-size:8px;color:var(--grn)">CHRONIC ICE</div>':''}
+      </div>
+      <div class="rdist">${p._d?p._d.toFixed(1)+'mi':''}</div>
+    </div>`).join('');
+}
+
+function renderMap(){
+  const area=document.getElementById('map-area');
+  if(!mapPros.length){
+    area.innerHTML='<div class="map-empty"><div style="font-size:36px;margin-bottom:10px">&#x1F5FA;&#xFE0F;</div><div>No prospects to map</div></div>';
+    if(window._lmap){window._lmap.remove();window._lmap=null;}
+    return;
+  }
+  // Init Leaflet map once
+  if(!window._lmap){
+    area.innerHTML='<div id="leaflet-map" style="width:100%;height:100%;border-radius:10px"></div>';
+    window._lmap=L.map('leaflet-map',{zoomControl:true,attributionControl:false});
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+      maxZoom:18,opacity:0.85
+    }).addTo(window._lmap);
+    window._lmarkers=L.layerGroup().addTo(window._lmap);
+  }
+  window._lmarkers.clearLayers();
+  const cols={CALLBACK:'#ff3b30',HOT:'#ff9f0a',WARM:'#ffd60a',WATCH:'#5e9eff',LATER:'#445066'};
+  const bounds=[];
+  mapPros.forEach(p=>{
+    const inR=routeSet.has(p.id);
+    const col=inR?'#00e5ff':cols[p.priority]||'#445066';
+    const r=inR?12:p.chronic_ice?10:8;
+    const marker=L.circleMarker([p.lat,p.lon],{
+      radius:r,color:col,fillColor:col,fillOpacity:0.85,weight:inR?3:1.5,
+      opacity:1
+    }).addTo(window._lmarkers);
+    marker.bindPopup(
+      '<b>'+p.name+'</b><br>'+p.city+' &bull; '+p.priority+'<br>'+dL(p.days_until)+
+      (p.seats?' &bull; '+p.seats+' seats':'')+
+      (p.est_monthly?' &bull; $'+p.est_monthly+'/mo':'')+
+      '<br><button onclick="addToRoute('+p.id+')" '+
+      'style="margin-top:4px;padding:3px 8px;border:none;border-radius:5px;background:'+col+';color:'+(p.priority==='WARM'?'#000':'#fff')+';font-size:10px;font-weight:700;cursor:pointer">'+
+      (routeSet.has(p.id)?'Remove from Route':'+Route')+'</button> '+
+      '<button onclick="openM('+p.id+')" '+
+      'style="margin-top:3px;padding:3px 8px;border:1px solid #333;border-radius:5px;background:#111;color:#fff;font-size:10px;cursor:pointer">Details</button>',
+      {maxWidth:220}
+    );
+    bounds.push([p.lat,p.lon]);
+  });
+  if(bounds.length)window._lmap.fitBounds(bounds,{padding:[20,20],maxZoom:13});
+}
+
+function addToRoute(id){
+  const p=P.find(x=>x.id===id);if(!p)return;
+  if(routeSet.has(id)){routeSet.delete(id);route=route.filter(r=>r.id!==id);}
+  else{if(route.length>=8){toast('Max 8 stops. Open in Maps first, then add more.');return;}routeSet.add(id);route.push(p);}
+  renderRList();renderMap();renderDayRoute();
+}
+function renderDayRoute(){
+  const dr=document.getElementById('day-route');
+  document.getElementById('stopcnt').textContent=route.length;
+  if(!route.length){dr.style.display='none';return;}
+  dr.style.display='block';
+  document.getElementById('day-stops').innerHTML=route.map((p,i)=>{
+    const ph=p.phone?('<a href="tel:'+p.phone.replace(/\s/g,'')+'\" style="font-size:10px;color:#55c8ff;text-decoration:none">'+p.phone+'</a>'):'';
+    return '<div class="day-stop">'
+      +'<div class="stopnum">'+(i+1)+'</div>'
+      +'<div style="flex:1">'
+        +'<div style="font-weight:600;font-size:11px">'+p.name+'</div>'
+        +'<div style="font-size:9px;color:var(--sub)">'+p.address+', '+p.city+'</div>'
+        +ph
+      +'</div>'
+      +'<span class="pbadge '+p.priority+'">'+p.priority+'</span>'
+      +'<button onclick="removeStop('+p.id+')" style="background:none;border:none;color:var(--sub);font-size:18px;cursor:pointer;padding:0 2px;line-height:1;flex-shrink:0">&#x2715;</button>'
+      +'</div>';
+  }).join('');
+}
+function openMaps(){
+  if(!route.length)return;
+  const url='https://www.google.com/maps/dir/'+route.filter(p=>p.address).map(p=>enc(p.address+', '+p.city+', FL '+p.zip)).join('/');
+  window.open(url,'_blank');
+}
+function clearRoute(){route=[];routeSet=new Set();renderRList();renderMap();renderDayRoute();}
+function removeStop(id){routeSet.delete(id);route=route.filter(r=>r.id!==id);renderRList();renderMap();renderDayRoute();}
+
+// MODAL
+function openM(id){
+  const p=P.find(x=>x.id===id);if(!p)return;
+  cur=p;selOut=null;
+  document.querySelectorAll('.obtn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('mnotes').value='';
+  document.getElementById('mn').textContent=p.name;
+  document.getElementById('ml').textContent=p.address+', '+p.city+', FL '+p.zip+' \u00b7 #'+p.id;
+  const pe=document.getElementById('mph'),ae=document.getElementById('mpa');
+  if(p.phone){
+    pe.textContent=p.phone;pe.className='mphnum';
+    const cl=p.phone.replace(/\\s/g,'');
+    ae.innerHTML=`<a href="tel:${cl}" class="mcall">Call Now</a><a href="sms:${cl}" class="msms">Text</a><a href="https://www.google.com/search?q=${enc(p.name+' '+p.city+' FL')}" target="_blank" class="mgoog">Google</a>`;
+  }else{
+    pe.textContent='No phone on file';pe.className='mphnum none';
+    ae.innerHTML=`<a href="https://www.google.com/search?q=${enc(p.name+' '+p.city+' FL phone number')}" target="_blank" class="mgoog">Find Phone</a><a href="https://maps.google.com/search?q=${enc(p.name+' '+p.address+' '+p.city+' FL')}" target="_blank" class="mgoog">Maps</a>`;
+  }
+  document.getElementById('mhrs').textContent=p.hours?'Hours: '+p.hours:'';
+  document.getElementById('mrat').textContent=p.rating>0?stars(p.rating):'';
+  const iceEl=document.getElementById('mice');
+  if(p.confirmed_ice||p.chronic_ice){
+    const codes=(p.fired_codes||[]).map(c=>ICN[c]||c).join(', ');
+    const parts=['<div class="micebox">'];
+    parts.push('<div style="font-size:8px;color:#013a18;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">&#x1F9CA; ICE MACHINE HISTORY</div>');
+    if(p.chronic_ice) parts.push('<div style="font-size:13px;font-weight:700;color:var(--grn);margin-bottom:3px">CHRONIC  -  flagged in '+p.direct_ice_count+' inspections</div>');
+    if(!p.chronic_ice&&p.confirmed_ice) parts.push('<div style="font-size:12px;color:#55c8ff;margin-bottom:3px">Confirmed ice machine violation on record</div>');
+    if(codes) parts.push('<div style="font-size:9px;color:#2a5a38;margin-bottom:3px">Violation codes: '+codes+'</div>');
+    if(p.ice_insight) parts.push('<div style="font-size:10px;color:#3a6a48;font-style:italic">'+p.ice_insight+'</div>');
+    parts.push('</div>');
+    iceEl.innerHTML=parts.join('');
+  }else iceEl.innerHTML='';
+  document.getElementById('mpitch').innerHTML=(PITCHES[p.pitch_type]||PITCHES.routine)(p.name);
+  document.getElementById('mwalkin').innerHTML=(WALKIN[p.pitch_type]||WALKIN.routine)(p.name);
+  document.getElementById('mfacts').innerHTML=[
+    ['Predicted Next',p.pred_next,''],['Days Until',dL(p.days_until),''],
+    ['High Violations',p.high_viol,p.high_viol>=4?'r':p.high_viol>=2?'o':''],
+    ['Total Violations',p.total_viol,''],['Last Inspected',p.last_insp,''],
+    ['Days Since Insp.',p.days_since_insp+'d',''],
+    ['Inspections on File',p.n_inspections,''],
+    ['Viol.Trend',p.trending_worse?'Getting Worse':'Stable',p.trending_worse?'r':'g'],
+    ['Seats',p.seats>0?p.seats:'Unknown',''],
+    ['Est. Machines',p.est_machines||1,''],
+    ['Est. Monthly',p.est_monthly?'$'+p.est_monthly:'','b'],
+    ['Account Tier',p.account_tier||'',''],
+    ['Est.Callback',p.est_callback_date||'N/A',''],
+    ['Days to Callback',p.days_to_callback!=null?(p.days_to_callback<0?Math.abs(p.days_to_callback)+'d overdue':'+'+p.days_to_callback+'d'):'N/A',p.days_to_callback!=null&&p.days_to_callback<=7?'r':p.days_to_callback!=null&&p.days_to_callback<=21?'o':''],
+  ].map(([l,v,c])=>`<div class="fact"><div class="fl">${l}</div><div class="fv ${c}">${v}</div></div>`).join('');
+  const hist=log[id]||[];
+  const hs=document.getElementById('mhs');
+  if(hist.length){hs.style.display='block';document.getElementById('mhist').innerHTML=[...hist].reverse().map(e=>{
+    const noteHtml=e.notes?('<div style="color:var(--sub);font-size:9px;margin-top:1px">'+e.notes+'</div>'):'';
+    return '<div class="hi">'+(OI[e.outcome]||e.outcome)+'<span style="color:var(--sub);font-size:9px"> &middot; '+e.date+'</span>'+noteHtml+'</div>';
+  }).join('');}
+  else hs.style.display='none';
+  document.getElementById('mbg').classList.add('on');
+}
+function closeM(e){if(e.target.id==='mbg')document.getElementById('mbg').classList.remove('on');}
+function setPitchMode(mode){
+  const phoneBtn=document.getElementById('btn-phone');
+  const walkinBtn=document.getElementById('btn-walkin');
+  const phoneDiv=document.getElementById('mpitch');
+  const walkinDiv=document.getElementById('mwalkin');
+  if(mode==='walkin'){
+    phoneDiv.style.display='none';walkinDiv.style.display='block';
+    phoneBtn.style.background='transparent';phoneBtn.style.color='var(--sub)';phoneBtn.style.borderColor='var(--brd)';
+    walkinBtn.style.background='#0a84ff22';walkinBtn.style.color='var(--blu)';walkinBtn.style.borderColor='var(--blu)';
+  }else{
+    phoneDiv.style.display='block';walkinDiv.style.display='none';
+    phoneBtn.style.background='#0a84ff22';phoneBtn.style.color='var(--blu)';phoneBtn.style.borderColor='var(--blu)';
+    walkinBtn.style.background='transparent';walkinBtn.style.color='var(--sub)';walkinBtn.style.borderColor='var(--brd)';
+  }
+}
+function selO(o){selOut=o;document.querySelectorAll('.obtn').forEach(b=>b.classList.toggle('on',b.dataset.o===o));}
+function saveL(){
+  if(!cur||!selOut){toast('Pick an outcome first');return;}
+  const notes=document.getElementById('mnotes').value.trim();
+  const e={outcome:selOut,date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),notes};
+  if(!log[cur.id])log[cur.id]=[];
+  log[cur.id].push(e);lSave();
+  document.getElementById('mbg').classList.remove('on');
+  toast(OI[selOut]+' logged');
+  if(tab==='today')rT();else if(tab==='all')rA();else if(tab==='pipe')rPipe();
+}
+function skip(id){
+  if(!log[id])log[id]=[];
+  log[id].push({outcome:'no_answer',date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),notes:'Skipped'});
+  lSave();rT();
+}
+
+// PIPELINE
+function rPipe(){
+  const grps={
+    scheduled:{l:'Scheduled / Booked',c:'#32d74b',ids:[]},
+    interested:{l:'Interested',c:'#0a84ff',ids:[]},
+    follow_up:{l:'Follow Up Needed',c:'#ffd60a',ids:[]},
+    voicemail:{l:'Voicemail Left',c:'#5e9eff',ids:[]},
+    no_answer:{l:'No Answer',c:'#445066',ids:[]},
+    not_interested:{l:'Not Interested',c:'#ff3b30',ids:[]},
+    service_done:{l:'Service Done',c:'#059669',ids:[]},
+  };
+  Object.entries(log).forEach(([id,entries])=>{if(!entries.length)return;const l=entries[entries.length-1];if(grps[l.outcome])grps[l.outcome].ids.push(parseInt(id));});
+  const pm={};P.forEach(p=>pm[p.id]=p);
+  const c=document.getElementById('pipec');
+  const hasAny=Object.values(grps).some(g=>g.ids.length>0);
+  if(!hasAny){c.innerHTML='<div class="empty"><div class="ei">&#x1F4DE;</div><div>Start logging calls to build your pipeline</div></div>';return;}
+  c.innerHTML=Object.entries(grps).map(([k,g])=>{
+    if(!g.ids.length)return'';
+    const items=g.ids.map(id=>{
+      const p=pm[id];if(!p)return'';
+      const last=(log[id]||[]).slice(-1)[0];
+      return '<div class="pitem" onclick="openM('+id+')">'
+        +'<div class="pdot" style="background:'+g.c+'"></div>'
+        +'<div style="flex:1">'
+          +'<div class="piname">'+p.name+'</div>'
+          +'<div style="font-size:9px;color:var(--sub)">'+p.city+', '+p.county+' &bull; '+dL(p.days_until)+' &bull; '+last.date+'</div>'
+          +(p.phone?('<div class="piph">'+p.phone+'</div>'):'')
+          +(last.notes?('<div style="font-size:9px;color:var(--sub);margin-top:1px">'+last.notes.slice(0,50)+'</div>'):'')
+        +'</div>'
+        +'<span class="pbadge '+p.priority+'">'+p.priority+'</span>'
+      +'</div>';
+    }).join('');
+    return `<div class="psect"><div class="pst" style="color:${g.c}">${g.l}<span class="pct">${g.ids.length}</span></div>${items}</div>`;
+  }).join('');
+}
+
+// ADD PHONE
+function addPhone(){
+  const id=parseInt(document.getElementById('ph-id').value.trim());
+  const phone=document.getElementById('ph-num').value.trim();
+  const hours=document.getElementById('ph-hrs').value.trim();
+  if(!id||!phone){toast('Enter a License ID and phone number');return;}
+  phSave(id,phone,hours,0);
+  document.getElementById('ph-id').value='';
+  document.getElementById('ph-num').value='';
+  document.getElementById('ph-hrs').value='';
+  toast('Phone saved for #'+id);
+  if(tab==='today')rT();
+}
+
+// EXPORT
+function exportCSV(){
+  const rows=[['Name','County','City','Phone','Hours','Rating','Priority','Days Until','Pred Next','High Viol','Total Viol','Ice Profile','Codes','Trend','Last Outcome','Date','Notes']];
+  P.forEach(p=>{
+    const l=getLC(p.id);
+    rows.push([p.name,p.county,p.city,p.phone||'',p.hours||'',p.rating||'',p.priority,
+      p.days_until,p.pred_next,p.high_viol,p.total_viol,
+      p.chronic_ice?'CHRONIC':p.confirmed_ice?'confirmed':'none',
+      (p.fired_codes||[]).join(';'),p.trending_worse?'worse':'stable',
+      l?OI[l.outcome]||l.outcome:'',l?l.date:'',l?l.notes:'']);
+  });
+  const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download='pic_prospects_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();toast('CSV exported');
+}
+function clrLog(){if(!confirm('Clear all call log data? This cannot be undone.'))return;log={};lSave();if(tab==='today')rT();if(tab==='pipe')rPipe();toast('Cleared');}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2200);}
+
+// INIT
+lLoad();phLoad();rT();
+</script>
+
+</body>
+</html>
+"""
+
+# ──────────────────────────────────────────────────────────────────────────────
+
+# ENTRY POINT
+
+# ──────────────────────────────────────────────────────────────────────────────
+
+def main():
+folder = Path(**file**).parent
+
+```
+if len(sys.argv) > 1:
+    arg = sys.argv[1]
+    if Path(arg).is_dir():
+        # Directory passed (e.g. "data/") -- find all CSV and XLSX files
+        data_dir = Path(arg)
+        csv_paths = (
+            sorted(data_dir.glob('*.csv')) +
+            sorted(data_dir.glob('*.xlsx')) +
+            sorted(data_dir.glob('*.xls'))
+        )
+        # Exclude the license extract from inspection data
+        csv_paths = [p for p in csv_paths if 'licenses' not in p.name.lower()
+                     and 'hrfood' not in p.name.lower()]
+        if not csv_paths:
+            print(f"\nNo inspection data files found in {data_dir}")
+            sys.exit(1)
+        print(f"Found {len(csv_paths)} file(s) in {data_dir}:")
+        for p in csv_paths:
+            print(f"  {p.name}")
+        print()
+    else:
+        csv_paths = sys.argv[1:]
+else:
+    # Auto-find in current folder
+    csv_paths = (
+        sorted(folder.glob('*.csv')) +
+        sorted(folder.glob('*.xlsx'))
+    )
+    csv_paths = [p for p in csv_paths if 'licenses' not in p.name.lower()
+                 and 'hrfood' not in p.name.lower()]
+    if not csv_paths:
+        print("\nNo data files found. Run: python build.py data/")
+        sys.exit(1)
+    print(f"Auto-found {len(csv_paths)} file(s):")
+    for p in csv_paths:
+        print(f"  {p.name}")
+    print()
+
+records = run(list(map(str, csv_paths)))
+print(f"\nGenerating HTML...")
+html = build_html(records)
+OUTPUT_FILE.parent.mkdir(exist_ok=True)
+OUTPUT_FILE.write_text(html, encoding='utf-8')
+size_kb = OUTPUT_FILE.stat().st_size // 1024
+print(f"  Written: {OUTPUT_FILE.name} ({size_kb}KB)")
+print(f"\n{'='*55}")
+print(f"  Done! Open prospecting_tool.html in Chrome.")
+print(f"  Your call log carries over automatically.")
+print(f"{'='*55}\n")
+```
+
+if **name** == ‘**main**’:
+main()
