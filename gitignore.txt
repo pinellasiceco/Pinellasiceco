@@ -1,0 +1,15 @@
+# Data files -- large, downloaded fresh each build, don't commit
+data/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+*.swp
