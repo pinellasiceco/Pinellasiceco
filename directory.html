@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ice Machine Sanitation Directory | Pinellas Ice Co</title>
+<meta name="description" content="Search Pinellas County restaurants and bars to see which businesses are on a certified ice machine sanitation program.">
+<style>
+  :root {
+    --navy: #1e3a5f;
+    --blu: #0a84ff;
+    --grn: #059669;
+    --ora: #ea580c;
+    --red: #dc2626;
+    --sub: #64748b;
+    --brd: #e2e8f0;
+    --surf: #ffffff;
+    --bg: #f8fafc;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: #1e293b; }
+
+  /* Header */
+  .header {
+    background: var(--navy);
+    color: #fff;
+    padding: 20px 16px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .logo { font-weight: 800; font-size: 16px; color: #fff; text-decoration: none; }
+  .logo span { color: #7dd3fc; }
+  .header-sub { font-size: 10px; color: rgba(255,255,255,.6); }
+  .search-bar {
+    display: flex; gap: 8px; align-items: center;
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 10px;
+    padding: 8px 12px;
+  }
+  .search-bar input {
+    background: none; border: none; outline: none;
+    color: #fff; font-size: 13px; flex: 1; font-family: inherit;
+  }
+  .search-bar input::placeholder { color: rgba(255,255,255,.5); }
+  .search-icon { color: rgba(255,255,255,.6); font-size: 14px; }
+
+  /* Stats strip */
+  .stats-strip {
+    background: var(--navy);
+    border-top: 1px solid rgba(255,255,255,.1);
+    padding: 8px 16px;
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+  }
+  .stat-pill {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; color: rgba(255,255,255,.8);
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .stat-pill b { color: #7dd3fc; }
+
+  /* Filter tabs */
+  .filters {
+    background: #fff;
+    border-bottom: 1px solid var(--brd);
+    padding: 0 16px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+  }
+  .filter-tab {
+    padding: 12px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--sub);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    flex-shrink: 0;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-family: inherit;
+    transition: .15s;
+  }
+  .filter-tab.on { color: var(--navy); border-bottom-color: var(--navy); }
+
+  /* Main content */
+  .main { max-width: 600px; margin: 0 auto; padding: 16px; }
+
+  /* Certified badge featured section */
+  .certified-header {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border: 1px solid #6ee7b7;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .certified-badge-big {
+    background: var(--grn);
+    color: #fff;
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 9px;
+    font-weight: 800;
+    text-align: center;
+    line-height: 1.3;
+    flex-shrink: 0;
+    min-width: 64px;
+  }
+
+  /* Business cards */
+  .biz-card {
+    background: #fff;
+    border: 1px solid var(--brd);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: box-shadow .15s, transform .1s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .biz-card:active { transform: scale(.99); }
+  .biz-card.certified { border-left: 4px solid var(--grn); }
+  .biz-card.uncertified { border-left: 4px solid var(--brd); opacity: .85; }
+
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 6px; }
+  .biz-name { font-weight: 700; font-size: 13px; color: var(--navy); line-height: 1.3; }
+  .biz-city { font-size: 10px; color: var(--sub); margin-top: 1px; }
+
+  .cert-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 8px; border-radius: 20px;
+    font-size: 9px; font-weight: 700;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .cert-badge.green { background: #ecfdf5; color: var(--grn); border: 1px solid #6ee7b7; }
+  .cert-badge.gray  { background: #f1f5f9; color: var(--sub); border: 1px solid var(--brd); }
+
+  .card-meta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 6px; }
+  .meta-item { font-size: 10px; color: var(--sub); }
+  .meta-item b { color: var(--navy); }
+
+  .card-footer {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--brd);
+    font-size: 10px;
+    color: var(--sub);
+    font-style: italic;
+  }
+
+  /* Detail modal */
+  .modal-bg {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.5);
+    z-index: 200;
+    display: flex; align-items: flex-end; justify-content: center;
+    padding: 0;
+  }
+  .modal {
+    background: #fff;
+    border-radius: 20px 20px 0 0;
+    padding: 0;
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .modal-handle {
+    width: 36px; height: 4px;
+    background: var(--brd);
+    border-radius: 2px;
+    margin: 12px auto 0;
+  }
+  .modal-body { padding: 16px; }
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    background: var(--brd);
+    border: none; border-radius: 50%;
+    width: 28px; height: 28px;
+    font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-family: inherit; color: var(--sub);
+  }
+
+  /* Certified detail */
+  .cert-strip {
+    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  .cert-strip .big-badge {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--grn);
+  }
+
+  /* Uncertified detail */
+  .uncert-strip {
+    background: #f8fafc;
+    border: 1px solid var(--brd);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  .comparison-note {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 11px;
+    color: #92400e;
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+
+  /* Service history timeline */
+  .timeline { position: relative; padding-left: 20px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 6px; top: 4px; bottom: 4px;
+    width: 2px;
+    background: var(--brd);
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 10px;
+    font-size: 11px;
+  }
+  .timeline-dot {
+    position: absolute;
+    left: -16px; top: 3px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--grn);
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1px var(--grn);
+  }
+
+  /* CTA buttons */
+  .cta-primary {
+    display: block; width: 100%;
+    padding: 13px;
+    background: var(--navy);
+    color: #fff;
+    border: none; border-radius: 10px;
+    font-size: 13px; font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: inherit;
+    margin-bottom: 8px;
+  }
+  .cta-secondary {
+    display: block; width: 100%;
+    padding: 11px;
+    background: #fff;
+    color: var(--navy);
+    border: 1.5px solid var(--navy);
+    border-radius: 10px;
+    font-size: 12px; font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: inherit;
+    margin-bottom: 8px;
+  }
+
+  /* Sticky CTA */
+  .sticky-cta {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: #fff;
+    border-top: 1px solid var(--brd);
+    padding: 12px 16px;
+    max-width: 600px;
+    margin: 0 auto;
+    display: none;
+    z-index: 150;
+  }
+
+  /* Lead capture form */
+  .lead-form {
+    background: #f8fafc;
+    border: 1px solid var(--brd);
+    border-radius: 10px;
+    padding: 12px;
+    margin-top: 10px;
+  }
+  .lead-form input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--brd);
+    border-radius: 7px;
+    font-size: 12px;
+    font-family: inherit;
+    outline: none;
+    margin-bottom: 6px;
+    background: #fff;
+  }
+
+  /* Empty state */
+  .empty { text-align: center; padding: 40px 20px; color: var(--sub); }
+  .empty-icon { font-size: 36px; margin-bottom: 10px; }
+
+  /* Disclaimer */
+  .disclaimer {
+    text-align: center;
+    font-size: 10px;
+    color: var(--sub);
+    padding: 16px;
+    line-height: 1.5;
+    border-top: 1px solid var(--brd);
+    margin-top: 20px;
+  }
+
+  /* Loading */
+  .loading { text-align: center; padding: 40px; color: var(--sub); }
+
+  @media (min-width: 600px) {
+    .main { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-top">
+    <a href="https://www.pinellasiceco.com" class="logo">Pinellas <span>Ice</span> Co</a>
+    <div class="header-sub">Sanitation Directory</div>
+  </div>
+  <div class="search-bar">
+    <span class="search-icon">&#x1F50D;</span>
+    <input type="text" id="search-input" placeholder="Search by restaurant name or city..." autocomplete="off" autocorrect="off">
+  </div>
+</div>
+
+<!-- Stats strip -->
+<div class="stats-strip" id="stats-strip">
+  <div class="stat-pill">&#x1F4CD; <span>Loading...</span></div>
+</div>
+
+<!-- Filter tabs -->
+<div class="filters">
+  <button class="filter-tab on" onclick="setFilter('all')" id="tab-all">All Businesses</button>
+  <button class="filter-tab" onclick="setFilter('certified')" id="tab-certified">&#x2705; Certified</button>
+  <button class="filter-tab" onclick="setFilter('uncertified')" id="tab-uncertified">Not Certified</button>
+</div>
+
+<!-- Main -->
+<div class="main">
+
+  <!-- Why this matters -->
+  <div class="certified-header" id="why-header">
+    <div class="certified-badge-big">
+      &#x1F9CA;<br>CERTIFIED<br>CLEAN
+    </div>
+    <div>
+      <div style="font-weight:700;font-size:12px;color:var(--navy);margin-bottom:3px">What does Certified mean?</div>
+      <div style="font-size:11px;color:var(--sub);line-height:1.4">
+        Certified businesses follow a recurring professional ice machine sanitation program. 
+        Their machines are cleaned, sanitized, and documented on a regular schedule — 
+        not just when there's a problem.
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="results-count" style="font-size:11px;color:var(--sub);margin-bottom:10px"></div>
+  <div id="biz-list">
+    <div class="loading">&#x23F3; Loading directory...</div>
+  </div>
+
+  <div class="disclaimer">
+    Data reflects service records maintained by Pinellas Ice Co. and may not represent 
+    all sanitation activity at this location. Certified status requires an active 
+    maintenance agreement with Pinellas Ice Co.<br><br>
+    &copy; 2026 Pinellas Ice Co. &bull; 
+    <a href="https://www.pinellasiceco.com" style="color:var(--sub)">pinellasiceco.com</a> &bull; 
+    (727) 855-6873
+  </div>
+</div>
+
+<!-- Sticky CTA (shows on scroll) -->
+<div class="sticky-cta" id="sticky-cta">
+  <a href="https://meetings-na2.hubspot.com/stripe/ice-machine-on-site" class="cta-primary" style="margin-bottom:0">
+    &#x1F4C5; Get Certified — Schedule Service
+  </a>
+</div>
+
+<!-- Detail Modal -->
+<div class="modal-bg" id="modal-bg" style="display:none" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal-inner">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeModal()">&#x2715;</button>
+    <div class="modal-body" id="modal-body">
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ─────────────────────────────────────────────────────────────────────
+let ALL_DATA = [];
+let CERTIFIED = [];
+let STATS = {};
+let currentFilter = 'all';
+let searchQuery = '';
+
+// Fetch customers.json from GitHub
+async function loadData() {
+  try {
+    // Try repo data folder first, fall back to root
+    const urls = [
+      'https://raw.githubusercontent.com/pinellasiceco/Pinellasiceco/main/data/customers.json',
+      'https://raw.githubusercontent.com/pinellasiceco/Pinellasiceco/main/customers.json',
+    ];
+    let data = null;
+    for (const url of urls) {
+      try {
+        const r = await fetch(url);
+        if (r.ok) { data = await r.json(); break; }
+      } catch(e) {}
+    }
+    if (!data) throw new Error('No data found');
+    CERTIFIED = data.certified || [];
+    STATS = data.stats || {};
+    ALL_DATA = [...CERTIFIED];
+    renderStats();
+    render();
+  } catch(e) {
+    // Show empty state gracefully - directory works even with no customers yet
+    CERTIFIED = [];
+    STATS = { total_certified: 0, generated: 'Loading...' };
+    ALL_DATA = [];
+    renderStats();
+    render();
+  }
+}
+
+// ── STATS ────────────────────────────────────────────────────────────────────
+function renderStats() {
+  const strip = document.getElementById('stats-strip');
+  const n = CERTIFIED.length;
+  strip.innerHTML = [
+    `<div class="stat-pill">&#x2705; <b>${n}</b> Certified Businesses</div>`,
+    `<div class="stat-pill">&#x1F4CD; <b>${[...new Set(CERTIFIED.map(b=>b.city))].length || 'Pinellas'}</b> Cities</div>`,
+    `<div class="stat-pill">&#x1F4C5; Updated <b>${STATS.generated || 'Recently'}</b></div>`,
+    `<div class="stat-pill">&#x1F6E1; <b>FDA 3-502.12</b> Compliant</div>`,
+  ].join('');
+}
+
+// ── FILTER ───────────────────────────────────────────────────────────────────
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('on'));
+  document.getElementById('tab-' + f).classList.add('on');
+  render();
+}
+
+// ── RENDER LIST ───────────────────────────────────────────────────────────────
+function render() {
+  const q = searchQuery.toLowerCase().trim();
+  let list = [...CERTIFIED];
+
+  // Apply filter
+  if (currentFilter === 'certified') {
+    list = list.filter(b => b.certified);
+  } else if (currentFilter === 'uncertified') {
+    list = [];  // No uncertified in the data - show search prompt
+  }
+
+  // Apply search
+  if (q) {
+    list = list.filter(b =>
+      (b.name||'').toLowerCase().includes(q) ||
+      (b.city||'').toLowerCase().includes(q) ||
+      (b.address||'').toLowerCase().includes(q)
+    );
+  }
+
+  const el = document.getElementById('biz-list');
+  const countEl = document.getElementById('results-count');
+
+  if (currentFilter === 'uncertified' && !q) {
+    el.innerHTML = renderSearchPrompt();
+    countEl.textContent = '';
+    return;
+  }
+
+  if (!list.length && !q && currentFilter === 'all') {
+    el.innerHTML = renderEmptyDirectory();
+    countEl.textContent = '';
+    return;
+  }
+
+  if (!list.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon">&#x1F50D;</div><div>No results for "' + q + '"</div></div>';
+    countEl.textContent = '';
+    return;
+  }
+
+  countEl.textContent = list.length + ' business' + (list.length === 1 ? '' : 'es');
+  el.innerHTML = list.map(b => renderCard(b)).join('');
+}
+
+function renderCard(b) {
+  const isCert = b.certified;
+  const daysSince = b.last_service_iso
+    ? Math.round((Date.now() - new Date(b.last_service_iso)) / 86400000)
+    : null;
+
+  return `<div class="biz-card ${isCert ? 'certified' : 'uncertified'}" onclick="openDetail(${b.id})">
+    <div class="card-top">
+      <div>
+        <div class="biz-name">${b.name}</div>
+        <div class="biz-city">&#x1F4CD; ${b.city}, FL${b.address ? ' &bull; ' + b.address : ''}</div>
+      </div>
+      <div class="cert-badge ${isCert ? 'green' : 'gray'}">
+        ${isCert ? '&#x2705; Certified' : 'Not Certified'}
+      </div>
+    </div>
+    ${isCert ? `
+      <div class="card-meta">
+        ${b.last_service ? `<div class="meta-item"><b>Last service:</b> ${b.last_service}</div>` : ''}
+        ${daysSince !== null ? `<div class="meta-item"><b>Verified:</b> ${daysSince === 0 ? 'Today' : daysSince + 'd ago'}</div>` : ''}
+        ${b.service_count ? `<div class="meta-item"><b>${b.service_count}</b> services completed</div>` : ''}
+        ${b.machine_brand ? `<div class="meta-item">&#x2699; ${b.machine_brand}</div>` : ''}
+      </div>
+      <div class="card-footer">&#x1F6E1; Inspection Ready &bull; Active maintenance program</div>
+    ` : `
+      <div class="card-footer">No recent sanitation data available &bull; Not currently maintained by Pinellas Ice Co</div>
+    `}
+  </div>`;
+}
+
+function renderEmptyDirectory() {
+  return `<div class="empty">
+    <div class="empty-icon">&#x1F9CA;</div>
+    <div style="font-weight:700;font-size:14px;color:var(--navy);margin-bottom:8px">Directory Launching Soon</div>
+    <div style="font-size:12px;color:var(--sub);line-height:1.5;margin-bottom:16px">
+      Certified businesses will appear here as they join the Pinellas Ice Co maintenance program.
+      <br>Be among the first in your area.
+    </div>
+    <a href="https://meetings-na2.hubspot.com/stripe/ice-machine-on-site" class="cta-primary" style="max-width:280px;margin:0 auto">
+      &#x1F4C5; Schedule Your First Service
+    </a>
+  </div>`;
+}
+
+function renderSearchPrompt() {
+  return `<div style="padding:16px 0">
+    <div style="background:#fff;border:1px solid var(--brd);border-radius:12px;padding:16px;margin-bottom:10px">
+      <div style="font-weight:700;font-size:12px;color:var(--navy);margin-bottom:6px">&#x1F50D; Search for a specific business</div>
+      <div style="font-size:11px;color:var(--sub);line-height:1.5;margin-bottom:10px">
+        Enter a restaurant or bar name above to see if they are on a certified ice machine sanitation program.
+      </div>
+    </div>
+    <div class="comparison-note">
+      &#x26A0; Businesses on a maintenance plan are professionally serviced every 60 days 
+      to maintain sanitation standards and FDA compliance. 
+      Without regular service, ice machines commonly develop mold, scale, and bacteria 
+      that pass visual inspection but fail ATP testing.
+    </div>
+    <a href="https://meetings-na2.hubspot.com/stripe/ice-machine-on-site" class="cta-primary">
+      Get Your Business Certified
+    </a>
+  </div>`;
+}
+
+// ── DETAIL MODAL ──────────────────────────────────────────────────────────────
+function openDetail(id) {
+  const b = CERTIFIED.find(x => x.id === id);
+  if (!b) return;
+
+  const isCert = b.certified;
+  const daysSince = b.last_service_iso
+    ? Math.round((Date.now() - new Date(b.last_service_iso)) / 86400000)
+    : null;
+
+  // Calculate renewal status
+  let renewalNote = '';
+  if (b.contract_renewal) {
+    const daysToRenewal = Math.round((new Date(b.contract_renewal) - Date.now()) / 86400000);
+    if (daysToRenewal < 0) {
+      renewalNote = `<div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:7px;padding:8px;font-size:10px;color:var(--red);font-weight:600;margin-bottom:10px">&#x26A0; Certification renewal due</div>`;
+    } else if (daysToRenewal <= 30) {
+      renewalNote = `<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:7px;padding:8px;font-size:10px;color:#92400e;font-weight:600;margin-bottom:10px">&#x23F1; Renewal due in ${daysToRenewal} days</div>`;
+    } else {
+      renewalNote = `<div style="font-size:10px;color:var(--sub);margin-bottom:10px">Certification valid through: ${new Date(b.contract_renewal).toLocaleDateString('en-US',{month:'long',year:'numeric'})}</div>`;
+    }
+  }
+
+  let html = '';
+
+  if (isCert) {
+    html += `
+      <div class="cert-strip">
+        <div style="font-size:28px;margin-bottom:4px">&#x2705;</div>
+        <div style="font-weight:800;font-size:16px;color:var(--grn)">CERTIFIED CLEAN</div>
+        <div style="font-size:10px;color:var(--sub);margin-top:2px">Active ice machine sanitation program</div>
+      </div>
+      ${renewalNote}
+      <div style="font-weight:800;font-size:16px;color:var(--navy);margin-bottom:2px">${b.name}</div>
+      <div style="font-size:11px;color:var(--sub);margin-bottom:12px">&#x1F4CD; ${b.address ? b.address + ', ' : ''}${b.city}, FL</div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+        ${metaBox('Last Service', b.last_service || 'On file')}
+        ${metaBox('Verified', daysSince !== null ? (daysSince === 0 ? 'Today' : daysSince + ' days ago') : 'Active')}
+        ${metaBox('Services Completed', b.service_count || '—')}
+        ${metaBox('Customer Since', b.won_date ? new Date(b.won_date).toLocaleDateString('en-US',{month:'short',year:'numeric'}) : 'Active')}
+        ${b.machine_brand ? metaBox('Machine', b.machine_brand) : ''}
+        ${b.filter_type && b.filter_type !== 'None / No filter' ? metaBox('Filter', b.filter_type) : ''}
+      </div>
+
+      <div style="background:#f0fdf4;border:1px solid #6ee7b7;border-radius:9px;padding:10px;margin-bottom:14px">
+        <div style="font-size:10px;font-weight:700;color:var(--grn);margin-bottom:4px">&#x1F6E1; What Certification Means</div>
+        <div style="font-size:11px;color:#065f46;line-height:1.5">
+          This business follows a professional ice machine sanitation schedule compliant with 
+          FDA Food Code 3-502.12. Machines are cleaned, descaled, sanitized, and ATP-tested 
+          by a certified technician on a regular basis.
+        </div>
+      </div>
+
+      ${b.phone ? `<div style="margin-bottom:12px"><a href="tel:${b.phone}" style="font-size:12px;color:var(--blu)">${b.phone}</a></div>` : ''}
+
+      <div style="font-size:9px;color:var(--sub);text-align:center;margin-bottom:12px">
+        Nearby businesses are on a recurring maintenance plan
+      </div>
+    `;
+  } else {
+    html += `
+      <div class="uncert-strip">
+        <div style="font-size:11px;font-weight:700;color:var(--sub);margin-bottom:4px">&#x1F4CB; SANITATION STATUS</div>
+        <div style="font-weight:800;font-size:15px;color:var(--navy);margin-bottom:4px">${b.name}</div>
+        <div style="font-size:11px;color:var(--sub)">&#x1F4CD; ${b.address ? b.address + ', ' : ''}${b.city}, FL</div>
+      </div>
+
+      <div style="background:#f8fafc;border:1px solid var(--brd);border-radius:9px;padding:12px;margin-bottom:12px">
+        <div style="font-size:11px;font-weight:700;color:var(--sub);margin-bottom:6px">No Recent Sanitation Data Available</div>
+        <div style="font-size:11px;color:var(--sub);line-height:1.5">
+          This business is not currently maintained by Pinellas Ice Co. 
+          We have no record of certified ice machine cleaning at this location.
+        </div>
+      </div>
+
+      <div class="comparison-note">
+        &#x26A0; Businesses on a maintenance plan are typically serviced every 60 days to maintain 
+        sanitation standards. Without regular service, ice machines commonly develop mold, 
+        scale, and bacteria — the most frequently cited item in FL health inspections.
+      </div>
+
+      <div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:8px">Own or manage this business?</div>
+    `;
+  }
+
+  // CTA section
+  html += `
+    <a href="https://meetings-na2.hubspot.com/stripe/ice-machine-on-site" class="cta-primary">
+      &#x1F4C5; Schedule Service — Get Certified
+    </a>
+    <a href="tel:7278556873" class="cta-secondary">
+      &#x1F4DE; Call (727) 855-6873
+    </a>
+
+    <!-- Lead capture for uncertified -->
+    ${!isCert ? `
+    <div class="lead-form">
+      <div style="font-size:11px;font-weight:700;color:var(--navy);margin-bottom:8px">&#x1F4E7; Get a free sanitation check reminder</div>
+      <input type="text" id="lead-name" placeholder="Your name">
+      <input type="email" id="lead-email" placeholder="Email address">
+      <input type="text" id="lead-biz" placeholder="Business name" value="${b.name}">
+      <button onclick="submitLead()" class="cta-primary" style="margin-bottom:0;font-size:12px">Send Reminder</button>
+    </div>
+    ` : ''}
+  `;
+
+  document.getElementById('modal-body').innerHTML = html;
+  document.getElementById('modal-bg').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+
+  // Show sticky CTA
+  document.getElementById('sticky-cta').style.display = 'block';
+}
+
+function metaBox(label, val) {
+  return `<div style="background:#f8fafc;border-radius:7px;padding:8px">
+    <div style="font-size:8px;color:var(--sub);font-weight:600;text-transform:uppercase;letter-spacing:.05em">${label}</div>
+    <div style="font-size:12px;font-weight:700;color:var(--navy);margin-top:2px">${val}</div>
+  </div>`;
+}
+
+function closeModal() {
+  document.getElementById('modal-bg').style.display = 'none';
+  document.body.style.overflow = '';
+  document.getElementById('sticky-cta').style.display = 'none';
+}
+
+// ── LEAD CAPTURE ──────────────────────────────────────────────────────────────
+function submitLead() {
+  const name = (document.getElementById('lead-name')||{}).value || '';
+  const email = (document.getElementById('lead-email')||{}).value || '';
+  const biz = (document.getElementById('lead-biz')||{}).value || '';
+
+  if (!email) { alert('Please enter your email address'); return; }
+
+  // Submit to HubSpot Forms API
+  const portalId = '241970357';
+  const formId   = 'FORM_ID_PLACEHOLDER'; // Replace with your HubSpot form GUID
+
+  fetch(`https://api.hsforms.com/submissions/v3/integration/submit/${portalId}/${formId}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      fields: [
+        { name: 'firstname', value: name },
+        { name: 'email', value: email },
+        { name: 'company', value: biz },
+        { name: 'message', value: 'Directory sanitation check reminder request' },
+      ]
+    })
+  }).then(() => {
+    document.querySelector('.lead-form').innerHTML =
+      '<div style="text-align:center;padding:12px;font-size:12px;color:var(--grn);font-weight:600">&#x2713; Got it! We will be in touch.</div>';
+  }).catch(() => {
+    // Fallback: just show confirmation
+    document.querySelector('.lead-form').innerHTML =
+      '<div style="text-align:center;padding:12px;font-size:12px;color:var(--grn);font-weight:600">&#x2713; Got it! We will be in touch.</div>';
+  });
+}
+
+// ── SEARCH ────────────────────────────────────────────────────────────────────
+document.getElementById('search-input').addEventListener('input', function() {
+  searchQuery = this.value;
+  render();
+  // When searching, auto-switch to all filter
+  if (searchQuery && currentFilter !== 'all') setFilter('all');
+});
+
+// ── STICKY CTA ON SCROLL ──────────────────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  const cta = document.getElementById('sticky-cta');
+  const modalOpen = document.getElementById('modal-bg').style.display === 'flex';
+  if (!modalOpen) {
+    cta.style.display = window.scrollY > 300 ? 'block' : 'none';
+  }
+});
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+loadData();
+</script>
+</body>
+</html>
