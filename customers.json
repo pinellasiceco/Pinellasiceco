@@ -1,30 +1,9 @@
 {
-  "generated": "2026-04-17T02:35:12.415Z",
-  "certified": [
-    {
-      "id": 2237516,
-      "name": "CENTRAL PIZZA & SUBS LLC 2891",
-      "address": "6405 CENTRAL AVE",
-      "city": "ST. PETERSBURG",
-      "zip": "33710",
-      "phone": "",
-      "lat": 27.785,
-      "lon": -82.734,
-      "status": "customer_recurring",
-      "service_count": 11,
-      "last_service": "Apr 16, 2026",
-      "last_service_iso": "2026-04-17",
-      "contract_start": "2026-04-17",
-      "contract_renewal": "2026-10-17",
-      "machine_brand": "",
-      "filter_type": "Everpure MH-2",
-      "certified": true,
-      "won_date": "Apr 16, 2026"
-    }
-  ],
+  "generated": "2026-04-17T03:20:57.967Z",
+  "certified": [],
   "stats": {
-    "total_certified": 1,
-    "counties_served": 1,
+    "total_certified": 0,
+    "counties_served": 0,
     "generated": "April 2026"
   }
 }
