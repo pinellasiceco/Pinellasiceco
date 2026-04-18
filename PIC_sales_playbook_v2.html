@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Pinellas Ice Co — Sales Playbook v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0f1f38;--navy2:#162d4a;--navy3:#1e3a5f;--gold:#c9973a;--gold2:#e8b14d;--cream:#f5f0e8;--white:#fafaf8;--brd:rgba(201,151,58,0.2);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--navy);color:var(--cream);font-family:"DM Sans",sans-serif;font-size:15px;line-height:1.6;min-height:100vh;}
+.hdr{background:linear-gradient(135deg,#0a1628 0%,var(--navy3) 100%);border-bottom:2px solid var(--gold);padding:20px 20px 16px;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,.4);}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.hdr-brand{font-family:"Playfair Display",serif;font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);}
+.hdr-title{font-family:"Playfair Display",serif;font-size:20px;font-weight:900;color:var(--white);letter-spacing:-.02em;}
+.hdr-sub{font-size:11px;color:rgba(245,240,232,.5);letter-spacing:.05em;text-transform:uppercase;margin-top:2px;}
+.nav-pills{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
+.nav-pills::-webkit-scrollbar{display:none;}
+.pill{flex-shrink:0;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.04em;cursor:pointer;border:1px solid rgba(201,151,58,.3);color:rgba(245,240,232,.6);background:transparent;transition:all .2s;white-space:nowrap;}
+.pill.active,.pill:hover{background:var(--gold);color:var(--navy);border-color:var(--gold);}
+.content{max-width:680px;margin:0 auto;padding:20px 16px 60px;}
+.section{margin-bottom:12px;border-radius:10px;overflow:hidden;border:1px solid var(--brd);background:rgba(255,255,255,.03);}
+.section-hdr{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;user-select:none;transition:background .2s;}
+.section-hdr:hover{background:rgba(201,151,58,.05);}
+.section-hdr.open{background:rgba(201,151,58,.08);border-bottom:1px solid var(--brd);}
+.section-num{font-family:"DM Mono",monospace;font-size:10px;font-weight:500;color:var(--gold);opacity:.7;min-width:24px;}
+.section-icon{font-size:18px;}
+.section-title{flex:1;font-family:"Playfair Display",serif;font-size:16px;font-weight:700;color:var(--white);}
+.section-sub{font-size:10px;color:rgba(245,240,232,.4);letter-spacing:.04em;text-transform:uppercase;}
+.chevron{font-size:12px;color:var(--gold);opacity:.6;transition:transform .25s;}
+.section-hdr.open .chevron{transform:rotate(180deg);}
+.section-body{display:none;}
+.section-body.open{display:block;}
+.block{padding:16px;border-bottom:1px solid rgba(201,151,58,.08);}
+.block:last-child{border-bottom:none;}
+.block-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+.block p{font-size:14px;line-height:1.7;color:rgba(245,240,232,.85);margin-bottom:10px;}
+.block p:last-child{margin-bottom:0;}
+.block strong{color:var(--white);font-weight:600;}
+.steps{list-style:none;}
+.steps li{display:flex;gap:12px;margin-bottom:12px;font-size:14px;line-height:1.6;color:rgba(245,240,232,.85);}
+.steps li:last-child{margin-bottom:0;}
+.step-num{font-family:"DM Mono",monospace;font-size:10px;font-weight:700;color:var(--navy);background:var(--gold);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.script{background:rgba(201,151,58,.08);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:12px 14px;margin:10px 0;font-size:14px;color:var(--white);font-style:italic;line-height:1.6;}
+.script-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;font-style:normal;}
+.obj-card{background:rgba(255,255,255,.04);border:1px solid rgba(201,151,58,.15);border-radius:8px;margin-bottom:10px;overflow:hidden;}
+.obj-card:last-child{margin-bottom:0;}
+.obj-q{padding:10px 14px;background:rgba(192,57,43,.1);border-bottom:1px solid rgba(192,57,43,.2);font-size:13px;font-weight:600;color:#f08080;}
+.obj-a{padding:10px 14px;font-size:14px;color:rgba(245,240,232,.85);line-height:1.6;}
+.obj-close{padding:8px 14px;background:rgba(26,107,60,.15);border-top:1px solid rgba(26,107,60,.2);font-size:13px;font-style:italic;color:#7ecfa0;}
+.intel-card{background:rgba(255,255,255,.04);border:1px solid var(--brd);border-radius:8px;padding:12px 14px;margin-bottom:10px;}
+.intel-card:last-child{margin-bottom:0;}
+.intel-name{font-size:13px;font-weight:700;color:var(--white);margin-bottom:4px;}
+.intel-tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;}
+.tag-threat{background:rgba(192,57,43,.2);color:#f08080;}
+.tag-easy{background:rgba(26,107,60,.2);color:#7ecfa0;}
+.tag-local{background:rgba(201,151,58,.2);color:var(--gold2);}
+.intel-body{font-size:13px;color:rgba(245,240,232,.75);line-height:1.6;}
+.intel-counter{margin-top:8px;padding:8px 10px;background:rgba(201,151,58,.08);border-radius:6px;font-size:13px;color:var(--gold2);font-style:italic;}
+.persona{background:rgba(255,255,255,.04);border:1px solid var(--brd);border-radius:8px;padding:12px 14px;margin-bottom:10px;}
+.persona:last-child{margin-bottom:0;}
+.persona-type{font-size:13px;font-weight:700;color:var(--gold2);margin-bottom:6px;}
+.persona-signals{font-size:12px;color:rgba(245,240,232,.5);margin-bottom:8px;font-style:italic;}
+.persona-close{font-size:14px;color:rgba(245,240,232,.85);line-height:1.6;}
+.alert{border-radius:8px;padding:12px 14px;margin:10px 0;font-size:13px;line-height:1.6;}
+.alert-gold{background:rgba(201,151,58,.12);border:1px solid rgba(201,151,58,.3);color:var(--gold2);}
+.alert-red{background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.25);color:#f08080;}
+.alert-green{background:rgba(26,107,60,.1);border:1px solid rgba(26,107,60,.25);color:#7ecfa0;}
+.alert-blue{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);color:#93c5fd;}
+.score-table{width:100%;border-collapse:collapse;margin:10px 0;}
+.score-table th{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);padding:6px 10px;text-align:left;border-bottom:1px solid var(--brd);}
+.score-table td{font-size:13px;color:rgba(245,240,232,.8);padding:7px 10px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:top;}
+.score-table tr:last-child td{border-bottom:none;}
+.timing{display:flex;gap:6px;margin:10px 0;flex-wrap:wrap;}
+.timing-step{flex:1;min-width:80px;background:rgba(255,255,255,.04);border:1px solid var(--brd);border-radius:6px;padding:8px 10px;text-align:center;}
+.timing-time{font-family:"DM Mono",monospace;font-size:11px;color:var(--gold);font-weight:500;}
+.timing-label{font-size:10px;color:rgba(245,240,232,.5);margin-top:2px;}
+.fu-step{display:flex;gap:12px;margin-bottom:14px;position:relative;}
+.fu-step::before{content:"";position:absolute;left:16px;top:32px;bottom:-14px;width:1px;background:rgba(201,151,58,.2);}
+.fu-step:last-child::before{display:none;}
+.fu-dot{width:32px;height:32px;border-radius:50%;background:var(--navy2);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:"DM Mono",monospace;font-size:10px;font-weight:700;color:var(--gold);}
+.fu-content{flex:1;padding-top:4px;}
+.fu-day{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+.fu-body{font-size:14px;color:rgba(245,240,232,.8);line-height:1.6;}
+.mbadge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-left:5px;vertical-align:middle;}
+.bc{background:rgba(139,92,246,.2);color:#c4b5fd;border:1px solid rgba(139,92,246,.3);}
+.bs{background:rgba(59,130,246,.2);color:#93c5fd;border:1px solid rgba(59,130,246,.3);}
+.bsp{background:rgba(16,185,129,.2);color:#6ee7b7;border:1px solid rgba(16,185,129,.3);}
+.price-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px;color:rgba(245,240,232,.8);}
+.price-row:last-child{border-bottom:none;}
+.price-you{font-family:"DM Mono",monospace;font-size:12px;color:var(--gold2);font-weight:700;}
+.price-them{font-family:"DM Mono",monospace;font-size:12px;color:rgba(245,240,232,.35);text-decoration:line-through;}
+@media(max-width:480px){.hdr-title{font-size:17px;}.content{padding:14px 12px 80px;}.section-title{font-size:15px;}}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-top">
+    <div>
+      <div class="hdr-brand">Pinellas Ice Co</div>
+      <div class="hdr-title">Sales Playbook</div>
+      <div class="hdr-sub">Pinellas County · Tampa Bay · v2.0</div>
+    </div>
+    <div style="font-size:28px">🧊</div>
+  </div>
+  <div class="nav-pills">
+    <div class="pill active" onclick="jumpTo('market')">The Market</div>
+    <div class="pill" onclick="jumpTo('walk-in')">Walk-In</div>
+    <div class="pill" onclick="jumpTo('atp-pitch')">ATP Pitch</div>
+    <div class="pill" onclick="jumpTo('objections')">Objections</div>
+    <div class="pill" onclick="jumpTo('pricing')">Pricing</div>
+    <div class="pill" onclick="jumpTo('personas')">Buyer Personas</div>
+    <div class="pill" onclick="jumpTo('intel')">Know Your Prospect</div>
+    <div class="pill" onclick="jumpTo('competitors')">Competitors</div>
+    <div class="pill" onclick="jumpTo('the-close')">The Close</div>
+    <div class="pill" onclick="jumpTo('followup')">Follow-Up</div>
+    <div class="pill" onclick="jumpTo('mindset')">Mindset</div>
+  </div>
+</div>
+<div class="content">
+
+<!-- METHODOLOGY BANNER -->
+<div class="alert alert-blue" style="margin-bottom:14px">
+<strong>Methodology foundation:</strong> This playbook is validated against three proven frameworks: <span class="mbadge bc">Challenger Sale</span> for insight-led opening, <span class="mbadge bs">Sandler</span> for pain discovery, and <span class="mbadge bsp">SPIN</span> for implication-to-close. Each relevant section is tagged.
+</div>
+
+<!-- 00 THE MARKET -->
+<div class="section" id="market">
+<div class="section-hdr open" onclick="toggle(this)">
+  <div class="section-num">00</div><div class="section-icon">🗺</div>
+  <div><div class="section-title">Know Your Market</div><div class="section-sub">Pinellas County — who you’re selling to</div></div>
+  <div class="chevron">▼</div>
+</div>
+<div class="section-body open">
+
+<div class="block">
+<div class="block-title">The Pinellas Restaurant Owner</div>
+<p>Pinellas County’s median age is 49 — older than the state average. The restaurant owners you’ll meet are predominantly established operators. Many have owned their business for 10–20 years. They’ve been pitched by dozens of vendors and have a sharp instinct for salespeople. <strong>They buy from people they trust, not from people who pitch them.</strong></p>
+<p>The county’s economy is anchored in tourism and hospitality. Clearwater Beach, St. Pete Beach, and downtown St. Pete generate millions of visitor days per year. High foot traffic means high ice demand and machines that run harder and get dirtier faster. Florida heat and humidity mean bacteria and scale grow faster here than almost anywhere else in the country.</p>
+<div class="alert alert-gold">⚡ Seasonal insight: June–September, Pinellas waterfront restaurants run machines at 90%+ capacity. That’s when neglected machines fail and inspections spike. The best window to close these accounts is March–May, before summer creates urgency. Sell prevention before the pain arrives.</div>
+</div>
+
+<div class="block">
+<div class="block-title">Cultural Landscape — Who You’ll Meet</div>
+<p>Pinellas is 71% White, 11% Hispanic, 9% Black. The adjacent Hillsborough market is 25% Hispanic with the highest concentration of Cuban and Puerto Rican ownership in the region. As your territory grows, these segments grow.</p>
+<p><strong>Cuban and Hispanic-owned restaurants</strong> are among your best prospects — family-operated, independent, owner usually present, community-networked. The concept of <em>confianza</em> (earned trust) governs decision-making. Do not rush. Do not use pressure. Ask about their restaurant before you mention your service. A warm referral from a trusted community contact will outperform 20 cold walk-ins in this segment.</p>
+<p><strong>Long-established independents</strong> (10+ years) are your most stable recurring clients. They’ve seen operators lose their license. They care about compliance. They respond to expertise and reliability over price. Earn trust once and they become advocates.</p>
+<p><strong>Newer independents</strong> (under 5 years) are more price-sensitive but also more open. They haven’t built their full vendor roster and are often genuinely unaware of what professional ice machine maintenance looks like.</p>
+</div>
+
+<div class="block">
+<div class="block-title">Three Zones — Adjust Your Approach</div>
+<table class="score-table">
+<tr><th>Zone</th><th>Business Profile</th><th>Primary Angle</th></tr>
+<tr><td><strong>Beach Strip</strong><br>Clearwater Beach, St. Pete Beach, Treasure Island</td><td>Tourist-driven, seasonal, high volume. Managers, not always owners. High compliance anxiety pre-summer.</td><td>Seasonal urgency. "Before the summer rush" is your window.</td></tr>
+<tr><td><strong>Downtown St. Pete</strong><br>Central Ave corridor, Deuces</td><td>Trendy independents, image-conscious, younger owners. Google reviews matter. Brand-sensitive.</td><td>Food safety as brand protection. "A citation shows up on Yelp."</td></tr>
+<tr><td><strong>Neighborhoods</strong><br>Largo, Clearwater, South St. Pete, Seminole</td><td>Established community restaurants, diverse ownership, long tenure, owner present. Loyal to vendors they trust.</td><td>Relationship play. Slower close, highest lifetime value.</td></tr>
+</table>
+</div>
+
+<div class="block">
+<div class="block-title">The Methodology Match</div>
+<table class="score-table">
+<tr><th>Framework</th><th>Where It Applies</th><th>Why It Works Here</th></tr>
+<tr><td><span class="mbadge bc">Challenger</span></td><td>Opening + ATP demo</td><td>You show restaurant owners something true about their business they couldn’t see themselves. That’s the Challenger principle. Challengers account for 54% of top performers in complex B2B sales. The ATP number is your commercial insight.</td></tr>
+<tr><td><span class="mbadge bs">Sandler</span></td><td>Discovery + qualification</td><td>Uncover the real pain beneath the surface. "When was the last time someone documented your machine?" is a Sandler opening. You don’t sell to people who don’t feel pain — the Sandler principle. Let them tell you why they need you.</td></tr>
+<tr><td><span class="mbadge bsp">SPIN</span></td><td>Pre-close</td><td>Implication + Need-Payoff after the ATP reading. "What would happen if an inspector found that reading during a surprise visit?" Then: "If I gave you documentation showing a 90%+ reduction, how would that change your confidence heading into inspection season?"</td></tr>
+</table>
+</div>
+
+</div>
+</div>
+
+<!-- 01 WALK-IN PLAYBOOK -->
+<div class="section" id="walk-in">
+<div class="section-hdr" onclick="toggle(this)">
+  <div class="section-num">01</div><div class="section-icon">🚶</div>
+  <div><div class="section-title">The Walk-In Playbook</div><div class="section-sub">Car to close — every step</div></div>
+  <div class="chevron">▼</div>
+</div>
+<div class="section-body">
+
+<div class="block">
+<div class="block-title">Before You Walk In — 90 Seconds in the Car <span class="mbadge bc">Challenger</span></div>
+<p>Pull up the prospect in your app. Score, priority, inspection notes. <strong>You are not winging this.</strong> You know their compliance history before you know their name. That knowledge is your credibility before you say a word.</p>
+<p>Decide your angle in 10 seconds:</p>
+<ol class="steps">
+<li><div class="step-num">C</div><div><strong>CALLBACK:</strong> Lead with compliance urgency. They have a re-inspection window. You offer documentation before the inspector returns.</div></li>
+<li><div class="step-num">H</div><div><strong>HOT:</strong> Lead with ATP demo. Show them a problem they can’t see. The number closes itself.</div></li>
+<li><div class="step-num">W</div><div><strong>WARM:</strong> Lead with prevention. "The best time to get on a schedule is before you need it."</div></li>
+</ol>
+<div class="alert alert-gold">⏱ Best window: 2:00–4:30pm, Tuesday through Thursday. Avoid Monday mornings, Friday afternoons, and 45 minutes before any meal service. In tourist zones, avoid peak summer lunch and dinner rush entirely.</div>
+</div>
+
+<div class="block">
+<div class="block-title">Step 1 — At the Host Stand</div>
+<p>Walk in with quiet confidence. You look like a technician making a courtesy stop — not a salesperson. That distinction matters more than you think in a market full of vendors owners have learned to avoid.</p>
+<div class="script"><div class="script-label">At host stand</div>"Hi, I’m looking for the owner or general manager — is [name] available?"</div>
+<p>If they ask what it’s about: <em>"I’m a commercial ice machine sanitation tech — I’m in the area and wanted to stop by for two minutes."</em></p>
+<p><strong>Never say "sales call." Never say "tell you about our services."</strong></p>
+</div>
+
+<div class="block">
+<div class="block-title">Step 2 — The Opening <span class="mbadge bs">Sandler</span></div>
+<p>The first sentence determines everything. Sandler principle: open with their world, not yours. Create a question in their mind before you answer anything.</p>
+<div class="script"><div class="script-label">The Sandler opener</div>"I only need two minutes. Can I ask you one question? When was the last time someone actually opened your ice machine and documented what they found?"</div>
+<p>This is a pain funnel entry. They either say "recently" — ask who and how often, which reveals the gap — or they say "I’m not sure," which means you’ve already found the pain.</p>
+<p><strong>Listen. Do not fill silence.</strong> What they say next tells you more about how to close them than anything you’ll say in response.</p>
+</div>
+
+<div class="block">
+<div class="block-title">Step 3 — The Machine Offer <span class="mbadge bc">Challenger</span></div>
+<div class="script"><div class="script-label">The pivot</div>"Mind if I take a look right now? Two minutes. I’ll tell you exactly what an inspector would flag — no charge, no obligation."</div>
+<p>When you open the machine, say nothing for a moment. Let them look. If there’s scale or biofilm visible, let the silence work. You don’t need to editorialize what they can see with their own eyes.</p>
+</div>
+
+<div class="block">
+<div class="block-title">Step 4 — ATP Demo (see Section 02)</div>
+<p>Hand them the meter. Say nothing while it reads. The number closes.</p>
+</div>
+
+<div class="block">
+<div class="block-title">Step 5 — The Offer <span class="mbadge bsp">SPIN</span></div>
+<p>After the reading, use SPIN’s Implication + Need-Payoff before presenting price:</p>
+<div class="script"><div class="script-label">Implication (SPIN)</div>"If an inspector ran that same test during a surprise visit, what would that mean for your license?"</div>
+<p>Let them answer. Then:</p>
+<div class="script"><div class="script-label">Need-Payoff (SPIN)</div>"If I could give you a compliance report showing a 90%+ reduction in that reading — documented, dated, available to show any inspector — how would that change things?"</div>
+<p>Then:</p>
+<div class="script"><div class="script-label">The offer</div>"Here’s what I do. A $99 first visit — I assess the machine, run ATP tests before and after, do a service and sanitize, and leave you a compliance report. If the machine needs a full deep clean, that’s $349 total and your $99 is credited. After that, 60-day maintenance at $149/month — six visits a year, two Everpure filter replacements included. No contract."</div>
+<p>Stop. Wait for them to respond.</p>
+</div>
+
+<div class="block">
+<div class="block-title">When the Owner Isn’t There</div>
+<div class="script"><div class="script-label">Leave-behind handoff</div>"Can you make sure [name] sees this? Tell them the ice machine tech stopped by."</div>
+<p>A compliance report on a manager’s desk has a shelf life. A business card gets thrown away.</p>
+</div>
+
+</div>
+</div>
+
+<!-- 02 ATP PITCH -->
+<div class="section" id="atp-pitch">
+<div class="section-hdr" onclick="toggle(this)">
+  <div class="section-num">02</div><div class="section-icon">🧪</div>
+  <div><div class="section-title">The ATP Pitch Protocol</div><div class="section-sub">Your single most powerful selling tool</div></div>
+  <div class="chevron">▼</div>
+</div>
+<div class="section-body">
+
+<div class="block">
+<div class="block-title">Why This Closes <span class="mbadge bc">Challenger</span></div>
+<p>The ATP test is a textbook Challenger Sale. You’re showing them something true about their own business they couldn’t see. Numbers remove opinion from the conversation. An owner can argue with your words. They cannot argue with 847 RLU on a meter they’re holding in their own hands.</p>
+<div class="alert alert-red">⚠ Never talk while the meter is reading. The silence is intentional. The moment they see the number is your highest-leverage selling moment. Don’t dilute it with words.</div>
+</div>
+
+<div class="block">
+<div class="block-title">Pre-Clean Swab Locations — Maximum Contamination</div>
+<ol class="steps">
+<li><div class="step-num">1</div><div><strong>Water trough interior</strong> — biofilm accumulates here constantly. Wet, dark, never cleaned by staff. Almost always the highest reading. Z-pattern, firm pressure.</div></li>
+<li><div class="step-num">2</div><div><strong>Underside of water curtain</strong> — dark, permanently wet, invisible to staff. Biofilm starts here. Swab the underside edge.</div></li>
+<li><div class="step-num">3</div><div><strong>Ice scoop handle</strong> — touched hundreds of times daily. Cross-contamination. Looks clean. Reads high.</div></li>
+<li><div class="step-num">4</div><div><strong>Inside bin near drain</strong> — ice runoff pools. Always elevated.</div></li>
+<li><div class="step-num">5</div><div><strong>Float valve housing</strong> — scale and organic material concentrate here. Rarely cleaned.</div></li>
+</ol>
+</div>
+
+<div class="block">
+<div class="block-title">The Pitch Move — Execute Exactly</div>
+<ol class="steps">
+<li><div class="step-num">1</div><div>Open the front panel.</div></li>
+<li><div class="step-num">2</div><div>Say nothing. Let them look first.</div></li>
+<li><div class="step-num">3</div><div>Pull out Ultrasnap. Snap tube. <em>"Let me show you something."</em></div></li>
+<li><div class="step-num">4</div><div>Swab trough, Z-pattern, firm pressure. About 4 seconds.</div></li>
+<li><div class="step-num">5</div><div>Insert swab into Ensure v2. <strong>Hand the meter to the owner. Say nothing.</strong></div></li>
+<li><div class="step-num">6</div><div>15 seconds. Let them watch the countdown. Let them read the number themselves.</div></li>
+<li><div class="step-num">7</div><div>Pause 2 full seconds after they read it. Then: <em>"Anything over 30 is a potential health inspection citation. Pass is 10 or below."</em></div></li>
+</ol>
+</div>
+
+<div class="block">
+<div class="block-title">Reading the Room After the Number <span class="mbadge bsp">SPIN</span></div>
+<table class="score-table">
+<tr><th>RLU</th><th>Reaction</th><th>Your Move</th></tr>
+<tr><td style="color:#7ecfa0;font-weight:700">0–30</td><td>Surprised or skeptical</td><td>"This is one of the cleaner machines I’ve seen. Monthly maintenance would keep it here year-round." Pivot to prevention.</td></tr>
+<tr><td style="color:#fbbf24;font-weight:700">31–200</td><td>Concerned</td><td>"This is in the gray zone — an inspector could flag this. One service gets it clean, monthly keeps it documented."</td></tr>
+<tr><td style="color:#fb923c;font-weight:700">201–500</td><td>Uncomfortable</td><td>Silence 3 seconds. "This is the most common reading I see in Pinellas kitchens. It’s not about hygiene habits — it’s the water contact surfaces that need disassembly to reach."</td></tr>
+<tr><td style="color:#f08080;font-weight:700">500+</td><td>Alarmed or defensive</td><td>"I’m not here to make you feel bad — this is very common and completely fixable in one visit." Show before/after photos.</td></tr>
+</table>
+</div>
+
+<div class="block">
+<div class="block-title">Post-Clean Compliance Documentation</div>
+<ol class="steps">
+<li><div class="step-num">1</div><div><strong>Center of evaporator plate</strong> — primary ice contact surface. Target: under 10 RLU.</div></li>
+<li><div class="step-num">2</div><div><strong>Distribution tube exterior</strong> — clean metal, holds sanitizer well.</div></li>
+<li><div class="step-num">3</div><div><strong>Upper bin interior wall</strong> — secondary compliance surface.</div></li>
+</ol>
+<div class="alert alert-green">✓ Report format: "Pre-service: 847 RLU → Post-service: 6 RLU." The delta is your proof. Never report post-clean alone — the before/after tells the whole story.</div>
+</div>
+
+</div>
+</div>
+
+<!-- 03 OBJECTIONS -->
+<div class="section" id="objections">
+<div class="section-hdr" onclick="toggle(this)">
+  <div class="section-num">03</div><div class="section-icon">🛡</div>
+  <div><div class="section-title">Objection Handler</div><div class="section-sub">Every pushback, exact response</div></div>
+  <div class="chevron">▼</div>
+</div>
+<div class="section-body">
+
+<div class="block">
+<div class="block-title">The Core Principle <span class="mbadge bs">Sandler</span></div>
+<p>An objection is not a no. It’s a request for more information, delivered poorly. Every objection has a root fear. Address the fear, not the surface statement. Sandler A-R-C: Acknowledge → Reframe → Close. Never argue. Never defend. Redirect.</p>
+</div>
+
+<div class="block">
+<div class="block-title">Common Objections</div>
+
+<div class="obj-card">
+<div class="obj-q">🔴 "We clean it ourselves."</div>
+<div class="obj-a"><strong>Root fear:</strong> Being told they’re doing something wrong. Ego investment.<br><br>
+"I’m sure you do — most operations run the clean cycle and wipe down the exterior, and that’s exactly the right habit. What I do is different: I open the water system, descale the evaporator plates, and document contamination levels with an ATP meter before and after. That’s what health inspectors look at — and it’s not accessible without disassembly." Then: "Can I run a 30-second test right now? You’ll see exactly where you stand — no charge."</div>
+<div class="obj-close">✓ The meter settles it without argument.</div>
+</div>
+
+<div class="obj-card">
+<div class="obj-q">🔴 "We already have someone."</div>
+<div class="obj-a"><strong>Root fear:</strong> Switching vendors feels like work. Stability preference.<br><br>
+"That’s great — how often do they come out? And do they document it with ATP readings and a compliance report?" Pause. If no: "That’s the gap. Anyone can run a cleaning service. We prove it was done to a standard that protects your license." If yes: "Excellent. Would you be open to a $99 comparison visit just to benchmark? A second set of eyes on a food safety item never hurts."</div>
+<div class="obj-close">✓ "Most of our clients had someone before us. The difference is the documentation."</div>
+</div>
+
+<div class="obj-card">
+<div class="obj-q">🔴 "That’s too expensive / we can’t afford it."</div>
+<div class="obj-a"><strong>Root fear:</strong> Adding a line item. Budget pressure is real in restaurants.<br><br>
+Give market context: "The industry average for a single professional ice machine cleaning in Tampa Bay is $250–300 per visit — Crystal Ice down the street charges $295. We’re $149 a month — six visits a year every 60 days, two Everpure Insurice filter replacements per year included, ATP documentation every visit." Then: "What would a health inspection citation cost you in fines, re-inspection fees, and the Google review that follows?"</div>
+<div class="obj-close">✓ "$99 intro, no commitment. One visit to see what the documentation looks like."</div>
+</div>
+
+<div class="obj-card">
+<div class="obj-q">🔴 "My landlord handles that."</div>
+<div class="obj-a"><strong>Root fear:</strong> Not my problem to solve.<br><br>
+"Do they have documentation of the last service — a compliance report you could show an inspector?" (Almost always: no.) "The challenge is that when the inspector writes a citation, it goes on your license, not your landlord’s. The responsibility is yours as the licensee." Offer to handle the service directly and send the documentation to building management. You’re solving their problem, not creating one.</div>
+<div class="obj-close">✓ "I service you directly, you forward the report to your landlord. Covers everyone."</div>
+</div>
+
+<div class="obj-card">
+<div class="obj-q">🔴 "Let me think about it."</div>
+<div class="obj-a"><strong>Root fear:</strong> Missing information — or no pain felt yet. Sandler: no pain, no sale.<br><br>
+Never hand a card and leave. "Of course — what specifically would be most helpful to know before you decide?" Listen. If they can’t articulate it, the real objection hasn’t surfaced. "Most people want to see the documentation before committing. Can I show you a before-and-after report from a job I did nearby this week?"</div>
+<div class="obj-close">✓ "I’m back in this area Thursday. Can I stop by when [owner] is in?" Always leave with a defined next step.</div>
+</div>
+
+<div class="obj-card">
+<div class="obj-q">🔴 "We just passed our last inspection."</div>
+<div class="obj-a"><strong>Root fear:</strong> If it ain’t broke, don’t fix it.<br><br>
+"That’s great — when was it?" Then: "Inspectors don’t always swab inside the unit — they’re often checking paperwork and visible surfaces. Would you like to see what the water contact surfaces look like right now?" The ATP demo still closes this. A passing inspection and a clean machine are two different things.</div>
+<div class="obj-close">✓ "Our goal isn’t just passing inspection. It’s never having a conversation with an inspector about your ice machine."</div>
+</div>
+
+<div class="obj-card">
+<div class="obj-q">🔴 "Your competitor is cheaper."</div>
+<div class="obj-a"><strong>Root fear:</strong> Overpaying. Comparison shopping.<br><br>
+"That’s possible. Do they provide ATP documentation with before-and-after readings? And a compliance report for your records?" Most cheaper services don’t. "The price difference is the documentation." Then give context: "A single professional cleaning in this market typically runs $250–300. Our monthly is $149, and we’re there 12 times a year, not twice."</div>
+<div class="obj-close">✓ "I’m not the cheapest. I’m the one you call when an inspector walks in."</div>
+</div>
+
+<div class="obj-card">
+<div class="obj-q">🔴 "I need to talk to my partner / corporate."</div>
+<div class="obj-a"><strong>Respect this one. Don’t push a close they don’t have authority to make.</strong><br><br>
+"Totally understand — who else is involved in this decision?" Get the name. "What would be most helpful to leave with you for that conversation?" Leave excellent materials. "Would it be easier if I came back when [name] is here, or would it help to send information directly to them?" Never leave without a defined next step.</div>
+<div class="obj-close">✓ Get a specific date, name, or contact method. A vague "they’ll call you" is a dead end.</div>
+<div class="obj-card">
+<div class="obj-q">🟢 “What’s actually included in the $149/month?”</div>
+<div class="obj-a"><strong>Buying signal. Answer completely and confidently.</strong><br><br>
+“Every 60 days I come in, open the water system, descale the evaporator, sanitize all internal surfaces, run ATP tests before and after, and leave you a compliance report. Twice a year I also replace your Everpure Insurice filter — that’s the filter on your water line that prevents scale on the evaporator and extends machine life. Most service companies charge extra for filter changes or don’t include them. It’s built into your $149. Six visits a year, two filter replacements, ATP documentation every visit.”</div>
+<div class="obj-close">✓ This answer closes more often than not. Have your pricing card ready.</div>
+</div>
+
+</div>
+</div>
+</div>
+
+<!-- 04 PRICING -->
+<div class="section" id="pricing">
+<div class="section-hdr" onclick="toggle(this)">
+  <div class="section-num">04</div><div class="section-icon">💰</div>
+  <div><div class="section-title">Pricing & Competitive Position</div><div class="section-sub">Where you fit in the market — and why it matters</div></div>
+  <div class="chevron">▼</div>
+</div>
+<div class="section-body">
+
+<div class="block">
+<div class="block-title">Your Pricing</div>
+<div class="timing">
+<div class="timing-step"><div class="timing-time">$99</div><div class="timing-label">Intro (light svc)</div></div>
+<div class="timing-step"><div class="timing-time">$349</div><div class="timing-label">Deep Clean ($99 credited)</div></div>
+<div class="timing-step"><div class="timing-time">$149/mo</div><div class="timing-label">1st Machine</div></div>
+<div class="timing-step"><div class="timing-time">$89/mo</div><div class="timing-label">2nd Machine</div></div>
+<div class="timing-step"><div class="timing-time">$69/mo</div><div class="timing-label">Each Add'l</div></div>
+</div>
+<div class="alert alert-green" style="margin-top:8px">✓ Monthly plan includes: 6 service visits/year (every 60 days) + 2 Everpure i2000(2) Insurice filter replacements. No other competitor in Tampa Bay includes filters in their maintenance pricing.</div>
+</div>
+
+<div class="block">
+<div class="block-title">Market Reality — You Are Below Market</div>
+<p>This is critical context for your pitch. You are a premium service at a below-market price point. That should be communicated as value, not as discount.</p>
+<div style="background:rgba(255,255,255,.04);border:1px solid var(--brd);border-radius:8px;padding:12px;margin:10px 0">
+<div class="price-row"><span>Industry average — single cleaning visit</span><span class="price-them">$250–$300/visit</span></div>
+<div class="price-row"><span>Crystal Ice (Tampa Bay) — PM cleaning</span><span class="price-them">$295/visit</span></div>
+<div class="price-row"><span>Industry standard annual cost (2x/year)</span><span class="price-them">$500–$600/year</span></div>
+<div class="price-row"><span>Your intro visit</span><span class="price-you">$99 (vs $250–295 market)</span></div>
+<div class="price-row"><span>Your monthly service — 6x/year equivalent</span><span class="price-you">$149/mo = $1,788/year</span></div>
+</div>
+<div class="alert alert-green">✓ The corrected comparison: Crystal Ice charges $295/visit, typically twice a year = $590/year, no filters, no ATP documentation. You charge $149/month = $1,788/year for 6 visits, 2 Everpure Insurice filters included, ATP documentation every visit. That is a fundamentally different and more comprehensive service — not a price comparison, a product comparison.</div>
+</div>
+
+<div class="block">
+<div class="block-title">Presenting Price</div>
+<p>Never lead with price. Lead with value. When price comes up, provide market context immediately:</p>
+<div class="script"><div class="script-label">Price framing</div>"Monthly service is $149 — that’s less than a single professional cleaning visit costs at most Tampa Bay service companies. You get a service visit every 60 days — six times a year vs. the industry standard of twice. Two Everpure filter replacements included. Every visit has a documented compliance report."</div>
+<p>If they push on commitment:</p>
+<div class="script"><div class="script-label">Monthly commitment objection</div>"Start with the $99 intro and see how it feels. No contract. Most clients don’t cancel because the documentation becomes valuable to them once they have it."</div>
+</div>
+
+<div class="block">
+<div class="block-title">Protecting Your Price</div>
+<p>You will feel pressure to discount. Resist. Every time you drop price without reason, you signal the original wasn’t real — and you erode your margin on a business that’s already lean. When they push on price, <strong>add value instead of cutting price:</strong></p>
+<ol class="steps">
+<li><div class="step-num">1</div><div>Complimentary air filter cleaning on the first visit.</div></li>
+<li><div class="step-num">2</div><div>Printed and laminated annual service schedule for their kitchen binder.</div></li>
+<li><div class="step-num">3</div><div>On-call contact for any ice machine questions between visits.</div></li>
+</ol>
+<p>None cost you more than 15 minutes. All raise perceived value without touching your margin.</p>
+</div>
+
+<div class="block">
+<div class="block-title">Multi-Machine & Annual Schedule Closes</div>
+<p>Always ask how many machines they have. Even if they only mentioned one.</p>
+<div class="script"><div class="script-label">Multi-machine ask</div>"How many ice machines do you have on-site? Any bar ice, back-of-house units besides the main one?"</div>
+<p>After every closed deal, generate the annual schedule on the spot and hand it physically:</p>
+<div class="script"><div class="script-label">Annual schedule handoff</div>"Here’s your service schedule for the next 12 months. Every 60 days, each visit comes with a compliance report. Keep this in your kitchen binder — if an inspector ever asks about your ice machine maintenance, you hand them this."</div>
+</div>
+
+</div>
+</div>
+
+<!-- 05 BUYER PERSONAS -->
+<div class="section" id="personas">
+<div class="section-hdr" onclick="toggle(this)">
+  <div class="section-num">05</div><div class="section-icon">👤</div>
+  <div><div class="section-title">Pinellas Buyer Personas</div><div class="section-sub">Read the room fast — adjust in real time</div></div>
+  <div class="chevron">▼</div>
+</div>
+<div class="section-body">
+
+<div class="block">
+<div class="block-title">The Six Personas You’ll Meet</div>
+
+<div class="persona">
+<div class="persona-type">🏖 The Beach / Tourist Zone Operator</div>
+<div class="persona-signals">Waterfront or tourist corridor location, high volume, seasonal business. Often a manager, not the owner.</div>
+<div class="persona-close"><strong>Angle:</strong> Summer urgency. "Your machine runs at maximum capacity June through September — that’s when machines fail and inspections spike." If owner isn’t there, qualify the manager’s authority and get the owner’s name. Sell prevention before the summer pain arrives.</div>
+</div>
+
+<div class="persona">
+<div class="persona-type">🇨🇺 The Cuban / Hispanic Family Owner</div>
+<div class="persona-signals">Family-operated, owner present most hours, pride in their establishment. Community-connected. Warm but cautious with new vendors.</div>
+<div class="persona-close"><strong>Angle:</strong> Relationship first — always. Ask about their restaurant before mentioning your service. How long have they been open? What’s their specialty? Show genuine interest. <em>Confianza</em> — earned trust — must come before the sale. Never rush. The ATP demo still closes, but the relationship opens the door. One referral in this community is worth 20 cold walk-ins. Ask explicitly: "Do you know other restaurant owners nearby who might benefit from this?"</div>
+</div>
+
+<div class="persona">
+<div class="persona-type">🏠 The Long-Established Neighborhood Owner (10+ years)</div>
+<div class="persona-signals">Same location for years, loyal customer base, has been burned by vendors before, skeptical baseline.</div>
+<div class="persona-close"><strong>Angle:</strong> Expertise and reliability. They’re not buying a cleaning service — they’re buying a vendor they can trust. Lead with your inspection intelligence: "I study FL DBPR data for every restaurant in Pinellas — I know what inspectors are flagging in your neighborhood right now." That’s differentiated knowledge they’ve never heard from a vendor. Undercommit and overdeliver on the first visit.</div>
+</div>
+
+<div class="persona">
+<div class="persona-type">🌟 The Downtown St. Pete Independent</div>
+<div class="persona-signals">Trendy concept, image-conscious, active on social media, younger or younger-minded owner. Google reviews matter.</div>
+<div class="persona-close"><strong>Angle:</strong> Brand protection. "A health inspection citation in Florida is public record — it shows up on Google, Yelp, and the county website within days." Your compliance report is brand insurance. Lead with the documentation story, not the cleaning story.</div>
+</div>
+
+<div class="persona">
+<div class="persona-type">💼 The Decisive Owner — wants it handled</div>
+<div class="persona-signals">Quick decisions, asks "what do you recommend," doesn’t haggle.</div>
+<div class="persona-close"><strong>Angle:</strong> Give them a clear recommendation, not options. "Based on what I’m seeing, start with a deep clean Thursday and go on monthly maintenance from there." Don’t offer three tiers. Give them the answer.</div>
+</div>
+
+<div class="persona">
+<div class="persona-type">🔍 The Skeptic — needs proof before anything</div>
+<div class="persona-signals">Arms crossed, lots of questions, references past vendors who disappointed them.</div>
+<div class="persona-close"><strong>Angle:</strong> Evidence only. Let the ATP number do the work. Show before-and-after photos and a sample compliance report. Offer the $99 intro as risk-free proof of concept. "Let me earn your trust with one visit before we talk about anything ongoing." Never close hard with a skeptic — they close themselves when the proof is undeniable.</div>
+</div>
+
+</div>
+</div>
+</div>
+
+<!-- 06 KNOW YOUR PROSPECT -->
+<div class="section" id="intel">
+<div class="section-hdr" onclick="toggle(this)">
+  <div class="section-num">06</div><div class="section-icon">🎯</div>
+  <div><div class="section-title">Know Your Prospect</div><div class="section-sub">Using inspection intelligence before you walk in</div></div>
+  <div class="chevron">▼</div>
+</div>
+<div class="section-body">
+
+<div class="block">
+<div class="block-title">What You Know Before You Knock <span class="mbadge bc">Challenger</span></div>
+<p>You have 6 years of FL DBPR inspection history on every prospect. No competitor walking in off the street has this. This is your commercial insight — the Challenger principle. You know their compliance history before they know your name.</p>
+<div class="alert alert-red">⚠ Do not reveal specific violation dates or case numbers. Frame it as your specialty: "I work specifically with restaurants that have had inspection activity" — not "I saw you had a violation on [date]."</div>
+</div>
+
+<div class="block">
+<div class="block-title">Reading Priority Scores</div>
+<table class="score-table">
+<tr><th>Priority</th><th>What It Means</th><th>Your Angle</th></tr>
+<tr><td style="color:#f08080;font-weight:700">CALLBACK</td><td>Had a violation requiring a return inspection. Highest urgency.</td><td>"I specialize in restaurants that have had callback inspections. My service gives you documented compliance before the re-inspection."</td></tr>
+<tr><td style="color:#fb923c;font-weight:700">HOT</td><td>Recent violations, elevated score, active risk.</td><td>Go straight to ATP demo. Urgency is real — use it honestly.</td></tr>
+<tr><td style="color:#fbbf24;font-weight:700">WARM</td><td>Moderate history, some risk signals.</td><td>"Most owners in your category don’t know they have an issue until the inspector shows up."</td></tr>
+<tr><td style="color:#34d399;font-weight:700">CHRONIC ICE</td><td>Specific ice/water violations in history.</td><td>"I specialize in exactly the type of violation your location has dealt with."</td></tr>
+</table>
+</div>
+
+<div class="block">
+<div class="block-title">Who to Target First in Pinellas</div>
+<ol class="steps">
+<li><div class="step-num">1</div><div><strong>CALLBACK priority</strong> with a re-inspection window open</div></li>
+<li><div class="step-num">2</div><div><strong>Independent ownership</strong> — decision maker is on premises today</div></li>
+<li><div class="step-num">3</div><div><strong>5+ years in business</strong> — stable, established, not going anywhere</div></li>
+<li><div class="step-num">4</div><div><strong>Mid-tier independent</strong> — not fast food (corporate contracts), not high-end fine dining. Sweet spot: neighborhood spots, sports bars, casual waterfront dining, Cuban/Latin restaurants, Caribbean spots</div></li>
+<li><div class="step-num">5</div><div><strong>Has a phone number</strong> in your app — more likely owner-operated and actively maintained</div></li>
+</ol>
+</div>
+
+</div>
+</div>
+
+<!-- 07 COMPETITORS -->
+<div class="section" id="competitors">
+<div class="section-hdr" onclick="toggle(this)">
+  <div class="section-num">07</div><div class="section-icon">⚔️</div>
+  <div><div class="section-title">Competitive Intelligence</div><div class="section-sub">Know them cold — use the gaps</div></div>
+  <div class="chevron">▼</div>
+</div>
+<div class="section-body">
+
+<div class="block">
+<div class="block-title">Your Position</div>
+<p>You are a local specialist with real-time inspection intelligence, ATP documentation, monthly frequency, and a personal relationship. You are also below market on per-visit cost while providing significantly higher service frequency. Every competitor either lacks your data, your documentation, your frequency, or your responsiveness.</p>
+</div>
+
+<div class="block">
+<div class="block-title">Main Competitors</div>
+
+<div class="intel-card">
+<div class="intel-name">Crystal Ice Machine Services — Clearwater</div>
+<div><span class="intel-tag tag-local">Real Local Competitor</span></div>
+<div class="intel-body">Family-owned since 1992. Services Pinellas, Hillsborough, Pasco, Hernando. Charges $295/visit for PM cleanings. Does repairs, sales, and leasing in addition to cleaning. Established reputation. Your most credible local competitor on cleaning specifically.</div>
+<div class="intel-counter">"Crystal Ice has been around since 1992 — solid company. Their cleaning visits are $295 each, typically twice a year. I’m $149 a month — six visits a year, every 60 days, two Everpure Insurice filter replacements per year included, ATP documentation every visit."</div>
+</div>
+
+<div class="intel-card">
+<div class="intel-name">Easy Ice</div>
+<div><span class="intel-tag tag-threat">National Subscription — Different Buyer</span></div>
+<div class="intel-body">They own the machine, you rent it. All-inclusive, hundreds per month. Best for large corporate accounts, hotels, hospitals. Uses third-party techs. Local responsiveness is a genuine weakness.</div>
+<div class="intel-counter">"Easy Ice is excellent for large corporate accounts. For an independent restaurant, you’re paying a premium for a machine you don’t own and a call center you share with thousands of other businesses. I’m local. You have my cell. When an inspector walks in Tuesday morning, I pick up."</div>
+</div>
+
+<div class="intel-card">
+<div class="intel-name">The Ice Doctors / S&W Refrigeration — Tampa</div>
+<div><span class="intel-tag tag-local">Repair-First</span></div>
+<div class="intel-body">Established 1997. Primary focus: repair and leasing. Cleaning is a secondary service. Strong for equipment issues.</div>
+<div class="intel-counter">"S&W is excellent for repairs. Their cleaning is an add-on to their repair business. I’m dedicated to cleaning and compliance — it’s not an afterthought for me, it’s the whole service."</div>
+</div>
+
+<div class="intel-card">
+<div class="intel-name">Local HVAC / Refrigeration Techs</div>
+<div><span class="intel-tag tag-easy">Easiest to Displace</span></div>
+<div class="intel-body">General refrigeration tech who "also cleans ice machines." No ATP testing. No compliance documentation. Reactive — shows up when the machine breaks.</div>
+<div class="intel-counter">"A refrigeration tech cleans machines to make them run. I clean machines to keep you compliant. Different service, different documentation, different reason."</div>
+</div>
+
+<div class="intel-card">
+<div class="intel-name">Restaurant’s Own Staff</div>
+<div><span class="intel-tag tag-easy">Most Common — ATP Demo Handles It</span></div>
+<div class="intel-body">Staff runs a clean cycle or wipes the exterior. No disassembly, no ATP, no documentation. They believe the machine is clean because they can’t see inside.</div>
+<div class="intel-counter">"I’m not replacing what your team does — they handle the daily wipe-downs, that’s the right habit. I handle the internal water system that requires disassembly, chemicals, and documentation. Two different things."</div>
+</div>
+
+</div>
+
+<div class="block">
+<div class="block-title">Your Unfair Advantages</div>
+<ol class="steps">
+<li><div class="step-num">1</div><div><strong>Inspection intelligence</strong> — 6 years of FL DBPR data on every prospect. No competitor walking in cold has this.</div></li>
+<li><div class="step-num">2</div><div><strong>ATP documentation</strong> — before/after on every visit. Most competitors don’t offer this at all.</div></li>
+<li><div class="step-num">3</div><div><strong>Below-market pricing with higher frequency</strong> — $149/month vs $295/visit. More visits, more documentation, lower per-visit cost.</div></li>
+<li><div class="step-num">4</div><div><strong>Local presence, personal relationship</strong> — you answer your phone. National companies cannot match this.</div></li>
+<li><div class="step-num">5</div><div><strong>Multi-brand expertise</strong> — Manitowoc, Hoshizaki, Scotsman, Ice-O-Matic, Follett, Cornelius. One call covers everything.</div></li>
+</ol>
+</div>
+
+</div>
+</div>
+
+<!-- 08 THE CLOSE -->
+<div class="section" id="the-close">
+<div class="section-hdr" onclick="toggle(this)">
+  <div class="section-num">08</div><div class="section-icon">🤝</div>
+  <div><div class="section-title">The Close</div><div class="section-sub">Read the room and seal the deal</div></div>
+  <div class="chevron">▼</div>
+</div>
+<div class="section-body">
+
+<div class="block">
+<div class="block-title">The Core Rule</div>
+<p>The close is the natural conclusion to a conversation where you’ve established real value. If someone doesn’t buy, you either didn’t establish enough value or you pitched the wrong person at the wrong time.</p>
+<div class="alert alert-gold">Never close with a question that can be answered "no." Close with a question that assumes yes and asks for a detail — a date, a preference, a name.</div>
+</div>
+
+<div class="block">
+<div class="block-title">Primary Closes</div>
+
+<div class="persona">
+<div class="persona-type">The Assumptive Close</div>
+<div class="persona-signals">Use when: strong buying signals, nodding, follow-up questions, concern about the ATP reading</div>
+<div class="persona-close"><div class="script" style="margin:0"><div class="script-label">Script</div>"Let me get you set up. What day works best for the first service — I typically do Tuesday and Thursday in this area."</div></div>
+</div>
+
+<div class="persona">
+<div class="persona-type">The Risk-Removal Close</div>
+<div class="persona-signals">Use when: interested but hesitant, needs a low-commitment entry point</div>
+<div class="persona-close"><div class="script" style="margin:0"><div class="script-label">Script</div>"Let’s start with the $99 intro visit. I assess the machine, do a service and sanitize, and run before-and-after ATP tests — all documented in a compliance report. If the machine needs a full deep clean, that’s $349 total and the $99 is credited. After that, 60-day maintenance at $149/month with two Everpure filter replacements per year included. No contract at any point."</div></div>
+</div>
+
+<div class="persona">
+<div class="persona-type">The Evidence Close</div>
+<div class="persona-signals">Use when: skeptic, wants proof before any commitment</div>
+<div class="persona-close"><div class="script" style="margin:0"><div class="script-label">Script</div>"Let me show you a before-and-after report from a service I did this week. If the results look like something you’d want for your own kitchen, we schedule a visit."</div></div>
+</div>
+
+<div class="persona">
+<div class="persona-type">The Graceful Exit (Firm No)</div>
+<div class="persona-signals">Use when: firm no after 2+ attempts — don’t push further</div>
+<div class="persona-close"><div class="script" style="margin:0"><div class="script-label">Script</div>"Completely understand. Can I leave this with you? If anything changes — new inspection, new season, your current service misses a visit — I’m easy to reach. Number’s on there."</div>
+<p style="margin-top:8px;font-size:13px;color:rgba(245,240,232,.6)">Leave gracefully. Log it. Set a 60-day follow-up. The ones who say no today remember who left with class.</p></div>
+</div>
+
+</div>
+</div>
+</div>
+
+<!-- 09 FOLLOW-UP -->
+<div class="section" id="followup">
+<div class="section-hdr" onclick="toggle(this)">
+  <div class="section-num">09</div><div class="section-icon">📅</div>
+  <div><div class="section-title">The Follow-Up Sequence</div><div class="section-sub">Where most commercial service deals are won</div></div>
+  <div class="chevron">▼</div>
+</div>
+<div class="section-body">
+
+<div class="block">
+<div class="block-title">The Core Truth</div>
+<p>80% of commercial service sales require 5 or more touchpoints. Most vendors give up after 2. Your follow-up discipline is a competitive advantage in itself. The goal of each touchpoint is never to push a close — it’s to add value and be there when something changes. Something always changes.</p>
+</div>
+
+<div class="block">
+<div class="block-title">Standard Follow-Up Sequence</div>
+
+<div class="fu-step"><div class="fu-dot">0</div><div class="fu-content">
+<div class="fu-day">Same Day — Log Everything</div>
+<div class="fu-body">Log in app: owner name, reaction, specific objection, machine brand, next action. Set Day 7 follow-up before you leave the parking lot.</div>
+</div></div>
+
+<div class="fu-step"><div class="fu-dot">7</div><div class="fu-content">
+<div class="fu-day">Day 7 — The Phone Call</div>
+<div class="fu-body">Call directly. If voicemail: <em>"Hi, this is [name] from Pinellas Ice Co — I stopped by last week and looked at your ice machine. I have a few notes I wanted to share. Two minutes when you get a chance — [number]."</em> Don’t pitch in the voicemail. Create curiosity.</div>
+</div></div>
+
+<div class="fu-step"><div class="fu-dot">14</div><div class="fu-content">
+<div class="fu-day">Day 14 — The Walk-Back</div>
+<div class="fu-body">Return in person if in the area. Brief, not a full visit. "I was in the neighborhood and wanted to drop something off for [owner]." Leave a before-and-after comparison from a recent nearby job. Presence, not pressure.</div>
+</div></div>
+
+<div class="fu-step"><div class="fu-dot">30</div><div class="fu-content">
+<div class="fu-day">Day 30 — The Intelligence Drop</div>
+<div class="fu-body">Text or call with genuine value: <em>"Hey, this is [name] from Pinellas Ice Co. FL DBPR is stepping up inspections in Pinellas this month — wanted to give you a heads up. Happy to get you documented if it would help."</em> Real intel from your Monday briefing email. Real information creates real conversations.</div>
+</div></div>
+
+<div class="fu-step"><div class="fu-dot">60</div><div class="fu-content">
+<div class="fu-day">Day 60 — Qualify or Close the Loop</div>
+<div class="fu-body">One more call or walk-in. If they’re not interested after 5 touchpoints, close gracefully: <em>"I’ve been in a few times and I know the timing hasn’t been right. I’ll take you off my active list — but keep my number. If anything changes with inspections or your current service, I’m a call away."</em></div>
+</div></div>
+
+</div>
+
+<div class="block">
+<div class="block-title">The Referral Ask — Highest ROI Activity</div>
+<p>After every completed service, before you leave:</p>
+<div class="script"><div class="script-label">The referral ask</div>"Do you know any other restaurant owners in the area who might want to see a report like this? I’ll give them the same $99 intro, and I’ll take care of you if they sign up monthly."</div>
+<p>Ask in person, every time. One warm referral in Cuban and Caribbean owner networks is worth 15 cold walk-ins. These communities talk to each other constantly.</p>
+</div>
+
+</div>
+</div>
+
+<!-- 10 MINDSET -->
+<div class="section" id="mindset">
+<div class="section-hdr" onclick="toggle(this)">
+  <div class="section-num">10</div><div class="section-icon">🔥</div>
+  <div><div class="section-title">Field Mindset</div><div class="section-sub">What separates the top 10% from everyone else</div></div>
+  <div class="chevron">▼</div>
+</div>
+<div class="section-body">
+
+<div class="block">
+<div class="block-title">The Three Rules</div>
+<ol class="steps">
+<li><div class="step-num">1</div><div><strong>Volume solves everything.</strong> A decent pitch on 20 walk-ins closes more than a perfect pitch on 3. The pitch sharpens through use, not through thinking about it.</div></li>
+<li><div class="step-num">2</div><div><strong>You are providing a genuine service.</strong> Restaurants with dirty ice machines are a liability risk to their owners and a health risk to customers. Walk in like someone who has something valuable to offer — because you do.</div></li>
+<li><div class="step-num">3</div><div><strong>The no is free.</strong> Every walk-in costs 10 minutes. A no costs nothing. The fear of rejection is the only thing between you and your goal. Feel it and go in anyway.</div></li>
+</ol>
+</div>
+
+<div class="block">
+<div class="block-title">Call Reluctance — The Real Obstacle</div>
+<p>Every field sales rep faces it. The discomfort before you open the door to an unfamiliar restaurant. The feeling you’re interrupting someone’s day. Here’s the truth: <strong>it disappears after 10 walk-ins.</strong> Not after more preparation. After 10 reps. Walks 1–3: awkward. 4–7: mechanical. 8–10: rhythm. Walk 15: professional.</p>
+<div class="alert alert-gold">Week one goal: 10 walk-ins, regardless of outcome. Not 10 closes. 10 walk-ins. That’s the only metric that matters in week one.</div>
+</div>
+
+<div class="block">
+<div class="block-title">The Numbers</div>
+<table class="score-table">
+<tr><th>Metric</th><th>Industry Average</th><th>Your Target</th></tr>
+<tr><td>Walk-ins to intro close</td><td>1 in 8–12</td><td>Track and improve each week</td></tr>
+<tr><td>Intro to monthly conversion</td><td>60–70%</td><td>80%+ — service quality drives this</td></tr>
+<tr><td>Monthly churn</td><td>3–5%/month</td><td>Under 2% — relationships prevent churn</td></tr>
+<tr><td>Referral rate</td><td>10–15%</td><td>20%+ if you ask every time</td></tr>
+</table>
+<div class="alert alert-green">✓ To reach 10 clients by July 1: 1 close per week for 10 weeks. At 1 close per 10 walk-ins, that’s 2 walk-ins per day, 5 days a week. That’s your number.</div>
+</div>
+
+<div class="block">
+<div class="block-title">Pre-Walk-In Ritual</div>
+<ol class="steps">
+<li><div class="step-num">1</div><div>Pull up their record. Score, priority, inspection notes.</div></li>
+<li><div class="step-num">2</div><div>Remind yourself: you have something they need. You’re not asking for a favor.</div></li>
+<li><div class="step-num">3</div><div>Decide your angle in 10 seconds.</div></li>
+<li><div class="step-num">4</div><div>Get out of the car.</div></li>
+</ol>
+</div>
+
+</div>
+</div>
+
+</div><!-- end .content -->
+
+<script>
+function toggle(el){
+  const body=el.nextElementSibling;
+  const isOpen=el.classList.contains("open");
+  if(isOpen){el.classList.remove("open");body.classList.remove("open");}
+  else{el.classList.add("open");body.classList.add("open");}
+}
+function jumpTo(id){
+  const el=document.getElementById(id);
+  if(!el)return;
+  const hdr=el.querySelector(".section-hdr");
+  const body=el.querySelector(".section-body");
+  if(hdr&&body){hdr.classList.add("open");body.classList.add("open");}
+  setTimeout(()=>{
+    const top=el.getBoundingClientRect().top+window.scrollY-80;
+    window.scrollTo({top,behavior:"smooth"});
+  },50);
+  document.querySelectorAll(".pill").forEach(p=>p.classList.remove("active"));
+  event.target.classList.add("active");
+}
+document.querySelector(".section-hdr").classList.add("open");
+document.querySelector(".section-body").classList.add("open");
+</script>
+</body>
+</html>
