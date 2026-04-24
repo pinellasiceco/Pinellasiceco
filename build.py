@@ -1423,7 +1423,7 @@ header{background:var(--navy);
   background:#dc2626;color:#fff;
   padding:6px 12px;
   font-size:11px;font-weight:700;
-  text-align:center;z-index:600;
+  text-align:center;z-index:200;
   align-items:center;justify-content:center;gap:6px;
 }
 #offline-banner.active{display:flex;}
@@ -1587,16 +1587,6 @@ header{background:var(--navy);
       </div>
       <div class="grid" id="nurture-grid"></div>
       <div class="tempty" id="nurture-empty" style="display:none">No follow-ups due. &#x2713;</div>
-    </div>
-
-    <!-- ── STRIKE ZONE ─────────────────────────────────── -->
-    <div id="section-strikezone" style="display:none">
-      <div class="tsect-hdr" style="background:#fef2f2;border-radius:8px;padding:8px 10px;margin-bottom:6px">
-        <span style="color:#dc2626;font-weight:800">🚨 Strike Zone — Act Now</span>
-        <span class="tsect-sub" style="color:#dc2626">CALLBACK + chronic ice + inspection imminent</span>
-      </div>
-      <div class="grid" id="tgrid-strikezone"></div>
-      <div class="tempty" id="empty-strikezone" style="display:none">No strike zone targets right now.</div>
     </div>
 
     <!-- ── BEST MOVE (cold targets) ─────────────────── -->
@@ -2868,6 +2858,7 @@ function attachGridListeners(grid){
       if(!id)return;
       const act=btn.dataset.action;
       if(act==='showCard')    showCard(id);
+      else if(act==='openM')  showCard(id);
       else if(act==='svclog') openServiceLog(id);
       else if(act==='snext')  setNextService(id);
       else if(act==='skip')   skip(id);
@@ -3250,7 +3241,7 @@ function renderRList(){
     const distTxt=p._d?p._d.toFixed(1)+'mi':'';
     const chronicTxt=p.chronic?'<div style="font-size:8px;color:#059669;font-weight:700">CHRONIC ICE</div>':'';
     const isAnchor=routeAnchor&&routeAnchor.id===p.id;
-    return '<div class="rcard'+(inR?' sel':'')+'" data-action="route" data-id='+p.id+' style="border-left:3px solid '+col+(inR?';background:#fff7f5':'')+(isAnchor?';border-left:4px solid #7c3aed':'')+';">'
+    return '<div class="rcard'+(inR?' sel':'')+'" data-action="route" data-id="'+p.id+'" style="border-left:3px solid '+col+(inR?';background:#fff7f5':'')+(isAnchor?';border-left:4px solid #7c3aed':'')+';">'
       +'<div class="rdot" style="background:'+col+'"></div>'
       +'<div style="flex:1;min-width:0">'
         +'<div class="rname" style="color:var(--navy)">'+p.name+(inR?' <span style="color:var(--ora)">&#x2713;</span>':'')+(isAnchor?' <span style="font-size:8px;color:#7c3aed">&#x1F4CD; START</span>':'')+'</div>'
@@ -3260,8 +3251,7 @@ function renderRList(){
       +'<div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">'
         +(distTxt?'<div class="rdist">'+distTxt+'</div>':'')
         +'<button data-action="start" style="font-size:8px;padding:2px 5px;border:1px solid #7c3aed;border-radius:4px;background:#f5f3ff;color:#7c3aed;cursor:pointer;font-family:inherit">Start &#x1F4CD;</button>'
-        +'<button data-action="route" style="font-size:9px;padding:4px 8px;min-height:36px;border:1px solid '+(inR?'#059669':'var(--brd)')+';border-radius:6px;background:'+(inR?'#ecfdf5':'var(--surf)')+';color:'+(inR?'#059669':'var(--sub)')+';cursor:pointer;font-family:inherit;touch-action:manipulation">'+(inR?'\u2713 Added':'+ Add')+'</button>'
-        +'<button data-action="showCard" style="font-size:8px;padding:4px 8px;min-height:36px;border:1px solid var(--brd);border-radius:6px;background:var(--surf);color:var(--sub);cursor:pointer;font-family:inherit;touch-action:manipulation">Details</button>'
+        +'<button data-action="openM" style="font-size:8px;padding:4px 8px;min-height:36px;border:1px solid var(--brd);border-radius:6px;background:var(--surf);color:var(--sub);cursor:pointer;font-family:inherit;touch-action:manipulation">Details</button>'
       +'</div>'
 
       +'</div>';
@@ -3309,7 +3299,7 @@ function renderMap(){
       '<br><button onclick="addToRoute('+p.id+')" '+
       'style="margin-top:4px;padding:3px 8px;border:none;border-radius:5px;background:'+col+';color:'+(p.priority==='WARM'?'#000':'#fff')+';font-size:10px;font-weight:700;cursor:pointer">'+
       (routeSet.has(p.id)?'Remove from Route':'+Route')+'</button> '+
-      '<button onclick="openM('+p.id+')" '+
+      '<button onclick="showCard('+p.id+')" '+
       'style="margin-top:3px;padding:3px 8px;border:1px solid #333;border-radius:5px;background:#111;color:#fff;font-size:10px;cursor:pointer">Details</button>',
       {maxWidth:220}
     );
@@ -3384,7 +3374,7 @@ function renderDayRoute(){
         +'</div>'
       +'</div>'
       +'<div style="display:flex;flex-direction:column;gap:3px;flex-shrink:0">'
-        +'<button onclick="openM('+p.id+')" style="font-size:9px;padding:3px 6px;border:1px solid var(--ora);border-radius:5px;background:#fff7f5;color:var(--ora);cursor:pointer;font-family:inherit">Details</button>'
+        +'<button onclick="showCard('+p.id+')" style="font-size:9px;padding:3px 6px;border:1px solid var(--ora);border-radius:5px;background:#fff7f5;color:var(--ora);cursor:pointer;font-family:inherit">Details</button>'
         +'<button onclick="removeStop('+p.id+')" style="font-size:9px;padding:3px 6px;border:1px solid var(--brd);border-radius:5px;background:transparent;color:var(--sub);cursor:pointer;font-family:inherit">Remove</button>'
       +'</div>'
 
@@ -3449,22 +3439,7 @@ function planMyDay(){
   const pri=(document.getElementById('rp')||{}).value||'';
   const rad=parseFloat((document.getElementById('rrad')||{}).value)||8;
 
-  if(!hours){
-    if(zip.length===5&&ZIPS[zip]){
-      const [slat,slon]=ZIPS[zip];
-      const rad2=parseFloat((document.getElementById('rrad')||{}).value)||8;
-      let cands=P.filter(p=>p.lat&&p.lon&&!isC(p.id))
-        .map(p=>({...p,_d:hav(slat,slon,p.lat,p.lon)}))
-        .filter(p=>p._d<=rad2)
-        .sort((a,b)=>(PO[a.priority]??5)-(PO[b.priority]??5)||b.score-a.score)
-        .slice(0,8);
-      if(!cands.length){toast('No prospects within '+rad2+'mi of '+zip);rRoute();return;}
-      route=cands;routeSet=new Set(cands.map(p=>p.id));
-      mapPros=cands;renderRList();renderMap();renderDayRoute();
-      toast('Built '+cands.length+' top stops near '+zip);
-    } else { rRoute(); }
-    return;
-  }
+  if(!hours){rRoute();return;}
 
   // Determine start coords — anchor takes priority over home ZIP
   let slat,slon,startLabel;
@@ -3591,130 +3566,10 @@ function removeStop(id){routeSet.delete(id);route=route.filter(r=>r.id!==id);ren
 // MODAL
 // showCard: opens the full openM modal sheet via iOS-compatible overlay
 // Works around iOS Safari inline onclick issues on injected divs
-
-// ── scStatusReport: generates print-ready prospect ATP status report ─────────
-function scStatusReport(){
-  var p=_sc.p; if(!p)return;
-  var ph=p.phone||PHONES[String(p.id)]||'';
-  var today=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-  var todayShort=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-
-  // ATP reading — prompt via overlay
-  var existing=document.getElementById('sr-bg');
-  if(existing)existing.remove();
-  var bg=document.createElement('div');
-  bg.id='sr-bg';
-  bg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:700;display:flex;align-items:center;justify-content:center';
-
-  bg.innerHTML='<div style="background:#fff;border-radius:16px;padding:20px;width:92%;max-width:360px">'
-    +'<div style="font-size:14px;font-weight:800;color:#0f1f38;margin-bottom:4px">📋 Status Report</div>'
-    +'<div style="font-size:11px;color:#64748b;margin-bottom:14px">Enter the ATP reading you just took</div>'
-    +'<div style="font-size:9px;font-weight:700;color:#dc2626;text-transform:uppercase;margin-bottom:4px">⚠ Before (pre-clean) RLU</div>'
-    +'<input id="sr-atp" type="number" placeholder="e.g. 847" min="0" max="9999" '
-    +'style="width:100%;padding:12px;border:2px solid #fca5a5;border-radius:8px;font-size:24px;font-weight:800;'
-    +'color:#dc2626;text-align:center;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:12px">'
-    +'<div style="font-size:9px;color:#64748b;margin-bottom:10px">Leave blank to show "Test pending"</div>'
-    +'<div style="display:flex;gap:8px">'
-    +'<button onclick="srGenerate()" ontouchend="event.preventDefault();srGenerate()" '
-    +'style="flex:1;padding:11px;background:#0f1f38;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Generate & Print</button>'
-    +'<button onclick="srCancel()" ontouchend="event.preventDefault();srCancel()" '
-    +'style="padding:11px 14px;background:#f1f5f9;color:#475569;border:none;border-radius:9px;font-size:13px;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
-    +'</div></div>';
-  document.body.appendChild(bg);
-}
-function srCancel(){var b=document.getElementById('sr-bg');if(b)b.remove();}
-function srGenerate(){
-  var p=_sc.p; if(!p)return;
-  var atpVal=parseInt((document.getElementById('sr-atp')||{}).value||'0')||0;
-  srCancel();
-
-  var atpDisplay=atpVal>0?atpVal:'—';
-  var atpStatus=atpVal<=0?'PENDING':atpVal<=10?'PASS':atpVal<=100?'MARGINAL':'FAIL';
-  var atpColor=atpVal<=0?'#64748b':atpVal<=10?'#059669':atpVal<=100?'#d97706':'#dc2626';
-  var atpBg=atpVal<=0?'#f8fafc':atpVal<=10?'#ecfdf5':atpVal<=100?'#fffbeb':'#fef2f2';
-  var atpMsg=atpVal<=0?'ATP test not yet performed':
-    atpVal<=10?'✓ Readings within safe range (FDA <10 RLU)':
-    atpVal<=100?'⚠ Elevated reading — cleaning recommended':
-    '✗ Critical contamination — cleaning required for compliance';
-
-  var ph=p.phone||PHONES[String(p.id)]||'';
-  var today=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-  var iceLine=p.chronic?'Chronic ice machine violations on FL DBPR record':
-    p.confirmed?'Ice machine violation on FL DBPR record':'';
-
-  var html='<!DOCTYPE html><html><head><meta charset="UTF-8">'
-    +'<meta name="viewport" content="width=device-width,initial-scale=1">'
-    +'<title>Ice Machine Status Report — '+p.name+'</title>'
-    +'<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:24px;max-width:680px;margin:0 auto;color:#1e293b;font-size:12px;}'
-    +'@media print{body{padding:12px;}button{display:none;}}</style></head><body>'
-    // Header
-    +'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid #0f1f38">'
-    +'<div><img src="logo_for_pdf.png" style="height:40px;margin-bottom:4px" onerror="this.remove()"><div style="font-size:11px;color:#64748b">pinellasiceco.com · (727) 855-6873</div></div>'
-    +'<div style="text-align:right"><div style="font-size:18px;font-weight:800;color:#0f1f38">ICE MACHINE STATUS REPORT</div>'
-    +'<div style="font-size:11px;color:#64748b">'+today+'</div></div></div>'
-    // Business info
-    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">'
-    +'<div style="padding:12px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0">'
-    +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;margin-bottom:4px">Establishment</div>'
-    +'<div style="font-size:14px;font-weight:800;color:#0f1f38">'+p.name+'</div>'
-    +'<div style="font-size:11px;color:#64748b">'+p.address+'</div>'
-    +'<div style="font-size:11px;color:#64748b">'+p.city+', FL '+p.zip+'</div>'
-    +(ph?'<div style="font-size:11px;color:#64748b;margin-top:4px">'+ph+'</div>':'')
-    +'</div>'
-    +'<div style="padding:12px;background:'+atpBg+';border-radius:8px;border:2px solid '+atpColor+'">'
-    +'<div style="font-size:9px;font-weight:700;color:'+atpColor+';text-transform:uppercase;margin-bottom:6px">ATP Contamination Reading</div>'
-    +'<div style="font-size:36px;font-weight:900;color:'+atpColor+'">'+atpDisplay+'</div>'
-    +(atpVal>0?'<div style="font-size:11px;color:'+atpColor+';font-weight:700">RLU · '+atpStatus+'</div>':'')
-    +'</div></div>'
-    // ATP explanation
-    +'<div style="background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;padding:12px;margin-bottom:16px">'
-    +'<div style="font-size:10px;font-weight:700;color:#312e81;margin-bottom:4px">About This Reading</div>'
-    +'<div style="font-size:11px;color:#312e81;line-height:1.6">'+atpMsg+'</div>'
-    +'<div style="font-size:10px;color:#64748b;margin-top:6px">FDA Food Code 3-502.12 · FL 64E-11 · Standard: &lt;10 RLU on food contact surfaces. '
-    +'ATP (adenosine triphosphate) testing is the same method used by health department inspectors.</div>'
-    +'</div>'
-    // Inspection record (if applicable)
-    +(iceLine?'<div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:10px;margin-bottom:16px">'
-    +'<div style="font-size:10px;font-weight:700;color:#dc2626;margin-bottom:2px">⚠ Inspection Record</div>'
-    +'<div style="font-size:11px;color:#dc2626">'+iceLine+'</div>'
-    +(p.n_callbacks>0?'<div style="font-size:10px;color:#dc2626;margin-top:2px">'+p.n_callbacks+' callback inspection(s) on record — inspector has returned for follow-up</div>':'')
-    +'</div>':'')
-    // What we do
-    +'<div style="margin-bottom:16px">'
-    +'<div style="font-size:10px;font-weight:700;color:#0f1f38;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">What Pinellas Ice Co Does</div>'
-    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">'
-    +['Full ice bin disassembly & cleaning','ATP pre/post testing with documentation','Water distribution system flush','Internal sanitizer application (NSF/ANSI 60)','Filter inspection & replacement','Dated compliance report for your records'].map(function(s){
-      return '<div style="display:flex;gap:6px;font-size:11px;color:#475569"><span style="color:#059669;font-weight:700">✓</span>'+s+'</div>';
-    }).join('')
-    +'</div></div>'
-    // Next step
-    +'<div style="background:#0f1f38;border-radius:10px;padding:14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">'
-    +'<div><div style="font-size:13px;font-weight:800;color:#fff">Ready to get this taken care of?</div>'
-    +'<div style="font-size:11px;color:rgba(255,255,255,.7);margin-top:2px">$99 intro cleaning · No commitment · Includes ATP report</div></div>'
-    +'<div style="text-align:right"><div style="font-size:16px;font-weight:900;color:#f97316">$99</div><div style="font-size:9px;color:rgba(255,255,255,.6)">first visit</div></div>'
-    +'</div>'
-    // Footer
-    +'<div style="text-align:center;font-size:9px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:10px">'
-    +'Pinellas Ice Co · Commercial Ice Machine Sanitation · Pinellas County, FL · pinellasiceco.com · (727) 855-6873<br>'
-    +'Service complies with FDA Food Code 3-502.12 and Florida Administrative Code 64E-11</div>'
-    +'<div style="text-align:center;margin-top:14px">'
-    +'<button onclick="window.print()" style="padding:10px 24px;background:#0f1f38;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">🖨 Print / Save PDF</button>'
-    +'</div>'
-    +'</body></html>';
-
-  var win=window.open('','_blank');
-  if(win){win.document.write(html);win.document.close();setTimeout(function(){win.print();},600);}
-  else{toast('Allow popups to print the report');}
-}
-
-// Global state for showCard - avoids closure/addEventListener issues on iOS
-var _sc={id:0,outcome:null,type:'call',reason:null,followup:'',p:null};
-
 function showCard(id){
   id=parseInt(id)||id;
   var p=P.find(function(x){return x.id===id||x.id==id;});
-  if(!p){toast('Not found');return;}
-  _sc={id:id,outcome:null,type:'call',reason:null,followup:'',p:p};
+  if(!p){toast('Not found: '+id);return;}
 
   var existing=document.getElementById('sc-bg');
   if(existing)existing.remove();
@@ -3724,624 +3579,457 @@ function showCard(id){
   var ph=p.phone||PHONES[String(p.id)]||'';
   var c=customers[p.id]||{};
 
-  // ── Phone block ──────────────────────────────────────────────────────────
+  // Phone
   var phoneH=ph
-    ?'<a href="tel:'+ph.replace(/\D/g,'')+'" style="display:flex;align-items:center;gap:8px;background:#059669;color:#fff;padding:10px 16px;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;touch-action:manipulation;margin-bottom:8px">📞 '+ph+'</a>'
-     +'<div style="display:flex;gap:6px;margin-bottom:10px">'
-     +'<a href="sms:'+ph.replace(/\D/g,'')+'" style="flex:1;text-align:center;padding:7px;border:1px solid #e2e8f0;border-radius:7px;font-size:11px;color:#475569;text-decoration:none">💬 Text</a>'
-     +'<a href="https://www.google.com/search?q='+enc(p.name+' '+p.city+' FL')+'" target="_blank" style="flex:1;text-align:center;padding:7px;border:1px solid #e2e8f0;border-radius:7px;font-size:11px;color:#475569;text-decoration:none">🔍 Google</a>'
-     +'</div>'
-    :'<div style="margin-bottom:10px;display:flex;gap:6px;align-items:center">'
-     +'<input id="sc-phone-in" type="tel" placeholder="Paste phone number…" style="flex:1;padding:8px;border:1px solid #e2e8f0;border-radius:7px;font-size:12px;font-family:inherit;outline:none">'
-     +'<button onclick="scSavePhone()" ontouchend="event.preventDefault();scSavePhone()" style="padding:8px 12px;background:#0f1f38;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Save</button>'
-     +'</div>';
+    ?'<a href="tel:'+ph.replace(/\D/g,'')+'" style="display:flex;align-items:center;gap:8px;background:#059669;color:#fff;padding:10px 16px;border-radius:8px;font-size:14px;font-weight:700;text-decoration:none;touch-action:manipulation;margin-bottom:10px">📞 '+ph+'</a><div style="display:flex;gap:6px;margin-bottom:10px"><a href="sms:'+ph.replace(/\D/g,'')+'" style="flex:1;text-align:center;padding:6px;border:1px solid #e2e8f0;border-radius:7px;font-size:11px;color:#475569;text-decoration:none">💬 Text</a><a href="https://www.google.com/search?q='+enc(p.name+' '+p.city+' FL')+'" target="_blank" style="flex:1;text-align:center;padding:6px;border:1px solid #e2e8f0;border-radius:7px;font-size:11px;color:#475569;text-decoration:none">🔍 Google</a></div>'
+    :'<div style="margin-bottom:10px;display:flex;gap:6px;align-items:center"><span style="font-size:11px;color:#94a3b8">No phone on file</span><a href="https://www.google.com/search?q='+enc(p.name+' '+p.city+' FL phone')+'" target="_blank" style="font-size:11px;color:var(--blu);border:1px solid var(--blu);padding:3px 8px;border-radius:5px;text-decoration:none">Find ↗</a></div>';
 
-  // ── Ice history ──────────────────────────────────────────────────────────
+  // Phone save (if no phone on file)
+  var phoneSaveH='';
+  if(!ph){
+    phoneSaveH='<div style="display:flex;gap:6px;margin-bottom:10px">'
+      +'<input id="sc-phone-input" type="tel" placeholder="Paste number here…" '
+      +'style="flex:1;padding:8px;border:1px solid #e2e8f0;border-radius:7px;font-size:12px;font-family:inherit;outline:none">'
+      +'<button id="sc-phone-save" style="padding:8px 12px;background:#0f1f38;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Save</button>'
+      +'</div>';
+  }
+
+  // Chips
+  var pBg={CALLBACK:'#fef2f2',HOT:'#fff7ed',WARM:'#fefce8',COOL:'#f8fafc'};
+  var pCl={CALLBACK:'#dc2626',HOT:'#f97316',WARM:'#ca8a04',COOL:'#64748b'};
+  var pc=pCl[p.priority]||'#64748b';
+  var lColor=lc?OI_COLOR[normO(lc.outcome)]||'#64748b':'#64748b';
+  var chips=[
+    '<span style="font-size:9px;padding:3px 8px;border-radius:5px;font-weight:700;background:'+(pBg[p.priority]||'#f8fafc')+';color:'+pc+'">'+p.priority+'</span>',
+    p.tier&&p.tier!==p.priority?'<span style="font-size:9px;padding:3px 8px;border-radius:5px;font-weight:700;background:#f1f5f9;color:#475569">'+p.tier+'</span>':'',
+    p.chronic?'<span style="font-size:9px;padding:3px 8px;border-radius:5px;font-weight:700;background:#ecfdf5;color:#059669">CHRONIC ICE</span>':'',
+    p.days_since>0?'<span style="font-size:9px;padding:3px 8px;border-radius:5px;font-weight:700;color:#dc2626;background:#fef2f2">'+p.days_since+'d overdue</span>':'',
+    lc?'<span style="font-size:9px;padding:3px 8px;border-radius:5px;font-weight:700;color:'+lColor+';background:'+lColor+'18">'+(OI[normO(lc.outcome)]||lc.outcome)+'</span>':'',
+    p.hours?'<span style="font-size:9px;padding:3px 8px;border-radius:5px;background:#f8fafc;color:#64748b">'+p.hours+'</span>':'',
+    p.rating>0?'<span style="font-size:9px;padding:3px 8px;border-radius:5px;background:#fffbeb;color:#d97706">'+stars(p.rating)+'</span>':'',
+  ].filter(Boolean).join(' ');
+
+  // Ice history
   var iceH='';
   if(p.confirmed||p.chronic){
     var codes=(p.codes||[]).map(function(c){return ICN[c]||c;}).join(', ');
     iceH='<div style="background:#ecfdf5;border:1px solid #6ee7b7;border-radius:8px;padding:10px;margin-bottom:10px">'
       +'<div style="font-size:8px;color:#013a18;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">🧊 ICE MACHINE HISTORY</div>'
-      +(p.chronic?'<div style="font-size:12px;font-weight:700;color:#059669">CHRONIC — flagged in '+p.ice_count+' inspections</div>':'')
-      +(!p.chronic&&p.confirmed?'<div style="font-size:11px;color:#059669">Confirmed ice machine violation on record</div>':'')
-      +(codes?'<div style="font-size:9px;color:#2a5a38;margin-top:2px">Codes: '+codes+'</div>':'')
+      +(p.chronic?'<div style="font-size:12px;font-weight:700;color:#059669;margin-bottom:2px">CHRONIC — flagged in '+p.ice_count+' inspections</div>':'')
+      +(!p.chronic&&p.confirmed?'<div style="font-size:11px;color:#059669;margin-bottom:2px">Confirmed ice machine violation on record</div>':'')
+      +(codes?'<div style="font-size:9px;color:#2a5a38">Codes: '+codes+'</div>':'')
       +'</div>';
   }
 
-  // ── Intel grid ───────────────────────────────────────────────────────────
+  // Pitch + walk-in
+  var pitchFn=PITCHES[p.pitch_type]||PITCHES.routine;
+  var walkinFn=WALKIN[p.pitch_type]||WALKIN.routine;
+  var pitchH='<div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Pitch Opener</div>'
+    +'<div style="background:#fff7ed;border-left:3px solid #c9973a;border-radius:0 8px 8px 0;padding:9px;font-size:11px;color:#475569;line-height:1.7">'+pitchFn(p.name)+'</div></div>';
+  var walkinH='<div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Walk-In Script</div>'
+    +'<div style="background:#f0fdf4;border-left:3px solid #059669;border-radius:0 8px 8px 0;padding:9px;font-size:11px;color:#475569;line-height:1.7">'+walkinFn(p.name)+'</div></div>';
+
+  // Objections
+  var objH='<div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Objection Handlers</div>'
+    +OBJECTIONS.map(function(o){
+      return '<details style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;margin-bottom:3px">'
+        +'<summary style="padding:6px 9px;font-size:10px;font-weight:600;color:#0f1f38;cursor:pointer;list-style:none">❓ '+o.q+'</summary>'
+        +'<div style="padding:5px 9px 8px;font-size:10px;color:#475569;line-height:1.6;border-top:1px solid #e2e8f0">'+o.a+'</div>'
+        +'</details>';
+    }).join('')+'</div>';
+
+  // Intel grid
+  var iceFresh=p.ice_fresh?'Within 6mo':p.ice_recent?'Within 1yr':p.days_since_ice<999?(Math.floor(p.days_since_ice/30)+'mo ago'):'None on record';
   var esc=p.escalation>1.5?'Escalating fast':p.escalation>0.8?'Getting worse':p.escalation>0.3?'Slight trend':'Stable';
   var escCol=p.escalation>1.5?'#dc2626':p.escalation>0.8?'#d97706':'#059669';
-  var iceFresh=p.ice_fresh?'Within 6mo':p.ice_recent?'Within 1yr':p.days_since_ice<999?(Math.floor(p.days_since_ice/30)+'mo ago'):'None on record';
-  var rows=[
+  var factRows=[
     ['Predicted Next',p.pred_next||'—','#1e293b'],
+    ['Days Until',dL(p.days_until),'#1e293b'],
     ['Last Inspected',p.last_insp||'—','#1e293b'],
+    ['Inspections on File',p.n_insp,'#1e293b'],
     ['Ice Violations',p.ice_count>0?p.ice_count+'x flagged':'None',p.ice_count>0?'#dc2626':'#059669'],
-    ['Last Ice Viol.',iceFresh,p.ice_fresh?'#dc2626':p.ice_recent?'#d97706':'#1e293b'],
-    ['Callbacks',p.n_callbacks>0?p.n_callbacks+'x':'None',p.n_callbacks>=2?'#dc2626':p.n_callbacks===1?'#d97706':'#1e293b'],
-    ['Trend',esc,escCol],
+    ['Last Ice Violation',iceFresh,p.ice_fresh?'#dc2626':p.ice_recent?'#d97706':'#1e293b'],
+    ['Callback Inspections',p.n_callbacks>0?p.n_callbacks+'x (inspector returning)':'None',p.n_callbacks>=2?'#dc2626':p.n_callbacks===1?'#d97706':'#1e293b'],
+    ['Disposition Trend',esc,escCol],
+    ['High/Total Viol.',p.high_viol+'/'+p.total_viol,p.high_viol>=4?'#dc2626':p.high_viol>=2?'#d97706':'#1e293b'],
     ['Confidence',(p.confidence||0)+'%',p.confidence>=75?'#059669':p.confidence>=50?'#d97706':'#1e293b'],
     ['Est. Machines',p.machines||1,'#1e293b'],
-    ['Monthly','$'+(p.monthly||149)+'/mo','#059669'],
-    ['One-Time','$'+(p.onetime||249),'#2563eb'],
+    ['Account Tier',p.tier||'COLD','#1e293b'],
+    ['Monthly Recurring','$'+(p.monthly||149)+'/mo','#059669'],
+    ['One-Time Clean','$'+(p.onetime||249),'#2563eb'],
+    ['Intro Offer','$99 first visit (no commitment)','#ea580c'],
   ];
   var intelH='<div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Intelligence</div>'
     +'<div style="background:#f8fafc;border-radius:8px;overflow:hidden;border:1px solid #e2e8f0">'
-    +rows.map(function(r,i){return '<div style="display:flex;justify-content:space-between;padding:5px 10px;background:'+(i%2===0?'#f8fafc':'#fff')+'">'
-      +'<div style="font-size:10px;color:#64748b">'+r[0]+'</div>'
-      +'<div style="font-size:10px;font-weight:600;color:'+r[2]+'">'+r[1]+'</div>'
-      +'</div>';}).join('')
-    +'</div></div>';
+    +factRows.map(function(r,i){
+      return '<div style="display:flex;justify-content:space-between;padding:5px 10px;background:'+(i%2===0?'#f8fafc':'#fff')+'">'
+        +'<div style="font-size:10px;color:#64748b">'+r[0]+'</div>'
+        +'<div style="font-size:10px;font-weight:600;color:'+r[2]+'">'+r[1]+'</div>'
+        +'</div>';
+    }).join('')+'</div></div>';
 
-  // ── Pitch + Walk-in ──────────────────────────────────────────────────────
-  var pitchFn2=PITCHES[p.pitch_type]||PITCHES.routine;
-  var walkinFn2=WALKIN[p.pitch_type]||WALKIN.routine;
-  var pitchH='<div style="margin-bottom:8px"><div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Pitch Opener</div>'
-    +'<div style="background:#fff7ed;border-left:3px solid #c9973a;border-radius:0 8px 8px 0;padding:9px;font-size:11px;color:#475569;line-height:1.7">'+pitchFn2(p.name)+'</div></div>';
-  var walkinH='<div style="margin-bottom:8px"><div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Walk-In Script</div>'
-    +'<div style="background:#f0fdf4;border-left:3px solid #059669;border-radius:0 8px 8px 0;padding:9px;font-size:11px;color:#475569;line-height:1.7">'+walkinFn2(p.name)+'</div></div>';
-
-  // ── Objections ───────────────────────────────────────────────────────────
-  var objH='<div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Objection Handlers</div>'
-    +OBJECTIONS.map(function(o){return '<details style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;margin-bottom:3px">'
-      +'<summary style="padding:6px 9px;font-size:10px;font-weight:600;color:#0f1f38;cursor:pointer;list-style:none">❓ '+o.q+'</summary>'
-      +'<div style="padding:5px 9px 8px;font-size:10px;color:#475569;line-height:1.6;border-top:1px solid #e2e8f0">'+o.a+'</div>'
-      +'</details>';}).join('')+'</div>';
-
-  // ── Call history ─────────────────────────────────────────────────────────
+  // History
   var histH='';
   if(entries.length){
     histH='<div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Call History</div>'
-      +[...entries].reverse().slice(0,5).map(function(e){
+      +[...entries].reverse().slice(0,6).map(function(e){
         var ec=OI_COLOR[normO(e.outcome)]||'#64748b';
         return '<div style="padding:5px 0;border-bottom:1px solid #f1f5f9">'
           +'<div style="display:flex;gap:6px;align-items:baseline">'
           +'<span style="font-size:10px;color:'+ec+';font-weight:700">'+(OI[normO(e.outcome)]||e.outcome)+'</span>'
           +'<span style="font-size:9px;color:#94a3b8">'+e.date+'</span>'
           +(e.reason?'<span style="font-size:9px;color:#94a3b8">· '+e.reason+'</span>':'')
-          +(e.followup?'<span style="font-size:9px;color:#0891b2">📅 '+e.followup+'</span>':'')
           +'</div>'
           +(e.notes?'<div style="font-size:9px;color:#64748b;font-style:italic">'+e.notes+'</div>':'')
-          +'</div>';}).join('')
-      +'</div>';
+          +(e.followup?'<div style="font-size:9px;color:#0891b2">📅 Follow-up: '+e.followup+'</div>':'')
+          +'</div>';
+      }).join('')+'</div>';
   }
 
-  // ── Service history ──────────────────────────────────────────────────────
-  var svcH='';
+  // Service history (past logged visits)
+  var svcHistH='';
   var svcHistory=(customers[p.id]||{}).service_history||[];
   if(svcHistory.length){
-    svcH='<div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Service History</div>'
-      +[...svcHistory].reverse().slice(0,3).map(function(sv){
+    svcHistH='<div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Service History</div>'
+      +[...svcHistory].reverse().slice(0,4).map(function(sv){
+        var atpStr=sv.atp?(' · ATP: '+sv.atp+' RLU'):'';  
         return '<div style="padding:5px 0;border-bottom:1px solid #f1f5f9">'
-          +'<div style="font-size:10px;font-weight:700;color:#0f1f38">'+sv.date_display+(sv.type==='deep_clean'?' · 🧼 Deep Clean':' · 🔧 60-Day')+( sv.atp?' · ATP: '+sv.atp:'')+'</div>'
-          +(sv.notes?'<div style="font-size:9px;color:#475569;font-style:italic">'+sv.notes+'</div>':'')
-          +'</div>';}).join('')
-      +'</div>';
+          +'<div style="font-size:10px;font-weight:700;color:#0f1f38">'+sv.date_display+(sv.type==='deep_clean'?' · 🧼 Deep Clean':' · 🔧 60-Day Maint.')+atpStr+'</div>'
+          +(sv.notes?'<div style="font-size:9px;color:#475569;font-style:italic">'+sv.notes+'</div>':'')  
+          +'</div>';
+      }).join('')
+    +'</div>';
   }
 
-  // ── Log interaction ──────────────────────────────────────────────────────
+  // Outcome log section
   var logH='<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px;margin-bottom:10px">'
-    +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;margin-bottom:8px">Log Interaction</div>'
-    // Type
+    +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Log Interaction</div>'
+    // Type toggle
     +'<div style="display:flex;gap:6px;margin-bottom:8px">'
-    +'<button id="sc-t-call" data-sctype="call" onclick="scSetType(this.dataset.sctype)" ontouchend="event.preventDefault();scSetType(this.dataset.sctype)" style="flex:1;padding:7px;border:1px solid #e2e8f0;border-radius:7px;background:#0f1f38;color:#fff;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">📞 Call</button>'
-    +'<button id="sc-t-walk" data-sctype="walkin" onclick="scSetType(this.dataset.sctype)" ontouchend="event.preventDefault();scSetType(this.dataset.sctype)" style="flex:1;padding:7px;border:1px solid #e2e8f0;border-radius:7px;background:#f8fafc;color:#475569;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">🚶 Walk-In</button>'
+    +'<button id="sc-type-call" data-sctype="call" style="flex:1;padding:7px;border:1px solid #e2e8f0;border-radius:7px;background:#0f1f38;color:#fff;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">📞 Call</button>'
+    +'<button id="sc-type-walkin" data-sctype="walkin" style="flex:1;padding:7px;border:1px solid #e2e8f0;border-radius:7px;background:#f8fafc;color:#475569;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">🚶 Walk-In</button>'
     +'</div>'
-    // Outcomes
-    +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-bottom:8px">'
-    +'<button id="sc-o-intro_set" data-scoutcome="intro_set" onclick="scSetOutcome(this.dataset.scoutcome)" ontouchend="event.preventDefault();scSetOutcome(this.dataset.scoutcome)" style="padding:8px 4px;border:2px solid #93c5fd;border-radius:7px;background:#eff6ff;color:#2563eb;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">📅 Intro Set</button>'
-    +'<button id="sc-o-in_play" data-scoutcome="in_play" onclick="scSetOutcome(this.dataset.scoutcome)" ontouchend="event.preventDefault();scSetOutcome(this.dataset.scoutcome)" style="padding:8px 4px;border:2px solid #fcd34d;border-radius:7px;background:#fffbeb;color:#d97706;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">🟡 In Play</button>'
-    +'<button id="sc-o-no_contact" data-scoutcome="no_contact" onclick="scSetOutcome(this.dataset.scoutcome)" ontouchend="event.preventDefault();scSetOutcome(this.dataset.scoutcome)" style="padding:8px 4px;border:2px solid #c4b5fd;border-radius:7px;background:#f5f3ff;color:#7c3aed;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">🚪 No Contact</button>'
-    +'<button id="sc-o-voicemail" data-scoutcome="voicemail" onclick="scSetOutcome(this.dataset.scoutcome)" ontouchend="event.preventDefault();scSetOutcome(this.dataset.scoutcome)" style="padding:8px 4px;border:2px solid #fdba74;border-radius:7px;background:#fff7ed;color:#ea580c;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">📲 Voicemail</button>'
-    +'<button id="sc-o-not_now" data-scoutcome="not_now" onclick="scSetOutcome(this.dataset.scoutcome)" ontouchend="event.preventDefault();scSetOutcome(this.dataset.scoutcome)" style="padding:8px 4px;border:2px solid #fca5a5;border-radius:7px;background:#fef2f2;color:#dc2626;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">❌ Not Now</button>'
-    +'<button id="sc-o-service_done" data-scoutcome="service_done" onclick="scSetOutcome(this.dataset.scoutcome)" ontouchend="event.preventDefault();scSetOutcome(this.dataset.scoutcome)" style="padding:8px 4px;border:2px solid #86efac;border-radius:7px;background:#f0fdf4;color:#059669;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">🧼 Service</button>'
+    // Outcome buttons
+    +'<div id="sc-obtn-row" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-bottom:8px">'
+    +'<button data-scout="signed" style="padding:8px 4px;border:2px solid #6ee7b7;border-radius:7px;background:#ecfdf5;color:#059669;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">✅ Signed</button>'
+    +'<button data-scout="intro_set" style="padding:8px 4px;border:2px solid #93c5fd;border-radius:7px;background:#eff6ff;color:#2563eb;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">📅 Intro Set</button>'
+    +'<button data-scout="in_play" style="padding:8px 4px;border:2px solid #fcd34d;border-radius:7px;background:#fffbeb;color:#d97706;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">🟡 In Play</button>'
+    +'<button data-scout="no_contact" style="padding:8px 4px;border:2px solid #c4b5fd;border-radius:7px;background:#f5f3ff;color:#7c3aed;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">🚪 No Contact</button>'
+    +'<button data-scout="voicemail" style="padding:8px 4px;border:2px solid #fdba74;border-radius:7px;background:#fff7ed;color:#ea580c;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">📲 Voicemail</button>'
+    +'<button data-scout="not_now" style="padding:8px 4px;border:2px solid #fca5a5;border-radius:7px;background:#fef2f2;color:#dc2626;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">❌ Not Now</button>'
+    +'<button data-scout="dead" style="padding:8px 4px;border:2px solid #94a3b8;border-radius:7px;background:#f1f5f9;color:#475569;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation;grid-column:1/3">⚫ Dead — wrong fit/hard no</button>'
+    +'<button data-scout="service_done" style="padding:8px 4px;border:2px solid #86efac;border-radius:7px;background:#f0fdf4;color:#059669;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">🧼 Service Done</button>'
     +'</div>'
-    +'<button id="sc-o-dead" data-scoutcome="dead" onclick="scSetOutcome(this.dataset.scoutcome)" ontouchend="event.preventDefault();scSetOutcome(this.dataset.scoutcome)" style="width:100%;padding:8px;border:2px solid #94a3b8;border-radius:7px;background:#f1f5f9;color:#475569;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation;margin-bottom:8px">⚫ Dead — wrong fit / hard no</button>'
-    // Reason (shown for not_now/in_play/dead)
+    // Reason picker
     +'<div id="sc-reason-wrap" style="display:none;margin-bottom:8px">'
-    +'<div style="font-size:9px;color:#94a3b8;font-weight:600;margin-bottom:4px">Reason:</div>'
-    +'<div id="sc-reason-btns" style="display:flex;flex-wrap:wrap;gap:4px"></div>'
+    +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;margin-bottom:4px">Reason</div>'
+    +'<div id="sc-reason-grid" style="display:flex;flex-wrap:wrap;gap:4px"></div>'
     +'</div>'
-    // Follow-up
+    // Notes + follow-up
+    +'<textarea id="sc-notes" placeholder="Notes…" rows="2" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:7px;font-size:12px;font-family:inherit;resize:none;outline:none;box-sizing:border-box;margin-bottom:6px"></textarea>'
     +'<div style="margin-bottom:8px">'
-    +'<div style="font-size:9px;color:#94a3b8;font-weight:600;margin-bottom:5px">📅 Follow-up (tap to set)</div>'
+    +'<div style="font-size:9px;color:#94a3b8;font-weight:600;margin-bottom:5px">📅 Follow-up date (tap to set)</div>'
     +'<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:5px">'
-    +'<button onclick="scSetFup(1)" ontouchend="event.preventDefault();scSetFup(1)" style="padding:8px 2px;border:1px solid #e2e8f0;border-radius:7px;background:#f8fafc;color:#475569;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">+1d</button>'
-    +'<button onclick="scSetFup(3)" ontouchend="event.preventDefault();scSetFup(3)" style="padding:8px 2px;border:1px solid #e2e8f0;border-radius:7px;background:#f8fafc;color:#475569;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">+3d</button>'
-    +'<button onclick="scSetFup(7)" ontouchend="event.preventDefault();scSetFup(7)" style="padding:8px 2px;border:1px solid #e2e8f0;border-radius:7px;background:#f8fafc;color:#475569;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">+7d</button>'
-    +'<button onclick="scSetFup(14)" ontouchend="event.preventDefault();scSetFup(14)" style="padding:8px 2px;border:1px solid #e2e8f0;border-radius:7px;background:#f8fafc;color:#475569;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">+14d</button>'
-    +'<button onclick="scSetFup(30)" ontouchend="event.preventDefault();scSetFup(30)" style="padding:8px 2px;border:1px solid #e2e8f0;border-radius:7px;background:#f8fafc;color:#475569;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">+30d</button>'
+    +'<button data-fupdays="1" style="padding:9px 4px;border:1px solid #e2e8f0;border-radius:7px;background:#f8fafc;color:#475569;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">+1d</button>'
+    +'<button data-fupdays="3" style="padding:9px 4px;border:1px solid #e2e8f0;border-radius:7px;background:#f8fafc;color:#475569;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">+3d</button>'
+    +'<button data-fupdays="7" style="padding:9px 4px;border:1px solid #e2e8f0;border-radius:7px;background:#f8fafc;color:#475569;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">+7d</button>'
+    +'<button data-fupdays="14" style="padding:9px 4px;border:1px solid #e2e8f0;border-radius:7px;background:#f8fafc;color:#475569;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">+14d</button>'
+    +'<button data-fupdays="30" style="padding:9px 4px;border:1px solid #e2e8f0;border-radius:7px;background:#f8fafc;color:#475569;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">+30d</button>'
     +'</div>'
-    +'<div id="sc-fup-display" style="font-size:11px;color:#059669;font-weight:700;min-height:16px"></div>'
+    +'<div id="sc-fup-display" style="font-size:11px;color:#059669;font-weight:700;min-height:18px"></div>'
+    +'<input id="sc-followup" type="hidden" value="">'  // value set by button taps
     +'</div>'
-    // Notes
-    +'<textarea id="sc-notes" placeholder="Notes…" rows="2" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:7px;font-size:12px;font-family:inherit;resize:none;outline:none;box-sizing:border-box;margin-bottom:8px"></textarea>'
-    +'<button onclick="scSaveLog()" ontouchend="event.preventDefault();scSaveLog()" style="width:100%;padding:12px;background:#059669;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Save Log Entry</button>'
+
+    +    +'<button id="sc-save-btn" style="width:100%;padding:11px;background:#059669;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Save Log Entry</button>'
     +'</div>';
 
-  // ── Close Deal ───────────────────────────────────────────────────────────
-  var wonH='<div style="margin-bottom:12px">'
+  // CLOSE DEAL section  
+  var closeH='<div style="margin-bottom:12px">'
     +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Close Deal</div>'
-    +'<button onclick="scMarkWon(this.dataset.scwon)" ontouchend="event.preventDefault();scMarkWon(this.dataset.scwon)" style="width:100%;padding:11px;border:2px solid #f97316;border-radius:9px;background:#fff7ed;color:#ea580c;font-weight:800;font-size:12px;cursor:pointer;font-family:inherit;touch-action:manipulation;margin-bottom:6px">'
-    +'🔥 Intro Offer — $99 first visit<br><span style="font-size:10px;font-weight:400">Try us once, no commitment</span></button>'
+    +'<button id="sc-won-intro" style="width:100%;padding:10px;border:2px solid #f97316;border-radius:9px;background:#fff7ed;color:#ea580c;font-weight:800;font-size:12px;cursor:pointer;font-family:inherit;touch-action:manipulation;margin-bottom:6px">'
+    +'🔥 Intro Offer — $99 first visit<br><span style="font-size:10px;font-weight:400">Try us once, no commitment. Recurring after.</span></button>'
     +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">'
-    +'<button data-scwon="customer_recurring" onclick="scMarkWon(this.dataset.scwon)" ontouchend="event.preventDefault();scMarkWon(this.dataset.scwon)" style="padding:10px 6px;border:2px solid #059669;border-radius:9px;background:#ecfdf5;color:#059669;font-weight:700;font-size:11px;cursor:pointer;font-family:inherit;touch-action:manipulation">'
-    +'💰 Won — Recurring<br><span style="font-size:10px;font-weight:400">$'+(p.monthly||149)+'/mo</span></button>'
-    +'<button data-scwon="customer_once" onclick="scMarkWon(this.dataset.scwon)" ontouchend="event.preventDefault();scMarkWon(this.dataset.scwon)" style="padding:10px 6px;border:2px solid #2563eb;border-radius:9px;background:#eff6ff;color:#2563eb;font-weight:700;font-size:11px;cursor:pointer;font-family:inherit;touch-action:manipulation">'
+    +'<button id="sc-won-rec" style="padding:10px 6px;border:2px solid #059669;border-radius:9px;background:#ecfdf5;color:#059669;font-weight:700;font-size:11px;cursor:pointer;font-family:inherit;touch-action:manipulation">'
+    +'💰 Won — Recurring<br><span id="sc-won-monthly" style="font-size:10px;font-weight:400">$'+( p.monthly||149)+'/mo</span></button>'
+    +'<button id="sc-won-once" style="padding:10px 6px;border:2px solid #2563eb;border-radius:9px;background:#eff6ff;color:#2563eb;font-weight:700;font-size:11px;cursor:pointer;font-family:inherit;touch-action:manipulation">'
     +'🧼 Won — One-Time<br><span style="font-size:10px;font-weight:400">$'+(p.onetime||249)+'</span></button>'
     +'</div>'
-    +'<button onclick="scMarkWon(this.dataset.scwon)" ontouchend="event.preventDefault();scMarkWon(this.dataset.scwon)" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;background:transparent;color:#94a3b8;font-size:10px;cursor:pointer;font-family:inherit;touch-action:manipulation">'
+    +'<button id="sc-lost-btn" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:8px;background:transparent;color:#94a3b8;font-size:10px;cursor:pointer;font-family:inherit;touch-action:manipulation">'
     +'Mark as Lost / Churned</button>'
     +'</div>';
 
-  // ── Contacts & Intel ─────────────────────────────────────────────────────
-  var cts=contacts[p.id]||[];
-  var ctH='<div style="margin-bottom:12px">'
+  // Contacts & Intel section
+  var contactsH='<div style="margin-bottom:12px">'
     +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Contacts & Intel</div>'
+    // Current vendor
     +'<div style="margin-bottom:8px;padding:8px;background:#fef9ee;border:1px solid #fde68a;border-radius:7px">'
     +'<div style="font-size:9px;font-weight:700;color:#92400e;margin-bottom:4px">🕵️ Current Ice Vendor</div>'
     +'<div style="display:flex;gap:5px">'
-    +'<input id="sc-vendor" type="text" value="'+((customers[p.id]||{}).vendor_name||'')+'" placeholder="e.g. Ecolab, cleans themselves…" '
+    +'<input id="sc-vendor" type="text" value="'+(c.vendor_name||'')+'" placeholder="e.g. Ecolab, staff cleans it…" '
     +'style="flex:1;padding:6px;border:1px solid #fde68a;border-radius:6px;font-size:11px;font-family:inherit;background:#fff;color:#1e293b;outline:none">'
-    +'<button onclick="scSaveVendor()" ontouchend="event.preventDefault();scSaveVendor()" style="padding:6px 10px;border:none;border-radius:6px;background:#92400e;color:#fff;font-size:10px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">Save</button>'
+    +'<button id="sc-save-vendor" style="padding:6px 10px;border:none;border-radius:6px;background:#92400e;color:#fff;font-size:10px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">Save</button>'
     +'</div></div>'
-    +(cts.length?cts.map(function(ct,i){return '<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #f1f5f9">'
-      +'<div><div style="font-size:11px;font-weight:600;color:#1e293b">'+ct.name+'</div>'
-      +'<div style="font-size:9px;color:#94a3b8">'+ct.role+(ct.phone?' · '+ct.phone:'')+'</div></div>'
-      +'<button onclick="scDelContact('+i+')" ontouchend="event.preventDefault();scDelContact('+i+')" style="border:none;background:transparent;color:#dc2626;font-size:14px;cursor:pointer;touch-action:manipulation;padding:4px 8px">✕</button>'
-      +'</div>';}).join(''):'<div style="font-size:10px;color:#94a3b8;margin-bottom:6px">No contacts added yet</div>')
-    +'<div id="sc-ct-form" style="display:none;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;margin-top:6px">'
-    +'<input id="sc-ct-name" type="text" placeholder="Name" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:5px">'
-    +'<input id="sc-ct-role" type="text" placeholder="Role (Owner, GM…)" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:5px">'
-    +'<input id="sc-ct-phone" type="tel" placeholder="Phone (optional)" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:8px">'
-    +'<div style="display:flex;gap:6px">'
-    +'<button onclick="scSaveContact()" ontouchend="event.preventDefault();scSaveContact()" style="flex:1;padding:8px;background:#059669;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Save Contact</button>'
-    +'<button onclick="scToggleContact()" ontouchend="event.preventDefault();scToggleContact()" style="padding:8px 12px;background:#f1f5f9;color:#475569;border:none;border-radius:7px;font-size:12px;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
-    +'</div></div>'
-    +'<button onclick="scToggleContact()" ontouchend="event.preventDefault();scToggleContact()" style="width:100%;padding:7px;border:1px dashed #e2e8f0;border-radius:7px;background:transparent;color:#64748b;font-size:10px;cursor:pointer;font-family:inherit;touch-action:manipulation;margin-top:4px">+ Add Contact</button>'
+    // Contacts
+    +'<div id="sc-contacts-wrap"><div style="font-size:10px;color:#94a3b8">Loading contacts…</div></div>'
+    +'<button id="sc-add-contact" style="width:100%;padding:7px;border:1px dashed #e2e8f0;border-radius:7px;background:transparent;color:#64748b;font-size:10px;cursor:pointer;font-family:inherit;touch-action:manipulation;margin-top:4px">+ Add Contact</button>'
     +'</div>';
 
-  // ── Build overlay ────────────────────────────────────────────────────────
+  // Build overlay
   var bg=document.createElement('div');
   bg.id='sc-bg';
   bg.style.cssText='position:fixed;inset:0;z-index:500;background:rgba(15,31,56,.75);display:flex;align-items:flex-end;justify-content:center';
-  bg.onclick=function(e){if(e.target===bg)scClose();};
-  bg.ontouchend=function(e){if(e.target===bg){e.preventDefault();scClose();}};
 
   bg.innerHTML=
     '<div id="sc-sheet" style="background:#fff;width:100%;max-width:640px;max-height:93vh;border-radius:20px 20px 0 0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain">'
     +'<div style="padding:10px 0 0;text-align:center"><div style="width:36px;height:4px;background:#e2e8f0;border-radius:2px;margin:0 auto"></div></div>'
-    +'<div style="position:sticky;top:0;background:#fff;border-bottom:1px solid #e2e8f0;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;z-index:10">'
+    // Sticky header
+    +'<div style="position:sticky;top:0;background:#fff;border-bottom:1px solid #e2e8f0;padding:12px 16px;display:flex;justify-content:space-between;align-items:flex-start;z-index:10">'
       +'<div style="flex:1;min-width:0">'
         +'<div style="font-size:17px;font-weight:800;color:#0f1f38;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+p.name+'</div>'
-        +'<div style="font-size:10px;color:#94a3b8">'+p.address+', '+p.city+' FL '+p.zip+'</div>'
+        +'<div style="font-size:10px;color:#94a3b8">'+p.address+', '+p.city+', FL '+p.zip+' · #'+p.id+'</div>'
       +'</div>'
-      +'<div style="display:flex;gap:6px;flex-shrink:0;margin-left:10px">'
-        +'<button onclick="scAddRoute()" ontouchend="event.preventDefault();scAddRoute()" style="border:none;background:#f0fdf4;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:#059669;cursor:pointer;touch-action:manipulation;font-family:inherit">📍 Route</button>'
-        +'<button onclick="scClose()" ontouchend="event.preventDefault();scClose()" style="border:none;background:#f1f5f9;border-radius:50%;width:34px;height:34px;font-size:17px;cursor:pointer;color:#475569;font-family:inherit;touch-action:manipulation">✕</button>'
-      +'</div>'
+      +'<div style="display:flex;gap:6px;align-items:center;flex-shrink:0;margin-left:10px">'
+    +'<button id="sc-route-btn" style="border:none;background:#f0fdf4;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:#059669;cursor:pointer;touch-action:manipulation;font-family:inherit;-webkit-tap-highlight-color:transparent">📍 +Route</button>'
+    +'<button id="sc-close" style="border:none;background:#f1f5f9;border-radius:50%;width:34px;height:34px;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;touch-action:manipulation;color:#475569;font-family:inherit">✕</button>'
     +'</div>'
-    +'<div style="padding:16px">'+phoneH+iceH+intelH+pitchH+walkinH+objH+histH+svcH+logH+wonH+ctH+'</div>'
-    +'</div>';
+    +'</div>'
+    +'<div style="padding:16px">'
+      +'<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px">'+chips+'</div>'
+      +phoneH+phoneSaveH+iceH+intelH+pitchH+walkinH+objH+histH+svcHistH+logH+closeH+contactsH
+    +'</div></div>';
 
   document.body.appendChild(bg);
-}
 
-// ── Global handlers (all inline-callable) ────────────────────────────────────
-function scClose(){var b=document.getElementById('sc-bg');if(b)b.remove();}
+  // ── Event state ──────────────────────────────────────────────────────────────
+  var selOutcome=null, selType='call', selReason=null;
 
-function scAddRoute(){
-  if(!_sc.p)return;
-  addToRoute(_sc.p.id);
-}
+  // ── Render contacts — no addEventListener needed, delegation covers deletes ──
+  function renderSCContacts(){
+    var cWrap=document.getElementById('sc-contacts-wrap');
+    if(!cWrap)return;
+    var cData=contacts[p.id]||[];
+    if(!cData.length){cWrap.innerHTML='<div style="font-size:10px;color:#94a3b8">No contacts added yet</div>';return;}
+    cWrap.innerHTML=cData.map(function(ct,i){
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #f1f5f9">'
+        +'<div><div style="font-size:11px;font-weight:600;color:#1e293b">'+ct.name+'</div>'
+        +'<div style="font-size:9px;color:#94a3b8">'+ct.role+(ct.phone?' · '+ct.phone:'')+'</div>'
+        +(ct.notes?'<div style="font-size:9px;color:#64748b;font-style:italic">'+ct.notes+'</div>':'')
+        +'</div>'
+        +'<button data-ci="'+i+'" style="border:none;background:transparent;color:#dc2626;font-size:12px;cursor:pointer;touch-action:manipulation">✕</button>'
+        +'</div>';
+    }).join('');
+  }
+  renderSCContacts();
 
-function scSetType(t){
-  _sc.type=t;
-  var call=document.getElementById('sc-t-call');
-  var walk=document.getElementById('sc-t-walk');
-  if(call){call.style.background=t==='call'?'#0f1f38':'#f8fafc';call.style.color=t==='call'?'#fff':'#475569';}
-  if(walk){walk.style.background=t==='walkin'?'#0f1f38':'#f8fafc';walk.style.color=t==='walkin'?'#fff':'#475569';}
-}
+  // ── Single delegation handler on bg ──────────────────────────────────────────
+  // bg is created via document.createElement (NOT innerHTML), so addEventListener
+  // is reliable on iOS PWA. All child button taps bubble up to this one handler.
+  var _scLastTouch=0;
+  function scHandle(e){
+    if(e.type==='click'&&Date.now()-_scLastTouch<350)return; // suppress ghost click after touchend
+    if(e.type==='touchend')_scLastTouch=Date.now();
 
-function scSetOutcome(o){
-  _sc.outcome=o;_sc.reason=null;
-  // Highlight selected button
-  ['intro_set','in_play','no_contact','voicemail','not_now','service_done','dead'].forEach(function(k){
-    var b=document.getElementById('sc-o-'+k);
-    if(b)b.style.opacity=k===o?'1':'0.45';
-  });
-  // Show reason picker for not_now, in_play, dead
-  var reasons={
-    not_now:['Already has service','Too expensive','Not decision maker','Call back later','No reason given'],
-    in_play:['Needs partner decision','Seasonal','Franchise contract','Just passed inspection'],
-    dead:['Wrong fit','Hard no','Out of business','Repeated refusals']
-  };
-  var wrap=document.getElementById('sc-reason-wrap');
-  var btns=document.getElementById('sc-reason-btns');
-  if(wrap&&btns){
-    if(reasons[o]){
-      btns.innerHTML=reasons[o].map(function(r){
-        return '<button data-screason="'+r.replace(/"/g,'&quot;')+'" onclick="scSetReason(this.dataset.screason)" ontouchend="event.preventDefault();scSetReason(this.dataset.screason)" '
-          +'style="padding:5px 9px;border:1px solid #e2e8f0;border-radius:5px;background:#fff;font-size:10px;cursor:pointer;font-family:inherit;touch-action:manipulation">'+r+'</button>';
-      }).join('');
-      wrap.style.display='block';
-    } else {
-      wrap.style.display='none';
+    // Backdrop tap → close
+    if(e.target===bg){e.preventDefault();bg.remove();return;}
+
+    var btn=e.target.closest(
+      '[data-scout],[data-sctype],[data-fupdays],[data-scr],[data-ci],'
+      +'#sc-close,#sc-route-btn,#sc-save-btn,#sc-phone-save,'
+      +'#sc-save-vendor,#sc-add-contact,#sc-won-intro,#sc-won-rec,'
+      +'#sc-won-once,#sc-lost-btn,#sc-ct-save,#sc-ct-cancel'
+    );
+    if(!btn)return;
+    if(e.type==='touchend')e.preventDefault();
+    var bid=btn.id||'';
+
+    // Close
+    if(bid==='sc-close'){bg.remove();return;}
+
+    // +Route
+    if(bid==='sc-route-btn'){addToRoute(p.id);toast('Added to route');return;}
+
+    // Phone save
+    if(bid==='sc-phone-save'){
+      var phoneVal=(document.getElementById('sc-phone-input')||{}).value||'';
+      if(!phoneVal){toast('Enter a phone number');return;}
+      phSave(p.id,phoneVal,p.hours||'',p.rating||0);p.phone=phoneVal;
+      toast('Phone saved');bg.remove();showCard(p.id);return;
+    }
+
+    // Type toggle (Call / Walk-In)
+    if(btn.dataset.sctype){
+      selType=btn.dataset.sctype;
+      bg.querySelectorAll('[data-sctype]').forEach(function(b){
+        b.style.background=b===btn?'#0f1f38':'#f8fafc';
+        b.style.color=b===btn?'#fff':'#475569';
+      });
+      return;
+    }
+
+    // Outcome selection
+    if(btn.dataset.scout){
+      var outcome=btn.dataset.scout;
+      if(outcome==='signed'){
+        toast('Use the Close Deal buttons below (Won Recurring/One-Time/Intro) to record a signed deal');
+        return;
+      }
+      selOutcome=outcome;selReason=null;
+      bg.querySelectorAll('[data-scout]').forEach(function(b){
+        b.style.opacity=b===btn?'1':'0.45';
+        b.style.fontWeight=b===btn?'800':'700';
+      });
+      var reasonMap={
+        not_now:['Already has service','Too expensive','Cleans themselves','Not the decision maker','Call back later','No reason given'],
+        in_play:['Interested, needs partner','Needs corporate approval','Seasonal','Franchise contract','Just passed inspection'],
+        dead:['Wrong fit','Hard no','Out of business','Corporate contract','Repeated refusals']
+      };
+      var rWrap=document.getElementById('sc-reason-wrap');
+      var rGrid=document.getElementById('sc-reason-grid');
+      if(reasonMap[outcome]&&rGrid){
+        rGrid.innerHTML=reasonMap[outcome].map(function(r){
+          return '<button data-scr="'+r+'" style="padding:4px 8px;border:1px solid #e2e8f0;border-radius:5px;background:#fff;font-size:10px;cursor:pointer;font-family:inherit;touch-action:manipulation">'+r+'</button>';
+        }).join('');
+        if(rWrap)rWrap.style.display='block';
+      }else{if(rWrap)rWrap.style.display='none';}
+      return;
+    }
+
+    // Reason chip
+    if(btn.hasAttribute('data-scr')){
+      selReason=btn.dataset.scr;
+      bg.querySelectorAll('[data-scr]').forEach(function(b){
+        b.style.background=b===btn?'#0f1f38':'#fff';
+        b.style.color=b===btn?'#fff':'#1e293b';
+      });
+      return;
+    }
+
+    // Follow-up day button
+    if(btn.dataset.fupdays){
+      var fupDays=parseInt(btn.dataset.fupdays);
+      var fupDate=new Date(Date.now()+fupDays*864e5);
+      var fupISO=fupDate.getFullYear()+'-'+String(fupDate.getMonth()+1).padStart(2,'0')+'-'+String(fupDate.getDate()).padStart(2,'0');
+      var fupInput=document.getElementById('sc-followup');
+      if(fupInput)fupInput.value=fupISO;
+      var fupDisp=document.getElementById('sc-fup-display');
+      if(fupDisp)fupDisp.textContent=fupDate.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+      bg.querySelectorAll('[data-fupdays]').forEach(function(b){
+        b.style.background=b===btn?'#0f1f38':'#f8fafc';
+        b.style.color=b===btn?'#fff':'#475569';
+      });
+      return;
+    }
+
+    // Save log entry
+    if(bid==='sc-save-btn'){
+      if(!selOutcome){toast('Pick an outcome first');return;}
+      var logNotes=(document.getElementById('sc-notes')||{}).value||'';
+      var logFollowup=(document.getElementById('sc-followup')||{}).value||'';
+      var needsFup=['not_now','in_play'].indexOf(selOutcome)>=0;
+      if(needsFup&&!logFollowup){toast('Follow-up date required for this outcome');return;}
+      if(!log[p.id])log[p.id]=[];
+      log[p.id].push({outcome:selOutcome,type:selType,reason:selReason,
+        date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
+        notes:logNotes,followup:logFollowup});
+      lSave();
+      toast(logFollowup?'✓ '+(OI[selOutcome]||selOutcome)+' — follow-up '+logFollowup:'✓ '+(OI[selOutcome]||selOutcome)+' logged');
+      bg.remove();
+      if(_queueAutoAdvance){_queueAutoAdvance=false;queueIdx++;renderQueueCard();}
+      else if(tab==='today')renderBriefing();
+      else if(tab==='all')rA();
+      else renderKPIs();
+      return;
+    }
+
+    // Close deal (Intro / Recurring / One-Time / Churned)
+    if(bid==='sc-won-intro'||bid==='sc-won-rec'||bid==='sc-won-once'||bid==='sc-lost-btn'){
+      var wonStatus=bid==='sc-won-intro'?'customer_intro':bid==='sc-won-rec'?'customer_recurring':bid==='sc-won-once'?'customer_once':'churned';
+      var wonNow=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+      customers[p.id]={
+        status:wonStatus,won_date:wonNow,
+        service_type:wonStatus==='customer_recurring'?'recurring':wonStatus==='customer_intro'?'intro':'one_time',
+        monthly:wonStatus==='customer_recurring'?p.monthly:0,
+        onetime:wonStatus==='customer_once'?p.onetime:wonStatus==='customer_intro'?99:0,
+        machines:p.machines,name:p.name,address:p.address,city:p.city,phone:ph,
+        notes:'',last_service:'',next_service:'',hubspot_url:'',square_url:'',
+        machine_brand:'',machine_model:'',machine_type:'',filter_type:'',
+        filter_installed:'',contract_start:'',contract_term:6,contract_renewal:'',
+        service_history:[],atp_history:[],vendor_name:'',
+      };
+      custSave();p.status=wonStatus;
+      if(!log[p.id])log[p.id]=[];
+      log[p.id].push({outcome:wonStatus,date:wonNow,notes:'Deal closed'});
+      lSave();
+      if(wonStatus==='customer_recurring'||wonStatus==='customer_intro')buildAnnualSchedule(p.id);
+      bg.remove();
+      toast(wonStatus==='customer_intro'?'🔥 Intro booked! $99 first visit':
+            wonStatus==='customer_recurring'?'🎉 Won! Added to recurring clients.':
+            wonStatus==='churned'?'Marked lost/churned':'🧼 Won! One-time service recorded.');
+      sw('customers');return;
+    }
+
+    // Vendor save
+    if(bid==='sc-save-vendor'){
+      var vendorVal=(document.getElementById('sc-vendor')||{}).value||'';
+      if(!customers[p.id])customers[p.id]={name:p.name,address:p.address,city:p.city,
+        phone:ph,machines:p.machines,status:'prospect',notes:'',vendor_name:''};
+      customers[p.id].vendor_name=vendorVal;custSave();
+      toast('✓ Vendor intel saved');
+      var origTxt=btn.textContent;btn.textContent='✓ Saved';btn.style.background='#059669';
+      setTimeout(function(){btn.textContent=origTxt;btn.style.background='#92400e';},1500);
+      return;
+    }
+
+    // Add contact (show / hide inline form)
+    if(bid==='sc-add-contact'){
+      var existingForm=document.getElementById('sc-contact-form');
+      if(existingForm){existingForm.remove();return;}
+      var ctForm=document.createElement('div');
+      ctForm.id='sc-contact-form';
+      ctForm.style.cssText='background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;margin-top:6px';
+      ctForm.innerHTML=
+        '<div style="font-size:9px;font-weight:700;color:#94a3b8;margin-bottom:6px">NEW CONTACT</div>'
+        +'<input id="sc-ct-name" type="text" placeholder="Name" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:5px">'
+        +'<input id="sc-ct-role" type="text" placeholder="Role (Owner, GM, Manager…)" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:5px">'
+        +'<input id="sc-ct-phone" type="tel" placeholder="Phone (optional)" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:5px">'
+        +'<input id="sc-ct-notes" type="text" placeholder="Notes (optional)" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:8px">'
+        +'<div style="display:flex;gap:6px">'
+        +'<button id="sc-ct-save" style="flex:1;padding:8px;background:#059669;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Save Contact</button>'
+        +'<button id="sc-ct-cancel" style="padding:8px 12px;background:#f1f5f9;color:#475569;border:none;border-radius:7px;font-size:12px;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
+        +'</div>';
+      btn.insertAdjacentElement('afterend',ctForm);
+      return;
+    }
+
+    // Save new contact
+    if(bid==='sc-ct-save'){
+      var ctName=(document.getElementById('sc-ct-name')||{}).value||'';
+      if(!ctName){toast('Name required');return;}
+      var ctRole=(document.getElementById('sc-ct-role')||{}).value||'';
+      var ctPhone2=(document.getElementById('sc-ct-phone')||{}).value||'';
+      var ctNotes2=(document.getElementById('sc-ct-notes')||{}).value||'';
+      if(!contacts[p.id])contacts[p.id]=[];
+      contacts[p.id].push({name:ctName,role:ctRole,phone:ctPhone2,notes:ctNotes2});
+      contactsSave();
+      var ctFrm=document.getElementById('sc-contact-form');if(ctFrm)ctFrm.remove();
+      renderSCContacts();toast('Contact saved');return;
+    }
+
+    // Cancel contact form
+    if(bid==='sc-ct-cancel'){
+      var ctFrm2=document.getElementById('sc-contact-form');if(ctFrm2)ctFrm2.remove();return;
+    }
+
+    // Delete contact
+    if(btn.hasAttribute('data-ci')){
+      var ci=parseInt(btn.dataset.ci);
+      var cArr=contacts[p.id]||[];
+      cArr.splice(ci,1);contacts[p.id]=cArr;
+      contactsSave();renderSCContacts();return;
     }
   }
-}
-
-function scSetReason(r){
-  _sc.reason=r;
-  var btns=document.getElementById('sc-reason-btns');
-  if(btns)btns.querySelectorAll('button').forEach(function(b){
-    b.style.background=b.textContent===r?'#0f1f38':'#fff';
-    b.style.color=b.textContent===r?'#fff':'#1e293b';
-  });
-}
-
-function scSetFup(days){
-  var d=new Date(Date.now()+days*864e5);
-  var iso=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-  _sc.followup=iso;
-  var disp=document.getElementById('sc-fup-display');
-  if(disp)disp.textContent='📅 '+d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-  // Highlight active button
-  var sheet=document.getElementById('sc-sheet');
-  if(sheet)sheet.querySelectorAll('[onclick^="scSetFup"]').forEach(function(b){
-    var bd=parseInt(b.getAttribute('onclick').replace('scSetFup(','').replace(')',''));
-    b.style.background=bd===days?'#0f1f38':'#f8fafc';
-    b.style.color=bd===days?'#fff':'#475569';
-  });
-}
-
-function scSaveLog(){
-  if(!_sc.outcome){toast('Pick an outcome first');return;}
-  // Only require follow-up for not_now and in_play
-  if((_sc.outcome==='not_now'||_sc.outcome==='in_play')&&!_sc.followup){
-    toast('Set a follow-up date for this outcome');
-    return;
-  }
-  var notes=(document.getElementById('sc-notes')||{}).value||'';
-  var p=_sc.p;
-  if(!log[p.id])log[p.id]=[];
-  log[p.id].push({
-    outcome:_sc.outcome,type:_sc.type,reason:_sc.reason,
-    date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
-    notes:notes,followup:_sc.followup
-  });
-  lSave();
-  var msg='✓ '+(OI[_sc.outcome]||_sc.outcome)+(_sc.followup?' — follow-up '+_sc.followup:'');
-  toast(msg);
-  scClose();
-  if(_queueAutoAdvance){_queueAutoAdvance=false;queueIdx++;renderQueueCard();}
-  else if(tab==='today')renderBriefing();
-  else if(tab==='all')rA();
-  else renderKPIs();
-}
-
-function scMarkWon(status){
-  var p=_sc.p;if(!p)return;
-  var now=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-  var ph=p.phone||PHONES[String(p.id)]||'';
-  customers[p.id]={
-    status:status,won_date:now,
-    service_type:status==='customer_recurring'?'recurring':status==='customer_intro'?'intro':'one_time',
-    monthly:status==='customer_recurring'?p.monthly:0,
-    onetime:status==='customer_once'?p.onetime:status==='customer_intro'?99:0,
-    machines:p.machines,name:p.name,address:p.address,city:p.city,phone:ph,
-    notes:'',last_service:'',next_service:'',hubspot_url:'',square_url:'',
-    machine_brand:'',machine_model:'',machine_type:'',filter_type:'',
-    filter_installed:'',contract_start:'',contract_term:6,contract_renewal:'',
-    service_history:[],atp_history:[],vendor_name:'',
-  };
-  p.status=status;
-  custSave();
-  if(!log[p.id])log[p.id]=[];
-  log[p.id].push({outcome:status,date:now,notes:'Deal closed'});
-  lSave();
-  if(status==='customer_recurring'||status==='customer_intro')buildAnnualSchedule(p.id);
-  scClose();
-  var msg=status==='customer_intro'?'🔥 Intro booked! Added to clients.':
-          status==='customer_recurring'?'🎉 Won! Added to recurring clients.':
-          status==='churned'?'Marked lost/churned':'🧼 Won! One-time service recorded.';
-  toast(msg);
-  sw('customers');
-}
-
-function scSavePhone(){
-  var val=(document.getElementById('sc-phone-in')||{}).value||'';
-  if(!val){toast('Enter a phone number');return;}
-  var p=_sc.p;if(!p)return;
-  phSave(p.id,val,p.hours||'',p.rating||0);
-  p.phone=val;
-  toast('Phone saved');
-  scClose();
-  showCard(p.id);
-}
-
-function scSaveVendor(){
-  var val=(document.getElementById('sc-vendor')||{}).value||'';
-  var p=_sc.p;if(!p)return;
-  if(!customers[p.id])customers[p.id]={name:p.name,address:p.address,city:p.city,
-    phone:p.phone||'',machines:p.machines,status:'prospect',notes:'',vendor_name:''};
-  customers[p.id].vendor_name=val;
-  custSave();
-  toast('✓ Vendor saved');
-  var btn=document.querySelector('#sc-bg button[onclick="scSaveVendor()"]');
-  if(btn){btn.textContent='✓ Saved';btn.style.background='#059669';
-    setTimeout(function(){btn.textContent='Save';btn.style.background='#92400e';},1500);}
-}
-
-function scToggleContact(){
-  var f=document.getElementById('sc-ct-form');
-  if(f)f.style.display=f.style.display==='none'?'block':'none';
-}
-
-function scSaveContact(){
-  var name=(document.getElementById('sc-ct-name')||{}).value||'';
-  if(!name){toast('Name required');return;}
-  var role=(document.getElementById('sc-ct-role')||{}).value||'';
-  var phone=(document.getElementById('sc-ct-phone')||{}).value||'';
-  var p=_sc.p;if(!p)return;
-  if(!contacts[p.id])contacts[p.id]=[];
-  contacts[p.id].push({name:name,role:role,phone:phone});
-  contactsSave();
-  toast('Contact saved');
-  scClose();
-  showCard(p.id);
-}
-
-function scDelContact(i){
-  var p=_sc.p;if(!p)return;
-  if(contacts[p.id])contacts[p.id].splice(i,1);
-  contactsSave();
-  scClose();
-  showCard(p.id);
-}
-
-// ── Calendar Widget — 100% button-based, works on all iOS ────────────────────
-var _cal={year:0,month:0,selected:'',targetId:0,mode:''}; // mode: 'nextsvc' or 'followup'
-
-function showCal(targetId, mode){
-  _cal.targetId=targetId||0;
-  _cal.mode=mode||'nextsvc';
-  _cal.selected='';
-  var now=new Date();
-  _cal.year=now.getFullYear();
-  _cal.month=now.getMonth();
-  var existing=document.getElementById('cal-bg');
-  if(existing)existing.remove();
-  var bg=document.createElement('div');
-  bg.id='cal-bg';
-  bg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:700;display:flex;align-items:center;justify-content:center';
-  bg.onclick=function(e){if(e.target===bg)bg.remove();};
-  bg.ontouchend=function(e){if(e.target===bg){e.preventDefault();bg.remove();}};
-  bg.innerHTML='<div id="cal-inner" style="background:#fff;border-radius:16px;padding:16px;width:94%;max-width:340px"></div>';
-  document.body.appendChild(bg);
-  calRender();
-}
-
-function calRender(){
-  var inner=document.getElementById('cal-inner');
-  if(!inner)return;
-  var MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
-  var DAYS=['Su','Mo','Tu','We','Th','Fr','Sa'];
-  var y=_cal.year, m=_cal.month;
-  var firstDay=new Date(y,m,1).getDay();
-  var daysInMonth=new Date(y,m+1,0).getDate();
-  var today=new Date();
-  var todayStr=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
-
-  // Header
-  var header='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">'
-    +'<button onclick="calPrev()" ontouchend="event.preventDefault();calPrev()" style="width:36px;height:36px;border:none;background:#f1f5f9;border-radius:8px;font-size:18px;cursor:pointer;touch-action:manipulation;font-family:inherit">‹</button>'
-    +'<div style="font-size:15px;font-weight:700;color:#0f1f38">'+MONTHS[m]+' '+y+'</div>'
-    +'<button onclick="calNext()" ontouchend="event.preventDefault();calNext()" style="width:36px;height:36px;border:none;background:#f1f5f9;border-radius:8px;font-size:18px;cursor:pointer;touch-action:manipulation;font-family:inherit">›</button>'
-    +'</div>';
-
-  // Day-of-week headers
-  var dow='<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px">'
-    +DAYS.map(function(d){return '<div style="text-align:center;font-size:10px;font-weight:700;color:#94a3b8;padding:4px 0">'+d+'</div>';}).join('')
-    +'</div>';
-
-  // Calendar grid
-  var grid='<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:12px">';
-  // Empty cells before first day
-  for(var i=0;i<firstDay;i++){
-    grid+='<div></div>';
-  }
-  // Day buttons
-  for(var d=1;d<=daysInMonth;d++){
-    var iso=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-    var isToday=iso===todayStr;
-    var isSelected=iso===_cal.selected;
-    var isPast=iso<todayStr;
-    var bg2=isSelected?'#0f1f38':isToday?'#dbeafe':'#f8fafc';
-    var col=isSelected?'#fff':isToday?'#1d4ed8':isPast?'#cbd5e1':'#1e293b';
-    var weight=isToday||isSelected?'700':'400';
-    var border=isToday&&!isSelected?'1px solid #93c5fd':'1px solid transparent';
-    grid+='<button data-iso="'+iso+'" onclick="calPickDay(this.dataset.iso)" ontouchend="event.preventDefault();calPickDay(this.dataset.iso)" '
-      +'style="aspect-ratio:1;border:'+border+';border-radius:8px;background:'+bg2+';color:'+col+';font-size:13px;font-weight:'+weight+';cursor:pointer;font-family:inherit;touch-action:manipulation;padding:0">'+d+'</button>';
-  }
-  grid+='</div>';
-
-  // Selected display
-  var selDisplay='';
-  if(_cal.selected){
-    var selDate=new Date(_cal.selected.replace(/-/g,'/'));
-    var selStr=selDate.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-    selDisplay='<div style="text-align:center;font-size:12px;font-weight:700;color:#059669;margin-bottom:10px">📅 '+selStr+'</div>';
-  }
-
-  // Action buttons
-  var actions='<div style="display:flex;gap:8px">'
-    +'<button onclick="calConfirm()" ontouchend="event.preventDefault();calConfirm()" '
-    +'style="flex:1;padding:11px;background:'+(  _cal.selected?'#059669':'#e2e8f0')+';color:'+(_cal.selected?'#fff':'#94a3b8')+';border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Confirm</button>'
-    +'<button onclick="calCancel()" ontouchend="event.preventDefault();calCancel()" '
-    +'style="padding:11px 16px;background:#f1f5f9;color:#475569;border:none;border-radius:9px;font-size:13px;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
-    +'</div>';
-
-  inner.innerHTML=header+dow+grid+selDisplay+actions;
-}
-
-function calPrev(){
-  _cal.month--;
-  if(_cal.month<0){_cal.month=11;_cal.year--;}
-  calRender();
-}
-function calNext(){
-  _cal.month++;
-  if(_cal.month>11){_cal.month=0;_cal.year++;}
-  calRender();
-}
-function calPickDay(iso){
-  _cal.selected=iso;
-  calRender();
-}
-function calCancel(){
-  var b=document.getElementById('cal-bg');
-  if(b)b.remove();
-}
-function calConfirm(){
-  if(!_cal.selected){toast('Pick a date first');return;}
-  var iso=_cal.selected;
-  if(_cal.mode==='nextsvc'){
-    var id=_cal.targetId;
-    if(!customers[id])customers[id]={};
-    customers[id].next_service=iso;
-    custSave();
-    rCust();
-    toast('Next service: '+iso);
-  } else if(_cal.mode==='followup'){
-    // Set follow-up in showCard
-    _sc.followup=iso;
-    var disp=new Date(iso.replace(/-/g,'/')).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-    var dispEl=document.getElementById('sc-fup-display');
-    if(dispEl)dispEl.textContent='📅 '+disp;
-    // Highlight none of the day-offset buttons (custom date selected)
-    var sheet=document.getElementById('sc-sheet');
-    if(sheet)sheet.querySelectorAll('[onclick^="scSetFup"]').forEach(function(b){
-      b.style.background='#f8fafc';b.style.color='#475569';
-    });
-  }
-  var b=document.getElementById('cal-bg');
-  if(b)b.remove();
-}
-
-
-// ── scStatusReport: generates print-ready prospect ATP status report ─────────
-function scStatusReport(){
-  var p=_sc.p; if(!p)return;
-  var ph=p.phone||PHONES[String(p.id)]||'';
-  var today=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-  var todayShort=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-
-  // ATP reading — prompt via overlay
-  var existing=document.getElementById('sr-bg');
-  if(existing)existing.remove();
-  var bg=document.createElement('div');
-  bg.id='sr-bg';
-  bg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:700;display:flex;align-items:center;justify-content:center';
-
-  bg.innerHTML='<div style="background:#fff;border-radius:16px;padding:20px;width:92%;max-width:360px">'
-    +'<div style="font-size:14px;font-weight:800;color:#0f1f38;margin-bottom:4px">📋 Status Report</div>'
-    +'<div style="font-size:11px;color:#64748b;margin-bottom:14px">Enter the ATP reading you just took</div>'
-    +'<div style="font-size:9px;font-weight:700;color:#dc2626;text-transform:uppercase;margin-bottom:4px">⚠ Before (pre-clean) RLU</div>'
-    +'<input id="sr-atp" type="number" placeholder="e.g. 847" min="0" max="9999" '
-    +'style="width:100%;padding:12px;border:2px solid #fca5a5;border-radius:8px;font-size:24px;font-weight:800;'
-    +'color:#dc2626;text-align:center;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:12px">'
-    +'<div style="font-size:9px;color:#64748b;margin-bottom:10px">Leave blank to show "Test pending"</div>'
-    +'<div style="display:flex;gap:8px">'
-    +'<button onclick="srGenerate()" ontouchend="event.preventDefault();srGenerate()" '
-    +'style="flex:1;padding:11px;background:#0f1f38;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Generate & Print</button>'
-    +'<button onclick="srCancel()" ontouchend="event.preventDefault();srCancel()" '
-    +'style="padding:11px 14px;background:#f1f5f9;color:#475569;border:none;border-radius:9px;font-size:13px;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
-    +'</div></div>';
-  document.body.appendChild(bg);
-}
-function srCancel(){var b=document.getElementById('sr-bg');if(b)b.remove();}
-function srGenerate(){
-  var p=_sc.p; if(!p)return;
-  var atpVal=parseInt((document.getElementById('sr-atp')||{}).value||'0')||0;
-  srCancel();
-
-  var atpDisplay=atpVal>0?atpVal:'—';
-  var atpStatus=atpVal<=0?'PENDING':atpVal<=10?'PASS':atpVal<=100?'MARGINAL':'FAIL';
-  var atpColor=atpVal<=0?'#64748b':atpVal<=10?'#059669':atpVal<=100?'#d97706':'#dc2626';
-  var atpBg=atpVal<=0?'#f8fafc':atpVal<=10?'#ecfdf5':atpVal<=100?'#fffbeb':'#fef2f2';
-  var atpMsg=atpVal<=0?'ATP test not yet performed':
-    atpVal<=10?'✓ Readings within safe range (FDA <10 RLU)':
-    atpVal<=100?'⚠ Elevated reading — cleaning recommended':
-    '✗ Critical contamination — cleaning required for compliance';
-
-  var ph=p.phone||PHONES[String(p.id)]||'';
-  var today=new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-  var iceLine=p.chronic?'Chronic ice machine violations on FL DBPR record':
-    p.confirmed?'Ice machine violation on FL DBPR record':'';
-
-  var html='<!DOCTYPE html><html><head><meta charset="UTF-8">'
-    +'<meta name="viewport" content="width=device-width,initial-scale=1">'
-    +'<title>Ice Machine Status Report — '+p.name+'</title>'
-    +'<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:24px;max-width:680px;margin:0 auto;color:#1e293b;font-size:12px;}'
-    +'@media print{body{padding:12px;}button{display:none;}}</style></head><body>'
-    // Header
-    +'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid #0f1f38">'
-    +'<div><img src="logo_for_pdf.png" style="height:40px;margin-bottom:4px" onerror="this.remove()"><div style="font-size:11px;color:#64748b">pinellasiceco.com · (727) 855-6873</div></div>'
-    +'<div style="text-align:right"><div style="font-size:18px;font-weight:800;color:#0f1f38">ICE MACHINE STATUS REPORT</div>'
-    +'<div style="font-size:11px;color:#64748b">'+today+'</div></div></div>'
-    // Business info
-    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">'
-    +'<div style="padding:12px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0">'
-    +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;margin-bottom:4px">Establishment</div>'
-    +'<div style="font-size:14px;font-weight:800;color:#0f1f38">'+p.name+'</div>'
-    +'<div style="font-size:11px;color:#64748b">'+p.address+'</div>'
-    +'<div style="font-size:11px;color:#64748b">'+p.city+', FL '+p.zip+'</div>'
-    +(ph?'<div style="font-size:11px;color:#64748b;margin-top:4px">'+ph+'</div>':'')
-    +'</div>'
-    +'<div style="padding:12px;background:'+atpBg+';border-radius:8px;border:2px solid '+atpColor+'">'
-    +'<div style="font-size:9px;font-weight:700;color:'+atpColor+';text-transform:uppercase;margin-bottom:6px">ATP Contamination Reading</div>'
-    +'<div style="font-size:36px;font-weight:900;color:'+atpColor+'">'+atpDisplay+'</div>'
-    +(atpVal>0?'<div style="font-size:11px;color:'+atpColor+';font-weight:700">RLU · '+atpStatus+'</div>':'')
-    +'</div></div>'
-    // ATP explanation
-    +'<div style="background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;padding:12px;margin-bottom:16px">'
-    +'<div style="font-size:10px;font-weight:700;color:#312e81;margin-bottom:4px">About This Reading</div>'
-    +'<div style="font-size:11px;color:#312e81;line-height:1.6">'+atpMsg+'</div>'
-    +'<div style="font-size:10px;color:#64748b;margin-top:6px">FDA Food Code 3-502.12 · FL 64E-11 · Standard: &lt;10 RLU on food contact surfaces. '
-    +'ATP (adenosine triphosphate) testing is the same method used by health department inspectors.</div>'
-    +'</div>'
-    // Inspection record (if applicable)
-    +(iceLine?'<div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:10px;margin-bottom:16px">'
-    +'<div style="font-size:10px;font-weight:700;color:#dc2626;margin-bottom:2px">⚠ Inspection Record</div>'
-    +'<div style="font-size:11px;color:#dc2626">'+iceLine+'</div>'
-    +(p.n_callbacks>0?'<div style="font-size:10px;color:#dc2626;margin-top:2px">'+p.n_callbacks+' callback inspection(s) on record — inspector has returned for follow-up</div>':'')
-    +'</div>':'')
-    // What we do
-    +'<div style="margin-bottom:16px">'
-    +'<div style="font-size:10px;font-weight:700;color:#0f1f38;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">What Pinellas Ice Co Does</div>'
-    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">'
-    +['Full ice bin disassembly & cleaning','ATP pre/post testing with documentation','Water distribution system flush','Internal sanitizer application (NSF/ANSI 60)','Filter inspection & replacement','Dated compliance report for your records'].map(function(s){
-      return '<div style="display:flex;gap:6px;font-size:11px;color:#475569"><span style="color:#059669;font-weight:700">✓</span>'+s+'</div>';
-    }).join('')
-    +'</div></div>'
-    // Next step
-    +'<div style="background:#0f1f38;border-radius:10px;padding:14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">'
-    +'<div><div style="font-size:13px;font-weight:800;color:#fff">Ready to get this taken care of?</div>'
-    +'<div style="font-size:11px;color:rgba(255,255,255,.7);margin-top:2px">$99 intro cleaning · No commitment · Includes ATP report</div></div>'
-    +'<div style="text-align:right"><div style="font-size:16px;font-weight:900;color:#f97316">$99</div><div style="font-size:9px;color:rgba(255,255,255,.6)">first visit</div></div>'
-    +'</div>'
-    // Footer
-    +'<div style="text-align:center;font-size:9px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:10px">'
-    +'Pinellas Ice Co · Commercial Ice Machine Sanitation · Pinellas County, FL · pinellasiceco.com · (727) 855-6873<br>'
-    +'Service complies with FDA Food Code 3-502.12 and Florida Administrative Code 64E-11</div>'
-    +'<div style="text-align:center;margin-top:14px">'
-    +'<button onclick="window.print()" style="padding:10px 24px;background:#0f1f38;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">🖨 Print / Save PDF</button>'
-    +'</div>'
-    +'</body></html>';
-
-  var win=window.open('','_blank');
-  if(win){win.document.write(html);win.document.close();setTimeout(function(){win.print();},600);}
-  else{toast('Allow popups to print the report');}
+  bg.addEventListener('touchend',scHandle,{passive:false});
+  bg.addEventListener('click',scHandle,false);
 }
 
 function openM(id){
@@ -4828,7 +4516,7 @@ function rCust(){
     // Service due indicator
     let serviceDueH='';
     if(c.next_service){
-      const due=(function(s){var p=s.split('-');return new Date(+p[0],+p[1]-1,+p[2],12,0,0);})(c.next_service);
+      const due=new Date(c.next_service);
       const daysUntil=Math.round((due-today)/864e5);
       const dueCol=daysUntil<0?'#dc2626':daysUntil<=7?'#d97706':'#059669';
       const dueTxt=daysUntil<0?Math.abs(daysUntil)+'d overdue':daysUntil===0?'Due TODAY':daysUntil+'d until service';
@@ -5313,16 +5001,6 @@ function renderBriefing(){
   }
 
   // ── BEST COLD TARGETS ─────────────────────────────────────────────────
-  // STRIKE ZONE: callback + chronic ice + inspection within 60 days
-  const strikeZone=P.filter(p=>{
-    if(isC(p.id))return false;
-    return p.priority==='CALLBACK'&&p.chronic&&p.days_until<=60&&p.days_until>=-30;
-  }).sort((a,b)=>(a.days_until||999)-(b.days_until||999)).slice(0,5);
-  const szGrid=document.getElementById('tgrid-strikezone');
-  const szSection=document.getElementById('section-strikezone');
-  if(szSection){szSection.style.display=strikeZone.length?'block':'none';}
-  if(szGrid&&strikeZone.length){szGrid.innerHTML=strikeZone.map(p=>cardHTML(p)).join('');attachGridListeners(szGrid);}
-
   const coldTargets=P.filter(p=>{
     if(isC(p.id))return false;
     return p.priority==='CALLBACK'||p.priority==='HOT';
@@ -5452,7 +5130,7 @@ function geoClusterSchedule(){
   recurring.forEach(p=>{
     const c=customers[p.id]||{};
     if(!c.next_service)return;
-    const due=(function(s){var p=s.split('-');return new Date(+p[0],+p[1]-1,+p[2],12,0,0);})(c.next_service);
+    const due=new Date(c.next_service);
     const daysUntil=Math.round((due-today)/864e5);
 
     // Find other clients within 5 days and 8 miles
@@ -5579,7 +5257,7 @@ function renderAtRisk(){
     const c=customers[p.id]||{};
     if(!c.last_service&&!c.next_service)return true; // never logged
     if(c.next_service){
-      const due=(function(s){var p=s.split('-');return new Date(+p[0],+p[1]-1,+p[2],12,0,0);})(c.next_service);
+      const due=new Date(c.next_service);
       const overdueDays=Math.round((today-due)/864e5);
       return overdueDays>5; // 5+ days overdue
     }
@@ -5808,7 +5486,7 @@ function openServiceLog(id){
 
   // Build modal
   const bg=document.createElement('div');
-  bg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:600;display:flex;align-items:flex-end;justify-content:center';
+  bg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:flex-end;justify-content:center';
   bg.id='svc-log-bg';
 
   bg.innerHTML='<div style="background:var(--surf);border-radius:16px 16px 0 0;padding:16px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto">'
@@ -5878,7 +5556,7 @@ function openServiceLog(id){
     // Buttons
     +'<div style="display:flex;gap:6px">'
       +'<button onclick="submitServiceLog('+id+')" ontouchend="event.preventDefault();submitServiceLog('+id+')" style="flex:2;padding:10px;border:none;border-radius:8px;background:#059669;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Save Service Visit</button>'
-      +'<button id="svc-cancel-btn" style="cursor:pointer" style="flex:1;padding:10px;border:1px solid var(--brd);border-radius:8px;background:var(--surf);color:var(--sub);font-size:11px;cursor:pointer;font-family:inherit">Cancel</button>'
+      +'<button onclick="closeSvcLog()" ontouchend="event.preventDefault();closeSvcLog()" style="flex:1;padding:10px;border:1px solid var(--brd);border-radius:8px;background:var(--surf);color:var(--sub);font-size:11px;cursor:pointer;font-family:inherit">Cancel</button>'
     +'</div>'
     +'</div>';
 
@@ -5898,49 +5576,9 @@ function openServiceLog(id){
       else{ind.textContent='Retest/Reservice';ind.style.background='#fef2f2';ind.style.color='#dc2626';}
     });
   }
-  // Event delegation on bg — works in iOS PWA where onclick on innerHTML fails
-  bg.addEventListener('touchend',function(e){
-    var t=e.target;
-    // Tap on save button or inside it
-    if(t.closest&&(t.closest('#svc-submit-btn')||t.id==='svc-submit-btn')){
-      e.preventDefault();e.stopPropagation();
-      submitServiceLog(id);
-    }
-    // Tap on cancel button
-    if(t.closest&&t.closest('#svc-cancel-btn')){
-      e.preventDefault();
-      document.getElementById('svc-log-bg').remove();
-    }
-    // Tap on backdrop only
-    if(t===bg){e.preventDefault();document.getElementById('svc-log-bg').remove();}
-    // Toggle filter type row
-    if(t.id==='svc-filter-replaced'){
-      var row=document.getElementById('svc-filter-type-row');
-      if(row)row.style.display=t.checked?'block':'none';
-    }
-    // ATP live indicator
-    var atp=document.getElementById('svc-atp');
-    var ind=document.getElementById('atp-indicator');
-    if(atp&&ind){
-      var v=parseInt(atp.value)||0;
-      if(v>0){
-        ind.style.display='block';
-        ind.textContent=v<=10?'✓ PASS — safe range':v<=100?'⚠ MARGINAL':'✗ FAIL — cleaning needed';
-        ind.style.color=v<=10?'#059669':v<=100?'#d97706':'#dc2626';
-        ind.style.background=v<=10?'#f0fdf4':v<=100?'#fffbeb':'#fef2f2';
-      }
-    }
-  },false);
-  bg.addEventListener('click',function(e){
-    var t=e.target;
-    if(t.closest&&(t.closest('#svc-submit-btn')||t.id==='svc-submit-btn')){
-      submitServiceLog(id);
-    }
-    if(t.closest&&t.closest('#svc-cancel-btn')){
-      document.getElementById('svc-log-bg').remove();
-    }
-  },false);
 }
+
+let _svcType='maintenance_60';
 function closeSvcLog(){const el=document.getElementById('svc-log-bg');if(el)el.remove();}
 function toggleStep(el){const next=el.nextElementSibling;if(next)next.style.display=next.style.display==='none'?'block':'none';}
 
@@ -6208,10 +5846,8 @@ function submitServiceLog(id){
   }
   // Set last service to today, next service 60 days out
   const today_str=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-  const _td=new Date();
-  const today_iso=_td.getFullYear()+'-'+String(_td.getMonth()+1).padStart(2,'0')+'-'+String(_td.getDate()).padStart(2,'0');
-  const _nd=new Date(Date.now()+60*864e5);
-  const next_iso=_nd.getFullYear()+'-'+String(_nd.getMonth()+1).padStart(2,'0')+'-'+String(_nd.getDate()).padStart(2,'0');
+  const today_iso=new Date().toISOString().slice(0,10);
+  const next_iso=new Date(Date.now()+60*864e5).toISOString().slice(0,10);
   customers[id].last_service=today_str;
   customers[id].next_service=next_iso;
   // Add to service history
@@ -6648,7 +6284,7 @@ function loadReportClient(){
     // ── CONDITION NOTES ──────────────────────────────────────────────────
     '<div style="margin-bottom:14px">'+
       '<div style="font-size:8px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Technician Notes &amp; Observations</div>'+
-      '<textarea id="report-notes-'+id+'" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;font-size:11px;font-family:inherit;color:#1e293b;background:#f8fafc;outline:none;resize:none;line-height:1.6" rows="3" placeholder="Auto-fills from last service visit. Edit before printing.">\'+(c.service_history&&c.service_history.length&&c.service_history[c.service_history.length-1].notes?c.service_history[c.service_history.length-1].notes:(c.report_notes||\'\'))+\'</textarea>\'
+      '<textarea id="report-notes-'+id+'" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;font-size:11px;font-family:inherit;color:#1e293b;background:#fff;outline:none;resize:none;line-height:1.6" rows="3" placeholder="Machine condition, scale level, biofilm observed, recommendations, items to monitor...">'+(c.report_notes||'')+'</textarea>'+
     '</div>'+
 
     // ── CERTIFICATION BLOCK ──────────────────────────────────────────────
@@ -6943,7 +6579,7 @@ function deleteContact(bizId,idx){
 // ── INIT ─────────────────────────────────────────────────────────────────────
 // INIT
 function init(){
-  lLoad();phLoad();custLoad();contactsLoad();initSettings();initGoals();(function tryRB(n){if(P&&P.length>0)renderBriefing();else if(n>0)setTimeout(function(){tryRB(n-1);},200);})(10);
+  lLoad();phLoad();custLoad();contactsLoad();initSettings();initGoals();setTimeout(function(){renderBriefing();},150);
   const si=document.getElementById('si');if(si)si.blur();
   // FAB hidden - using tab navigation instead
 
@@ -7090,7 +6726,7 @@ if('serviceWorker' in navigator){
 # ──────────────────────────────────────────────────────────────────────────────
 # ENTRY POINT
 # ──────────────────────────────────────────────────────────────────────────────
-SW_JS = """const CACHE_NAME='pic-BUILDDATE';
+SW_JS = """const CACHE_NAME='pic-v5';
 const ASSETS=['./','./ index.html'];
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(ASSETS).catch(()=>{})));
@@ -7103,17 +6739,18 @@ self.addEventListener('activate',e=>{
 self.addEventListener('fetch',e=>{
   const url=new URL(e.request.url);
   if(url.origin===self.location.origin){
-    e.respondWith(
-      fetch(e.request).then(res=>{
+    e.respondWith(caches.match(e.request).then(cached=>{
+      const fresh=fetch(e.request).then(res=>{
         if(res&&res.status===200){const copy=res.clone();caches.open(CACHE_NAME).then(c=>c.put(e.request,copy));}
         return res;
-      }).catch(()=>caches.match(e.request))
-    );
+      }).catch(()=>cached);
+      return cached||fresh;
+    }));
   } else {
     e.respondWith(fetch(e.request).catch(()=>caches.match(e.request)));
   }
 });
-""".replace('BUILDDATE', str(TODAY))
+"""
 
 def main():
     folder = Path(__file__).parent

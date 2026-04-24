@@ -41,5 +41,5 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add index.html sw.js data/snapshot_prev.json || true
-          git diff --staged --quiet && echo "No changes to commit" || \
-            git commit -m "Weekly rebuild $(date +'%Y-%m-%d')" && git push
+          git commit --allow-empty -m "Weekly rebuild $(date +'%Y-%m-%d')"
+          git push
