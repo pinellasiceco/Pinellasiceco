@@ -5,6 +5,9 @@ on:
     - cron: '0 12 * * 1'   # Every Monday at 12:00 PM UTC (8am ET)
   workflow_dispatch:         # Manual trigger
 
+permissions:
+  contents: write
+
 jobs:
   rebuild:
     runs-on: ubuntu-latest
@@ -25,9 +28,7 @@ jobs:
         run: python download_data.py
 
       - name: Build prospect tool
-        run: |
-          # Auto-find all CSV/XLSX files in data/ folder
-          python build.py data/
+        run: python build.py data/
 
       - name: Send weekly briefing email
         env:
@@ -35,7 +36,7 @@ jobs:
           BRIEFING_EMAIL: ${{ secrets.BRIEFING_EMAIL }}
         run: python send_briefing.py
 
-      - name: Deploy to GitHub Pages
+      - name: Commit and push
         run: |
           cp prospecting_tool.html index.html
           git config user.name  "github-actions[bot]"

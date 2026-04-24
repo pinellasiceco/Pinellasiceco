@@ -2,38 +2,45 @@ name: Rebuild Prospect Tool
 
 on:
   schedule:
-    - cron: '0 11 * * 1'
-  workflow_dispatch:
+    - cron: '0 12 * * 1'   # Every Monday at 12:00 PM UTC (8am ET)
+  workflow_dispatch:         # Manual trigger
 
 permissions:
   contents: write
 
 jobs:
-  build:
+  rebuild:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install pandas scikit-learn numpy openpyxl requests
+        run: pip install requests openpyxl
 
-      - name: Download fresh FL data
+      - name: Download fresh FL DBPR data
         run: python download_data.py
 
       - name: Build prospect tool
         run: python build.py data/
 
-      - name: Commit and push updated tool
+      - name: Send weekly briefing email
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          BRIEFING_EMAIL: ${{ secrets.BRIEFING_EMAIL }}
+        run: python send_briefing.py
+
+      - name: Commit and push
         run: |
-          git config user.name  "Pinellas Ice Bot"
-          git config user.email "bot@pinellasice"
           cp prospecting_tool.html index.html
-          git add index.html
-          git diff --staged --quiet && echo "No changes" || (
-            git commit -m "Weekly rebuild $(date +'%Y-%m-%d')"
-            git push
-          )
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html sw.js data/snapshot_prev.json || true
+          git commit --allow-empty -m "Weekly rebuild $(date +'%Y-%m-%d')"
+          git push
