@@ -2858,6 +2858,7 @@ function attachGridListeners(grid){
       if(!id)return;
       const act=btn.dataset.action;
       if(act==='showCard')    showCard(id);
+      else if(act==='openM')  showCard(id);
       else if(act==='svclog') openServiceLog(id);
       else if(act==='snext')  setNextService(id);
       else if(act==='skip')   skip(id);
@@ -3240,7 +3241,7 @@ function renderRList(){
     const distTxt=p._d?p._d.toFixed(1)+'mi':'';
     const chronicTxt=p.chronic?'<div style="font-size:8px;color:#059669;font-weight:700">CHRONIC ICE</div>':'';
     const isAnchor=routeAnchor&&routeAnchor.id===p.id;
-    return '<div class="rcard'+(inR?' sel':'')+'" data-action="route" style="border-left:3px solid '+col+(inR?';background:#fff7f5':'')+(isAnchor?';border-left:4px solid #7c3aed':'')+';">'
+    return '<div class="rcard'+(inR?' sel':'')+'" data-action="route" data-id="'+p.id+'" style="border-left:3px solid '+col+(inR?';background:#fff7f5':'')+(isAnchor?';border-left:4px solid #7c3aed':'')+';">'
       +'<div class="rdot" style="background:'+col+'"></div>'
       +'<div style="flex:1;min-width:0">'
         +'<div class="rname" style="color:var(--navy)">'+p.name+(inR?' <span style="color:var(--ora)">&#x2713;</span>':'')+(isAnchor?' <span style="font-size:8px;color:#7c3aed">&#x1F4CD; START</span>':'')+'</div>'
@@ -3298,7 +3299,7 @@ function renderMap(){
       '<br><button onclick="addToRoute('+p.id+')" '+
       'style="margin-top:4px;padding:3px 8px;border:none;border-radius:5px;background:'+col+';color:'+(p.priority==='WARM'?'#000':'#fff')+';font-size:10px;font-weight:700;cursor:pointer">'+
       (routeSet.has(p.id)?'Remove from Route':'+Route')+'</button> '+
-      '<button onclick="openM('+p.id+')" '+
+      '<button onclick="showCard('+p.id+')" '+
       'style="margin-top:3px;padding:3px 8px;border:1px solid #333;border-radius:5px;background:#111;color:#fff;font-size:10px;cursor:pointer">Details</button>',
       {maxWidth:220}
     );
@@ -3373,7 +3374,7 @@ function renderDayRoute(){
         +'</div>'
       +'</div>'
       +'<div style="display:flex;flex-direction:column;gap:3px;flex-shrink:0">'
-        +'<button onclick="openM('+p.id+')" style="font-size:9px;padding:3px 6px;border:1px solid var(--ora);border-radius:5px;background:#fff7f5;color:var(--ora);cursor:pointer;font-family:inherit">Details</button>'
+        +'<button onclick="showCard('+p.id+')" style="font-size:9px;padding:3px 6px;border:1px solid var(--ora);border-radius:5px;background:#fff7f5;color:var(--ora);cursor:pointer;font-family:inherit">Details</button>'
         +'<button onclick="removeStop('+p.id+')" style="font-size:9px;padding:3px 6px;border:1px solid var(--brd);border-radius:5px;background:transparent;color:var(--sub);cursor:pointer;font-family:inherit">Remove</button>'
       +'</div>'
 
@@ -3799,229 +3800,16 @@ function showCard(id){
 
   document.body.appendChild(bg);
 
-  // ── Wire all interactive elements ──────────────────────────────────────────
+  // ── Event state ──────────────────────────────────────────────────────────────
   var selOutcome=null, selType='call', selReason=null;
 
-  // Phone save
-  if(!ph){
-    var phoneSaveBtn=document.getElementById('sc-phone-save');
-    if(phoneSaveBtn){
-      function doPhoneSave(e2){
-        if(e2&&e2.type==='touchend')e2.preventDefault();
-        var val=(document.getElementById('sc-phone-input')||{}).value||'';
-        if(!val){toast('Enter a phone number');return;}
-        phSave(p.id,val,p.hours||'',p.rating||0);
-        p.phone=val;
-        toast('Phone saved');
-        bg.remove();
-        showCard(p.id); // reopen with phone
-      }
-      phoneSaveBtn.addEventListener('touchend',doPhoneSave,false);
-      phoneSaveBtn.addEventListener('click',doPhoneSave,false);
-    }
-  }
-
-  // Route button
-  var routeBtn=document.getElementById('sc-route-btn');
-  if(routeBtn){
-    function doRoute(e){if(e&&e.type==='touchend')e.preventDefault();addToRoute(p.id);toast('Added to route');}
-    routeBtn.addEventListener('touchend',doRoute,false);
-    routeBtn.addEventListener('click',doRoute,false);
-  }
-  // Close
-  function doClose(e){if(e&&e.type==='touchend')e.preventDefault();bg.remove();}
-  var closeBtn=document.getElementById('sc-close');
-  closeBtn.addEventListener('touchend',doClose,false);
-  closeBtn.addEventListener('click',doClose,false);
-  bg.addEventListener('touchend',function(e){if(e.target===bg){e.preventDefault();bg.remove();}},false);
-
-  // Follow-up day buttons — wire BEFORE type toggle
-  var fupContainer=document.getElementById('sc-sheet');
-  if(fupContainer){
-    fupContainer.querySelectorAll('[data-fupdays]').forEach(function(btn){
-      function pickFup(e){
-        if(e.type==='touchend')e.preventDefault();
-        var days=parseInt(btn.dataset.fupdays);
-        var d=new Date(Date.now()+days*864e5);
-        var iso=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-        var fupInput=document.getElementById('sc-followup');
-        if(fupInput)fupInput.value=iso;
-        var disp=document.getElementById('sc-fup-display');
-        if(disp)disp.textContent=d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-        // Update button styles
-        fupContainer.querySelectorAll('[data-fupdays]').forEach(function(b){
-          b.style.background=b===btn?'#0f1f38':'#f8fafc';
-          b.style.color=b===btn?'#fff':'#475569';
-        });
-      }
-      btn.addEventListener('touchend',pickFup,false);
-      btn.addEventListener('click',pickFup,false);
-    });
-  }
-
-  // Type toggle
-  var typeBtns=document.querySelectorAll('#sc-sheet [data-sctype]');
-  function pickType(e){
-    if(e.type==='touchend')e.preventDefault();
-    selType=e.currentTarget.dataset.sctype;
-    typeBtns.forEach(function(b){
-      b.style.background=b===e.currentTarget?'#0f1f38':'#f8fafc';
-      b.style.color=b===e.currentTarget?'#fff':'#475569';
-    });
-  }
-  typeBtns.forEach(function(b){b.addEventListener('touchend',pickType,false);b.addEventListener('click',pickType,false);});
-
-  // Outcome buttons
-  var obtnRow=document.getElementById('sc-obtn-row');
-  var reasonWrap=document.getElementById('sc-reason-wrap');
-  var reasonGrid=document.getElementById('sc-reason-grid');
-  function pickOutcome(btn){
-    selOutcome=btn.dataset.scout;
-    selReason=null;
-    obtnRow.querySelectorAll('[data-scout]').forEach(function(b){
-      b.style.opacity=b===btn?'1':'0.45';
-      b.style.fontWeight=b===btn?'800':'700';
-    });
-    // Reason picker
-    var reasonMap={
-      not_now:['Already has service','Too expensive','Cleans themselves','Not the decision maker','Call back later','No reason given'],
-      in_play:['Interested, needs partner','Needs corporate approval','Seasonal','Franchise contract','Just passed inspection'],
-      dead:['Wrong fit','Hard no','Out of business','Corporate contract','Repeated refusals']
-    };
-    // Special: 'Signed' is a shortcut to Won-Recurring (creates customer record)
-    if(selOutcome==='signed'){
-      toast('Use the Close Deal buttons below (Won Recurring/One-Time/Intro) to record a signed deal');
-      selOutcome=null;
-      obtnRow.querySelectorAll('[data-scout]').forEach(function(b){b.style.opacity='1';});
-      return;
-    }
-    if(reasonMap[selOutcome]){
-      reasonGrid.innerHTML=reasonMap[selOutcome].map(function(r){
-        return '<button data-scr="'+r+'" style="padding:4px 8px;border:1px solid #e2e8f0;border-radius:5px;background:#fff;font-size:10px;cursor:pointer;font-family:inherit;touch-action:manipulation">'+r+'</button>';
-      }).join('');
-      reasonWrap.style.display='block';
-      // Wire reason chips
-      reasonGrid.querySelectorAll('[data-scr]').forEach(function(rb){
-        function pickR(e){
-          if(e.type==='touchend')e.preventDefault();
-          selReason=rb.dataset.scr;
-          reasonGrid.querySelectorAll('[data-scr]').forEach(function(b){
-            b.style.background=b===rb?'#0f1f38':'#fff';
-            b.style.color=b===rb?'#fff':'#1e293b';
-          });
-        }
-        rb.addEventListener('touchend',pickR,false);
-        rb.addEventListener('click',pickR,false);
-      });
-    } else {
-      reasonWrap.style.display='none';
-    }
-  }
-  obtnRow.querySelectorAll('[data-scout]').forEach(function(btn){
-    btn.addEventListener('touchend',function(e){e.preventDefault();pickOutcome(btn);},false);
-    btn.addEventListener('click',function(){pickOutcome(btn);},false);
-  });
-
-  // Save log
-  function doSaveLog(e){
-    if(e&&e.type==='touchend')e.preventDefault();
-    if(!selOutcome){toast('Pick an outcome first');return;}
-    var notes=(document.getElementById('sc-notes')||{}).value||'';
-    var followup=(document.getElementById('sc-followup')||{}).value||'';
-    // Require follow-up date for anything that's not a terminal outcome
-    var needsFollowup=['not_now','in_play'].indexOf(selOutcome)>=0;
-    if(needsFollowup&&!followup){
-      toast('Follow-up date required for this outcome');
-      var fup=document.getElementById('sc-followup');
-      if(fup){fup.style.border='2px solid #dc2626';fup.focus();}
-      return;
-    }
-    if(!log[p.id])log[p.id]=[];
-    log[p.id].push({outcome:selOutcome,type:selType,reason:selReason,
-      date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
-      notes:notes,followup:followup});
-    lSave();
-    var msg=followup?'✓ '+(OI[selOutcome]||selOutcome)+' — follow-up '+followup:'✓ '+(OI[selOutcome]||selOutcome)+' logged';
-    toast(msg);
-    bg.remove();
-    if(_queueAutoAdvance){_queueAutoAdvance=false;queueIdx++;renderQueueCard();}
-    else if(tab==='today')renderBriefing();
-    else if(tab==='all')rA();
-    else renderKPIs();
-  }
-  var saveBtn=document.getElementById('sc-save-btn');
-  saveBtn.addEventListener('touchend',doSaveLog,false);
-  saveBtn.addEventListener('click',doSaveLog,false);
-
-  // markWon helper
-  function doMarkWon(status){
-    var now=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-    customers[p.id]={
-      status:status,won_date:now,
-      service_type:status==='customer_recurring'?'recurring':status==='customer_intro'?'intro':'one_time',
-      monthly:status==='customer_recurring'?p.monthly:0,
-      onetime:status==='customer_once'?p.onetime:status==='customer_intro'?99:0,
-      machines:p.machines,name:p.name,address:p.address,city:p.city,phone:ph,
-      notes:'',last_service:'',next_service:'',hubspot_url:'',square_url:'',
-      machine_brand:'',machine_model:'',machine_type:'',filter_type:'',
-      filter_installed:'',contract_start:'',contract_term:6,contract_renewal:'',
-      service_history:[],atp_history:[],vendor_name:'',
-    };
-    custSave();
-    // CRITICAL: set p.status so rCust() filter finds this prospect
-    p.status=status;
-    if(!log[p.id])log[p.id]=[];
-    log[p.id].push({outcome:status,date:now,notes:'Deal closed'});
-    lSave();
-    if(status==='customer_recurring')buildAnnualSchedule(p.id);
-    if(status==='customer_intro')buildAnnualSchedule(p.id);
-    bg.remove();
-    var msg=status==='customer_intro'?'🔥 Intro booked! $99 first visit':
-            status==='customer_recurring'?'🎉 Won! Added to recurring clients.':
-            status==='churned'?'Marked lost/churned':'🧼 Won! One-time service recorded.';
-    toast(msg);
-    sw('customers');
-  }
-
-  // Close deal buttons
-  function wireWon(btnId,status){
-    var btn=document.getElementById(btnId);
-    if(!btn)return;
-    btn.addEventListener('touchend',function(e){e.preventDefault();doMarkWon(status);},false);
-    btn.addEventListener('click',function(){doMarkWon(status);},false);
-  }
-  wireWon('sc-won-intro','customer_intro');
-  wireWon('sc-won-rec','customer_recurring');
-  wireWon('sc-won-once','customer_once');
-  wireWon('sc-lost-btn','churned');
-
-  // Vendor save
-  var vendorSaveBtn=document.getElementById('sc-save-vendor');
-  function doSaveVendor(e){
-    if(e&&e.type==='touchend')e.preventDefault();
-    var val=(document.getElementById('sc-vendor')||{}).value||'';
-    if(!customers[p.id])customers[p.id]={name:p.name,address:p.address,city:p.city,
-      phone:ph,machines:p.machines,status:'prospect',notes:'',vendor_name:''};
-    customers[p.id].vendor_name=val;
-    custSave();
-    toast('✓ Vendor intel saved');
-    // Visual confirmation on button
-    if(vendorSaveBtn){
-      var orig=vendorSaveBtn.textContent;
-      vendorSaveBtn.textContent='✓ Saved';
-      vendorSaveBtn.style.background='#059669';
-      setTimeout(function(){vendorSaveBtn.textContent=orig;vendorSaveBtn.style.background='#92400e';},1500);
-    }
-  }
-  vendorSaveBtn.addEventListener('touchend',doSaveVendor,false);
-  vendorSaveBtn.addEventListener('click',doSaveVendor,false);
-
-  // Contacts
-  var cWrap=document.getElementById('sc-contacts-wrap');
-  var contacts_data=contacts[p.id]||[];
+  // ── Render contacts — no addEventListener needed, delegation covers deletes ──
   function renderSCContacts(){
-    if(!contacts_data.length){cWrap.innerHTML='<div style="font-size:10px;color:#94a3b8">No contacts added yet</div>';return;}
-    cWrap.innerHTML=contacts_data.map(function(ct,i){
+    var cWrap=document.getElementById('sc-contacts-wrap');
+    if(!cWrap)return;
+    var cData=contacts[p.id]||[];
+    if(!cData.length){cWrap.innerHTML='<div style="font-size:10px;color:#94a3b8">No contacts added yet</div>';return;}
+    cWrap.innerHTML=cData.map(function(ct,i){
       return '<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #f1f5f9">'
         +'<div><div style="font-size:11px;font-weight:600;color:#1e293b">'+ct.name+'</div>'
         +'<div style="font-size:9px;color:#94a3b8">'+ct.role+(ct.phone?' · '+ct.phone:'')+'</div>'
@@ -4030,68 +3818,218 @@ function showCard(id){
         +'<button data-ci="'+i+'" style="border:none;background:transparent;color:#dc2626;font-size:12px;cursor:pointer;touch-action:manipulation">✕</button>'
         +'</div>';
     }).join('');
-    // Wire delete
-    cWrap.querySelectorAll('[data-ci]').forEach(function(btn){
-      function delContact(e){
-        if(e.type==='touchend')e.preventDefault();
-        contacts_data.splice(parseInt(btn.dataset.ci),1);
-        contacts[p.id]=contacts_data;
-        contactsSave();
-        renderSCContacts();
-      }
-      btn.addEventListener('touchend',delContact,false);
-      btn.addEventListener('click',delContact,false);
-    });
   }
   renderSCContacts();
 
-  // Add contact
-  var addContactBtn=document.getElementById('sc-add-contact');
-  function doAddContact(e){
-    if(e&&e.type==='touchend')e.preventDefault();
-    // Show inline form instead of prompt (prompt blocked in PWA)
-    var existing=document.getElementById('sc-contact-form');
-    if(existing){existing.remove();return;}
-    var form=document.createElement('div');
-    form.id='sc-contact-form';
-    form.style.cssText='background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;margin-top:6px';
-    form.innerHTML=
-      '<div style="font-size:9px;font-weight:700;color:#94a3b8;margin-bottom:6px">NEW CONTACT</div>'
-      +'<input id="sc-ct-name" type="text" placeholder="Name" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:5px">'
-      +'<input id="sc-ct-role" type="text" placeholder="Role (Owner, GM, Manager…)" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:5px">'
-      +'<input id="sc-ct-phone" type="tel" placeholder="Phone (optional)" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:5px">'
-      +'<input id="sc-ct-notes" type="text" placeholder="Notes (optional)" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:8px">'
-      +'<div style="display:flex;gap:6px">'
-      +'<button id="sc-ct-save" style="flex:1;padding:8px;background:#059669;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Save Contact</button>'
-      +'<button id="sc-ct-cancel" style="padding:8px 12px;background:#f1f5f9;color:#475569;border:none;border-radius:7px;font-size:12px;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
-      +'</div>';
-    addContactBtn.insertAdjacentElement('afterend', form);
-    // Wire save
-    function saveNewContact(e2){
-      if(e2&&e2.type==='touchend')e2.preventDefault();
-      var name=(document.getElementById('sc-ct-name')||{}).value||'';
-      if(!name){toast('Name required');return;}
-      var role=(document.getElementById('sc-ct-role')||{}).value||'';
-      var phone=(document.getElementById('sc-ct-phone')||{}).value||'';
-      var notes=(document.getElementById('sc-ct-notes')||{}).value||'';
-      if(!contacts[p.id])contacts[p.id]=[];
-      contacts[p.id].push({name:name,role:role,phone:phone,notes:notes});
-      contacts_data=contacts[p.id];
-      contactsSave();
-      form.remove();
-      renderSCContacts();
-      toast('Contact saved');
+  // ── Single delegation handler on bg ──────────────────────────────────────────
+  // bg is created via document.createElement (NOT innerHTML), so addEventListener
+  // is reliable on iOS PWA. All child button taps bubble up to this one handler.
+  var _scLastTouch=0;
+  function scHandle(e){
+    if(e.type==='click'&&Date.now()-_scLastTouch<350)return; // suppress ghost click after touchend
+    if(e.type==='touchend')_scLastTouch=Date.now();
+
+    // Backdrop tap → close
+    if(e.target===bg){e.preventDefault();bg.remove();return;}
+
+    var btn=e.target.closest(
+      '[data-scout],[data-sctype],[data-fupdays],[data-scr],[data-ci],'
+      +'#sc-close,#sc-route-btn,#sc-save-btn,#sc-phone-save,'
+      +'#sc-save-vendor,#sc-add-contact,#sc-won-intro,#sc-won-rec,'
+      +'#sc-won-once,#sc-lost-btn,#sc-ct-save,#sc-ct-cancel'
+    );
+    if(!btn)return;
+    if(e.type==='touchend')e.preventDefault();
+    var bid=btn.id||'';
+
+    // Close
+    if(bid==='sc-close'){bg.remove();return;}
+
+    // +Route
+    if(bid==='sc-route-btn'){addToRoute(p.id);toast('Added to route');return;}
+
+    // Phone save
+    if(bid==='sc-phone-save'){
+      var phoneVal=(document.getElementById('sc-phone-input')||{}).value||'';
+      if(!phoneVal){toast('Enter a phone number');return;}
+      phSave(p.id,phoneVal,p.hours||'',p.rating||0);p.phone=phoneVal;
+      toast('Phone saved');bg.remove();showCard(p.id);return;
     }
-    var saveCt=document.getElementById('sc-ct-save');
-    saveCt.addEventListener('touchend',saveNewContact,false);
-    saveCt.addEventListener('click',saveNewContact,false);
-    var cancelCt=document.getElementById('sc-ct-cancel');
-    function cancelForm(e2){if(e2&&e2.type==='touchend')e2.preventDefault();form.remove();}
-    cancelCt.addEventListener('touchend',cancelForm,false);
-    cancelCt.addEventListener('click',cancelForm,false);
+
+    // Type toggle (Call / Walk-In)
+    if(btn.dataset.sctype){
+      selType=btn.dataset.sctype;
+      bg.querySelectorAll('[data-sctype]').forEach(function(b){
+        b.style.background=b===btn?'#0f1f38':'#f8fafc';
+        b.style.color=b===btn?'#fff':'#475569';
+      });
+      return;
+    }
+
+    // Outcome selection
+    if(btn.dataset.scout){
+      var outcome=btn.dataset.scout;
+      if(outcome==='signed'){
+        toast('Use the Close Deal buttons below (Won Recurring/One-Time/Intro) to record a signed deal');
+        return;
+      }
+      selOutcome=outcome;selReason=null;
+      bg.querySelectorAll('[data-scout]').forEach(function(b){
+        b.style.opacity=b===btn?'1':'0.45';
+        b.style.fontWeight=b===btn?'800':'700';
+      });
+      var reasonMap={
+        not_now:['Already has service','Too expensive','Cleans themselves','Not the decision maker','Call back later','No reason given'],
+        in_play:['Interested, needs partner','Needs corporate approval','Seasonal','Franchise contract','Just passed inspection'],
+        dead:['Wrong fit','Hard no','Out of business','Corporate contract','Repeated refusals']
+      };
+      var rWrap=document.getElementById('sc-reason-wrap');
+      var rGrid=document.getElementById('sc-reason-grid');
+      if(reasonMap[outcome]&&rGrid){
+        rGrid.innerHTML=reasonMap[outcome].map(function(r){
+          return '<button data-scr="'+r+'" style="padding:4px 8px;border:1px solid #e2e8f0;border-radius:5px;background:#fff;font-size:10px;cursor:pointer;font-family:inherit;touch-action:manipulation">'+r+'</button>';
+        }).join('');
+        if(rWrap)rWrap.style.display='block';
+      }else{if(rWrap)rWrap.style.display='none';}
+      return;
+    }
+
+    // Reason chip
+    if(btn.hasAttribute('data-scr')){
+      selReason=btn.dataset.scr;
+      bg.querySelectorAll('[data-scr]').forEach(function(b){
+        b.style.background=b===btn?'#0f1f38':'#fff';
+        b.style.color=b===btn?'#fff':'#1e293b';
+      });
+      return;
+    }
+
+    // Follow-up day button
+    if(btn.dataset.fupdays){
+      var fupDays=parseInt(btn.dataset.fupdays);
+      var fupDate=new Date(Date.now()+fupDays*864e5);
+      var fupISO=fupDate.getFullYear()+'-'+String(fupDate.getMonth()+1).padStart(2,'0')+'-'+String(fupDate.getDate()).padStart(2,'0');
+      var fupInput=document.getElementById('sc-followup');
+      if(fupInput)fupInput.value=fupISO;
+      var fupDisp=document.getElementById('sc-fup-display');
+      if(fupDisp)fupDisp.textContent=fupDate.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+      bg.querySelectorAll('[data-fupdays]').forEach(function(b){
+        b.style.background=b===btn?'#0f1f38':'#f8fafc';
+        b.style.color=b===btn?'#fff':'#475569';
+      });
+      return;
+    }
+
+    // Save log entry
+    if(bid==='sc-save-btn'){
+      if(!selOutcome){toast('Pick an outcome first');return;}
+      var logNotes=(document.getElementById('sc-notes')||{}).value||'';
+      var logFollowup=(document.getElementById('sc-followup')||{}).value||'';
+      var needsFup=['not_now','in_play'].indexOf(selOutcome)>=0;
+      if(needsFup&&!logFollowup){toast('Follow-up date required for this outcome');return;}
+      if(!log[p.id])log[p.id]=[];
+      log[p.id].push({outcome:selOutcome,type:selType,reason:selReason,
+        date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
+        notes:logNotes,followup:logFollowup});
+      lSave();
+      toast(logFollowup?'✓ '+(OI[selOutcome]||selOutcome)+' — follow-up '+logFollowup:'✓ '+(OI[selOutcome]||selOutcome)+' logged');
+      bg.remove();
+      if(_queueAutoAdvance){_queueAutoAdvance=false;queueIdx++;renderQueueCard();}
+      else if(tab==='today')renderBriefing();
+      else if(tab==='all')rA();
+      else renderKPIs();
+      return;
+    }
+
+    // Close deal (Intro / Recurring / One-Time / Churned)
+    if(bid==='sc-won-intro'||bid==='sc-won-rec'||bid==='sc-won-once'||bid==='sc-lost-btn'){
+      var wonStatus=bid==='sc-won-intro'?'customer_intro':bid==='sc-won-rec'?'customer_recurring':bid==='sc-won-once'?'customer_once':'churned';
+      var wonNow=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+      customers[p.id]={
+        status:wonStatus,won_date:wonNow,
+        service_type:wonStatus==='customer_recurring'?'recurring':wonStatus==='customer_intro'?'intro':'one_time',
+        monthly:wonStatus==='customer_recurring'?p.monthly:0,
+        onetime:wonStatus==='customer_once'?p.onetime:wonStatus==='customer_intro'?99:0,
+        machines:p.machines,name:p.name,address:p.address,city:p.city,phone:ph,
+        notes:'',last_service:'',next_service:'',hubspot_url:'',square_url:'',
+        machine_brand:'',machine_model:'',machine_type:'',filter_type:'',
+        filter_installed:'',contract_start:'',contract_term:6,contract_renewal:'',
+        service_history:[],atp_history:[],vendor_name:'',
+      };
+      custSave();p.status=wonStatus;
+      if(!log[p.id])log[p.id]=[];
+      log[p.id].push({outcome:wonStatus,date:wonNow,notes:'Deal closed'});
+      lSave();
+      if(wonStatus==='customer_recurring'||wonStatus==='customer_intro')buildAnnualSchedule(p.id);
+      bg.remove();
+      toast(wonStatus==='customer_intro'?'🔥 Intro booked! $99 first visit':
+            wonStatus==='customer_recurring'?'🎉 Won! Added to recurring clients.':
+            wonStatus==='churned'?'Marked lost/churned':'🧼 Won! One-time service recorded.');
+      sw('customers');return;
+    }
+
+    // Vendor save
+    if(bid==='sc-save-vendor'){
+      var vendorVal=(document.getElementById('sc-vendor')||{}).value||'';
+      if(!customers[p.id])customers[p.id]={name:p.name,address:p.address,city:p.city,
+        phone:ph,machines:p.machines,status:'prospect',notes:'',vendor_name:''};
+      customers[p.id].vendor_name=vendorVal;custSave();
+      toast('✓ Vendor intel saved');
+      var origTxt=btn.textContent;btn.textContent='✓ Saved';btn.style.background='#059669';
+      setTimeout(function(){btn.textContent=origTxt;btn.style.background='#92400e';},1500);
+      return;
+    }
+
+    // Add contact (show / hide inline form)
+    if(bid==='sc-add-contact'){
+      var existingForm=document.getElementById('sc-contact-form');
+      if(existingForm){existingForm.remove();return;}
+      var ctForm=document.createElement('div');
+      ctForm.id='sc-contact-form';
+      ctForm.style.cssText='background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;margin-top:6px';
+      ctForm.innerHTML=
+        '<div style="font-size:9px;font-weight:700;color:#94a3b8;margin-bottom:6px">NEW CONTACT</div>'
+        +'<input id="sc-ct-name" type="text" placeholder="Name" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:5px">'
+        +'<input id="sc-ct-role" type="text" placeholder="Role (Owner, GM, Manager…)" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:5px">'
+        +'<input id="sc-ct-phone" type="tel" placeholder="Phone (optional)" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:5px">'
+        +'<input id="sc-ct-notes" type="text" placeholder="Notes (optional)" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:8px">'
+        +'<div style="display:flex;gap:6px">'
+        +'<button id="sc-ct-save" style="flex:1;padding:8px;background:#059669;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Save Contact</button>'
+        +'<button id="sc-ct-cancel" style="padding:8px 12px;background:#f1f5f9;color:#475569;border:none;border-radius:7px;font-size:12px;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
+        +'</div>';
+      btn.insertAdjacentElement('afterend',ctForm);
+      return;
+    }
+
+    // Save new contact
+    if(bid==='sc-ct-save'){
+      var ctName=(document.getElementById('sc-ct-name')||{}).value||'';
+      if(!ctName){toast('Name required');return;}
+      var ctRole=(document.getElementById('sc-ct-role')||{}).value||'';
+      var ctPhone2=(document.getElementById('sc-ct-phone')||{}).value||'';
+      var ctNotes2=(document.getElementById('sc-ct-notes')||{}).value||'';
+      if(!contacts[p.id])contacts[p.id]=[];
+      contacts[p.id].push({name:ctName,role:ctRole,phone:ctPhone2,notes:ctNotes2});
+      contactsSave();
+      var ctFrm=document.getElementById('sc-contact-form');if(ctFrm)ctFrm.remove();
+      renderSCContacts();toast('Contact saved');return;
+    }
+
+    // Cancel contact form
+    if(bid==='sc-ct-cancel'){
+      var ctFrm2=document.getElementById('sc-contact-form');if(ctFrm2)ctFrm2.remove();return;
+    }
+
+    // Delete contact
+    if(btn.hasAttribute('data-ci')){
+      var ci=parseInt(btn.dataset.ci);
+      var cArr=contacts[p.id]||[];
+      cArr.splice(ci,1);contacts[p.id]=cArr;
+      contactsSave();renderSCContacts();return;
+    }
   }
-  addContactBtn.addEventListener('touchend',doAddContact,false);
-  addContactBtn.addEventListener('click',doAddContact,false);
+  bg.addEventListener('touchend',scHandle,{passive:false});
+  bg.addEventListener('click',scHandle,false);
 }
 
 function openM(id){
