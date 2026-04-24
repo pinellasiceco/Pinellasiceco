@@ -1535,22 +1535,26 @@ header{background:var(--navy);
   <div class="panel on" id="p-today">
 
     <!-- ── KPI ROW ─────────────────────────────────── -->
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px" id="kpi-row">
-      <div class="dc" style="text-align:center;padding:10px 6px">
-        <div style="font-size:8px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);margin-bottom:3px">MRR</div>
-        <div style="font-size:20px;font-weight:800;color:var(--grn)" id="kpi-mrr">$0</div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:12px" id="kpi-row">
+      <div class="dc" style="text-align:center;padding:8px 4px">
+        <div style="font-size:7px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);margin-bottom:3px">MRR</div>
+        <div style="font-size:17px;font-weight:800;color:var(--grn)" id="kpi-mrr">$0</div>
       </div>
-      <div class="dc" style="text-align:center;padding:10px 6px">
-        <div style="font-size:8px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);margin-bottom:3px">Clients</div>
-        <div style="font-size:20px;font-weight:800;color:var(--navy)" id="kpi-clients">0</div>
+      <div class="dc" style="text-align:center;padding:8px 4px">
+        <div style="font-size:7px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);margin-bottom:3px">ARR</div>
+        <div style="font-size:17px;font-weight:800;color:var(--grn)" id="kpi-arr">$0</div>
       </div>
-      <div class="dc" style="text-align:center;padding:10px 6px">
-        <div style="font-size:8px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);margin-bottom:3px">Pipeline</div>
-        <div style="font-size:20px;font-weight:800;color:var(--blu)" id="kpi-pipe">0</div>
+      <div class="dc" style="text-align:center;padding:8px 4px">
+        <div style="font-size:7px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);margin-bottom:3px">Clients</div>
+        <div style="font-size:17px;font-weight:800;color:var(--navy)" id="kpi-clients">0</div>
       </div>
-      <div class="dc" style="text-align:center;padding:10px 6px">
-        <div style="font-size:8px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);margin-bottom:3px">This Wk</div>
-        <div style="font-size:20px;font-weight:800;color:var(--ora)" id="kpi-week">0</div>
+      <div class="dc" style="text-align:center;padding:8px 4px">
+        <div style="font-size:7px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);margin-bottom:3px">Pipeline</div>
+        <div style="font-size:17px;font-weight:800;color:var(--blu)" id="kpi-pipe">0</div>
+      </div>
+      <div class="dc" style="text-align:center;padding:8px 4px">
+        <div style="font-size:7px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);margin-bottom:3px">This Wk</div>
+        <div style="font-size:17px;font-weight:800;color:var(--ora)" id="kpi-week">0</div>
       </div>
     </div>
 
@@ -1587,6 +1591,16 @@ header{background:var(--navy);
       </div>
       <div class="grid" id="nurture-grid"></div>
       <div class="tempty" id="nurture-empty" style="display:none">No follow-ups due. &#x2713;</div>
+    </div>
+
+    <!-- ── STRIKE ZONE ──────────────────────────────────── -->
+    <div id="strike-zone-section" style="margin-bottom:18px">
+      <div class="tsect-hdr">
+        <span>&#x1F3AF; Strike Zone</span>
+        <span class="tsect-sub">CALLBACK + chronic ice violations + inspection &le;60 days out.</span>
+      </div>
+      <div class="grid" id="strike-zone-grid"></div>
+      <div class="tempty" id="strike-zone-empty" style="display:none">No strike zone targets right now. &#x2713;</div>
     </div>
 
     <!-- ── BEST MOVE (cold targets) ─────────────────── -->
@@ -2023,10 +2037,6 @@ header{background:var(--navy);
       </div>
       <div class="pitch" id="mpitch"></div>
       <div class="pitch" id="mwalkin" style="display:none;border-color:#e2e8f0;color:var(--sub2)"></div>
-      <div style="margin-top:8px">
-        <div class="msect">OBJECTION HANDLERS</div>
-        <div id="mobjections" style="display:flex;flex-direction:column;gap:5px"></div>
-      </div>
     </div>
     <div style="margin-bottom:10px">
       <div class="msect">LOG THIS CONTACT</div>
@@ -2624,37 +2634,12 @@ const VIDEO_LINKS={
   },
 };
 
-const OBJECTIONS=[
-  {
-    q:"We already have someone who does it",
-    a:"Perfect  -  can I ask who and how often they come out? The reason I ask is most places we start working with had someone too, but it was either annual or on-call. The problem is Florida inspectors now specifically open the machine during inspections  -  they want to see dated service records, not just a clean exterior. If your current vendor is leaving you a dated compliance report after every visit you are set. If not, that is the gap we fill. I can show you what ours looks like  -  takes two minutes."
-  },
-  {
-    q:"Not interested",
-    a:"Fair enough. Real quick before I go  -  when was the last time someone actually opened up the machine? Not wiped it down, but opened the evaporator cover and documented what they found? Most managers I talk to have never seen inside their own machine. I am not trying to sell you anything right now  -  I can open it up in five minutes and tell you exactly what an inspector would flag. If it is clean you never hear from me again."
-  },
-  {
-    q:"Call me back / Not a good time",
-    a:"Completely understand. I am in this area Tuesdays and Thursdays  -  which works better? And honestly a two-minute conversation now saves us both a phone tag. The short version: your inspection history flagged ice machine violations and I specialize in exactly that. If it is not a fit I will tell you right now and be out of your hair."
-  },
-  {
-    q:"We clean it ourselves / Staff handles it",
-    a:"That is great  -  and I am sure the bin and scoop are spotless. The issue is the evaporator plates and water distribution system inside the unit. Those need chemical descaling and sanitizer that food handler training does not cover. More importantly  -  inspectors know the difference. They will open it and if there is scale or biofilm on the plates that is a high priority violation regardless of how clean everything else is. That is what we document and prevent."
-  },
-  {
-    q:"How much does it cost?",
-    a:"Monthly maintenance is $149 for the first machine, $89 for a second. That covers the full clean, sanitizer treatment, and a dated compliance report every visit. One failed callback costs more in lost revenue than six months of service. And if you want to try us first, we do a $99 intro visit  -  full service, full report, no commitment. If you like it, we set up monthly. If not, no problem."
-  },
-  {
-    q:"We just had an inspection and passed",
-    a:"That is actually the best possible time to start  -  you have the most runway before the next one. Here is the thing about Florida inspectors: they rotate, and new inspectors are specifically trained to look at ice machine interiors because it is one of the most commonly missed items. Passing once does not mean the next inspector sees it the same way. What we do is get you to a standard that passes regardless of who walks in the door  -  and gives you the paperwork to prove it."
-  },
-];
 
 function dL(d){return d<0?Math.abs(d)+'d overdue':d===0?'TODAY':'+'+d+'d';}
 function dC(d,p){return p==='CALLBACK'||d<0?'u':d<=21?'h':d<=45?'w':'';}
 function stars(r){return r>0?'\u2605'.repeat(Math.round(r))+' '+r+'/5':'';}
 function enc(s){return encodeURIComponent(s);}
+function parseLD(s){if(!s)return new Date(NaN);var p=s.split('-');return new Date(+p[0],+p[1]-1,+p[2],12,0,0);}
 function hav(la1,lo1,la2,lo2){
   const R=3958.8,a=Math.sin((la2-la1)*Math.PI/360)**2+
     Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin((lo2-lo1)*Math.PI/360)**2;
@@ -3110,17 +3095,6 @@ function renderQueueCard(){
       }).join('')
      +'</div>':'';
 
-  // Objections
-  const objH='<div style="margin-bottom:10px">'
-    +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Objection Handlers</div>'
-    +OBJECTIONS.slice(0,4).map(o=>
-      '<details style="background:#f8fafc;border:1px solid var(--brd);border-radius:6px;margin-bottom:4px">'
-      +'<summary style="padding:6px 8px;font-size:10px;font-weight:600;color:var(--navy);cursor:pointer;list-style:none">❓ '+o.q+'</summary>'
-      +'<div style="padding:4px 8px 8px;font-size:10px;color:#475569;line-height:1.6;border-top:1px solid var(--brd)">'+o.a+'</div>'
-      +'</details>'
-    ).join('')
-  +'</div>';
-
   wrap.innerHTML=
     '<div style="background:#fff;border-radius:12px;padding:16px;box-shadow:0 2px 12px rgba(0,0,0,.1)">'
     +'<div style="margin-bottom:8px">'
@@ -3128,7 +3102,7 @@ function renderQueueCard(){
       +'<div style="font-size:10px;color:#94a3b8">'+p.address+', '+p.city+' · FL#'+p.id+'</div>'
     +'</div>'
     +'<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px">'+chipsH+'</div>'
-    +phoneH+intelH+pitchH+walkinH+lastNoteH+histH+objH
+    +phoneH+intelH+pitchH+walkinH+lastNoteH+histH
     +'<textarea id="q-notes" placeholder="Quick note (optional)..." rows="2" '
       +'style="width:100%;padding:8px;border:1px solid var(--brd);border-radius:7px;font-size:12px;font-family:inherit;resize:none;outline:none;color:#1a1a2e;background:#fff;box-sizing:border-box"></textarea>'
     +'</div>';
@@ -3629,15 +3603,6 @@ function showCard(id){
   var walkinH='<div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Walk-In Script</div>'
     +'<div style="background:#f0fdf4;border-left:3px solid #059669;border-radius:0 8px 8px 0;padding:9px;font-size:11px;color:#475569;line-height:1.7">'+walkinFn(p.name)+'</div></div>';
 
-  // Objections
-  var objH='<div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Objection Handlers</div>'
-    +OBJECTIONS.map(function(o){
-      return '<details style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;margin-bottom:3px">'
-        +'<summary style="padding:6px 9px;font-size:10px;font-weight:600;color:#0f1f38;cursor:pointer;list-style:none">❓ '+o.q+'</summary>'
-        +'<div style="padding:5px 9px 8px;font-size:10px;color:#475569;line-height:1.6;border-top:1px solid #e2e8f0">'+o.a+'</div>'
-        +'</details>';
-    }).join('')+'</div>';
-
   // Intel grid
   var iceFresh=p.ice_fresh?'Within 6mo':p.ice_recent?'Within 1yr':p.days_since_ice<999?(Math.floor(p.days_since_ice/30)+'mo ago'):'None on record';
   var esc=p.escalation>1.5?'Escalating fast':p.escalation>0.8?'Getting worse':p.escalation>0.3?'Slight trend':'Stable';
@@ -3795,7 +3760,7 @@ function showCard(id){
     +'</div>'
     +'<div style="padding:16px">'
       +'<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px">'+chips+'</div>'
-      +phoneH+phoneSaveH+iceH+intelH+pitchH+walkinH+objH+histH+svcHistH+logH+closeH+contactsH
+      +phoneH+phoneSaveH+iceH+intelH+pitchH+walkinH+histH+svcHistH+logH+closeH+contactsH
     +'</div></div>';
 
   document.body.appendChild(bg);
@@ -4070,17 +4035,6 @@ function openM(id){
   }else iceEl.innerHTML='';
   document.getElementById('mpitch').innerHTML=(PITCHES[p.pitch_type]||PITCHES.routine)(p.name);
   document.getElementById('mwalkin').innerHTML=(WALKIN[p.pitch_type]||WALKIN.routine)(p.name);
-  // Objection handlers
-  const objEl=document.getElementById('mobjections');
-  if(objEl){
-    objEl.innerHTML=OBJECTIONS.map((o,i)=>
-      '<details style="background:#f5f8fa;border:1px solid var(--brd2);border-radius:7px;padding:0">'
-      +'<summary style="padding:7px 10px;font-size:10px;font-weight:600;color:var(--navy);cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px">'
-      +'<span style="color:var(--cb)">&#x2753;</span>'+o.q+'</summary>'
-      +'<div style="padding:4px 10px 9px;font-size:10px;color:var(--sub2);line-height:1.6;border-top:1px solid var(--brd2)">'+o.a+'</div>'
-      +'</details>'
-    ).join('');
-  }
   // Build intelligence signals display
   const iceFreshness=p.ice_fresh?'Within 6mo':p.ice_recent?'Within 1yr':p.days_since_ice<999?(Math.floor(p.days_since_ice/30)+'mo ago'):'None on record';
   const iceFreshnessCol=p.ice_fresh?'r':p.ice_recent?'o':'';
@@ -4516,7 +4470,7 @@ function rCust(){
     // Service due indicator
     let serviceDueH='';
     if(c.next_service){
-      const due=new Date(c.next_service);
+      const due=parseLD(c.next_service);
       const daysUntil=Math.round((due-today)/864e5);
       const dueCol=daysUntil<0?'#dc2626':daysUntil<=7?'#d97706':'#059669';
       const dueTxt=daysUntil<0?Math.abs(daysUntil)+'d overdue':daysUntil===0?'Due TODAY':daysUntil+'d until service';
@@ -4844,6 +4798,7 @@ function renderBriefing(){
 
   const kpiEl=id=>document.getElementById(id);
   if(kpiEl('kpi-mrr'))kpiEl('kpi-mrr').textContent='$'+mrr.toLocaleString();
+  if(kpiEl('kpi-arr'))kpiEl('kpi-arr').textContent='$'+(mrr*12).toLocaleString();
   if(kpiEl('kpi-clients'))kpiEl('kpi-clients').textContent=clientCount;
   if(kpiEl('kpi-pipe'))kpiEl('kpi-pipe').textContent=pipeCount;
   if(kpiEl('kpi-week'))kpiEl('kpi-week').textContent=weekTotal;
@@ -4880,7 +4835,7 @@ function renderBriefing(){
   const gEl=document.getElementById('goal-pacing-content');
   if(gEl){
     const goalClients=goals.clients||10;
-    const deadline=goals.deadline?new Date(goals.deadline):null;
+    const deadline=goals.deadline?parseLD(goals.deadline):null;
     const daysLeft=deadline?Math.ceil((deadline-now)/864e5):null;
     const weeksLeft=daysLeft?Math.max(1,daysLeft/7):null;
     const needed=Math.max(0,goalClients-clientCount);
@@ -5000,6 +4955,18 @@ function renderBriefing(){
     }
   }
 
+  // ── STRIKE ZONE (CALLBACK + chronic + ≤60d inspection) ───────────────
+  const strikeZone=P.filter(p=>{
+    if(isC(p.id))return false;
+    return p.priority==='CALLBACK'&&p.chronic&&p.days_until<=60;
+  }).sort((a,b)=>a.days_until-b.days_until).slice(0,8);
+  const szGrid=document.getElementById('strike-zone-grid');
+  const szEmpty=document.getElementById('strike-zone-empty');
+  if(szGrid){
+    if(!strikeZone.length){szGrid.innerHTML='';if(szEmpty)szEmpty.style.display='block';}
+    else{if(szEmpty)szEmpty.style.display='none';szGrid.innerHTML=strikeZone.map(p=>cardHTML(p)).join('');attachGridListeners(szGrid);}
+  }
+
   // ── BEST COLD TARGETS ─────────────────────────────────────────────────
   const coldTargets=P.filter(p=>{
     if(isC(p.id))return false;
@@ -5030,6 +4997,7 @@ function renderKPIs(){
   const weekTotal=weekEntries.filter(e=>e.outcome!=='service_done').length;
   const el=id=>document.getElementById(id);
   if(el('kpi-mrr'))el('kpi-mrr').textContent='$'+mrr.toLocaleString();
+  if(el('kpi-arr'))el('kpi-arr').textContent='$'+(mrr*12).toLocaleString();
   if(el('kpi-clients'))el('kpi-clients').textContent=recurring.length;
   if(el('kpi-pipe'))el('kpi-pipe').textContent=pipeCount;
   if(el('kpi-week'))el('kpi-week').textContent=weekTotal;
@@ -5130,7 +5098,7 @@ function geoClusterSchedule(){
   recurring.forEach(p=>{
     const c=customers[p.id]||{};
     if(!c.next_service)return;
-    const due=new Date(c.next_service);
+    const due=parseLD(c.next_service);
     const daysUntil=Math.round((due-today)/864e5);
 
     // Find other clients within 5 days and 8 miles
@@ -5257,12 +5225,12 @@ function renderAtRisk(){
     const c=customers[p.id]||{};
     if(!c.last_service&&!c.next_service)return true; // never logged
     if(c.next_service){
-      const due=new Date(c.next_service);
+      const due=parseLD(c.next_service);
       const overdueDays=Math.round((today-due)/864e5);
       return overdueDays>5; // 5+ days overdue
     }
     if(c.last_service){
-      const last=new Date(c.last_service);
+      const last=parseLD(c.last_service);
       const daysSince=Math.round((today-last)/864e5);
       return daysSince>35; // 35+ days since last service
     }
@@ -5279,7 +5247,7 @@ function renderAtRisk(){
     +atRisk.slice(0,3).map(p=>{
       const c=customers[p.id]||{};
       const msg=!c.last_service&&!c.next_service?'Never serviced since won'
-        :c.next_service?Math.round((new Date()-new Date(c.next_service))/864e5)+'d overdue'
+        :c.next_service?Math.round((new Date()-parseLD(c.next_service))/864e5)+'d overdue'
         :'35+d since last service';
       return '<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-top:1px solid #fca5a5;font-size:10px">'
         +'<div><div style="font-weight:600;color:var(--navy)">'+p.name+'</div>'
@@ -5321,9 +5289,9 @@ function renderServiceCal(){
     const c=customers[p.id]||{};
     let daysUntil=null;
     if(c.next_service){
-      daysUntil=Math.round((new Date(c.next_service)-today)/864e5);
+      daysUntil=Math.round((parseLD(c.next_service)-today)/864e5);
     } else if(c.last_service){
-      const lastD=new Date(c.last_service);
+      const lastD=parseLD(c.last_service);
       daysUntil=30-Math.round((today-lastD)/864e5);
     }
     return {...p,_daysUntil:daysUntil,_cust:c};
@@ -6061,12 +6029,12 @@ function buildServiceRoute(){
     const c=customers[p.id]||{};
     if(!c.next_service&&!c.last_service)return weekOffset<0; // overdue filter
     if(c.next_service){
-      const d=new Date(c.next_service);
+      const d=parseLD(c.next_service);
       if(weekOffset===-7)return d<today; // overdue
       return d>=windowStart&&d<=windowEnd;
     }
     if(c.last_service){
-      const last=new Date(c.last_service);
+      const last=parseLD(c.last_service);
       const daysSince=Math.round((today-last)/864e5);
       return daysSince>=25&&daysSince<=35; // due around now
     }
