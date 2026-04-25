@@ -3109,17 +3109,6 @@ function renderQueueCard(){
       +intel.map(r=>'<div style="font-size:10px;color:#475569;line-height:1.9">'+r+'</div>').join('')
      +'</div>':'';
 
-  // Pitch + walk-in scripts
-  const pitchFn=PITCHES[p.pitch_type]||PITCHES.routine;
-  const walkinFn=WALKIN[p.pitch_type]||WALKIN.routine;
-  const pitchH='<div style="margin-bottom:10px">'
-    +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Pitch Opener</div>'
-    +'<div style="background:#fff7ed;border-left:3px solid var(--gold);border-radius:0 7px 7px 0;padding:8px 10px;font-size:11px;color:#475569;line-height:1.6">'+pitchFn(p.name)+'</div>'
-  +'</div>';
-  const walkinH='<div style="margin-bottom:10px">'
-    +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Walk-In Script</div>'
-    +'<div style="background:#f0fdf4;border-left:3px solid #059669;border-radius:0 7px 7px 0;padding:8px 10px;font-size:11px;color:#475569;line-height:1.6">'+walkinFn(p.name)+'</div>'
-  +'</div>';
 
   // Last note
   const lastNoteH=lc&&lc.notes
@@ -3146,7 +3135,7 @@ function renderQueueCard(){
       +'<div style="font-size:10px;color:#94a3b8">'+p.address+', '+p.city+' · FL#'+p.id+'</div>'
     +'</div>'
     +'<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px">'+chipsH+'</div>'
-    +phoneH+intelH+pitchH+walkinH+lastNoteH+histH
+    +phoneH+intelH+lastNoteH+histH
     +'<textarea id="q-notes" placeholder="Quick note (optional)..." rows="2" '
       +'style="width:100%;padding:8px;border:1px solid var(--brd);border-radius:7px;font-size:12px;font-family:inherit;resize:none;outline:none;color:#1a1a2e;background:#fff;box-sizing:border-box"></textarea>'
     +'</div>';
@@ -3259,19 +3248,21 @@ function renderRList(){
     const distTxt=p._d?p._d.toFixed(1)+'mi':'';
     const chronicTxt=p.chronic?'<div style="font-size:8px;color:#059669;font-weight:700">CHRONIC ICE</div>':'';
     const isAnchor=routeAnchor&&routeAnchor.id===p.id;
-    return '<div class="rcard'+(inR?' sel':'')+'" data-action="route" data-id="'+p.id+'" style="border-left:3px solid '+col+(inR?';background:#fff7f5':'')+(isAnchor?';border-left:4px solid #7c3aed':'')+';">'
+    const addBtnStyle=inR
+      ?'font-size:9px;padding:5px 8px;border:1px solid var(--ora);border-radius:6px;background:#fff7f5;color:var(--ora);cursor:pointer;font-family:inherit;font-weight:700;touch-action:manipulation'
+      :'font-size:9px;padding:5px 8px;border:1px solid #059669;border-radius:6px;background:#ecfdf5;color:#059669;cursor:pointer;font-family:inherit;font-weight:700;touch-action:manipulation';
+    return '<div class="rcard'+(inR?' sel':'')+'" data-id="'+p.id+'" style="border-left:3px solid '+col+(inR?';background:#fff7f5':'')+(isAnchor?';border-left:4px solid #7c3aed':'')+';">'
       +'<div class="rdot" style="background:'+col+'"></div>'
-      +'<div style="flex:1;min-width:0">'
-        +'<div class="rname" style="color:var(--navy)">'+p.name+(inR?' <span style="color:var(--ora)">&#x2713;</span>':'')+(isAnchor?' <span style="font-size:8px;color:#7c3aed">&#x1F4CD; START</span>':'')+'</div>'
+      +'<div style="flex:1;min-width:0" data-action="openM" data-id="'+p.id+'">'
+        +'<div class="rname" style="color:var(--navy)">'+p.name+(isAnchor?' <span style="font-size:8px;color:#7c3aed">&#x1F4CD; START</span>':'')+'</div>'
         +'<div style="font-size:9px;color:var(--sub)">'+p.city+' &bull; '+p.priority+' &bull; '+dL(p.days_until)+'</div>'
         +chronicTxt
       +'</div>'
-      +'<div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">'
+      +'<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">'
         +(distTxt?'<div class="rdist">'+distTxt+'</div>':'')
-        +'<button data-action="start" style="font-size:8px;padding:2px 5px;border:1px solid #7c3aed;border-radius:4px;background:#f5f3ff;color:#7c3aed;cursor:pointer;font-family:inherit">Start &#x1F4CD;</button>'
-        +'<button data-action="openM" style="font-size:8px;padding:4px 8px;min-height:36px;border:1px solid var(--brd);border-radius:6px;background:var(--surf);color:var(--sub);cursor:pointer;font-family:inherit;touch-action:manipulation">Details</button>'
+        +'<button data-action="route" data-id="'+p.id+'" style="'+addBtnStyle+'">'+(inR?'&#x2713; Added':'&#x2795; Add')+'</button>'
+        +'<button data-action="start" data-id="'+p.id+'" style="font-size:8px;padding:2px 5px;border:1px solid #7c3aed;border-radius:4px;background:#f5f3ff;color:#7c3aed;cursor:pointer;font-family:inherit">Start &#x1F4CD;</button>'
       +'</div>'
-
       +'</div>';
   }).join('');
   attachGridListeners(el);
@@ -3457,7 +3448,12 @@ function planMyDay(){
   const pri=(document.getElementById('rp')||{}).value||'';
   const rad=parseFloat((document.getElementById('rrad')||{}).value)||8;
 
-  if(!hours){rRoute();return;}
+  if(!hours){
+    rRoute();
+    const hint=document.getElementById('rhint');
+    if(hint)hint.textContent='Manual mode — tap ➕ Add on any card to build your route. Tap ✓ Added to remove.';
+    return;
+  }
 
   // Determine start coords — anchor takes priority over home ZIP
   let slat,slon,startLabel;
@@ -3639,13 +3635,6 @@ function showCard(id){
       +'</div>';
   }
 
-  // Pitch + walk-in
-  var pitchFn=PITCHES[p.pitch_type]||PITCHES.routine;
-  var walkinFn=WALKIN[p.pitch_type]||WALKIN.routine;
-  var pitchH='<div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Pitch Opener</div>'
-    +'<div style="background:#fff7ed;border-left:3px solid #c9973a;border-radius:0 8px 8px 0;padding:9px;font-size:11px;color:#475569;line-height:1.7">'+pitchFn(p.name)+'</div></div>';
-  var walkinH='<div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Walk-In Script</div>'
-    +'<div style="background:#f0fdf4;border-left:3px solid #059669;border-radius:0 8px 8px 0;padding:9px;font-size:11px;color:#475569;line-height:1.7">'+walkinFn(p.name)+'</div></div>';
 
   // Intel grid
   var iceFresh=p.ice_fresh?'Within 6mo':p.ice_recent?'Within 1yr':p.days_since_ice<999?(Math.floor(p.days_since_ice/30)+'mo ago'):'None on record';
@@ -3805,7 +3794,7 @@ function showCard(id){
     +'</div>'
     +'<div style="padding:16px">'
       +'<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px">'+chips+'</div>'
-      +phoneH+phoneSaveH+iceH+intelH+pitchH+walkinH+histH+svcHistH+logH+closeH+contactsH
+      +phoneH+phoneSaveH+iceH+intelH+histH+svcHistH+logH+closeH+contactsH
     +'</div></div>';
 
   document.body.appendChild(bg);
@@ -3938,8 +3927,9 @@ function showCard(id){
       if(!selOutcome){toast('Pick an outcome first');return;}
       var logNotes=(document.getElementById('sc-notes')||{}).value||'';
       var logFollowup=(document.getElementById('sc-followup')||{}).value||'';
-      var needsFup=['not_now','in_play'].indexOf(selOutcome)>=0;
-      if(needsFup&&!logFollowup){toast('Follow-up date required for this outcome');return;}
+      if(!logFollowup&&['not_now','in_play'].indexOf(selOutcome)>=0){
+        toast('Tip: tap +3d or +7d to set a follow-up date');
+      }
       if(!log[p.id])log[p.id]=[];
       log[p.id].push({outcome:selOutcome,type:selType,reason:selReason,
         date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
@@ -6717,7 +6707,7 @@ function initSettings(){
   const rzip=document.getElementById('rzip');
   if(rzip){
     const z=s.home_zip||DEFAULT_HOME_ZIP;
-    if(!rzip.value)rzip.value=z;
+    rzip.value=z;  // always override — settings is source of truth
     rzip.placeholder=z;
   }
 }
