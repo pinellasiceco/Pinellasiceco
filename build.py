@@ -1172,7 +1172,7 @@ header{background:var(--navy);
 .srch input:focus{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.4)}
 .si{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.5);font-size:11px;pointer-events:none}
 .tabs{display:flex;background:var(--surf);border-bottom:2px solid var(--brd2);flex-shrink:0;
-  box-shadow:0 1px 3px rgba(45,62,80,.06)}
+  box-shadow:0 1px 3px rgba(45,62,80,.06);position:relative}
 .tab{flex:1;padding:10px 4px;text-align:center;font-size:11px;font-weight:600;
   color:var(--sub);cursor:pointer;border-bottom:2px solid transparent;
   margin-bottom:-2px;transition:.15s;user-select:none}
@@ -1370,6 +1370,7 @@ header{background:var(--navy);
 .svc-tab{flex:1;padding:8px 4px;border:none;background:var(--surf);color:var(--sub);font-size:10px;font-weight:600;cursor:pointer;font-family:inherit;border-right:1px solid var(--brd);transition:.15s}
 .svc-tab:last-child{border-right:none}
 .svc-tab.on{background:var(--navy);color:#fff}
+.client-tab.on{background:var(--navy)!important;color:#fff!important}
 .svc-card{background:var(--surf);border:1px solid var(--brd);border-radius:10px;padding:12px;margin-bottom:8px;display:flex;flex-direction:column;gap:7px}
 .svc-card.overdue{border-left:4px solid #dc2626;background:#fef2f2}
 .svc-card.due-soon{border-left:4px solid #d97706;background:#fef9ee}
@@ -1517,19 +1518,19 @@ header{background:var(--navy);
     </div>
   </header>
   <nav class="tabs" id="main-nav">
-    <div class="tab on"  onclick="sw('today')"     ><span class="tab-icon">&#x1F4CA;</span><span class="tab-lbl">Home</span></div>
-    <div class="tab"     onclick="sw('all')"        ><span class="tab-icon">&#x1F4CD;</span><span class="tab-lbl">Prospects</span></div>
-    <div class="tab"     onclick="sw('route')"      ><span class="tab-icon">&#x1F5FA;</span><span class="tab-lbl">Route</span></div>
-    <div class="tab"     onclick="sw('customers')"  ><span class="tab-icon">&#x1F91D;</span><span class="tab-lbl">Clients</span></div>
-    <div class="tab"     onclick="sw('service')"    ><span class="tab-icon">&#x1F9FC;</span><span class="tab-lbl">Service</span></div>
-    <div class="tab"     onclick="sw('data')"       ><span class="tab-icon">&#x2699;&#xFE0F;</span><span class="tab-lbl">Settings</span></div>
+    <div class="tab on"  onclick="sw('today')"    ><span class="tab-icon">&#x1F4CA;</span><span class="tab-lbl">Home</span></div>
+    <div class="tab"     onclick="sw('all')"       ><span class="tab-icon">&#x1F4CD;</span><span class="tab-lbl">Prospects</span></div>
+    <div class="tab"     onclick="sw('pipeline')"  ><span class="tab-icon">&#x1F3AF;</span><span class="tab-lbl">Pipeline</span></div>
+    <div class="tab"     onclick="sw('route')"     ><span class="tab-icon">&#x1F5FA;</span><span class="tab-lbl">Route</span></div>
+    <div class="tab"     onclick="sw('clients')"   ><span class="tab-icon">&#x1F91D;</span><span class="tab-lbl">Clients</span></div>
+    <button id="gear-btn" onclick="sw('data')" title="Settings" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;cursor:pointer;padding:4px;color:var(--sub);line-height:1">&#x2699;&#xFE0F;</button>
   </nav>
 
   <!-- Offline banner -->
   <div id="offline-banner" style="display:none">&#x26A1; Offline &mdash; data saved locally, all features available</div>
 
   <!-- FAB: Service tab shortcut (phone only) -->
-  <button id="svc-fab" onclick="sw('service')" style="display:none">&#x1F9FC;</button>
+  <button id="svc-fab" onclick="sw('clients');setTimeout(()=>setClientTab('service'),50)" style="display:none">&#x1F9FC;</button>
 
   <!-- TODAY -->
   <div class="panel on" id="p-today">
@@ -1778,130 +1779,155 @@ header{background:var(--navy);
     </div>
   </div>
 
-  <!-- SERVICE -->
-  <div class="panel" id="p-service">
-
-    <!-- Revenue forecast strip -->
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px" id="svc-forecast"></div>
-
-    <!-- At-risk alert -->
-    <div id="svc-atrisk" style="margin-bottom:12px"></div>
-
-    <!-- Tabs: Calendar | Route | Reports | Referrals -->
-    <div style="display:flex;gap:0;margin-bottom:12px;border:1px solid var(--brd);border-radius:8px;overflow:hidden;flex-wrap:wrap">
-      <button class="svc-tab on" onclick="setSvcTab('cal')"      id="svct-cal">&#x1F4C5; Calendar</button>
-      <button class="svc-tab"    onclick="setSvcTab('route')"    id="svct-route">&#x1F5FA; Route</button>
-      <button class="svc-tab"    onclick="setSvcTab('reports')"  id="svct-reports">&#x1F4CB; Reports</button>
-      <button class="svc-tab"    onclick="setSvcTab('tutorials')" id="svct-tutorials">&#x1F4D6; Tutorials</button>
-      <button class="svc-tab"    onclick="setSvcTab('refs')"     id="svct-refs">&#x1F91D; Referrals</button>
+  <!-- PIPELINE -->
+  <div class="panel" id="p-pipeline">
+    <div style="margin-bottom:14px">
+      <div style="font-weight:700;font-size:13px;color:var(--navy);margin-bottom:2px">&#x1F3AF; Pipeline</div>
+      <div style="font-size:10px;color:var(--sub)">Active prospects you're working. Grouped by follow-up urgency.</div>
     </div>
-
-    <!-- Calendar view -->
-    <div id="svc-cal">
-      <div style="font-size:9px;color:var(--sub);margin-bottom:8px">Recurring clients due for service. Tap to log or reschedule.</div>
-      <div id="svc-cal-list"></div>
+    <div id="pipeline-list"></div>
+    <div class="tempty" id="pipeline-empty" style="display:none">
+      <div class="ei">&#x1F3AF;</div>
+      <div style="font-weight:600;margin-bottom:4px">No active pipeline yet</div>
+      <div style="font-size:11px;color:var(--sub)">Log a call as "In Play", "Intro Set", or "Quoted" to move a prospect in.</div>
     </div>
-
-    <!-- Service route builder -->
-    <div id="svc-route" style="display:none">
-      <div style="font-size:9px;color:var(--sub);margin-bottom:8px">Build a service route for clients due this week, clustered by geography.</div>
-      <div style="display:flex;gap:6px;margin-bottom:8px">
-        <select id="svc-week" onchange="renderServiceRoute()"
-          style="flex:1;padding:7px;border:1px solid var(--brd);border-radius:7px;font-size:11px;font-family:inherit;background:var(--surf);color:var(--txt);outline:none">
-          <option value="0">This week</option>
-          <option value="7">Next week</option>
-          <option value="14">In 2 weeks</option>
-          <option value="-7">Overdue</option>
-        </select>
-        <button onclick="buildServiceRoute()"
-          style="padding:7px 12px;border:none;border-radius:7px;background:var(--navy);color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">
-          &#x26A1; Build Route
-        </button>
-      </div>
-      <div id="svc-route-list"></div>
-      <div id="svc-route-map-btn" style="display:none;margin-top:8px">
-        <button onclick="openServiceMaps()" class="route-btn">Open in Google Maps &#x2192;</button>
-      </div>
-    </div>
-
-    <!-- Service reports -->
-    <div id="svc-reports" style="display:none">
-      <div style="font-size:9px;color:var(--sub);margin-bottom:8px">Generate a printable service report for any client visit.</div>
-      <select id="svc-report-client" onchange="loadReportClient()"
-        style="width:100%;padding:8px;border:1px solid var(--brd);border-radius:7px;font-size:11px;font-family:inherit;background:var(--surf);color:var(--txt);outline:none;margin-bottom:8px">
-        <option value="">Select a client...</option>
-      </select>
-      <div id="svc-report-preview" style="overflow-y:auto;max-height:70vh;-webkit-overflow-scrolling:touch"></div>
-    </div>
-
-    <!-- Tutorials -->
-    <div id="svc-tutorials" style="display:none">
-      <div style="font-size:9px;color:var(--sub);margin-bottom:8px">Step-by-step cleaning guides for each machine brand. Select brand and procedure type.</div>
-      <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap">
-        <select id="tut-brand" onchange="renderTutorial()"
-          style="flex:1;min-width:120px;padding:7px;border:1px solid var(--brd);border-radius:7px;font-size:11px;font-family:inherit;background:var(--surf);color:var(--txt);outline:none">
-          <option value="">Select brand...</option>
-          <option>Manitowoc</option><option>Hoshizaki</option><option>Scotsman</option>
-          <option>Ice-O-Matic</option><option>Follett</option><option>Cornelius</option>
-        </select>
-        <select id="tut-type" onchange="renderTutorial()"
-          style="flex:1;min-width:120px;padding:7px;border:1px solid var(--brd);border-radius:7px;font-size:11px;font-family:inherit;background:var(--surf);color:var(--txt);outline:none">
-          <option value="deep_clean">&#x1F9FC; Deep Clean</option>
-          <option value="maintenance_60">&#x1F527; 60-Day Maintenance</option>
-          <option value="atp_protocol">&#x1F4CA; ATP Testing Guide</option>
-        </select>
-      </div>
-      <div id="tut-content"></div>
-    </div>
-
-    <!-- Referrals -->
-    <div id="svc-refs" style="display:none">
-      <div style="font-size:9px;color:var(--sub);margin-bottom:8px">Track who referred new clients. Your best customers are your best salespeople.</div>
-      <div id="svc-refs-list"></div>
-    </div>
-
   </div>
 
-  <!-- PIPELINE -->
+  <!-- CLIENTS (merged Clients + Service) -->
   <div class="panel" id="p-customers">
-    <div class="fbar">
-      <select id="cust-status" onchange="rCust()">
-        <option value="">All Customers</option>
-        <option value="customer_recurring">Recurring</option>
-        <option value="customer_intro">Intro ($99 first visit)</option>
-        <option value="customer_once">One-Time ($249)</option>
-        <option value="quoted">Quoted - Pending</option>
-        <option value="churned">Churned</option>
-      </select>
-      <span class="fcnt" id="cust-cnt"></span>
+
+    <!-- Inner sub-tabs: Clients | Service -->
+    <div style="display:flex;gap:0;margin-bottom:14px;border:1px solid var(--brd);border-radius:8px;overflow:hidden">
+      <button class="client-tab on" onclick="setClientTab('clients')" id="ct-clients" style="flex:1;padding:8px 4px;border:none;background:var(--surf);font-size:11px;font-weight:700;font-family:inherit;cursor:pointer;color:var(--navy);transition:background .15s">&#x1F91D; Clients</button>
+      <button class="client-tab"    onclick="setClientTab('service')" id="ct-service" style="flex:1;padding:8px 4px;border:none;background:var(--surf);font-size:11px;font-weight:700;font-family:inherit;cursor:pointer;color:var(--sub);border-left:1px solid var(--brd);transition:background .15s">&#x1F9FC; Service</button>
     </div>
 
-    <!-- Revenue summary bar -->
-    <div id="cust-summary" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px">
-      <div class="dc" style="text-align:center">
-        <div class="fl" style="font-size:9px">Monthly Recurring</div>
-        <div style="font-size:22px;font-weight:800;color:var(--grn)" id="mrr-val">$0</div>
-        <div class="fl">MRR</div>
+    <!-- ── CLIENTS PANE ── -->
+    <div id="ct-panel-clients">
+      <div class="fbar">
+        <select id="cust-status" onchange="rCust()">
+          <option value="">All Customers</option>
+          <option value="customer_recurring">Recurring</option>
+          <option value="customer_intro">Intro ($99 first visit)</option>
+          <option value="customer_once">One-Time ($249)</option>
+          <option value="quoted">Quoted - Pending</option>
+          <option value="churned">Churned</option>
+        </select>
+        <span class="fcnt" id="cust-cnt"></span>
       </div>
-      <div class="dc" style="text-align:center">
-        <div class="fl" style="font-size:9px">Active Customers</div>
-        <div style="font-size:22px;font-weight:800;color:var(--navy)" id="cust-count">0</div>
-        <div class="fl">Accounts</div>
+
+      <!-- Revenue summary bar -->
+      <div id="cust-summary" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px">
+        <div class="dc" style="text-align:center">
+          <div class="fl" style="font-size:9px">Monthly Recurring</div>
+          <div style="font-size:22px;font-weight:800;color:var(--grn)" id="mrr-val">$0</div>
+          <div class="fl">MRR</div>
+        </div>
+        <div class="dc" style="text-align:center">
+          <div class="fl" style="font-size:9px">Active Customers</div>
+          <div style="font-size:22px;font-weight:800;color:var(--navy)" id="cust-count">0</div>
+          <div class="fl">Accounts</div>
+        </div>
+        <div class="dc" style="text-align:center">
+          <div class="fl" style="font-size:9px">Annual Run Rate</div>
+          <div style="font-size:22px;font-weight:800;color:var(--blu)" id="arr-val">$0</div>
+          <div class="fl">ARR</div>
+        </div>
       </div>
-      <div class="dc" style="text-align:center">
-        <div class="fl" style="font-size:9px">Annual Run Rate</div>
-        <div style="font-size:22px;font-weight:800;color:var(--blu)" id="arr-val">$0</div>
-        <div class="fl">ARR</div>
+
+      <div id="cust-list"></div>
+
+      <div class="tempty" id="cust-empty" style="display:none">
+        <div class="ei">&#x1F91D;</div>
+        <div style="font-weight:600;margin-bottom:4px">No customers yet</div>
+        <div style="font-size:11px;color:var(--sub)">When you close a deal, open any prospect card and mark them as Won.</div>
       </div>
     </div>
 
-    <div id="cust-list"></div>
+    <!-- ── SERVICE PANE ── -->
+    <div id="ct-panel-service" style="display:none">
 
-    <div class="tempty" id="cust-empty" style="display:none">
-      <div class="ei">&#x1F91D;</div>
-      <div style="font-weight:600;margin-bottom:4px">No customers yet</div>
-      <div style="font-size:11px;color:var(--sub)">When you close a deal, open any prospect card and mark them as Won.</div>
-    </div>
+      <!-- Revenue forecast strip -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px" id="svc-forecast"></div>
+
+      <!-- At-risk alert -->
+      <div id="svc-atrisk" style="margin-bottom:12px"></div>
+
+      <!-- Tabs: Calendar | Route | Reports | Tutorials | Referrals -->
+      <div style="display:flex;gap:0;margin-bottom:12px;border:1px solid var(--brd);border-radius:8px;overflow:hidden;flex-wrap:wrap">
+        <button class="svc-tab on" onclick="setSvcTab('cal')"       id="svct-cal">&#x1F4C5; Calendar</button>
+        <button class="svc-tab"    onclick="setSvcTab('route')"     id="svct-route">&#x1F5FA; Route</button>
+        <button class="svc-tab"    onclick="setSvcTab('reports')"   id="svct-reports">&#x1F4CB; Reports</button>
+        <button class="svc-tab"    onclick="setSvcTab('tutorials')" id="svct-tutorials">&#x1F4D6; Tutorials</button>
+        <button class="svc-tab"    onclick="setSvcTab('refs')"      id="svct-refs">&#x1F91D; Referrals</button>
+      </div>
+
+      <!-- Calendar view -->
+      <div id="svc-cal">
+        <div style="font-size:9px;color:var(--sub);margin-bottom:8px">Recurring clients due for service. Tap to log or reschedule.</div>
+        <div id="svc-cal-list"></div>
+      </div>
+
+      <!-- Service route builder -->
+      <div id="svc-route" style="display:none">
+        <div style="font-size:9px;color:var(--sub);margin-bottom:8px">Build a service route for clients due this week, clustered by geography.</div>
+        <div style="display:flex;gap:6px;margin-bottom:8px">
+          <select id="svc-week" onchange="renderServiceRoute()"
+            style="flex:1;padding:7px;border:1px solid var(--brd);border-radius:7px;font-size:11px;font-family:inherit;background:var(--surf);color:var(--txt);outline:none">
+            <option value="0">This week</option>
+            <option value="7">Next week</option>
+            <option value="14">In 2 weeks</option>
+            <option value="-7">Overdue</option>
+          </select>
+          <button onclick="buildServiceRoute()"
+            style="padding:7px 12px;border:none;border-radius:7px;background:var(--navy);color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">
+            &#x26A1; Build Route
+          </button>
+        </div>
+        <div id="svc-route-list"></div>
+        <div id="svc-route-map-btn" style="display:none;margin-top:8px">
+          <button onclick="openServiceMaps()" class="route-btn">Open in Google Maps &#x2192;</button>
+        </div>
+      </div>
+
+      <!-- Service reports -->
+      <div id="svc-reports" style="display:none">
+        <div style="font-size:9px;color:var(--sub);margin-bottom:8px">Generate a printable service report for any client visit.</div>
+        <select id="svc-report-client" onchange="loadReportClient()"
+          style="width:100%;padding:8px;border:1px solid var(--brd);border-radius:7px;font-size:11px;font-family:inherit;background:var(--surf);color:var(--txt);outline:none;margin-bottom:8px">
+          <option value="">Select a client...</option>
+        </select>
+        <div id="svc-report-preview" style="overflow-y:auto;max-height:70vh;-webkit-overflow-scrolling:touch"></div>
+      </div>
+
+      <!-- Tutorials -->
+      <div id="svc-tutorials" style="display:none">
+        <div style="font-size:9px;color:var(--sub);margin-bottom:8px">Step-by-step cleaning guides for each machine brand. Select brand and procedure type.</div>
+        <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap">
+          <select id="tut-brand" onchange="renderTutorial()"
+            style="flex:1;min-width:120px;padding:7px;border:1px solid var(--brd);border-radius:7px;font-size:11px;font-family:inherit;background:var(--surf);color:var(--txt);outline:none">
+            <option value="">Select brand...</option>
+            <option>Manitowoc</option><option>Hoshizaki</option><option>Scotsman</option>
+            <option>Ice-O-Matic</option><option>Follett</option><option>Cornelius</option>
+          </select>
+          <select id="tut-type" onchange="renderTutorial()"
+            style="flex:1;min-width:120px;padding:7px;border:1px solid var(--brd);border-radius:7px;font-size:11px;font-family:inherit;background:var(--surf);color:var(--txt);outline:none">
+            <option value="deep_clean">&#x1F9FC; Deep Clean</option>
+            <option value="maintenance_60">&#x1F527; 60-Day Maintenance</option>
+            <option value="atp_protocol">&#x1F4CA; ATP Testing Guide</option>
+          </select>
+        </div>
+        <div id="tut-content"></div>
+      </div>
+
+      <!-- Referrals -->
+      <div id="svc-refs" style="display:none">
+        <div style="font-size:9px;color:var(--sub);margin-bottom:8px">Track who referred new clients. Your best customers are your best salespeople.</div>
+        <div id="svc-refs-list"></div>
+      </div>
+
+    </div><!-- /ct-panel-service -->
+
   </div>
 
   <!-- DATA -->
@@ -2648,6 +2674,7 @@ function hav(la1,lo1,la2,lo2){
 
 let log={},tab='today',selOut=null,selType=null,selReasonVal=null,cur=null,Q='',route=[],routeSet=new Set(),mapPros=[],routeAnchor=null;
 let queueList=[],queueIdx=0;
+let svcTab='cal',clientTab='clients';
 
 function setType(t){
   selType=t;
@@ -2721,19 +2748,36 @@ function loadLeaflet(cb){
   document.head.appendChild(scr);
 }
 function sw(t){
+  // Aliases for removed standalone tabs
+  if(t==='customers'){t='clients';}
+  else if(t==='service'){setClientTab('service');t='clients';}
   tab=t;
-  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('on',['today','all','route','customers','service','data'][i]===t));
+  const tabNames=['today','all','pipeline','route','clients'];
+  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('on',tabNames[i]===t));
   document.querySelectorAll('.panel').forEach(el=>el.classList.remove('on'));
-  const panel=document.getElementById('p-'+t);
+  // panel ID mapping: clients → p-customers, data → p-data, others → p-{t}
+  const panelId=t==='clients'?'p-customers':'p-'+t;
+  const panel=document.getElementById(panelId);
   if(panel)panel.classList.add('on');
   if(t==='today'){renderBriefing();}
   else if(t==='all'){const ag=document.getElementById('agrid');if(ag)delete ag._glAttached;showDebugIfNeeded();populateCityFilter();rA();}
+  else if(t==='pipeline'){renderPipeline();}
   else if(t==='route'){rRoute();}
-  else if(t==='customers'){rCust();}
-  // Load leaflet on route
+  else if(t==='clients'){if(clientTab==='service')rService();else rCust();}
   if(t==='route'&&typeof L==='undefined')loadLeaflet();
 }
-
+function setClientTab(t){
+  clientTab=t;
+  document.querySelectorAll('.client-tab').forEach(b=>b.classList.remove('on'));
+  const btn=document.getElementById('ct-'+t);
+  if(btn)btn.classList.add('on');
+  const paneClients=document.getElementById('ct-panel-clients');
+  const paneSvc=document.getElementById('ct-panel-service');
+  if(paneClients)paneClients.style.display=t==='clients'?'block':'none';
+  if(paneSvc)paneSvc.style.display=t==='service'?'block':'none';
+  if(t==='service')rService();
+  else rCust();
+}
 
 function setF(p){sw('today');rT();}
 function onS(){Q=document.getElementById('si').value.toLowerCase().trim();if(tab==='today')rT();else if(tab==='all')rA();}
@@ -4341,7 +4385,7 @@ function clrCustomers(){
   if(!confirm('Clear all customer data? Cannot be undone.'))return;
   customers={};custSave();
   P.forEach(p=>{if(p.status!=='prospect')p.status='prospect';});
-  if(tab==='customers')rCust();
+  if(tab==='clients')rCust();
   renderBriefing();
   toast('Customer data cleared');
 }
@@ -4354,8 +4398,8 @@ function clrAll(){
   P.forEach(p=>p.status='prospect');
   if(tab==='today'){rT();renderBriefing();}
   
-  else if(tab==='customers')rCust();
-  else if(tab==='service')rService();
+  else if(tab==='clients'&&clientTab==='service')rService();
+  else if(tab==='clients')rCust();
   else{rT();renderBriefing();}
   toast('All data cleared. Reloading...');
   setTimeout(()=>window.location.reload(),1200);
@@ -4424,6 +4468,81 @@ function markWon(status){
     document.getElementById('mbg').classList.remove('on');
     sw('customers');
   }
+}
+
+function renderPipeline(){
+  const listEl=document.getElementById('pipeline-list');
+  const emptyEl=document.getElementById('pipeline-empty');
+  if(!listEl)return;
+
+  const PIPE_OUTCOMES=new Set(['in_play','intro_set','interested','quoted','follow_up','scheduled']);
+  const CUST_STATUSES=new Set(['customer_recurring','customer_intro','customer_once','churned']);
+  const now=new Date();
+  const todayStr=now.toISOString().slice(0,10);
+  const weekEnd=new Date(now);weekEnd.setDate(weekEnd.getDate()+7);
+  const monthEnd=new Date(now);monthEnd.setDate(monthEnd.getDate()+30);
+
+  // Gather prospects with a pipeline outcome as latest log entry (not yet converted customers)
+  const pipeItems=[];
+  P.forEach(p=>{
+    if(CUST_STATUSES.has(p.status))return; // skip actual customers
+    const lc=getLC(p.id);
+    if(!lc)return;
+    const norm=normO(lc.outcome);
+    if(!PIPE_OUTCOMES.has(norm)&&!PIPE_OUTCOMES.has(lc.outcome))return;
+    pipeItems.push({p,lc,norm,followup:lc.followup||''});
+  });
+
+  if(!pipeItems.length){
+    listEl.innerHTML='';
+    if(emptyEl)emptyEl.style.display='block';
+    return;
+  }
+  if(emptyEl)emptyEl.style.display='none';
+
+  // Group by urgency
+  const groups={overdue:[],today:[],week:[],month:[],later:[]};
+  pipeItems.forEach(item=>{
+    const fu=item.followup;
+    if(!fu){groups.later.push(item);return;}
+    if(fu<todayStr)groups.overdue.push(item);
+    else if(fu===todayStr)groups.today.push(item);
+    else if(fu<=weekEnd.toISOString().slice(0,10))groups.week.push(item);
+    else if(fu<=monthEnd.toISOString().slice(0,10))groups.month.push(item);
+    else groups.later.push(item);
+  });
+
+  const groupDefs=[
+    {key:'overdue',label:'&#x1F6A8; Overdue',color:'#dc2626'},
+    {key:'today',  label:'&#x1F525; Today',   color:'#d97706'},
+    {key:'week',   label:'&#x1F4C5; This Week',color:'#0891b2'},
+    {key:'month',  label:'&#x23F3; This Month',color:'#7c3aed'},
+    {key:'later',  label:'&#x1F4CB; No Date / Later',color:'#64748b'},
+  ];
+
+  let html='';
+  groupDefs.forEach(({key,label,color})=>{
+    const items=groups[key];
+    if(!items.length)return;
+    html+='<div style="font-size:10px;font-weight:700;color:'+color+';margin:12px 0 6px;text-transform:uppercase;letter-spacing:.05em">'+label+' ('+items.length+')</div>';
+    items.forEach(({p,lc,norm})=>{
+      const oColor=OI_COLOR[norm]||OI_COLOR[lc.outcome]||'#64748b';
+      const oLabel=OI[norm]||OI[lc.outcome]||lc.outcome;
+      const fu=lc.followup?'<span style="font-size:9px;color:#0891b2;margin-left:6px">&#x1F4C5; '+lc.followup+'</span>':'';
+      const notes=lc.notes?'<div style="font-size:9px;color:var(--sub);margin-top:2px">'+lc.notes.slice(0,60)+(lc.notes.length>60?'…':'')+'</div>':'';
+      html+='<div class="dc" style="padding:10px 12px;margin-bottom:6px;cursor:pointer" onclick="showCard('+p.id+')">'
+        +'<div style="display:flex;justify-content:space-between;align-items:flex-start">'
+        +'<div style="font-weight:700;font-size:12px;color:var(--navy);flex:1;margin-right:8px">'+p.name+'</div>'
+        +'<span style="font-size:9px;padding:2px 7px;border-radius:20px;font-weight:700;white-space:nowrap;background:'+oColor+'18;color:'+oColor+'">'+oLabel+'</span>'
+        +'</div>'
+        +'<div style="font-size:10px;color:var(--sub);margin-top:2px">'+p.city+(p.phone||PHONES[String(p.id)]?'  &#x2022;  &#x1F4F1;':'')+'</div>'
+        +notes
+        +('<div style="margin-top:3px">'+fu+'</div>')
+        +'</div>';
+    });
+  });
+
+  listEl.innerHTML=html;
 }
 
 function rCust(){
@@ -5003,7 +5122,7 @@ function renderKPIs(){
   if(el('kpi-week'))el('kpi-week').textContent=weekTotal;
 }
 
-function swCustomers(){sw('customers');}
+function swCustomers(){sw('clients');}
 
 function buildAnnualSchedule(id){
   if(!customers[id])return;
