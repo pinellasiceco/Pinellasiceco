@@ -2666,6 +2666,7 @@ function dC(d,p){return p==='CALLBACK'||d<0?'u':d<=21?'h':d<=45?'w':'';}
 function stars(r){return r>0?'\u2605'.repeat(Math.round(r))+' '+r+'/5':'';}
 function enc(s){return encodeURIComponent(s);}
 function parseLD(s){if(!s)return new Date(NaN);var p=s.split('-');return new Date(+p[0],+p[1]-1,+p[2],12,0,0);}
+function localISO(d){var p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
 function hav(la1,lo1,la2,lo2){
   const R=3958.8,a=Math.sin((la2-la1)*Math.PI/360)**2+
     Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin((lo2-lo1)*Math.PI/360)**2;
@@ -4366,7 +4367,7 @@ function exportCSV(){
   const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\\n');
   const a=document.createElement('a');
   a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
-  a.download='pic_prospects_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.download='pic_prospects_'+localISO(new Date())+'.csv';
   a.click();toast('CSV exported');
 }
 function clrLog(){
@@ -4472,7 +4473,7 @@ function renderPipeline(){
   const PIPE_OUTCOMES=new Set(['in_play','intro_set','interested','quoted','follow_up','scheduled']);
   const CUST_STATUSES=new Set(['customer_recurring','customer_intro','customer_once','churned']);
   const now=new Date();
-  const todayStr=now.toISOString().slice(0,10);
+  const todayStr=localISO(now);
   const weekEnd=new Date(now);weekEnd.setDate(weekEnd.getDate()+7);
   const monthEnd=new Date(now);monthEnd.setDate(monthEnd.getDate()+30);
 
@@ -4501,8 +4502,8 @@ function renderPipeline(){
     if(!fu){groups.later.push(item);return;}
     if(fu<todayStr)groups.overdue.push(item);
     else if(fu===todayStr)groups.today.push(item);
-    else if(fu<=weekEnd.toISOString().slice(0,10))groups.week.push(item);
-    else if(fu<=monthEnd.toISOString().slice(0,10))groups.month.push(item);
+    else if(fu<=localISO(weekEnd))groups.week.push(item);
+    else if(fu<=localISO(monthEnd))groups.month.push(item);
     else groups.later.push(item);
   });
 
@@ -4741,7 +4742,7 @@ function saveContractField(id,field,value){
     if(!isNaN(start)){
       const renewal=new Date(start);
       renewal.setMonth(renewal.getMonth()+term);
-      customers[id].contract_renewal=renewal.toISOString().slice(0,10);
+      customers[id].contract_renewal=localISO(renewal);
     }
   }
   custSave();
@@ -4765,7 +4766,7 @@ function logService(id){
   const p=P.find(x=>x.id===id);
   if(p&&p.status==='customer_recurring'){
     const next=new Date();next.setDate(next.getDate()+60);
-    customers[id].next_service=next.toISOString().slice(0,10);
+    customers[id].next_service=localISO(next);
   }
   custSave();rCust();
   toast('Service visit logged for '+today);
@@ -4775,7 +4776,7 @@ function setNextService(id){
   // iOS-safe date picker overlay
   const existing=document.getElementById('sns-bg');
   if(existing)existing.remove();
-  const defaultDate=new Date(Date.now()+60*864e5).toISOString().slice(0,10);
+  const defaultDate=localISO(new Date(Date.now()+60*864e5));
   const bg=document.createElement('div');
   bg.id='sns-bg';
   bg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:600;display:flex;align-items:center;justify-content:center';
@@ -4879,7 +4880,7 @@ function initGoals(){
 
 function renderBriefing(){
   const now=new Date();
-  const todayStr=now.toISOString().slice(0,10);
+  const todayStr=localISO(now);
   const weekAgo=new Date(now-7*864e5);
   const dayName=now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
 
@@ -5023,11 +5024,11 @@ function renderBriefing(){
   if(tab!=='today')return; // KPI-only update handled by renderKPIs
   // Defer heavy card rendering to next animation frame
   requestAnimationFrame(()=>{
-  const today2=now.toISOString().slice(0,10);
+  const today2=localISO(now);
   // All prospects with a follow-up date set (any outcome), not yet clients
-  const today_iso=now.toISOString().slice(0,10);
-  const in7=new Date(now.getTime()+7*864e5).toISOString().slice(0,10);
-  const in14=new Date(now.getTime()+14*864e5).toISOString().slice(0,10);
+  const today_iso=localISO(now);
+  const in7=localISO(new Date(now.getTime()+7*864e5));
+  const in14=localISO(new Date(now.getTime()+14*864e5));
 
   const allFollowups=P.filter(p=>{
     if(isC(p.id))return false;
@@ -5122,7 +5123,7 @@ function buildAnnualSchedule(id){
   if(!customers[id])return;
   const c=customers[id];
   // Parse date as LOCAL (not UTC) to avoid off-by-one errors
-  const startStr=c.contract_start||new Date().toISOString().slice(0,10);
+  const startStr=c.contract_start||localISO(new Date());
   const [sy,sm,sd]=startStr.split('-').map(Number);
   const start=new Date(sy,sm-1,sd,12,0,0); // noon to avoid any DST edge
   const term=parseInt(c.contract_term||6);
@@ -5151,10 +5152,10 @@ function buildAnnualSchedule(id){
   }
 
   c.annual_schedule=schedule;
-  c.contract_start=c.contract_start||new Date().toISOString().slice(0,10);
+  c.contract_start=c.contract_start||localISO(new Date());
   const renewal=new Date(start);
   renewal.setMonth(renewal.getMonth()+term);
-  c.contract_renewal=renewal.toISOString().slice(0,10);
+  c.contract_renewal=localISO(renewal);
   custSave();
 }
 
@@ -5513,7 +5514,7 @@ function logServiceFromCal(id,opts){
 
   // Build service record
   const svcRecord={
-    date: today.toISOString().slice(0,10),
+    date: localISO(today),
     date_display: todayStr,
     time: timeStr,
     type: isDeepClean?'deep_clean':'maintenance_60',
@@ -5533,12 +5534,12 @@ function logServiceFromCal(id,opts){
   c.service_history.push(svcRecord);
 
   c.last_service=todayStr;
-  c.last_service_iso=today.toISOString().slice(0,10);
+  c.last_service_iso=localISO(today);
 
   // Next service: 60 days for maintenance, but auto-schedule deep clean at 6 months
   const next=new Date(today);
   next.setDate(next.getDate()+60);
-  c.next_service=next.toISOString().slice(0,10);
+  c.next_service=localISO(next);
 
   // Flag 6-month deep clean if approaching
   const nextDeepDays=lastDeep
@@ -5923,10 +5924,10 @@ function submitServiceLog(id){
   if(atp)customers[id].atp_post_last=atp;
   if(filterReplaced&&filterType){
     customers[id].filter_type=filterType;
-    customers[id].filter_installed=new Date().toISOString().slice(0,10);
+    customers[id].filter_installed=localISO(new Date());
   }
   // ATP history (logServiceFromCal covers service_history/last_service/next_service/custSave)
-  const today_iso=new Date().toISOString().slice(0,10);
+  const today_iso=localISO(new Date());
   const today_str=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
   if(!customers[id].atp_history)customers[id].atp_history=[];
   if(atp||atpPre)customers[id].atp_history.push({date:today_iso,pre:atpPre,post:atp});
@@ -5945,14 +5946,14 @@ function submitServiceLog(id){
 
 function reschedule(id){
   const c=customers[id]||{};
-  const current=c.next_service||new Date(Date.now()+60*864e5).toISOString().slice(0,10);
+  const current=c.next_service||localISO(new Date(Date.now()+60*864e5));
   const d=prompt('Set next service date (YYYY-MM-DD):',current);
   if(!d||!/^\d{4}-\d{2}-\d{2}$/.test(d)){toast('Invalid date');return;}
   if(!customers[id])customers[id]={};
   customers[id].next_service=d;
   // Rebuild annual schedule from new date
   if(customers[id].annual_schedule&&customers[id].annual_schedule.length){
-    const today=new Date().toISOString().slice(0,10);
+    const today=localISO(new Date());
     // Update the next upcoming scheduled visit
     const nextIdx=customers[id].annual_schedule.findIndex(s=>s.status!=='completed'&&s.date>=today);
     if(nextIdx>=0){
@@ -5962,7 +5963,7 @@ function reschedule(id){
       for(let i=nextIdx+1;i<customers[id].annual_schedule.length;i++){
         const prev=parseLD(customers[id].annual_schedule[i-1].date);
         const next=new Date(prev);next.setDate(next.getDate()+60);
-        customers[id].annual_schedule[i].date=next.toISOString().slice(0,10);
+        customers[id].annual_schedule[i].date=localISO(next);
         customers[id].annual_schedule[i].date_display=next.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
       }
     }
@@ -6933,7 +6934,7 @@ if('serviceWorker' in navigator){
 # ──────────────────────────────────────────────────────────────────────────────
 # ENTRY POINT
 # ──────────────────────────────────────────────────────────────────────────────
-SW_JS = """const CACHE_NAME='pic-v5';
+SW_JS = """const CACHE_NAME='pic-BUILD_DATE';
 const ASSETS=['./','./ index.html'];
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(ASSETS).catch(()=>{})));
@@ -7009,7 +7010,7 @@ def main():
     print(f"  Written: {OUTPUT_FILE.name} ({size_kb}KB)")
     # Write sw.js for PWA offline support
     sw_path = OUTPUT_FILE.parent / 'sw.js'
-    sw_path.write_text(SW_JS, encoding='utf-8')
+    sw_path.write_text(SW_JS.replace('BUILD_DATE', date.today().strftime('%Y%m%d')), encoding='utf-8')
     print(f"  Written: sw.js")
     print(f"\n{'='*55}")
     print(f"  Done! Open prospecting_tool.html in Chrome.")
@@ -7066,7 +7067,7 @@ def main():
     print(f"  Written: {OUTPUT_FILE.name} ({size_kb}KB)")
     # Write sw.js for PWA offline support
     sw_path = OUTPUT_FILE.parent / 'sw.js'
-    sw_path.write_text(SW_JS, encoding='utf-8')
+    sw_path.write_text(SW_JS.replace('BUILD_DATE', date.today().strftime('%Y%m%d')), encoding='utf-8')
     print(f"  Written: sw.js")
     print(f"\n{'='*55}")
     print(f"  Done! Open prospecting_tool.html in Chrome.")

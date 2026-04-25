@@ -1,5 +1,5 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-04-25 by Claude Code*
+*Last updated: 2026-04-25 (session 2) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
@@ -61,16 +61,7 @@
 
 ## What's Broken / Watch List ⚠️
 
-### Service log dates use `toISOString()` (lines 5516, 5536, 4768)
-- **Risk:** Off-by-one date for users in ET between 8pm–midnight (before UTC midnight)
-- `toISOString()` returns UTC, so 9pm ET = next UTC day
-- Prospect follow-up dates use `parseLD()` (local noon) — correct
-- Service dates were partially fixed; some paths still use `toISOString()`
-- **Fix:** Replace `toISOString().slice(0,10)` with local date string in submitServiceLog and next_service save
-
-### sw.js cache is static `pic-v3` (not date-stamped)
-- **Risk:** iOS PWA may serve stale app after code updates until user manually clears cache
-- **Fix:** Either bump `pic-v3` → `pic-v4` after major changes, or inject build date into sw.js from `build.py`
+None known.
 
 ## What's Missing 🔲
 - Nothing from the current feature roadmap is missing — all requested features are implemented
@@ -82,12 +73,13 @@
 - **2026-04-25:** Bug fix — Removed pitch/walkin/objection call scripts from showCard and queue cards
 - **2026-04-25:** Bug fix — Rebuild changed to daily cron; commit uses `--allow-empty`; briefing email updated to "Daily"
 - **2026-04-25:** Bug fix — Follow-up date missing on in_play/not_now shows soft toast instead of blocking save
+- **2026-04-25 (session 2):** Fix all date storage to use `localISO()` (local YYYY-MM-DD) instead of `toISOString()` (UTC); eliminates off-by-one dates after 8pm ET
+- **2026-04-25 (session 2):** sw.js cache now date-stamped daily by build.py (`pic-20260425`, etc.); eliminates stale PWA installs
 
 ## Next Session Priorities
-1. Fix service log date storage to use local date string instead of `toISOString()` (lines 5516, 5536, 4768 in build.py)
-2. Bump `sw.js` cache version (`pic-v3` → `pic-v4`) or inject date-stamp from build.py to prevent stale PWA installs
-3. Verify Pipeline tab `renderPipeline()` displays correctly in production with real data (sorting, empty states)
-4. Confirm ATP report prints cleanly on letter-size in iOS Safari (check margin/page-break behavior)
+1. Verify Pipeline tab `renderPipeline()` displays correctly in production with real data (sorting, empty states)
+2. Confirm ATP report prints cleanly on letter-size in iOS Safari (check margin/page-break behavior)
+3. Consider adding a "New Client" quick-add flow from the Clients tab (currently requires going through showCard)
 
 ## iOS PWA Rules (never violate these)
 - **Buttons:** `onclick="fn()"` + `ontouchend="event.preventDefault();fn()"` on every interactive element
