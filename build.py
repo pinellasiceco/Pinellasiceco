@@ -3798,8 +3798,9 @@ function showCard(id){
         +'<div style="font-size:10px;color:#94a3b8">'+p.address+', '+p.city+', FL '+p.zip+' · #'+p.id+'</div>'
       +'</div>'
       +'<div style="display:flex;gap:6px;align-items:center;flex-shrink:0;margin-left:10px">'
-    +'<button id="sc-route-btn" style="border:none;background:#f0fdf4;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:#059669;cursor:pointer;touch-action:manipulation;font-family:inherit;-webkit-tap-highlight-color:transparent">📍 +Route</button>'
-    +'<button id="sc-close" style="border:none;background:#f1f5f9;border-radius:50%;width:34px;height:34px;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;touch-action:manipulation;color:#475569;font-family:inherit">✕</button>'
+    +'<button id="sc-route-btn" style="border:none;background:#f0fdf4;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:#059669;cursor:pointer;touch-action:manipulation;font-family:inherit;-webkit-tap-highlight-color:transparent">&#x1F4CD; +Route</button>'
+    +'<button id="sc-report-btn" style="border:none;background:#fff7ed;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:#ea580c;cursor:pointer;touch-action:manipulation;font-family:inherit;-webkit-tap-highlight-color:transparent">&#x1F4CB; Report</button>'
+    +'<button id="sc-close" style="border:none;background:#f1f5f9;border-radius:50%;width:34px;height:34px;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;touch-action:manipulation;color:#475569;font-family:inherit">&#x2715;</button>'
     +'</div>'
     +'</div>'
     +'<div style="padding:16px">'
@@ -3843,7 +3844,7 @@ function showCard(id){
 
     var btn=e.target.closest(
       '[data-scout],[data-sctype],[data-fupdays],[data-scr],[data-ci],'
-      +'#sc-close,#sc-route-btn,#sc-save-btn,#sc-phone-save,'
+      +'#sc-close,#sc-route-btn,#sc-report-btn,#sc-save-btn,#sc-phone-save,'
       +'#sc-save-vendor,#sc-add-contact,#sc-won-intro,#sc-won-rec,'
       +'#sc-won-once,#sc-lost-btn,#sc-ct-save,#sc-ct-cancel'
     );
@@ -3856,6 +3857,9 @@ function showCard(id){
 
     // +Route
     if(bid==='sc-route-btn'){addToRoute(p.id);toast('Added to route');return;}
+
+    // Report
+    if(bid==='sc-report-btn'){scStatusReport(p);return;}
 
     // Phone save
     if(bid==='sc-phone-save'){
@@ -6548,6 +6552,146 @@ function saveReferredBy(bizId,refId){
   custSave();
   renderReferrals();
   toast('Referral source saved');
+}
+
+// ── ATP STATUS REPORT ─────────────────────────────────────────────────────────
+function scStatusReport(p){
+  var atpBg=document.createElement('div');
+  atpBg.id='atp-bg';
+  atpBg.style.cssText='position:fixed;inset:0;z-index:600;background:rgba(15,31,56,.88);display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box';
+  var box=document.createElement('div');
+  box.style.cssText='background:#fff;border-radius:16px;padding:24px;width:100%;max-width:340px';
+  box.innerHTML=
+    '<div style="font-size:14px;font-weight:800;color:#0f1f38;margin-bottom:4px">&#x1F4CB; ATP Status Report</div>'
+    +'<div style="font-size:11px;color:#64748b;margin-bottom:16px">Enter the ATP reading from the test (RLU). Leave blank if not yet tested.</div>'
+    +'<input id="atp-val-inp" type="number" min="0" max="9999" placeholder="e.g. 847" inputmode="numeric" '
+    +'style="width:100%;padding:14px;border:2px solid #e2e8f0;border-radius:10px;font-size:28px;font-weight:800;font-family:inherit;outline:none;text-align:center;box-sizing:border-box;margin-bottom:12px;color:#0f1f38">'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
+    +'<button id="atp-cancel" style="padding:12px;border:1px solid #e2e8f0;border-radius:9px;background:#f8fafc;color:#64748b;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
+    +'<button id="atp-print" style="padding:12px;border:none;border-radius:9px;background:#ea580c;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Generate &amp; Print</button>'
+    +'</div>';
+  atpBg.appendChild(box);
+  document.body.appendChild(atpBg);
+  var inp=document.getElementById('atp-val-inp');
+  setTimeout(function(){if(inp)inp.focus();},120);
+  var _lt=0;
+  function atpHandle(e){
+    if(e.type==='click'&&Date.now()-_lt<350)return;
+    if(e.type==='touchend')_lt=Date.now();
+    if(e.target===atpBg){atpBg.remove();return;}
+    var btn=e.target.closest('#atp-cancel,#atp-print');
+    if(!btn)return;
+    if(e.type==='touchend')e.preventDefault();
+    if(btn.id==='atp-cancel'){atpBg.remove();return;}
+    if(btn.id==='atp-print'){
+      var val=parseInt((inp&&inp.value)||'0')||0;
+      atpBg.remove();
+      srGenerate(p,val);
+    }
+  }
+  atpBg.addEventListener('click',atpHandle);
+  atpBg.addEventListener('touchend',atpHandle);
+}
+
+function srGenerate(p,atpVal){
+  var now=new Date();
+  var dateStr=now.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  var atpStatus,atpColor,atpBgCol,barW;
+  if(atpVal<=0){atpStatus='PENDING';atpColor='#64748b';atpBgCol='#f8fafc';barW=0;}
+  else if(atpVal<=10){atpStatus='PASS';atpColor='#059669';atpBgCol='#ecfdf5';barW=Math.round(atpVal*10);}
+  else if(atpVal<=100){atpStatus='MARGINAL';atpColor='#d97706';atpBgCol='#fffbeb';barW=Math.round(10+((atpVal-10)/90)*60);}
+  else{atpStatus='FAIL';atpColor='#dc2626';atpBgCol='#fef2f2';barW=100;}
+  var barH=atpVal>0
+    ?('<div style="width:100%;height:12px;background:#e2e8f0;border-radius:6px;overflow:hidden;margin-bottom:6px">'
+      +'<div style="width:'+barW+'%;height:100%;background:'+atpColor+';border-radius:6px"></div></div>')
+    :'';
+  var inspLines=[];
+  if(p.chronic)inspLines.push('Chronic ice machine violations on FL DBPR record ('+p.ice_count+' flagged inspections)');
+  else if(p.confirmed)inspLines.push('Ice machine violation confirmed on FL DBPR record');
+  if(p.n_callbacks>0)inspLines.push(p.n_callbacks+' callback inspection'+(p.n_callbacks>1?'s':'')+' on record &mdash; inspector returned');
+  var inspH=inspLines.length
+    ?('<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:14px;margin-bottom:16px">'
+      +'<div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#7f1d1d;margin-bottom:8px">&#x26A0; FL DBPR Inspection Record</div>'
+      +inspLines.map(function(l){return '<div style="font-size:11px;color:#991b1b;margin-bottom:4px">&bull; '+l+'</div>';}).join('')
+      +'</div>')
+    :'';
+  var services=['Full ice bin disassembly &amp; deep cleaning',
+    'ATP pre/post testing with printed documentation',
+    'Dated compliance report for your records',
+    'Water distribution system flush &amp; sanitize',
+    'Filter inspection &amp; replacement (as needed)',
+    'Internal sanitizer application (NSF/ANSI 60 compliant)'];
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8">'
+    +'<meta name="viewport" content="width=device-width,initial-scale=1">'
+    +'<title>Ice Machine Status Report</title>'
+    +'<style>'
+    +'*{box-sizing:border-box}body{margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;background:#fff;color:#0f172a}'
+    +'@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}'
+    +'@page{size:letter portrait;margin:0.55in}'
+    +'.page{max-width:680px;margin:0 auto;padding:28px}'
+    +'</style></head><body><div class="page">'
+    +'<table style="width:100%;border-collapse:collapse;margin-bottom:20px"><tr>'
+    +'<td style="vertical-align:middle"><img src="logo_for_pdf.png" onerror="this.remove()" style="height:42px;display:block"></td>'
+    +'<td style="text-align:right;vertical-align:middle">'
+    +'<div style="font-size:17px;font-weight:900;color:#0f1f38;letter-spacing:-.01em">ICE MACHINE STATUS REPORT</div>'
+    +'<div style="font-size:11px;color:#64748b;margin-top:2px">pinellasiceco.com &nbsp;&middot;&nbsp; '+dateStr+'</div>'
+    +'</td></tr></table>'
+    +'<div style="border-top:2px solid #0f1f38;margin-bottom:16px"></div>'
+    +'<table style="width:100%;border-collapse:collapse;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:16px"><tbody>'
+    +'<tr style="background:#f8fafc">'
+    +'<td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;width:55%">Establishment</td>'
+    +'<td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;border-left:1px solid #e2e8f0;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b">ATP Reading</td>'
+    +'</tr><tr>'
+    +'<td style="padding:14px;vertical-align:top">'
+    +'<div style="font-size:14px;font-weight:800;color:#0f1f38;margin-bottom:4px">'+p.name+'</div>'
+    +'<div style="font-size:11px;color:#475569">'+p.address+'</div>'
+    +'<div style="font-size:11px;color:#475569">'+p.city+', FL '+p.zip+'</div>'
+    +'</td>'
+    +'<td style="padding:14px;vertical-align:top;border-left:1px solid #e2e8f0;background:'+atpBgCol+'">'
+    +barH
+    +'<div style="font-size:'+(atpVal>0?'36':'22')+'px;font-weight:900;color:'+atpColor+';line-height:1">'+(atpVal>0?atpVal:'&mdash;')+'</div>'
+    +(atpVal>0?'<div style="font-size:11px;color:'+atpColor+';font-weight:600">RLU</div>':'')
+    +'<div style="font-size:15px;font-weight:900;color:'+atpColor+';letter-spacing:.06em;margin-top:6px;border-top:1px solid '+atpColor+'30;padding-top:6px">'+atpStatus+'</div>'
+    +'</td></tr></tbody></table>'
+    +'<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:16px">'
+    +'<div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:8px">About This Reading</div>'
+    +'<div style="font-size:11px;color:#334155;line-height:1.65">ATP (adenosine triphosphate) bioluminescence testing measures biological contamination on food contact surfaces. '
+    +'Readings above 100&nbsp;RLU indicate significant microbial contamination. '
+    +'The FDA Food Code requires &lt;10&nbsp;RLU on food contact surfaces. '
+    +'Ice machine evaporators, water lines, and bin surfaces were tested at this visit.</div>'
+    +'<div style="display:flex;gap:8px;margin-top:12px">'
+    +'<div style="flex:1;text-align:center;padding:8px;background:#ecfdf5;border-radius:6px;border:1px solid #6ee7b7"><div style="font-size:15px;font-weight:900;color:#059669">&le;10</div><div style="font-size:8px;color:#059669;font-weight:700;letter-spacing:.05em">PASS</div></div>'
+    +'<div style="flex:1;text-align:center;padding:8px;background:#fffbeb;border-radius:6px;border:1px solid #fcd34d"><div style="font-size:15px;font-weight:900;color:#d97706">11&ndash;100</div><div style="font-size:8px;color:#d97706;font-weight:700;letter-spacing:.05em">MARGINAL</div></div>'
+    +'<div style="flex:1;text-align:center;padding:8px;background:#fef2f2;border-radius:6px;border:1px solid #fca5a5"><div style="font-size:15px;font-weight:900;color:#dc2626">&gt;100</div><div style="font-size:8px;color:#dc2626;font-weight:700;letter-spacing:.05em">FAIL</div></div>'
+    +'</div></div>'
+    +inspH
+    +'<div style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:16px">'
+    +'<div style="background:#0f1f38;padding:10px 14px;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8">What Pinellas Ice Co Does</div>'
+    +'<div style="padding:12px 14px">'
+    +services.map(function(s){return '<div style="font-size:11px;color:#334155;padding:3px 0;display:flex;gap:8px"><span style="color:#059669;font-weight:700;flex-shrink:0">&#x2713;</span><span>'+s+'</span></div>';}).join('')
+    +'</div></div>'
+    +'<div style="background:#0f1f38;border-radius:10px;padding:18px;text-align:center;margin-bottom:16px">'
+    +'<div style="font-size:8px;color:#94a3b8;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">Limited Intro Offer &mdash; No Commitment</div>'
+    +'<div style="font-size:26px;font-weight:900;color:#f97316;margin-bottom:4px">$99 &mdash; First Visit</div>'
+    +'<div style="font-size:11px;color:#e2e8f0;margin-bottom:10px">Full service &middot; ATP documentation &middot; compliance report</div>'
+    +'<div style="font-size:16px;font-weight:800;color:#fff">Call&nbsp;/&nbsp;Text:&nbsp;&nbsp;(727)&nbsp;855-6873</div>'
+    +'<div style="font-size:10px;color:#94a3b8;margin-top:4px">pinellasiceco.com</div>'
+    +'</div>'
+    +'<table style="width:100%;border-collapse:collapse;margin-bottom:14px"><tr>'
+    +'<td style="width:48%;padding-right:14px"><div style="border-bottom:1px solid #94a3b8;height:26px;margin-bottom:3px"></div><div style="font-size:9px;color:#94a3b8">Technician Signature</div></td>'
+    +'<td style="width:4%"></td>'
+    +'<td style="width:48%;padding-left:14px"><div style="border-bottom:1px solid #94a3b8;height:26px;margin-bottom:3px"></div><div style="font-size:9px;color:#94a3b8">Date</div></td>'
+    +'</tr></table>'
+    +'<div style="text-align:center;font-size:9px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:10px">'
+    +'Pinellas Ice Co &nbsp;&middot;&nbsp; pinellasiceco.com &nbsp;&middot;&nbsp; (727) 855-6873<br>'
+    +'FDA Food Code &sect;3-502.12 &nbsp;&middot;&nbsp; FL Administrative Code 64E-11 &nbsp;&middot;&nbsp; ATP testing per NSF/ANSI Standard 63'
+    +'</div>'
+    +'</div></body></html>';
+  var w=window.open('','_blank');
+  if(!w){toast('Pop-up blocked — allow pop-ups and try again');return;}
+  w.document.write(html);
+  w.document.close();
+  setTimeout(function(){w.print();},600);
 }
 
 // ── SETTINGS ─────────────────────────────────────────────────────────────────
