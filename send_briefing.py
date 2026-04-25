@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-send_briefing.py — runs after build.py in GitHub Actions every Monday.
-Sends a weekly intelligence briefing email via Resend.
+send_briefing.py — runs after build.py in GitHub Actions every day.
+Sends a daily intelligence briefing email via Resend.
 """
 import os, sys, json, csv, re
 from pathlib import Path
@@ -205,7 +205,7 @@ def build_email(current, changes, stats):
     <!-- Header -->
     <div style="background:#1e3a5f;border-radius:12px 12px 0 0;padding:20px 24px;margin-bottom:0">
       <div style="font-size:11px;color:rgba(255,255,255,.6);margin-bottom:2px">PINELLAS ICE CO</div>
-      <div style="font-size:20px;font-weight:800;color:#fff">&#x1F4CB; Weekly Intelligence Briefing</div>
+      <div style="font-size:20px;font-weight:800;color:#fff">&#x1F4CB; Daily Intelligence Briefing</div>
       <div style="font-size:12px;color:rgba(255,255,255,.7);margin-top:4px">{today}</div>
     </div>
 
@@ -233,7 +233,7 @@ def build_email(current, changes, stats):
       <!-- Footer -->
       <div style="text-align:center;font-size:10px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:12px">
         Pinellas Ice Co &bull; Data refreshed from FL DBPR &bull; pinellasiceco.com<br>
-        This email is sent automatically every Monday after the weekly data rebuild.
+        This email is sent automatically every day after the daily data rebuild.
       </div>
     </div>
   </div>
@@ -281,7 +281,7 @@ def send_email(subject, html):
         return False
 
 def main():
-    print('\nSending weekly briefing email...')
+    print('\nSending daily briefing email...')
 
     if not RESEND_API_KEY:
         print('  RESEND_API_KEY not set — skipping email')
