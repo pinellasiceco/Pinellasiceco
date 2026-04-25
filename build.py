@@ -5106,7 +5106,7 @@ function geoClusterSchedule(){
       if(q.id===p.id)return false;
       const cq=customers[q.id]||{};
       if(!cq.next_service)return false;
-      const dueQ=new Date(cq.next_service);
+      const dueQ=parseLD(cq.next_service);
       const daysDiff=Math.abs(Math.round((dueQ-due)/864e5));
       const miles=hav(p.lat,p.lon,q.lat,q.lon);
       return daysDiff<=5&&miles<=8;
@@ -5812,23 +5812,12 @@ function submitServiceLog(id){
     customers[id].filter_type=filterType;
     customers[id].filter_installed=new Date().toISOString().slice(0,10);
   }
-  // Set last service to today, next service 60 days out
-  const today_str=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  // ATP history (logServiceFromCal covers service_history/last_service/next_service/custSave)
   const today_iso=new Date().toISOString().slice(0,10);
-  const next_iso=new Date(Date.now()+60*864e5).toISOString().slice(0,10);
-  customers[id].last_service=today_str;
-  customers[id].next_service=next_iso;
-  // Add to service history
-  if(!customers[id].service_history)customers[id].service_history=[];
-  customers[id].service_history.push({
-    date_display:today_str,date:today_iso,
-    type:svcType,label:svcType==='deep_clean'?'Deep Clean':'60-Day Maintenance',
-    atp:atp,atp_pre:atpPre,notes:notes,filter_replaced:filterReplaced,status:'completed'
-  });
-  // Add to ATP history for reporting
+  const today_str=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
   if(!customers[id].atp_history)customers[id].atp_history=[];
   if(atp||atpPre)customers[id].atp_history.push({date:today_iso,pre:atpPre,post:atp});
-  // Log service_done outcome with ATP data for report generation
+  // Log service_done to call log so it appears in weekly funnel
   if(!log[id])log[id]=[];
   log[id].push({
     outcome:'service_done',type:'service',reason:null,
@@ -5838,10 +5827,7 @@ function submitServiceLog(id){
   lSave();
   custSave();
   document.getElementById('svc-log-bg').remove();
-  toast('\u2713 Service logged \u2014 next due '+next_iso);
-  // Update weekly funnel / briefing
-  if(typeof renderBriefing==='function')setTimeout(renderBriefing,100);
-  rCust();
+  if(typeof rCust==='function')rCust();
 }
 
 function reschedule(id){
@@ -5858,10 +5844,10 @@ function reschedule(id){
     const nextIdx=customers[id].annual_schedule.findIndex(s=>s.status!=='completed'&&s.date>=today);
     if(nextIdx>=0){
       customers[id].annual_schedule[nextIdx].date=d;
-      customers[id].annual_schedule[nextIdx].date_display=new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+      customers[id].annual_schedule[nextIdx].date_display=parseLD(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
       // Realign subsequent visits every 60 days from new date
       for(let i=nextIdx+1;i<customers[id].annual_schedule.length;i++){
-        const prev=new Date(customers[id].annual_schedule[i-1].date);
+        const prev=parseLD(customers[id].annual_schedule[i-1].date);
         const next=new Date(prev);next.setDate(next.getDate()+60);
         customers[id].annual_schedule[i].date=next.toISOString().slice(0,10);
         customers[id].annual_schedule[i].date_display=next.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
