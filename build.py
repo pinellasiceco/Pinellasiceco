@@ -3261,8 +3261,8 @@ function renderRList(){
       +'</div>'
       +'<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">'
         +(distTxt?'<div class="rdist">'+distTxt+'</div>':'')
-        +'<button data-action="route" data-id="'+p.id+'" style="'+addBtnStyle+'">'+(inR?'&#x2713; Added':'&#x2795; Add')+'</button>'
-        +'<button data-action="start" data-id="'+p.id+'" style="font-size:8px;padding:2px 5px;border:1px solid #7c3aed;border-radius:4px;background:#f5f3ff;color:#7c3aed;cursor:pointer;font-family:inherit">Start &#x1F4CD;</button>'
+        +'<button data-action="route" data-id="'+p.id+'" ontouchend="event.stopPropagation();event.preventDefault();addToRoute('+p.id+')" onclick="event.stopPropagation();addToRoute('+p.id+')" style="'+addBtnStyle+'">'+(inR?'&#x2713; Added':'&#x2795; Add')+'</button>'
+        +'<button data-action="start" data-id="'+p.id+'" ontouchend="event.stopPropagation();event.preventDefault();setRouteAnchor('+p.id+')" onclick="event.stopPropagation();setRouteAnchor('+p.id+')" style="font-size:8px;padding:2px 5px;border:1px solid #7c3aed;border-radius:4px;background:#f5f3ff;color:#7c3aed;cursor:pointer;font-family:inherit">Start &#x1F4CD;</button>'
       +'</div>'
       +'</div>';
   }).join('');
@@ -3724,22 +3724,13 @@ function showCard(id){
     +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;margin-bottom:4px">Reason</div>'
     +'<div id="sc-reason-grid" style="display:flex;flex-wrap:wrap;gap:4px"></div>'
     +'</div>'
-    // Notes + follow-up
-    +'<textarea id="sc-notes" placeholder="Notes…" rows="2" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:7px;font-size:12px;font-family:inherit;resize:none;outline:none;box-sizing:border-box;margin-bottom:6px"></textarea>'
-    +'<div style="margin-bottom:8px">'
-    +'<div style="font-size:9px;color:#94a3b8;font-weight:600;margin-bottom:5px">📅 Follow-up date (tap to set)</div>'
-    +'<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:5px">'
-    +'<button data-fupdays="1" style="padding:9px 4px;border:1px solid #e2e8f0;border-radius:7px;background:#f8fafc;color:#475569;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">+1d</button>'
-    +'<button data-fupdays="3" style="padding:9px 4px;border:1px solid #e2e8f0;border-radius:7px;background:#f8fafc;color:#475569;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">+3d</button>'
-    +'<button data-fupdays="7" style="padding:9px 4px;border:1px solid #e2e8f0;border-radius:7px;background:#f8fafc;color:#475569;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">+7d</button>'
-    +'<button data-fupdays="14" style="padding:9px 4px;border:1px solid #e2e8f0;border-radius:7px;background:#f8fafc;color:#475569;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">+14d</button>'
-    +'<button data-fupdays="30" style="padding:9px 4px;border:1px solid #e2e8f0;border-radius:7px;background:#f8fafc;color:#475569;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">+30d</button>'
+    // Notes + follow-up + save
+    +'<textarea id="sc-notes" placeholder="Notes…" rows="2" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:7px;font-size:12px;font-family:inherit;resize:none;outline:none;box-sizing:border-box;margin-bottom:8px"></textarea>'
+    +'<div style="margin-bottom:10px">'
+    +'<div style="font-size:9px;color:#94a3b8;font-weight:600;margin-bottom:5px">📅 Follow-up date (optional)</div>'
+    +'<input id="sc-followup" type="date" value="'+(lc&&lc.followup||'')+'" style="width:100%;padding:9px;border:1px solid #e2e8f0;border-radius:7px;font-size:13px;font-family:inherit;background:#fff;color:#0f1f38;outline:none;box-sizing:border-box">'
     +'</div>'
-    +'<div id="sc-fup-display" style="font-size:11px;color:#059669;font-weight:700;min-height:18px"></div>'
-    +'<input id="sc-followup" type="hidden" value="">'  // value set by button taps
-    +'</div>'
-
-    +    +'<button id="sc-save-btn" style="width:100%;padding:11px;background:#059669;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Save Log Entry</button>'
+    +'<button id="sc-save-btn" style="width:100%;padding:13px;background:#059669;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent">Save &amp; Disposition Lead</button>'
     +'</div>';
 
   // CLOSE DEAL section  
@@ -3907,29 +3898,13 @@ function showCard(id){
       return;
     }
 
-    // Follow-up day button
-    if(btn.dataset.fupdays){
-      var fupDays=parseInt(btn.dataset.fupdays);
-      var fupDate=new Date(Date.now()+fupDays*864e5);
-      var fupISO=fupDate.getFullYear()+'-'+String(fupDate.getMonth()+1).padStart(2,'0')+'-'+String(fupDate.getDate()).padStart(2,'0');
-      var fupInput=document.getElementById('sc-followup');
-      if(fupInput)fupInput.value=fupISO;
-      var fupDisp=document.getElementById('sc-fup-display');
-      if(fupDisp)fupDisp.textContent=fupDate.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-      bg.querySelectorAll('[data-fupdays]').forEach(function(b){
-        b.style.background=b===btn?'#0f1f38':'#f8fafc';
-        b.style.color=b===btn?'#fff':'#475569';
-      });
-      return;
-    }
-
     // Save log entry
     if(bid==='sc-save-btn'){
       if(!selOutcome){toast('Pick an outcome first');return;}
       var logNotes=(document.getElementById('sc-notes')||{}).value||'';
       var logFollowup=(document.getElementById('sc-followup')||{}).value||'';
       if(!logFollowup&&['not_now','in_play'].indexOf(selOutcome)>=0){
-        toast('Tip: tap +3d or +7d to set a follow-up date');
+        toast('Tip: set a follow-up date above before saving');
       }
       if(!log[p.id])log[p.id]=[];
       log[p.id].push({outcome:selOutcome,type:selType,reason:selReason,
