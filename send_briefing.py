@@ -181,12 +181,19 @@ def biz_row(r, extra=''):
     phone_html = f'<a href="tel:{phone}" style="color:#0a84ff">{phone}</a>' if phone else '<span style="color:#94a3b8">No phone</span>'
     score = r.get('score', 0)
     score_col = '#dc2626' if score >= 80 else '#d97706' if score >= 60 else '#64748b'
+    last_insp = r.get('last_insp', '')
+    try:
+        from datetime import date as _d
+        insp_fmt = _d.fromisoformat(last_insp).strftime('%b %-d')
+    except Exception:
+        insp_fmt = last_insp or '—'
     return f"""
     <tr style="border-bottom:1px solid #f1f5f9">
       <td style="padding:8px 12px;font-weight:600;color:#1e293b">{r.get('name','')[:35]}</td>
       <td style="padding:8px 12px;color:#64748b;font-size:11px">{r.get('city','')}</td>
       <td style="padding:8px 12px">{phone_html}</td>
       <td style="padding:8px 12px;font-weight:700;color:{score_col};font-size:12px">{score}</td>
+      <td style="padding:8px 12px;font-size:11px;color:#64748b">{insp_fmt}</td>
       {f'<td style="padding:8px 12px;font-size:11px;color:#64748b">{extra}</td>' if extra else ''}
     </tr>"""
 
@@ -219,7 +226,7 @@ def build_email(current, changes, stats, ref_total=0, ref_top=None, ref_ready=No
             &#x1F195; New Since Yesterday ({len(new_since)})
           </div>
           <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden">
-            <tr style="background:#fef9c3"><th style="padding:8px 12px;text-align:left;font-size:11px;color:#854d0e">Business</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#854d0e">City</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#854d0e">Phone</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#854d0e">Score</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#854d0e">Reason</th></tr>
+            <tr style="background:#fef9c3"><th style="padding:8px 12px;text-align:left;font-size:11px;color:#854d0e">Business</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#854d0e">City</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#854d0e">Phone</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#854d0e">Score</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#854d0e">Last Insp.</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#854d0e">Reason</th></tr>
             {rows}
           </table>
         </div>"""
@@ -238,7 +245,7 @@ def build_email(current, changes, stats, ref_total=0, ref_top=None, ref_ready=No
             &#x1F6A8; Emergency Closures / Overdue Callbacks ({len(changes['emergency_closures'])})
           </div>
           <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden">
-            <tr style="background:#fef2f2"><th style="padding:8px 12px;text-align:left;font-size:11px;color:#dc2626">Business</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#dc2626">City</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#dc2626">Phone</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#dc2626">Score</th></tr>
+            <tr style="background:#fef2f2"><th style="padding:8px 12px;text-align:left;font-size:11px;color:#dc2626">Business</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#dc2626">City</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#dc2626">Phone</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#dc2626">Score</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#dc2626">Last Insp.</th></tr>
             {rows}
           </table>
         </div>"""
@@ -252,7 +259,7 @@ def build_email(current, changes, stats, ref_total=0, ref_top=None, ref_ready=No
             &#x1F4DE; New CALLBACK Businesses This Week ({len(changes['new_callbacks'])})
           </div>
           <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden">
-            <tr style="background:#f0f4ff"><th style="padding:8px 12px;text-align:left;font-size:11px;color:#1e3a5f">Business</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#1e3a5f">City</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#1e3a5f">Phone</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#1e3a5f">Score</th></tr>
+            <tr style="background:#f0f4ff"><th style="padding:8px 12px;text-align:left;font-size:11px;color:#1e3a5f">Business</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#1e3a5f">City</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#1e3a5f">Phone</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#1e3a5f">Score</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#1e3a5f">Last Insp.</th></tr>
             {rows}
           </table>
         </div>"""
@@ -266,7 +273,7 @@ def build_email(current, changes, stats, ref_total=0, ref_top=None, ref_ready=No
             &#x1F9CA; New Ice Violations (Last 6 Months) ({len(changes['new_ice_fresh'])})
           </div>
           <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden">
-            <tr style="background:#eff6ff"><th style="padding:8px 12px;text-align:left;font-size:11px;color:#0a84ff">Business</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#0a84ff">City</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#0a84ff">Phone</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#0a84ff">Score</th></tr>
+            <tr style="background:#eff6ff"><th style="padding:8px 12px;text-align:left;font-size:11px;color:#0a84ff">Business</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#0a84ff">City</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#0a84ff">Phone</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#0a84ff">Score</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#0a84ff">Last Insp.</th></tr>
             {rows}
           </table>
         </div>"""
@@ -280,7 +287,7 @@ def build_email(current, changes, stats, ref_total=0, ref_top=None, ref_ready=No
             &#x1F4C8; Biggest Score Jumps This Week
           </div>
           <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden">
-            <tr style="background:#fef9ee"><th style="padding:8px 12px;text-align:left;font-size:11px;color:#d97706">Business</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#d97706">City</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#d97706">Phone</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#d97706">Score</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#d97706">Change</th></tr>
+            <tr style="background:#fef9ee"><th style="padding:8px 12px;text-align:left;font-size:11px;color:#d97706">Business</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#d97706">City</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#d97706">Phone</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#d97706">Score</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#d97706">Last Insp.</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#d97706">Change</th></tr>
             {rows}
           </table>
         </div>"""
