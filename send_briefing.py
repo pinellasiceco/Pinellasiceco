@@ -7,8 +7,8 @@ import os, sys, json, csv, re
 from pathlib import Path
 from datetime import datetime, timedelta
 
-RESEND_API_KEY = os.environ.get('RESEND_API_KEY', '')
-TO_EMAIL       = os.environ.get('BRIEFING_EMAIL', 'your@email.com')
+RESEND_API_KEY = os.environ.get('RESEND_API_KEY', '').strip()
+TO_EMAIL       = os.environ.get('BRIEFING_EMAIL', 'your@email.com').strip()
 FROM_EMAIL     = 'briefing@pinellasiceco.com'
 
 DATA_DIR = Path(__file__).parent / 'data'
@@ -398,7 +398,8 @@ def send_email(subject, html):
         return True
     except urllib.error.HTTPError as e:
         body = e.read().decode('utf-8', errors='replace')
-        print(f"  Email HTTP error {e.code}: {body}")
+        print(f"  Email HTTP error {e.code}: {repr(body)}")
+        print(f"  Headers: {dict(e.headers)}")
         raise
     except Exception as e:
         print(f"  Email failed: {e}")
@@ -407,7 +408,7 @@ def send_email(subject, html):
 def main():
     print('\nSending daily briefing email...')
     print(f'  FROM: {FROM_EMAIL}')
-    print(f'  TO:   {TO_EMAIL}')
+    print(f'  TO:   {TO_EMAIL[:12]}... (len={len(TO_EMAIL)})')
     print(f'  KEY:  {"set (" + RESEND_API_KEY[:8] + "...)" if RESEND_API_KEY else "NOT SET"}')
 
     if not RESEND_API_KEY:
