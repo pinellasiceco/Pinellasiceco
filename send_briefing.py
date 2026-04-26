@@ -61,6 +61,59 @@ def save_snapshot(data):
     } for r in data]
     snap.write_text(json.dumps(lite), encoding='utf-8')
 
+def load_customers():
+    """Load customer records from customers.json (written by the app's export, if present)."""
+    cust_path = Path(__file__).parent / 'customers.json'
+    if not cust_path.exists():
+        return {}
+    try:
+        raw = json.loads(cust_path.read_text(encoding='utf-8'))
+        if isinstance(raw, list):
+            return {str(r.get('id', i)): r for i, r in enumerate(raw)}
+        return raw
+    except:
+        return {}
+
+def get_referral_stats(customers_data, current):
+    """Summarise referral activity from customer records."""
+    total = sum(len(c.get('referrals', [])) for c in customers_data.values())
+    top = sorted(
+        [(c.get('name', '?'), len(c.get('referrals', []))) for c in customers_data.values() if c.get('referrals')],
+        key=lambda x: x[1], reverse=True
+    )[:3]
+    # Clients ready to ask (30+ days, 1+ service visit, not asked in 60d)
+    today_str = datetime.now().strftime('%Y-%m-%d')
+    ready = []
+    for p in current:
+        pid = str(p.get('id'))
+        c = customers_data.get(pid, {})
+        won_date = c.get('won_date', '')
+        if not won_date:
+            continue
+        try:
+            from datetime import date
+            parts = won_date.replace(',', '').split()  # "Apr 19, 2026" or "Apr 19 2026"
+            won_d = datetime.strptime(' '.join(parts), '%b %d %Y').date()
+            days_since = (date.today() - won_d).days
+        except:
+            continue
+        if days_since < 30:
+            continue
+        if not c.get('service_history'):
+            continue
+        last_ask = c.get('last_referral_ask', '')
+        if last_ask:
+            try:
+                ask_d = datetime.strptime(last_ask, '%Y-%m-%d').date()
+                if (date.today() - ask_d).days < 60:
+                    continue
+            except:
+                pass
+        visits = len(c.get('service_history', []))
+        ready.append((p.get('name', '?'), days_since, visits))
+    ready = ready[:3]
+    return total, top, ready
+
 def compare(current, previous):
     """Find what changed since last week."""
     prev_map = {r['id']: r for r in previous}
@@ -136,9 +189,11 @@ def biz_row(r, extra=''):
       {f'<td style="padding:8px 12px;font-size:11px;color:#64748b">{extra}</td>' if extra else ''}
     </tr>"""
 
-def build_email(current, changes, stats):
+def build_email(current, changes, stats, ref_total=0, ref_top=None, ref_ready=None):
     today = datetime.now().strftime('%A, %B %-d, %Y')
     has_changes = any(len(v) > 0 for v in changes.values())
+    ref_top = ref_top or []
+    ref_ready = ref_ready or []
 
     sections = ''
 
@@ -236,6 +291,29 @@ def build_email(current, changes, stats):
           <div style="font-size:11px;color:#064e3b;margin-top:4px">Territory is stable. Focus on working your existing pipeline.</div>
         </div>"""
 
+    # Referral pipeline section (only shown if there is any referral activity)
+    ref_section = ''
+    if ref_total > 0 or ref_ready:
+        ref_rows = ''.join(
+            f'<tr><td style="padding:6px 12px;font-size:11px;color:#1e293b">{name}</td>'
+            f'<td style="padding:6px 12px;font-size:11px;font-weight:700;color:#7c3aed">{cnt} referral{"s" if cnt>1 else ""}</td></tr>'
+            for name, cnt in ref_top
+        )
+        ready_rows = ''.join(
+            f'<tr><td style="padding:4px 12px;font-size:11px;color:#1e293b">{name}</td>'
+            f'<td style="padding:4px 12px;font-size:10px;color:#64748b">{days}d client &bull; {visits} visit{"s" if visits!=1 else ""}</td></tr>'
+            for name, days, visits in ref_ready
+        )
+        ref_section = f"""
+        <div style="margin-bottom:24px">
+          <div style="font-size:13px;font-weight:800;color:#7c3aed;margin-bottom:8px">&#x1F49C; Referral Pipeline</div>
+          <div style="background:#faf5ff;border:1px solid #ddd8f5;border-radius:8px;padding:12px 16px">
+            <div style="font-size:11px;color:#5b21b6;margin-bottom:8px">Total referred clients: <strong>{ref_total}</strong></div>
+            {f'<table style="width:100%;border-collapse:collapse;margin-bottom:8px">{ref_rows}</table>' if ref_rows else ''}
+            {f'<div style="font-size:11px;color:#5b21b6;font-weight:700;margin-top:8px">Clients ready to ask ({len(ref_ready)}):</div><table style="width:100%;border-collapse:collapse">{ready_rows}</table>' if ready_rows else ''}
+          </div>
+        </div>"""
+
     html = f"""<!DOCTYPE html>
 <html>
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -261,6 +339,7 @@ def build_email(current, changes, stats):
     <!-- Body -->
     <div style="background:#f8fafc;padding:20px 24px;border-radius:0 0 12px 12px">
       {sections}
+      {ref_section}
 
       <!-- Open app CTA -->
       <div style="text-align:center;padding:16px 0">
@@ -338,10 +417,13 @@ def main():
 
     changes = compare(current, previous)
     stats   = counts(current)
+    customers_data = load_customers()
+    ref_total, ref_top, ref_ready = get_referral_stats(customers_data, current)
 
     print(f"  Changes: {len(changes['emergency_closures'])} closures, {len(changes['new_callbacks'])} callbacks, {len(changes['new_ice_fresh'])} ice viol.")
+    print(f"  Referrals: {ref_total} total, {len(ref_ready)} clients ready to ask")
 
-    subject, html = build_email(current, changes, stats)
+    subject, html = build_email(current, changes, stats, ref_total, ref_top, ref_ready)
     print(f'  Subject: {subject}')
 
     send_email(subject, html)

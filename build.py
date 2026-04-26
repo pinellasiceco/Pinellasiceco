@@ -1657,6 +1657,15 @@ header{background:var(--navy);
       <div class="grid" id="nsy-grid"></div>
     </div>
 
+    <!-- ── ASK FOR REFERRAL ──────────────────────────────── -->
+    <div id="referral-remind" style="margin-bottom:18px;display:none">
+      <div class="tsect-hdr">
+        <span>&#x1F49C; Ask for a Referral</span>
+        <span class="tsect-sub">Happy clients who are ready to make introductions.</span>
+      </div>
+      <div id="referral-remind-list"></div>
+    </div>
+
     <!-- ── STRIKE ZONE ──────────────────────────────────── -->
     <div id="strike-zone-section" style="margin-bottom:18px">
       <div class="tsect-hdr">
@@ -4078,28 +4087,9 @@ function showCard(id){
     // Close deal (Intro / Recurring / One-Time / Churned)
     if(bid==='sc-won-intro'||bid==='sc-won-rec'||bid==='sc-won-once'||bid==='sc-lost-btn'){
       var wonStatus=bid==='sc-won-intro'?'customer_intro':bid==='sc-won-rec'?'customer_recurring':bid==='sc-won-once'?'customer_once':'churned';
-      var wonNow=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-      customers[p.id]={
-        status:wonStatus,won_date:wonNow,
-        service_type:wonStatus==='customer_recurring'?'recurring':wonStatus==='customer_intro'?'intro':'one_time',
-        monthly:wonStatus==='customer_recurring'?p.monthly:0,
-        onetime:wonStatus==='customer_once'?p.onetime:wonStatus==='customer_intro'?99:0,
-        machines:p.machines,name:p.name,address:p.address,city:p.city,phone:ph,
-        notes:'',last_service:'',next_service:'',hubspot_url:'',square_url:'',
-        machine_brand:'',machine_model:'',machine_type:'',filter_type:'',
-        filter_installed:'',contract_start:'',contract_term:6,contract_renewal:'',
-        service_history:[],atp_history:[],vendor_name:'',
-      };
-      custSave();p.status=wonStatus;
-      if(!log[p.id])log[p.id]=[];
-      log[p.id].push({outcome:wonStatus,date:wonNow,notes:'Deal closed'});
-      lSave();
-      if(wonStatus==='customer_recurring'||wonStatus==='customer_intro')buildAnnualSchedule(p.id);
-      bg.remove();
-      toast(wonStatus==='customer_intro'?'🔥 Intro booked! $99 first visit':
-            wonStatus==='customer_recurring'?'🎉 Won! Added to recurring clients.':
-            wonStatus==='churned'?'Marked lost/churned':'🧼 Won! One-time service recorded.');
-      sw('customers');return;
+      if(wonStatus==='churned'){scExecWon(p,wonStatus,null,ph,bg);return;}
+      _sc.wonStatus=wonStatus;_sc.ph=ph;_sc.bg=bg;
+      scShowReferralCapture();return;
     }
 
     // Vendor save
@@ -4541,6 +4531,109 @@ function custLoad(){
 }
 function custSave(){try{localStorage.setItem('pic_customers',JSON.stringify(customers));}catch(e){}}
 
+// ── REFERRAL CAPTURE ──────────────────────────────────────────────────────────
+function scExecWon(p,wonStatus,referrerId,ph,bgEl){
+  var wonNow=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  var refName='';
+  if(referrerId){var rp=P.find(function(x){return x.id==referrerId;});refName=rp?rp.name:'';}
+  customers[p.id]={
+    status:wonStatus,won_date:wonNow,
+    service_type:wonStatus==='customer_recurring'?'recurring':wonStatus==='customer_intro'?'intro':'one_time',
+    monthly:wonStatus==='customer_recurring'?p.monthly:0,
+    onetime:wonStatus==='customer_once'?p.onetime:wonStatus==='customer_intro'?99:0,
+    machines:p.machines,name:p.name,address:p.address,city:p.city,phone:ph,
+    notes:'',last_service:'',next_service:'',hubspot_url:'',square_url:'',
+    machine_brand:'',machine_model:'',machine_type:'',filter_type:'',
+    filter_installed:'',contract_start:'',contract_term:6,contract_renewal:'',
+    service_history:[],atp_history:[],vendor_name:'',
+    referred_by:referrerId||null,referred_by_name:refName,
+    referrals:[],last_referral_ask:null,
+  };
+  if(referrerId&&customers[referrerId]){
+    if(!customers[referrerId].referrals)customers[referrerId].referrals=[];
+    customers[referrerId].referrals.push({id:p.id,name:p.name,date:wonNow,status:wonStatus});
+  }
+  custSave();p.status=wonStatus;
+  if(!log[p.id])log[p.id]=[];
+  log[p.id].push({outcome:wonStatus,date:wonNow,notes:'Deal closed'+(refName?' · Referred by '+refName:'')});
+  lSave();
+  if(wonStatus==='customer_recurring'||wonStatus==='customer_intro')buildAnnualSchedule(p.id);
+  if(bgEl)bgEl.remove();
+  toast(wonStatus==='customer_intro'?'🔥 Intro booked! $99 first visit':
+        wonStatus==='customer_recurring'?'🎉 Won! Added to recurring clients.':
+        '🧼 Won! One-time service recorded.');
+  sw('customers');
+}
+
+function scShowReferralCapture(){
+  var p=_sc.p;if(!p)return;
+  var ph=_sc.ph||'';var wonStatus=_sc.wonStatus||'customer_recurring';var bgEl=_sc.bg;
+  var clients=P.filter(function(x){
+    return ['customer_recurring','customer_intro','customer_once'].indexOf(x.status)>=0&&x.id!==p.id;
+  }).sort(function(a,b){return a.name.localeCompare(b.name);});
+  var selectedId=null;
+  function clientHTML(list){
+    if(!list.length)return '<div style="padding:10px;font-size:12px;color:#94a3b8;text-align:center">No matching clients</div>';
+    return list.map(function(c){
+      var refCnt=((customers[c.id]||{}).referrals||[]).length;
+      var sel=c.id===selectedId;
+      return '<div data-refid="'+c.id+'" style="padding:9px 10px;border-radius:8px;cursor:pointer;border:2px solid '+(sel?'#059669':'#e2e8f0')+';background:'+(sel?'#ecfdf5':'#fff')+';margin-bottom:5px;display:flex;justify-content:space-between;align-items:center;touch-action:manipulation">'
+        +'<div><div style="font-size:12px;font-weight:700;color:#0f1f38">'+c.name+'</div>'
+        +'<div style="font-size:9px;color:#94a3b8">'+c.city+'</div></div>'
+        +(refCnt?'<span style="font-size:9px;font-weight:700;color:#7c3aed;background:#f5f3ff;padding:2px 6px;border-radius:10px">'+refCnt+' ref'+(refCnt>1?'s':'')+'</span>':'')
+        +'</div>';
+    }).join('');
+  }
+  var ol=document.createElement('div');
+  ol.id='ref-overlay';
+  ol.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:10002;display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box';
+  ol.innerHTML='<div style="background:#fff;border-radius:14px;padding:20px;width:100%;max-width:380px;max-height:80vh;display:flex;flex-direction:column;overflow:hidden">'
+    +'<div style="font-size:16px;font-weight:800;color:#0f1f38;margin-bottom:4px">🎉 Great close!</div>'
+    +'<div style="font-size:12px;color:#475569;margin-bottom:14px">Were you referred by another client?</div>'
+    +'<input id="ref-search" type="text" placeholder="Search clients…" style="width:100%;padding:9px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:10px">'
+    +'<div id="ref-list" style="overflow-y:auto;flex:1;margin-bottom:14px;max-height:220px"></div>'
+    +'<div style="display:flex;gap:8px;flex-shrink:0">'
+    +'<button id="ref-skip" style="flex:1;padding:10px;border:1px solid #e2e8f0;border-radius:9px;background:#f8fafc;color:#64748b;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Skip — no referral</button>'
+    +'<button id="ref-save" style="flex:1;padding:10px;border:none;border-radius:9px;background:#059669;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Save with referral</button>'
+    +'</div></div>';
+  document.body.appendChild(ol);
+  var listEl=document.getElementById('ref-list');
+  var searchEl=document.getElementById('ref-search');
+  listEl.innerHTML=clientHTML(clients);
+  searchEl.addEventListener('input',function(){
+    var q=this.value.toLowerCase();
+    listEl.innerHTML=clientHTML(clients.filter(function(c){return !q||c.name.toLowerCase().indexOf(q)>=0||c.city.toLowerCase().indexOf(q)>=0;}));
+  },false);
+  function rerender(){
+    var q=(searchEl.value||'').toLowerCase();
+    listEl.innerHTML=clientHTML(clients.filter(function(c){return !q||c.name.toLowerCase().indexOf(q)>=0||c.city.toLowerCase().indexOf(q)>=0;}));
+  }
+  function doSkip(){ol.remove();scExecWon(p,wonStatus,null,ph,bgEl);}
+  function doSave(){ol.remove();scExecWon(p,wonStatus,selectedId,ph,bgEl);}
+  ol.addEventListener('touchend',function(e){
+    if(e.target===ol){e.preventDefault();doSkip();return;}
+    var item=e.target.closest('[data-refid]');
+    if(item){e.preventDefault();selectedId=parseInt(item.dataset.refid);rerender();return;}
+    if(e.target.closest('#ref-skip')){e.preventDefault();doSkip();return;}
+    if(e.target.closest('#ref-save')){e.preventDefault();doSave();return;}
+  },false);
+  ol.addEventListener('click',function(e){
+    if(e.target===ol){doSkip();return;}
+    var item=e.target.closest('[data-refid]');
+    if(item){selectedId=parseInt(item.dataset.refid);rerender();return;}
+    if(e.target.closest('#ref-skip')){doSkip();return;}
+    if(e.target.closest('#ref-save')){doSave();return;}
+  },false);
+}
+
+function markReferralAsked(id){
+  if(!customers[id])return;
+  customers[id].last_referral_ask=localISO(new Date());
+  custSave();
+  toast('✓ Marked — will resurface in 60 days');
+  renderBriefing();
+}
+
 function markWon(status){
   if(!cur)return;
   const p=cur;
@@ -4733,12 +4826,15 @@ function rCust(){
           +'<div style="font-weight:700;font-size:12px;color:var(--navy)">'+p.name+'</div>'
           +'<div style="font-size:10px;color:var(--sub)">'+p.city+', '+p.county+(p.phone?' &bull; '+p.phone:'')+'</div>'
           +'<div style="font-size:9px;font-weight:700;color:'+col+';margin-top:2px">'+lbl+'</div>'
+          +(c.referred_by_name?'<div style="font-size:9px;color:#7c3aed;margin-top:2px">&#x1F91D; Ref by '+c.referred_by_name+'</div>':'')
         +'</div>'
         +'<div style="text-align:right;flex-shrink:0;margin-left:10px">'
           +(rev?'<div style="font-size:13px;font-weight:800;color:var(--grn)">'+rev+'</div>':'')
           +(c.won_date?'<div style="font-size:9px;color:var(--sub)">Since '+c.won_date+'</div>':'')
+          +((c.referrals&&c.referrals.length)?'<div style="font-size:9px;font-weight:700;color:#7c3aed;margin-top:2px">&#x1F49C; '+c.referrals.length+' referral'+(c.referrals.length>1?'s':'')+'</div>':'')
         +'</div>'
       +'</div>'
+      +((c.referrals&&c.referrals.length)?'<div style="padding:5px 0;display:flex;flex-wrap:wrap;gap:4px">'+c.referrals.map(r=>'<span style="font-size:9px;color:#7c3aed;background:#faf5ff;border:1px solid #ddd8f5;border-radius:10px;padding:2px 7px">&#x1F49C; '+r.name+' ('+r.date+')</span>').join('')+'</div>':'')
       // Service tracking row
       +'<div style="background:#f5f8fa;border-radius:7px;padding:8px;display:flex;flex-direction:column;gap:5px">'
         +'<div style="display:flex;justify-content:space-between;align-items:center">'
@@ -5211,6 +5307,48 @@ function renderBriefing(){
       if(nsyGrid){nsyGrid.innerHTML=newBizs.map(p=>cardHTML(p)).join('');attachGridListeners(nsyGrid);}
     } else {
       nsyEl.style.display='none';
+    }
+  }
+
+  // ── ASK FOR REFERRAL REMINDER ─────────────────────────────────────────
+  const refRemindEl=document.getElementById('referral-remind');
+  const refRemindList=document.getElementById('referral-remind-list');
+  if(refRemindEl&&refRemindList){
+    const refCandidates=P.filter(function(rp){
+      const rc=customers[rp.id];
+      if(!rc||!rc.status||rc.status==='prospect'||rc.status==='churned')return false;
+      if(!rc.won_date)return false;
+      const wonD=parseLD(rc.won_date)||now;
+      if(Math.floor((now-wonD)/864e5)<30)return false;
+      if(!rc.service_history||!rc.service_history.length)return false;
+      if(rc.last_referral_ask){
+        const lastAsk=parseLD(rc.last_referral_ask);
+        if(lastAsk&&Math.floor((now-lastAsk)/864e5)<60)return false;
+      }
+      return true;
+    }).slice(0,3);
+    if(refCandidates.length){
+      refRemindEl.style.display='block';
+      refRemindList.innerHTML=refCandidates.map(function(rp){
+        const rc=customers[rp.id]||{};
+        const visits=(rc.service_history||[]).length;
+        const wonD=parseLD(rc.won_date)||now;
+        const daysSince=Math.floor((now-wonD)/864e5);
+        const sid='ref-script-'+rp.id;
+        return '<div style="background:#fff;border:1px solid #ddd8f5;border-radius:10px;padding:12px;margin-bottom:8px">'
+          +'<div style="font-weight:700;font-size:12px;color:#0f1f38">'+rp.name+'</div>'
+          +'<div style="font-size:9px;color:#94a3b8;margin-bottom:8px">'+rp.city+' &bull; Client '+daysSince+'d &bull; '+visits+' visit'+(visits!==1?'s':'')+'</div>'
+          +'<div id="'+sid+'" style="background:#faf5ff;border-radius:7px;padding:7px 10px;font-size:10px;color:#5b21b6;font-style:italic;margin-bottom:8px;display:none">'
+            +'&ldquo;Hey &mdash; quick favor. If you know any other restaurant owners who might want their ice machine tested, I&rsquo;d really appreciate the intro. I&rsquo;ll take care of them the same way I take care of you.&rdquo;'
+          +'</div>'
+          +'<div style="display:flex;gap:6px;flex-wrap:wrap">'
+            +'<button onclick="event.stopPropagation();(function(){var s=document.getElementById(\''+sid+'\');if(s)s.style.display=s.style.display===\'none\'?\'block\':\'none\';})()" ontouchend="event.stopPropagation();event.preventDefault();(function(){var s=document.getElementById(\''+sid+'\');if(s)s.style.display=s.style.display===\'none\'?\'block\':\'none\';})()" style="font-size:9px;padding:5px 9px;border:1px solid #ddd8f5;border-radius:6px;background:#faf5ff;color:#7c3aed;cursor:pointer;font-family:inherit;touch-action:manipulation">What to say &#x25BE;</button>'
+            +'<button onclick="event.stopPropagation();markReferralAsked('+rp.id+')" ontouchend="event.stopPropagation();event.preventDefault();markReferralAsked('+rp.id+')" style="font-size:9px;padding:5px 9px;border:1px solid #6ee7b7;border-radius:6px;background:#ecfdf5;color:#059669;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Asked</button>'
+            +'<button onclick="event.stopPropagation();openM('+rp.id+')" ontouchend="event.stopPropagation();event.preventDefault();openM('+rp.id+')" style="font-size:9px;padding:5px 9px;border:1px solid #e2e8f0;border-radius:6px;background:#f8fafc;color:#475569;cursor:pointer;font-family:inherit;touch-action:manipulation">View Client</button>'
+          +'</div></div>';
+      }).join('');
+    } else {
+      refRemindEl.style.display='none';
     }
   }
 
