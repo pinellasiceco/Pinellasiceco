@@ -5485,7 +5485,7 @@ function renderBriefing(){
             +'&ldquo;Hey &mdash; quick favor. If you know any other restaurant owners who might want their ice machine tested, I&rsquo;d really appreciate the intro. I&rsquo;ll take care of them the same way I take care of you.&rdquo;'
           +'</div>'
           +'<div style="display:flex;gap:6px;flex-wrap:wrap">'
-            +'<button onclick="event.stopPropagation();(function(){var s=document.getElementById(\''+sid+'\');if(s)s.style.display=s.style.display===\'none\'?\'block\':\'none\';})()" ontouchend="event.stopPropagation();event.preventDefault();(function(){var s=document.getElementById(\''+sid+'\');if(s)s.style.display=s.style.display===\'none\'?\'block\':\'none\';})()" style="font-size:9px;padding:5px 9px;border:1px solid #ddd8f5;border-radius:6px;background:#faf5ff;color:#7c3aed;cursor:pointer;font-family:inherit;touch-action:manipulation">What to say &#x25BE;</button>'
+            +'<button onclick="event.stopPropagation();toggleRefScript(this)" ontouchend="event.stopPropagation();event.preventDefault();toggleRefScript(this)" data-sid="'+sid+'" style="font-size:9px;padding:5px 9px;border:1px solid #ddd8f5;border-radius:6px;background:#faf5ff;color:#7c3aed;cursor:pointer;font-family:inherit;touch-action:manipulation">What to say &#x25BE;</button>'
             +'<button onclick="event.stopPropagation();markReferralAsked('+rp.id+')" ontouchend="event.stopPropagation();event.preventDefault();markReferralAsked('+rp.id+')" style="font-size:9px;padding:5px 9px;border:1px solid #6ee7b7;border-radius:6px;background:#ecfdf5;color:#059669;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Asked</button>'
             +'<button onclick="event.stopPropagation();openM('+rp.id+')" ontouchend="event.stopPropagation();event.preventDefault();openM('+rp.id+')" style="font-size:9px;padding:5px 9px;border:1px solid #e2e8f0;border-radius:6px;background:#f8fafc;color:#475569;cursor:pointer;font-family:inherit;touch-action:manipulation">View Client</button>'
           +'</div></div>';
@@ -6089,6 +6089,7 @@ function openServiceLog(id){
 let _svcType='maintenance_60';
 function closeSvcLog(){const el=document.getElementById('svc-log-bg');if(el)el.remove();}
 function toggleStep(el){const next=el.nextElementSibling;if(next)next.style.display=next.style.display==='none'?'block':'none';}
+function toggleRefScript(btn){var id=btn.getAttribute('data-sid');var s=document.getElementById(id);if(s)s.style.display=s.style.display==='none'?'block':'none';}
 
 function getDiagram(brand){
   const diagrams={
