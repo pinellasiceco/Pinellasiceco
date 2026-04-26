@@ -76,9 +76,10 @@ def load_customers():
 
 def get_referral_stats(customers_data, current):
     """Summarise referral activity from customer records."""
-    total = sum(len(c.get('referrals', [])) for c in customers_data.values())
+    custs = {k: v for k, v in customers_data.items() if isinstance(v, dict)}
+    total = sum(len(c.get('referrals', [])) for c in custs.values())
     top = sorted(
-        [(c.get('name', '?'), len(c.get('referrals', []))) for c in customers_data.values() if c.get('referrals')],
+        [(c.get('name', '?'), len(c.get('referrals', []))) for c in custs.values() if c.get('referrals')],
         key=lambda x: x[1], reverse=True
     )[:3]
     # Clients ready to ask (30+ days, 1+ service visit, not asked in 60d)
@@ -86,7 +87,7 @@ def get_referral_stats(customers_data, current):
     ready = []
     for p in current:
         pid = str(p.get('id'))
-        c = customers_data.get(pid, {})
+        c = custs.get(pid, {})
         won_date = c.get('won_date', '')
         if not won_date:
             continue
