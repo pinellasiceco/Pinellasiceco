@@ -587,6 +587,44 @@ def save_geo_cache(cache, data_dir=None):
 # ──────────────────────────────────────────────────────────────────────────────
 # MAIN PIPELINE
 # ──────────────────────────────────────────────────────────────────────────────
+def load_prev_snapshot(data_dir):
+    """Load yesterday's snapshot for new-since-yesterday classification."""
+    if not data_dir:
+        return {}
+    snap_path = Path(data_dir) / 'snapshot_prev.json'
+    if not snap_path.exists():
+        return {}
+    try:
+        raw = json.loads(snap_path.read_text(encoding='utf-8'))
+        if isinstance(raw, list):
+            return {str(r['id']): r for r in raw if 'id' in r}
+        if isinstance(raw, dict):
+            return {str(k): v for k, v in raw.items()}
+        return {}
+    except Exception:
+        return {}
+
+
+def classify_new(record, prev_snapshot):
+    """Return new_reason string or None. Only called when prev_snapshot is non-empty."""
+    rid = str(record.get('id', ''))
+    prev = prev_snapshot.get(rid)
+    if prev is None:
+        return 'new_to_dataset'
+    if record.get('priority') == 'CALLBACK' and prev.get('priority') != 'CALLBACK':
+        return 'new_callback'
+    if record.get('ice_count', 0) > prev.get('ice_count', 0):
+        return 'new_ice_violation'
+    rank = {'CALLBACK': 0, 'HOT': 1, 'WARM': 2, 'WATCH': 3, 'LATER': 4}
+    curr_r = rank.get(record.get('priority', ''), 4)
+    prev_r = rank.get(prev.get('priority', ''), 4)
+    if curr_r < prev_r and record.get('priority') in ('CALLBACK', 'HOT'):
+        return 'priority_escalated'
+    if record.get('score', 0) - prev.get('score', 0) >= 10:
+        return 'score_jump'
+    return None
+
+
 def run(csv_paths):
     print(f"\n{'='*55}")
     print(f"  Pinellas Ice Co \u2014 Building Prospect Tool")
@@ -1016,6 +1054,22 @@ def run(csv_paths):
 
     PO = {'CALLBACK':0,'HOT':1,'WARM':2,'WATCH':3,'LATER':4}
     records.sort(key=lambda x: (PO.get(x['priority'], 5), -x['score']))
+
+    # ── NEW SINCE YESTERDAY ──────────────────────────────────────────────────
+    prev_snapshot = load_prev_snapshot(data_dir)
+    is_first_run = len(prev_snapshot) == 0
+    if is_first_run:
+        print("  New-since-yesterday: first run, no baseline (new_reason=None for all)")
+        for rec in records:
+            rec['new_reason'] = None
+    else:
+        n_new = 0
+        for rec in records:
+            reason = classify_new(rec, prev_snapshot)
+            rec['new_reason'] = reason
+            if reason:
+                n_new += 1
+        print(f"  New since yesterday: {n_new} businesses flagged")
 
     # Save geocoding cache for future runs
     save_geo_cache(geo_cache, data_dir)
@@ -1592,6 +1646,15 @@ header{background:var(--navy);
       </div>
       <div class="grid" id="nurture-grid"></div>
       <div class="tempty" id="nurture-empty" style="display:none">No follow-ups due. &#x2713;</div>
+    </div>
+
+    <!-- ── NEW SINCE YESTERDAY ──────────────────────────────── -->
+    <div id="new-since-yesterday" style="margin-bottom:18px;display:none">
+      <div class="tsect-hdr">
+        <span>&#x1F195; New Since Yesterday</span>
+        <span class="tsect-sub">Escalated to CALLBACK/HOT, new ice violation, or big score jump since last rebuild.</span>
+      </div>
+      <div class="grid" id="nsy-grid"></div>
     </div>
 
     <!-- ── STRIKE ZONE ──────────────────────────────────── -->
@@ -2824,6 +2887,9 @@ function cardHTML(p){
   const tierH=p.tier&&p.tier!=='COLD'?(' <span style="font-size:8px;font-weight:700;padding:2px 6px;border-radius:20px;background:'+(tbg[p.tier]||'#f1f5f9')+';color:'+(tc[p.tier]||'#64748b')+'">'+p.tier+'</span>'):'';
   const revenueH=p.monthly?('<div style="font-size:10px;font-weight:700;color:#059669;margin-bottom:5px">$'+p.monthly+'/mo &bull; '+(p.machines>1?p.machines+' machines':'1 machine')+'</div>'):'';
   const emergH=p.is_emergency?'<span class="emerg-badge">&#x1F6A8; EMERGENCY</span>':'';
+  const _nsyLabels={'new_callback':'&#x1F195; CALLBACK','new_ice_violation':'&#x1F195; Ice Viol.','priority_escalated':'&#x1F195; Escalated','score_jump':'&#x1F195; Score &#x2191;','new_to_dataset':'&#x1F195; New'};
+  const newBadge=p.new_reason?('<span style="font-size:8px;font-weight:700;padding:2px 6px;border-radius:20px;background:#fef9c3;color:#854d0e;border:1px solid #fde047;margin-left:4px">'+(_nsyLabels[p.new_reason]||'&#x1F195;')+'</span>'):'';
+
   const confCol=p.confidence>=75?'#059669':p.confidence>=50?'#d97706':'#9ca3af';
   const confH='<span style="font-size:8px;font-weight:600;color:'+confCol+'" title="Prediction confidence">'+p.confidence+'% conf</span>';
   const franchH=p.biz_type==='franchise'?'<span style="font-size:8px;padding:1px 5px;border-radius:10px;background:#f0f9ff;color:#0ea5e9;border:1px solid #bae6fd">Franchise</span>':'';
@@ -2831,7 +2897,7 @@ function cardHTML(p){
     ?('<div style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;display:inline-block;margin-bottom:4px;background:'+(p.status==='customer_recurring'?'#ecfdf5':p.status==='customer_once'?'#eff6ff':'#fff7f5')+';color:'+(p.status==='customer_recurring'?'#059669':p.status==='customer_once'?'var(--blu)':'var(--ora)')+'">'+({'customer_recurring':'Recurring Customer','customer_once':'One-Time Customer','quoted':'Quote Sent','churned':'Churned'}[p.status]||p.status)+'</div>')
     :'';
   return '<div class="card '+p.priority+(isC(p.id)?' done':'')+'" data-id="'+p.id+'">'
-    +'<div class="ctop"><div class="cname">'+p.name+tierH+emergH+'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px"><span class="pbadge '+p.priority+'">'+p.priority+'</span>'+confH+'</div></div>'
+    +'<div class="ctop"><div class="cname">'+p.name+tierH+emergH+newBadge+'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px"><span class="pbadge '+p.priority+'">'+p.priority+'</span>'+confH+'</div></div>'
     +'<div class="cloc">'+p.city+', '+p.county+' '+franchH+'</div>'
     +custStatusH+revenueH+phH+ratH+callH+hrH+iceH+cbH+codesH+insH
     +'<div class="cmeta">'
@@ -5041,6 +5107,21 @@ function renderBriefing(){
         +fuSection('📆 This Week','#d97706',fuSoon)
         +fuSection('🔭 Upcoming','#2563eb',fuUpcoming);
       attachGridListeners(nGrid);
+    }
+  }
+
+  // ── NEW SINCE YESTERDAY ───────────────────────────────────────────────
+  const nsyEl=document.getElementById('new-since-yesterday');
+  const nsyGrid=document.getElementById('nsy-grid');
+  if(nsyEl){
+    const newBizs=P.filter(p=>p.new_reason&&!isC(p.id))
+      .sort((a,b)=>(PO[a.priority]??99)-(PO[b.priority]??99)||(b.score||0)-(a.score||0))
+      .slice(0,5);
+    if(newBizs.length){
+      nsyEl.style.display='block';
+      if(nsyGrid){nsyGrid.innerHTML=newBizs.map(p=>cardHTML(p)).join('');attachGridListeners(nsyGrid);}
+    } else {
+      nsyEl.style.display='none';
     }
   }
 

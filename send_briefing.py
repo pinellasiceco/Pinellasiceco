@@ -42,13 +42,16 @@ def save_snapshot(data):
     """Save this week's data as next week's comparison baseline."""
     DATA_DIR.mkdir(exist_ok=True)
     snap = DATA_DIR / 'snapshot_prev.json'
-    # Save lightweight version — just id, score, priority, days_until
+    # Save fields needed by build.py's classify_new() for tomorrow's comparison
     lite = [{
-        'id':        r.get('id'),
-        'score':     r.get('score',0),
-        'priority':  r.get('priority',''),
-        'days_until':r.get('days_until',999),
-        'ice_fresh': r.get('ice_fresh', False),
+        'id':          r.get('id'),
+        'score':       r.get('score', 0),
+        'priority':    r.get('priority', ''),
+        'days_until':  r.get('days_until', 999),
+        'ice_fresh':   r.get('ice_fresh', False),
+        'n_callbacks': r.get('n_callbacks', 0),
+        'ice_count':   r.get('ice_count', 0),
+        'last_insp':   r.get('last_insp', ''),
     } for r in data]
     snap.write_text(json.dumps(lite), encoding='utf-8')
 
@@ -132,6 +135,37 @@ def build_email(current, changes, stats):
     has_changes = any(len(v) > 0 for v in changes.values())
 
     sections = ''
+
+    # New Since Yesterday
+    _nsy_labels = {
+        'new_callback':       '🆕 New CALLBACK',
+        'new_ice_violation':  '🆕 New Ice Viol.',
+        'priority_escalated': '🆕 Escalated',
+        'score_jump':         '🆕 Score ↑',
+        'new_to_dataset':     '🆕 New Business',
+    }
+    new_since = sorted(
+        [r for r in current if r.get('new_reason')],
+        key=lambda x: ({'CALLBACK':0,'HOT':1,'WARM':2,'WATCH':3,'LATER':4}.get(x.get('priority',''), 4),
+                       -x.get('score', 0))
+    )[:8]
+    if new_since:
+        rows = ''.join(biz_row(r, _nsy_labels.get(r.get('new_reason',''), '🆕 New')) for r in new_since)
+        sections += f"""
+        <div style="margin-bottom:24px">
+          <div style="font-size:13px;font-weight:800;color:#854d0e;margin-bottom:8px">
+            &#x1F195; New Since Yesterday ({len(new_since)})
+          </div>
+          <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden">
+            <tr style="background:#fef9c3"><th style="padding:8px 12px;text-align:left;font-size:11px;color:#854d0e">Business</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#854d0e">City</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#854d0e">Phone</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#854d0e">Score</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#854d0e">Reason</th></tr>
+            {rows}
+          </table>
+        </div>"""
+    else:
+        sections += """
+        <div style="background:#f0fdf4;border:1px solid #6ee7b7;border-radius:8px;padding:12px 16px;margin-bottom:16px">
+          <div style="font-size:12px;font-weight:700;color:#059669">&#x2713; No new escalations since yesterday</div>
+        </div>"""
 
     # Emergency closures
     if changes['emergency_closures']:
