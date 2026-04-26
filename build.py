@@ -2763,6 +2763,22 @@ function loadRouteState(){
     routeAnchor=s.anchor?P.find(function(p){return p.id===s.anchor;})||null:null;
   }catch(e){route=[];routeSet=new Set();routeAnchor=null;}
 }
+var _sc={p:null};
+var _scRouteLast=0;
+function scAddRoute(){
+  if(Date.now()-_scRouteLast<400)return;
+  _scRouteLast=Date.now();
+  var p=_sc.p;if(!p)return;
+  addToRoute(p.id);
+  var nowIn=routeSet.has(p.id);
+  var btn=document.getElementById('sc-route-btn');
+  if(btn){
+    btn.textContent=nowIn?'✓ On Route':'📍 Route';
+    btn.style.background=nowIn?'#ecfdf5':'#f0fdf4';
+    btn.style.color=nowIn?'#059669':'#059669';
+    btn.style.border=nowIn?'1px solid #6ee7b7':'none';
+  }
+}
 let svcTab='cal',clientTab='clients';
 
 function setType(t){
@@ -3720,6 +3736,7 @@ function showCard(id){
   id=parseInt(id)||id;
   var p=P.find(function(x){return x.id===id||x.id==id;});
   if(!p){toast('Not found: '+id);return;}
+  _sc.p=p;
 
   var existing=document.getElementById('sc-bg');
   if(existing)existing.remove();
@@ -3914,7 +3931,7 @@ function showCard(id){
         +'<div style="font-size:10px;color:#94a3b8">'+p.address+', '+p.city+', FL '+p.zip+' · #'+p.id+'</div>'
       +'</div>'
       +'<div style="display:flex;gap:6px;align-items:center;flex-shrink:0;margin-left:10px">'
-    +(function(){var _ir=routeSet.has(parseInt(p.id));return '<button id="sc-route-btn" style="border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;font-family:inherit;-webkit-tap-highlight-color:transparent;'+(_ir?'background:#ecfdf5;color:#059669;border:1px solid #6ee7b7':'background:#f0fdf4;color:#059669;border:none')+'">'+(_ir?'&#x2713; On Route':'&#x1F4CD; Route')+'</button>';})()
+    +(function(){var _ir=routeSet.has(parseInt(p.id));return '<button id="sc-route-btn" onclick="event.stopPropagation();scAddRoute()" ontouchend="event.stopPropagation();event.preventDefault();scAddRoute()" style="border-radius:8px;padding:8px 14px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;font-family:inherit;-webkit-tap-highlight-color:transparent;'+(_ir?'background:#ecfdf5;color:#059669;border:1px solid #6ee7b7':'background:#f0fdf4;color:#059669;border:none')+'">'+(_ir?'&#x2713; On Route':'&#x1F4CD; Route')+'</button>';})()
 
     +'<button id="sc-report-btn" style="border:none;background:#fff7ed;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:#ea580c;cursor:pointer;touch-action:manipulation;font-family:inherit;-webkit-tap-highlight-color:transparent">&#x1F4CB; Report</button>'
     +'<button id="sc-close" style="border:none;background:#f1f5f9;border-radius:50%;width:34px;height:34px;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;touch-action:manipulation;color:#475569;font-family:inherit">&#x2715;</button>'
@@ -3972,15 +3989,8 @@ function showCard(id){
     // Close
     if(bid==='sc-close'){bg.remove();return;}
 
-    // +Route — toggle in/out, update button appearance immediately
-    if(bid==='sc-route-btn'){
-      addToRoute(p.id); // handles toggle + saveRouteState + re-render
-      var _nowIn=routeSet.has(p.id);
-      btn.textContent=_nowIn?'✓ On Route':'📍 Route';
-      btn.style.background=_nowIn?'#ecfdf5':'#f0fdf4';
-      btn.style.border=_nowIn?'1px solid #6ee7b7':'none';
-      return;
-    }
+    // +Route — handled by inline onclick/ontouchend → scAddRoute()
+    if(bid==='sc-route-btn'){return;}
 
     // Report
     if(bid==='sc-report-btn'){scStatusReport(p);return;}
