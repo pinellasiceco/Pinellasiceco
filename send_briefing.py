@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 
 RESEND_API_KEY = os.environ.get('RESEND_API_KEY', '')
 TO_EMAIL       = os.environ.get('BRIEFING_EMAIL', 'your@email.com')
-FROM_EMAIL     = 'briefing@pinellasiceco.com'  # Must be verified in Resend
+FROM_EMAIL     = 'onboarding@resend.dev'
 
 DATA_DIR = Path(__file__).parent / 'data'
 
