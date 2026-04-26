@@ -1805,6 +1805,18 @@ header{background:var(--navy);
         <div style="font-size:9px;color:var(--sub);margin-top:6px" id="rhint">Enter start ZIP (or tap Start 📍 on any business). Set time budget. Tap Build Optimal Route.</div>
       </div>
 
+      <!-- YOUR ROUTE — shown when stops exist -->
+      <div id="manual-route-bar" style="display:none;background:#ecfdf5;border:1px solid #6ee7b7;border-radius:10px;padding:10px 12px;flex-shrink:0">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">
+          <div style="font-weight:800;font-size:12px;color:#065f46">&#x1F4CD; YOUR ROUTE &#x2014; <span id="manual-stop-cnt">0</span> stops</div>
+          <div style="display:flex;gap:6px">
+            <button ontouchend="event.preventDefault();openMaps()" onclick="openMaps()" style="font-size:10px;padding:5px 10px;border:none;border-radius:7px;background:#059669;color:#fff;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Maps &#x2197;</button>
+            <button ontouchend="event.preventDefault();clearRoute()" onclick="clearRoute()" style="font-size:10px;padding:5px 10px;border:1px solid #6ee7b7;border-radius:7px;background:#fff;color:#065f46;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">Clear &#x2715;</button>
+          </div>
+        </div>
+        <div id="manual-stops" style="display:flex;flex-direction:column;gap:3px"></div>
+      </div>
+
       <!-- Two-column: list left, route+map right -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;flex:1;min-height:0;overflow:hidden">
 
@@ -2738,6 +2750,19 @@ function hav(la1,lo1,la2,lo2){
 
 let log={},tab='today',selOut=null,selType=null,selReasonVal=null,cur=null,Q='',route=[],routeSet=new Set(),mapPros=[],routeAnchor=null;
 let queueList=[],queueIdx=0;
+
+function saveRouteState(){
+  try{sessionStorage.setItem('pic_route',JSON.stringify({stops:route.map(p=>p.id),anchor:routeAnchor?routeAnchor.id:null}));}catch(e){}
+}
+function loadRouteState(){
+  try{
+    var s=JSON.parse(sessionStorage.getItem('pic_route')||'{}');
+    var ids=s.stops||[];
+    route=ids.map(function(id){return P.find(function(p){return p.id===id;});}).filter(Boolean);
+    routeSet=new Set(ids);
+    routeAnchor=s.anchor?P.find(function(p){return p.id===s.anchor;})||null:null;
+  }catch(e){route=[];routeSet=new Set();routeAnchor=null;}
+}
 let svcTab='cal',clientTab='clients';
 
 function setType(t){
@@ -2889,6 +2914,7 @@ function cardHTML(p){
   const emergH=p.is_emergency?'<span class="emerg-badge">&#x1F6A8; EMERGENCY</span>':'';
   const _nsyLabels={'new_callback':'&#x1F195; CALLBACK','new_ice_violation':'&#x1F195; Ice Viol.','priority_escalated':'&#x1F195; Escalated','score_jump':'&#x1F195; Score &#x2191;','new_to_dataset':'&#x1F195; New'};
   const newBadge=p.new_reason?('<span style="font-size:8px;font-weight:700;padding:2px 6px;border-radius:20px;background:#fef9c3;color:#854d0e;border:1px solid #fde047;margin-left:4px">'+(_nsyLabels[p.new_reason]||'&#x1F195;')+'</span>'):'';
+  const routeBadge=routeSet.has(p.id)?('<span style="font-size:9px;padding:2px 6px;border-radius:4px;background:#ecfdf5;color:#059669;font-weight:700;margin-left:4px">&#x1F4CD; ON ROUTE</span>'):'';
 
   const confCol=p.confidence>=75?'#059669':p.confidence>=50?'#d97706':'#9ca3af';
   const confH='<span style="font-size:8px;font-weight:600;color:'+confCol+'" title="Prediction confidence">'+p.confidence+'% conf</span>';
@@ -2897,7 +2923,7 @@ function cardHTML(p){
     ?('<div style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;display:inline-block;margin-bottom:4px;background:'+(p.status==='customer_recurring'?'#ecfdf5':p.status==='customer_once'?'#eff6ff':'#fff7f5')+';color:'+(p.status==='customer_recurring'?'#059669':p.status==='customer_once'?'var(--blu)':'var(--ora)')+'">'+({'customer_recurring':'Recurring Customer','customer_once':'One-Time Customer','quoted':'Quote Sent','churned':'Churned'}[p.status]||p.status)+'</div>')
     :'';
   return '<div class="card '+p.priority+(isC(p.id)?' done':'')+'" data-id="'+p.id+'">'
-    +'<div class="ctop"><div class="cname">'+p.name+tierH+emergH+newBadge+'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px"><span class="pbadge '+p.priority+'">'+p.priority+'</span>'+confH+'</div></div>'
+    +'<div class="ctop"><div class="cname">'+p.name+tierH+emergH+newBadge+routeBadge+'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px"><span class="pbadge '+p.priority+'">'+p.priority+'</span>'+confH+'</div></div>'
     +'<div class="cloc">'+p.city+', '+p.county+' '+franchH+'</div>'
     +custStatusH+revenueH+phH+ratH+callH+hrH+iceH+cbH+codesH+insH
     +'<div class="cmeta">'
@@ -3385,6 +3411,7 @@ function renderMap(){
 }
 
 function addToRoute(id){
+  id=parseInt(id);
   const p=P.find(x=>x.id===id);if(!p)return;
   if(routeSet.has(id)){
     routeSet.delete(id);route=route.filter(r=>r.id!==id);
@@ -3392,13 +3419,39 @@ function addToRoute(id){
   } else {
     if(route.length>=8){toast('Max 8 stops. Open in Maps first.');return;}
     routeSet.add(id);route.push(p);
-    toast(p.name.slice(0,20)+' added to route ('+route.length+' stops)');
+    toast('✓ '+p.name.slice(0,20)+' added to route ('+route.length+' stops)');
   }
+  saveRouteState();
   renderRList();renderMap();renderDayRoute();
 }
 function renderDayRoute(){
   const dr=document.getElementById('day-route');
+  const mrb=document.getElementById('manual-route-bar');
+  const msc=document.getElementById('manual-stop-cnt');
+  const ms=document.getElementById('manual-stops');
   document.getElementById('stopcnt').textContent=route.length;
+
+  // ── YOUR ROUTE top bar ───────────────────────────────────────────
+  if(mrb){
+    if(route.length){
+      mrb.style.display='block';
+      if(msc)msc.textContent=route.length;
+      if(ms)ms.innerHTML=route.map(function(p,i){
+        return '<div style="display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid #d1fae5">'
+          +'<span style="font-size:9px;font-weight:800;color:#065f46;min-width:16px">'+(i+1)+'.</span>'
+          +'<div style="flex:1;min-width:0;overflow:hidden">'
+            +'<div style="font-size:11px;font-weight:700;color:#065f46;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+p.name+'</div>'
+            +'<div style="font-size:9px;color:#047857">'+p.city+' &bull; <span style="font-weight:700">'+p.priority+'</span></div>'
+          +'</div>'
+          +'<button ontouchend="event.preventDefault();removeStop('+p.id+')" onclick="removeStop('+p.id+')" '
+            +'style="font-size:14px;color:#dc2626;border:none;background:transparent;cursor:pointer;padding:0 4px;font-family:inherit;touch-action:manipulation;line-height:1">&#x2715;</button>'
+          +'</div>';
+      }).join('');
+    } else {
+      mrb.style.display='none';
+    }
+  }
+
   if(!route.length){dr.style.display='none';return;}
   dr.style.display='block';
 
@@ -3588,6 +3641,7 @@ function planMyDay(){
   }
 
   mapPros=candidates.slice(0,100);
+  saveRouteState();
   renderRList();renderMap();renderDayRoute();
   const h=Math.floor(usedMin/60),m=Math.round(usedMin%60);
   const hint=document.getElementById('rhint');
@@ -3609,25 +3663,40 @@ function optimizeRoute(){
     ordered.push(stops.splice(best,1)[0]);
   }
   route=ordered;routeSet=new Set(route.map(r=>r.id));
-  renderRList();renderMap();renderDayRoute();
+  saveRouteState();renderRList();renderMap();renderDayRoute();
   toast('Route sorted by distance');
 }
 
 function openMaps(){
-  if(!route.length){toast('Add stops to your route first');return;}
-  // Build Google Maps directions URL with all route stops
-  const stops=route.filter(p=>p.address);
-  if(!stops.length)return;
-  const url='https://www.google.com/maps/dir/'+stops.map(p=>enc(p.address+', '+p.city+', FL '+p.zip)).join('/');
-  // Use anchor click — most reliable across iOS Safari, PWA, and Chrome
+  if(!route.length){toast('Add stops first — tap &#x1F4CD; Route on any prospect card');return;}
+  // Prefer lat/lon waypoints (cleaner URL, works without address), fallback to address
+  const withCoords=route.filter(p=>p.lat&&p.lon);
+  const zip=(document.getElementById('rzip')||{}).value||'34689';
+  let origin=ZIPS[zip]?(ZIPS[zip][0]+','+ZIPS[zip][1]):'28.1500,-82.7576';
+  if(routeAnchor&&routeAnchor.lat)origin=routeAnchor.lat+','+routeAnchor.lon;
+  let url;
+  if(withCoords.length){
+    const dest=withCoords[withCoords.length-1];
+    const waypoints=withCoords.slice(0,-1).map(p=>p.lat+','+p.lon).join('|');
+    url='https://www.google.com/maps/dir/?api=1&origin='+origin
+      +(waypoints?'&waypoints='+waypoints:'')
+      +'&destination='+dest.lat+','+dest.lon
+      +'&travelmode=driving';
+  } else {
+    const addrs=route.filter(p=>p.address).map(p=>enc(p.address+', '+p.city+', FL'));
+    if(!addrs.length){toast('No addresses found for route stops');return;}
+    url='https://www.google.com/maps/dir/'+addrs.join('/');
+  }
   const a=document.createElement('a');
-  a.href=url; a.target='_blank'; a.rel='noopener noreferrer';
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(()=>document.body.removeChild(a),200);
+  a.href=url;a.target='_blank';a.rel='noopener noreferrer';
+  document.body.appendChild(a);a.click();
+  setTimeout(function(){document.body.removeChild(a);},200);
   toast('Opening Google Maps...');
 }
-function clearRoute(){route=[];routeSet=new Set();routeAnchor=null;renderRList();renderMap();renderDayRoute();}
+function clearRoute(){
+  if(route.length&&!confirm('Clear all '+route.length+' route stop'+(route.length>1?'s':'')+'?'))return;
+  route=[];routeSet=new Set();routeAnchor=null;saveRouteState();renderRList();renderMap();renderDayRoute();
+}
 function clearAnchor(){
   routeAnchor=null;
   renderDayRoute();renderRList();
@@ -3642,7 +3711,7 @@ function setRouteAnchor(id){
   renderRList();
   toast('Route will start from: '+p.name.slice(0,25));
 }
-function removeStop(id){routeSet.delete(id);route=route.filter(r=>r.id!==id);renderRList();renderMap();renderDayRoute();}
+function removeStop(id){id=parseInt(id);routeSet.delete(id);route=route.filter(r=>r.id!==id);saveRouteState();renderRList();renderMap();renderDayRoute();}
 
 // MODAL
 // showCard: opens the full openM modal sheet via iOS-compatible overlay
@@ -3845,7 +3914,8 @@ function showCard(id){
         +'<div style="font-size:10px;color:#94a3b8">'+p.address+', '+p.city+', FL '+p.zip+' · #'+p.id+'</div>'
       +'</div>'
       +'<div style="display:flex;gap:6px;align-items:center;flex-shrink:0;margin-left:10px">'
-    +'<button id="sc-route-btn" style="border:none;background:#f0fdf4;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:#059669;cursor:pointer;touch-action:manipulation;font-family:inherit;-webkit-tap-highlight-color:transparent">&#x1F4CD; +Route</button>'
+    +(function(){var _ir=routeSet.has(parseInt(p.id));return '<button id="sc-route-btn" style="border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;font-family:inherit;-webkit-tap-highlight-color:transparent;'+(_ir?'background:#ecfdf5;color:#059669;border:1px solid #6ee7b7':'background:#f0fdf4;color:#059669;border:none')+'">'+(_ir?'&#x2713; On Route':'&#x1F4CD; Route')+'</button>';})()
+
     +'<button id="sc-report-btn" style="border:none;background:#fff7ed;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:#ea580c;cursor:pointer;touch-action:manipulation;font-family:inherit;-webkit-tap-highlight-color:transparent">&#x1F4CB; Report</button>'
     +'<button id="sc-close" style="border:none;background:#f1f5f9;border-radius:50%;width:34px;height:34px;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;touch-action:manipulation;color:#475569;font-family:inherit">&#x2715;</button>'
     +'</div>'
@@ -3902,8 +3972,15 @@ function showCard(id){
     // Close
     if(bid==='sc-close'){bg.remove();return;}
 
-    // +Route
-    if(bid==='sc-route-btn'){addToRoute(p.id);toast('Added to route');return;}
+    // +Route — toggle in/out, update button appearance immediately
+    if(bid==='sc-route-btn'){
+      addToRoute(p.id); // handles toggle + saveRouteState + re-render
+      var _nowIn=routeSet.has(p.id);
+      btn.textContent=_nowIn?'✓ On Route':'📍 Route';
+      btn.style.background=_nowIn?'#ecfdf5':'#f0fdf4';
+      btn.style.border=_nowIn?'1px solid #6ee7b7':'none';
+      return;
+    }
 
     // Report
     if(bid==='sc-report-btn'){scStatusReport(p);return;}
@@ -6843,7 +6920,7 @@ function deleteContact(bizId,idx){
 // ── INIT ─────────────────────────────────────────────────────────────────────
 // INIT
 function init(){
-  lLoad();phLoad();custLoad();contactsLoad();initSettings();initGoals();setTimeout(function(){renderBriefing();},150);
+  lLoad();phLoad();custLoad();contactsLoad();initSettings();initGoals();loadRouteState();setTimeout(function(){renderBriefing();},150);
   const si=document.getElementById('si');if(si)si.blur();
   // FAB hidden - using tab navigation instead
 
