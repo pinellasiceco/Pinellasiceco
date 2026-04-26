@@ -14,19 +14,25 @@ FROM_EMAIL     = 'briefing@pinellasiceco.com'  # Must be verified in Resend
 DATA_DIR = Path(__file__).parent / 'data'
 
 def load_current():
-    """Load the freshly built prospect data from index.html."""
-    html_path = Path(__file__).parent / 'index.html'
-    if not html_path.exists():
-        return []
-    content = html_path.read_text(encoding='utf-8')
-    start = content.find('const P=') + 8
-    end   = content.find(';\nconst PHONES=', start)
-    if start < 8 or end < 0:
-        return []
-    try:
-        return json.loads(content[start:end])
-    except:
-        return []
+    """Load the freshly built prospect data — prefer prospecting_tool.html (CI output), fall back to index.html."""
+    for fname in ('prospecting_tool.html', 'index.html'):
+        html_path = Path(__file__).parent / fname
+        if not html_path.exists():
+            continue
+        content = html_path.read_text(encoding='utf-8')
+        start = content.find('const P=') + 8
+        end   = content.find(';\nconst PHONES=', start)
+        if start < 8 or end < 0:
+            continue
+        try:
+            data = json.loads(content[start:end])
+            print(f'  Loaded {len(data):,} prospects from {fname}')
+            return data
+        except Exception as e:
+            print(f'  Parse error in {fname}: {e}')
+            continue
+    print('  No prospect data found in prospecting_tool.html or index.html')
+    return []
 
 def load_previous():
     """Load last week's snapshot for comparison."""

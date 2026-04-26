@@ -2765,6 +2765,7 @@ function loadRouteState(){
 }
 var _sc={p:null};
 var _scRouteLast=0;
+var _addRouteTs={};
 function scAddRoute(){
   if(Date.now()-_scRouteLast<400)return;
   _scRouteLast=Date.now();
@@ -3428,6 +3429,7 @@ function renderMap(){
 
 function addToRoute(id){
   id=parseInt(id);
+  var _now=Date.now();if(_addRouteTs[id]&&_now-_addRouteTs[id]<400)return;_addRouteTs[id]=_now;
   const p=P.find(x=>x.id===id);if(!p)return;
   if(routeSet.has(id)){
     routeSet.delete(id);route=route.filter(r=>r.id!==id);
