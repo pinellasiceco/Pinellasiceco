@@ -396,16 +396,27 @@ def send_email(subject, html):
         data = json.loads(resp.read())
         print(f"  Email sent: {data.get('id','OK')}")
         return True
+    except urllib.error.HTTPError as e:
+        body = e.read().decode('utf-8', errors='replace')
+        print(f"  Email HTTP error {e.code}: {body}")
+        raise
     except Exception as e:
         print(f"  Email failed: {e}")
-        return False
+        raise
 
 def main():
     print('\nSending daily briefing email...')
+    print(f'  FROM: {FROM_EMAIL}')
+    print(f'  TO:   {TO_EMAIL}')
+    print(f'  KEY:  {"set (" + RESEND_API_KEY[:8] + "...)" if RESEND_API_KEY else "NOT SET"}')
 
     if not RESEND_API_KEY:
-        print('  RESEND_API_KEY not set — skipping email')
-        return
+        print('  ERROR: RESEND_API_KEY secret is not set in GitHub repo settings.')
+        raise SystemExit(1)
+
+    if TO_EMAIL == 'your@email.com':
+        print('  ERROR: BRIEFING_EMAIL secret is not set — still using placeholder.')
+        raise SystemExit(1)
 
     current  = load_current()
     previous = load_previous()
