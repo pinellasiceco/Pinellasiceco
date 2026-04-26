@@ -1,5 +1,5 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-04-25 (session 3) by Claude Code*
+*Last updated: 2026-04-26 (session 4) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
@@ -45,6 +45,11 @@
 - Optimized build available (hours input triggers TSP routing)
 - Anchor stop supported (`routeAnchor` / `clearAnchor()`)
 - Start 📍 button also uses inline `ontouchend` for iOS reliability
+- **Route state persists across tab switches** via `sessionStorage` (`pic_route`); loaded in `init()`
+- **showCard Route button**: reflects current state on open ("📍 Route" vs "✓ On Route"); toggles instantly with visual border change on tap
+- **YOUR ROUTE bar** (`#manual-route-bar`): appears above candidate list when stops exist; numbered stop list with ✕ per stop, Maps ↗ and Clear ✕ buttons
+- **Route badge** on prospect cards ("📍 ON ROUTE") when prospect is in route
+- **openMaps()**: uses lat/lon waypoints (`?api=1` format) when available; falls back to address-based; home ZIP as origin; `clearRoute()` now confirms before clearing
 
 ### Pipeline Tab
 - `renderPipeline()` groups in_play / intro_set / quoted prospects by follow-up urgency
@@ -75,6 +80,8 @@ None known. If something appears broken, first try force-closing the PWA and reo
 - Nothing from the current feature roadmap is missing
 
 ## Recent Changes
+- **2026-04-26 (s4):** Route+ button fixed — unified sessionStorage state, showCard toggle, YOUR ROUTE bar, route badge on cards, lat/lon openMaps
+- **2026-04-26 (s4):** New Since Yesterday feature — daily diff alert system in Home tab, email, and card badges
 - **2026-04-25:** Architecture rewrite — 5-tab nav, Pipeline tab, Clients/Service sub-tabs, Settings gear button
 - **2026-04-25:** ATP Status Report — 📋 Report button in showCard, print-ready HTML
 - **2026-04-25:** Bug fixes — Route ZIP, manual +Add buttons, remove call scripts, daily cron, soft followup warning
