@@ -389,6 +389,7 @@ def send_email(subject, html):
         headers={
             'Authorization': f'Bearer {RESEND_API_KEY}',
             'Content-Type':  'application/json',
+            'User-Agent':    'PIC-Briefing/1.0',
         }
     )
     try:
