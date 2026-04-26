@@ -22,7 +22,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install requests openpyxl
+        run: pip install requests openpyxl pandas scikit-learn numpy
 
       - name: Download fresh FL DBPR data
         run: python download_data.py
