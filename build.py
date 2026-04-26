@@ -2111,6 +2111,9 @@ header{background:var(--navy);
       </div>
       <button onclick="restoreFromCloud()" ontouchend="event.stopPropagation();event.preventDefault();restoreFromCloud()" style="width:100%;margin-top:8px;padding:9px;background:#059669;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2193; Restore from Cloud</button>
       <div id="sb-last-sync" style="font-size:10px;color:#94a3b8;margin-top:6px;text-align:center"></div>
+      <div style="font-size:10px;color:var(--sub);margin-top:12px;margin-bottom:4px">&#x1F4E7; Email Proxy URL</div>
+      <div style="font-size:9px;color:#94a3b8;margin-bottom:4px;line-height:1.5">Supabase Edge Function URL for sending ATP reports and compliance emails to clients.</div>
+      <input class="phinput" id="sb-email-fn" type="text" placeholder="https://xxxx.supabase.co/functions/v1/send-email" oninput="saveEmailFnUrl()">
     </div>
 
     <div class="dc" style="margin-top:12px">
@@ -2894,6 +2897,21 @@ function initSbSettings(){
   if(lastSyncEl&&lastSync){
     try{var d=new Date(lastSync);lastSyncEl.textContent='Last restore: '+d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});}catch(e){}
   }
+  var emailFnEl=document.getElementById('sb-email-fn');
+  if(emailFnEl)emailFnEl.value=localStorage.getItem('pic_email_fn_url')||'';
+}
+function saveEmailFnUrl(){
+  var v=(document.getElementById('sb-email-fn')||{}).value||'';
+  localStorage.setItem('pic_email_fn_url',v.trim());
+}
+async function sendEmailViaProxy(to,subject,htmlBody){
+  var url=(localStorage.getItem('pic_email_fn_url')||'').trim();
+  if(!url){toast('&#x1F4E7; Email Proxy URL not set — add it in Settings → Cloud Sync');return;}
+  try{
+    var r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,subject,html:htmlBody})});
+    if(r.ok){toast('&#x2713; Email sent to '+to);}
+    else{var t=await r.text().catch(function(){return '';});toast('Email failed: HTTP '+r.status+' '+t.slice(0,80));}
+  }catch(e){toast('Email error: '+e.message);}
 }
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -4985,8 +5003,9 @@ function rCust(){
         +'</div>'
         +serviceDueH
         +'<div style="display:flex;gap:5px;margin-top:3px">'
-          +'<button onclick="event.stopPropagation();openServiceLog('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();openServiceLog('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();openServiceLog('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:none;border-radius:6px;background:var(--grn);color:#fff;font-weight:700;cursor:pointer;font-family:inherit">&#x2713; Log Visit</button>'
-          +'<button onclick="event.stopPropagation();setNextService('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();setNextService('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();setNextService('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:1px solid var(--brd);border-radius:6px;background:var(--surf);color:var(--sub);cursor:pointer;font-family:inherit">Set Next Due</button>'
+          +'<button onclick="event.stopPropagation();openServiceLog('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();openServiceLog('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:none;border-radius:6px;background:var(--grn);color:#fff;font-weight:700;cursor:pointer;font-family:inherit">&#x2713; Log Visit</button>'
+          +'<button onclick="event.stopPropagation();emailComplianceReport('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();emailComplianceReport('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:none;border-radius:6px;background:#0f1f38;color:#fff;font-weight:700;cursor:pointer;font-family:inherit">&#x1F4E7; Email</button>'
+          +'<button onclick="event.stopPropagation();setNextService('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();setNextService('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:1px solid var(--brd);border-radius:6px;background:var(--surf);color:var(--sub);cursor:pointer;font-family:inherit">Set Next</button>'
         +'</div>'
       +'</div>'
       // Action buttons
@@ -5002,6 +5021,13 @@ function rCust(){
       // URL link fields
       +'<div style="display:flex;flex-direction:column;gap:5px;padding:8px;background:#f5f8fa;border-radius:7px">'
         +'<div style="font-size:8px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">&#x1F517; Link Records</div>'
+        +'<div style="display:flex;gap:5px;align-items:center">'
+          +'<span style="font-size:9px;color:#0f1f38;font-weight:600;width:52px;flex-shrink:0">Email</span>'
+          +'<input type="email" placeholder="owner@example.com" value="'+(c.email||'')+'"'
+            +' onchange="saveCustomerEmail('+p.id+',this.value)"'
+            +' onclick="event.stopPropagation()"'
+            +' style="flex:1;padding:5px;border:1px solid var(--brd);border-radius:5px;font-size:10px;font-family:inherit;background:#fff;color:var(--txt);outline:none">'
+        +'</div>'
         +'<div style="display:flex;gap:5px;align-items:center">'
           +'<span style="font-size:9px;color:#ff7a59;font-weight:600;width:52px;flex-shrink:0">HubSpot</span>'
           +'<input type="url" placeholder="Paste HubSpot company URL..." value="'+(c.hubspot_url||'')+'"'
@@ -5090,6 +5116,12 @@ function saveFoundPhone(id){
   toast('\u2713 Phone saved: '+digits);
 }
 function saveHsUrl(id,v){saveCustomerUrl(id,'hubspot_url',v);}
+function saveCustomerEmail(id,v){
+  if(!customers[id])customers[id]={};
+  customers[id].email=v.trim();
+  custSave();
+  toast('Email saved');
+}
 function saveMachineBrand(id,v){saveMachineField(id,'machine_brand',v);}
 function saveMachineType(id,v){saveMachineField(id,'machine_type',v);}
 function saveFilterType(id,v){saveMachineField(id,'filter_type',v);}
@@ -6821,9 +6853,113 @@ function loadReportClient(){
     reportHTML+
     '</div>'+
     '<div style="display:flex;gap:8px;margin-top:10px">'+
-      '<button onclick="printReport()" style="flex:1;padding:10px;border:none;border-radius:8px;background:#0f1f38;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F5A8; Print / Save PDF</button>'+
-      '<button onclick="saveReportAndLog('+id+')" style="flex:1;padding:10px;border:1px solid #059669;border-radius:8px;background:#ecfdf5;color:#059669;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Save &amp; Log Visit</button>'+
+      '<button onclick="printReport()" style="flex:1;padding:10px;border:none;border-radius:8px;background:#0f1f38;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F5A8; Print</button>'+
+      '<button onclick="emailServiceReport('+id+')" style="flex:1;padding:10px;border:none;border-radius:8px;background:#1e40af;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E7; Email</button>'+
+      '<button onclick="saveReportAndLog('+id+')" style="flex:1;padding:10px;border:1px solid #059669;border-radius:8px;background:#ecfdf5;color:#059669;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Save &amp; Log</button>'+
     '</div>';
+}
+
+function emailServiceReport(id){
+  var c=customers[id]||{};
+  var email=(c.email||'').trim();
+  if(!email){toast('No email on file — add it in Link Records on the client card');return;}
+  var content=document.getElementById('report-content');
+  if(!content){toast('Generate the service report first, then email it');return;}
+  var p=P.find(function(x){return x.id===id;});
+  var now=new Date();
+  var dateStr=now.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8">'
+    +'<style>*{box-sizing:border-box}body{margin:0;padding:24px;font-family:system-ui,sans-serif;background:#fff;color:#1e293b;max-width:680px}</style>'
+    +'</head><body>'+content.outerHTML+'</body></html>';
+  var subject='Ice Machine Service Report — '+(p?p.name:id)+' — '+dateStr;
+  sendEmailViaProxy(email,subject,html);
+}
+function emailComplianceReport(id){
+  var p=P.find(function(x){return x.id===id;});
+  var c=customers[id]||{};
+  var email=(c.email||'').trim();
+  if(!email){toast('No email on file — add it in Link Records on the client card');return;}
+  var now=new Date();
+  var dateStr=now.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  var lastSvc=c.service_history&&c.service_history.length?c.service_history[c.service_history.length-1]:null;
+  var atpPre=lastSvc?lastSvc.atp_pre:null;
+  var atpPost=lastSvc?lastSvc.atp:null;
+  var atpStatus='';
+  var atpColor='#64748b';
+  if(atpPost!==null&&atpPost!==undefined&&atpPost!==''){
+    var av=parseInt(atpPost)||0;
+    if(av<=10){atpStatus='PASS';atpColor='#059669';}
+    else if(av<=100){atpStatus='MARGINAL';atpColor='#d97706';}
+    else{atpStatus='FAIL';atpColor='#dc2626';}
+  }
+  var lastSvcDate=c.last_service||'Not recorded';
+  var nextDue=c.next_service||'Not scheduled';
+  var machineParts=[c.machine_brand,c.machine_model,c.machine_serial].filter(Boolean);
+  var machineInfo=machineParts.length?machineParts.join(' &middot; '):'Not recorded';
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8">'
+    +'<title>Ice Machine Compliance Report</title>'
+    +'<style>*{box-sizing:border-box}body{margin:0;padding:24px;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;background:#fff;color:#0f172a;max-width:620px}</style>'
+    +'</head><body>'
+    +'<table style="width:100%;border-collapse:collapse;margin-bottom:16px"><tr>'
+    +'<td style="vertical-align:middle"><div style="font-size:20px;font-weight:900;color:#0f1f38;letter-spacing:-.02em">PINELLAS ICE CO</div>'
+    +'<div style="font-size:10px;color:#64748b">Commercial Ice Machine Sanitation</div></td>'
+    +'<td style="text-align:right;vertical-align:middle">'
+    +'<div style="font-size:15px;font-weight:900;color:#0f1f38">ICE MACHINE COMPLIANCE REPORT</div>'
+    +'<div style="font-size:10px;color:#64748b;margin-top:2px">pinellasiceco.com &middot; '+dateStr+'</div>'
+    +'</td></tr></table>'
+    +'<div style="border-top:2px solid #0f1f38;margin-bottom:14px"></div>'
+    +'<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:14px">'
+    +'<div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:6px">Client</div>'
+    +'<div style="font-size:14px;font-weight:800;color:#0f1f38">'+(p?p.name:'')+'</div>'
+    +'<div style="font-size:11px;color:#475569">'+(p?p.address+', '+p.city+', FL '+p.zip:'')+'</div>'
+    +'</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">'
+    +'<div style="background:#ecfdf5;border:1px solid #6ee7b7;border-radius:8px;padding:12px;text-align:center">'
+    +'<div style="font-size:9px;font-weight:700;color:#059669;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Last Service</div>'
+    +'<div style="font-size:16px;font-weight:900;color:#059669">'+lastSvcDate+'</div>'
+    +'</div>'
+    +'<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px;text-align:center">'
+    +'<div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Next Due</div>'
+    +'<div style="font-size:16px;font-weight:900;color:#0f1f38">'+nextDue+'</div>'
+    +'</div>'
+    +'</div>'
+    +(atpPre||atpPost
+      ?'<div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:14px">'
+        +'<div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:8px">ATP Test Results — Most Recent Service</div>'
+        +'<div style="display:flex;gap:10px">'
+        +(atpPre!==null&&atpPre!==undefined&&atpPre!==''
+          ?'<div style="flex:1;text-align:center;padding:10px;background:#fef2f2;border-radius:6px;border:1px solid #fca5a5">'
+            +'<div style="font-size:22px;font-weight:900;color:#dc2626">'+atpPre+'</div>'
+            +'<div style="font-size:9px;color:#dc2626;font-weight:700">RLU Before</div></div>'
+          :'')
+        +(atpPost!==null&&atpPost!==undefined&&atpPost!==''
+          ?'<div style="flex:1;text-align:center;padding:10px;background:#ecfdf5;border-radius:6px;border:1px solid #6ee7b7">'
+            +'<div style="font-size:22px;font-weight:900;color:#059669">'+atpPost+'</div>'
+            +'<div style="font-size:9px;color:#059669;font-weight:700">RLU After</div></div>'
+          :'')
+        +(atpStatus
+          ?'<div style="flex:1;text-align:center;padding:10px;background:#f8fafc;border-radius:6px;border:1px solid #e2e8f0">'
+            +'<div style="font-size:16px;font-weight:900;color:'+atpColor+'">'+atpStatus+'</div>'
+            +'<div style="font-size:9px;color:#64748b;font-weight:700">Result</div></div>'
+          :'')
+        +'</div></div>'
+      :'')
+    +'<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:14px">'
+    +'<div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:6px">Machine</div>'
+    +'<div style="font-size:12px;font-weight:700;color:#0f1f38">'+machineInfo+'</div>'
+    +(c.machines&&c.machines>1?'<div style="font-size:10px;color:#64748b;margin-top:2px">'+c.machines+' units</div>':'')
+    +'</div>'
+    +'<div style="background:#0f1f38;border-radius:8px;padding:14px;margin-bottom:14px">'
+    +'<div style="font-size:9px;font-weight:700;color:#c9973a;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Certification</div>'
+    +'<div style="font-size:10px;color:#e0d8cc;line-height:1.7">This ice machine equipment was cleaned, descaled, and sanitized in accordance with FDA Food Code 3-502.12, Florida Administrative Code 64E-11, and manufacturer service specifications. All chemical products used are EPA-registered and NSF/ANSI 60 certified for food equipment contact surfaces. ATP readings were obtained using a calibrated Hygiena Ensure&trade; luminometer with Ultrasnap&trade; test swabs.</div>'
+    +'</div>'
+    +'<div style="border-top:1px solid #e2e8f0;padding-top:8px;font-size:9px;color:#94a3b8;text-align:center">'
+    +'Pinellas Ice Co &bull; (727) 855-6873 &bull; pinellasiceco.com<br>'
+    +'Retain this document for health inspection compliance records'
+    +'</div>'
+    +'</body></html>';
+  var subject='Ice Machine Compliance Report — '+(p?p.name:id)+' — '+dateStr;
+  sendEmailViaProxy(email,subject,html);
 }
 
 function svcRow(label,val){
@@ -6981,12 +7117,15 @@ function scStatusReport(p){
   box.style.cssText='background:#fff;border-radius:16px;padding:24px;width:100%;max-width:340px';
   box.innerHTML=
     '<div style="font-size:14px;font-weight:800;color:#0f1f38;margin-bottom:4px">&#x1F4CB; ATP Status Report</div>'
-    +'<div style="font-size:11px;color:#64748b;margin-bottom:16px">Enter the ATP reading from the test (RLU). Leave blank if not yet tested.</div>'
+    +'<div style="font-size:11px;color:#64748b;margin-bottom:14px">Enter the ATP reading from the test (RLU). Leave blank if not yet tested.</div>'
     +'<input id="atp-val-inp" type="number" min="0" max="9999" placeholder="e.g. 847" inputmode="numeric" '
-    +'style="width:100%;padding:14px;border:2px solid #e2e8f0;border-radius:10px;font-size:28px;font-weight:800;font-family:inherit;outline:none;text-align:center;box-sizing:border-box;margin-bottom:12px;color:#0f1f38">'
-    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
-    +'<button id="atp-cancel" style="padding:12px;border:1px solid #e2e8f0;border-radius:9px;background:#f8fafc;color:#64748b;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
-    +'<button id="atp-print" style="padding:12px;border:none;border-radius:9px;background:#ea580c;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Generate &amp; Print</button>'
+    +'style="width:100%;padding:14px;border:2px solid #e2e8f0;border-radius:10px;font-size:28px;font-weight:800;font-family:inherit;outline:none;text-align:center;box-sizing:border-box;margin-bottom:10px;color:#0f1f38">'
+    +'<input id="atp-email-inp" type="email" placeholder="Email report to (optional)" '
+    +'style="width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:12px;color:#0f1f38">'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">'
+    +'<button id="atp-cancel" style="padding:12px;border:1px solid #e2e8f0;border-radius:9px;background:#f8fafc;color:#64748b;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
+    +'<button id="atp-email" style="padding:12px;border:none;border-radius:9px;background:#0f1f38;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E7; Email</button>'
+    +'<button id="atp-print" style="padding:12px;border:none;border-radius:9px;background:#ea580c;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Print</button>'
     +'</div>';
   atpBg.appendChild(box);
   document.body.appendChild(atpBg);
@@ -6997,15 +7136,15 @@ function scStatusReport(p){
     if(e.type==='click'&&Date.now()-_lt<350)return;
     if(e.type==='touchend')_lt=Date.now();
     if(e.target===atpBg){atpBg.remove();return;}
-    var btn=e.target.closest('#atp-cancel,#atp-print');
+    var btn=e.target.closest('#atp-cancel,#atp-print,#atp-email');
     if(!btn)return;
     if(e.type==='touchend')e.preventDefault();
     if(btn.id==='atp-cancel'){atpBg.remove();return;}
-    if(btn.id==='atp-print'){
-      var val=parseInt((inp&&inp.value)||'0')||0;
-      atpBg.remove();
-      srGenerate(p,val);
-    }
+    var val=parseInt((inp&&inp.value)||'0')||0;
+    var emailInp=document.getElementById('atp-email-inp');
+    var emailTo=(emailInp&&emailInp.value.trim())||'';
+    if(btn.id==='atp-print'){atpBg.remove();srGenerate(p,val);}
+    if(btn.id==='atp-email'){atpBg.remove();srSendEmail(p,val,emailTo);}
   }
   atpBg.addEventListener('click',atpHandle);
   atpBg.addEventListener('touchend',atpHandle);
@@ -7110,6 +7249,95 @@ function srGenerate(p,atpVal){
   w.document.write(html);
   w.document.close();
   setTimeout(function(){w.print();},600);
+}
+
+function srSendEmail(p,atpVal,emailTo){
+  if(!emailTo){toast('Enter a recipient email address first');return;}
+  var now=new Date();
+  var dateStr=now.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  var atpStatus,atpColor,atpBgCol,barW;
+  if(atpVal<=0){atpStatus='PENDING';atpColor='#64748b';atpBgCol='#f8fafc';barW=0;}
+  else if(atpVal<=10){atpStatus='PASS';atpColor='#059669';atpBgCol='#ecfdf5';barW=Math.round(atpVal*10);}
+  else if(atpVal<=100){atpStatus='MARGINAL';atpColor='#d97706';atpBgCol='#fffbeb';barW=Math.round(10+((atpVal-10)/90)*60);}
+  else{atpStatus='FAIL';atpColor='#dc2626';atpBgCol='#fef2f2';barW=100;}
+  var barH=atpVal>0
+    ?('<div style="width:100%;height:12px;background:#e2e8f0;border-radius:6px;overflow:hidden;margin-bottom:6px">'
+      +'<div style="width:'+barW+'%;height:100%;background:'+atpColor+';border-radius:6px"></div></div>')
+    :'';
+  var inspLines=[];
+  if(p.chronic)inspLines.push('Chronic ice machine violations on FL DBPR record ('+p.ice_count+' flagged inspections)');
+  else if(p.confirmed)inspLines.push('Ice machine violation confirmed on FL DBPR record');
+  if(p.n_callbacks>0)inspLines.push(p.n_callbacks+' callback inspection'+(p.n_callbacks>1?'s':'')+' on record &mdash; inspector returned');
+  var inspH=inspLines.length
+    ?('<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:14px;margin-bottom:16px">'
+      +'<div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#7f1d1d;margin-bottom:8px">&#x26A0; FL DBPR Inspection Record</div>'
+      +inspLines.map(function(l){return '<div style="font-size:11px;color:#991b1b;margin-bottom:4px">&bull; '+l+'</div>';}).join('')
+      +'</div>')
+    :'';
+  var services=['Full ice bin disassembly &amp; deep cleaning',
+    'ATP pre/post testing with printed documentation',
+    'Dated compliance report for your records',
+    'Water distribution system flush &amp; sanitize',
+    'Filter inspection &amp; replacement (as needed)',
+    'Internal sanitizer application (NSF/ANSI 60 compliant)'];
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8">'
+    +'<title>Ice Machine Status Report</title>'
+    +'<style>*{box-sizing:border-box}body{margin:0;padding:24px;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;background:#fff;color:#0f172a;max-width:680px}</style>'
+    +'</head><body>'
+    +'<table style="width:100%;border-collapse:collapse;margin-bottom:20px"><tr>'
+    +'<td style="vertical-align:middle"><div style="font-size:20px;font-weight:900;color:#0f1f38;letter-spacing:-.02em">PINELLAS ICE CO</div>'
+    +'<div style="font-size:10px;color:#64748b">Commercial Ice Machine Sanitation</div></td>'
+    +'<td style="text-align:right;vertical-align:middle">'
+    +'<div style="font-size:17px;font-weight:900;color:#0f1f38;letter-spacing:-.01em">ICE MACHINE STATUS REPORT</div>'
+    +'<div style="font-size:11px;color:#64748b;margin-top:2px">pinellasiceco.com &nbsp;&middot;&nbsp; '+dateStr+'</div>'
+    +'</td></tr></table>'
+    +'<div style="border-top:2px solid #0f1f38;margin-bottom:16px"></div>'
+    +'<table style="width:100%;border-collapse:collapse;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:16px"><tbody>'
+    +'<tr style="background:#f8fafc">'
+    +'<td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;width:55%">Establishment</td>'
+    +'<td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;border-left:1px solid #e2e8f0;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b">ATP Reading</td>'
+    +'</tr><tr>'
+    +'<td style="padding:14px;vertical-align:top">'
+    +'<div style="font-size:14px;font-weight:800;color:#0f1f38;margin-bottom:4px">'+p.name+'</div>'
+    +'<div style="font-size:11px;color:#475569">'+p.address+'</div>'
+    +'<div style="font-size:11px;color:#475569">'+p.city+', FL '+p.zip+'</div>'
+    +'</td>'
+    +'<td style="padding:14px;vertical-align:top;border-left:1px solid #e2e8f0;background:'+atpBgCol+'">'
+    +barH
+    +'<div style="font-size:'+(atpVal>0?'36':'22')+'px;font-weight:900;color:'+atpColor+';line-height:1">'+(atpVal>0?atpVal:'&mdash;')+'</div>'
+    +(atpVal>0?'<div style="font-size:11px;color:'+atpColor+';font-weight:600">RLU</div>':'')
+    +'<div style="font-size:15px;font-weight:900;color:'+atpColor+';letter-spacing:.06em;margin-top:6px;border-top:1px solid '+atpColor+'30;padding-top:6px">'+atpStatus+'</div>'
+    +'</td></tr></tbody></table>'
+    +'<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:16px">'
+    +'<div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:8px">About This Reading</div>'
+    +'<div style="font-size:11px;color:#334155;line-height:1.65">ATP (adenosine triphosphate) bioluminescence testing measures biological contamination on food contact surfaces. '
+    +'Readings above 100&nbsp;RLU indicate significant microbial contamination. '
+    +'The FDA Food Code requires &lt;10&nbsp;RLU on food contact surfaces. '
+    +'Ice machine evaporators, water lines, and bin surfaces were tested at this visit.</div>'
+    +'<div style="display:flex;gap:8px;margin-top:12px">'
+    +'<div style="flex:1;text-align:center;padding:8px;background:#ecfdf5;border-radius:6px;border:1px solid #6ee7b7"><div style="font-size:15px;font-weight:900;color:#059669">&le;10</div><div style="font-size:8px;color:#059669;font-weight:700;letter-spacing:.05em">PASS</div></div>'
+    +'<div style="flex:1;text-align:center;padding:8px;background:#fffbeb;border-radius:6px;border:1px solid #fcd34d"><div style="font-size:15px;font-weight:900;color:#d97706">11&ndash;100</div><div style="font-size:8px;color:#d97706;font-weight:700;letter-spacing:.05em">MARGINAL</div></div>'
+    +'<div style="flex:1;text-align:center;padding:8px;background:#fef2f2;border-radius:6px;border:1px solid #fca5a5"><div style="font-size:15px;font-weight:900;color:#dc2626">&gt;100</div><div style="font-size:8px;color:#dc2626;font-weight:700;letter-spacing:.05em">FAIL</div></div>'
+    +'</div></div>'
+    +inspH
+    +'<div style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:16px">'
+    +'<div style="background:#0f1f38;padding:10px 14px;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8">What Pinellas Ice Co Does</div>'
+    +'<div style="padding:12px 14px">'
+    +services.map(function(s){return '<div style="font-size:11px;color:#334155;padding:3px 0;display:flex;gap:8px"><span style="color:#059669;font-weight:700;flex-shrink:0">&#x2713;</span><span>'+s+'</span></div>';}).join('')
+    +'</div></div>'
+    +'<div style="background:#0f1f38;border-radius:10px;padding:18px;text-align:center;margin-bottom:16px">'
+    +'<div style="font-size:8px;color:#94a3b8;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">Limited Intro Offer &mdash; No Commitment</div>'
+    +'<div style="font-size:26px;font-weight:900;color:#f97316;margin-bottom:4px">$99 &mdash; First Visit</div>'
+    +'<div style="font-size:11px;color:#e2e8f0;margin-bottom:10px">Full service &middot; ATP documentation &middot; compliance report</div>'
+    +'<div style="font-size:16px;font-weight:800;color:#fff">Call&nbsp;/&nbsp;Text:&nbsp;&nbsp;(727)&nbsp;855-6873</div>'
+    +'<div style="font-size:10px;color:#94a3b8;margin-top:4px">pinellasiceco.com</div>'
+    +'</div>'
+    +'<div style="text-align:center;font-size:9px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:10px">'
+    +'Pinellas Ice Co &nbsp;&middot;&nbsp; pinellasiceco.com &nbsp;&middot;&nbsp; (727) 855-6873<br>'
+    +'FDA Food Code &sect;3-502.12 &nbsp;&middot;&nbsp; FL Administrative Code 64E-11 &nbsp;&middot;&nbsp; ATP testing per NSF/ANSI Standard 63'
+    +'</div>'
+    +'</body></html>';
+  sendEmailViaProxy(emailTo,'Ice Machine Status Report — '+p.name,html);
 }
 
 // ── SETTINGS ─────────────────────────────────────────────────────────────────
