@@ -1578,6 +1578,7 @@ header{background:var(--navy);
     <div class="tab"     onclick="sw('route')"     ><span class="tab-icon">&#x1F5FA;</span><span class="tab-lbl">Route</span></div>
     <div class="tab"     onclick="sw('clients')"   ><span class="tab-icon">&#x1F91D;</span><span class="tab-lbl">Clients</span></div>
     <button id="gear-btn" onclick="sw('data')" title="Settings" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;cursor:pointer;padding:4px;color:var(--sub);line-height:1">&#x2699;&#xFE0F;</button>
+    <span id="sync-dot" title="Local only — configure cloud sync in Settings" onclick="event.stopPropagation();sw('data')" ontouchend="event.stopPropagation();event.preventDefault();sw('data')" style="position:absolute;right:38px;top:50%;transform:translateY(-50%);font-size:13px;cursor:pointer;line-height:1">&#x1F4BE;</span>
   </nav>
 
   <!-- Offline banner -->
@@ -2095,6 +2096,21 @@ header{background:var(--navy);
         <input class="phinput" id="home-zip" type="text" placeholder="34689" value="34689" maxlength="5" oninput="saveSettings()">
       </div>
       <button onclick="saveSettings();toast('\u2713 Settings saved')" ontouchend="event.preventDefault();saveSettings();toast('\u2713 Settings saved')" style="width:100%;margin-top:10px;padding:9px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Save Settings</button>
+    </div>
+
+    <div class="dc" style="margin-top:12px">
+      <div class="dct">&#x2601;&#xFE0F; Cloud Sync</div>
+      <div style="font-size:10px;color:var(--sub);margin-bottom:8px;line-height:1.5">Back up all data to Supabase. If your device is lost or cleared, tap <b>Restore from Cloud</b> on any device to recover everything instantly.</div>
+      <div style="font-size:10px;color:var(--sub);margin-bottom:4px">Supabase Project URL</div>
+      <input class="phinput" id="sb-url" type="text" placeholder="https://xxxx.supabase.co" oninput="saveSbCredentials()">
+      <div style="font-size:10px;color:var(--sub);margin-top:8px;margin-bottom:4px">Supabase Anon Key</div>
+      <input class="phinput" id="sb-key" type="password" placeholder="eyJhbGci..." oninput="saveSbCredentials()">
+      <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
+        <button onclick="testSbConnection()" ontouchend="event.stopPropagation();event.preventDefault();testSbConnection()" style="flex:1;padding:9px;background:#0f1f38;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Test Connection</button>
+        <span id="sb-status" style="font-size:11px;color:#94a3b8">&#x25CF; Not configured</span>
+      </div>
+      <button onclick="restoreFromCloud()" ontouchend="event.stopPropagation();event.preventDefault();restoreFromCloud()" style="width:100%;margin-top:8px;padding:9px;background:#059669;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2193; Restore from Cloud</button>
+      <div id="sb-last-sync" style="font-size:10px;color:#94a3b8;margin-top:6px;text-align:center"></div>
     </div>
 
     <div class="dc" style="margin-top:12px">
@@ -2760,6 +2776,127 @@ function hav(la1,lo1,la2,lo2){
 let log={},tab='today',selOut=null,selType=null,selReasonVal=null,cur=null,Q='',route=[],routeSet=new Set(),mapPros=[],routeAnchor=null;
 let queueList=[],queueIdx=0;
 
+// ── SUPABASE CLOUD SYNC ───────────────────────────────────────────────────────
+function getDeviceId(){
+  var id=localStorage.getItem('pic_device_id');
+  if(!id){id='pic_'+Date.now()+'_'+Math.random().toString(36).slice(2);localStorage.setItem('pic_device_id',id);}
+  return id;
+}
+function getSbConfig(){
+  return{url:(localStorage.getItem('pic_supabase_url')||'').trim(),key:(localStorage.getItem('pic_supabase_key')||'').trim()};
+}
+function sbEnabled(){var c=getSbConfig();return !!(c.url&&c.key);}
+function updateSyncIndicator(status){
+  var dot=document.getElementById('sync-dot');
+  if(!dot)return;
+  dot.textContent=status==='synced'?'☁':status==='error'?'⚠':'💾';
+  dot.title=status==='synced'?'Data synced to cloud':status==='error'?'Sync error — data saved locally':'Local only — configure cloud sync in Settings';
+}
+async function sbUpsert(table,prospectId,data){
+  if(!sbEnabled())return;
+  var c=getSbConfig();
+  try{
+    await fetch(c.url+'/rest/v1/'+table,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':c.key,'Authorization':'Bearer '+c.key,'Prefer':'resolution=merge-duplicates'},
+      body:JSON.stringify({device_id:getDeviceId(),prospect_id:String(prospectId),data:data,updated_at:new Date().toISOString()})
+    });
+    updateSyncIndicator('synced');
+  }catch(e){console.warn('Supabase sync failed:',e);updateSyncIndicator('error');}
+}
+async function sbUpsertSetting(key,data){
+  if(!sbEnabled())return;
+  var c=getSbConfig();
+  try{
+    await fetch(c.url+'/rest/v1/pic_settings',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':c.key,'Authorization':'Bearer '+c.key,'Prefer':'resolution=merge-duplicates'},
+      body:JSON.stringify({device_id:getDeviceId(),key:key,data:data,updated_at:new Date().toISOString()})
+    });
+  }catch(e){console.warn('Supabase sync failed:',e);}
+}
+async function sbFetchAll(table){
+  if(!sbEnabled())return null;
+  var c=getSbConfig();
+  try{
+    var res=await fetch(c.url+'/rest/v1/'+table+'?device_id=eq.'+encodeURIComponent(getDeviceId())+'&limit=10000',{
+      headers:{'apikey':c.key,'Authorization':'Bearer '+c.key}
+    });
+    if(!res.ok)return null;
+    return await res.json();
+  }catch(e){console.warn('Supabase fetch failed:',e);return null;}
+}
+function saveSbCredentials(){
+  var url=(document.getElementById('sb-url')||{}).value||'';
+  var key=(document.getElementById('sb-key')||{}).value||'';
+  localStorage.setItem('pic_supabase_url',url.trim());
+  localStorage.setItem('pic_supabase_key',key.trim());
+  updateSyncIndicator(sbEnabled()?'synced':'local');
+  var status=document.getElementById('sb-status');
+  if(status){status.textContent=sbEnabled()?'● Connected':'● Not configured';status.style.color=sbEnabled()?'#059669':'#94a3b8';}
+}
+async function testSbConnection(){
+  var c=getSbConfig();
+  if(!c.url||!c.key){toast('Enter URL and Key first');return;}
+  try{
+    var res=await fetch(c.url+'/rest/v1/pic_settings?limit=1',{
+      headers:{'apikey':c.key,'Authorization':'Bearer '+c.key}
+    });
+    if(res.ok){
+      toast('✓ Connected to Supabase');
+      var indicator=document.getElementById('sb-status');
+      if(indicator){indicator.textContent='● Connected';indicator.style.color='#059669';}
+      updateSyncIndicator('synced');
+    }else{
+      var body=await res.text();
+      toast('Connection failed ('+res.status+')');
+      console.warn('Supabase test error:',body);
+    }
+  }catch(e){toast('Connection failed — check URL');console.warn(e);}
+}
+async function restoreFromCloud(){
+  if(!sbEnabled()){toast('Configure Supabase URL and Key first');return;}
+  toast('Restoring from cloud...');
+  try{
+    var logRows=await sbFetchAll('pic_log');
+    if(logRows&&logRows.length){logRows.forEach(function(row){if(row.data)log[row.prospect_id]=row.data;});lSave();}
+    var custRows=await sbFetchAll('pic_customers');
+    if(custRows&&custRows.length){custRows.forEach(function(row){if(row.data)customers[row.prospect_id]=row.data;});custSave();}
+    var phoneRows=await sbFetchAll('pic_phones');
+    if(phoneRows&&phoneRows.length){
+      var ph={};try{ph=JSON.parse(localStorage.getItem('pic_phones')||'{}')||{};}catch(e){}
+      phoneRows.forEach(function(row){if(row.data)ph[row.prospect_id]=row.data;});
+      try{localStorage.setItem('pic_phones',JSON.stringify(ph));}catch(e){}
+    }
+    var contactRows=await sbFetchAll('pic_contacts');
+    if(contactRows&&contactRows.length){contactRows.forEach(function(row){if(row.data)contacts[row.prospect_id]=row.data;});try{localStorage.setItem('pic_contacts',JSON.stringify(contacts));}catch(e){}}
+    var settingRows=await sbFetchAll('pic_settings');
+    if(settingRows&&settingRows.length){
+      settingRows.forEach(function(row){
+        if(row.key==='goals'&&row.data)goals=row.data;
+        if(row.key==='settings'&&row.data)try{localStorage.setItem('pic_settings',JSON.stringify(row.data));}catch(e){}
+      });
+      try{localStorage.setItem('pic_goals',JSON.stringify(goals));}catch(e){}
+    }
+    localStorage.setItem('pic_last_sync',new Date().toISOString());
+    toast('✓ Restored from cloud — reloading...');
+    setTimeout(function(){location.reload();},1500);
+  }catch(e){toast('Restore failed — check credentials');console.error(e);}
+}
+function initSbSettings(){
+  var urlEl=document.getElementById('sb-url'),keyEl=document.getElementById('sb-key');
+  if(urlEl)urlEl.value=localStorage.getItem('pic_supabase_url')||'';
+  if(keyEl)keyEl.value=localStorage.getItem('pic_supabase_key')||'';
+  var status=document.getElementById('sb-status');
+  if(status&&sbEnabled()){status.textContent='● Connected';status.style.color='#059669';}
+  var lastSync=localStorage.getItem('pic_last_sync');
+  var lastSyncEl=document.getElementById('sb-last-sync');
+  if(lastSyncEl&&lastSync){
+    try{var d=new Date(lastSync);lastSyncEl.textContent='Last restore: '+d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});}catch(e){}
+  }
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 function saveRouteState(){
   try{sessionStorage.setItem('pic_route',JSON.stringify({stops:route.map(p=>p.id),anchor:routeAnchor?routeAnchor.id:null}));}catch(e){}
 }
@@ -2810,6 +2947,7 @@ function lSave(){
     toast('✓ Logged — next');
   }
   try{localStorage.setItem('pic_v4',JSON.stringify(log));}catch(e){}
+  if(sbEnabled()){Object.keys(log).forEach(function(pid){sbUpsert('pic_log',pid,log[pid]);});}
 }
 function phLoad(){
   try{
@@ -2826,6 +2964,7 @@ function phSave(id,phone,hours,rating){
   let s={};try{s=JSON.parse(localStorage.getItem('pic_phones')||'{}')||{};}catch(e){}
   s[id]={phone,hours,rating};try{localStorage.setItem('pic_phones',JSON.stringify(s));}catch(e){}
   const p=P.find(x=>x.id===id);if(p){p.phone=phone;p.hours=hours;p.rating=rating;}
+  if(sbEnabled())sbUpsert('pic_phones',id,{phone,hours,rating});
 }
 function getLC(id){const e=log[id]||[];return e.length?e[e.length-1]:null;}
 function isC(id){
@@ -4529,7 +4668,10 @@ function custLoad(){
   // Apply saved statuses to P records
   P.forEach(p=>{const c=customers[p.id];if(c)p.status=c.status;});
 }
-function custSave(){try{localStorage.setItem('pic_customers',JSON.stringify(customers));}catch(e){}}
+function custSave(){
+  try{localStorage.setItem('pic_customers',JSON.stringify(customers));}catch(e){}
+  if(sbEnabled()){Object.keys(customers).forEach(function(pid){sbUpsert('pic_customers',pid,customers[pid]);});}
+}
 
 // ── REFERRAL CAPTURE ──────────────────────────────────────────────────────────
 function scExecWon(p,wonStatus,referrerId,ph,bgEl){
@@ -5052,6 +5194,7 @@ function goalsLoad(){
 }
 function goalsSave(){
   try{localStorage.setItem('pic_goals',JSON.stringify(goals));}catch(e){}
+  if(sbEnabled())sbUpsertSetting('goals',goals);
 }
 function autoMRR(){
   const clients=parseInt(document.getElementById('goal-clients')?.value)||0;
@@ -6975,7 +7118,9 @@ function loadSettings(){
 function saveSettings(){
   const portal=(document.getElementById('hs-portal')||{}).value||'';
   const homeZip=(document.getElementById('home-zip')||{}).value||'';
-  try{localStorage.setItem('pic_settings',JSON.stringify({hubspot_portal:portal,home_zip:homeZip}));}catch(e){}
+  const s={hubspot_portal:portal,home_zip:homeZip};
+  try{localStorage.setItem('pic_settings',JSON.stringify(s));}catch(e){}
+  if(sbEnabled())sbUpsertSetting('settings',s);
 }
 function initSettings(){
   const s=loadSettings();
@@ -7024,6 +7169,7 @@ function renderVendor(id){
 }
 function contactsSave(){
   try{localStorage.setItem('pic_contacts',JSON.stringify(contacts));}catch(e){}
+  if(sbEnabled()){Object.keys(contacts).forEach(function(pid){sbUpsert('pic_contacts',pid,contacts[pid]);});}
 }
 
 function renderContacts(id){
@@ -7070,7 +7216,7 @@ function deleteContact(bizId,idx){
 // ── INIT ─────────────────────────────────────────────────────────────────────
 // INIT
 function init(){
-  lLoad();phLoad();custLoad();contactsLoad();initSettings();initGoals();loadRouteState();setTimeout(function(){renderBriefing();},150);
+  lLoad();phLoad();custLoad();contactsLoad();initSettings();initGoals();loadRouteState();initSbSettings();updateSyncIndicator(sbEnabled()?'synced':'local');setTimeout(function(){renderBriefing();},150);
   const si=document.getElementById('si');if(si)si.blur();
   // FAB hidden - using tab navigation instead
 
