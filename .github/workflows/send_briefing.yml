@@ -1,0 +1,30 @@
+name: Send Daily Briefing Email
+
+on:
+  push:
+    branches: ["main"]      # Fires after every rebuild commit
+  schedule:
+    - cron: '30 11 * * *'   # Fallback: 11:30 UTC (7:30am ET) if push trigger missed
+  workflow_dispatch:         # Manual trigger
+
+jobs:
+  send-briefing:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Send briefing email
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          BRIEFING_EMAIL: ${{ secrets.BRIEFING_EMAIL }}
+        run: python send_briefing.py

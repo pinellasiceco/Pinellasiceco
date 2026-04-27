@@ -30,12 +30,6 @@ jobs:
       - name: Build prospect tool
         run: python build.py data/
 
-      - name: Send daily briefing email
-        env:
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          BRIEFING_EMAIL: ${{ secrets.BRIEFING_EMAIL }}
-        run: python send_briefing.py
-
       - name: Commit and push
         run: |
           cp prospecting_tool.html index.html
