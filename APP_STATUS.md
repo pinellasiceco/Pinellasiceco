@@ -1,11 +1,11 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-04-25 (session 3) by Claude Code*
+*Last updated: 2026-04-27 (session 7) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
-- Last deployed: 2026-04-25 (all fixes applied directly to index.html — live now)
+- Last deployed: 2026-04-27 (email buttons + proxy deployed)
 - Build script: `build.py` (repo root) → outputs `prospecting_tool.html` → copied to `index.html` by CI
-- `index.html` and `build.py` are fully in sync as of session 3
+- `index.html` and `build.py` are fully in sync as of session 7
 
 ## What's Working ✅
 
@@ -59,8 +59,22 @@
 ### ATP Status Report
 - `scStatusReport(p)` opens ATP input overlay from showCard
 - `srGenerate(p, atpVal)` generates print-ready letter-size HTML report
+- `srSendEmail(p, atpVal, emailTo)` emails same report via proxy (text logo instead of image)
 - Scale: ≤0 = PENDING, ≤10 = PASS, 11–100 = MARGINAL, >100 = FAIL
 - Pop-up blocker fallback toast if `window.open` is blocked
+- 3-button layout: Cancel / 📧 Email / Print
+
+### Email System
+- **Proxy required**: Resend blocks browser-direct calls (CORS 403) — all email goes through Supabase Edge Function
+- Edge Function: `supabase/functions/send-email/index.ts` — deployed via GitHub Actions (`deploy_edge_functions.yml`)
+- App setting: `pic_email_fn_url` (localStorage) = Edge Function URL; set in Settings → Cloud Sync
+- App setting: `pic_supabase_key` (localStorage) = Supabase anon key (used as Bearer token)
+- `sendEmailViaProxy(to, subject, html)` — central send function used by all email buttons
+- Email buttons on: ATP report overlay, service report preview, customer card (compliance summary), service log row
+- Customer email address stored in `customers[id].email` via `saveCustomerEmail()`
+- `emailServiceReport(id)` — emails rendered report HTML from `#report-content`
+- `emailComplianceReport(id)` — emails lightweight compliance summary (last service, ATP, machine, next due)
+- **Deploy**: any change to `supabase/functions/**` on main auto-triggers `deploy_edge_functions.yml`
 
 ### Date Handling
 - `localISO(d)` helper returns `YYYY-MM-DD` in device local timezone
@@ -69,7 +83,10 @@
 
 ## What's Broken / Watch List ⚠️
 
-None known. If something appears broken, first try force-closing the PWA and reopening — the sw.js cache bust (`pic-YYYYMMDD`) requires a full app restart on iOS to take effect.
+- **Email error alerts**: temporarily using `alert()` instead of `toast()` for email failures (aids debugging). Switch back to `toast()` once email is confirmed stable.
+- **iPad copy-paste**: copying code blocks from chat on iPad adds angle brackets around URLs. Never paste code directly into Supabase editor — use the GitHub Actions deploy workflow instead.
+
+If something appears broken, first try force-closing the PWA and reopening — the sw.js cache bust (`pic-YYYYMMDD`) requires a full app restart on iOS to take effect.
 
 ## What's Missing 🔲
 - Nothing from the current feature roadmap is missing
@@ -83,12 +100,17 @@ None known. If something appears broken, first try force-closing the PWA and reo
 - **2026-04-25 (s3):** Route +Add / Start buttons — inline `ontouchend` bypasses delegation, fires on iOS
 - **2026-04-25 (s3):** Follow-up UX — replaced +Xd quick buttons (NaN bug) with `input[type=date]` pre-filled from existing follow-up; Save button enlarged and renamed "Save & Disposition Lead"
 - **2026-04-25 (s3):** All fixes applied directly to `index.html` — live without waiting for daily CI
+- **2026-04-27 (s7):** Email Inspection Reports — 📧 Email buttons on ATP report, service report, compliance summary, customer card; `sendEmailViaProxy()` central send function
+- **2026-04-27 (s7):** Supabase Edge Function `send-email` — CORS-safe proxy for Resend API (browser cannot call Resend directly); deployed via GitHub Actions
+- **2026-04-27 (s7):** Daily briefing reliability — decoupled from `rebuild.yml` into dedicated `send_briefing.yml` triggered on push to main (fixes silent cron failure on low-activity repos)
+- **2026-04-27 (s7):** `deploy_edge_functions.yml` — auto-deploys Edge Functions from repo; eliminates need to copy-paste code into Supabase dashboard
 
 ## Next Session Priorities
-1. Verify Pipeline tab populates correctly with real data (need a CI rebuild with DBPR data)
-2. Confirm ATP report prints cleanly on letter-size in iOS Safari
-3. Test follow-up → pipeline flow end-to-end: log "In Play" with date → verify prospect appears in Pipeline tab
-4. Consider "New Client" quick-add from Clients tab (currently requires showCard → Won button)
+1. Confirm email sending works end-to-end (ATP report email, service report email, compliance summary)
+2. Switch email error `alert()` back to `toast()` once email is confirmed stable
+3. Verify daily briefing now sends reliably via `send_briefing.yml` push trigger
+4. Verify Pipeline tab populates correctly with real data (need a CI rebuild with DBPR data)
+5. Confirm ATP report prints cleanly on letter-size in iOS Safari
 
 ## iOS PWA Rules (never violate these)
 - **Buttons in injected HTML:** use inline `ontouchend="event.preventDefault();fn()"` + `onclick="fn()"` — NOT `addEventListener` on innerHTML-injected elements
@@ -105,9 +127,12 @@ None known. If something appears broken, first try force-closing the PWA and reo
 | `build.py` | **Edit this** — generates prospecting_tool.html; also stamps sw.js cache date |
 | `index.html` | Deployed output — keep in sync with build.py; overwritten by CI daily |
 | `sw.js` | Service worker — auto date-stamped by build.py; bump manually after direct edits |
-| `.github/workflows/rebuild.yml` | Daily CI: download data → build → email → commit → push |
+| `.github/workflows/rebuild.yml` | Daily CI: download data → build → commit → push |
+| `.github/workflows/send_briefing.yml` | Daily briefing email — triggered on push to main + 11:30 UTC cron fallback |
+| `.github/workflows/deploy_edge_functions.yml` | Deploys Supabase Edge Functions — triggers on changes to supabase/functions/ or manual dispatch |
 | `.github/workflows/pages.yml` | GitHub Pages deploy — triggers on every push to main |
 | `send_briefing.py` | Daily briefing email via Resend |
+| `supabase/functions/send-email/index.ts` | Supabase Edge Function — CORS-safe Resend proxy for in-app email |
 | `download_data.py` | Downloads FL DBPR inspection CSV files |
 | `APP_STATUS.md` | This file — update at end of every session |
 | `customers.json` | Seed customer data (used at build time) |
