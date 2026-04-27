@@ -2111,9 +2111,9 @@ header{background:var(--navy);
       </div>
       <button onclick="restoreFromCloud()" ontouchend="event.stopPropagation();event.preventDefault();restoreFromCloud()" style="width:100%;margin-top:8px;padding:9px;background:#059669;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2193; Restore from Cloud</button>
       <div id="sb-last-sync" style="font-size:10px;color:#94a3b8;margin-top:6px;text-align:center"></div>
-      <div style="font-size:10px;color:var(--sub);margin-top:12px;margin-bottom:4px">&#x1F4E7; Email (Resend API Key)</div>
-      <div style="font-size:9px;color:#94a3b8;margin-bottom:4px;line-height:1.5">Paste your Resend API key (<b>re_...</b>) to enable sending ATP reports and compliance emails directly from the app. Your domain is already verified.</div>
-      <input class="phinput" id="sb-email-fn" type="password" placeholder="re_xxxxxxxxxxxx" oninput="saveEmailFnUrl()">
+      <div style="font-size:10px;color:var(--sub);margin-top:12px;margin-bottom:4px">&#x1F4E7; Email Proxy URL</div>
+      <div style="font-size:9px;color:#94a3b8;margin-bottom:4px;line-height:1.5">Supabase Edge Function URL. Deploy <b>supabase/functions/send-email/</b> from this repo, then paste the URL here.</div>
+      <input class="phinput" id="sb-email-fn" type="text" placeholder="https://xxxx.supabase.co/functions/v1/send-email" oninput="saveEmailFnUrl()">
     </div>
 
     <div class="dc" style="margin-top:12px">
@@ -2905,14 +2905,10 @@ function saveEmailFnUrl(){
   localStorage.setItem('pic_email_fn_url',v.trim());
 }
 async function sendEmailViaProxy(to,subject,htmlBody){
-  var key=(localStorage.getItem('pic_email_fn_url')||'').trim();
-  if(!key){toast('&#x1F4E7; Resend API Key not set — add it in Settings → Cloud Sync');return;}
+  var url=(localStorage.getItem('pic_email_fn_url')||'').trim();
+  if(!url){toast('&#x1F4E7; Email Proxy URL not set — deploy the Edge Function and add its URL in Settings');return;}
   try{
-    var r=await fetch('https://api.resend.com/emails',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
-      body:JSON.stringify({from:'service@pinellasiceco.com',to:to,subject:subject,html:htmlBody})
-    });
+    var r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,subject,html:htmlBody})});
     if(r.ok){toast('&#x2713; Email sent to '+to);}
     else{var t=await r.text().catch(function(){return '';});toast('Email failed: HTTP '+r.status+' '+t.slice(0,80));}
   }catch(e){toast('Email error: '+e.message);}
