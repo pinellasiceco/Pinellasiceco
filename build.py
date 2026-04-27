@@ -2906,12 +2906,16 @@ function saveEmailFnUrl(){
 }
 async function sendEmailViaProxy(to,subject,htmlBody){
   var url=(localStorage.getItem('pic_email_fn_url')||'').trim();
-  if(!url){toast('&#x1F4E7; Email Proxy URL not set — deploy the Edge Function and add its URL in Settings');return;}
+  if(!url){toast('&#x1F4E7; Email Proxy URL not set — add it in Settings → Cloud Sync');return;}
+  var anonKey=(localStorage.getItem('pic_supabase_key')||'').trim();
+  var headers={'Content-Type':'application/json'};
+  if(anonKey)headers['Authorization']='Bearer '+anonKey;
   try{
-    var r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,subject,html:htmlBody})});
+    var r=await fetch(url,{method:'POST',headers:headers,body:JSON.stringify({to:to,subject:subject,html:htmlBody})});
+    var t=await r.text().catch(function(){return '';});
     if(r.ok){toast('&#x2713; Email sent to '+to);}
-    else{var t=await r.text().catch(function(){return '';});toast('Email failed: HTTP '+r.status+' '+t.slice(0,80));}
-  }catch(e){toast('Email error: '+e.message);}
+    else{alert('Email failed: HTTP '+r.status+'\n'+t.slice(0,200));}
+  }catch(e){alert('Email error: '+e.message);}
 }
 // ─────────────────────────────────────────────────────────────────────────────
 
