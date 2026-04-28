@@ -1,5 +1,5 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-04-27 (session 7) by Claude Code*
+*Last updated: 2026-04-28 (session 8) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
@@ -23,6 +23,8 @@
 - Clients tab has inner sub-tabs: Clients / Service (via `setClientTab()`)
 
 ### Home Tab
+- **TODAY'S PLAN** section at top: ranked action list (action score = urgency × revenue × recency × ice risk boost), max 8 stops
+- **Add All to Route** button in TODAY'S PLAN adds all stops and switches to Route tab
 - Strike Zone section shows top-scored prospects by city cluster
 - In Play follow-ups grouped by urgency: Overdue / Today / This Week / This Month
 - Cold targets grid loads on first open
@@ -39,6 +41,7 @@
 
 ### Route Tab
 - ZIP always syncs from Settings on load (no stale value)
+- **City cluster chips**: Tarpon / Palm Harbor / Dunedin / Clearwater / Largo / Safety Harbor / St. Pete / All — sets ZIP + triggers rRoute()
 - Manual mode: explicit green **➕ Add** / orange **✓ Added** toggle buttons per card with inline `ontouchend` — fires reliably on iOS PWA
 - Manual mode displays hint text explaining how to build route
 - Card body tap opens Details; only the Add button adds to route (no accidental adds)
@@ -47,12 +50,20 @@
 - Start 📍 button also uses inline `ontouchend` for iOS reliability
 
 ### Pipeline Tab
-- `renderPipeline()` groups in_play / intro_set / quoted prospects by follow-up urgency
-- Shown in `p-pipeline` panel
+- 4-stage tab UI: **In Play / Quoted / Won / Lost** (via `setPipeStage()` / `pipeStage` state)
+- KPI bar: In Play count, Quoted count, Close Rate %
+- `getProspectStage(p)` classifies each prospect by stage (checks p.status + last log outcome)
+- In Play / Quoted: grouped by follow-up urgency (Overdue / Today / Week / Month / Later)
+- Won / Lost: chronological list with outcome badge
+- Ice risk badges (High/Med) shown on In Play / Quoted cards
+- Lost `not_now` (Timing) auto-resurfaces after 90 days (not shown in Lost)
+- Quoted outcome button in showCard (purple style, logs `quoted` outcome)
 
 ### Clients Tab
 - MRR/ARR calculated from recurring customers (`kpi-mrr`, `kpi-arr`)
 - Filter by account status: Recurring / One-Time / Intro / Quoted / Churned
+- Client card service row: **Email Report only** (Log Visit + Set Next Due removed — use Service sub-tab)
+- `churnClient(id)` marks prospect churned with confirm dialog; red Churn button on non-churned cards
 - Service sub-tab: log service visits, track next service date, machine info
 - Save Service Visit button: iOS-safe (`onclick` + `ontouchend`)
 
@@ -63,6 +74,19 @@
 - Scale: ≤0 = PENDING, ≤10 = PASS, 11–100 = MARGINAL, >100 = FAIL
 - Pop-up blocker fallback toast if `window.open` is blocked
 - 3-button layout: Cancel / 📧 Email / Print
+- Print CSS: `@page { margin: 0.45in }`, padding reduced, all buttons hidden in print — fits letter-size in one page
+
+### showCard Detail Overlay
+- **WHY THIS PROSPECT MATTERS** navy intel panel (`buildIntelSummary(p)`) — shows ice violations, callback count, inspection timeline, machine count, risk level
+- **Ice risk badges** (🧊 High Risk / 🧊 Med Risk) in chips row
+- **Quoted** outcome button (purple) added alongside In Play / Intro Set
+- All buttons: iOS-safe inline `ontouchend` + `onclick`
+
+### Ice Compliance Risk Score
+- `calc_ice_risk(record)` Python function bakes `ice_risk_prob` (0–100), `ice_risk_level` (Low/Med/High), `ice_risk_reason` into every P[] record
+- Factors: ice violations <6mo (+25), total ice violations (×8), callbacks (×15), chronic flag (+15), days since inspection (+5/10), machine count (+4/8), business type keywords (+6)
+- High ≥65, Medium ≥35, Low <35
+- Ice risk boosts action score in TODAY'S PLAN: High=1.4×, Medium=1.2×
 
 ### Email System
 - **Proxy required**: Resend blocks browser-direct calls (CORS 403) — all email goes through Supabase Edge Function
@@ -83,7 +107,6 @@
 
 ## What's Broken / Watch List ⚠️
 
-- **Email error alerts**: temporarily using `alert()` instead of `toast()` for email failures (aids debugging). Switch back to `toast()` once email is confirmed stable.
 - **iPad copy-paste**: copying code blocks from chat on iPad adds angle brackets around URLs. Never paste code directly into Supabase editor — use the GitHub Actions deploy workflow instead.
 
 If something appears broken, first try force-closing the PWA and reopening — the sw.js cache bust (`pic-YYYYMMDD`) requires a full app restart on iOS to take effect.
@@ -92,6 +115,16 @@ If something appears broken, first try force-closing the PWA and reopening — t
 - Nothing from the current feature roadmap is missing
 
 ## Recent Changes
+- **2026-04-28 (s8):** Pipeline overhaul — 4-stage tabs (In Play/Quoted/Won/Lost), KPI bar, getProspectStage(), setPipeStage(), ice risk badges on cards, Quoted outcome button in showCard
+- **2026-04-28 (s8):** TODAY'S PLAN — ranked action list on Home tab (action score formula), Add All to Route button
+- **2026-04-28 (s8):** WHY THIS PROSPECT MATTERS — navy intel panel in showCard with ice violation + callback intel
+- **2026-04-28 (s8):** Ice Compliance Risk Score — calc_ice_risk() Python bakes risk level/score/reason into every prospect record
+- **2026-04-28 (s8):** City cluster chips in Route tab — 7 Pinellas area presets + All, sets ZIP and triggers rRoute()
+- **2026-04-28 (s8):** Clients tab cleanup — removed Log Visit + Set Next Due buttons (kept Email Report only); service actions remain in Service sub-tab
+- **2026-04-28 (s8):** churnClient() + Churn button on client cards — red, confirm dialog, only for non-churned
+- **2026-04-28 (s8):** Print CSS — @page 0.45in margin, reduced padding, buttons hidden — all 3 reports fit letter-size
+- **2026-04-28 (s8):** Deep clean pricing fixed to $349 everywhere (est_onetime Python fn + all JS fallbacks + UI labels)
+- **2026-04-28 (s8):** alert() → toast() — all email error alerts converted (no more blocking alerts)
 - **2026-04-25:** Architecture rewrite — 5-tab nav, Pipeline tab, Clients/Service sub-tabs, Settings gear button
 - **2026-04-25:** ATP Status Report — 📋 Report button in showCard, print-ready HTML
 - **2026-04-25:** Bug fixes — Route ZIP, manual +Add buttons, remove call scripts, daily cron, soft followup warning
@@ -106,11 +139,11 @@ If something appears broken, first try force-closing the PWA and reopening — t
 - **2026-04-27 (s7):** `deploy_edge_functions.yml` — auto-deploys Edge Functions from repo; eliminates need to copy-paste code into Supabase dashboard
 
 ## Next Session Priorities
-1. Confirm email sending works end-to-end (ATP report email, service report email, compliance summary)
-2. Switch email error `alert()` back to `toast()` once email is confirmed stable
-3. Verify daily briefing now sends reliably via `send_briefing.yml` push trigger
-4. Verify Pipeline tab populates correctly with real data (need a CI rebuild with DBPR data)
-5. Confirm ATP report prints cleanly on letter-size in iOS Safari
+1. Verify Pipeline 4-stage tabs work correctly with real data after next CI rebuild
+2. Confirm TODAY'S PLAN populates and Add All to Route works end-to-end
+3. Test city cluster chips on iPhone — verify chip highlights + ZIP sets correctly
+4. Test email sending end-to-end (ATP report, service report, compliance summary)
+5. Confirm ATP/service reports print cleanly on letter-size in iOS Safari (one page)
 
 ## iOS PWA Rules (never violate these)
 - **Buttons in injected HTML:** use inline `ontouchend="event.preventDefault();fn()"` + `onclick="fn()"` — NOT `addEventListener` on innerHTML-injected elements
