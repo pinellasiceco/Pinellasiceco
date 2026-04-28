@@ -3,9 +3,9 @@
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
-- Last deployed: 2026-04-27 (email buttons + proxy deployed)
+- Last deployed: 2026-04-28 (session 8 — Pipeline overhaul, Decision Engine, Tier 1 fixes)
 - Build script: `build.py` (repo root) → outputs `prospecting_tool.html` → copied to `index.html` by CI
-- `index.html` and `build.py` are fully in sync as of session 7
+- `index.html` and `build.py` are fully in sync as of session 8
 
 ## What's Working ✅
 
