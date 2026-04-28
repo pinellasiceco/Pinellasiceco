@@ -5246,7 +5246,7 @@ function renderTodaysPlan(){
     var col=PRI_COL[p.priority]||'#64748b';
     var riskH=p.ice_risk_level==='High'?'<span style="font-size:9px;color:#dc2626"> &#x1F9CA; H</span>':p.ice_risk_level==='Medium'?'<span style="font-size:9px;color:#d97706"> &#x1F9CA; M</span>':'';
     var daysH=p._daysSince<999?'<span style="font-size:9px;color:#94a3b8"> &#x2022; '+p._daysSince+'d ago</span>':'';
-    return '<div onclick="openM('+p.id+')" ontouchend="event.preventDefault();openM('+p.id+')" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid #e2e8f0;cursor:pointer;touch-action:manipulation">'
+    return '<div onclick="showCard('+p.id+')" ontouchend="event.preventDefault();showCard('+p.id+')" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid #e2e8f0;cursor:pointer;touch-action:manipulation">'
       +'<div style="font-size:11px;font-weight:800;color:#94a3b8;width:16px;flex-shrink:0">'+(i+1)+'.</div>'
       +'<div style="flex:1;min-width:0">'
         +'<div style="font-size:11px;font-weight:700;color:#0f1f38;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+p.name+'</div>'
