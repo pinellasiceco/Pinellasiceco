@@ -2073,8 +2073,16 @@ header{background:var(--navy);
     </div>
 
     <div class="dc" style="margin-top:12px">
-      <div class="dct">&#x1F4E7; Monday Briefing</div>
-      <div style="font-size:11px;color:var(--sub);line-height:1.6">Automated weekly email via GitHub Actions. Requires <code>RESEND_API_KEY</code> and <code>BRIEFING_EMAIL</code> in GitHub Secrets.</div>
+      <div class="dct">&#x1F4E7; Daily Briefing</div>
+      <div style="font-size:11px;color:var(--sub);line-height:1.6">Automated daily email via GitHub Actions. Requires <code>RESEND_API_KEY</code> and <code>BRIEFING_EMAIL</code> in GitHub Secrets.</div>
+      <button onclick="exportToBriefing()" ontouchend="event.preventDefault();exportToBriefing()" style="width:100%;margin-top:8px;padding:9px;background:#1e3a5f;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E4; Export Contacted Prospects to Briefing Filter</button>
+      <div style="font-size:9px;color:var(--sub);margin-top:4px">Marks prospects you have contacted so they don't appear in tomorrow's cold-target sections.</div>
+    </div>
+
+    <div class="dc" style="margin-top:12px">
+      <div class="dct">&#x1F4E7; Email Proxy</div>
+      <div style="font-size:9px;color:var(--sub);margin-bottom:4px">Supabase Edge Function URL for sending in-app emails. Deploy supabase/functions/send-email from the repo, then paste the URL here.</div>
+      <input class="phinput" id="sb-email-fn" type="text" placeholder="https://xxxx.supabase.co/functions/v1/send-email" oninput="saveEmailFnUrl()">
     </div>
 
     <div class="dc" style="margin-top:12px">
@@ -4735,8 +4743,9 @@ function rCust(){
         +'</div>'
         +serviceDueH
         +'<div style="display:flex;gap:5px;margin-top:3px">'
-          +'<button onclick="event.stopPropagation();openServiceLog('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();openServiceLog('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();openServiceLog('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:none;border-radius:6px;background:var(--grn);color:#fff;font-weight:700;cursor:pointer;font-family:inherit">&#x2713; Log Visit</button>'
-          +'<button onclick="event.stopPropagation();setNextService('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();setNextService('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();setNextService('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:1px solid var(--brd);border-radius:6px;background:var(--surf);color:var(--sub);cursor:pointer;font-family:inherit">Set Next Due</button>'
+          +'<button onclick="event.stopPropagation();openServiceLog('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();openServiceLog('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:none;border-radius:6px;background:var(--grn);color:#fff;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Log Visit</button>'
+          +'<button onclick="event.stopPropagation();emailComplianceReport('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();emailComplianceReport('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:1px solid #0a84ff;border-radius:6px;background:#eff6ff;color:#0a84ff;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E7; Email</button>'
+          +'<button onclick="event.stopPropagation();setNextService('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();setNextService('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:1px solid var(--brd);border-radius:6px;background:var(--surf);color:var(--sub);cursor:pointer;font-family:inherit;touch-action:manipulation">Set Next</button>'
         +'</div>'
       +'</div>'
       // Action buttons
@@ -4752,6 +4761,13 @@ function rCust(){
       // URL link fields
       +'<div style="display:flex;flex-direction:column;gap:5px;padding:8px;background:#f5f8fa;border-radius:7px">'
         +'<div style="font-size:8px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">&#x1F517; Link Records</div>'
+        +'<div style="display:flex;gap:5px;align-items:center">'
+          +'<span style="font-size:9px;color:#0a84ff;font-weight:600;width:52px;flex-shrink:0">Email</span>'
+          +'<input type="email" placeholder="client@example.com" value="'+(c.email||'')+'"'
+            +' onchange="saveCustomerEmail('+p.id+',this.value)"'
+            +' onclick="event.stopPropagation()"'
+            +' style="flex:1;padding:5px;border:1px solid var(--brd);border-radius:5px;font-size:10px;font-family:inherit;background:#fff;color:var(--txt);outline:none">'
+        +'</div>'
         +'<div style="display:flex;gap:5px;align-items:center">'
           +'<span style="font-size:9px;color:#ff7a59;font-weight:600;width:52px;flex-shrink:0">HubSpot</span>'
           +'<input type="url" placeholder="Paste HubSpot company URL..." value="'+(c.hubspot_url||'')+'"'
@@ -4840,6 +4856,12 @@ function saveFoundPhone(id){
   toast('\u2713 Phone saved: '+digits);
 }
 function saveHsUrl(id,v){saveCustomerUrl(id,'hubspot_url',v);}
+function saveCustomerEmail(id,v){
+  if(!customers[id])customers[id]={};
+  customers[id].email=v.trim();
+  custSave();
+  if(v.trim())toast('Email saved');
+}
 function saveMachineBrand(id,v){saveMachineField(id,'machine_brand',v);}
 function saveMachineType(id,v){saveMachineField(id,'machine_type',v);}
 function saveFilterType(id,v){saveMachineField(id,'filter_type',v);}
@@ -6526,9 +6548,10 @@ function loadReportClient(){
     '<div style="border:1px solid #e2e8f0;border-radius:10px;padding:20px;margin-top:8px;background:#fff;color:#1e293b;font-family:system-ui,sans-serif" id="report-content">'+
     reportHTML+
     '</div>'+
-    '<div style="display:flex;gap:8px;margin-top:10px">'+
-      '<button onclick="printReport()" style="flex:1;padding:10px;border:none;border-radius:8px;background:#0f1f38;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F5A8; Print / Save PDF</button>'+
-      '<button onclick="saveReportAndLog('+id+')" style="flex:1;padding:10px;border:1px solid #059669;border-radius:8px;background:#ecfdf5;color:#059669;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Save &amp; Log Visit</button>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px">'+
+      '<button onclick="printReport()" style="padding:10px;border:none;border-radius:8px;background:#0f1f38;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F5A8; Print</button>'+
+      '<button onclick="emailServiceReport('+id+')" style="padding:10px;border:1px solid #0a84ff;border-radius:8px;background:#eff6ff;color:#0a84ff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E7; Email</button>'+
+      '<button onclick="saveReportAndLog('+id+')" style="padding:10px;border:1px solid #059669;border-radius:8px;background:#ecfdf5;color:#059669;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Save &amp; Log</button>'+
     '</div>';
 }
 
@@ -6689,10 +6712,13 @@ function scStatusReport(p){
     '<div style="font-size:14px;font-weight:800;color:#0f1f38;margin-bottom:4px">&#x1F4CB; ATP Status Report</div>'
     +'<div style="font-size:11px;color:#64748b;margin-bottom:16px">Enter the ATP reading from the test (RLU). Leave blank if not yet tested.</div>'
     +'<input id="atp-val-inp" type="number" min="0" max="9999" placeholder="e.g. 847" inputmode="numeric" '
-    +'style="width:100%;padding:14px;border:2px solid #e2e8f0;border-radius:10px;font-size:28px;font-weight:800;font-family:inherit;outline:none;text-align:center;box-sizing:border-box;margin-bottom:12px;color:#0f1f38">'
-    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
-    +'<button id="atp-cancel" style="padding:12px;border:1px solid #e2e8f0;border-radius:9px;background:#f8fafc;color:#64748b;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
-    +'<button id="atp-print" style="padding:12px;border:none;border-radius:9px;background:#ea580c;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Generate &amp; Print</button>'
+    +'style="width:100%;padding:14px;border:2px solid #e2e8f0;border-radius:10px;font-size:28px;font-weight:800;font-family:inherit;outline:none;text-align:center;box-sizing:border-box;margin-bottom:8px;color:#0f1f38">'
+    +'<input id="atp-email-inp" type="email" placeholder="Email to (optional)" '
+    +'style="width:100%;padding:10px;border:2px solid #e2e8f0;border-radius:10px;font-size:14px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:12px;color:#0f1f38">'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">'
+    +'<button id="atp-cancel" style="padding:10px;border:1px solid #e2e8f0;border-radius:9px;background:#f8fafc;color:#64748b;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
+    +'<button id="atp-email" style="padding:10px;border:1px solid #0a84ff;border-radius:9px;background:#eff6ff;color:#0a84ff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E7; Email</button>'
+    +'<button id="atp-print" style="padding:10px;border:none;border-radius:9px;background:#ea580c;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Print</button>'
     +'</div>';
   atpBg.appendChild(box);
   document.body.appendChild(atpBg);
@@ -6703,12 +6729,19 @@ function scStatusReport(p){
     if(e.type==='click'&&Date.now()-_lt<350)return;
     if(e.type==='touchend')_lt=Date.now();
     if(e.target===atpBg){atpBg.remove();return;}
-    var btn=e.target.closest('#atp-cancel,#atp-print');
+    var btn=e.target.closest('#atp-cancel,#atp-email,#atp-print');
     if(!btn)return;
     if(e.type==='touchend')e.preventDefault();
     if(btn.id==='atp-cancel'){atpBg.remove();return;}
+    var val=parseInt((inp&&inp.value)||'0')||0;
+    var emailTo=((document.getElementById('atp-email-inp')||{}).value||'').trim();
+    if(btn.id==='atp-email'){
+      atpBg.remove();
+      if(!emailTo){toast('Enter an email address first');return;}
+      srSendEmail(p,val,emailTo);
+      return;
+    }
     if(btn.id==='atp-print'){
-      var val=parseInt((inp&&inp.value)||'0')||0;
       atpBg.remove();
       srGenerate(p,val);
     }
@@ -6818,6 +6851,71 @@ function srGenerate(p,atpVal){
   setTimeout(function(){w.print();},600);
 }
 
+function srSendEmail(p,atpVal,emailTo){
+  var now=new Date();
+  var dateStr=now.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  var atpStatus,atpColor;
+  if(atpVal<=0){atpStatus='PENDING';atpColor='#64748b';}
+  else if(atpVal<=10){atpStatus='PASS';atpColor='#059669';}
+  else if(atpVal<=100){atpStatus='MARGINAL';atpColor='#d97706';}
+  else{atpStatus='FAIL';atpColor='#dc2626';}
+  var services=['Full ice bin disassembly &amp; deep cleaning','ATP pre/post testing with printed documentation','Dated compliance report for your records','Water distribution system flush &amp; sanitize','Filter inspection &amp; replacement (as needed)','Internal sanitizer application (NSF/ANSI 60 compliant)'];
+  var html='<!DOCTYPE html><html><body style="font-family:system-ui,sans-serif;max-width:600px;margin:0 auto;padding:20px">'
+    +'<div style="font-size:18px;font-weight:800;color:#0f1f38">PINELLAS ICE CO</div>'
+    +'<div style="font-size:14px;font-weight:700;color:#0f1f38;margin:8px 0">ICE MACHINE STATUS REPORT</div>'
+    +'<div style="font-size:11px;color:#64748b">pinellasiceco.com &nbsp;&middot;&nbsp; '+dateStr+'</div>'
+    +'<hr style="border-color:#0f1f38;border-width:2px;margin:12px 0">'
+    +'<div style="font-weight:700;font-size:14px">'+p.name+'</div>'
+    +'<div style="font-size:11px;color:#475569">'+p.address+', '+p.city+', FL '+p.zip+'</div>'
+    +'<div style="margin:12px 0;padding:12px;background:#f8fafc;border-radius:8px">'
+    +'<div style="font-size:12px;font-weight:700;color:#64748b">ATP READING</div>'
+    +(atpVal>0?'<div style="font-size:32px;font-weight:900;color:'+atpColor+'">'+atpVal+' RLU</div>':'<div style="font-size:24px;color:#64748b">&mdash;</div>')
+    +'<div style="font-size:18px;font-weight:900;color:'+atpColor+'">'+atpStatus+'</div>'
+    +'</div>'
+    +'<div style="font-size:12px;font-weight:700;margin-top:12px;color:#0f1f38">Services Performed:</div>'
+    +'<ul style="font-size:11px;color:#475569;padding-left:16px">'+services.map(function(s){return '<li>'+s+'</li>';}).join('')+'</ul>'
+    +'<div style="margin-top:16px;font-size:10px;color:#94a3b8">Pinellas Ice Co &bull; Licensed &amp; Insured &bull; pinellasiceco.com</div>'
+    +'</body></html>';
+  sendEmailViaProxy(emailTo,'Ice Machine Status Report — '+p.name,html);
+}
+function emailServiceReport(id){
+  var p=P.find(function(x){return x.id===id;});
+  var c=customers[id]||{};
+  var to=(c.email||'').trim();
+  if(!to){toast('No email saved for this client — add it in Link Records');return;}
+  var content=document.getElementById('report-content');
+  if(!content){toast('No report loaded — select a client and view the report first');return;}
+  var subject='Service Report — '+(p?p.name:'');
+  sendEmailViaProxy(to,subject,'<!DOCTYPE html><html><body>'+content.outerHTML+'</body></html>');
+}
+function emailComplianceReport(id){
+  var p=P.find(function(x){return x.id===id;});
+  var c=customers[id]||{};
+  var to=(c.email||'').trim();
+  if(!to){toast('No email saved for this client — add it in Link Records');return;}
+  var now=new Date();
+  var dateStr=now.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  var atpH=c.atp_history||[];
+  var lastAtp=atpH.slice(-1)[0]||{};
+  var nextSvc=c.next_service?new Date(c.next_service.replace(/-/g,'/')).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}):'Not scheduled';
+  var html='<!DOCTYPE html><html><body style="font-family:system-ui,sans-serif;max-width:600px;margin:0 auto;padding:20px">'
+    +'<div style="font-size:18px;font-weight:800;color:#0f1f38">PINELLAS ICE CO</div>'
+    +'<div style="font-size:14px;font-weight:700;margin:8px 0">Compliance Summary — '+dateStr+'</div>'
+    +'<hr style="border-color:#0f1f38;border-width:2px;margin:12px 0">'
+    +'<div style="font-weight:700;font-size:14px">'+(p?p.name:id)+'</div>'
+    +(p?'<div style="font-size:11px;color:#475569">'+p.address+', '+p.city+', FL '+p.zip+'</div>':'')
+    +'<table style="width:100%;border-collapse:collapse;margin-top:12px">'
+    +'<tr style="background:#f8fafc"><td style="padding:8px;font-size:11px;font-weight:600;color:#64748b;width:45%">Last Service</td><td style="padding:8px;font-size:11px">'+(c.last_service||'Not recorded')+'</td></tr>'
+    +'<tr><td style="padding:8px;font-size:11px;font-weight:600;color:#64748b">Next Service Due</td><td style="padding:8px;font-size:11px">'+nextSvc+'</td></tr>'
+    +'<tr style="background:#f8fafc"><td style="padding:8px;font-size:11px;font-weight:600;color:#64748b">ATP Before</td><td style="padding:8px;font-size:11px">'+(lastAtp.pre||'—')+' RLU</td></tr>'
+    +'<tr><td style="padding:8px;font-size:11px;font-weight:600;color:#64748b">ATP After</td><td style="padding:8px;font-size:11px">'+(lastAtp.post||'—')+' RLU</td></tr>'
+    +'<tr style="background:#f8fafc"><td style="padding:8px;font-size:11px;font-weight:600;color:#64748b">Machine</td><td style="padding:8px;font-size:11px">'+(c.machine_brand||'')+(c.machine_model?' / '+c.machine_model:'')+'</td></tr>'
+    +'</table>'
+    +'<div style="margin-top:16px;font-size:10px;color:#94a3b8">Pinellas Ice Co &bull; Licensed &amp; Insured &bull; pinellasiceco.com</div>'
+    +'</body></html>';
+  sendEmailViaProxy(to,'Compliance Summary — '+(p?p.name:id),html);
+}
+
 // ── SETTINGS ─────────────────────────────────────────────────────────────────
 function loadSettings(){
   try{return JSON.parse(localStorage.getItem('pic_settings')||'{}')||{};}catch(e){return {};}
@@ -6837,13 +6935,48 @@ function initSettings(){
     if(s.home_zip)hzip.value=s.home_zip;
     else if(!hzip.value)hzip.value=DEFAULT_HOME_ZIP;
   }
-  // Auto-fill route start ZIP from saved home ZIP (fallback to default)
   const rzip=document.getElementById('rzip');
   if(rzip){
     const z=s.home_zip||DEFAULT_HOME_ZIP;
-    rzip.value=z;  // always override — settings is source of truth
+    rzip.value=z;
     rzip.placeholder=z;
   }
+  var emailFnEl=document.getElementById('sb-email-fn');
+  if(emailFnEl)emailFnEl.value=localStorage.getItem('pic_email_fn_url')||'';
+}
+function saveEmailFnUrl(){
+  var v=(document.getElementById('sb-email-fn')||{}).value||'';
+  localStorage.setItem('pic_email_fn_url',v.trim());
+}
+async function sendEmailViaProxy(to,subject,htmlBody){
+  var url=(localStorage.getItem('pic_email_fn_url')||'').trim();
+  if(!url){toast('Email Proxy URL not set — add it in Settings → Email Proxy');return;}
+  var anonKey=(localStorage.getItem('pic_supabase_key')||'').trim();
+  var headers={'Content-Type':'application/json'};
+  if(anonKey)headers['Authorization']='Bearer '+anonKey;
+  try{
+    var r=await fetch(url,{method:'POST',headers:headers,body:JSON.stringify({to:to,subject:subject,html:htmlBody})});
+    var t=await r.text().catch(function(){return '';});
+    if(r.ok){toast('✓ Email sent to '+to);}
+    else{toast('Email failed: HTTP '+r.status+' — '+t.slice(0,120));}
+  }catch(e){toast('Email error: '+e.message);}
+}
+async function exportToBriefing(){
+  var sbUrl=(localStorage.getItem('pic_supabase_url')||'').trim();
+  var sbKey=(localStorage.getItem('pic_supabase_key')||'').trim();
+  if(!sbUrl||!sbKey){toast('Configure Supabase URL and Key in Settings first');return;}
+  var contactedIds=Object.keys(log).filter(function(id){return (log[id]||[]).length>0;});
+  var deviceId=localStorage.getItem('pic_device_id')||('dev-'+Math.random().toString(36).slice(2));
+  localStorage.setItem('pic_device_id',deviceId);
+  try{
+    var r=await fetch(sbUrl+'/rest/v1/pic_briefing_export',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':sbKey,'Authorization':'Bearer '+sbKey,'Prefer':'resolution=merge-duplicates'},
+      body:JSON.stringify({device_id:deviceId,contacted_ids:contactedIds,exported_at:new Date().toISOString()})
+    });
+    if(r.ok){toast('✓ Exported '+contactedIds.length+' contacted prospects to briefing filter');}
+    else{var t=await r.text();toast('Export failed: HTTP '+r.status);}
+  }catch(e){toast('Export error: '+e.message);}
 }
 
 // ── QUOTE BUILDER ─────────────────────────────────────────────────────────────
