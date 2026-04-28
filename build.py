@@ -1578,7 +1578,6 @@ header{background:var(--navy);
     <div class="tab"     onclick="sw('route')"     ><span class="tab-icon">&#x1F5FA;</span><span class="tab-lbl">Route</span></div>
     <div class="tab"     onclick="sw('clients')"   ><span class="tab-icon">&#x1F91D;</span><span class="tab-lbl">Clients</span></div>
     <button id="gear-btn" onclick="sw('data')" title="Settings" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;cursor:pointer;padding:4px;color:var(--sub);line-height:1">&#x2699;&#xFE0F;</button>
-    <span id="sync-dot" title="Local only — configure cloud sync in Settings" onclick="event.stopPropagation();sw('data')" ontouchend="event.stopPropagation();event.preventDefault();sw('data')" style="position:absolute;right:38px;top:50%;transform:translateY(-50%);font-size:13px;cursor:pointer;line-height:1">&#x1F4BE;</span>
   </nav>
 
   <!-- Offline banner -->
@@ -1656,15 +1655,6 @@ header{background:var(--navy);
         <span class="tsect-sub">Escalated to CALLBACK/HOT, new ice violation, or big score jump since last rebuild.</span>
       </div>
       <div class="grid" id="nsy-grid"></div>
-    </div>
-
-    <!-- ── ASK FOR REFERRAL ──────────────────────────────── -->
-    <div id="referral-remind" style="margin-bottom:18px;display:none">
-      <div class="tsect-hdr">
-        <span>&#x1F49C; Ask for a Referral</span>
-        <span class="tsect-sub">Happy clients who are ready to make introductions.</span>
-      </div>
-      <div id="referral-remind-list"></div>
     </div>
 
     <!-- ── STRIKE ZONE ──────────────────────────────────── -->
@@ -2083,8 +2073,16 @@ header{background:var(--navy);
     </div>
 
     <div class="dc" style="margin-top:12px">
-      <div class="dct">&#x1F4E7; Monday Briefing</div>
-      <div style="font-size:11px;color:var(--sub);line-height:1.6">Automated weekly email via GitHub Actions. Requires <code>RESEND_API_KEY</code> and <code>BRIEFING_EMAIL</code> in GitHub Secrets.</div>
+      <div class="dct">&#x1F4E7; Daily Briefing</div>
+      <div style="font-size:11px;color:var(--sub);line-height:1.6">Automated daily email via GitHub Actions. Requires <code>RESEND_API_KEY</code> and <code>BRIEFING_EMAIL</code> in GitHub Secrets.</div>
+      <button onclick="exportToBriefing()" ontouchend="event.preventDefault();exportToBriefing()" style="width:100%;margin-top:8px;padding:9px;background:#1e3a5f;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E4; Export Contacted Prospects to Briefing Filter</button>
+      <div style="font-size:9px;color:var(--sub);margin-top:4px">Marks prospects you have contacted so they don't appear in tomorrow's cold-target sections.</div>
+    </div>
+
+    <div class="dc" style="margin-top:12px">
+      <div class="dct">&#x1F4E7; Email Proxy</div>
+      <div style="font-size:9px;color:var(--sub);margin-bottom:4px">Supabase Edge Function URL for sending in-app emails. Deploy supabase/functions/send-email from the repo, then paste the URL here.</div>
+      <input class="phinput" id="sb-email-fn" type="text" placeholder="https://xxxx.supabase.co/functions/v1/send-email" oninput="saveEmailFnUrl()">
     </div>
 
     <div class="dc" style="margin-top:12px">
@@ -2096,24 +2094,6 @@ header{background:var(--navy);
         <input class="phinput" id="home-zip" type="text" placeholder="34689" value="34689" maxlength="5" oninput="saveSettings()">
       </div>
       <button onclick="saveSettings();toast('\u2713 Settings saved')" ontouchend="event.preventDefault();saveSettings();toast('\u2713 Settings saved')" style="width:100%;margin-top:10px;padding:9px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Save Settings</button>
-    </div>
-
-    <div class="dc" style="margin-top:12px">
-      <div class="dct">&#x2601;&#xFE0F; Cloud Sync</div>
-      <div style="font-size:10px;color:var(--sub);margin-bottom:8px;line-height:1.5">Back up all data to Supabase. If your device is lost or cleared, tap <b>Restore from Cloud</b> on any device to recover everything instantly.</div>
-      <div style="font-size:10px;color:var(--sub);margin-bottom:4px">Supabase Project URL</div>
-      <input class="phinput" id="sb-url" type="text" placeholder="https://xxxx.supabase.co" oninput="saveSbCredentials()">
-      <div style="font-size:10px;color:var(--sub);margin-top:8px;margin-bottom:4px">Supabase Anon Key</div>
-      <input class="phinput" id="sb-key" type="password" placeholder="eyJhbGci..." oninput="saveSbCredentials()">
-      <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
-        <button onclick="testSbConnection()" ontouchend="event.stopPropagation();event.preventDefault();testSbConnection()" style="flex:1;padding:9px;background:#0f1f38;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Test Connection</button>
-        <span id="sb-status" style="font-size:11px;color:#94a3b8">&#x25CF; Not configured</span>
-      </div>
-      <button onclick="restoreFromCloud()" ontouchend="event.stopPropagation();event.preventDefault();restoreFromCloud()" style="width:100%;margin-top:8px;padding:9px;background:#059669;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2193; Restore from Cloud</button>
-      <div id="sb-last-sync" style="font-size:10px;color:#94a3b8;margin-top:6px;text-align:center"></div>
-      <div style="font-size:10px;color:var(--sub);margin-top:12px;margin-bottom:4px">&#x1F4E7; Email Proxy URL</div>
-      <div style="font-size:9px;color:#94a3b8;margin-bottom:4px;line-height:1.5">Supabase Edge Function URL. Deploy <b>supabase/functions/send-email/</b> from this repo, then paste the URL here.</div>
-      <input class="phinput" id="sb-email-fn" type="text" placeholder="https://xxxx.supabase.co/functions/v1/send-email" oninput="saveEmailFnUrl()">
     </div>
 
     <div class="dc" style="margin-top:12px">
@@ -2779,146 +2759,6 @@ function hav(la1,lo1,la2,lo2){
 let log={},tab='today',selOut=null,selType=null,selReasonVal=null,cur=null,Q='',route=[],routeSet=new Set(),mapPros=[],routeAnchor=null;
 let queueList=[],queueIdx=0;
 
-// ── SUPABASE CLOUD SYNC ───────────────────────────────────────────────────────
-function getDeviceId(){
-  var id=localStorage.getItem('pic_device_id');
-  if(!id){id='pic_'+Date.now()+'_'+Math.random().toString(36).slice(2);localStorage.setItem('pic_device_id',id);}
-  return id;
-}
-function getSbConfig(){
-  return{url:(localStorage.getItem('pic_supabase_url')||'').trim(),key:(localStorage.getItem('pic_supabase_key')||'').trim()};
-}
-function sbEnabled(){var c=getSbConfig();return !!(c.url&&c.key);}
-function updateSyncIndicator(status){
-  var dot=document.getElementById('sync-dot');
-  if(!dot)return;
-  dot.textContent=status==='synced'?'☁':status==='error'?'⚠':'💾';
-  dot.title=status==='synced'?'Data synced to cloud':status==='error'?'Sync error — data saved locally':'Local only — configure cloud sync in Settings';
-}
-async function sbUpsert(table,prospectId,data){
-  if(!sbEnabled())return;
-  var c=getSbConfig();
-  try{
-    await fetch(c.url+'/rest/v1/'+table,{
-      method:'POST',
-      headers:{'Content-Type':'application/json','apikey':c.key,'Authorization':'Bearer '+c.key,'Prefer':'resolution=merge-duplicates'},
-      body:JSON.stringify({device_id:getDeviceId(),prospect_id:String(prospectId),data:data,updated_at:new Date().toISOString()})
-    });
-    updateSyncIndicator('synced');
-  }catch(e){console.warn('Supabase sync failed:',e);updateSyncIndicator('error');}
-}
-async function sbUpsertSetting(key,data){
-  if(!sbEnabled())return;
-  var c=getSbConfig();
-  try{
-    await fetch(c.url+'/rest/v1/pic_settings',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','apikey':c.key,'Authorization':'Bearer '+c.key,'Prefer':'resolution=merge-duplicates'},
-      body:JSON.stringify({device_id:getDeviceId(),key:key,data:data,updated_at:new Date().toISOString()})
-    });
-  }catch(e){console.warn('Supabase sync failed:',e);}
-}
-async function sbFetchAll(table){
-  if(!sbEnabled())return null;
-  var c=getSbConfig();
-  try{
-    var res=await fetch(c.url+'/rest/v1/'+table+'?device_id=eq.'+encodeURIComponent(getDeviceId())+'&limit=10000',{
-      headers:{'apikey':c.key,'Authorization':'Bearer '+c.key}
-    });
-    if(!res.ok)return null;
-    return await res.json();
-  }catch(e){console.warn('Supabase fetch failed:',e);return null;}
-}
-function saveSbCredentials(){
-  var url=(document.getElementById('sb-url')||{}).value||'';
-  var key=(document.getElementById('sb-key')||{}).value||'';
-  localStorage.setItem('pic_supabase_url',url.trim());
-  localStorage.setItem('pic_supabase_key',key.trim());
-  updateSyncIndicator(sbEnabled()?'synced':'local');
-  var status=document.getElementById('sb-status');
-  if(status){status.textContent=sbEnabled()?'● Connected':'● Not configured';status.style.color=sbEnabled()?'#059669':'#94a3b8';}
-}
-async function testSbConnection(){
-  var c=getSbConfig();
-  if(!c.url||!c.key){toast('Enter URL and Key first');return;}
-  try{
-    var res=await fetch(c.url+'/rest/v1/pic_settings?limit=1',{
-      headers:{'apikey':c.key,'Authorization':'Bearer '+c.key}
-    });
-    if(res.ok){
-      toast('✓ Connected to Supabase');
-      var indicator=document.getElementById('sb-status');
-      if(indicator){indicator.textContent='● Connected';indicator.style.color='#059669';}
-      updateSyncIndicator('synced');
-    }else{
-      var body=await res.text();
-      toast('Connection failed ('+res.status+')');
-      console.warn('Supabase test error:',body);
-    }
-  }catch(e){toast('Connection failed — check URL');console.warn(e);}
-}
-async function restoreFromCloud(){
-  if(!sbEnabled()){toast('Configure Supabase URL and Key first');return;}
-  toast('Restoring from cloud...');
-  try{
-    var logRows=await sbFetchAll('pic_log');
-    if(logRows&&logRows.length){logRows.forEach(function(row){if(row.data)log[row.prospect_id]=row.data;});lSave();}
-    var custRows=await sbFetchAll('pic_customers');
-    if(custRows&&custRows.length){custRows.forEach(function(row){if(row.data)customers[row.prospect_id]=row.data;});custSave();}
-    var phoneRows=await sbFetchAll('pic_phones');
-    if(phoneRows&&phoneRows.length){
-      var ph={};try{ph=JSON.parse(localStorage.getItem('pic_phones')||'{}')||{};}catch(e){}
-      phoneRows.forEach(function(row){if(row.data)ph[row.prospect_id]=row.data;});
-      try{localStorage.setItem('pic_phones',JSON.stringify(ph));}catch(e){}
-    }
-    var contactRows=await sbFetchAll('pic_contacts');
-    if(contactRows&&contactRows.length){contactRows.forEach(function(row){if(row.data)contacts[row.prospect_id]=row.data;});try{localStorage.setItem('pic_contacts',JSON.stringify(contacts));}catch(e){}}
-    var settingRows=await sbFetchAll('pic_settings');
-    if(settingRows&&settingRows.length){
-      settingRows.forEach(function(row){
-        if(row.key==='goals'&&row.data)goals=row.data;
-        if(row.key==='settings'&&row.data)try{localStorage.setItem('pic_settings',JSON.stringify(row.data));}catch(e){}
-      });
-      try{localStorage.setItem('pic_goals',JSON.stringify(goals));}catch(e){}
-    }
-    localStorage.setItem('pic_last_sync',new Date().toISOString());
-    toast('✓ Restored from cloud — reloading...');
-    setTimeout(function(){location.reload();},1500);
-  }catch(e){toast('Restore failed — check credentials');console.error(e);}
-}
-function initSbSettings(){
-  var urlEl=document.getElementById('sb-url'),keyEl=document.getElementById('sb-key');
-  if(urlEl)urlEl.value=localStorage.getItem('pic_supabase_url')||'';
-  if(keyEl)keyEl.value=localStorage.getItem('pic_supabase_key')||'';
-  var status=document.getElementById('sb-status');
-  if(status&&sbEnabled()){status.textContent='● Connected';status.style.color='#059669';}
-  var lastSync=localStorage.getItem('pic_last_sync');
-  var lastSyncEl=document.getElementById('sb-last-sync');
-  if(lastSyncEl&&lastSync){
-    try{var d=new Date(lastSync);lastSyncEl.textContent='Last restore: '+d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});}catch(e){}
-  }
-  var emailFnEl=document.getElementById('sb-email-fn');
-  if(emailFnEl)emailFnEl.value=localStorage.getItem('pic_email_fn_url')||'';
-}
-function saveEmailFnUrl(){
-  var v=(document.getElementById('sb-email-fn')||{}).value||'';
-  localStorage.setItem('pic_email_fn_url',v.trim());
-}
-async function sendEmailViaProxy(to,subject,htmlBody){
-  var url=(localStorage.getItem('pic_email_fn_url')||'').trim();
-  if(!url){toast('&#x1F4E7; Email Proxy URL not set — add it in Settings → Cloud Sync');return;}
-  var anonKey=(localStorage.getItem('pic_supabase_key')||'').trim();
-  var headers={'Content-Type':'application/json'};
-  if(anonKey)headers['Authorization']='Bearer '+anonKey;
-  try{
-    var r=await fetch(url,{method:'POST',headers:headers,body:JSON.stringify({to:to,subject:subject,html:htmlBody})});
-    var t=await r.text().catch(function(){return '';});
-    if(r.ok){toast('&#x2713; Email sent to '+to);}
-    else{alert('Email failed: HTTP '+r.status+'\n'+t.slice(0,200));}
-  }catch(e){alert('Email error: '+e.message);}
-}
-// ─────────────────────────────────────────────────────────────────────────────
-
 function saveRouteState(){
   try{sessionStorage.setItem('pic_route',JSON.stringify({stops:route.map(p=>p.id),anchor:routeAnchor?routeAnchor.id:null}));}catch(e){}
 }
@@ -2930,23 +2770,6 @@ function loadRouteState(){
     routeSet=new Set(ids);
     routeAnchor=s.anchor?P.find(function(p){return p.id===s.anchor;})||null:null;
   }catch(e){route=[];routeSet=new Set();routeAnchor=null;}
-}
-var _sc={p:null};
-var _scRouteLast=0;
-var _addRouteTs={};
-function scAddRoute(){
-  if(Date.now()-_scRouteLast<400)return;
-  _scRouteLast=Date.now();
-  var p=_sc.p;if(!p)return;
-  addToRoute(p.id);
-  var nowIn=routeSet.has(p.id);
-  var btn=document.getElementById('sc-route-btn');
-  if(btn){
-    btn.textContent=nowIn?'✓ On Route':'📍 Route';
-    btn.style.background=nowIn?'#ecfdf5':'#f0fdf4';
-    btn.style.color=nowIn?'#059669':'#059669';
-    btn.style.border=nowIn?'1px solid #6ee7b7':'none';
-  }
 }
 let svcTab='cal',clientTab='clients';
 
@@ -2969,7 +2792,6 @@ function lSave(){
     toast('✓ Logged — next');
   }
   try{localStorage.setItem('pic_v4',JSON.stringify(log));}catch(e){}
-  if(sbEnabled()){Object.keys(log).forEach(function(pid){sbUpsert('pic_log',pid,log[pid]);});}
 }
 function phLoad(){
   try{
@@ -2986,7 +2808,6 @@ function phSave(id,phone,hours,rating){
   let s={};try{s=JSON.parse(localStorage.getItem('pic_phones')||'{}')||{};}catch(e){}
   s[id]={phone,hours,rating};try{localStorage.setItem('pic_phones',JSON.stringify(s));}catch(e){}
   const p=P.find(x=>x.id===id);if(p){p.phone=phone;p.hours=hours;p.rating=rating;}
-  if(sbEnabled())sbUpsert('pic_phones',id,{phone,hours,rating});
 }
 function getLC(id){const e=log[id]||[];return e.length?e[e.length-1]:null;}
 function isC(id){
@@ -3599,7 +3420,6 @@ function renderMap(){
 
 function addToRoute(id){
   id=parseInt(id);
-  var _now=Date.now();if(_addRouteTs[id]&&_now-_addRouteTs[id]<400)return;_addRouteTs[id]=_now;
   const p=P.find(x=>x.id===id);if(!p)return;
   if(routeSet.has(id)){
     routeSet.delete(id);route=route.filter(r=>r.id!==id);
@@ -3908,7 +3728,6 @@ function showCard(id){
   id=parseInt(id)||id;
   var p=P.find(function(x){return x.id===id||x.id==id;});
   if(!p){toast('Not found: '+id);return;}
-  _sc.p=p;
 
   var existing=document.getElementById('sc-bg');
   if(existing)existing.remove();
@@ -4103,7 +3922,7 @@ function showCard(id){
         +'<div style="font-size:10px;color:#94a3b8">'+p.address+', '+p.city+', FL '+p.zip+' · #'+p.id+'</div>'
       +'</div>'
       +'<div style="display:flex;gap:6px;align-items:center;flex-shrink:0;margin-left:10px">'
-    +(function(){var _ir=routeSet.has(parseInt(p.id));return '<button id="sc-route-btn" onclick="event.stopPropagation();scAddRoute()" ontouchend="event.stopPropagation();event.preventDefault();scAddRoute()" style="border-radius:8px;padding:8px 14px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;font-family:inherit;-webkit-tap-highlight-color:transparent;'+(_ir?'background:#ecfdf5;color:#059669;border:1px solid #6ee7b7':'background:#f0fdf4;color:#059669;border:none')+'">'+(_ir?'&#x2713; On Route':'&#x1F4CD; Route')+'</button>';})()
+    +(function(){var _ir=routeSet.has(parseInt(p.id));return '<button id="sc-route-btn" style="border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;font-family:inherit;-webkit-tap-highlight-color:transparent;'+(_ir?'background:#ecfdf5;color:#059669;border:1px solid #6ee7b7':'background:#f0fdf4;color:#059669;border:none')+'">'+(_ir?'&#x2713; On Route':'&#x1F4CD; Route')+'</button>';})()
 
     +'<button id="sc-report-btn" style="border:none;background:#fff7ed;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:#ea580c;cursor:pointer;touch-action:manipulation;font-family:inherit;-webkit-tap-highlight-color:transparent">&#x1F4CB; Report</button>'
     +'<button id="sc-close" style="border:none;background:#f1f5f9;border-radius:50%;width:34px;height:34px;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;touch-action:manipulation;color:#475569;font-family:inherit">&#x2715;</button>'
@@ -4161,8 +3980,15 @@ function showCard(id){
     // Close
     if(bid==='sc-close'){bg.remove();return;}
 
-    // +Route — handled by inline onclick/ontouchend → scAddRoute()
-    if(bid==='sc-route-btn'){return;}
+    // +Route — toggle in/out, update button appearance immediately
+    if(bid==='sc-route-btn'){
+      addToRoute(p.id); // handles toggle + saveRouteState + re-render
+      var _nowIn=routeSet.has(p.id);
+      btn.textContent=_nowIn?'✓ On Route':'📍 Route';
+      btn.style.background=_nowIn?'#ecfdf5':'#f0fdf4';
+      btn.style.border=_nowIn?'1px solid #6ee7b7':'none';
+      return;
+    }
 
     // Report
     if(bid==='sc-report-btn'){scStatusReport(p);return;}
@@ -4248,9 +4074,28 @@ function showCard(id){
     // Close deal (Intro / Recurring / One-Time / Churned)
     if(bid==='sc-won-intro'||bid==='sc-won-rec'||bid==='sc-won-once'||bid==='sc-lost-btn'){
       var wonStatus=bid==='sc-won-intro'?'customer_intro':bid==='sc-won-rec'?'customer_recurring':bid==='sc-won-once'?'customer_once':'churned';
-      if(wonStatus==='churned'){scExecWon(p,wonStatus,null,ph,bg);return;}
-      _sc.wonStatus=wonStatus;_sc.ph=ph;_sc.bg=bg;
-      scShowReferralCapture();return;
+      var wonNow=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+      customers[p.id]={
+        status:wonStatus,won_date:wonNow,
+        service_type:wonStatus==='customer_recurring'?'recurring':wonStatus==='customer_intro'?'intro':'one_time',
+        monthly:wonStatus==='customer_recurring'?p.monthly:0,
+        onetime:wonStatus==='customer_once'?p.onetime:wonStatus==='customer_intro'?99:0,
+        machines:p.machines,name:p.name,address:p.address,city:p.city,phone:ph,
+        notes:'',last_service:'',next_service:'',hubspot_url:'',square_url:'',
+        machine_brand:'',machine_model:'',machine_type:'',filter_type:'',
+        filter_installed:'',contract_start:'',contract_term:6,contract_renewal:'',
+        service_history:[],atp_history:[],vendor_name:'',
+      };
+      custSave();p.status=wonStatus;
+      if(!log[p.id])log[p.id]=[];
+      log[p.id].push({outcome:wonStatus,date:wonNow,notes:'Deal closed'});
+      lSave();
+      if(wonStatus==='customer_recurring'||wonStatus==='customer_intro')buildAnnualSchedule(p.id);
+      bg.remove();
+      toast(wonStatus==='customer_intro'?'🔥 Intro booked! $99 first visit':
+            wonStatus==='customer_recurring'?'🎉 Won! Added to recurring clients.':
+            wonStatus==='churned'?'Marked lost/churned':'🧼 Won! One-time service recorded.');
+      sw('customers');return;
     }
 
     // Vendor save
@@ -4690,113 +4535,7 @@ function custLoad(){
   // Apply saved statuses to P records
   P.forEach(p=>{const c=customers[p.id];if(c)p.status=c.status;});
 }
-function custSave(){
-  try{localStorage.setItem('pic_customers',JSON.stringify(customers));}catch(e){}
-  if(sbEnabled()){Object.keys(customers).forEach(function(pid){sbUpsert('pic_customers',pid,customers[pid]);});}
-}
-
-// ── REFERRAL CAPTURE ──────────────────────────────────────────────────────────
-function scExecWon(p,wonStatus,referrerId,ph,bgEl){
-  var wonNow=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-  var refName='';
-  if(referrerId){var rp=P.find(function(x){return x.id==referrerId;});refName=rp?rp.name:'';}
-  customers[p.id]={
-    status:wonStatus,won_date:wonNow,
-    service_type:wonStatus==='customer_recurring'?'recurring':wonStatus==='customer_intro'?'intro':'one_time',
-    monthly:wonStatus==='customer_recurring'?p.monthly:0,
-    onetime:wonStatus==='customer_once'?p.onetime:wonStatus==='customer_intro'?99:0,
-    machines:p.machines,name:p.name,address:p.address,city:p.city,phone:ph,
-    notes:'',last_service:'',next_service:'',hubspot_url:'',square_url:'',
-    machine_brand:'',machine_model:'',machine_type:'',filter_type:'',
-    filter_installed:'',contract_start:'',contract_term:6,contract_renewal:'',
-    service_history:[],atp_history:[],vendor_name:'',
-    referred_by:referrerId||null,referred_by_name:refName,
-    referrals:[],last_referral_ask:null,
-  };
-  if(referrerId&&customers[referrerId]){
-    if(!customers[referrerId].referrals)customers[referrerId].referrals=[];
-    customers[referrerId].referrals.push({id:p.id,name:p.name,date:wonNow,status:wonStatus});
-  }
-  custSave();p.status=wonStatus;
-  if(!log[p.id])log[p.id]=[];
-  log[p.id].push({outcome:wonStatus,date:wonNow,notes:'Deal closed'+(refName?' · Referred by '+refName:'')});
-  lSave();
-  if(wonStatus==='customer_recurring'||wonStatus==='customer_intro')buildAnnualSchedule(p.id);
-  if(bgEl)bgEl.remove();
-  toast(wonStatus==='customer_intro'?'🔥 Intro booked! $99 first visit':
-        wonStatus==='customer_recurring'?'🎉 Won! Added to recurring clients.':
-        '🧼 Won! One-time service recorded.');
-  sw('customers');
-}
-
-function scShowReferralCapture(){
-  var p=_sc.p;if(!p)return;
-  var ph=_sc.ph||'';var wonStatus=_sc.wonStatus||'customer_recurring';var bgEl=_sc.bg;
-  var clients=P.filter(function(x){
-    return ['customer_recurring','customer_intro','customer_once'].indexOf(x.status)>=0&&x.id!==p.id;
-  }).sort(function(a,b){return a.name.localeCompare(b.name);});
-  var selectedId=null;
-  function clientHTML(list){
-    if(!list.length)return '<div style="padding:10px;font-size:12px;color:#94a3b8;text-align:center">No matching clients</div>';
-    return list.map(function(c){
-      var refCnt=((customers[c.id]||{}).referrals||[]).length;
-      var sel=c.id===selectedId;
-      return '<div data-refid="'+c.id+'" style="padding:9px 10px;border-radius:8px;cursor:pointer;border:2px solid '+(sel?'#059669':'#e2e8f0')+';background:'+(sel?'#ecfdf5':'#fff')+';margin-bottom:5px;display:flex;justify-content:space-between;align-items:center;touch-action:manipulation">'
-        +'<div><div style="font-size:12px;font-weight:700;color:#0f1f38">'+c.name+'</div>'
-        +'<div style="font-size:9px;color:#94a3b8">'+c.city+'</div></div>'
-        +(refCnt?'<span style="font-size:9px;font-weight:700;color:#7c3aed;background:#f5f3ff;padding:2px 6px;border-radius:10px">'+refCnt+' ref'+(refCnt>1?'s':'')+'</span>':'')
-        +'</div>';
-    }).join('');
-  }
-  var ol=document.createElement('div');
-  ol.id='ref-overlay';
-  ol.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:10002;display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box';
-  ol.innerHTML='<div style="background:#fff;border-radius:14px;padding:20px;width:100%;max-width:380px;max-height:80vh;display:flex;flex-direction:column;overflow:hidden">'
-    +'<div style="font-size:16px;font-weight:800;color:#0f1f38;margin-bottom:4px">🎉 Great close!</div>'
-    +'<div style="font-size:12px;color:#475569;margin-bottom:14px">Were you referred by another client?</div>'
-    +'<input id="ref-search" type="text" placeholder="Search clients…" style="width:100%;padding:9px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:10px">'
-    +'<div id="ref-list" style="overflow-y:auto;flex:1;margin-bottom:14px;max-height:220px"></div>'
-    +'<div style="display:flex;gap:8px;flex-shrink:0">'
-    +'<button id="ref-skip" style="flex:1;padding:10px;border:1px solid #e2e8f0;border-radius:9px;background:#f8fafc;color:#64748b;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Skip — no referral</button>'
-    +'<button id="ref-save" style="flex:1;padding:10px;border:none;border-radius:9px;background:#059669;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Save with referral</button>'
-    +'</div></div>';
-  document.body.appendChild(ol);
-  var listEl=document.getElementById('ref-list');
-  var searchEl=document.getElementById('ref-search');
-  listEl.innerHTML=clientHTML(clients);
-  searchEl.addEventListener('input',function(){
-    var q=this.value.toLowerCase();
-    listEl.innerHTML=clientHTML(clients.filter(function(c){return !q||c.name.toLowerCase().indexOf(q)>=0||c.city.toLowerCase().indexOf(q)>=0;}));
-  },false);
-  function rerender(){
-    var q=(searchEl.value||'').toLowerCase();
-    listEl.innerHTML=clientHTML(clients.filter(function(c){return !q||c.name.toLowerCase().indexOf(q)>=0||c.city.toLowerCase().indexOf(q)>=0;}));
-  }
-  function doSkip(){ol.remove();scExecWon(p,wonStatus,null,ph,bgEl);}
-  function doSave(){ol.remove();scExecWon(p,wonStatus,selectedId,ph,bgEl);}
-  ol.addEventListener('touchend',function(e){
-    if(e.target===ol){e.preventDefault();doSkip();return;}
-    var item=e.target.closest('[data-refid]');
-    if(item){e.preventDefault();selectedId=parseInt(item.dataset.refid);rerender();return;}
-    if(e.target.closest('#ref-skip')){e.preventDefault();doSkip();return;}
-    if(e.target.closest('#ref-save')){e.preventDefault();doSave();return;}
-  },false);
-  ol.addEventListener('click',function(e){
-    if(e.target===ol){doSkip();return;}
-    var item=e.target.closest('[data-refid]');
-    if(item){selectedId=parseInt(item.dataset.refid);rerender();return;}
-    if(e.target.closest('#ref-skip')){doSkip();return;}
-    if(e.target.closest('#ref-save')){doSave();return;}
-  },false);
-}
-
-function markReferralAsked(id){
-  if(!customers[id])return;
-  customers[id].last_referral_ask=localISO(new Date());
-  custSave();
-  toast('✓ Marked — will resurface in 60 days');
-  renderBriefing();
-}
+function custSave(){try{localStorage.setItem('pic_customers',JSON.stringify(customers));}catch(e){}}
 
 function markWon(status){
   if(!cur)return;
@@ -4990,15 +4729,12 @@ function rCust(){
           +'<div style="font-weight:700;font-size:12px;color:var(--navy)">'+p.name+'</div>'
           +'<div style="font-size:10px;color:var(--sub)">'+p.city+', '+p.county+(p.phone?' &bull; '+p.phone:'')+'</div>'
           +'<div style="font-size:9px;font-weight:700;color:'+col+';margin-top:2px">'+lbl+'</div>'
-          +(c.referred_by_name?'<div style="font-size:9px;color:#7c3aed;margin-top:2px">&#x1F91D; Ref by '+c.referred_by_name+'</div>':'')
         +'</div>'
         +'<div style="text-align:right;flex-shrink:0;margin-left:10px">'
           +(rev?'<div style="font-size:13px;font-weight:800;color:var(--grn)">'+rev+'</div>':'')
           +(c.won_date?'<div style="font-size:9px;color:var(--sub)">Since '+c.won_date+'</div>':'')
-          +((c.referrals&&c.referrals.length)?'<div style="font-size:9px;font-weight:700;color:#7c3aed;margin-top:2px">&#x1F49C; '+c.referrals.length+' referral'+(c.referrals.length>1?'s':'')+'</div>':'')
         +'</div>'
       +'</div>'
-      +((c.referrals&&c.referrals.length)?'<div style="padding:5px 0;display:flex;flex-wrap:wrap;gap:4px">'+c.referrals.map(r=>'<span style="font-size:9px;color:#7c3aed;background:#faf5ff;border:1px solid #ddd8f5;border-radius:10px;padding:2px 7px">&#x1F49C; '+r.name+' ('+r.date+')</span>').join('')+'</div>':'')
       // Service tracking row
       +'<div style="background:#f5f8fa;border-radius:7px;padding:8px;display:flex;flex-direction:column;gap:5px">'
         +'<div style="display:flex;justify-content:space-between;align-items:center">'
@@ -5007,9 +4743,9 @@ function rCust(){
         +'</div>'
         +serviceDueH
         +'<div style="display:flex;gap:5px;margin-top:3px">'
-          +'<button onclick="event.stopPropagation();openServiceLog('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();openServiceLog('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:none;border-radius:6px;background:var(--grn);color:#fff;font-weight:700;cursor:pointer;font-family:inherit">&#x2713; Log Visit</button>'
-          +'<button onclick="event.stopPropagation();emailComplianceReport('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();emailComplianceReport('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:none;border-radius:6px;background:#0f1f38;color:#fff;font-weight:700;cursor:pointer;font-family:inherit">&#x1F4E7; Email</button>'
-          +'<button onclick="event.stopPropagation();setNextService('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();setNextService('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:1px solid var(--brd);border-radius:6px;background:var(--surf);color:var(--sub);cursor:pointer;font-family:inherit">Set Next</button>'
+          +'<button onclick="event.stopPropagation();openServiceLog('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();openServiceLog('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:none;border-radius:6px;background:var(--grn);color:#fff;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Log Visit</button>'
+          +'<button onclick="event.stopPropagation();emailComplianceReport('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();emailComplianceReport('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:1px solid #0a84ff;border-radius:6px;background:#eff6ff;color:#0a84ff;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E7; Email</button>'
+          +'<button onclick="event.stopPropagation();setNextService('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();setNextService('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:1px solid var(--brd);border-radius:6px;background:var(--surf);color:var(--sub);cursor:pointer;font-family:inherit;touch-action:manipulation">Set Next</button>'
         +'</div>'
       +'</div>'
       // Action buttons
@@ -5026,8 +4762,8 @@ function rCust(){
       +'<div style="display:flex;flex-direction:column;gap:5px;padding:8px;background:#f5f8fa;border-radius:7px">'
         +'<div style="font-size:8px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">&#x1F517; Link Records</div>'
         +'<div style="display:flex;gap:5px;align-items:center">'
-          +'<span style="font-size:9px;color:#0f1f38;font-weight:600;width:52px;flex-shrink:0">Email</span>'
-          +'<input type="email" placeholder="owner@example.com" value="'+(c.email||'')+'"'
+          +'<span style="font-size:9px;color:#0a84ff;font-weight:600;width:52px;flex-shrink:0">Email</span>'
+          +'<input type="email" placeholder="client@example.com" value="'+(c.email||'')+'"'
             +' onchange="saveCustomerEmail('+p.id+',this.value)"'
             +' onclick="event.stopPropagation()"'
             +' style="flex:1;padding:5px;border:1px solid var(--brd);border-radius:5px;font-size:10px;font-family:inherit;background:#fff;color:var(--txt);outline:none">'
@@ -5124,7 +4860,7 @@ function saveCustomerEmail(id,v){
   if(!customers[id])customers[id]={};
   customers[id].email=v.trim();
   custSave();
-  toast('Email saved');
+  if(v.trim())toast('Email saved');
 }
 function saveMachineBrand(id,v){saveMachineField(id,'machine_brand',v);}
 function saveMachineType(id,v){saveMachineField(id,'machine_type',v);}
@@ -5230,7 +4966,6 @@ function goalsLoad(){
 }
 function goalsSave(){
   try{localStorage.setItem('pic_goals',JSON.stringify(goals));}catch(e){}
-  if(sbEnabled())sbUpsertSetting('goals',goals);
 }
 function autoMRR(){
   const clients=parseInt(document.getElementById('goal-clients')?.value)||0;
@@ -5486,48 +5221,6 @@ function renderBriefing(){
       if(nsyGrid){nsyGrid.innerHTML=newBizs.map(p=>cardHTML(p)).join('');attachGridListeners(nsyGrid);}
     } else {
       nsyEl.style.display='none';
-    }
-  }
-
-  // ── ASK FOR REFERRAL REMINDER ─────────────────────────────────────────
-  const refRemindEl=document.getElementById('referral-remind');
-  const refRemindList=document.getElementById('referral-remind-list');
-  if(refRemindEl&&refRemindList){
-    const refCandidates=P.filter(function(rp){
-      const rc=customers[rp.id];
-      if(!rc||!rc.status||rc.status==='prospect'||rc.status==='churned')return false;
-      if(!rc.won_date)return false;
-      const wonD=parseLD(rc.won_date)||now;
-      if(Math.floor((now-wonD)/864e5)<30)return false;
-      if(!rc.service_history||!rc.service_history.length)return false;
-      if(rc.last_referral_ask){
-        const lastAsk=parseLD(rc.last_referral_ask);
-        if(lastAsk&&Math.floor((now-lastAsk)/864e5)<60)return false;
-      }
-      return true;
-    }).slice(0,3);
-    if(refCandidates.length){
-      refRemindEl.style.display='block';
-      refRemindList.innerHTML=refCandidates.map(function(rp){
-        const rc=customers[rp.id]||{};
-        const visits=(rc.service_history||[]).length;
-        const wonD=parseLD(rc.won_date)||now;
-        const daysSince=Math.floor((now-wonD)/864e5);
-        const sid='ref-script-'+rp.id;
-        return '<div style="background:#fff;border:1px solid #ddd8f5;border-radius:10px;padding:12px;margin-bottom:8px">'
-          +'<div style="font-weight:700;font-size:12px;color:#0f1f38">'+rp.name+'</div>'
-          +'<div style="font-size:9px;color:#94a3b8;margin-bottom:8px">'+rp.city+' &bull; Client '+daysSince+'d &bull; '+visits+' visit'+(visits!==1?'s':'')+'</div>'
-          +'<div id="'+sid+'" style="background:#faf5ff;border-radius:7px;padding:7px 10px;font-size:10px;color:#5b21b6;font-style:italic;margin-bottom:8px;display:none">'
-            +'&ldquo;Hey &mdash; quick favor. If you know any other restaurant owners who might want their ice machine tested, I&rsquo;d really appreciate the intro. I&rsquo;ll take care of them the same way I take care of you.&rdquo;'
-          +'</div>'
-          +'<div style="display:flex;gap:6px;flex-wrap:wrap">'
-            +'<button onclick="event.stopPropagation();toggleRefScript(this)" ontouchend="event.stopPropagation();event.preventDefault();toggleRefScript(this)" data-sid="'+sid+'" style="font-size:9px;padding:5px 9px;border:1px solid #ddd8f5;border-radius:6px;background:#faf5ff;color:#7c3aed;cursor:pointer;font-family:inherit;touch-action:manipulation">What to say &#x25BE;</button>'
-            +'<button onclick="event.stopPropagation();markReferralAsked('+rp.id+')" ontouchend="event.stopPropagation();event.preventDefault();markReferralAsked('+rp.id+')" style="font-size:9px;padding:5px 9px;border:1px solid #6ee7b7;border-radius:6px;background:#ecfdf5;color:#059669;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Asked</button>'
-            +'<button onclick="event.stopPropagation();openM('+rp.id+')" ontouchend="event.stopPropagation();event.preventDefault();openM('+rp.id+')" style="font-size:9px;padding:5px 9px;border:1px solid #e2e8f0;border-radius:6px;background:#f8fafc;color:#475569;cursor:pointer;font-family:inherit;touch-action:manipulation">View Client</button>'
-          +'</div></div>';
-      }).join('');
-    } else {
-      refRemindEl.style.display='none';
     }
   }
 
@@ -6125,7 +5818,6 @@ function openServiceLog(id){
 let _svcType='maintenance_60';
 function closeSvcLog(){const el=document.getElementById('svc-log-bg');if(el)el.remove();}
 function toggleStep(el){const next=el.nextElementSibling;if(next)next.style.display=next.style.display==='none'?'block':'none';}
-function toggleRefScript(btn){var id=btn.getAttribute('data-sid');var s=document.getElementById(id);if(s)s.style.display=s.style.display==='none'?'block':'none';}
 
 function getDiagram(brand){
   const diagrams={
@@ -6856,114 +6548,11 @@ function loadReportClient(){
     '<div style="border:1px solid #e2e8f0;border-radius:10px;padding:20px;margin-top:8px;background:#fff;color:#1e293b;font-family:system-ui,sans-serif" id="report-content">'+
     reportHTML+
     '</div>'+
-    '<div style="display:flex;gap:8px;margin-top:10px">'+
-      '<button onclick="printReport()" style="flex:1;padding:10px;border:none;border-radius:8px;background:#0f1f38;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F5A8; Print</button>'+
-      '<button onclick="emailServiceReport('+id+')" style="flex:1;padding:10px;border:none;border-radius:8px;background:#1e40af;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E7; Email</button>'+
-      '<button onclick="saveReportAndLog('+id+')" style="flex:1;padding:10px;border:1px solid #059669;border-radius:8px;background:#ecfdf5;color:#059669;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Save &amp; Log</button>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px">'+
+      '<button onclick="printReport()" style="padding:10px;border:none;border-radius:8px;background:#0f1f38;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F5A8; Print</button>'+
+      '<button onclick="emailServiceReport('+id+')" style="padding:10px;border:1px solid #0a84ff;border-radius:8px;background:#eff6ff;color:#0a84ff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E7; Email</button>'+
+      '<button onclick="saveReportAndLog('+id+')" style="padding:10px;border:1px solid #059669;border-radius:8px;background:#ecfdf5;color:#059669;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Save &amp; Log</button>'+
     '</div>';
-}
-
-function emailServiceReport(id){
-  var c=customers[id]||{};
-  var email=(c.email||'').trim();
-  if(!email){toast('No email on file — add it in Link Records on the client card');return;}
-  var content=document.getElementById('report-content');
-  if(!content){toast('Generate the service report first, then email it');return;}
-  var p=P.find(function(x){return x.id===id;});
-  var now=new Date();
-  var dateStr=now.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-  var html='<!DOCTYPE html><html><head><meta charset="UTF-8">'
-    +'<style>*{box-sizing:border-box}body{margin:0;padding:24px;font-family:system-ui,sans-serif;background:#fff;color:#1e293b;max-width:680px}</style>'
-    +'</head><body>'+content.outerHTML+'</body></html>';
-  var subject='Ice Machine Service Report — '+(p?p.name:id)+' — '+dateStr;
-  sendEmailViaProxy(email,subject,html);
-}
-function emailComplianceReport(id){
-  var p=P.find(function(x){return x.id===id;});
-  var c=customers[id]||{};
-  var email=(c.email||'').trim();
-  if(!email){toast('No email on file — add it in Link Records on the client card');return;}
-  var now=new Date();
-  var dateStr=now.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-  var lastSvc=c.service_history&&c.service_history.length?c.service_history[c.service_history.length-1]:null;
-  var atpPre=lastSvc?lastSvc.atp_pre:null;
-  var atpPost=lastSvc?lastSvc.atp:null;
-  var atpStatus='';
-  var atpColor='#64748b';
-  if(atpPost!==null&&atpPost!==undefined&&atpPost!==''){
-    var av=parseInt(atpPost)||0;
-    if(av<=10){atpStatus='PASS';atpColor='#059669';}
-    else if(av<=100){atpStatus='MARGINAL';atpColor='#d97706';}
-    else{atpStatus='FAIL';atpColor='#dc2626';}
-  }
-  var lastSvcDate=c.last_service||'Not recorded';
-  var nextDue=c.next_service||'Not scheduled';
-  var machineParts=[c.machine_brand,c.machine_model,c.machine_serial].filter(Boolean);
-  var machineInfo=machineParts.length?machineParts.join(' &middot; '):'Not recorded';
-  var html='<!DOCTYPE html><html><head><meta charset="UTF-8">'
-    +'<title>Ice Machine Compliance Report</title>'
-    +'<style>*{box-sizing:border-box}body{margin:0;padding:24px;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;background:#fff;color:#0f172a;max-width:620px}</style>'
-    +'</head><body>'
-    +'<table style="width:100%;border-collapse:collapse;margin-bottom:16px"><tr>'
-    +'<td style="vertical-align:middle"><div style="font-size:20px;font-weight:900;color:#0f1f38;letter-spacing:-.02em">PINELLAS ICE CO</div>'
-    +'<div style="font-size:10px;color:#64748b">Commercial Ice Machine Sanitation</div></td>'
-    +'<td style="text-align:right;vertical-align:middle">'
-    +'<div style="font-size:15px;font-weight:900;color:#0f1f38">ICE MACHINE COMPLIANCE REPORT</div>'
-    +'<div style="font-size:10px;color:#64748b;margin-top:2px">pinellasiceco.com &middot; '+dateStr+'</div>'
-    +'</td></tr></table>'
-    +'<div style="border-top:2px solid #0f1f38;margin-bottom:14px"></div>'
-    +'<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:14px">'
-    +'<div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:6px">Client</div>'
-    +'<div style="font-size:14px;font-weight:800;color:#0f1f38">'+(p?p.name:'')+'</div>'
-    +'<div style="font-size:11px;color:#475569">'+(p?p.address+', '+p.city+', FL '+p.zip:'')+'</div>'
-    +'</div>'
-    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">'
-    +'<div style="background:#ecfdf5;border:1px solid #6ee7b7;border-radius:8px;padding:12px;text-align:center">'
-    +'<div style="font-size:9px;font-weight:700;color:#059669;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Last Service</div>'
-    +'<div style="font-size:16px;font-weight:900;color:#059669">'+lastSvcDate+'</div>'
-    +'</div>'
-    +'<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px;text-align:center">'
-    +'<div style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Next Due</div>'
-    +'<div style="font-size:16px;font-weight:900;color:#0f1f38">'+nextDue+'</div>'
-    +'</div>'
-    +'</div>'
-    +(atpPre||atpPost
-      ?'<div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:14px">'
-        +'<div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:8px">ATP Test Results — Most Recent Service</div>'
-        +'<div style="display:flex;gap:10px">'
-        +(atpPre!==null&&atpPre!==undefined&&atpPre!==''
-          ?'<div style="flex:1;text-align:center;padding:10px;background:#fef2f2;border-radius:6px;border:1px solid #fca5a5">'
-            +'<div style="font-size:22px;font-weight:900;color:#dc2626">'+atpPre+'</div>'
-            +'<div style="font-size:9px;color:#dc2626;font-weight:700">RLU Before</div></div>'
-          :'')
-        +(atpPost!==null&&atpPost!==undefined&&atpPost!==''
-          ?'<div style="flex:1;text-align:center;padding:10px;background:#ecfdf5;border-radius:6px;border:1px solid #6ee7b7">'
-            +'<div style="font-size:22px;font-weight:900;color:#059669">'+atpPost+'</div>'
-            +'<div style="font-size:9px;color:#059669;font-weight:700">RLU After</div></div>'
-          :'')
-        +(atpStatus
-          ?'<div style="flex:1;text-align:center;padding:10px;background:#f8fafc;border-radius:6px;border:1px solid #e2e8f0">'
-            +'<div style="font-size:16px;font-weight:900;color:'+atpColor+'">'+atpStatus+'</div>'
-            +'<div style="font-size:9px;color:#64748b;font-weight:700">Result</div></div>'
-          :'')
-        +'</div></div>'
-      :'')
-    +'<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:14px">'
-    +'<div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:6px">Machine</div>'
-    +'<div style="font-size:12px;font-weight:700;color:#0f1f38">'+machineInfo+'</div>'
-    +(c.machines&&c.machines>1?'<div style="font-size:10px;color:#64748b;margin-top:2px">'+c.machines+' units</div>':'')
-    +'</div>'
-    +'<div style="background:#0f1f38;border-radius:8px;padding:14px;margin-bottom:14px">'
-    +'<div style="font-size:9px;font-weight:700;color:#c9973a;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Certification</div>'
-    +'<div style="font-size:10px;color:#e0d8cc;line-height:1.7">This ice machine equipment was cleaned, descaled, and sanitized in accordance with FDA Food Code 3-502.12, Florida Administrative Code 64E-11, and manufacturer service specifications. All chemical products used are EPA-registered and NSF/ANSI 60 certified for food equipment contact surfaces. ATP readings were obtained using a calibrated Hygiena Ensure&trade; luminometer with Ultrasnap&trade; test swabs.</div>'
-    +'</div>'
-    +'<div style="border-top:1px solid #e2e8f0;padding-top:8px;font-size:9px;color:#94a3b8;text-align:center">'
-    +'Pinellas Ice Co &bull; (727) 855-6873 &bull; pinellasiceco.com<br>'
-    +'Retain this document for health inspection compliance records'
-    +'</div>'
-    +'</body></html>';
-  var subject='Ice Machine Compliance Report — '+(p?p.name:id)+' — '+dateStr;
-  sendEmailViaProxy(email,subject,html);
 }
 
 function svcRow(label,val){
@@ -7121,15 +6710,15 @@ function scStatusReport(p){
   box.style.cssText='background:#fff;border-radius:16px;padding:24px;width:100%;max-width:340px';
   box.innerHTML=
     '<div style="font-size:14px;font-weight:800;color:#0f1f38;margin-bottom:4px">&#x1F4CB; ATP Status Report</div>'
-    +'<div style="font-size:11px;color:#64748b;margin-bottom:14px">Enter the ATP reading from the test (RLU). Leave blank if not yet tested.</div>'
+    +'<div style="font-size:11px;color:#64748b;margin-bottom:16px">Enter the ATP reading from the test (RLU). Leave blank if not yet tested.</div>'
     +'<input id="atp-val-inp" type="number" min="0" max="9999" placeholder="e.g. 847" inputmode="numeric" '
-    +'style="width:100%;padding:14px;border:2px solid #e2e8f0;border-radius:10px;font-size:28px;font-weight:800;font-family:inherit;outline:none;text-align:center;box-sizing:border-box;margin-bottom:10px;color:#0f1f38">'
-    +'<input id="atp-email-inp" type="email" placeholder="Email report to (optional)" '
-    +'style="width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:12px;color:#0f1f38">'
+    +'style="width:100%;padding:14px;border:2px solid #e2e8f0;border-radius:10px;font-size:28px;font-weight:800;font-family:inherit;outline:none;text-align:center;box-sizing:border-box;margin-bottom:8px;color:#0f1f38">'
+    +'<input id="atp-email-inp" type="email" placeholder="Email to (optional)" '
+    +'style="width:100%;padding:10px;border:2px solid #e2e8f0;border-radius:10px;font-size:14px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:12px;color:#0f1f38">'
     +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">'
-    +'<button id="atp-cancel" style="padding:12px;border:1px solid #e2e8f0;border-radius:9px;background:#f8fafc;color:#64748b;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
-    +'<button id="atp-email" style="padding:12px;border:none;border-radius:9px;background:#0f1f38;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E7; Email</button>'
-    +'<button id="atp-print" style="padding:12px;border:none;border-radius:9px;background:#ea580c;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Print</button>'
+    +'<button id="atp-cancel" style="padding:10px;border:1px solid #e2e8f0;border-radius:9px;background:#f8fafc;color:#64748b;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
+    +'<button id="atp-email" style="padding:10px;border:1px solid #0a84ff;border-radius:9px;background:#eff6ff;color:#0a84ff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E7; Email</button>'
+    +'<button id="atp-print" style="padding:10px;border:none;border-radius:9px;background:#ea580c;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Print</button>'
     +'</div>';
   atpBg.appendChild(box);
   document.body.appendChild(atpBg);
@@ -7140,15 +6729,22 @@ function scStatusReport(p){
     if(e.type==='click'&&Date.now()-_lt<350)return;
     if(e.type==='touchend')_lt=Date.now();
     if(e.target===atpBg){atpBg.remove();return;}
-    var btn=e.target.closest('#atp-cancel,#atp-print,#atp-email');
+    var btn=e.target.closest('#atp-cancel,#atp-email,#atp-print');
     if(!btn)return;
     if(e.type==='touchend')e.preventDefault();
     if(btn.id==='atp-cancel'){atpBg.remove();return;}
     var val=parseInt((inp&&inp.value)||'0')||0;
-    var emailInp=document.getElementById('atp-email-inp');
-    var emailTo=(emailInp&&emailInp.value.trim())||'';
-    if(btn.id==='atp-print'){atpBg.remove();srGenerate(p,val);}
-    if(btn.id==='atp-email'){atpBg.remove();srSendEmail(p,val,emailTo);}
+    var emailTo=((document.getElementById('atp-email-inp')||{}).value||'').trim();
+    if(btn.id==='atp-email'){
+      atpBg.remove();
+      if(!emailTo){toast('Enter an email address first');return;}
+      srSendEmail(p,val,emailTo);
+      return;
+    }
+    if(btn.id==='atp-print'){
+      atpBg.remove();
+      srGenerate(p,val);
+    }
   }
   atpBg.addEventListener('click',atpHandle);
   atpBg.addEventListener('touchend',atpHandle);
@@ -7256,92 +6852,68 @@ function srGenerate(p,atpVal){
 }
 
 function srSendEmail(p,atpVal,emailTo){
-  if(!emailTo){toast('Enter a recipient email address first');return;}
   var now=new Date();
   var dateStr=now.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-  var atpStatus,atpColor,atpBgCol,barW;
-  if(atpVal<=0){atpStatus='PENDING';atpColor='#64748b';atpBgCol='#f8fafc';barW=0;}
-  else if(atpVal<=10){atpStatus='PASS';atpColor='#059669';atpBgCol='#ecfdf5';barW=Math.round(atpVal*10);}
-  else if(atpVal<=100){atpStatus='MARGINAL';atpColor='#d97706';atpBgCol='#fffbeb';barW=Math.round(10+((atpVal-10)/90)*60);}
-  else{atpStatus='FAIL';atpColor='#dc2626';atpBgCol='#fef2f2';barW=100;}
-  var barH=atpVal>0
-    ?('<div style="width:100%;height:12px;background:#e2e8f0;border-radius:6px;overflow:hidden;margin-bottom:6px">'
-      +'<div style="width:'+barW+'%;height:100%;background:'+atpColor+';border-radius:6px"></div></div>')
-    :'';
-  var inspLines=[];
-  if(p.chronic)inspLines.push('Chronic ice machine violations on FL DBPR record ('+p.ice_count+' flagged inspections)');
-  else if(p.confirmed)inspLines.push('Ice machine violation confirmed on FL DBPR record');
-  if(p.n_callbacks>0)inspLines.push(p.n_callbacks+' callback inspection'+(p.n_callbacks>1?'s':'')+' on record &mdash; inspector returned');
-  var inspH=inspLines.length
-    ?('<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:14px;margin-bottom:16px">'
-      +'<div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#7f1d1d;margin-bottom:8px">&#x26A0; FL DBPR Inspection Record</div>'
-      +inspLines.map(function(l){return '<div style="font-size:11px;color:#991b1b;margin-bottom:4px">&bull; '+l+'</div>';}).join('')
-      +'</div>')
-    :'';
-  var services=['Full ice bin disassembly &amp; deep cleaning',
-    'ATP pre/post testing with printed documentation',
-    'Dated compliance report for your records',
-    'Water distribution system flush &amp; sanitize',
-    'Filter inspection &amp; replacement (as needed)',
-    'Internal sanitizer application (NSF/ANSI 60 compliant)'];
-  var html='<!DOCTYPE html><html><head><meta charset="UTF-8">'
-    +'<title>Ice Machine Status Report</title>'
-    +'<style>*{box-sizing:border-box}body{margin:0;padding:24px;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;background:#fff;color:#0f172a;max-width:680px}</style>'
-    +'</head><body>'
-    +'<table style="width:100%;border-collapse:collapse;margin-bottom:20px"><tr>'
-    +'<td style="vertical-align:middle"><div style="font-size:20px;font-weight:900;color:#0f1f38;letter-spacing:-.02em">PINELLAS ICE CO</div>'
-    +'<div style="font-size:10px;color:#64748b">Commercial Ice Machine Sanitation</div></td>'
-    +'<td style="text-align:right;vertical-align:middle">'
-    +'<div style="font-size:17px;font-weight:900;color:#0f1f38;letter-spacing:-.01em">ICE MACHINE STATUS REPORT</div>'
-    +'<div style="font-size:11px;color:#64748b;margin-top:2px">pinellasiceco.com &nbsp;&middot;&nbsp; '+dateStr+'</div>'
-    +'</td></tr></table>'
-    +'<div style="border-top:2px solid #0f1f38;margin-bottom:16px"></div>'
-    +'<table style="width:100%;border-collapse:collapse;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:16px"><tbody>'
-    +'<tr style="background:#f8fafc">'
-    +'<td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;width:55%">Establishment</td>'
-    +'<td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;border-left:1px solid #e2e8f0;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b">ATP Reading</td>'
-    +'</tr><tr>'
-    +'<td style="padding:14px;vertical-align:top">'
-    +'<div style="font-size:14px;font-weight:800;color:#0f1f38;margin-bottom:4px">'+p.name+'</div>'
-    +'<div style="font-size:11px;color:#475569">'+p.address+'</div>'
-    +'<div style="font-size:11px;color:#475569">'+p.city+', FL '+p.zip+'</div>'
-    +'</td>'
-    +'<td style="padding:14px;vertical-align:top;border-left:1px solid #e2e8f0;background:'+atpBgCol+'">'
-    +barH
-    +'<div style="font-size:'+(atpVal>0?'36':'22')+'px;font-weight:900;color:'+atpColor+';line-height:1">'+(atpVal>0?atpVal:'&mdash;')+'</div>'
-    +(atpVal>0?'<div style="font-size:11px;color:'+atpColor+';font-weight:600">RLU</div>':'')
-    +'<div style="font-size:15px;font-weight:900;color:'+atpColor+';letter-spacing:.06em;margin-top:6px;border-top:1px solid '+atpColor+'30;padding-top:6px">'+atpStatus+'</div>'
-    +'</td></tr></tbody></table>'
-    +'<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:16px">'
-    +'<div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:8px">About This Reading</div>'
-    +'<div style="font-size:11px;color:#334155;line-height:1.65">ATP (adenosine triphosphate) bioluminescence testing measures biological contamination on food contact surfaces. '
-    +'Readings above 100&nbsp;RLU indicate significant microbial contamination. '
-    +'The FDA Food Code requires &lt;10&nbsp;RLU on food contact surfaces. '
-    +'Ice machine evaporators, water lines, and bin surfaces were tested at this visit.</div>'
-    +'<div style="display:flex;gap:8px;margin-top:12px">'
-    +'<div style="flex:1;text-align:center;padding:8px;background:#ecfdf5;border-radius:6px;border:1px solid #6ee7b7"><div style="font-size:15px;font-weight:900;color:#059669">&le;10</div><div style="font-size:8px;color:#059669;font-weight:700;letter-spacing:.05em">PASS</div></div>'
-    +'<div style="flex:1;text-align:center;padding:8px;background:#fffbeb;border-radius:6px;border:1px solid #fcd34d"><div style="font-size:15px;font-weight:900;color:#d97706">11&ndash;100</div><div style="font-size:8px;color:#d97706;font-weight:700;letter-spacing:.05em">MARGINAL</div></div>'
-    +'<div style="flex:1;text-align:center;padding:8px;background:#fef2f2;border-radius:6px;border:1px solid #fca5a5"><div style="font-size:15px;font-weight:900;color:#dc2626">&gt;100</div><div style="font-size:8px;color:#dc2626;font-weight:700;letter-spacing:.05em">FAIL</div></div>'
-    +'</div></div>'
-    +inspH
-    +'<div style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:16px">'
-    +'<div style="background:#0f1f38;padding:10px 14px;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8">What Pinellas Ice Co Does</div>'
-    +'<div style="padding:12px 14px">'
-    +services.map(function(s){return '<div style="font-size:11px;color:#334155;padding:3px 0;display:flex;gap:8px"><span style="color:#059669;font-weight:700;flex-shrink:0">&#x2713;</span><span>'+s+'</span></div>';}).join('')
-    +'</div></div>'
-    +'<div style="background:#0f1f38;border-radius:10px;padding:18px;text-align:center;margin-bottom:16px">'
-    +'<div style="font-size:8px;color:#94a3b8;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">Limited Intro Offer &mdash; No Commitment</div>'
-    +'<div style="font-size:26px;font-weight:900;color:#f97316;margin-bottom:4px">$99 &mdash; First Visit</div>'
-    +'<div style="font-size:11px;color:#e2e8f0;margin-bottom:10px">Full service &middot; ATP documentation &middot; compliance report</div>'
-    +'<div style="font-size:16px;font-weight:800;color:#fff">Call&nbsp;/&nbsp;Text:&nbsp;&nbsp;(727)&nbsp;855-6873</div>'
-    +'<div style="font-size:10px;color:#94a3b8;margin-top:4px">pinellasiceco.com</div>'
+  var atpStatus,atpColor;
+  if(atpVal<=0){atpStatus='PENDING';atpColor='#64748b';}
+  else if(atpVal<=10){atpStatus='PASS';atpColor='#059669';}
+  else if(atpVal<=100){atpStatus='MARGINAL';atpColor='#d97706';}
+  else{atpStatus='FAIL';atpColor='#dc2626';}
+  var services=['Full ice bin disassembly &amp; deep cleaning','ATP pre/post testing with printed documentation','Dated compliance report for your records','Water distribution system flush &amp; sanitize','Filter inspection &amp; replacement (as needed)','Internal sanitizer application (NSF/ANSI 60 compliant)'];
+  var html='<!DOCTYPE html><html><body style="font-family:system-ui,sans-serif;max-width:600px;margin:0 auto;padding:20px">'
+    +'<div style="font-size:18px;font-weight:800;color:#0f1f38">PINELLAS ICE CO</div>'
+    +'<div style="font-size:14px;font-weight:700;color:#0f1f38;margin:8px 0">ICE MACHINE STATUS REPORT</div>'
+    +'<div style="font-size:11px;color:#64748b">pinellasiceco.com &nbsp;&middot;&nbsp; '+dateStr+'</div>'
+    +'<hr style="border-color:#0f1f38;border-width:2px;margin:12px 0">'
+    +'<div style="font-weight:700;font-size:14px">'+p.name+'</div>'
+    +'<div style="font-size:11px;color:#475569">'+p.address+', '+p.city+', FL '+p.zip+'</div>'
+    +'<div style="margin:12px 0;padding:12px;background:#f8fafc;border-radius:8px">'
+    +'<div style="font-size:12px;font-weight:700;color:#64748b">ATP READING</div>'
+    +(atpVal>0?'<div style="font-size:32px;font-weight:900;color:'+atpColor+'">'+atpVal+' RLU</div>':'<div style="font-size:24px;color:#64748b">&mdash;</div>')
+    +'<div style="font-size:18px;font-weight:900;color:'+atpColor+'">'+atpStatus+'</div>'
     +'</div>'
-    +'<div style="text-align:center;font-size:9px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:10px">'
-    +'Pinellas Ice Co &nbsp;&middot;&nbsp; pinellasiceco.com &nbsp;&middot;&nbsp; (727) 855-6873<br>'
-    +'FDA Food Code &sect;3-502.12 &nbsp;&middot;&nbsp; FL Administrative Code 64E-11 &nbsp;&middot;&nbsp; ATP testing per NSF/ANSI Standard 63'
-    +'</div>'
+    +'<div style="font-size:12px;font-weight:700;margin-top:12px;color:#0f1f38">Services Performed:</div>'
+    +'<ul style="font-size:11px;color:#475569;padding-left:16px">'+services.map(function(s){return '<li>'+s+'</li>';}).join('')+'</ul>'
+    +'<div style="margin-top:16px;font-size:10px;color:#94a3b8">Pinellas Ice Co &bull; Licensed &amp; Insured &bull; pinellasiceco.com</div>'
     +'</body></html>';
   sendEmailViaProxy(emailTo,'Ice Machine Status Report — '+p.name,html);
+}
+function emailServiceReport(id){
+  var p=P.find(function(x){return x.id===id;});
+  var c=customers[id]||{};
+  var to=(c.email||'').trim();
+  if(!to){toast('No email saved for this client — add it in Link Records');return;}
+  var content=document.getElementById('report-content');
+  if(!content){toast('No report loaded — select a client and view the report first');return;}
+  var subject='Service Report — '+(p?p.name:'');
+  sendEmailViaProxy(to,subject,'<!DOCTYPE html><html><body>'+content.outerHTML+'</body></html>');
+}
+function emailComplianceReport(id){
+  var p=P.find(function(x){return x.id===id;});
+  var c=customers[id]||{};
+  var to=(c.email||'').trim();
+  if(!to){toast('No email saved for this client — add it in Link Records');return;}
+  var now=new Date();
+  var dateStr=now.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  var atpH=c.atp_history||[];
+  var lastAtp=atpH.slice(-1)[0]||{};
+  var nextSvc=c.next_service?new Date(c.next_service.replace(/-/g,'/')).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}):'Not scheduled';
+  var html='<!DOCTYPE html><html><body style="font-family:system-ui,sans-serif;max-width:600px;margin:0 auto;padding:20px">'
+    +'<div style="font-size:18px;font-weight:800;color:#0f1f38">PINELLAS ICE CO</div>'
+    +'<div style="font-size:14px;font-weight:700;margin:8px 0">Compliance Summary — '+dateStr+'</div>'
+    +'<hr style="border-color:#0f1f38;border-width:2px;margin:12px 0">'
+    +'<div style="font-weight:700;font-size:14px">'+(p?p.name:id)+'</div>'
+    +(p?'<div style="font-size:11px;color:#475569">'+p.address+', '+p.city+', FL '+p.zip+'</div>':'')
+    +'<table style="width:100%;border-collapse:collapse;margin-top:12px">'
+    +'<tr style="background:#f8fafc"><td style="padding:8px;font-size:11px;font-weight:600;color:#64748b;width:45%">Last Service</td><td style="padding:8px;font-size:11px">'+(c.last_service||'Not recorded')+'</td></tr>'
+    +'<tr><td style="padding:8px;font-size:11px;font-weight:600;color:#64748b">Next Service Due</td><td style="padding:8px;font-size:11px">'+nextSvc+'</td></tr>'
+    +'<tr style="background:#f8fafc"><td style="padding:8px;font-size:11px;font-weight:600;color:#64748b">ATP Before</td><td style="padding:8px;font-size:11px">'+(lastAtp.pre||'—')+' RLU</td></tr>'
+    +'<tr><td style="padding:8px;font-size:11px;font-weight:600;color:#64748b">ATP After</td><td style="padding:8px;font-size:11px">'+(lastAtp.post||'—')+' RLU</td></tr>'
+    +'<tr style="background:#f8fafc"><td style="padding:8px;font-size:11px;font-weight:600;color:#64748b">Machine</td><td style="padding:8px;font-size:11px">'+(c.machine_brand||'')+(c.machine_model?' / '+c.machine_model:'')+'</td></tr>'
+    +'</table>'
+    +'<div style="margin-top:16px;font-size:10px;color:#94a3b8">Pinellas Ice Co &bull; Licensed &amp; Insured &bull; pinellasiceco.com</div>'
+    +'</body></html>';
+  sendEmailViaProxy(to,'Compliance Summary — '+(p?p.name:id),html);
 }
 
 // ── SETTINGS ─────────────────────────────────────────────────────────────────
@@ -7351,9 +6923,7 @@ function loadSettings(){
 function saveSettings(){
   const portal=(document.getElementById('hs-portal')||{}).value||'';
   const homeZip=(document.getElementById('home-zip')||{}).value||'';
-  const s={hubspot_portal:portal,home_zip:homeZip};
-  try{localStorage.setItem('pic_settings',JSON.stringify(s));}catch(e){}
-  if(sbEnabled())sbUpsertSetting('settings',s);
+  try{localStorage.setItem('pic_settings',JSON.stringify({hubspot_portal:portal,home_zip:homeZip}));}catch(e){}
 }
 function initSettings(){
   const s=loadSettings();
@@ -7365,13 +6935,48 @@ function initSettings(){
     if(s.home_zip)hzip.value=s.home_zip;
     else if(!hzip.value)hzip.value=DEFAULT_HOME_ZIP;
   }
-  // Auto-fill route start ZIP from saved home ZIP (fallback to default)
   const rzip=document.getElementById('rzip');
   if(rzip){
     const z=s.home_zip||DEFAULT_HOME_ZIP;
-    rzip.value=z;  // always override — settings is source of truth
+    rzip.value=z;
     rzip.placeholder=z;
   }
+  var emailFnEl=document.getElementById('sb-email-fn');
+  if(emailFnEl)emailFnEl.value=localStorage.getItem('pic_email_fn_url')||'';
+}
+function saveEmailFnUrl(){
+  var v=(document.getElementById('sb-email-fn')||{}).value||'';
+  localStorage.setItem('pic_email_fn_url',v.trim());
+}
+async function sendEmailViaProxy(to,subject,htmlBody){
+  var url=(localStorage.getItem('pic_email_fn_url')||'').trim();
+  if(!url){toast('Email Proxy URL not set — add it in Settings → Email Proxy');return;}
+  var anonKey=(localStorage.getItem('pic_supabase_key')||'').trim();
+  var headers={'Content-Type':'application/json'};
+  if(anonKey)headers['Authorization']='Bearer '+anonKey;
+  try{
+    var r=await fetch(url,{method:'POST',headers:headers,body:JSON.stringify({to:to,subject:subject,html:htmlBody})});
+    var t=await r.text().catch(function(){return '';});
+    if(r.ok){toast('✓ Email sent to '+to);}
+    else{toast('Email failed: HTTP '+r.status+' — '+t.slice(0,120));}
+  }catch(e){toast('Email error: '+e.message);}
+}
+async function exportToBriefing(){
+  var sbUrl=(localStorage.getItem('pic_supabase_url')||'').trim();
+  var sbKey=(localStorage.getItem('pic_supabase_key')||'').trim();
+  if(!sbUrl||!sbKey){toast('Configure Supabase URL and Key in Settings first');return;}
+  var contactedIds=Object.keys(log).filter(function(id){return (log[id]||[]).length>0;});
+  var deviceId=localStorage.getItem('pic_device_id')||('dev-'+Math.random().toString(36).slice(2));
+  localStorage.setItem('pic_device_id',deviceId);
+  try{
+    var r=await fetch(sbUrl+'/rest/v1/pic_briefing_export',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':sbKey,'Authorization':'Bearer '+sbKey,'Prefer':'resolution=merge-duplicates'},
+      body:JSON.stringify({device_id:deviceId,contacted_ids:contactedIds,exported_at:new Date().toISOString()})
+    });
+    if(r.ok){toast('✓ Exported '+contactedIds.length+' contacted prospects to briefing filter');}
+    else{var t=await r.text();toast('Export failed: HTTP '+r.status);}
+  }catch(e){toast('Export error: '+e.message);}
 }
 
 // ── QUOTE BUILDER ─────────────────────────────────────────────────────────────
@@ -7402,7 +7007,6 @@ function renderVendor(id){
 }
 function contactsSave(){
   try{localStorage.setItem('pic_contacts',JSON.stringify(contacts));}catch(e){}
-  if(sbEnabled()){Object.keys(contacts).forEach(function(pid){sbUpsert('pic_contacts',pid,contacts[pid]);});}
 }
 
 function renderContacts(id){
@@ -7449,7 +7053,7 @@ function deleteContact(bizId,idx){
 // ── INIT ─────────────────────────────────────────────────────────────────────
 // INIT
 function init(){
-  lLoad();phLoad();custLoad();contactsLoad();initSettings();initGoals();loadRouteState();initSbSettings();updateSyncIndicator(sbEnabled()?'synced':'local');setTimeout(function(){renderBriefing();},150);
+  lLoad();phLoad();custLoad();contactsLoad();initSettings();initGoals();loadRouteState();setTimeout(function(){renderBriefing();},150);
   const si=document.getElementById('si');if(si)si.blur();
   // FAB hidden - using tab navigation instead
 
