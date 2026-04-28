@@ -20,11 +20,10 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install dependencies
-        run: pip install requests
-
       - name: Send briefing email
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           BRIEFING_EMAIL: ${{ secrets.BRIEFING_EMAIL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: python send_briefing.py
