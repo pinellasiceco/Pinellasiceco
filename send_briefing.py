@@ -179,12 +179,13 @@ def build_email(current, changes, stats, contacted_ids):
 
     sections = ''
 
+    # New Since Yesterday
     _nsy_labels = {
-        'new_callback':       '\U0001f195 New CALLBACK',
-        'new_ice_violation':  '\U0001f195 New Ice Viol.',
-        'priority_escalated': '\U0001f195 Escalated',
-        'score_jump':         '\U0001f195 Score ↑',
-        'new_to_dataset':     '\U0001f195 New Business',
+        'new_callback':       '🆕 New CALLBACK',
+        'new_ice_violation':  '🆕 New Ice Viol.',
+        'priority_escalated': '🆕 Escalated',
+        'score_jump':         '🆕 Score ↑',
+        'new_to_dataset':     '🆕 New Business',
     }
     new_since = sorted(
         [r for r in current if r.get('new_reason')],
@@ -192,7 +193,7 @@ def build_email(current, changes, stats, contacted_ids):
                        -x.get('score', 0))
     )[:8]
     if new_since:
-        rows = ''.join(biz_row(r, _nsy_labels.get(r.get('new_reason', ''), '\U0001f195 New')) for r in new_since)
+        rows = ''.join(biz_row(r, _nsy_labels.get(r.get('new_reason', ''), '🆕 New')) for r in new_since)
         sections += f"""
         <div style="margin-bottom:24px">
           <div style="font-size:13px;font-weight:800;color:#854d0e;margin-bottom:8px">
@@ -223,6 +224,7 @@ def build_email(current, changes, stats, contacted_ids):
         </div>"""
 
     if changes['new_callbacks']:
+        # Filter already-contacted prospects from cold sections
         filtered = [r for r in changes['new_callbacks'] if str(r.get('id','')) not in contacted_ids]
         if filtered:
             rows = ''.join(biz_row(r) for r in filtered)
@@ -313,7 +315,7 @@ def build_email(current, changes, stats, contacted_ids):
 
     subject = f"PIC Briefing {datetime.now().strftime('%b %-d')} — "
     if changes['emergency_closures']:
-        subject += f"\U0001f6a8 {len(changes['emergency_closures'])} closures, "
+        subject += f"🚨 {len(changes['emergency_closures'])} closures, "
     if changes['new_callbacks']:
         subject += f"{len(changes['new_callbacks'])} new callbacks, "
     if changes['new_ice_fresh']:
