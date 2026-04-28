@@ -1,5 +1,5 @@
-const CACHE_NAME='pic-20260427';
-const ASSETS=['./','./ index.html'];
+const CACHE_NAME='pic-20260428';
+const ASSETS=['./','/Pinellasiceco/index.html'];
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(ASSETS).catch(()=>{})));
   self.skipWaiting();
