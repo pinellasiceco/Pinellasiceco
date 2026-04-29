@@ -1197,7 +1197,7 @@ def run(csv_paths):
 # HTML
 # ──────────────────────────────────────────────────────────────────────────────
 def build_html(records):
-    data_js   = json.dumps(records, separators=(',',':'))
+    data_js   = json.dumps(records, separators=(',',':')).replace('`', '\\u0060')
     phones_js = json.dumps(
         {str(r['id']): {'phone':r['phone'],'rating':r['rating'],'hours':r['hours']}
          for r in records if r['phone']},
@@ -1231,7 +1231,7 @@ def build_html(records):
 # ──────────────────────────────────────────────────────────────────────────────
 
 def build_html(records):
-    data_js   = json.dumps(records, separators=(',',':'))
+    data_js   = json.dumps(records, separators=(',',':')).replace('`', '\\u0060')
     phones_js = json.dumps(
         {str(r['id']): {'phone':r['phone'],'rating':r['rating'],'hours':r['hours']}
          for r in records if r['phone']},
@@ -2944,8 +2944,8 @@ function scOpenClose(p,bg){
     +'</div>'
     +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Service Plan · Annual Commitment · Filters NOT included</div>'
     +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:4px">'
-    +'<button id="co-monthly" onclick="updateCloseDisplay(\'monthly\')" ontouchend="event.preventDefault();updateCloseDisplay(\'monthly\')" style="padding:10px;border:2px solid #1e3a5f;border-radius:9px;background:#eff6ff;color:#1e3a5f;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;touch-action:manipulation">Monthly<br><span id="co-mo-price" style="font-size:11px;font-weight:400">$'+monthly+'/mo</span></button>'
-    +'<button id="co-quarterly" onclick="updateCloseDisplay(\'quarterly\')" ontouchend="event.preventDefault();updateCloseDisplay(\'quarterly\')" style="padding:10px;border:2px solid #e2e8f0;border-radius:9px;background:#f8fafc;color:#64748b;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;touch-action:manipulation">Quarterly<br><span id="co-q-price" style="font-size:11px;font-weight:400">$'+quarterly+'/mo</span></button>'
+    +'<button id="co-monthly" onclick="updateCloseDisplay(\\'monthly\\')" ontouchend="event.preventDefault();updateCloseDisplay(\\'monthly\\')" style="padding:10px;border:2px solid #1e3a5f;border-radius:9px;background:#eff6ff;color:#1e3a5f;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;touch-action:manipulation">Monthly<br><span id="co-mo-price" style="font-size:11px;font-weight:400">$'+monthly+'/mo</span></button>'
+    +'<button id="co-quarterly" onclick="updateCloseDisplay(\\'quarterly\\')" ontouchend="event.preventDefault();updateCloseDisplay(\\'quarterly\\')" style="padding:10px;border:2px solid #e2e8f0;border-radius:9px;background:#f8fafc;color:#64748b;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;touch-action:manipulation">Quarterly<br><span id="co-q-price" style="font-size:11px;font-weight:400">$'+quarterly+'/mo</span></button>'
     +'</div>'
     +'<div style="font-size:9px;color:#94a3b8;margin-bottom:12px">Annual commitment · Cancel anytime after year 1</div>'
     +'<div style="margin-bottom:12px">'
@@ -2969,7 +2969,7 @@ function scOpenClose(p,bg){
     +'<div style="text-align:center;margin-bottom:4px">'
     +'<button onclick="coUseOnetime()" ontouchend="event.preventDefault();coUseOnetime()" style="border:none;background:transparent;font-size:10px;color:#94a3b8;cursor:pointer;font-family:inherit;text-decoration:underline;touch-action:manipulation">Use $'+onetimePrice+' one-time deep clean instead</button>'
     +'</div>'
-    +'<button id="co-cancel" onclick="document.getElementById(\'close-overlay\').remove()" ontouchend="event.preventDefault();document.getElementById(\'close-overlay\').remove()" style="width:100%;padding:8px;border:none;border-radius:8px;background:transparent;color:#94a3b8;font-size:11px;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
+    +'<button id="co-cancel" onclick="document.getElementById(\\'close-overlay\\').remove()" ontouchend="event.preventDefault();document.getElementById(\\'close-overlay\\').remove()" style="width:100%;padding:8px;border:none;border-radius:8px;background:transparent;color:#94a3b8;font-size:11px;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
     +'</div>';
   document.body.appendChild(el);
 }
@@ -5158,7 +5158,7 @@ function rCust(){
           ?'<a href="'+c.square_url+'" target="_blank" onclick="event.stopPropagation()" style="flex:1;font-size:9px;padding:5px;border:1px solid #00c058;border-radius:6px;background:#f0fff4;color:#00c058;cursor:pointer;font-family:inherit;text-decoration:none;text-align:center;display:flex;align-items:center;justify-content:center">Square &#x2197;</a>'
           :'')
         +(p.status!=='churned'
-          ?'<button onclick="event.stopPropagation();if(confirm(\'Mark as churned?\'))churnClient('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();if(confirm(\'Mark as churned?\'))churnClient('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:1px solid #dc2626;border-radius:6px;background:#fef2f2;color:#dc2626;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x274C; Churn</button>'
+          ?'<button onclick="event.stopPropagation();if(confirm(\\'Mark as churned?\\'))churnClient('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();if(confirm(\\'Mark as churned?\\'))churnClient('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:1px solid #dc2626;border-radius:6px;background:#fef2f2;color:#dc2626;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x274C; Churn</button>'
           :'')
       +'</div>'
       // URL link fields
@@ -5468,7 +5468,7 @@ function renderTodaysPlan(){
   }).join('');
   el.innerHTML='<div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden">'
     +'<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#0f1f38">'
-      +'<div style="font-size:12px;font-weight:800;color:#fff;letter-spacing:.04em">&#x1F4CB; TODAY'S PLAN</div>'
+      +'<div style="font-size:12px;font-weight:800;color:#fff;letter-spacing:.04em">&#x1F4CB; TODAY&#x27;S PLAN</div>'
       +'<button onclick="addPlanToRoute()" ontouchend="event.preventDefault();addPlanToRoute()" style="font-size:9px;padding:4px 8px;background:#ea580c;color:#fff;border:none;border-radius:5px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Add All to Route &#x2192;</button>'
     +'</div>'
     +rows
