@@ -1,11 +1,11 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-04-29 (session 9) by Claude Code*
+*Last updated: 2026-04-29 (session 10) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
-- Last deployed: 2026-04-29 (session 9 — Pricing overhaul, Golf, Close Deal overlay, email fix)
+- Last deployed: 2026-04-29 (session 10 — Email/Supabase restored, pricing v2, schedule fix, Close Deal v2)
 - Build script: `build.py` (repo root) → outputs `prospecting_tool.html` → copied to `index.html` by CI
-- `index.html` and `build.py` are fully in sync as of session 9
+- `index.html` regenerated directly from `build.py` using existing P[] data (s10) — fully in sync
 
 ## What's Working ✅
 
@@ -109,6 +109,7 @@
 ## What's Broken / Watch List ⚠️
 
 - **iPad copy-paste**: copying code blocks from chat on iPad adds angle brackets around URLs. Never paste code directly into Supabase editor — use the GitHub Actions deploy workflow instead.
+- **Daily email timing**: The 11am UTC CI rebuild today ran with pre-session-9 workflow and committed no changes (output was already in sync). Email fix is in place for tomorrow's rebuild.
 
 If something appears broken, first try force-closing the PWA and reopening — the sw.js cache bust (`pic-YYYYMMDD`) requires a full app restart on iOS to take effect.
 
@@ -116,6 +117,11 @@ If something appears broken, first try force-closing the PWA and reopening — t
 - Nothing from the current feature roadmap is missing
 
 ## Recent Changes
+- **2026-04-29 (s10):** Email/Supabase restored — `srSendEmail()`, `emailServiceReport()`, `emailComplianceReport()`, `sendEmailViaProxy()`, `exportToBriefing()`, `saveEmailFnUrl()`, `sb-email-fn` input, Daily Briefing section with export button — were missing from manually-patched s9 index.html; fixed by regenerating index.html directly from build.py
+- **2026-04-29 (s10):** Pricing v2 — `est_deep_clean` now per-machine ($395 + $149 each additional, standalone no-plan); `calc_year1(plan, machines)` Python function; `year1_monthly` + `year1_quarterly` baked into P[]; `calcOnetime()` + `calcYear1()` JS functions; factRows updated with "Filters NOT included"; ATP CTA "$99 to start · Annual plans from $129/mo"
+- **2026-04-29 (s10):** Close Deal overlay v2 — machine +/− spinner, editable entry price field ($99 default), live Year 1 Total Value display ($entry + $monthly × 12), "Use $X one-time instead" link at bottom; `coAdjMachines()`, `coUpdateEntry()`, `coUseOnetime()` functions added; `scMarkWon(onetime)` stores `entry_price`, `entry_discount`, `filters_included:false` to customer record
+- **2026-04-29 (s10):** Service schedule intervals fixed — monthly plan: 60-day intervals (was 61); quarterly plan: 90-day intervals (was 91); maintenance type `maintenance_61`→`maintenance_60`, label `61-Day`→`60-Day`
+- **2026-04-29 (s10):** sw.js bumped to `pic-20260429b`
 - **2026-04-29 (s9):** Pricing overhaul — `est_monthly_plan(machines, plan)`, `est_deep_clean()`, `est_intro()` Python functions; `quarterly` field baked into P[]; monthly $149/mo, quarterly $129/mo, intro $99+$49/extra
 - **2026-04-29 (s9):** Close Deal overlay — single 🤝 Close Deal button → modal with Monthly/Quarterly toggle + $99 intro checkbox; `scOpenClose()`, `updateCloseDisplay()`, `scMarkWon()`; Lost moved to confirm() dialog
 - **2026-04-29 (s9):** buildAnnualSchedule quarterly — monthly=6 visits/61-day, quarterly=4 visits/91-day; deep cleans at visits 1+4 (monthly) or 1+3 (quarterly); all contracts renew at 1 year
@@ -148,11 +154,11 @@ If something appears broken, first try force-closing the PWA and reopening — t
 - **2026-04-27 (s7):** `deploy_edge_functions.yml` — auto-deploys Edge Functions from repo; eliminates need to copy-paste code into Supabase dashboard
 
 ## Next Session Priorities
-1. Verify daily email sends after tomorrow's 11:00 UTC rebuild (first time it runs with the new embedded step)
-2. Test Close Deal overlay end-to-end on iPhone — plan toggle, intro toggle, Confirm Close
-3. Verify ⛳ Golf filter shows golf venues in Prospects tab (needs next CI rebuild to bake venue_type into P[])
-4. Verify quarterly schedule generates correctly (4 visits, 91-day intervals)
-5. Check ATP report CTA — confirm "Annual plans from $129/mo" language shows correctly
+1. Verify daily email sends at 11am UTC tomorrow (first full rebuild with send_briefing.py embedded as final step)
+2. Test Close Deal overlay v2 on iPhone — machine spinner, entry price edit, Year 1 display, confirm close, one-time link
+3. Verify ⛳ Golf filter shows golf venues in Prospects tab (venue_type baked at next CI rebuild)
+4. Verify service schedule: monthly=6 visits/60-day, quarterly=4 visits/90-day
+5. Confirm "Filters NOT included" language shows in factRows and Close Deal overlay
 
 ## iOS PWA Rules (never violate these)
 - **Buttons in injected HTML:** use inline `ontouchend="event.preventDefault();fn()"` + `onclick="fn()"` — NOT `addEventListener` on innerHTML-injected elements

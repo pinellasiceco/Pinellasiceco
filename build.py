@@ -83,13 +83,18 @@ def est_monthly_plan(machines, plan='monthly'):
         return 238 + (machines - 2) * 69
 
 def est_deep_clean(machines):
-    """One-time deep clean — flat $349 regardless of machine count."""
-    return 349
+    """Standalone one-time deep clean (no plan) — $395 first + $149 each additional."""
+    machines = max(1, int(machines or 1))
+    return 395 + max(0, machines - 1) * 149
 
 def est_intro(machines):
-    """Intro offer: $99 first machine + $49 each additional."""
+    """Entry deep clean with annual plan — $99 first machine + $49 each additional."""
     machines = max(1, int(machines or 1))
     return 99 + max(0, machines - 1) * 49
+
+def calc_year1(plan, machines):
+    """Total year 1 value: entry deep clean + monthly × 12."""
+    return est_intro(machines) + est_monthly_plan(machines, plan) * 12
 
 def est_monthly(machines):
     """Legacy alias — use est_monthly_plan instead."""
@@ -1038,10 +1043,12 @@ def run(csv_paths):
             venue_type  = 'golf' if is_golf else ('bar' if bool(row.is_bar) else 'restaurant')
             machines    = est_machines(seats, bool(row.is_bar), rank)
             if is_golf: machines = max(2, machines)  # golf clubs always have multiple machines
-            monthly_val   = est_monthly_plan(machines, 'monthly')
-            quarterly_val = est_monthly_plan(machines, 'quarterly')
-            onetime_val   = est_deep_clean(machines)
-            intro_val     = est_intro(machines)
+            monthly_val      = est_monthly_plan(machines, 'monthly')
+            quarterly_val    = est_monthly_plan(machines, 'quarterly')
+            onetime_val      = est_deep_clean(machines)
+            intro_val        = est_intro(machines)
+            year1_monthly    = calc_year1('monthly', machines)
+            year1_quarterly  = calc_year1('quarterly', machines)
             confirmed   = bool(row.confirmed)
             chronic     = bool(row.chronic)
             tier        = account_tier(seats, rank, machines, chronic, confirmed)
@@ -1094,10 +1101,12 @@ def run(csv_paths):
                 'venue_type':  venue_type,
                 'seats':       seats,
                 'machines':    machines,
-                'monthly':     monthly_val,
-                'quarterly':   quarterly_val,
-                'onetime':     onetime_val,
-                'intro':       intro_val,
+                'monthly':          monthly_val,
+                'quarterly':        quarterly_val,
+                'onetime':          onetime_val,
+                'intro':            intro_val,
+                'year1_monthly':    year1_monthly,
+                'year1_quarterly':  year1_quarterly,
                 'tier':        tier,
                 'phone':       phone_raw,
                 'status':      'prospect',
@@ -2884,7 +2893,7 @@ function loadRouteState(){
   }catch(e){route=[];routeSet=new Set();routeAnchor=null;}
 }
 let svcTab='cal',clientTab='clients',pipeStage='inplay';
-var _scCardP=null,_scCardBg=null,_closeState={plan:'monthly',useIntro:false};
+var _scCardP=null,_scCardBg=null,_closeState={plan:'monthly',machines:1,entryPrice:99};
 
 function calcMonthly(plan,machines){
   machines=Math.max(1,machines||1);
@@ -2893,45 +2902,102 @@ function calcMonthly(plan,machines){
   if(machines===2)return 238;
   return 238+(machines-2)*69;
 }
+function calcOnetime(machines){
+  return 395+Math.max(0,(machines||1)-1)*149;
+}
+function calcYear1(plan,machines){
+  return (99+Math.max(0,(machines||1)-1)*49)+calcMonthly(plan,machines)*12;
+}
 
 function scOpenClose(p,bg){
   _scCardP=p;_scCardBg=bg;
-  _closeState={plan:'monthly',useIntro:false};
   var m=p.machines||1;
+  var entryDefault=99+Math.max(0,m-1)*49;
+  _closeState={plan:'monthly',machines:m,entryPrice:entryDefault};
   var monthly=calcMonthly('monthly',m);
   var quarterly=calcMonthly('quarterly',m);
-  var intro=99+Math.max(0,m-1)*49;
+  var onetimePrice=calcOnetime(m);
+  var year1=entryDefault+monthly*12;
   var el=document.createElement('div');
   el.id='close-overlay';
   el.style.cssText='position:fixed;inset:0;z-index:600;background:rgba(15,31,56,.85);display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box';
-  el.innerHTML='<div style="background:#fff;border-radius:16px;width:100%;max-width:380px;padding:20px;box-sizing:border-box">'
+  el.innerHTML='<div style="background:#fff;border-radius:16px;width:100%;max-width:380px;padding:20px;box-sizing:border-box;max-height:90vh;overflow-y:auto">'
     +'<div style="font-size:16px;font-weight:800;color:#0f1f38;margin-bottom:4px">🤝 Close Deal</div>'
-    +'<div style="font-size:11px;color:#64748b;margin-bottom:16px">'+p.name+' · '+m+' machine'+(m>1?'s':'')+'</div>'
-    +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Service Plan (Annual Commitment)</div>'
+    +'<div style="font-size:11px;color:#64748b;margin-bottom:12px">'+p.name+'</div>'
+    +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;padding:8px 10px;background:#f8fafc;border-radius:8px">'
+    +'<div style="font-size:10px;font-weight:700;color:#64748b;flex:1">Machines</div>'
+    +'<button id="co-mach-minus" onclick="coAdjMachines(-1)" ontouchend="event.preventDefault();coAdjMachines(-1)" style="width:28px;height:28px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;font-size:18px;line-height:1;cursor:pointer;font-family:inherit;touch-action:manipulation">−</button>'
+    +'<span id="co-mach-count" style="min-width:24px;text-align:center;font-weight:800;font-size:15px">'+m+'</span>'
+    +'<button id="co-mach-plus" onclick="coAdjMachines(1)" ontouchend="event.preventDefault();coAdjMachines(1)" style="width:28px;height:28px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;font-size:18px;line-height:1;cursor:pointer;font-family:inherit;touch-action:manipulation">+</button>'
+    +'</div>'
+    +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Service Plan · Annual Commitment · Filters NOT included</div>'
     +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:4px">'
-    +'<button id="co-monthly" onclick="updateCloseDisplay(\'monthly\')" ontouchend="event.preventDefault();updateCloseDisplay(\'monthly\')" style="padding:10px;border:2px solid #1e3a5f;border-radius:9px;background:#eff6ff;color:#1e3a5f;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;touch-action:manipulation">Monthly<br><span style="font-size:11px;font-weight:400">$'+monthly+'/mo</span></button>'
-    +'<button id="co-quarterly" onclick="updateCloseDisplay(\'quarterly\')" ontouchend="event.preventDefault();updateCloseDisplay(\'quarterly\')" style="padding:10px;border:2px solid #e2e8f0;border-radius:9px;background:#f8fafc;color:#64748b;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;touch-action:manipulation">Quarterly<br><span style="font-size:11px;font-weight:400">$'+quarterly+'/mo</span></button>'
+    +'<button id="co-monthly" onclick="updateCloseDisplay(\'monthly\')" ontouchend="event.preventDefault();updateCloseDisplay(\'monthly\')" style="padding:10px;border:2px solid #1e3a5f;border-radius:9px;background:#eff6ff;color:#1e3a5f;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;touch-action:manipulation">Monthly<br><span id="co-mo-price" style="font-size:11px;font-weight:400">$'+monthly+'/mo</span></button>'
+    +'<button id="co-quarterly" onclick="updateCloseDisplay(\'quarterly\')" ontouchend="event.preventDefault();updateCloseDisplay(\'quarterly\')" style="padding:10px;border:2px solid #e2e8f0;border-radius:9px;background:#f8fafc;color:#64748b;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;touch-action:manipulation">Quarterly<br><span id="co-q-price" style="font-size:11px;font-weight:400">$'+quarterly+'/mo</span></button>'
     +'</div>'
     +'<div style="font-size:9px;color:#94a3b8;margin-bottom:12px">Annual commitment · Cancel anytime after year 1</div>'
-    +'<div style="margin-bottom:14px;padding:8px 10px;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px">'
-    +'<label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:11px;color:#ea580c;font-weight:600">'
-    +'<input type="checkbox" id="co-intro-chk" onchange="updateCloseDisplay()" style="width:14px;height:14px;accent-color:#ea580c">'
-    +'🔥 Use $99 intro offer instead (first visit · $'+intro+')</label></div>'
-    +'<div id="co-summary" style="padding:10px;background:#f0fdf4;border:1px solid #6ee7b7;border-radius:8px;margin-bottom:14px;text-align:center;font-size:13px;font-weight:700;color:#059669">Monthly Plan · $'+monthly+'/mo</div>'
+    +'<div style="margin-bottom:12px">'
+    +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Entry Deep Clean (First Visit)</div>'
+    +'<div style="display:flex;align-items:center;gap:6px">'
+    +'<span style="font-size:14px;color:#64748b;font-weight:700">$</span>'
+    +'<input id="co-entry-price" type="number" value="'+entryDefault+'" min="0" oninput="coUpdateEntry()" style="width:80px;padding:6px 8px;border:1px solid #e2e8f0;border-radius:6px;font-size:15px;font-weight:700;font-family:inherit;outline:none;color:#0f1f38">'
+    +'<span id="co-entry-note" style="font-size:10px;color:#94a3b8">standard $'+entryDefault+'</span>'
+    +'</div>'
+    +'</div>'
+    +'<div style="padding:10px;background:#f0fdf4;border:1px solid #6ee7b7;border-radius:8px;margin-bottom:12px;text-align:center">'
+    +'<div style="font-size:9px;color:#059669;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Year 1 Total Value</div>'
+    +'<div id="co-year1-val" style="font-size:22px;font-weight:900;color:#059669">$'+year1.toLocaleString('en-US')+'</div>'
+    +'<div id="co-year1-detail" style="font-size:9px;color:#064e3b">$'+entryDefault+' entry + $'+monthly+'/mo × 12</div>'
+    +'</div>'
     +'<button id="co-confirm" onclick="scMarkWon()" ontouchend="event.preventDefault();scMarkWon()" style="width:100%;padding:12px;border:none;border-radius:10px;background:#059669;color:#fff;font-weight:800;font-size:13px;cursor:pointer;font-family:inherit;touch-action:manipulation;margin-bottom:6px">✅ Confirm Close</button>'
+    +'<div style="text-align:center;margin-bottom:4px">'
+    +'<button onclick="coUseOnetime()" ontouchend="event.preventDefault();coUseOnetime()" style="border:none;background:transparent;font-size:10px;color:#94a3b8;cursor:pointer;font-family:inherit;text-decoration:underline;touch-action:manipulation">Use $'+onetimePrice+' one-time deep clean instead</button>'
+    +'</div>'
     +'<button id="co-cancel" onclick="document.getElementById(\'close-overlay\').remove()" ontouchend="event.preventDefault();document.getElementById(\'close-overlay\').remove()" style="width:100%;padding:8px;border:none;border-radius:8px;background:transparent;color:#94a3b8;font-size:11px;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
     +'</div>';
   document.body.appendChild(el);
 }
 
+function coAdjMachines(delta){
+  _closeState.machines=Math.max(1,(_closeState.machines||1)+delta);
+  var m=_closeState.machines;
+  var mEl=document.getElementById('co-mach-count');
+  if(mEl)mEl.textContent=m;
+  _closeState.entryPrice=99+Math.max(0,m-1)*49;
+  var ep=document.getElementById('co-entry-price');
+  if(ep)ep.value=_closeState.entryPrice;
+  var enEl=document.getElementById('co-entry-note');
+  if(enEl)enEl.textContent='standard $'+_closeState.entryPrice;
+  var moPriceEl=document.getElementById('co-mo-price');
+  var qPriceEl=document.getElementById('co-q-price');
+  if(moPriceEl)moPriceEl.textContent='$'+calcMonthly('monthly',m)+'/mo';
+  if(qPriceEl)qPriceEl.textContent='$'+calcMonthly('quarterly',m)+'/mo';
+  updateCloseDisplay();
+}
+
+function coUpdateEntry(){
+  var ep=document.getElementById('co-entry-price');
+  if(ep)_closeState.entryPrice=parseInt(ep.value)||0;
+  updateCloseDisplay();
+}
+
+function coUseOnetime(){
+  var m=_closeState.machines||1;
+  var price=calcOnetime(m);
+  if(confirm('Book $'+price+' one-time deep clean for '+m+' machine'+(m>1?'s':'')+' (no ongoing plan)?')){
+    scMarkWon(true);
+  }
+}
+
 function updateCloseDisplay(plan){
   if(plan)_closeState.plan=plan;
-  var chk=document.getElementById('co-intro-chk');
-  _closeState.useIntro=chk?chk.checked:false;
+  var m=_closeState.machines||1;
+  var entry=typeof _closeState.entryPrice==='number'?_closeState.entryPrice:(99+Math.max(0,m-1)*49);
   var mBtn=document.getElementById('co-monthly');
   var qBtn=document.getElementById('co-quarterly');
-  var summary=document.getElementById('co-summary');
-  if(!summary||!mBtn||!qBtn)return;
+  var y1El=document.getElementById('co-year1-val');
+  var y1Det=document.getElementById('co-year1-detail');
+  if(!mBtn||!qBtn)return;
   var isMo=_closeState.plan==='monthly';
   mBtn.style.border=isMo?'2px solid #1e3a5f':'2px solid #e2e8f0';
   mBtn.style.background=isMo?'#eff6ff':'#f8fafc';
@@ -2939,47 +3005,47 @@ function updateCloseDisplay(plan){
   qBtn.style.border=!isMo?'2px solid #7c3aed':'2px solid #e2e8f0';
   qBtn.style.background=!isMo?'#f5f3ff':'#f8fafc';
   qBtn.style.color=!isMo?'#7c3aed':'#64748b';
-  var p=_scCardP,m=p?p.machines||1:1;
-  if(_closeState.useIntro){
-    var ip=99+Math.max(0,m-1)*49;
-    summary.textContent='🔥 Intro Offer · $'+ip+' first visit';
-    summary.style.background='#fff7ed';summary.style.borderColor='#fed7aa';summary.style.color='#ea580c';
-  }else{
-    var price=calcMonthly(_closeState.plan,m);
-    summary.textContent=(_closeState.plan==='monthly'?'Monthly':'Quarterly')+' Plan · $'+price+'/mo';
-    summary.style.background='#f0fdf4';summary.style.borderColor='#6ee7b7';summary.style.color='#059669';
-  }
+  var monthlyPrice=calcMonthly(_closeState.plan,m);
+  var year1=entry+monthlyPrice*12;
+  if(y1El)y1El.textContent='$'+year1.toLocaleString('en-US');
+  if(y1Det)y1Det.textContent='$'+entry+' entry + $'+monthlyPrice+'/mo × 12';
 }
 
-function scMarkWon(){
+function scMarkWon(onetime){
   var p=_scCardP,bg=_scCardBg;
   if(!p)return;
-  var cs=_closeState,m=p.machines||1;
-  var wonStatus=cs.useIntro?'customer_intro':cs.plan==='quarterly'?'customer_quarterly':'customer_recurring';
+  var cs=_closeState,m=cs.machines||p.machines||1;
+  var epEl=document.getElementById('co-entry-price');
+  var entry=epEl?parseInt(epEl.value)||0:cs.entryPrice;
   var wonNow=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-  var monthlyPrice=cs.useIntro?0:calcMonthly(cs.plan,m);
-  var introPrice=cs.useIntro?(99+Math.max(0,m-1)*49):0;
-  var ph=(p.phone||'');
+  var wonStatus=onetime?'customer_recurring':cs.plan==='quarterly'?'customer_quarterly':'customer_recurring';
+  var monthlyPrice=onetime?0:calcMonthly(cs.plan,m);
+  var onetimePrice=onetime?calcOnetime(m):0;
+  var standardEntry=99+Math.max(0,m-1)*49;
   customers[p.id]={
     status:wonStatus,won_date:wonNow,
-    service_type:cs.useIntro?'intro':cs.plan,
-    monthly:monthlyPrice,onetime:cs.useIntro?introPrice:0,
-    machines:m,name:p.name,address:p.address,city:p.city,phone:ph,
+    service_type:onetime?'onetime':cs.plan,
+    monthly:monthlyPrice,onetime:onetimePrice,
+    entry_price:onetime?0:entry,
+    entry_discount:onetime?0:Math.max(0,standardEntry-entry),
+    filters_included:false,
+    machines:m,name:p.name,address:p.address,city:p.city,phone:p.phone||'',
     notes:'',last_service:'',next_service:'',hubspot_url:'',square_url:'',
     machine_brand:'',machine_model:'',machine_type:'',filter_type:'',
-    filter_installed:'',contract_start:'',contract_term:cs.plan==='quarterly'?12:6,
+    filter_installed:'',contract_start:'',contract_term:12,
     contract_renewal:'',service_history:[],atp_history:[],vendor_name:'',
   };
   custSave();p.status=wonStatus;
   if(!log[p.id])log[p.id]=[];
   log[p.id].push({outcome:wonStatus,date:wonNow,
-    notes:'Deal closed · '+(cs.useIntro?'Intro $'+introPrice:cs.plan+' $'+monthlyPrice+'/mo')});
+    notes:onetime?'One-time deep clean · $'+onetimePrice:
+      'Deal closed · '+cs.plan+' $'+monthlyPrice+'/mo · $'+entry+' entry'});
   lSave();
-  buildAnnualSchedule(p.id);
+  if(!onetime)buildAnnualSchedule(p.id);
   var ov=document.getElementById('close-overlay');if(ov)ov.remove();
   if(bg)bg.remove();
-  toast(cs.useIntro?'🔥 Intro booked! $'+introPrice+' first visit':
-        '🎉 Won! '+(cs.plan==='quarterly'?'Quarterly':'Monthly')+' plan · $'+monthlyPrice+'/mo');
+  toast(onetime?'✅ One-time booked · $'+onetimePrice:
+        '🎉 Won! '+(cs.plan==='quarterly'?'Quarterly':'Monthly')+' · $'+monthlyPrice+'/mo · $'+entry+' entry');
   sw('customers');
 }
 
@@ -4049,10 +4115,10 @@ function showCard(id){
     ['Confidence',(p.confidence||0)+'%',p.confidence>=75?'#059669':p.confidence>=50?'#d97706':'#1e293b'],
     ['Est. Machines',p.machines||1,'#1e293b'],
     ['Account Tier',p.tier||'COLD','#1e293b'],
-    ['Monthly Plan','$'+(p.monthly||149)+'/mo · Annual commitment','#059669'],
-    ['Quarterly Plan','$'+(p.quarterly||129)+'/mo · Annual commitment','#7c3aed'],
-    ['Deep Clean (One-Time)','$'+(p.onetime||349),'#2563eb'],
-    ['Intro Offer','$'+(p.intro||99)+' first visit · Recurring after','#ea580c'],
+    ['Monthly Plan','$'+(p.monthly||149)+'/mo · Annual · Filters NOT included','#059669'],
+    ['Quarterly Plan','$'+(p.quarterly||129)+'/mo · Annual · Filters NOT included','#7c3aed'],
+    ['One-Time Clean','$'+(p.onetime||395)+' (no plan) · Filters NOT included','#2563eb'],
+    ['Entry w/ Plan','$'+(p.intro||99)+' first visit then $'+(p.monthly||149)+'/mo','#ea580c'],
   ];
   var _intelLines=buildIntelSummary(p);
   var intelWhyH=_intelLines.length
@@ -4141,7 +4207,7 @@ function showCard(id){
   var closeH='<div style="margin-bottom:12px">'
     +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Close Deal</div>'
     +'<button id="sc-close-deal" style="width:100%;padding:12px;border:2px solid #059669;border-radius:10px;background:#ecfdf5;color:#059669;font-weight:800;font-size:13px;cursor:pointer;font-family:inherit;touch-action:manipulation;margin-bottom:6px">'
-    +'🤝 Close Deal<br><span style="font-size:10px;font-weight:400">Monthly $'+(p.monthly||149)+'/mo · Quarterly $'+(p.quarterly||129)+'/mo · Intro $'+(p.intro||99)+'</span></button>'
+    +'🤝 Close Deal<br><span style="font-size:10px;font-weight:400">$'+(p.intro||99)+' entry · Monthly $'+(p.monthly||149)+'/mo · Quarterly $'+(p.quarterly||129)+'/mo</span></button>'
     +'<button id="sc-lost-btn" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:8px;background:transparent;color:#94a3b8;font-size:10px;cursor:pointer;font-family:inherit;touch-action:manipulation">'
     +'Mark as Lost / Churned</button>'
     +'</div>';
@@ -4472,10 +4538,10 @@ function openM(id){
     ['Confidence',       (p.confidence||0)+'%',p.confidence>=75?'g':p.confidence>=50?'o':''],
     ['Est. Machines',    p.machines||1,''],
     ['Account Tier',     p.tier||'COLD',''],
-    ['Monthly Plan',     '$'+(p.monthly||149)+'/mo · Annual','g'],
-    ['Quarterly Plan',   '$'+(p.quarterly||129)+'/mo · Annual','g'],
-    ['Deep Clean',       '$'+(p.onetime||349),'b'],
-    ['Intro Offer',      '$'+(p.intro||99)+' first visit','o'],
+    ['Monthly Plan',     '$'+(p.monthly||149)+'/mo · Annual · Filters NOT included','g'],
+    ['Quarterly Plan',   '$'+(p.quarterly||129)+'/mo · Annual · Filters NOT included','g'],
+    ['One-Time Clean',   '$'+(p.onetime||395)+' (no plan) · Filters NOT included','b'],
+    ['Entry w/ Plan',    '$'+(p.intro||99)+' first visit + $'+((p.monthly||149))+'/mo','o'],
   ].map(([l,v,c])=>'<div class="fact"><div class="fl">'+l+'</div><div class="fv '+c+'">'+v+'</div></div>').join('');
   const hist=log[id]||[];
   const hs=document.getElementById('mhs');
@@ -5659,7 +5725,7 @@ function buildAnnualSchedule(id){
   const [sy,sm,sd]=startStr.split('-').map(Number);
   const start=new Date(sy,sm-1,sd,12,0,0);
   const isQuarterly=c.service_type==='quarterly';
-  const intervalDays=isQuarterly?91:61;
+  const intervalDays=isQuarterly?90:60;
   const totalVisits=isQuarterly?4:6;
   // deep cleans: visit 1 and 4 (monthly) or visit 1 and 3 (quarterly)
   const deepVisits=isQuarterly?new Set([1,3]):new Set([1,4]);
@@ -5672,8 +5738,8 @@ function buildAnnualSchedule(id){
     schedule.push({
       date:iso_local,
       date_display:visit.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
-      type:isDeep?'deep_clean':(isQuarterly?'maintenance_90':'maintenance_61'),
-      label:isDeep?'Deep Clean':(isQuarterly?'90-Day Maintenance':'61-Day Maintenance'),
+      type:isDeep?'deep_clean':(isQuarterly?'maintenance_90':'maintenance_60'),
+      label:isDeep?'Deep Clean':(isQuarterly?'90-Day Maintenance':'60-Day Maintenance'),
       status:'scheduled',
     });
     visit=new Date(visit);
@@ -7207,7 +7273,7 @@ function srGenerate(p,atpVal){
     +'<div style="font-size:8px;color:#94a3b8;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">Intro Offer</div>'
     +'<div style="font-size:26px;font-weight:900;color:#f97316;margin-bottom:4px">$99 &mdash; First Visit</div>'
     +'<div style="font-size:11px;color:#e2e8f0;margin-bottom:4px">Full service &middot; ATP documentation &middot; compliance report</div>'
-    +'<div style="font-size:10px;color:#94a3b8;margin-bottom:8px">Annual plans from $129/mo &middot; Annual commitment &middot; Cancel anytime after year 1</div>'
+    +'<div style="font-size:10px;color:#94a3b8;margin-bottom:8px">$99 to start &middot; Annual plans from $129/mo &middot; Annual commitment</div>'
     +'<div style="font-size:16px;font-weight:800;color:#fff">Call&nbsp;/&nbsp;Text:&nbsp;&nbsp;(727)&nbsp;855-6873</div>'
     +'<div style="font-size:10px;color:#94a3b8;margin-top:4px">pinellasiceco.com</div>'
     +'</div>'
