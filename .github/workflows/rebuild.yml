@@ -22,19 +22,13 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install requests openpyxl
+        run: pip install requests openpyxl pandas scikit-learn numpy
 
       - name: Download fresh FL DBPR data
         run: python download_data.py
 
       - name: Build prospect tool
         run: python build.py data/
-
-      - name: Send daily briefing email
-        env:
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          BRIEFING_EMAIL: ${{ secrets.BRIEFING_EMAIL }}
-        run: python send_briefing.py
 
       - name: Commit and push
         run: |
@@ -44,3 +38,11 @@ jobs:
           git add index.html sw.js data/snapshot_prev.json || true
           git commit --allow-empty -m "Daily rebuild $(date +'%Y-%m-%d %H:%M')"
           git push
+
+      - name: Send daily briefing email
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          BRIEFING_EMAIL: ${{ secrets.BRIEFING_EMAIL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: python send_briefing.py
