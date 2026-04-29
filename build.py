@@ -49,6 +49,15 @@ def classify_business(name):
         if f in n: return 'franchise', True
     return 'independent', False
 
+GOLF_KEYWORDS = [
+    'golf','country club','club house','clubhouse','course',
+    'links','fairway','greens','pro shop','19th hole',
+]
+
+def is_golf_venue(name):
+    n = name.lower()
+    return any(kw in n for kw in GOLF_KEYWORDS)
+
 # ── MACHINE ESTIMATION ────────────────────────────────────────────────────────
 def est_machines(seats, is_full_bar, rank_code):
     """Estimate ice machine count from seat count + license type."""
@@ -63,17 +72,32 @@ def est_machines(seats, is_full_bar, rank_code):
     bonus = 1 if is_full_bar else 0
     return min(base + bonus, 6)
 
+def est_monthly_plan(machines, plan='monthly'):
+    """Monthly or quarterly service plan pricing."""
+    machines = max(1, int(machines or 1))
+    if plan == 'quarterly':
+        return 129 + max(0, machines - 1) * 49
+    else:
+        if machines == 1: return 149
+        if machines == 2: return 238
+        return 238 + (machines - 2) * 69
+
+def est_deep_clean(machines):
+    """One-time deep clean — flat $349 regardless of machine count."""
+    return 349
+
+def est_intro(machines):
+    """Intro offer: $99 first machine + $49 each additional."""
+    machines = max(1, int(machines or 1))
+    return 99 + max(0, machines - 1) * 49
+
 def est_monthly(machines):
-    """Tiered: $149 first, $89 second (+$238), $69 each additional."""
-    if machines <= 1: return 149
-    if machines == 2: return 238
-    return 238 + (machines - 2) * 69
+    """Legacy alias — use est_monthly_plan instead."""
+    return est_monthly_plan(machines, 'monthly')
 
 def est_onetime(machines):
-    """One-time deep clean price."""
-    if machines <= 1: return 349
-    if machines == 2: return 489
-    return 489 + (machines - 2) * 120
+    """Legacy alias — use est_deep_clean instead."""
+    return est_deep_clean(machines)
 
 
 def calc_ice_risk(record):
@@ -968,6 +992,9 @@ def run(csv_paths):
     result['is_bar'] = result['biz_name'].str.lower().apply(
         lambda n: any(w in str(n) for w in bar_words))
 
+    # Vectorized golf detection
+    result['is_golf'] = result['biz_name'].apply(lambda n: is_golf_venue(str(n)))
+
     # Vectorized emergency flag
     result['is_emergency'] = result['license_id'].astype(str).isin(emergency_ids)
 
@@ -1007,10 +1034,14 @@ def run(csv_paths):
             seats     = int(lic_info.get('seats', 0) or 0)
             rank      = lic_info.get('rank', 'SEAT')
 
+            is_golf     = bool(row.is_golf)
+            venue_type  = 'golf' if is_golf else ('bar' if bool(row.is_bar) else 'restaurant')
             machines    = est_machines(seats, bool(row.is_bar), rank)
-            monthly_val = est_monthly(machines)
-            onetime_val = est_onetime(machines)
-            intro_val   = 99  # flat intro offer regardless of machine count
+            if is_golf: machines = max(2, machines)  # golf clubs always have multiple machines
+            monthly_val   = est_monthly_plan(machines, 'monthly')
+            quarterly_val = est_monthly_plan(machines, 'quarterly')
+            onetime_val   = est_deep_clean(machines)
+            intro_val     = est_intro(machines)
             confirmed   = bool(row.confirmed)
             chronic     = bool(row.chronic)
             tier        = account_tier(seats, rank, machines, chronic, confirmed)
@@ -1025,7 +1056,8 @@ def run(csv_paths):
             n_insp      = int(row.n_insp or 1)
             avg_ice     = float(row.avg_ice or 0)
             disp_raw    = str(row.disp_raw or '')
-            final_score = min(100, int(row.sc) + seat_score_bonus(machines, rank))
+            golf_bonus  = 10 if is_golf else 0
+            final_score = min(100, int(row.sc) + seat_score_bonus(machines, rank) + golf_bonus)
             conf        = confidence_score(n_insp, 1, confirmed, days_since)
 
             records.append({
@@ -1059,9 +1091,11 @@ def run(csv_paths):
                 'is_emergency':bool(row.is_emergency),
                 'biz_type':    str(row.biz_type),
                 'is_bar':      bool(row.is_bar),
+                'venue_type':  venue_type,
                 'seats':       seats,
                 'machines':    machines,
                 'monthly':     monthly_val,
+                'quarterly':   quarterly_val,
                 'onetime':     onetime_val,
                 'intro':       intro_val,
                 'tier':        tier,
@@ -1730,6 +1764,7 @@ header{background:var(--navy);
       <button class="preset-btn"    onclick="setPreset('inplay')"   id="pre-inplay">&#x1F7E1; In Play</button>
       <button class="preset-btn"    onclick="setPreset('freshice')" id="pre-freshice">&#x1F525; Ice Viol.</button>
       <button class="preset-btn" onclick="setPreset('followups')" id="pre-followups">&#x1F4C5; Follow-Ups</button>
+      <button class="preset-btn" onclick="setPreset('golf')" id="pre-golf">&#x26F3; Golf</button>
     </div>
 
     <!-- Filters row -->
@@ -1835,6 +1870,7 @@ header{background:var(--navy);
           <button onclick="setRouteCluster('34677','Safety Harbor')" ontouchend="event.preventDefault();setRouteCluster('34677','Safety Harbor')" class="cluster-chip" id="chip-Safety_Harbor" style="font-size:9px;padding:4px 9px;border:1px solid var(--brd);border-radius:12px;background:var(--surf);color:var(--navy);cursor:pointer;font-family:inherit;margin-right:4px;white-space:nowrap;touch-action:manipulation">Safety Harbor</button>
           <button onclick="setRouteCluster('33701','St. Pete')" ontouchend="event.preventDefault();setRouteCluster('33701','St. Pete')" class="cluster-chip" id="chip-St_Pete" style="font-size:9px;padding:4px 9px;border:1px solid var(--brd);border-radius:12px;background:var(--surf);color:var(--navy);cursor:pointer;font-family:inherit;margin-right:4px;white-space:nowrap;touch-action:manipulation">St. Pete</button>
           <button onclick="setRouteCluster('','All')" ontouchend="event.preventDefault();setRouteCluster('','All')" class="cluster-chip on" id="chip-All" style="font-size:9px;padding:4px 9px;border:1px solid var(--navy);border-radius:12px;background:var(--navy);color:#fff;cursor:pointer;font-family:inherit;margin-right:4px;white-space:nowrap;touch-action:manipulation">All</button>
+          <button onclick="setRouteCluster('','Golf','golf')" ontouchend="event.preventDefault();setRouteCluster('','Golf','golf')" class="cluster-chip" id="chip-Golf" style="font-size:9px;padding:4px 9px;border:1px solid #059669;border-radius:12px;background:#ecfdf5;color:#059669;cursor:pointer;font-family:inherit;margin-right:4px;white-space:nowrap;touch-action:manipulation">&#x26F3; Golf</button>
         </div>
 
         <!-- Row 3: Action buttons -->
@@ -2269,7 +2305,7 @@ header{background:var(--navy);
       <!-- Intro offer - most prominent -->
       <button onclick="markWon('customer_intro')"
         style="width:100%;padding:10px;border:2px solid var(--ora);border-radius:9px;background:#fff7f5;color:var(--ora);font-weight:800;font-size:12px;cursor:pointer;font-family:inherit;margin-bottom:6px">
-        &#x1F525; Intro Offer  -  $99 first visit<br><span style="font-size:10px;font-weight:400">Try us once, no commitment. Recurring starts after.</span>
+        &#x1F525; Intro Offer  -  $99 first visit<br><span style="font-size:10px;font-weight:400">Full deep clean &middot; Recurring plan after &middot; Annual plans from $129/mo</span>
       </button>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
         <button onclick="markWon('customer_recurring')"
@@ -2848,6 +2884,104 @@ function loadRouteState(){
   }catch(e){route=[];routeSet=new Set();routeAnchor=null;}
 }
 let svcTab='cal',clientTab='clients',pipeStage='inplay';
+var _scCardP=null,_scCardBg=null,_closeState={plan:'monthly',useIntro:false};
+
+function calcMonthly(plan,machines){
+  machines=Math.max(1,machines||1);
+  if(plan==='quarterly')return 129+Math.max(0,machines-1)*49;
+  if(machines===1)return 149;
+  if(machines===2)return 238;
+  return 238+(machines-2)*69;
+}
+
+function scOpenClose(p,bg){
+  _scCardP=p;_scCardBg=bg;
+  _closeState={plan:'monthly',useIntro:false};
+  var m=p.machines||1;
+  var monthly=calcMonthly('monthly',m);
+  var quarterly=calcMonthly('quarterly',m);
+  var intro=99+Math.max(0,m-1)*49;
+  var el=document.createElement('div');
+  el.id='close-overlay';
+  el.style.cssText='position:fixed;inset:0;z-index:600;background:rgba(15,31,56,.85);display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box';
+  el.innerHTML='<div style="background:#fff;border-radius:16px;width:100%;max-width:380px;padding:20px;box-sizing:border-box">'
+    +'<div style="font-size:16px;font-weight:800;color:#0f1f38;margin-bottom:4px">🤝 Close Deal</div>'
+    +'<div style="font-size:11px;color:#64748b;margin-bottom:16px">'+p.name+' · '+m+' machine'+(m>1?'s':'')+'</div>'
+    +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Service Plan (Annual Commitment)</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:4px">'
+    +'<button id="co-monthly" onclick="updateCloseDisplay(\'monthly\')" ontouchend="event.preventDefault();updateCloseDisplay(\'monthly\')" style="padding:10px;border:2px solid #1e3a5f;border-radius:9px;background:#eff6ff;color:#1e3a5f;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;touch-action:manipulation">Monthly<br><span style="font-size:11px;font-weight:400">$'+monthly+'/mo</span></button>'
+    +'<button id="co-quarterly" onclick="updateCloseDisplay(\'quarterly\')" ontouchend="event.preventDefault();updateCloseDisplay(\'quarterly\')" style="padding:10px;border:2px solid #e2e8f0;border-radius:9px;background:#f8fafc;color:#64748b;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit;touch-action:manipulation">Quarterly<br><span style="font-size:11px;font-weight:400">$'+quarterly+'/mo</span></button>'
+    +'</div>'
+    +'<div style="font-size:9px;color:#94a3b8;margin-bottom:12px">Annual commitment · Cancel anytime after year 1</div>'
+    +'<div style="margin-bottom:14px;padding:8px 10px;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px">'
+    +'<label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:11px;color:#ea580c;font-weight:600">'
+    +'<input type="checkbox" id="co-intro-chk" onchange="updateCloseDisplay()" style="width:14px;height:14px;accent-color:#ea580c">'
+    +'🔥 Use $99 intro offer instead (first visit · $'+intro+')</label></div>'
+    +'<div id="co-summary" style="padding:10px;background:#f0fdf4;border:1px solid #6ee7b7;border-radius:8px;margin-bottom:14px;text-align:center;font-size:13px;font-weight:700;color:#059669">Monthly Plan · $'+monthly+'/mo</div>'
+    +'<button id="co-confirm" onclick="scMarkWon()" ontouchend="event.preventDefault();scMarkWon()" style="width:100%;padding:12px;border:none;border-radius:10px;background:#059669;color:#fff;font-weight:800;font-size:13px;cursor:pointer;font-family:inherit;touch-action:manipulation;margin-bottom:6px">✅ Confirm Close</button>'
+    +'<button id="co-cancel" onclick="document.getElementById(\'close-overlay\').remove()" ontouchend="event.preventDefault();document.getElementById(\'close-overlay\').remove()" style="width:100%;padding:8px;border:none;border-radius:8px;background:transparent;color:#94a3b8;font-size:11px;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
+    +'</div>';
+  document.body.appendChild(el);
+}
+
+function updateCloseDisplay(plan){
+  if(plan)_closeState.plan=plan;
+  var chk=document.getElementById('co-intro-chk');
+  _closeState.useIntro=chk?chk.checked:false;
+  var mBtn=document.getElementById('co-monthly');
+  var qBtn=document.getElementById('co-quarterly');
+  var summary=document.getElementById('co-summary');
+  if(!summary||!mBtn||!qBtn)return;
+  var isMo=_closeState.plan==='monthly';
+  mBtn.style.border=isMo?'2px solid #1e3a5f':'2px solid #e2e8f0';
+  mBtn.style.background=isMo?'#eff6ff':'#f8fafc';
+  mBtn.style.color=isMo?'#1e3a5f':'#64748b';
+  qBtn.style.border=!isMo?'2px solid #7c3aed':'2px solid #e2e8f0';
+  qBtn.style.background=!isMo?'#f5f3ff':'#f8fafc';
+  qBtn.style.color=!isMo?'#7c3aed':'#64748b';
+  var p=_scCardP,m=p?p.machines||1:1;
+  if(_closeState.useIntro){
+    var ip=99+Math.max(0,m-1)*49;
+    summary.textContent='🔥 Intro Offer · $'+ip+' first visit';
+    summary.style.background='#fff7ed';summary.style.borderColor='#fed7aa';summary.style.color='#ea580c';
+  }else{
+    var price=calcMonthly(_closeState.plan,m);
+    summary.textContent=(_closeState.plan==='monthly'?'Monthly':'Quarterly')+' Plan · $'+price+'/mo';
+    summary.style.background='#f0fdf4';summary.style.borderColor='#6ee7b7';summary.style.color='#059669';
+  }
+}
+
+function scMarkWon(){
+  var p=_scCardP,bg=_scCardBg;
+  if(!p)return;
+  var cs=_closeState,m=p.machines||1;
+  var wonStatus=cs.useIntro?'customer_intro':cs.plan==='quarterly'?'customer_quarterly':'customer_recurring';
+  var wonNow=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  var monthlyPrice=cs.useIntro?0:calcMonthly(cs.plan,m);
+  var introPrice=cs.useIntro?(99+Math.max(0,m-1)*49):0;
+  var ph=(p.phone||'');
+  customers[p.id]={
+    status:wonStatus,won_date:wonNow,
+    service_type:cs.useIntro?'intro':cs.plan,
+    monthly:monthlyPrice,onetime:cs.useIntro?introPrice:0,
+    machines:m,name:p.name,address:p.address,city:p.city,phone:ph,
+    notes:'',last_service:'',next_service:'',hubspot_url:'',square_url:'',
+    machine_brand:'',machine_model:'',machine_type:'',filter_type:'',
+    filter_installed:'',contract_start:'',contract_term:cs.plan==='quarterly'?12:6,
+    contract_renewal:'',service_history:[],atp_history:[],vendor_name:'',
+  };
+  custSave();p.status=wonStatus;
+  if(!log[p.id])log[p.id]=[];
+  log[p.id].push({outcome:wonStatus,date:wonNow,
+    notes:'Deal closed · '+(cs.useIntro?'Intro $'+introPrice:cs.plan+' $'+monthlyPrice+'/mo')});
+  lSave();
+  buildAnnualSchedule(p.id);
+  var ov=document.getElementById('close-overlay');if(ov)ov.remove();
+  if(bg)bg.remove();
+  toast(cs.useIntro?'🔥 Intro booked! $'+introPrice+' first visit':
+        '🎉 Won! '+(cs.plan==='quarterly'?'Quarterly':'Monthly')+' plan · $'+monthlyPrice+'/mo');
+  sw('customers');
+}
 
 function setType(t){
   selType=t;
@@ -2970,6 +3104,7 @@ function cardHTML(p){
   const phH=_ph
     ?('<div class="phrow"><span class="phnum">'+_ph+'</span><a href="tel:'+_ph.replace(/\s/g,'')+'" class="abtn call-a" onclick="event.stopPropagation()">Call</a></div>')
     :('<div class="phrow"><span class="phnum none">No phone on file</span><a href="https://www.google.com/search?q='+enc(p.name+' '+p.city+' FL phone number')+'" target="_blank" class="abtn find-a" onclick="event.stopPropagation()">Find</a></div>'+'<div id="ph-save-'+p.id+'" style="margin-top:4px;display:flex;gap:4px;align-items:center">'  +'<input id="ph-inp-'+p.id+'" type="tel" placeholder="Paste number here..." onclick="event.stopPropagation()" '    +'style="flex:1;padding:5px 7px;border:1px solid var(--brd);border-radius:6px;font-size:11px;font-family:inherit;background:var(--surf);color:var(--txt);outline:none">'  +'<button class="save-phone-btn" data-id="'+p.id+'" data-action="save" '    +'style="padding:5px 9px;border:none;border-radius:6px;background:var(--navy);color:#fff;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit">Save</button>'+'</div>');
+  const golfH=p.venue_type==='golf'?'<div class="icebadge confirmed" style="background:#ecfdf5;color:#059669;border-color:#6ee7b7">&#x26F3; Golf / Country Club</div>':'';
   const iceH=p.chronic
     ?('<div class="icebadge chronic">&#x1F9CA; CHRONIC  -  '+p.ice_count+'x ice violations'+(p.ice_fresh?' &bull; <b>recent</b>':'')+'</div>')
     :p.confirmed?'<div class="icebadge confirmed">&#x2713; Ice violation on record'+(p.ice_fresh?' (within 6mo)':p.ice_recent?' (within 1yr)':'')+'</div>':'';
@@ -3017,7 +3152,7 @@ function cardHTML(p){
   return '<div class="card '+p.priority+(isC(p.id)?' done':'')+'" data-id="'+p.id+'">'
     +'<div class="ctop"><div class="cname">'+p.name+tierH+emergH+newBadge+routeBadge+'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px"><span class="pbadge '+p.priority+'">'+p.priority+'</span>'+confH+'</div></div>'
     +'<div class="cloc">'+p.city+', '+p.county+' '+franchH+'</div>'
-    +custStatusH+revenueH+phH+ratH+callH+hrH+iceH+cbH+codesH+insH
+    +custStatusH+revenueH+phH+ratH+callH+hrH+golfH+iceH+cbH+codesH+insH
     +'<div class="cmeta">'
       +'<div class="mi"><div class="ml">Days Until</div><div class="mv '+dC(p.days_until,p.priority)+'">'+dL(p.days_until)+'</div></div>'
       +'<div class="mi"><div class="ml">H/T Viol</div><div class="mv '+(p.high_viol>=4?'u':p.high_viol>=2?'h':'')+'">'+p.high_viol+'/'+p.total_viol+'</div></div>'
@@ -3182,6 +3317,7 @@ function setPreset(k){
     const lc=getLC(p.id);
     return lc&&lc.followup&&!isC(p.id);
   };
+  else if(k==='golf') presetFilter=p=>p.venue_type==='golf';
   rA();
 }
 
@@ -3389,7 +3525,9 @@ function queueNext(){
 
 
 
-function setRouteCluster(zip,label){
+var _routeVenueFilter=null;
+function setRouteCluster(zip,label,venueType){
+  _routeVenueFilter=venueType||null;
   document.querySelectorAll('.cluster-chip').forEach(c=>c.classList.remove('on'));
   const chipId='chip-'+label.replace(/[\s.]/g,'_');
   const chip=document.getElementById(chipId);
@@ -3397,7 +3535,6 @@ function setRouteCluster(zip,label){
   if(zip){
     const zipEl=document.getElementById('rzip');
     if(zipEl){zipEl.value=zip;}
-    // Auto-expand radius for city clusters
     const radEl=document.getElementById('rrad');
     if(radEl)radEl.value='8';
   }
@@ -3417,6 +3554,7 @@ function rRoute(){
     if(entries.length&&entries[entries.length-1].outcome==='not_interested')rExclude.add(p.id);
   });
   let data=P.filter(p=>p.lat&&p.lon&&!rExclude.has(p.id));
+  if(_routeVenueFilter)data=data.filter(p=>p.venue_type===_routeVenueFilter);
   if(county)data=data.filter(p=>p.county===county);
   if(pri)data=data.filter(p=>p.priority===pri);
   if(zip.length===5&&ZIPS[zip]){
@@ -3829,7 +3967,8 @@ function buildIntelSummary(p){
   if(p.chronic)lines.push('&#x1F9CA; Chronic ice — '+p.ice_count+' inspections flagged');
   if(p.ice_fresh)lines.push('&#x26A1; Ice violation within last 6 months');
   if(p.days_until>=0&&p.days_until<=45)lines.push('&#x1F4C5; Next inspection in '+p.days_until+' days');
-  if((p.machines||1)>1)lines.push('&#x1F4B0; '+(p.machines||1)+' machines = $'+((p.machines||1)*149)+'/mo potential');
+  if(p.venue_type==='golf')lines.push('&#x26F3; Golf/country club — typically 2+ machines, F&B director is key contact');
+  if((p.machines||1)>1)lines.push('&#x1F4B0; '+(p.machines||1)+' machines — monthly plan $'+(p.monthly||149)+'/mo');
   if(p.ice_risk_level==='High')lines.push('&#x1F9CA; High ice risk: '+p.ice_risk_prob+'% — '+(p.ice_risk_reason||''));
   else if(p.ice_risk_level==='Medium')lines.push('&#x1F9CA; Medium ice risk: '+p.ice_risk_prob+'%');
   if(p.new_reason)lines.push('&#x1F195; New escalation since yesterday');
@@ -3872,6 +4011,7 @@ function showCard(id){
     '<span style="font-size:9px;padding:3px 8px;border-radius:5px;font-weight:700;background:'+(pBg[p.priority]||'#f8fafc')+';color:'+pc+'">'+p.priority+'</span>',
     p.tier&&p.tier!==p.priority?'<span style="font-size:9px;padding:3px 8px;border-radius:5px;font-weight:700;background:#f1f5f9;color:#475569">'+p.tier+'</span>':'',
     p.chronic?'<span style="font-size:9px;padding:3px 8px;border-radius:5px;font-weight:700;background:#ecfdf5;color:#059669">CHRONIC ICE</span>':'',
+    p.venue_type==='golf'?'<span style="font-size:9px;padding:3px 8px;border-radius:5px;font-weight:700;background:#ecfdf5;color:#059669;border:1px solid #6ee7b7">&#x26F3; Golf</span>':'',
     p.days_since>0?'<span style="font-size:9px;padding:3px 8px;border-radius:5px;font-weight:700;color:#dc2626;background:#fef2f2">'+p.days_since+'d overdue</span>':'',
     lc?'<span style="font-size:9px;padding:3px 8px;border-radius:5px;font-weight:700;color:'+lColor+';background:'+lColor+'18">'+(OI[normO(lc.outcome)]||lc.outcome)+'</span>':'',
     p.hours?'<span style="font-size:9px;padding:3px 8px;border-radius:5px;background:#f8fafc;color:#64748b">'+p.hours+'</span>':'',
@@ -3909,9 +4049,10 @@ function showCard(id){
     ['Confidence',(p.confidence||0)+'%',p.confidence>=75?'#059669':p.confidence>=50?'#d97706':'#1e293b'],
     ['Est. Machines',p.machines||1,'#1e293b'],
     ['Account Tier',p.tier||'COLD','#1e293b'],
-    ['Monthly Recurring','$'+(p.monthly||149)+'/mo','#059669'],
-    ['One-Time Clean','$'+(p.onetime||349),'#2563eb'],
-    ['Intro Offer','$99 first visit (no commitment)','#ea580c'],
+    ['Monthly Plan','$'+(p.monthly||149)+'/mo · Annual commitment','#059669'],
+    ['Quarterly Plan','$'+(p.quarterly||129)+'/mo · Annual commitment','#7c3aed'],
+    ['Deep Clean (One-Time)','$'+(p.onetime||349),'#2563eb'],
+    ['Intro Offer','$'+(p.intro||99)+' first visit · Recurring after','#ea580c'],
   ];
   var _intelLines=buildIntelSummary(p);
   var intelWhyH=_intelLines.length
@@ -3999,14 +4140,8 @@ function showCard(id){
   // CLOSE DEAL section  
   var closeH='<div style="margin-bottom:12px">'
     +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Close Deal</div>'
-    +'<button id="sc-won-intro" style="width:100%;padding:10px;border:2px solid #f97316;border-radius:9px;background:#fff7ed;color:#ea580c;font-weight:800;font-size:12px;cursor:pointer;font-family:inherit;touch-action:manipulation;margin-bottom:6px">'
-    +'🔥 Intro Offer — $99 first visit<br><span style="font-size:10px;font-weight:400">Try us once, no commitment. Recurring after.</span></button>'
-    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">'
-    +'<button id="sc-won-rec" style="padding:10px 6px;border:2px solid #059669;border-radius:9px;background:#ecfdf5;color:#059669;font-weight:700;font-size:11px;cursor:pointer;font-family:inherit;touch-action:manipulation">'
-    +'💰 Won — Recurring<br><span id="sc-won-monthly" style="font-size:10px;font-weight:400">$'+( p.monthly||149)+'/mo</span></button>'
-    +'<button id="sc-won-once" style="padding:10px 6px;border:2px solid #2563eb;border-radius:9px;background:#eff6ff;color:#2563eb;font-weight:700;font-size:11px;cursor:pointer;font-family:inherit;touch-action:manipulation">'
-    +'🧼 Won — One-Time<br><span style="font-size:10px;font-weight:400">$'+(p.onetime||349)+'</span></button>'
-    +'</div>'
+    +'<button id="sc-close-deal" style="width:100%;padding:12px;border:2px solid #059669;border-radius:10px;background:#ecfdf5;color:#059669;font-weight:800;font-size:13px;cursor:pointer;font-family:inherit;touch-action:manipulation;margin-bottom:6px">'
+    +'🤝 Close Deal<br><span style="font-size:10px;font-weight:400">Monthly $'+(p.monthly||149)+'/mo · Quarterly $'+(p.quarterly||129)+'/mo · Intro $'+(p.intro||99)+'</span></button>'
     +'<button id="sc-lost-btn" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:8px;background:transparent;color:#94a3b8;font-size:10px;cursor:pointer;font-family:inherit;touch-action:manipulation">'
     +'Mark as Lost / Churned</button>'
     +'</div>';
@@ -4090,8 +4225,8 @@ function showCard(id){
     var btn=e.target.closest(
       '[data-scout],[data-sctype],[data-fupdays],[data-scr],[data-ci],'
       +'#sc-close,#sc-route-btn,#sc-report-btn,#sc-save-btn,#sc-phone-save,'
-      +'#sc-save-vendor,#sc-add-contact,#sc-won-intro,#sc-won-rec,'
-      +'#sc-won-once,#sc-lost-btn,#sc-ct-save,#sc-ct-cancel'
+      +'#sc-save-vendor,#sc-add-contact,#sc-close-deal,'
+      +'#sc-lost-btn,#sc-ct-save,#sc-ct-cancel'
     );
     if(!btn)return;
     if(e.type==='touchend')e.preventDefault();
@@ -4135,7 +4270,7 @@ function showCard(id){
     if(btn.dataset.scout){
       var outcome=btn.dataset.scout;
       if(outcome==='signed'){
-        toast('Use the Close Deal buttons below (Won Recurring/One-Time/Intro) to record a signed deal');
+        toast('Use the 🤝 Close Deal button below to record a signed deal');
         return;
       }
       selOutcome=outcome;selReason=null;
@@ -4191,31 +4326,18 @@ function showCard(id){
       return;
     }
 
-    // Close deal (Intro / Recurring / One-Time / Churned)
-    if(bid==='sc-won-intro'||bid==='sc-won-rec'||bid==='sc-won-once'||bid==='sc-lost-btn'){
-      var wonStatus=bid==='sc-won-intro'?'customer_intro':bid==='sc-won-rec'?'customer_recurring':bid==='sc-won-once'?'customer_once':'churned';
-      var wonNow=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-      customers[p.id]={
-        status:wonStatus,won_date:wonNow,
-        service_type:wonStatus==='customer_recurring'?'recurring':wonStatus==='customer_intro'?'intro':'one_time',
-        monthly:wonStatus==='customer_recurring'?p.monthly:0,
-        onetime:wonStatus==='customer_once'?p.onetime:wonStatus==='customer_intro'?99:0,
-        machines:p.machines,name:p.name,address:p.address,city:p.city,phone:ph,
-        notes:'',last_service:'',next_service:'',hubspot_url:'',square_url:'',
-        machine_brand:'',machine_model:'',machine_type:'',filter_type:'',
-        filter_installed:'',contract_start:'',contract_term:6,contract_renewal:'',
-        service_history:[],atp_history:[],vendor_name:'',
-      };
-      custSave();p.status=wonStatus;
+    // Open Close Deal overlay
+    if(bid==='sc-close-deal'){scOpenClose(p,bg);return;}
+
+    // Lost / Churned
+    if(bid==='sc-lost-btn'){
+      if(!confirm('Mark '+p.name+' as Lost / Churned?'))return;
+      var lostNow=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+      customers[p.id]=Object.assign(customers[p.id]||{},{status:'churned',won_date:lostNow,name:p.name,address:p.address,city:p.city,phone:ph,machines:p.machines});
+      custSave();p.status='churned';
       if(!log[p.id])log[p.id]=[];
-      log[p.id].push({outcome:wonStatus,date:wonNow,notes:'Deal closed'});
-      lSave();
-      if(wonStatus==='customer_recurring'||wonStatus==='customer_intro')buildAnnualSchedule(p.id);
-      bg.remove();
-      toast(wonStatus==='customer_intro'?'🔥 Intro booked! $99 first visit':
-            wonStatus==='customer_recurring'?'🎉 Won! Added to recurring clients.':
-            wonStatus==='churned'?'Marked lost/churned':'🧼 Won! One-time service recorded.');
-      sw('customers');return;
+      log[p.id].push({outcome:'churned',date:lostNow,notes:'Marked lost/churned'});
+      lSave();bg.remove();toast('Marked lost/churned');renderKPIs();return;
     }
 
     // Vendor save
@@ -4240,7 +4362,11 @@ function showCard(id){
       ctForm.innerHTML=
         '<div style="font-size:9px;font-weight:700;color:#94a3b8;margin-bottom:6px">NEW CONTACT</div>'
         +'<input id="sc-ct-name" type="text" placeholder="Name" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:5px">'
-        +'<input id="sc-ct-role" type="text" placeholder="Role (Owner, GM, Manager…)" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:5px">'
+        +'<select id="sc-ct-role" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:5px;background:#fff;color:#1e293b">'
+        +(p.venue_type==='golf'
+          ?'<option value="F&B Director" selected>F&amp;B Director</option><option>General Manager</option><option>Golf Pro/Director</option><option>Owner</option><option>Club Manager</option><option>Executive Chef</option><option>Other</option>'
+          :'<option value="">Role…</option><option>Owner</option><option>General Manager</option><option>Manager</option><option>Chef</option><option>F&amp;B Director</option><option>Other</option>')
+        +'</select>'
         +'<input id="sc-ct-phone" type="tel" placeholder="Phone (optional)" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:5px">'
         +'<input id="sc-ct-notes" type="text" placeholder="Notes (optional)" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:8px">'
         +'<div style="display:flex;gap:6px">'
@@ -4346,9 +4472,10 @@ function openM(id){
     ['Confidence',       (p.confidence||0)+'%',p.confidence>=75?'g':p.confidence>=50?'o':''],
     ['Est. Machines',    p.machines||1,''],
     ['Account Tier',     p.tier||'COLD',''],
-    ['Monthly Recurring','$'+(p.monthly||149)+'/mo','g'],
-    ['One-Time Clean',   '$'+(p.onetime||349),'b'],
-    ['Intro Offer',      '$99 first visit (no commitment)','o'],
+    ['Monthly Plan',     '$'+(p.monthly||149)+'/mo · Annual','g'],
+    ['Quarterly Plan',   '$'+(p.quarterly||129)+'/mo · Annual','g'],
+    ['Deep Clean',       '$'+(p.onetime||349),'b'],
+    ['Intro Offer',      '$'+(p.intro||99)+' first visit','o'],
   ].map(([l,v,c])=>'<div class="fact"><div class="fl">'+l+'</div><div class="fv '+c+'">'+v+'</div></div>').join('');
   const hist=log[id]||[];
   const hs=document.getElementById('mhs');
@@ -5528,39 +5655,35 @@ function swCustomers(){sw('clients');}
 function buildAnnualSchedule(id){
   if(!customers[id])return;
   const c=customers[id];
-  // Parse date as LOCAL (not UTC) to avoid off-by-one errors
   const startStr=c.contract_start||localISO(new Date());
   const [sy,sm,sd]=startStr.split('-').map(Number);
-  const start=new Date(sy,sm-1,sd,12,0,0); // noon to avoid any DST edge
-  const term=parseInt(c.contract_term||6);
+  const start=new Date(sy,sm-1,sd,12,0,0);
+  const isQuarterly=c.service_type==='quarterly';
+  const intervalDays=isQuarterly?91:61;
+  const totalVisits=isQuarterly?4:6;
+  // deep cleans: visit 1 and 4 (monthly) or visit 1 and 3 (quarterly)
+  const deepVisits=isQuarterly?new Set([1,3]):new Set([1,4]);
   const schedule=[];
 
-  // Build visit schedule: every 60 days, starting 60 days from contract start
-  let visit=new Date(start.getFullYear(),start.getMonth(),start.getDate()+60,12,0,0);
-  const endDate=new Date(start);
-  endDate.setMonth(endDate.getMonth()+(term===6?6:12));
-
-  let visitNum=0;
-  while(visit<=endDate){
-    visitNum++;
-    const isDeep=visitNum===1||(visitNum*60)%180<60;
-    // Format as local YYYY-MM-DD (avoid UTC shift)
+  let visit=new Date(start.getFullYear(),start.getMonth(),start.getDate()+intervalDays,12,0,0);
+  for(let visitNum=1;visitNum<=totalVisits;visitNum++){
+    const isDeep=deepVisits.has(visitNum);
     const iso_local=visit.getFullYear()+'-'+String(visit.getMonth()+1).padStart(2,'0')+'-'+String(visit.getDate()).padStart(2,'0');
     schedule.push({
-      date: iso_local,
-      date_display: visit.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
-      type: isDeep?'deep_clean':'maintenance_60',
-      label: isDeep?'Deep Clean':'60-Day Maintenance',
-      status: 'scheduled',
+      date:iso_local,
+      date_display:visit.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
+      type:isDeep?'deep_clean':(isQuarterly?'maintenance_90':'maintenance_61'),
+      label:isDeep?'Deep Clean':(isQuarterly?'90-Day Maintenance':'61-Day Maintenance'),
+      status:'scheduled',
     });
     visit=new Date(visit);
-    visit.setDate(visit.getDate()+60);
+    visit.setDate(visit.getDate()+intervalDays);
   }
 
   c.annual_schedule=schedule;
   c.contract_start=c.contract_start||localISO(new Date());
   const renewal=new Date(start);
-  renewal.setMonth(renewal.getMonth()+term);
+  renewal.setFullYear(renewal.getFullYear()+1);
   c.contract_renewal=localISO(renewal);
   custSave();
 }
@@ -7081,9 +7204,10 @@ function srGenerate(p,atpVal){
     +services.map(function(s){return '<div style="font-size:11px;color:#334155;padding:3px 0;display:flex;gap:8px"><span style="color:#059669;font-weight:700;flex-shrink:0">&#x2713;</span><span>'+s+'</span></div>';}).join('')
     +'</div></div>'
     +'<div style="background:#0f1f38;border-radius:10px;padding:18px;text-align:center;margin-bottom:16px">'
-    +'<div style="font-size:8px;color:#94a3b8;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">Limited Intro Offer &mdash; No Commitment</div>'
+    +'<div style="font-size:8px;color:#94a3b8;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">Intro Offer</div>'
     +'<div style="font-size:26px;font-weight:900;color:#f97316;margin-bottom:4px">$99 &mdash; First Visit</div>'
-    +'<div style="font-size:11px;color:#e2e8f0;margin-bottom:10px">Full service &middot; ATP documentation &middot; compliance report</div>'
+    +'<div style="font-size:11px;color:#e2e8f0;margin-bottom:4px">Full service &middot; ATP documentation &middot; compliance report</div>'
+    +'<div style="font-size:10px;color:#94a3b8;margin-bottom:8px">Annual plans from $129/mo &middot; Annual commitment &middot; Cancel anytime after year 1</div>'
     +'<div style="font-size:16px;font-weight:800;color:#fff">Call&nbsp;/&nbsp;Text:&nbsp;&nbsp;(727)&nbsp;855-6873</div>'
     +'<div style="font-size:10px;color:#94a3b8;margin-top:4px">pinellasiceco.com</div>'
     +'</div>'
