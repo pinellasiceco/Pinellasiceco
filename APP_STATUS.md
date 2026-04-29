@@ -1,11 +1,11 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-04-28 (session 8) by Claude Code*
+*Last updated: 2026-04-29 (session 9) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
-- Last deployed: 2026-04-28 (session 8 — Pipeline overhaul, Decision Engine, Tier 1 fixes)
+- Last deployed: 2026-04-29 (session 9 — Pricing overhaul, Golf, Close Deal overlay, email fix)
 - Build script: `build.py` (repo root) → outputs `prospecting_tool.html` → copied to `index.html` by CI
-- `index.html` and `build.py` are fully in sync as of session 8
+- `index.html` and `build.py` are fully in sync as of session 9
 
 ## What's Working ✅
 
@@ -13,8 +13,9 @@
 - Daily cron: `0 11 * * *` (7am ET) in `rebuild.yml`
 - Commit uses `--allow-empty` — always pushes even if no data changes
 - `pages.yml` deploys to GitHub Pages on every push to main
-- `send_briefing.py` sends daily briefing email via Resend
-- sw.js cache auto date-stamped by `build.py` on each rebuild (`pic-YYYYMMDD`) — no stale PWA
+- `send_briefing.py` runs as **final step in rebuild.yml** — always sends after fresh data is built
+- Daily briefing fallback: `send_briefing.yml` cron at 13:00 UTC (9am ET) if rebuild fails
+- sw.js cache bumped manually when patching index.html; `build.py` auto-stamps on CI rebuild
 
 ### Navigation
 - 5-tab layout: Home / Prospects / Pipeline / Route / Clients
@@ -115,6 +116,14 @@ If something appears broken, first try force-closing the PWA and reopening — t
 - Nothing from the current feature roadmap is missing
 
 ## Recent Changes
+- **2026-04-29 (s9):** Pricing overhaul — `est_monthly_plan(machines, plan)`, `est_deep_clean()`, `est_intro()` Python functions; `quarterly` field baked into P[]; monthly $149/mo, quarterly $129/mo, intro $99+$49/extra
+- **2026-04-29 (s9):** Close Deal overlay — single 🤝 Close Deal button → modal with Monthly/Quarterly toggle + $99 intro checkbox; `scOpenClose()`, `updateCloseDisplay()`, `scMarkWon()`; Lost moved to confirm() dialog
+- **2026-04-29 (s9):** buildAnnualSchedule quarterly — monthly=6 visits/61-day, quarterly=4 visits/91-day; deep cleans at visits 1+4 (monthly) or 1+3 (quarterly); all contracts renew at 1 year
+- **2026-04-29 (s9):** Golf course detection — `GOLF_KEYWORDS`, `is_golf_venue()`, `venue_type` field baked into P[]; golf floors machines at 2, +10 score bonus; ⛳ Golf filter chip in Prospects; ⛳ Golf cluster chip in Route tab; golf badge in cards + showCard; F&B Director default in contact role dropdown
+- **2026-04-29 (s9):** WHY THIS PROSPECT MATTERS — added to index.html (was missing from s8 patch); includes golf intel line; ice risk chips added to showCard chips row
+- **2026-04-29 (s9):** Pricing displays — showCard factRows updated (quarterly, annual commitment language); ATP CTA "Annual plans from $129/mo · Annual commitment · Cancel anytime after year 1"; removed all "no commitment" language
+- **2026-04-29 (s9):** Daily email fix — `send_briefing.py` embedded as final step in `rebuild.yml` (GitHub bot pushes never trigger other workflows, so the push trigger was never firing); `send_briefing.yml` cron moved to 13:00 UTC as true fallback
+- **2026-04-29 (s9):** sw.js bumped to `pic-20260429`, asset path fixed (removed stray space)
 - **2026-04-28 (s8):** Pipeline overhaul — 4-stage tabs (In Play/Quoted/Won/Lost), KPI bar, getProspectStage(), setPipeStage(), ice risk badges on cards, Quoted outcome button in showCard
 - **2026-04-28 (s8):** TODAY'S PLAN — ranked action list on Home tab (action score formula), Add All to Route button
 - **2026-04-28 (s8):** WHY THIS PROSPECT MATTERS — navy intel panel in showCard with ice violation + callback intel
@@ -139,11 +148,11 @@ If something appears broken, first try force-closing the PWA and reopening — t
 - **2026-04-27 (s7):** `deploy_edge_functions.yml` — auto-deploys Edge Functions from repo; eliminates need to copy-paste code into Supabase dashboard
 
 ## Next Session Priorities
-1. Verify Pipeline 4-stage tabs work correctly with real data after next CI rebuild
-2. Confirm TODAY'S PLAN populates and Add All to Route works end-to-end
-3. Test city cluster chips on iPhone — verify chip highlights + ZIP sets correctly
-4. Test email sending end-to-end (ATP report, service report, compliance summary)
-5. Confirm ATP/service reports print cleanly on letter-size in iOS Safari (one page)
+1. Verify daily email sends after tomorrow's 11:00 UTC rebuild (first time it runs with the new embedded step)
+2. Test Close Deal overlay end-to-end on iPhone — plan toggle, intro toggle, Confirm Close
+3. Verify ⛳ Golf filter shows golf venues in Prospects tab (needs next CI rebuild to bake venue_type into P[])
+4. Verify quarterly schedule generates correctly (4 visits, 91-day intervals)
+5. Check ATP report CTA — confirm "Annual plans from $129/mo" language shows correctly
 
 ## iOS PWA Rules (never violate these)
 - **Buttons in injected HTML:** use inline `ontouchend="event.preventDefault();fn()"` + `onclick="fn()"` — NOT `addEventListener` on innerHTML-injected elements
