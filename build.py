@@ -611,6 +611,17 @@ def osm_match(name, city, osm_cache):
                 best_match = cached_biz
     return best_match
 
+def osm_golf_match(name, city, osm_cache):
+    """Golf-specific OSM match — strips venue-type words for cleaner matching."""
+    import re as _re
+    clean = (name.lower()
+        .replace('golf club','').replace('country club','')
+        .replace('golf course','').replace('golf resort','')
+        .replace('golf & country','').replace('& country club','')
+        .strip())
+    result = osm_match(clean, city, osm_cache) if clean else None
+    return result or osm_match(name, city, osm_cache)
+
 def load_geo_cache(data_dir=None):
     """Load persistent geocoding cache from disk."""
     dirs = []
@@ -1030,7 +1041,8 @@ def run(csv_paths):
             rating_raw = 0
             # OSM enrichment - phone + hours for unmatched records
             if not phone_raw or not hours_raw:
-                osm_hit = osm_match(name, str(row.city), osm_cache)
+                osm_fn = osm_golf_match if bool(row.is_golf) else osm_match
+                osm_hit = osm_fn(name, str(row.city), osm_cache)
                 if osm_hit:
                     if not phone_raw:
                         phone_raw = osm_hit.get('phone','')
@@ -2944,6 +2956,10 @@ function scOpenClose(p,bg){
     +'<span id="co-entry-note" style="font-size:10px;color:#94a3b8">standard $'+entryDefault+'</span>'
     +'</div>'
     +'</div>'
+    +'<div style="margin-bottom:12px">'
+    +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Note (optional)</div>'
+    +'<input id="co-note" type="text" placeholder="e.g. discounted entry to close annual" style="width:100%;padding:7px 8px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit;outline:none;color:#1e293b;box-sizing:border-box">'
+    +'</div>'
     +'<div style="padding:10px;background:#f0fdf4;border:1px solid #6ee7b7;border-radius:8px;margin-bottom:12px;text-align:center">'
     +'<div style="font-size:9px;color:#059669;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Year 1 Total Value</div>'
     +'<div id="co-year1-val" style="font-size:22px;font-weight:900;color:#059669">$'+year1.toLocaleString('en-US')+'</div>'
@@ -3017,6 +3033,8 @@ function scMarkWon(onetime){
   var cs=_closeState,m=cs.machines||p.machines||1;
   var epEl=document.getElementById('co-entry-price');
   var entry=epEl?parseInt(epEl.value)||0:cs.entryPrice;
+  var noteEl=document.getElementById('co-note');
+  var closeNote=noteEl?(noteEl.value||''):'';
   var wonNow=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
   var wonStatus=onetime?'customer_recurring':cs.plan==='quarterly'?'customer_quarterly':'customer_recurring';
   var monthlyPrice=onetime?0:calcMonthly(cs.plan,m);
@@ -3028,9 +3046,9 @@ function scMarkWon(onetime){
     monthly:monthlyPrice,onetime:onetimePrice,
     entry_price:onetime?0:entry,
     entry_discount:onetime?0:Math.max(0,standardEntry-entry),
-    filters_included:false,
+    filters_included:false,close_note:closeNote,
     machines:m,name:p.name,address:p.address,city:p.city,phone:p.phone||'',
-    notes:'',last_service:'',next_service:'',hubspot_url:'',square_url:'',
+    notes:closeNote,last_service:'',next_service:'',hubspot_url:'',square_url:'',
     machine_brand:'',machine_model:'',machine_type:'',filter_type:'',
     filter_installed:'',contract_start:'',contract_term:12,
     contract_renewal:'',service_history:[],atp_history:[],vendor_name:'',
@@ -3038,8 +3056,8 @@ function scMarkWon(onetime){
   custSave();p.status=wonStatus;
   if(!log[p.id])log[p.id]=[];
   log[p.id].push({outcome:wonStatus,date:wonNow,
-    notes:onetime?'One-time deep clean · $'+onetimePrice:
-      'Deal closed · '+cs.plan+' $'+monthlyPrice+'/mo · $'+entry+' entry'});
+    notes:(onetime?'One-time deep clean · $'+onetimePrice:
+      'Deal closed · '+cs.plan+' $'+monthlyPrice+'/mo · $'+entry+' entry')+(closeNote?' — '+closeNote:'')});
   lSave();
   if(!onetime)buildAnnualSchedule(p.id);
   var ov=document.getElementById('close-overlay');if(ov)ov.remove();
