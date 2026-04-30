@@ -2261,7 +2261,7 @@ header{background:var(--navy);
     </div>
 
     <!-- KPI bar -->
-    <div id="pipe-kpis" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">
+    <div id="pipe-kpis" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px">
       <div class="dc" style="text-align:center;padding:8px 4px">
         <div style="font-size:9px;color:var(--sub);font-weight:600;margin-bottom:2px">IN PLAY</div>
         <div style="font-size:20px;font-weight:800;color:var(--navy)" id="pipe-kpi-inplay">0</div>
@@ -2273,6 +2273,10 @@ header{background:var(--navy);
       <div class="dc" style="text-align:center;padding:8px 4px">
         <div style="font-size:9px;color:var(--sub);font-weight:600;margin-bottom:2px">CLOSE RATE</div>
         <div style="font-size:20px;font-weight:800;color:#059669" id="pipe-kpi-close">0%</div>
+      </div>
+      <div class="dc" style="text-align:center;padding:8px 4px">
+        <div style="font-size:9px;color:var(--sub);font-weight:600;margin-bottom:2px">FORECAST</div>
+        <div style="font-size:16px;font-weight:800;color:#d97706" id="pipe-kpi-forecast">$0</div>
       </div>
     </div>
 
@@ -2433,7 +2437,10 @@ header{background:var(--navy);
   <div class="panel" id="p-partners">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
       <div style="font-size:15px;font-weight:800;color:var(--navy)">&#x1F91D; Channel Partners</div>
-      <button onclick="openAddPartner()" ontouchend="event.preventDefault();openAddPartner()" style="padding:6px 12px;border:none;border-radius:8px;background:var(--navy);color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">+ Add Partner</button>
+      <div style="display:flex;gap:6px">
+        <button onclick="openLogReferral()" ontouchend="event.preventDefault();openLogReferral()" style="padding:6px 12px;border:none;border-radius:8px;background:#059669;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E8; Log Referral</button>
+        <button onclick="openAddPartner()" ontouchend="event.preventDefault();openAddPartner()" style="padding:6px 12px;border:none;border-radius:8px;background:var(--navy);color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">+ Add Partner</button>
+      </div>
     </div>
     <div id="partner-kpi-bar" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px"></div>
     <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px" id="partner-type-filters">
@@ -2574,6 +2581,14 @@ header{background:var(--navy);
       <button class="dbtn" onclick="clrLog()" style="margin-bottom:4px;width:100%">Clear Call Log</button>
       <button class="dbtn" onclick="clrCustomers()" style="margin-bottom:4px;width:100%">Clear Customer Data</button>
       <button class="dbtn" onclick="clrAll()" style="width:100%">Clear ALL Data (full reset)</button>
+    </div>
+
+    <div class="dc" style="margin-top:12px;border:1px solid #fca5a5;background:#fff5f5">
+      <div class="dct" style="color:#dc2626">&#x26A0;&#xFE0F; Danger Zone</div>
+      <div style="font-size:10px;color:#64748b;margin-bottom:8px">These actions cannot be undone. Use with caution.</div>
+      <button class="dbtn" onclick="doResetFees()" style="margin-bottom:4px;width:100%;background:#fff7ed;color:#d97706;border-color:#fcd34d">Reset Partner Fees (mark all owed)</button>
+      <button class="dbtn" onclick="doResetLocal()" style="margin-bottom:4px;width:100%;background:#fef2f2;color:#dc2626;border-color:#fca5a5">&#x1F5D1; Reset Local Data (calls, customers, partners)</button>
+      <button class="dbtn" onclick="doResetAll()" style="width:100%;background:#dc2626;color:#fff;border-color:#dc2626">&#x26A0; Wipe All Data &amp; Reload</button>
     </div>
 
   </div>
@@ -3310,6 +3325,12 @@ function scOpenClose(p,bg){
     +'<button id="co-cancel" onclick="document.getElementById(\\'close-overlay\\').remove()" ontouchend="event.preventDefault();document.getElementById(\\'close-overlay\\').remove()" style="width:100%;padding:8px;border:none;border-radius:8px;background:transparent;color:#94a3b8;font-size:11px;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
     +'</div>';
   document.body.appendChild(el);
+  // Auto-populate partner if this prospect was referred via an inbound referral
+  var ref=getProspectPartnerRef(p.id);
+  if(ref&&ref.partnerId){
+    var sel=document.getElementById('close-partner-select');
+    if(sel){sel.value=ref.partnerId;}
+  }
 }
 
 function coAdjMachines(delta){
@@ -3450,6 +3471,14 @@ function partnerCardHTML(p){
   var refs=(p.referrals||[]).length;
   var reasonsHTML=(p.fit_reasons&&p.fit_reasons.length)?\'<div style="font-size:9px;color:#64748b;margin-top:3px;">\'+p.fit_reasons.join(\' · \')+\'</div>\':\'\'
   var warnHTML=(p.fit_warnings&&p.fit_warnings.length)?\'<div style="font-size:9px;color:#d97706;margin-top:2px;">⚠ \'+p.fit_warnings[0]+\'</div>\':\'\'
+  var tp=getPartnerTierProgress(p);
+  var tierC={bronze:\'#92400e\',silver:\'#64748b\',gold:\'#d97706\'};
+  var tierBarH=tp.nextTier
+    ?(\'<div style="margin-top:6px;"><div style="display:flex;justify-content:space-between;font-size:9px;color:#64748b;margin-bottom:2px;">\'
+      +\'<span style="font-weight:700;color:\'+tierC[tp.tier]+\';">\'+tp.tier.charAt(0).toUpperCase()+tp.tier.slice(1)+\' ($\'+tp.fee+\'/ref)</span>\'
+      +\'<span>\'+tp.count+\'/\'+tp.nextAt+\' → \'+tp.nextTier.charAt(0).toUpperCase()+tp.nextTier.slice(1)+\'</span></div>\'
+      +\'<div style="height:4px;background:#e2e8f0;border-radius:2px;"><div style="height:4px;background:\'+tierC[tp.tier]+\';border-radius:2px;width:\'+tp.pct+\'%;transition:width .3s"></div></div></div>\')
+    :(\'<div style="margin-top:5px;font-size:9px;font-weight:700;color:#d97706;">&#x1F947; Gold Partner · $150/referral</div>\');
   return \'<div class="partner-card" data-pid="\'+p.id+\'" ontouchend="event.preventDefault();openPartner(this.dataset.pid)" onclick="openPartner(this.dataset.pid)" style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;margin-bottom:10px;cursor:pointer;">\'
     +\'<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px;">\'
     +\'<div style="flex:1;min-width:0;"><div style="font-weight:700;font-size:14px;color:#1e293b;">\'+p.name+tierBadge+\'</div>\'
@@ -3459,7 +3488,7 @@ function partnerCardHTML(p){
     +\'<div style="font-size:9px;color:\'+fitColor+\';">\'+p.fit_level+\'</div>\'
     +\'<div style="font-size:10px;color:\'+statusColor+\';margin-top:3px;font-weight:600;">\'+statusLabel+\'</div></div></div>\'
     +reasonsHTML+warnHTML
-    +(refs?\'<div style="font-size:12px;color:#059669;margin-top:4px;">\'+refs+\' referral\'+(refs!==1?\'s\':\'\')+\'</div>\':\'\')+\'</div>\';
+    +(refs?\'<div style="font-size:12px;color:#059669;margin-top:4px;">\'+refs+\' referral\'+(refs!==1?\'s\':\'\')+\'</div>\':\'\')+tierBarH+\'</div>\';
 }
 function renderTopPartners(){
   var data=loadPartnerData();
@@ -3540,6 +3569,25 @@ function openPartner(pid){
     +(p.email?\'<div style="margin-bottom:10px;font-size:13px;color:#1e293b;">✉️ <a href="mailto:\'+p.email+\'" style="color:var(--navy);text-decoration:none;">\'+p.email+\'</a></div>\':\'\')
     +\'<div style="margin-bottom:12px;"><label style="font-size:12px;font-weight:600;color:#475569;">Notes</label>\'
     +\'<textarea id="po-notes" rows="3" onchange="savePartnerField(_openPartnerId,\\\'notes\\\',this.value)" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;margin-top:4px;font-family:inherit;box-sizing:border-box;">\'+((p.notes||\'\')+\'\')+\'</textarea></div>\'
+    +(function(){
+      var tp=getPartnerTierProgress(p);
+      var tierC={bronze:\'#92400e\',silver:\'#64748b\',gold:\'#d97706\'};
+      var tierBg={bronze:\'#fef3c7\',silver:\'#f1f5f9\',gold:\'#fffbeb\'};
+      var tierBrd={bronze:\'#fcd34d\',silver:\'#cbd5e1\',gold:\'#fde68a\'};
+      if(tp.nextTier){
+        return \'<div style="background:\'+tierBg[tp.tier]+\';border:1px solid \'+tierBrd[tp.tier]+\';border-radius:10px;padding:12px;margin-bottom:12px;">\'
+          +\'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">\'
+          +\'<div style="font-size:11px;font-weight:700;color:\'+tierC[tp.tier]+\';text-transform:uppercase;letter-spacing:.05em;">\'+tp.tier+\' Tier · $\'+tp.fee+\'/referral</div>\'
+          +\'<div style="font-size:11px;color:#64748b;">\'+tp.count+\' closed</div></div>\'
+          +\'<div style="height:6px;background:#e2e8f0;border-radius:3px;margin-bottom:4px;">\'
+          +\'<div style="height:6px;background:\'+tierC[tp.tier]+\';border-radius:3px;width:\'+tp.pct+\'%;transition:width .3s;"></div></div>\'
+          +\'<div style="font-size:9px;color:#64748b;">\'+tp.count+\'/\'+tp.nextAt+\' referrals to reach \'+tp.nextTier.charAt(0).toUpperCase()+tp.nextTier.slice(1)+\' ($\'+(tp.nextTier===\'gold\'?150:125)+\'/ref)</div>\'
+          +\'</div>\';
+      }
+      return \'<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:12px;margin-bottom:12px;text-align:center;">\'
+        +\'<div style="font-size:14px;font-weight:800;color:#d97706;">&#x1F947; Gold Partner</div>\'
+        +\'<div style="font-size:11px;color:#92400e;margin-top:2px;">$150/referral · \'+tp.count+\' closed deals</div></div>\';
+    })()
     +\'<div style="margin-bottom:6px;font-weight:700;font-size:13px;">Referrals\'+(owed?\'<span style="margin-left:8px;color:#d97706;font-size:12px;">$\'+owed+\' owed</span>\':\'\')+ \'</div>\'
     +refsHTML
     +\'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px;">\'
@@ -3610,6 +3658,96 @@ function generatePayoutReport(){
   var a=document.createElement(\'a\');a.href=URL.createObjectURL(blob);a.download=\'partner_payout_\'+(new Date().toISOString().slice(0,10))+\'.txt\';a.click();
 }
 
+function getProspectPartnerRef(prospectId){
+  var data=loadPartnerData();
+  var result=null;
+  Object.keys(data).forEach(function(pid){
+    var pdata=data[pid]||{};
+    (pdata.inbound_referrals||[]).forEach(function(r){
+      if(r.prospect_id!=null&&String(r.prospect_id)===String(prospectId)){
+        var base=PARTNERS.find(function(p){return p.id===pid;});
+        result={partnerName:(base?base.name:pdata.name)||pid,partnerId:pid,referral:r};
+      }
+    });
+  });
+  return result;
+}
+function getPartnerTierProgress(p){
+  var refs=(p.referrals||[]).filter(function(r){return r.fee_status!==\'void\';});
+  var count=refs.length;
+  var fee=count>=6?150:count>=3?125:99;
+  if(count>=6)return{tier:\'gold\',count:count,nextTier:null,nextAt:null,pct:100,fee:fee};
+  if(count>=3)return{tier:\'silver\',count:count,nextTier:\'gold\',nextAt:6,pct:Math.round((count-3)/3*100),fee:fee};
+  return{tier:\'bronze\',count:count,nextTier:\'silver\',nextAt:3,pct:Math.round(count/3*100),fee:fee};
+}
+function openLogReferral(){
+  var data=loadPartnerData();
+  var allPartners=PARTNERS.map(function(p){return Object.assign({},p,data[p.id]||{});});
+  var active=allPartners.filter(function(p){return(p.status||\'not_contacted\')===\'active\';});
+  var pOpts=(active.length?active:allPartners).map(function(p){
+    return \'<option value="\'+p.id+\'">\'+p.name+\' (\'+p.partner_type_label+\')</option>\';
+  }).join(\'\');
+  if(!pOpts){toast(\'No partners on file — add one first\');return;}
+  var html=\'<div id="ref-overlay-bg" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:900;display:flex;align-items:flex-end;justify-content:center;" ontouchend="event.preventDefault();document.getElementById(\\\'ref-overlay-bg\\\').remove()" onclick="document.getElementById(\\\'ref-overlay-bg\\\').remove()">\'
+    +\'<div ontouchend="event.stopPropagation()" onclick="event.stopPropagation()" style="background:#fff;border-radius:20px 20px 0 0;padding:20px;width:100%;max-width:520px;">\'
+    +\'<div style="font-weight:800;font-size:16px;margin-bottom:4px;">&#x1F4E8; Log Inbound Referral</div>\'
+    +\'<div style="font-size:11px;color:#64748b;margin-bottom:14px;">Capture a new lead sent by a partner</div>\'
+    +\'<div style="font-size:11px;font-weight:600;color:#475569;margin-bottom:4px;">Partner</div>\'
+    +\'<select id="ref-partner" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;margin-bottom:10px;font-family:inherit;background:#fff;box-sizing:border-box;">\'
+    +\'<option value="">— Select partner —</option>\'+pOpts+\'</select>\'
+    +\'<div style="font-size:11px;font-weight:600;color:#475569;margin-bottom:4px;">Business Name</div>\'
+    +\'<input id="ref-biz" type="text" placeholder="e.g. Sunset Grill" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;margin-bottom:10px;font-family:inherit;box-sizing:border-box;">\'
+    +\'<div style="font-size:11px;font-weight:600;color:#475569;margin-bottom:4px;">Contact Name (optional)</div>\'
+    +\'<input id="ref-contact" type="text" placeholder="e.g. Mike Johnson" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;margin-bottom:10px;font-family:inherit;box-sizing:border-box;">\'
+    +\'<div style="font-size:11px;font-weight:600;color:#475569;margin-bottom:4px;">Phone (optional)</div>\'
+    +\'<input id="ref-phone" type="tel" placeholder="(727) 555-0100" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;margin-bottom:10px;font-family:inherit;box-sizing:border-box;">\'
+    +\'<div style="font-size:11px;font-weight:600;color:#475569;margin-bottom:4px;">Note (optional)</div>\'
+    +\'<input id="ref-note" type="text" placeholder="e.g. 2 ice machines, owner says urgent" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;margin-bottom:14px;font-family:inherit;box-sizing:border-box;">\'
+    +\'<button ontouchend="event.preventDefault();saveInboundReferral()" onclick="saveInboundReferral()" style="width:100%;padding:12px;border:none;border-radius:10px;background:var(--navy);color:#fff;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;touch-action:manipulation;">Save Referral</button>\'
+    +\'</div></div>\';
+  document.body.insertAdjacentHTML(\'beforeend\',html);
+}
+function saveInboundReferral(){
+  var pid=((document.getElementById(\'ref-partner\')||{}).value||\'\')||\'\'
+  var biz=((document.getElementById(\'ref-biz\')||{}).value||\'\'). trim();
+  var contact=((document.getElementById(\'ref-contact\')||{}).value||\'\'). trim();
+  var phone=((document.getElementById(\'ref-phone\')||{}).value||\'\'). trim();
+  var note=((document.getElementById(\'ref-note\')||{}).value||\'\'). trim();
+  if(!pid){toast(\'Select a partner\');return;}
+  if(!biz){toast(\'Enter business name\');return;}
+  var matchP=P.find(function(x){return x.name.toLowerCase().includes(biz.toLowerCase())||biz.toLowerCase().includes(x.name.toLowerCase());});
+  var d=loadPartnerData();
+  if(!d[pid])d[pid]={};
+  if(!d[pid].inbound_referrals)d[pid].inbound_referrals=[];
+  d[pid].inbound_referrals.push({id:Date.now(),business_name:biz,prospect_id:matchP?matchP.id:null,contact_name:contact,phone:phone,note:note,date:localISO(new Date()),status:\'new\'});
+  savePartnerData(d);
+  var bg=document.getElementById(\'ref-overlay-bg\');if(bg)bg.remove();
+  toast(matchP?\'Referral logged — matched \'+matchP.name:\'Referral logged\');
+  renderPartners();
+}
+function doResetFees(){
+  if(!confirm(\'Mark all partner referral fees as owed? This resets any previously marked-paid fees.\'))return;
+  var d=loadPartnerData();
+  Object.keys(d).forEach(function(pid){
+    (d[pid].referrals||[]).forEach(function(r){if(r.fee_status===\'paid\')r.fee_status=\'owed\';});
+  });
+  savePartnerData(d);
+  toast(\'All fees reset to owed\');
+  renderPartners();
+}
+function doResetLocal(){
+  if(!confirm(\'Clear all call logs, customer records, and partner data? This cannot be undone.\'))return;
+  [\'pic_v4\',\'pic_customers\',\'pic_partners_v1\',\'pic_settings\',\'pic_phones\',\'pic_goals\',\'pic_route_state\'].forEach(function(k){localStorage.removeItem(k);});
+  toast(\'Local data cleared — reloading…\');
+  setTimeout(function(){location.reload();},1200);
+}
+function doResetAll(){
+  if(!confirm(\'Wipe ALL data from this device? This is permanent and cannot be undone.\'))return;
+  if(!confirm(\'Are you absolutely sure? Every setting and record will be deleted.\'))return;
+  localStorage.clear();
+  toast(\'All data wiped\');
+  setTimeout(function(){location.reload();},1200);
+}
 function setType(t){
   selType=t;
   document.getElementById('mtype-walkin').className='mtype-btn'+(t==='walkin'?' mtype-on':'');
@@ -3770,6 +3908,8 @@ function cardHTML(p){
   const _nsyLabels={'new_callback':'&#x1F195; CALLBACK','new_ice_violation':'&#x1F195; Ice Viol.','priority_escalated':'&#x1F195; Escalated','score_jump':'&#x1F195; Score &#x2191;','new_to_dataset':'&#x1F195; New'};
   const newBadge=p.new_reason?('<span style="font-size:8px;font-weight:700;padding:2px 6px;border-radius:20px;background:#fef9c3;color:#854d0e;border:1px solid #fde047;margin-left:4px">'+(_nsyLabels[p.new_reason]||'&#x1F195;')+'</span>'):'';
   const routeBadge=routeSet.has(p.id)?('<span style="font-size:9px;padding:2px 6px;border-radius:4px;background:#ecfdf5;color:#059669;font-weight:700;margin-left:4px">&#x1F4CD; ON ROUTE</span>'):'';
+  const _pref=getProspectPartnerRef(p.id);
+  const refBadge=_pref?('<span style="font-size:8px;font-weight:700;padding:2px 6px;border-radius:20px;background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd;margin-left:4px">&#x1F4E8; '+_pref.partnerName+'</span>'):'';
 
   const confCol=p.confidence>=75?'#059669':p.confidence>=50?'#d97706':'#9ca3af';
   const confH='<span style="font-size:8px;font-weight:600;color:'+confCol+'" title="Prediction confidence">'+p.confidence+'% conf</span>';
@@ -3778,7 +3918,7 @@ function cardHTML(p){
     ?('<div style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;display:inline-block;margin-bottom:4px;background:'+(p.status==='customer_recurring'?'#ecfdf5':p.status==='customer_once'?'#eff6ff':'#fff7f5')+';color:'+(p.status==='customer_recurring'?'#059669':p.status==='customer_once'?'var(--blu)':'var(--ora)')+'">'+({'customer_recurring':'Recurring Customer','customer_once':'One-Time Customer','quoted':'Quote Sent','churned':'Churned'}[p.status]||p.status)+'</div>')
     :'';
   return '<div class="card '+p.priority+(isC(p.id)?' done':'')+'" data-id="'+p.id+'">'
-    +'<div class="ctop"><div class="cname">'+p.name+tierH+emergH+newBadge+routeBadge+'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px"><span class="pbadge '+p.priority+'">'+p.priority+'</span>'+confH+'</div></div>'
+    +'<div class="ctop"><div class="cname">'+p.name+tierH+emergH+newBadge+routeBadge+refBadge+'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px"><span class="pbadge '+p.priority+'">'+p.priority+'</span>'+confH+'</div></div>'
     +'<div class="cloc">'+p.city+', '+p.county+' '+franchH+'</div>'
     +custStatusH+revenueH+phH+ratH+callH+hrH+golfH+iceH+cbH+codesH+insH
     +'<div class="cmeta">'
@@ -4591,6 +4731,8 @@ function removeStop(id){id=parseInt(id);routeSet.delete(id);route=route.filter(r
 // Works around iOS Safari inline onclick issues on injected divs
 function buildIntelSummary(p){
   var lines=[];
+  var ref=getProspectPartnerRef(p.id);
+  if(ref)lines.push('&#x1F4E8; Referred by '+ref.partnerName+(ref.referral.note?' — '+ref.referral.note:''));
   if(p.n_callbacks>0)lines.push('&#x1F6A8; '+p.n_callbacks+'x callback — inspector returned');
   if(p.chronic)lines.push('&#x1F9CA; Chronic ice — '+p.ice_count+' inspections flagged');
   if(p.ice_fresh)lines.push('&#x26A1; Ice violation within last 6 months');
@@ -5511,12 +5653,24 @@ function renderPipeline(){
   });
   const total=wonCount+lostCount;
   const closeRate=total>0?Math.round(wonCount/total*100):0;
+  let forecastVal=0;
+  P.forEach(p=>{
+    const s=getProspectStage(p);
+    if(s==='inplay'||s==='quoted'){
+      const monthly=p.monthly||149;
+      const entry=p.intro||99;
+      const year1=entry+monthly*12;
+      forecastVal+=Math.round(year1*(s==='inplay'?0.30:0.60));
+    }
+  });
   const kInplay=document.getElementById('pipe-kpi-inplay');
   const kQuoted=document.getElementById('pipe-kpi-quoted');
   const kClose=document.getElementById('pipe-kpi-close');
+  const kForecast=document.getElementById('pipe-kpi-forecast');
   if(kInplay)kInplay.textContent=inplayCount;
   if(kQuoted)kQuoted.textContent=quotedCount;
   if(kClose)kClose.textContent=closeRate+'%';
+  if(kForecast)kForecast.textContent='$'+forecastVal.toLocaleString('en-US');
 
   // Gather items for current stage
   const stageItems=[];
