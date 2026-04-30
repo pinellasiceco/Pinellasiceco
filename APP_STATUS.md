@@ -1,11 +1,11 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-04-29 (session 10) by Claude Code*
+*Last updated: 2026-04-30 (session 11) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
-- Last deployed: 2026-04-29 (session 10 — Email/Supabase restored, pricing v2, schedule fix, Close Deal v2)
-- Build script: `build.py` (repo root) → outputs `prospecting_tool.html` → copied to `index.html` by CI
-- `index.html` regenerated directly from `build.py` using existing P[] data (s10) — fully in sync
+- Last deployed: 2026-04-30 (session 11 — Channel Partner Program)
+- Build script: `build.py` (repo root) → outputs `index.html` directly
+- `index.html` regenerated from `build.py` using existing P[] data — fully in sync
 
 ## What's Working ✅
 
@@ -18,7 +18,7 @@
 - sw.js cache bumped manually when patching index.html; `build.py` auto-stamps on CI rebuild
 
 ### Navigation
-- 5-tab layout: Home / Prospects / Pipeline / Route / Clients
+- 6-tab layout: Home / Prospects / Pipeline / Route / Clients / Partners
 - Gear ⚙️ button opens Settings overlay
 - `sw('customers')` and `sw('service')` alias to Clients tab (backward compatible)
 - Clients tab has inner sub-tabs: Clients / Service (via `setClientTab()`)
@@ -113,10 +113,25 @@
 
 If something appears broken, first try force-closing the PWA and reopening — the sw.js cache bust (`pic-YYYYMMDD`) requires a full app restart on iOS to take effect.
 
+### Channel Partners Tab (session 11)
+- 6th tab: &#x1F91D; Partners — channel partner prospect management
+- **Python pipeline** (`build.py`): `classify_partner()`, `build_partner_records()` — keyword detection on FL DBPR contractor license CSV (if downloaded) + fallback seed list; bakes `PARTNERS[]` into HTML at CI rebuild time
+- **Data**: `PARTNERS[]` static array in HTML, merged at runtime with `localStorage` overrides (`pic_partners_v1`)
+- **Filter chips**: by partner type (Hood / Pest / Refrig / HVAC / Beverage) and status (Not Contacted / Active / In Conversation)
+- **KPI bar**: Total Prospects · Active Partners · Fees Owed (3 columns)
+- **Partner card** → detail overlay: status dropdown, notes textarea, phone/email links, referral list, "Copy Email" / "Log Outreach" buttons
+- **Close Deal integration**: active partner dropdown in Close Deal overlay; `logPartnerReferral()` records referral + calculates tier (Bronze/Silver/Gold)
+- **Payout report**: downloads `.txt` file listing all fees owed by partner
+- **Add Partner** button: manually add any business not in seed list
+- **Daily briefing**: `send_briefing.py` includes top 5 not-contacted partners in email
+- **CI**: `download_data.py` tries 3 DBPR contractor CSV URLs to populate `data/partner_licenses.csv`
+- **sw.js**: bumped to `pic-20260430a`
+
 ## What's Missing 🔲
 - Nothing from the current feature roadmap is missing
 
 ## Recent Changes
+- **2026-04-30 (s11):** Channel Partner Program — Partners tab, partner detection pipeline, referral attribution, payout report, daily briefing integration
 - **2026-04-29 (s10):** Email/Supabase restored — `srSendEmail()`, `emailServiceReport()`, `emailComplianceReport()`, `sendEmailViaProxy()`, `exportToBriefing()`, `saveEmailFnUrl()`, `sb-email-fn` input, Daily Briefing section with export button — were missing from manually-patched s9 index.html; fixed by regenerating index.html directly from build.py
 - **2026-04-29 (s10):** Pricing v2 — `est_deep_clean` now per-machine ($395 + $149 each additional, standalone no-plan); `calc_year1(plan, machines)` Python function; `year1_monthly` + `year1_quarterly` baked into P[]; `calcOnetime()` + `calcYear1()` JS functions; factRows updated with "Filters NOT included"; ATP CTA "$99 to start · Annual plans from $129/mo"
 - **2026-04-29 (s10):** Close Deal overlay v2 — machine +/− spinner, editable entry price field ($99 default), live Year 1 Total Value display ($entry + $monthly × 12), "Use $X one-time instead" link at bottom; `coAdjMachines()`, `coUpdateEntry()`, `coUseOnetime()` functions added; `scMarkWon(onetime)` stores `entry_price`, `entry_discount`, `filters_included:false` to customer record

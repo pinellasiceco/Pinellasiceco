@@ -222,4 +222,32 @@ try:
 except Exception as e:
     print(f'  OSM lookup skipped: {e}')
 
+# ── PARTNER LICENSE DATA ───────────────────────────────────────────────────────
+# FL DBPR contractor license extract — used to find hood cleaners, pest control,
+# HVAC, refrigeration, beverage equipment companies in Pinellas for partner outreach.
+print('\nDownloading FL DBPR contractor license data...')
+
+PARTNER_LICENSE_URLS = [
+    ('https://www2.myfloridalicense.com/sto/file_download/extracts/contractor.csv', 'partner_licenses.csv'),
+    ('https://www2.myfloridalicense.com/sto/file_download/extracts/hrcontractor.csv', 'partner_licenses.csv'),
+    ('https://www2.myfloridalicense.com/sto/file_download/extracts/hrfood3_contractor.csv', 'partner_licenses.csv'),
+]
+
+partner_downloaded = False
+for url, fname in PARTNER_LICENSE_URLS:
+    dest = DATA_DIR / fname
+    try:
+        import requests as _req
+        r = _req.get(url, timeout=30, headers={'User-Agent': 'PIC-DataDownload/1.0'})
+        if r.status_code == 200 and len(r.content) > 1000:
+            dest.write_bytes(r.content)
+            print(f'  Partner license data: {len(r.content):,} bytes → {fname}')
+            partner_downloaded = True
+            break
+    except Exception as e:
+        print(f'  Partner download failed ({url}): {e}')
+
+if not partner_downloaded:
+    print('  Partner license download unavailable — partner list uses keyword detection only')
+
 print('\nAll downloads complete.')

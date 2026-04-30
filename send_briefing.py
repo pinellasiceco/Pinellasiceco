@@ -37,7 +37,9 @@ def load_current():
         sys.exit(1)
     content = html_path.read_text(encoding='utf-8')
     start = content.find('const P=') + 8
-    end   = content.find(';\nconst PHONES=', start)
+    end   = content.find('\nconst PARTNERS=', start)
+    if end < 0:
+        end = content.find(';\nconst ', start)
     if start < 8 or end < 0:
         print('ERROR: Could not find prospect data array in index.html — build may have failed')
         sys.exit(1)
@@ -173,11 +175,48 @@ def biz_row(r, extra=''):
     </tr>"""
 
 
+def load_partner_fees():
+    """Read partner referral fees owed from index.html PARTNERS data (baked at build time)."""
+    try:
+        html_path = Path(__file__).parent / 'index.html'
+        content = html_path.read_text(encoding='utf-8')
+        m = re.search(r'const PARTNERS=(\[.*?\]);', content, re.DOTALL)
+        if not m:
+            return []
+        partners = json.loads(m.group(1))
+        return [p for p in partners if p.get('partner_type')]
+    except Exception as e:
+        print(f'  Partner load error: {e}')
+        return []
+
+
 def build_email(current, changes, stats, contacted_ids):
     today = datetime.now().strftime('%A, %B %-d, %Y')
     has_changes = any(len(v) > 0 for v in changes.values())
 
     sections = ''
+
+    # Partner outreach reminders (not_contacted partners)
+    partners = load_partner_fees()
+    not_contacted = [p for p in partners if (p.get('status') or 'not_contacted') == 'not_contacted']
+    if not_contacted:
+        p_rows = ''.join(
+            f'<tr style="border-bottom:1px solid #f1f5f9"><td style="padding:8px 12px;font-size:12px;font-weight:600;">{p["name"]}</td>'
+            f'<td style="padding:8px 12px;font-size:12px;color:#64748b;">{p.get("partner_type_label","")}</td>'
+            f'<td style="padding:8px 12px;font-size:12px;color:#64748b;">{p.get("city","")}</td>'
+            f'<td style="padding:8px 12px;font-size:12px;color:#64748b;">{p.get("phone","—")}</td></tr>'
+            for p in not_contacted[:5]
+        )
+        sections += f"""
+        <div style="margin-bottom:24px">
+          <div style="font-size:13px;font-weight:800;color:#1e3a5f;margin-bottom:8px">
+            &#x1F91D; Partner Outreach — {len(not_contacted)} Not Yet Contacted
+          </div>
+          <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden">
+            <tr style="background:#e0f2fe"><th style="padding:8px 12px;text-align:left;font-size:11px;color:#1e3a5f">Business</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#1e3a5f">Type</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#1e3a5f">City</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#1e3a5f">Phone</th></tr>
+            {p_rows}
+          </table>
+        </div>"""
 
     # New Since Yesterday
     _nsy_labels = {
