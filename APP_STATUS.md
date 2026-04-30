@@ -1,9 +1,9 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-04-30 (session 11) by Claude Code*
+*Last updated: 2026-04-30 (session 11b) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
-- Last deployed: 2026-04-30 (session 11 — Channel Partner Program)
+- Last deployed: 2026-04-30 (session 11b — Channel Partner Program + Fit Score, live on main)
 - Build script: `build.py` (repo root) → outputs `index.html` directly
 - `index.html` regenerated from `build.py` using existing P[] data — fully in sync
 
