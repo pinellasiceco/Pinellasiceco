@@ -2538,9 +2538,13 @@ header{background:var(--navy);
     </div>
 
     <div class="dc" style="margin-top:12px">
-      <div class="dct">&#x1F4E7; Email Proxy</div>
+      <div class="dct">&#x1F4E7; Email Proxy &amp; Cloud Sync</div>
       <div style="font-size:9px;color:var(--sub);margin-bottom:4px">Supabase Edge Function URL for sending in-app emails. Deploy supabase/functions/send-email from the repo, then paste the URL here.</div>
       <input class="phinput" id="sb-email-fn" type="text" placeholder="https://xxxx.supabase.co/functions/v1/send-email" oninput="saveEmailFnUrl()">
+      <div style="font-size:9px;color:var(--sub);margin-top:8px;margin-bottom:4px">Supabase Project URL — for Export to Briefing and cloud sync</div>
+      <input class="phinput" id="sb-supabase-url" type="text" placeholder="https://xxxx.supabase.co" oninput="saveSupabaseSettings()">
+      <div style="font-size:9px;color:var(--sub);margin-top:8px;margin-bottom:4px">Supabase Anon Key — used as Bearer token for email proxy auth</div>
+      <input class="phinput" id="sb-supabase-key" type="password" placeholder="eyJhbGciOiJIUzI1NiIs..." oninput="saveSupabaseSettings()">
     </div>
 
     <div class="dc" style="margin-top:12px">
@@ -3392,7 +3396,7 @@ function scMarkWon(onetime){
     filter_installed:'',contract_start:'',contract_term:12,
     contract_renewal:'',service_history:[],atp_history:[],vendor_name:'',
   };
-  custSave();p.status=wonStatus;
+  custSave();p.status=wonStatus;p.monthly=monthlyPrice||p.monthly;p.machines=m;
   if(partnerId)logPartnerReferral(partnerId,p.id,p.name,onetime,monthlyPrice);
   if(!log[p.id])log[p.id]=[];
   log[p.id].push({outcome:wonStatus,date:wonNow,
@@ -5613,9 +5617,9 @@ function rCust(){
   const allCusts=P.filter(p=>p.status&&p.status!=='prospect');
   const shown=filter?allCusts.filter(p=>p.status===filter):allCusts;
 
-  // MRR calculation
+  // MRR calculation — prefer customers[] record (actual closed price) over P[] estimate
   const recurring=allCusts.filter(p=>p.status==='customer_recurring');
-  const mrr=recurring.reduce((s,p)=>s+(p.monthly||149),0);
+  const mrr=recurring.reduce((s,p)=>s+((customers[p.id]||{}).monthly||p.monthly||149),0);
   document.getElementById('mrr-val').textContent='$'+mrr.toLocaleString();
   document.getElementById('cust-count').textContent=recurring.length;
   document.getElementById('arr-val').textContent='$'+(mrr*12).toLocaleString();
@@ -5647,7 +5651,7 @@ function rCust(){
     const c=customers[p.id]||{};
     const col=STATUS_COLORS[p.status]||'var(--sub)';
     const lbl=STATUS_LABELS[p.status]||p.status;
-    const rev=p.status==='customer_recurring'?('$'+p.monthly+'/mo'):p.status==='customer_once'?('$'+p.onetime+' one-time'):'';
+    const rev=p.status==='customer_recurring'?('$'+(c.monthly||p.monthly||149)+'/mo'):p.status==='customer_once'?('$'+(c.onetime||p.onetime||0)+' one-time'):'';
 
     // Service due indicator
     let serviceDueH='';
@@ -7783,9 +7787,9 @@ function srGenerate(p,atpVal){
     +'<title>Ice Machine Status Report</title>'
     +'<style>'
     +'*{box-sizing:border-box}body{margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;background:#fff;color:#0f172a}'
-    +'@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}.page{padding:0}button{display:none}}'
-    +'@page{size:letter portrait;margin:0.45in}'
-    +'.page{max-width:680px;margin:0 auto;padding:20px}'
+    +'@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}button{display:none}.page{zoom:0.92;padding:0}}'
+    +'@page{size:letter portrait;margin:0.3in}'
+    +'.page{max-width:680px;margin:0 auto;padding:16px}'
     +'</style></head><body><div class="page">'
     +'<table style="width:100%;border-collapse:collapse;margin-bottom:20px"><tr>'
     +'<td style="vertical-align:middle"><img src="logo_for_pdf.png" onerror="this.remove()" style="height:42px;display:block"></td>'
@@ -7793,8 +7797,8 @@ function srGenerate(p,atpVal){
     +'<div style="font-size:17px;font-weight:900;color:#0f1f38;letter-spacing:-.01em">ICE MACHINE STATUS REPORT</div>'
     +'<div style="font-size:11px;color:#64748b;margin-top:2px">pinellasiceco.com &nbsp;&middot;&nbsp; '+dateStr+'</div>'
     +'</td></tr></table>'
-    +'<div style="border-top:2px solid #0f1f38;margin-bottom:16px"></div>'
-    +'<table style="width:100%;border-collapse:collapse;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:16px"><tbody>'
+    +'<div style="border-top:2px solid #0f1f38;margin-bottom:10px"></div>'
+    +'<table style="width:100%;border-collapse:collapse;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:10px"><tbody>'
     +'<tr style="background:#f8fafc">'
     +'<td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;width:55%">Establishment</td>'
     +'<td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;border-left:1px solid #e2e8f0;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b">ATP Reading</td>'
@@ -7810,7 +7814,7 @@ function srGenerate(p,atpVal){
     +(atpVal>0?'<div style="font-size:11px;color:'+atpColor+';font-weight:600">RLU</div>':'')
     +'<div style="font-size:15px;font-weight:900;color:'+atpColor+';letter-spacing:.06em;margin-top:6px;border-top:1px solid '+atpColor+'30;padding-top:6px">'+atpStatus+'</div>'
     +'</td></tr></tbody></table>'
-    +'<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:16px">'
+    +'<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:10px">'
     +'<div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:8px">About This Reading</div>'
     +'<div style="font-size:11px;color:#334155;line-height:1.65">ATP (adenosine triphosphate) bioluminescence testing measures biological contamination on food contact surfaces. '
     +'Readings above 100&nbsp;RLU indicate significant microbial contamination. '
@@ -7822,12 +7826,12 @@ function srGenerate(p,atpVal){
     +'<div style="flex:1;text-align:center;padding:8px;background:#fef2f2;border-radius:6px;border:1px solid #fca5a5"><div style="font-size:15px;font-weight:900;color:#dc2626">&gt;100</div><div style="font-size:8px;color:#dc2626;font-weight:700;letter-spacing:.05em">FAIL</div></div>'
     +'</div></div>'
     +inspH
-    +'<div style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:16px">'
+    +'<div style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:10px">'
     +'<div style="background:#0f1f38;padding:10px 14px;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8">What Pinellas Ice Co Does</div>'
     +'<div style="padding:12px 14px">'
     +services.map(function(s){return '<div style="font-size:11px;color:#334155;padding:3px 0;display:flex;gap:8px"><span style="color:#059669;font-weight:700;flex-shrink:0">&#x2713;</span><span>'+s+'</span></div>';}).join('')
     +'</div></div>'
-    +'<div style="background:#0f1f38;border-radius:10px;padding:18px;text-align:center;margin-bottom:16px">'
+    +'<div style="background:#0f1f38;border-radius:10px;padding:12px;text-align:center;margin-bottom:10px">'
     +'<div style="font-size:8px;color:#94a3b8;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">Intro Offer</div>'
     +'<div style="font-size:26px;font-weight:900;color:#f97316;margin-bottom:4px">$99 &mdash; First Visit</div>'
     +'<div style="font-size:11px;color:#e2e8f0;margin-bottom:4px">Full service &middot; ATP documentation &middot; compliance report</div>'
@@ -7835,7 +7839,7 @@ function srGenerate(p,atpVal){
     +'<div style="font-size:16px;font-weight:800;color:#fff">Call&nbsp;/&nbsp;Text:&nbsp;&nbsp;(727)&nbsp;855-6873</div>'
     +'<div style="font-size:10px;color:#94a3b8;margin-top:4px">pinellasiceco.com</div>'
     +'</div>'
-    +'<table style="width:100%;border-collapse:collapse;margin-bottom:14px"><tr>'
+    +'<table style="width:100%;border-collapse:collapse;margin-bottom:10px"><tr>'
     +'<td style="width:48%;padding-right:14px"><div style="border-bottom:1px solid #94a3b8;height:26px;margin-bottom:3px"></div><div style="font-size:9px;color:#94a3b8">Technician Signature</div></td>'
     +'<td style="width:4%"></td>'
     +'<td style="width:48%;padding-left:14px"><div style="border-bottom:1px solid #94a3b8;height:26px;margin-bottom:3px"></div><div style="font-size:9px;color:#94a3b8">Date</div></td>'
@@ -7944,10 +7948,20 @@ function initSettings(){
   }
   var emailFnEl=document.getElementById('sb-email-fn');
   if(emailFnEl)emailFnEl.value=localStorage.getItem('pic_email_fn_url')||'';
+  var sbUrlEl=document.getElementById('sb-supabase-url');
+  if(sbUrlEl)sbUrlEl.value=localStorage.getItem('pic_supabase_url')||'';
+  var sbKeyEl=document.getElementById('sb-supabase-key');
+  if(sbKeyEl)sbKeyEl.value=localStorage.getItem('pic_supabase_key')||'';
 }
 function saveEmailFnUrl(){
   var v=(document.getElementById('sb-email-fn')||{}).value||'';
   localStorage.setItem('pic_email_fn_url',v.trim());
+}
+function saveSupabaseSettings(){
+  var u=(document.getElementById('sb-supabase-url')||{}).value||'';
+  var k=(document.getElementById('sb-supabase-key')||{}).value||'';
+  if(u.trim())localStorage.setItem('pic_supabase_url',u.trim());
+  if(k.trim())localStorage.setItem('pic_supabase_key',k.trim());
 }
 async function sendEmailViaProxy(to,subject,htmlBody){
   var url=(localStorage.getItem('pic_email_fn_url')||'').trim();
@@ -8226,69 +8240,6 @@ self.addEventListener('fetch',e=>{
   }
 });
 """
-
-def main():
-    folder = Path(__file__).parent
-
-    if len(sys.argv) > 1:
-        arg = sys.argv[1]
-        if Path(arg).is_dir():
-            # Directory passed (e.g. "data/") -- find all CSV and XLSX files
-            data_dir = Path(arg)
-            csv_paths = (
-                sorted(data_dir.glob('*.csv')) +
-                sorted(data_dir.glob('*.xlsx')) +
-                sorted(data_dir.glob('*.xls'))
-            )
-            # Exclude the license extract from inspection data
-            csv_paths = [p for p in csv_paths if 'licenses' not in p.name.lower()
-                         and 'hrfood' not in p.name.lower()]
-            if not csv_paths:
-                print(f"\nNo inspection data files found in {data_dir}")
-                sys.exit(1)
-            print(f"Found {len(csv_paths)} file(s) in {data_dir}:")
-            for p in csv_paths:
-                print(f"  {p.name}")
-            print()
-        else:
-            csv_paths = sys.argv[1:]
-    else:
-        # Auto-find in current folder
-        csv_paths = (
-            sorted(folder.glob('*.csv')) +
-            sorted(folder.glob('*.xlsx'))
-        )
-        csv_paths = [p for p in csv_paths if 'licenses' not in p.name.lower()
-                     and 'hrfood' not in p.name.lower()]
-        if not csv_paths:
-            print("\nNo data files found. Run: python build.py data/")
-            sys.exit(1)
-        print(f"Auto-found {len(csv_paths)} file(s):")
-        for p in csv_paths:
-            print(f"  {p.name}")
-        print()
-
-    records = run(list(map(str, csv_paths)))
-    print(f"\nBuilding partner records...")
-    osm_cache = load_osm_cache(Path('data'))
-    web_cache = load_partner_web_cache()
-    partners = build_partner_records(osm_cache, web_cache)
-    save_partner_web_cache(web_cache)
-    print(f"  Partner candidates: {len(partners)}")
-    print(f"\nGenerating HTML...")
-    html = build_html(records, partners)
-    OUTPUT_FILE.parent.mkdir(exist_ok=True)
-    OUTPUT_FILE.write_text(html, encoding='utf-8')
-    size_kb = OUTPUT_FILE.stat().st_size // 1024
-    print(f"  Written: {OUTPUT_FILE.name} ({size_kb}KB)")
-    # Write sw.js for PWA offline support
-    sw_path = OUTPUT_FILE.parent / 'sw.js'
-    sw_path.write_text(SW_JS.replace('BUILD_DATE', date.today().strftime('%Y%m%d')), encoding='utf-8')
-    print(f"  Written: sw.js")
-    print(f"\n{'='*55}")
-    print(f"  Done! Open prospecting_tool.html in Chrome.")
-    print(f"  Your call log carries over automatically.")
-    print(f"{'='*55}\n")
 
 def main():
     folder = Path(__file__).parent

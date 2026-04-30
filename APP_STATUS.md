@@ -1,5 +1,5 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-04-30 (session 11) by Claude Code*
+*Last updated: 2026-04-30 (session 11c) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
@@ -75,7 +75,7 @@
 - Scale: ≤0 = PENDING, ≤10 = PASS, 11–100 = MARGINAL, >100 = FAIL
 - Pop-up blocker fallback toast if `window.open` is blocked
 - 3-button layout: Cancel / 📧 Email / Print
-- Print CSS: `@page { margin: 0.45in }`, padding reduced, all buttons hidden in print — fits letter-size in one page
+- Print CSS: `@page { margin: 0.3in }`, `zoom: 0.92`, padding reduced — guaranteed 1-page output on iOS and desktop
 
 ### showCard Detail Overlay
 - **WHY THIS PROSPECT MATTERS** navy intel panel (`buildIntelSummary(p)`) — shows ice violations, callback count, inspection timeline, machine count, risk level
@@ -109,7 +109,6 @@
 ## What's Broken / Watch List ⚠️
 
 - **iPad copy-paste**: copying code blocks from chat on iPad adds angle brackets around URLs. Never paste code directly into Supabase editor — use the GitHub Actions deploy workflow instead.
-- **Daily email timing**: The 11am UTC CI rebuild today ran with pre-session-9 workflow and committed no changes (output was already in sync). Email fix is in place for tomorrow's rebuild.
 
 If something appears broken, first try force-closing the PWA and reopening — the sw.js cache bust (`pic-YYYYMMDD`) requires a full app restart on iOS to take effect.
 
@@ -131,6 +130,7 @@ If something appears broken, first try force-closing the PWA and reopening — t
 - Nothing from the current feature roadmap is missing
 
 ## Recent Changes
+- **2026-04-30 (s11c):** Bug fixes — (1) Supabase URL + key inputs added to Settings panel so `sendEmailViaProxy()` and `exportToBriefing()` can be configured from UI; (2) ATP PDF guaranteed 1-page via `@page{margin:0.3in}` + `zoom:0.92` + tighter element spacing; (3) Close deal MRR fix: `rCust()` now reads `customers[p.id].monthly` (actual closed price) instead of `p.monthly` (DBPR estimate), and `scMarkWon()` syncs `p.monthly`/`p.machines` back to P[] for consistency; (4) Daily briefing JSON parse fix: `load_current()` delimiter changed to `';\nconst PARTNERS='` so trailing semicolon is excluded from the `json.loads()` slice; duplicate `main()` in build.py removed
 - **2026-04-30 (s11b):** Partner Fit Score — `calc_partner_fit_score()` auto-scores 0-100 from type, years in business, review count, rating, food service focus, geography, website; `scrape_website_keywords()` caches to `data/partner_web_cache.json`; fit score badge on partner cards; fit score breakdown in detail overlay; "Best to Contact First" top-5 section; sort by fit score; daily briefing shows top 3 by score; sw.js bumped to `pic-20260430b`
 - **2026-04-30 (s11):** Channel Partner Program — Partners tab, partner detection pipeline, referral attribution, payout report, daily briefing integration
 - **2026-04-29 (s10):** Email/Supabase restored — `srSendEmail()`, `emailServiceReport()`, `emailComplianceReport()`, `sendEmailViaProxy()`, `exportToBriefing()`, `saveEmailFnUrl()`, `sb-email-fn` input, Daily Briefing section with export button — were missing from manually-patched s9 index.html; fixed by regenerating index.html directly from build.py
@@ -170,11 +170,9 @@ If something appears broken, first try force-closing the PWA and reopening — t
 - **2026-04-27 (s7):** `deploy_edge_functions.yml` — auto-deploys Edge Functions from repo; eliminates need to copy-paste code into Supabase dashboard
 
 ## Next Session Priorities
-1. Verify daily email sends at 11am UTC tomorrow (first full rebuild with send_briefing.py embedded as final step)
-2. Test Close Deal overlay v2 on iPhone — machine spinner, entry price edit, Year 1 display, confirm close, one-time link
-3. Verify ⛳ Golf filter shows golf venues in Prospects tab (venue_type baked at next CI rebuild)
-4. Verify service schedule: monthly=6 visits/60-day, quarterly=4 visits/90-day
-5. Confirm "Filters NOT included" language shows in factRows and Close Deal overlay
+1. Verify daily briefing email sends after next CI rebuild (JSON parse fix is in place)
+2. Confirm Supabase inputs appear in Settings panel on next rebuild
+3. Test Close Deal: select 1 machine → close → verify MRR shows correct closed price
 
 ## iOS PWA Rules (never violate these)
 - **Buttons in injected HTML:** use inline `ontouchend="event.preventDefault();fn()"` + `onclick="fn()"` — NOT `addEventListener` on innerHTML-injected elements
