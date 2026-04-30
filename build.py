@@ -58,6 +58,326 @@ def is_golf_venue(name):
     n = name.lower()
     return any(kw in n for kw in GOLF_KEYWORDS)
 
+# ── CHANNEL PARTNER DETECTION ─────────────────────────────────────────────────
+COMPETITOR_KEYWORDS = [
+    'ice machine cleaning','ice machine sanitation','ice machine service',
+    'ice cleaning','pinellas ice','crystal ice',
+]
+HOOD_KEYWORDS    = ['hood','exhaust','fire suppression','grease trap','kitchen exhaust','vent clean']
+PEST_KEYWORDS    = ['pest','exterminator','bug control','termite','rodent']
+HVAC_KEYWORDS    = ['hvac','air conditioning','heating cooling','mechanical contractor']
+REFRIG_KEYWORDS  = ['refrigeration','cooler repair','freezer repair','cold storage']
+BEVERAGE_KEYWORDS= ['beverage','draft beer','soda fountain','coffee machine','espresso','keg service']
+KITCHEN_KEYWORDS = ['kitchen equipment','commercial kitchen','foodservice equipment','restaurant equipment']
+
+PARTNER_PRIORITY = {
+    'hood_cleaning':1,'pest_control':2,'refrigeration':3,
+    'beverage_equipment':4,'hvac':5,'kitchen_equipment':6,
+}
+PARTNER_TYPE_LABELS = {
+    'hood_cleaning':'Hood Cleaning','pest_control':'Pest Control',
+    'refrigeration':'Refrigeration Repair','beverage_equipment':'Beverage Equipment',
+    'hvac':'Commercial HVAC','kitchen_equipment':'Kitchen Equipment',
+}
+
+def classify_partner(name):
+    n = (name or '').lower()
+    if any(kw in n for kw in COMPETITOR_KEYWORDS): return None
+    if any(kw in n for kw in HOOD_KEYWORDS):     return 'hood_cleaning'
+    if any(kw in n for kw in PEST_KEYWORDS):     return 'pest_control'
+    if any(kw in n for kw in BEVERAGE_KEYWORDS): return 'beverage_equipment'
+    if any(kw in n for kw in KITCHEN_KEYWORDS):  return 'kitchen_equipment'
+    if any(kw in n for kw in REFRIG_KEYWORDS):   return 'refrigeration'
+    if any(kw in n for kw in HVAC_KEYWORDS):     return 'hvac'
+    return None
+
+PINELLAS_ZIPS_SET = {
+    '33755','33756','33759','33760','33761','33762','33763','33764','33765',
+    '33767','33770','33771','33772','33773','33774','33776','33777','33778',
+    '33781','33782','33785','33786','34677','34681','34683','34684','34685',
+    '34688','34689','34695','34698','33701','33702','33703','33704','33705',
+    '33706','33707','33708','33709','33710','33711','33712','33713','33714',
+    '33715','33716','33721','33730','33731','33732','33733','33734','33736',
+    '33738','33740','33741','33742','33743','33744','33747','33755','33756',
+}
+
+# Highest-density prospect clusters — used in fit score geography bonus
+PINELLAS_CORE_ZIPS = {
+    '34689','34688','34683','34684','34685',         # Tarpon / Palm Harbor
+    '33755','33756','33759','33760','33761','33762','33765','33767',  # Clearwater
+    '33701','33702','33703','33704','33705','33706','33707','33710',  # St Pete
+    '34698','34695',                                  # Dunedin / Safety Harbor
+    '33770','33771','33772','33773','33774',          # Largo
+}
+
+PARTNER_WEB_CACHE_PATH = Path('data') / 'partner_web_cache.json'
+
+def load_partner_web_cache():
+    try:
+        if PARTNER_WEB_CACHE_PATH.exists():
+            return json.loads(PARTNER_WEB_CACHE_PATH.read_text())
+    except Exception:
+        pass
+    return {}
+
+def save_partner_web_cache(cache):
+    try:
+        PARTNER_WEB_CACHE_PATH.write_text(json.dumps(cache, indent=2))
+    except Exception:
+        pass
+
+def extract_license_year(row):
+    """Extract year first licensed from a DBPR CSV row dict."""
+    for field in ['original_issue_date', 'issue_date', 'license_date', 'first_issue']:
+        val = str(row.get(field, '') or '').strip()
+        if not val or len(val) < 4:
+            continue
+        try:
+            if '/' in val:
+                parts = val.split('/')
+                year = int(parts[2]) if len(parts) == 3 else int(parts[-1])
+            else:
+                year = int(val[:4])
+            if 1980 <= year <= 2026:
+                return year
+        except Exception:
+            pass
+    return None
+
+def get_osm_rating(osm_hit):
+    """Extract rating/review signals from an OSM cache hit."""
+    if not osm_hit:
+        return {}
+    return {
+        'google_rating': float(osm_hit.get('stars', 0) or 0),
+        'review_count':  int(osm_hit.get('review_count', 0) or 0),
+        'description':   str(osm_hit.get('description', '') or ''),
+    }
+
+def scrape_website_keywords(url, timeout=8):
+    """Lightweight food-service keyword extraction from a partner website."""
+    empty = {'website_crawled': False, 'food_keyword_hits': [], 'food_keyword_count': 0}
+    if not url:
+        return empty
+    FOOD_KEYWORDS = [
+        'restaurant', 'food service', 'commercial kitchen', 'hospitality',
+        'bar and grill', 'hotel', 'food safety', 'health inspection',
+        'sanitation', 'grease', 'kitchen', 'dining', 'foodservice',
+        'food establishment',
+    ]
+    try:
+        import requests as _req
+        if not url.startswith('http'):
+            url = 'https://' + url
+        r = _req.get(url,
+                     headers={'User-Agent': 'Mozilla/5.0 (compatible; PIC-Scout/1.0)',
+                               'Accept': 'text/html'},
+                     timeout=timeout, allow_redirects=True)
+        if r.status_code != 200:
+            return empty
+        text = re.sub(r'<[^>]+>', ' ', r.text).lower()
+        text = re.sub(r'\s+', ' ', text)[:5000]
+        hits = [kw for kw in FOOD_KEYWORDS if kw in text]
+        return {'website_crawled': True, 'food_keyword_hits': hits, 'food_keyword_count': len(hits)}
+    except Exception:
+        return empty
+
+def calc_partner_fit_score(partner):
+    """Auto-calculated partner fit score 0-100. Higher = better referral candidate."""
+    score = 0
+    reasons = []
+    warnings = []
+
+    type_scores = {
+        'hood_cleaning': 40, 'pest_control': 35, 'refrigeration': 30,
+        'beverage_equipment': 28, 'hvac': 20, 'kitchen_equipment': 20,
+    }
+    score += type_scores.get(partner.get('partner_type', ''), 0)
+
+    license_year = partner.get('license_year')
+    if license_year:
+        years = 2026 - license_year
+        if years >= 10:
+            score += 20
+            reasons.append(f'{years} yrs in business')
+        elif years >= 5:
+            score += 12
+            reasons.append(f'{years} yrs in business')
+        elif years >= 2:
+            score += 5
+        else:
+            warnings.append('New business (<2 yrs)')
+
+    reviews = int(partner.get('review_count', 0) or 0)
+    if 5 <= reviews <= 50:
+        score += 15
+        reasons.append('small independent')
+    elif 1 <= reviews < 5:
+        score += 8
+    elif 51 <= reviews <= 200:
+        score += 8
+    elif reviews > 200:
+        warnings.append('Large company — lower referral motivation')
+
+    rating = float(partner.get('google_rating', 0) or 0)
+    if rating >= 4.5:
+        score += 10
+        reasons.append('strong client reviews')
+    elif rating >= 4.0:
+        score += 6
+    elif 0 < rating < 3.5:
+        warnings.append('Low rating — relationship quality concern')
+
+    kw_count = int(partner.get('food_keyword_count', 0) or 0)
+    desc = (partner.get('description', '') or '').lower()
+    food_desc_hits = sum(1 for kw in [
+        'restaurant', 'food service', 'commercial kitchen',
+        'hospitality', 'food safety', 'sanitation'
+    ] if kw in desc)
+    total_food = kw_count + food_desc_hits
+    if total_food >= 4:
+        score += 15
+        reasons.append('food service specialist')
+    elif total_food >= 2:
+        score += 8
+        reasons.append('some food service focus')
+    elif total_food == 0 and partner.get('website_crawled'):
+        warnings.append('No food service focus on website')
+
+    if partner.get('zip') in PINELLAS_CORE_ZIPS:
+        score += 10
+        reasons.append('core service area')
+    elif (partner.get('county') or '').lower() == 'pinellas':
+        score += 5
+
+    if partner.get('website'):
+        score += 5
+    if not partner.get('website_crawled') and not partner.get('google_rating'):
+        score = max(0, score - 3)
+
+    score = min(100, max(0, int(score)))
+    if score >= 75:
+        level, stars = 'Strong Fit', '⭐⭐⭐'
+    elif score >= 50:
+        level, stars = 'Good Fit', '⭐⭐'
+    else:
+        level, stars = 'Possible Fit', '⭐'
+
+    return {
+        'fit_score':    score,
+        'fit_level':    level,
+        'fit_stars':    stars,
+        'fit_reasons':  reasons[:3],
+        'fit_warnings': warnings[:2],
+    }
+
+def build_partner_records(osm_cache=None, web_cache=None):
+    """Build partner prospect records with keyword detection, enrichment, and fit scoring."""
+    import hashlib
+    osm_cache = osm_cache or {}
+    web_cache = web_cache if web_cache is not None else {}
+
+    seed_partners = []
+
+    # Try loading contractor license CSV if downloaded by download_data.py
+    partner_csv = Path('data') / 'partner_licenses.csv'
+    if partner_csv.exists():
+        try:
+            import csv as _csv
+            with open(partner_csv, encoding='utf-8', errors='replace') as f:
+                reader = _csv.DictReader(f)
+                for row in reader:
+                    name = (row.get('business_name','') or row.get('name','')).strip()
+                    if not name: continue
+                    county = (row.get('county','') or '').lower()
+                    zip5   = str(row.get('zip',''))[:5]
+                    if 'pinellas' not in county and zip5 not in PINELLAS_ZIPS_SET:
+                        continue
+                    ptype = classify_partner(name)
+                    if not ptype: continue
+                    seed_partners.append({
+                        'name':         name,
+                        'ptype':        ptype,
+                        'city':         (row.get('city','') or '').strip().title(),
+                        'zip':          zip5,
+                        'address':      (row.get('address','') or '').strip(),
+                        'phone':        (row.get('phone','') or '').strip(),
+                        'owner':        (row.get('licensee_name','') or row.get('qualifier_name','')).strip(),
+                        'license':      (row.get('license_number','') or '').strip(),
+                        'license_year': extract_license_year(row),
+                    })
+        except Exception as e:
+            print(f'  Partner CSV load error: {e}')
+
+    # Fallback seed list with realistic license years for fit scoring
+    if not seed_partners:
+        seed_partners = [
+            {'name': 'Hood Masters Clearwater', 'ptype': 'hood_cleaning',      'city': 'Clearwater',    'zip': '33755', 'address': '', 'phone': '', 'owner': '', 'license': '', 'license_year': 2010},
+            {'name': 'Bay Area Hood Cleaning',  'ptype': 'hood_cleaning',      'city': 'St. Petersburg','zip': '33711', 'address': '', 'phone': '', 'owner': '', 'license': '', 'license_year': 2015},
+            {'name': 'Pinellas Pest Pros',       'ptype': 'pest_control',       'city': 'Clearwater',    'zip': '33756', 'address': '', 'phone': '', 'owner': '', 'license': '', 'license_year': 2012},
+            {'name': 'Gulf Coast Refrigeration', 'ptype': 'refrigeration',      'city': 'St. Petersburg','zip': '33701', 'address': '', 'phone': '', 'owner': '', 'license': '', 'license_year': 2008},
+            {'name': 'Suncoast Beverage Service','ptype': 'beverage_equipment', 'city': 'Largo',         'zip': '33771', 'address': '', 'phone': '', 'owner': '', 'license': '', 'license_year': 2018},
+        ]
+
+    seen = set()
+    records = []
+    for s in seed_partners:
+        key = s['name'].lower()
+        if key in seen: continue
+        seen.add(key)
+
+        osm  = osm_match(s['name'], s['city'], osm_cache) or {} if osm_cache else {}
+        phone   = s.get('phone','') or osm.get('phone','')
+        website = osm.get('website','') or ''
+
+        # Website keyword scraping — cached to avoid re-scraping on every build
+        web_data = {}
+        if website:
+            cache_key = website[:120]
+            if cache_key in web_cache:
+                web_data = web_cache[cache_key]
+            else:
+                web_data = scrape_website_keywords(website)
+                web_cache[cache_key] = web_data
+
+        osm_ratings = get_osm_rating(osm)
+        uid = 'p_' + hashlib.md5((s['name'] + s.get('zip','')).encode()).hexdigest()[:8]
+
+        record = {
+            'id':                 uid,
+            'name':               s['name'],
+            'owner_name':         s.get('owner',''),
+            'partner_type':       s['ptype'],
+            'partner_type_label': PARTNER_TYPE_LABELS[s['ptype']],
+            'priority':           PARTNER_PRIORITY[s['ptype']],
+            'address':            s.get('address',''),
+            'city':               s.get('city',''),
+            'zip':                s.get('zip',''),
+            'phone':              phone,
+            'website':            website,
+            'email':              '',
+            'license_number':     s.get('license',''),
+            'license_year':       s.get('license_year'),
+            'google_rating':      osm_ratings.get('google_rating', 0),
+            'review_count':       osm_ratings.get('review_count', 0),
+            'description':        osm_ratings.get('description', ''),
+            'website_crawled':    web_data.get('website_crawled', False),
+            'food_keyword_count': web_data.get('food_keyword_count', 0),
+            'food_keyword_hits':  web_data.get('food_keyword_hits', []),
+            'status':             'not_contacted',
+            'referrals':          [],
+            'tier':               'bronze',
+            'notes':              '',
+            'last_contact':       '',
+        }
+        fit = calc_partner_fit_score(record)
+        record.update(fit)
+        records.append(record)
+
+    # Sort best fit first, then by partner type priority
+    records.sort(key=lambda x: (-x.get('fit_score', 0), x.get('priority', 9)))
+    return records
+
 # ── MACHINE ESTIMATION ────────────────────────────────────────────────────────
 def est_machines(seats, is_full_bar, rank_code):
     """Estimate ice machine count from seat count + license type."""
@@ -1196,8 +1516,9 @@ def run(csv_paths):
 # ──────────────────────────────────────────────────────────────────────────────
 # HTML
 # ──────────────────────────────────────────────────────────────────────────────
-def build_html(records):
-    data_js   = json.dumps(records, separators=(',',':')).replace('`', '\\u0060')
+def build_html(records, partners=None):
+    data_js     = json.dumps(records, separators=(',',':')).replace('`', '\\u0060')
+    partners_js = json.dumps(partners or [], separators=(',',':')).replace('`', '\\u0060')
     phones_js = json.dumps(
         {str(r['id']): {'phone':r['phone'],'rating':r['rating'],'hours':r['hours']}
          for r in records if r['phone']},
@@ -1212,8 +1533,8 @@ def build_html(records):
     n_chron = sum(1 for r in records if r.get('chronic'))
     n_geo   = sum(1 for r in records if r['lat'])
 
-    # Read the HTML template embedded below
     return HTML_TEMPLATE.replace('%%DATA%%', data_js)\
+                        .replace('%%PARTNERS%%', partners_js)\
                         .replace('%%PHONES%%', phones_js)\
                         .replace('%%ZIPS%%', zip_js)\
                         .replace('%%DATE%%', str(TODAY))\
@@ -1229,36 +1550,6 @@ def build_html(records):
 # ──────────────────────────────────────────────────────────────────────────────
 # HTML TEMPLATE  (everything between the triple-quotes)
 # ──────────────────────────────────────────────────────────────────────────────
-
-def build_html(records):
-    data_js   = json.dumps(records, separators=(',',':')).replace('`', '\\u0060')
-    phones_js = json.dumps(
-        {str(r['id']): {'phone':r['phone'],'rating':r['rating'],'hours':r['hours']}
-         for r in records if r['phone']},
-        separators=(',',':')
-    )
-    zip_js = json.dumps({z: list(c) for z,c in ZIP_COORDS.items()}, separators=(',',':'))
-
-    n_cb    = sum(1 for r in records if r['priority']=='CALLBACK')
-    n_hot   = sum(1 for r in records if r['priority']=='HOT')
-    n_warm  = sum(1 for r in records if r['priority']=='WARM')
-    n_phone = sum(1 for r in records if r['phone'])
-    n_chron = sum(1 for r in records if r.get('chronic'))
-    n_geo   = sum(1 for r in records if r['lat'])
-
-    # Read the HTML template embedded below
-    return HTML_TEMPLATE.replace('%%DATA%%', data_js)\
-                        .replace('%%PHONES%%', phones_js)\
-                        .replace('%%ZIPS%%', zip_js)\
-                        .replace('%%DATE%%', str(TODAY))\
-                        .replace('%%TOTAL%%', str(len(records)))\
-                        .replace('%%NCB%%', str(n_cb))\
-                        .replace('%%NHOT%%', str(n_hot))\
-                        .replace('%%NWARM%%', str(n_warm))\
-                        .replace('%%NPHONE%%', str(n_phone))\
-                        .replace('%%NCHRON%%', str(n_chron))\
-                        .replace('%%NGEO%%', str(n_geo))\
-                        .replace('%%NCONF%%', str(sum(1 for r in records if r['confirmed'])))
 
 # ──────────────────────────────────────────────────────────────────────────────
 # HTML TEMPLATE  (everything between the triple-quotes)
@@ -1667,6 +1958,7 @@ header{background:var(--navy);
     <div class="tab"     onclick="sw('pipeline')"  ><span class="tab-icon">&#x1F3AF;</span><span class="tab-lbl">Pipeline</span></div>
     <div class="tab"     onclick="sw('route')"     ><span class="tab-icon">&#x1F5FA;</span><span class="tab-lbl">Route</span></div>
     <div class="tab"     onclick="sw('clients')"   ><span class="tab-icon">&#x1F91D;</span><span class="tab-lbl">Clients</span></div>
+    <div class="tab"     onclick="sw('partners')"  ><span class="tab-icon">&#x1F91D;</span><span class="tab-lbl">Partners</span></div>
     <button id="gear-btn" onclick="sw('data')" title="Settings" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;cursor:pointer;padding:4px;color:var(--sub);line-height:1">&#x2699;&#xFE0F;</button>
   </nav>
 
@@ -2137,6 +2429,40 @@ header{background:var(--navy);
 
   </div>
 
+  <!-- PARTNERS -->
+  <div class="panel" id="p-partners">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div style="font-size:15px;font-weight:800;color:var(--navy)">&#x1F91D; Channel Partners</div>
+      <button onclick="openAddPartner()" ontouchend="event.preventDefault();openAddPartner()" style="padding:6px 12px;border:none;border-radius:8px;background:var(--navy);color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">+ Add Partner</button>
+    </div>
+    <div id="partner-kpi-bar" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px"></div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px" id="partner-type-filters">
+      <button class="ptype-chip on" data-ptype="all"              onclick="setPartnerFilter('all')"              ontouchend="event.preventDefault();setPartnerFilter('all')"              style="font-size:9px;padding:4px 9px;border-radius:12px;border:1px solid var(--navy);background:var(--navy);color:#fff;cursor:pointer;font-family:inherit;touch-action:manipulation">All</button>
+      <button class="ptype-chip"    data-ptype="hood_cleaning"    onclick="setPartnerFilter('hood_cleaning')"    ontouchend="event.preventDefault();setPartnerFilter('hood_cleaning')"    style="font-size:9px;padding:4px 9px;border-radius:12px;border:1px solid #e2e8f0;background:#f8fafc;color:#475569;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F525; Hood</button>
+      <button class="ptype-chip"    data-ptype="pest_control"     onclick="setPartnerFilter('pest_control')"     ontouchend="event.preventDefault();setPartnerFilter('pest_control')"     style="font-size:9px;padding:4px 9px;border-radius:12px;border:1px solid #e2e8f0;background:#f8fafc;color:#475569;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F41B; Pest</button>
+      <button class="ptype-chip"    data-ptype="refrigeration"    onclick="setPartnerFilter('refrigeration')"    ontouchend="event.preventDefault();setPartnerFilter('refrigeration')"    style="font-size:9px;padding:4px 9px;border-radius:12px;border:1px solid #e2e8f0;background:#f8fafc;color:#475569;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2744;&#xFE0F; Refrig</button>
+      <button class="ptype-chip"    data-ptype="hvac"             onclick="setPartnerFilter('hvac')"             ontouchend="event.preventDefault();setPartnerFilter('hvac')"             style="font-size:9px;padding:4px 9px;border-radius:12px;border:1px solid #e2e8f0;background:#f8fafc;color:#475569;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2600;&#xFE0F; HVAC</button>
+      <button class="ptype-chip"    data-ptype="beverage_equipment" onclick="setPartnerFilter('beverage_equipment')" ontouchend="event.preventDefault();setPartnerFilter('beverage_equipment')" style="font-size:9px;padding:4px 9px;border-radius:12px;border:1px solid #e2e8f0;background:#f8fafc;color:#475569;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F37A; Beverage</button>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px" id="partner-status-filters">
+      <button class="pstatus-chip on" data-pstatus="all"            onclick="setPartnerStatusFilter('all')"            ontouchend="event.preventDefault();setPartnerStatusFilter('all')"            style="font-size:9px;padding:4px 9px;border-radius:12px;border:1px solid var(--navy);background:var(--navy);color:#fff;cursor:pointer;font-family:inherit;touch-action:manipulation">All Status</button>
+      <button class="pstatus-chip"    data-pstatus="not_contacted"  onclick="setPartnerStatusFilter('not_contacted')"  ontouchend="event.preventDefault();setPartnerStatusFilter('not_contacted')"  style="font-size:9px;padding:4px 9px;border-radius:12px;border:1px solid #e2e8f0;background:#f8fafc;color:#475569;cursor:pointer;font-family:inherit;touch-action:manipulation">Not Contacted</button>
+      <button class="pstatus-chip"    data-pstatus="active"         onclick="setPartnerStatusFilter('active')"         ontouchend="event.preventDefault();setPartnerStatusFilter('active')"         style="font-size:9px;padding:4px 9px;border-radius:12px;border:1px solid #e2e8f0;background:#f8fafc;color:#475569;cursor:pointer;font-family:inherit;touch-action:manipulation">Active</button>
+      <button class="pstatus-chip"    data-pstatus="in_conversation" onclick="setPartnerStatusFilter('in_conversation')" ontouchend="event.preventDefault();setPartnerStatusFilter('in_conversation')" style="font-size:9px;padding:4px 9px;border-radius:12px;border:1px solid #e2e8f0;background:#f8fafc;color:#475569;cursor:pointer;font-family:inherit;touch-action:manipulation">In Conversation</button>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <button onclick="generatePayoutReport()" ontouchend="event.preventDefault();generatePayoutReport()" style="padding:7px 12px;border:1px solid #e2e8f0;border-radius:8px;background:#f8fafc;font-size:11px;font-weight:700;color:var(--navy);cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4CA; Payout Report</button>
+      <select id="partner-sort" onchange="renderPartners()" style="font-size:11px;padding:5px 8px;border:1px solid #e2e8f0;border-radius:8px;background:#fff;font-family:inherit;color:#475569">
+        <option value="fit">Sort: Best Fit</option>
+        <option value="priority">Sort: Partner Type</option>
+        <option value="name">Sort: Name</option>
+        <option value="status">Sort: Status</option>
+      </select>
+    </div>
+    <div id="partner-top"></div>
+    <div id="partner-list"></div>
+  </div>
+
   <!-- DATA -->
   <div class="panel" id="p-data">
     <div class="dc" style="margin-bottom:12px">
@@ -2382,6 +2708,7 @@ header{background:var(--navy);
 
 <script>
 const P=%%DATA%%;
+const PARTNERS=%%PARTNERS%%;
 const PHONES=%%PHONES%%;
 const ZIPS=%%ZIPS%%;
 
@@ -2960,6 +3287,13 @@ function scOpenClose(p,bg){
     +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Note (optional)</div>'
     +'<input id="co-note" type="text" placeholder="e.g. discounted entry to close annual" style="width:100%;padding:7px 8px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit;outline:none;color:#1e293b;box-sizing:border-box">'
     +'</div>'
+    +'<div style="margin-bottom:12px">'
+    +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Referred by partner (optional)</div>'
+    +'<select id="close-partner-select" style="width:100%;padding:7px 8px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;font-family:inherit;outline:none;color:#1e293b;background:#fff;box-sizing:border-box">'
+    +'<option value="">— Self-generated / no referral —</option>'
+    +getActivePartnersForClose()
+    +'</select>'
+    +'</div>'
     +'<div style="padding:10px;background:#f0fdf4;border:1px solid #6ee7b7;border-radius:8px;margin-bottom:12px;text-align:center">'
     +'<div style="font-size:9px;color:#059669;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Year 1 Total Value</div>'
     +'<div id="co-year1-val" style="font-size:22px;font-weight:900;color:#059669">$'+year1.toLocaleString('en-US')+'</div>'
@@ -3035,6 +3369,9 @@ function scMarkWon(onetime){
   var entry=epEl?parseInt(epEl.value)||0:cs.entryPrice;
   var noteEl=document.getElementById('co-note');
   var closeNote=noteEl?(noteEl.value||''):'';
+  var partnerEl=document.getElementById('close-partner-select');
+  var partnerId=partnerEl?partnerEl.value:'';
+  var partnerObj=partnerId?PARTNERS.find(function(x){return x.id===partnerId;}):null;
   var wonNow=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
   var wonStatus=onetime?'customer_recurring':cs.plan==='quarterly'?'customer_quarterly':'customer_recurring';
   var monthlyPrice=onetime?0:calcMonthly(cs.plan,m);
@@ -3047,6 +3384,8 @@ function scMarkWon(onetime){
     entry_price:onetime?0:entry,
     entry_discount:onetime?0:Math.max(0,standardEntry-entry),
     filters_included:false,close_note:closeNote,
+    referred_by_partner:partnerId,
+    referred_by_partner_name:partnerObj?partnerObj.name:'',
     machines:m,name:p.name,address:p.address,city:p.city,phone:p.phone||'',
     notes:closeNote,last_service:'',next_service:'',hubspot_url:'',square_url:'',
     machine_brand:'',machine_model:'',machine_type:'',filter_type:'',
@@ -3054,6 +3393,7 @@ function scMarkWon(onetime){
     contract_renewal:'',service_history:[],atp_history:[],vendor_name:'',
   };
   custSave();p.status=wonStatus;
+  if(partnerId)logPartnerReferral(partnerId,p.id,p.name,onetime,monthlyPrice);
   if(!log[p.id])log[p.id]=[];
   log[p.id].push({outcome:wonStatus,date:wonNow,
     notes:(onetime?'One-time deep clean · $'+onetimePrice:
@@ -3065,6 +3405,205 @@ function scMarkWon(onetime){
   toast(onetime?'✅ One-time booked · $'+onetimePrice:
         '🎉 Won! '+(cs.plan==='quarterly'?'Quarterly':'Monthly')+' · $'+monthlyPrice+'/mo · $'+entry+' entry');
   sw('customers');
+}
+
+// ── CHANNEL PARTNER ───────────────────────────────────────────────────────────
+var PARTNER_STORAGE_KEY=\'pic_partners_v1\';
+var _partnerTypeFilter=\'all\';
+var _partnerStatusFilter=\'all\';
+var _openPartnerId=null;
+var PARTNER_STATUS_COLORS={not_contacted:\'#94a3b8\',reached_out:\'#d97706\',in_conversation:\'#2563eb\',active:\'#059669\',inactive:\'#dc2626\'};
+var PARTNER_STATUS_LABELS={not_contacted:\'Not Contacted\',reached_out:\'Reached Out\',in_conversation:\'In Conversation\',active:\'Active Partner\',inactive:\'Inactive\'};
+function loadPartnerData(){try{return JSON.parse(localStorage.getItem(PARTNER_STORAGE_KEY)||\'{}\')||{};}catch(e){return {};}}
+function savePartnerData(d){localStorage.setItem(PARTNER_STORAGE_KEY,JSON.stringify(d));}
+function getPartnerById(pid){return PARTNERS.find(function(p){return p.id===pid;});}
+function getMergedPartner(pid){var base=getPartnerById(pid);if(!base)return null;var saved=(loadPartnerData())[pid]||{};return Object.assign({},base,saved);}
+function savePartnerField(pid,key,val){var d=loadPartnerData();if(!d[pid])d[pid]={};d[pid][key]=val;savePartnerData(d);}
+function getActivePartnersForClose(){var data=loadPartnerData();return PARTNERS.filter(function(p){return((data[p.id]||{}).status||p.status||\'not_contacted\')==\'active\';}).map(function(p){return \'<option value="\'+p.id+\'">\'+p.name+\' (\'+p.partner_type_label+\')</option>\';}).join(\'\');}
+function logPartnerReferral(pid,prospectId,prospectName,onetime,monthlyPrice){var data=loadPartnerData();if(!data[pid])data[pid]={};if(!data[pid].referrals)data[pid].referrals=[];var fee=onetime?49:99;data[pid].referrals.push({prospect_id:prospectId,prospect_name:prospectName,plan:onetime?\'onetime\':\'annual\',monthly:monthlyPrice||0,closed_date:localISO(new Date()),fee_amount:fee,fee_status:\'owed\',first_visit_logged:false});var c=data[pid].referrals.filter(function(r){return r.fee_status!==\'void\';}).length;data[pid].tier=c>=6?\'gold\':c>=3?\'silver\':\'bronze\';savePartnerData(data);}
+function markPartnerFeePaid(pid,idx){var d=loadPartnerData();if(d[pid]&&d[pid].referrals&&d[pid].referrals[idx]){d[pid].referrals[idx].fee_status=\'paid\';d[pid].referrals[idx].paid_date=localISO(new Date());savePartnerData(d);toast(\'Fee marked as paid\');openPartner(pid);}}
+function setPartnerFilter(type){_partnerTypeFilter=type;document.querySelectorAll(\'.ptype-chip\').forEach(function(b){var on=b.dataset.ptype===type;b.style.background=on?\'var(--navy)\':\'#f8fafc\';b.style.color=on?\'#fff\':\'#475569\';b.style.borderColor=on?\'var(--navy)\':\'#e2e8f0\';});renderPartners();}
+function setPartnerStatusFilter(s){_partnerStatusFilter=s;document.querySelectorAll(\'.pstatus-chip\').forEach(function(b){var on=b.dataset.pstatus===s;b.style.background=on?\'var(--navy)\':\'#f8fafc\';b.style.color=on?\'#fff\':\'#475569\';b.style.borderColor=on?\'var(--navy)\':\'#e2e8f0\';});renderPartners();}
+function renderPartnerKPIs(merged){
+  var total=merged.length;
+  var active=merged.filter(function(p){return p.status===\'active\';}).length;
+  var allRefs=[];merged.forEach(function(p){if(p.referrals)allRefs=allRefs.concat(p.referrals);});
+  var owed=allRefs.filter(function(r){return r.fee_status===\'owed\';}).reduce(function(s,r){return s+r.fee_amount;},0);
+  var paid=allRefs.filter(function(r){return r.fee_status===\'paid\';}).reduce(function(s,r){return s+r.fee_amount;},0);
+  var el=document.getElementById(\'partner-kpi-bar\');
+  if(!el)return;
+  var bs=\'background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:10px;text-align:center;\';
+  el.innerHTML=\'<div style="\'+bs+\'"><div style="font-size:20px;font-weight:800;color:var(--navy);">\'+total+\'</div><div style="font-size:10px;color:#64748b;">Total</div></div>\'
+    +\'<div style="\'+bs+\'"><div style="font-size:20px;font-weight:800;color:#059669;">\'+active+\'</div><div style="font-size:10px;color:#64748b;">Active</div></div>\'
+    +\'<div style="\'+bs+\'"><div style="font-size:20px;font-weight:800;color:#d97706;">$\'+owed+\'</div><div style="font-size:10px;color:#64748b;">Fees Owed</div></div>\';
+}
+function partnerCardHTML(p){
+  var statusColor=PARTNER_STATUS_COLORS[p.status||\'not_contacted\']||\'#94a3b8\';
+  var statusLabel=PARTNER_STATUS_LABELS[p.status||\'not_contacted\']||\'Not Contacted\';
+  var fitScore=p.fit_score||0;
+  var fitColor=fitScore>=75?\'#059669\':fitScore>=50?\'#d97706\':\'#94a3b8\';
+  var tierBadge=p.tier&&p.tier!==\'bronze\'?\'<span style="margin-left:6px;font-size:10px;background:\'+(p.tier===\'gold\'?\'#d97706\':\'#64748b\')+\';color:#fff;border-radius:20px;padding:2px 8px;">\'+p.tier.toUpperCase()+\'</span>\':\'\'
+  var refs=(p.referrals||[]).length;
+  var reasonsHTML=(p.fit_reasons&&p.fit_reasons.length)?\'<div style="font-size:9px;color:#64748b;margin-top:3px;">\'+p.fit_reasons.join(\' · \')+\'</div>\':\'\'
+  var warnHTML=(p.fit_warnings&&p.fit_warnings.length)?\'<div style="font-size:9px;color:#d97706;margin-top:2px;">⚠ \'+p.fit_warnings[0]+\'</div>\':\'\'
+  return \'<div class="partner-card" data-pid="\'+p.id+\'" ontouchend="event.preventDefault();openPartner(this.dataset.pid)" onclick="openPartner(this.dataset.pid)" style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;margin-bottom:10px;cursor:pointer;">\'
+    +\'<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px;">\'
+    +\'<div style="flex:1;min-width:0;"><div style="font-weight:700;font-size:14px;color:#1e293b;">\'+p.name+tierBadge+\'</div>\'
+    +\'<div style="font-size:12px;color:#64748b;margin-top:1px;">\'+p.partner_type_label+(p.city?\' · \'+p.city:\'\')+\'</div></div>\'
+    +\'<div style="text-align:right;margin-left:10px;flex-shrink:0;">\'
+    +\'<div style="font-size:12px;font-weight:800;color:\'+fitColor+\'">\'+fitScore+\'</div>\'
+    +\'<div style="font-size:9px;color:\'+fitColor+\';">\'+p.fit_level+\'</div>\'
+    +\'<div style="font-size:10px;color:\'+statusColor+\';margin-top:3px;font-weight:600;">\'+statusLabel+\'</div></div></div>\'
+    +reasonsHTML+warnHTML
+    +(refs?\'<div style="font-size:12px;color:#059669;margin-top:4px;">\'+refs+\' referral\'+(refs!==1?\'s\':\'\')+\'</div>\':\'\')+\'</div>\';
+}
+function renderTopPartners(){
+  var data=loadPartnerData();
+  var top=PARTNERS.filter(function(p){return((data[p.id]||{}).status||p.status||\'not_contacted\')===\'not_contacted\';})
+    .sort(function(a,b){return(b.fit_score||0)-(a.fit_score||0);}).slice(0,5);
+  if(!top.length)return \'\';
+  return \'<div style="background:#f0fdf4;border:1px solid #6ee7b7;border-radius:10px;padding:14px;margin-bottom:12px;">\'
+    +\'<div style="font-size:11px;font-weight:800;color:#059669;margin-bottom:2px;">🎯 Best to Contact First</div>\'
+    +\'<div style="font-size:10px;color:#64748b;margin-bottom:10px;">Highest fit score · Not yet contacted</div>\'
+    +top.map(function(p,i){
+      return \'<div class="partner-card" data-pid="\'+p.id+\'" ontouchend="event.preventDefault();openPartner(this.dataset.pid)" onclick="openPartner(this.dataset.pid)" style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #d1fae5;cursor:pointer;">\'
+        +\'<div><div style="font-size:12px;font-weight:700;color:#0f1f38;">\'+(i+1)+\'. \'+p.name+\'</div>\'
+        +\'<div style="font-size:10px;color:#64748b;">\'+p.partner_type_label+\' · \'+(p.city||\'\')+((p.fit_reasons&&p.fit_reasons.length)?\' · \'+p.fit_reasons[0]:\'\')+\'</div></div>\'
+        +\'<div style="font-size:13px;font-weight:800;color:#059669;">\'+((p.fit_stars||\'\')+\' \')+(p.fit_score||0)+\'</div></div>\';
+    }).join(\'\')
+    +\'</div>\';
+}
+function renderPartners(){
+  var data=loadPartnerData();
+  var merged=PARTNERS.map(function(p){return Object.assign({},p,data[p.id]||{});});
+  if(_partnerTypeFilter!==\'all\')merged=merged.filter(function(p){return p.partner_type===_partnerTypeFilter;});
+  if(_partnerStatusFilter!==\'all\')merged=merged.filter(function(p){return(p.status||\'not_contacted\')===_partnerStatusFilter;});
+  var sortEl=document.getElementById(\'partner-sort\');
+  var sortBy=sortEl?sortEl.value:\'fit\';
+  if(sortBy===\'fit\'){merged.sort(function(a,b){return(b.fit_score||0)-(a.fit_score||0);});}
+  else if(sortBy===\'priority\'){merged.sort(function(a,b){return(a.priority||9)-(b.priority||9)||(b.fit_score||0)-(a.fit_score||0);});}
+  else if(sortBy===\'name\'){merged.sort(function(a,b){return a.name.localeCompare(b.name);});}
+  else if(sortBy===\'status\'){merged.sort(function(a,b){return(a.status||\'not_contacted\').localeCompare(b.status||\'not_contacted\');});}
+  renderPartnerKPIs(PARTNERS.map(function(p){return Object.assign({},p,data[p.id]||{});}));
+  var topEl=document.getElementById(\'partner-top\');
+  if(topEl)topEl.innerHTML=(_partnerTypeFilter===\'all\'&&_partnerStatusFilter===\'all\')?renderTopPartners():\'\';
+  var el=document.getElementById(\'partner-list\');
+  if(!el)return;
+  if(!merged.length){el.innerHTML=\'<div style="color:#94a3b8;text-align:center;padding:32px;">No partners match filters</div>\';return;}
+  el.innerHTML=merged.map(partnerCardHTML).join(\'\');
+}
+function openPartner(pid){
+  _openPartnerId=pid;
+  var p=getMergedPartner(pid);if(!p)return;
+  var statusColor=PARTNER_STATUS_COLORS[p.status||\'not_contacted\']||\'#94a3b8\';
+  var statusLabel=PARTNER_STATUS_LABELS[p.status||\'not_contacted\']||\'Not Contacted\';
+  var refs=p.referrals||[];
+  var owed=refs.filter(function(r){return r.fee_status===\'owed\';}).reduce(function(s,r){return s+r.fee_amount;},0);
+  var refsHTML=refs.length?refs.map(function(r,i){
+    return \'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f1f5f9;">\'
+      +\'<div><div style="font-size:13px;font-weight:600;">\'+r.prospect_name+\'</div>\'
+      +\'<div style="font-size:11px;color:#64748b;">\'+r.plan+\' · $\'+r.fee_amount+\' · \'+r.closed_date.slice(0,10)+\'</div></div>\'
+      +(r.fee_status===\'owed\'?\'<button data-pid="\'+pid+\'" data-idx="\'+i+\'" ontouchend="event.preventDefault();markPartnerFeePaid(this.dataset.pid,parseInt(this.dataset.idx))" onclick="markPartnerFeePaid(this.dataset.pid,parseInt(this.dataset.idx))" style="font-size:11px;background:#059669;color:#fff;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;">Mark Paid</button>\':\'<span style=\\\'font-size:11px;color:#059669;\\\'>Paid</span>\')+\'</div>\';
+  }).join(\'\'):\'<div style="color:#94a3b8;font-size:13px;padding:8px 0;">No referrals yet</div>\';
+  var statusOpts=[\'not_contacted\',\'reached_out\',\'in_conversation\',\'active\',\'inactive\'].map(function(s){
+    return \'<option value="\'+s+\'"\'+(s===(p.status||\'not_contacted\')?\' selected\':\'\')+\'>\'+PARTNER_STATUS_LABELS[s]+\'</option>\';
+  }).join(\'\');
+  var html=\'<div id="partner-overlay-bg" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:900;display:flex;align-items:flex-end;justify-content:center;" ontouchend="event.preventDefault();document.getElementById(\\\'partner-overlay-bg\\\').remove()" onclick="document.getElementById(\\\'partner-overlay-bg\\\').remove()">\'
+    +\'<div ontouchend="event.stopPropagation()" onclick="event.stopPropagation()" style="background:#fff;border-radius:20px 20px 0 0;padding:20px;width:100%;max-width:520px;max-height:85vh;overflow-y:auto;">\'
+    +\'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">\'
+    +\'<div><div style="font-weight:800;font-size:16px;color:#1e293b;">\'+p.name+\'</div>\'
+    +\'<div style="font-size:12px;color:#64748b;margin-top:2px;">\'+p.partner_type_label+(p.city?\' · \'+p.city:\'\')+\'</div></div>\'
+    +\'<button ontouchend="event.preventDefault();document.getElementById(\\\'partner-overlay-bg\\\').remove()" onclick="document.getElementById(\\\'partner-overlay-bg\\\').remove()" style="font-size:20px;background:none;border:none;cursor:pointer;color:#64748b;padding:0;">×</button></div>\'
+    +(function(){
+      var fs=p.fit_score||0;
+      var fc=fs>=75?\'#059669\':fs>=50?\'#d97706\':\'#94a3b8\';
+      var fbg=fs>=75?\'#ecfdf5\':fs>=50?\'#fffbeb\':\'#f8fafc\';
+      var fbrd=fs>=75?\'#6ee7b7\':fs>=50?\'#fde68a\':\'#e2e8f0\';
+      var rh=(p.fit_reasons&&p.fit_reasons.length)?p.fit_reasons.map(function(r){return \'<div style="font-size:11px;color:#475569;display:flex;gap:5px;margin-bottom:2px;"><span style="color:#059669">✓</span>\'+r+\'</div>\';}).join(\'\'):\'\';
+      var wh=(p.fit_warnings&&p.fit_warnings.length)?p.fit_warnings.map(function(w){return \'<div style="font-size:11px;color:#d97706;display:flex;gap:5px;margin-bottom:2px;"><span>⚠</span>\'+w+\'</div>\';}).join(\'\'):\'\';
+      var src=\'Score from FL license data\'+(p.website_crawled?\' + website\':\'\')+(p.google_rating?\' + reviews\':\'\');
+      return \'<div style="background:\'+fbg+\';border:1px solid \'+fbrd+\';border-radius:10px;padding:14px;margin-bottom:14px;">\'
+        +\'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">\'
+        +\'<div style="font-size:11px;font-weight:700;color:\'+fc+\';text-transform:uppercase;letter-spacing:.05em;">Partner Fit Score</div>\'
+        +\'<div style="font-size:26px;font-weight:900;color:\'+fc+\'">\'+fs+\'</div></div>\'
+        +\'<div style="font-size:12px;font-weight:700;color:\'+fc+\';margin-bottom:8px;">\'+(p.fit_stars||\'\')+\' \'+(p.fit_level||\'\')+\'</div>\'
+        +rh+wh
+        +\'<div style="font-size:9px;color:#94a3b8;margin-top:6px;">\'+src+\'</div></div>\';
+    })()
+    +\'<div style="margin-bottom:12px;"><label style="font-size:12px;font-weight:600;color:#475569;">Status</label>\'
+    +\'<select id="po-status" onchange="savePartnerField(_openPartnerId,\\\'status\\\',this.value);renderPartners();" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;margin-top:4px;">\'+statusOpts+\'</select></div>\'
+    +(p.phone?\'<div style="margin-bottom:10px;font-size:13px;color:#1e293b;">📞 <a href="tel:\'+p.phone+\'" style="color:var(--navy);text-decoration:none;">\'+p.phone+\'</a></div>\':\'\')
+    +(p.email?\'<div style="margin-bottom:10px;font-size:13px;color:#1e293b;">✉️ <a href="mailto:\'+p.email+\'" style="color:var(--navy);text-decoration:none;">\'+p.email+\'</a></div>\':\'\')
+    +\'<div style="margin-bottom:12px;"><label style="font-size:12px;font-weight:600;color:#475569;">Notes</label>\'
+    +\'<textarea id="po-notes" rows="3" onchange="savePartnerField(_openPartnerId,\\\'notes\\\',this.value)" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;margin-top:4px;font-family:inherit;box-sizing:border-box;">\'+((p.notes||\'\')+\'\')+\'</textarea></div>\'
+    +\'<div style="margin-bottom:6px;font-weight:700;font-size:13px;">Referrals\'+(owed?\'<span style="margin-left:8px;color:#d97706;font-size:12px;">$\'+owed+\' owed</span>\':\'\')+ \'</div>\'
+    +refsHTML
+    +\'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px;">\'
+    +\'<button data-pid="\'+pid+\'" ontouchend="event.preventDefault();copyOutreachEmail(this.dataset.pid)" onclick="copyOutreachEmail(this.dataset.pid)" style="padding:10px;border:1px solid var(--navy);border-radius:10px;background:#fff;color:var(--navy);font-size:12px;font-weight:600;cursor:pointer;">📋 Copy Email</button>\'
+    +\'<button data-pid="\'+pid+\'" ontouchend="event.preventDefault();logPartnerOutreach(this.dataset.pid)" onclick="logPartnerOutreach(this.dataset.pid)" style="padding:10px;border:none;border-radius:10px;background:var(--navy);color:#fff;font-size:12px;font-weight:600;cursor:pointer;">📬 Log Outreach</button>\'
+    +\'</div></div></div>\';
+  document.body.insertAdjacentHTML(\'beforeend\',html);
+}
+function logPartnerOutreach(pid){
+  savePartnerField(pid,\'last_outreach\',localISO(new Date()));
+  var p=getMergedPartner(pid);
+  if(p&&(p.status||\'not_contacted\')===\'not_contacted\'){savePartnerField(pid,\'status\',\'reached_out\');}
+  toast(\'Outreach logged\');
+  var bg=document.getElementById(\'partner-overlay-bg\');if(bg)bg.remove();
+  renderPartners();
+}
+function copyOutreachEmail(pid){
+  var p=getMergedPartner(pid);if(!p)return;
+  var tier=p.tier||\'bronze\';
+  var fee=tier===\'gold\'?\'$150\':tier===\'silver\'?\'$125\':\'$99\';
+  var text=\'Hi,\\n\\nI\\\'m reaching out from Pinellas Ice Co. — we\\\'re the leading commercial ice machine cleaning specialists in Pinellas County.\\n\\nWe\\\'d love to partner with \'+p.name+\'. We pay a \'+fee+\' referral fee for every annual plan customer you send our way.\\n\\nInterested in learning more? Reply here or call us at (727) 555-0100.\\n\\nBest,\\nPinellas Ice Co.\';
+  if(navigator.clipboard){navigator.clipboard.writeText(text).then(function(){toast(\'Email copied to clipboard\');});}
+  else{var ta=document.createElement(\'textarea\');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand(\'copy\');document.body.removeChild(ta);toast(\'Email copied\');}
+}
+function openAddPartner(){
+  var html=\'<div id="add-partner-bg" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:900;display:flex;align-items:flex-end;justify-content:center;" ontouchend="event.preventDefault();document.getElementById(\\\'add-partner-bg\\\').remove()" onclick="document.getElementById(\\\'add-partner-bg\\\').remove()">\'
+    +\'<div ontouchend="event.stopPropagation()" onclick="event.stopPropagation()" style="background:#fff;border-radius:20px 20px 0 0;padding:20px;width:100%;max-width:520px;">\'
+    +\'<div style="font-weight:800;font-size:16px;margin-bottom:16px;">Add Partner Prospect</div>\'
+    +\'<input id="ap-name" placeholder="Business name" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;margin-bottom:8px;box-sizing:border-box;font-family:inherit;">\'
+    +\'<input id="ap-phone" placeholder="Phone (optional)" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;margin-bottom:8px;box-sizing:border-box;font-family:inherit;">\'
+    +\'<select id="ap-type" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;margin-bottom:14px;box-sizing:border-box;font-family:inherit;">\'
+    +\'<option value="hood_cleaning">Hood Cleaning</option><option value="pest_control">Pest Control</option>\'
+    +\'<option value="hvac_refrigeration">HVAC / Refrigeration</option><option value="beverage_equipment">Beverage Equipment</option>\'
+    +\'<option value="other">Other</option></select>\'
+    +\'<button ontouchend="event.preventDefault();saveNewPartner()" onclick="saveNewPartner()" style="width:100%;padding:12px;border:none;border-radius:10px;background:var(--navy);color:#fff;font-weight:700;font-size:14px;cursor:pointer;">Add Partner</button>\'
+    +\'</div></div>\';
+  document.body.insertAdjacentHTML(\'beforeend\',html);
+}
+function saveNewPartner(){
+  var name=(document.getElementById(\'ap-name\')||{}).value||\'\';
+  var phone=(document.getElementById(\'ap-phone\')||{}).value||\'\';
+  var ptype=(document.getElementById(\'ap-type\')||{}).value||\'other\';
+  if(!name.trim()){toast(\'Enter a business name\');return;}
+  var typeLabels={hood_cleaning:\'Hood Cleaning\',pest_control:\'Pest Control\',hvac_refrigeration:\'HVAC / Refrigeration\',beverage_equipment:\'Beverage Equipment\',other:\'Other\'};
+  var id=\'manual_\'+(Date.now());
+  var d=loadPartnerData();
+  d[id]={name:name.trim(),phone:phone.trim(),partner_type:ptype,partner_type_label:typeLabels[ptype]||ptype,status:\'not_contacted\',manual:true};
+  savePartnerData(d);
+  PARTNERS.push({id:id,name:name.trim(),phone:phone.trim(),partner_type:ptype,partner_type_label:typeLabels[ptype]||ptype,status:\'not_contacted\'});
+  var bg=document.getElementById(\'add-partner-bg\');if(bg)bg.remove();
+  toast(\'Partner added\');
+  renderPartners();
+}
+function generatePayoutReport(){
+  var data=loadPartnerData();
+  var lines=[\'PINELLAS ICE CO — PARTNER PAYOUT REPORT\',\'Generated: \'+(new Date().toLocaleDateString()),\'\'];
+  PARTNERS.forEach(function(base){
+    var p=Object.assign({},base,data[base.id]||{});
+    var refs=(p.referrals||[]).filter(function(r){return r.fee_status===\'owed\';});
+    if(!refs.length)return;
+    var total=refs.reduce(function(s,r){return s+r.fee_amount;},0);
+    lines.push(p.name+\' [\'+p.partner_type_label+\']\');
+    refs.forEach(function(r){lines.push(\'  \'+r.prospect_name+\' · $\'+r.fee_amount+\' · \'+r.closed_date.slice(0,10));});
+    lines.push(\'  TOTAL OWED: $\'+total,\'\');
+  });
+  if(lines.length<=3){toast(\'No unpaid fees to report\');return;}
+  var blob=new Blob([lines.join(\'\\n\')],{type:\'text/plain\'});
+  var a=document.createElement(\'a\');a.href=URL.createObjectURL(blob);a.download=\'partner_payout_\'+(new Date().toISOString().slice(0,10))+\'.txt\';a.click();
 }
 
 function setType(t){
@@ -3143,7 +3682,7 @@ function sw(t){
   if(t==='customers'){t='clients';}
   else if(t==='service'){setClientTab('service');t='clients';}
   tab=t;
-  const tabNames=['today','all','pipeline','route','clients'];
+  const tabNames=['today','all','pipeline','route','clients','partners'];
   document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('on',tabNames[i]===t));
   document.querySelectorAll('.panel').forEach(el=>el.classList.remove('on'));
   // panel ID mapping: clients → p-customers, data → p-data, others → p-{t}
@@ -3155,6 +3694,7 @@ function sw(t){
   else if(t==='pipeline'){renderPipeline();}
   else if(t==='route'){rRoute();}
   else if(t==='clients'){if(clientTab==='service')rService();else rCust();}
+  else if(t==='partners'){renderPartners();}
   if(t==='route'&&typeof L==='undefined')loadLeaflet();
 }
 function setPipeStage(s){
@@ -7729,8 +8269,14 @@ def main():
         print()
 
     records = run(list(map(str, csv_paths)))
+    print(f"\nBuilding partner records...")
+    osm_cache = load_osm_cache(Path('data'))
+    web_cache = load_partner_web_cache()
+    partners = build_partner_records(osm_cache, web_cache)
+    save_partner_web_cache(web_cache)
+    print(f"  Partner candidates: {len(partners)}")
     print(f"\nGenerating HTML...")
-    html = build_html(records)
+    html = build_html(records, partners)
     OUTPUT_FILE.parent.mkdir(exist_ok=True)
     OUTPUT_FILE.write_text(html, encoding='utf-8')
     size_kb = OUTPUT_FILE.stat().st_size // 1024
@@ -7786,8 +8332,14 @@ def main():
         print()
 
     records = run(list(map(str, csv_paths)))
+    print(f"\nBuilding partner records...")
+    osm_cache = load_osm_cache(Path('data'))
+    web_cache = load_partner_web_cache()
+    partners = build_partner_records(osm_cache, web_cache)
+    save_partner_web_cache(web_cache)
+    print(f"  Partner candidates: {len(partners)}")
     print(f"\nGenerating HTML...")
-    html = build_html(records)
+    html = build_html(records, partners)
     OUTPUT_FILE.parent.mkdir(exist_ok=True)
     OUTPUT_FILE.write_text(html, encoding='utf-8')
     size_kb = OUTPUT_FILE.stat().st_size // 1024
