@@ -37,7 +37,7 @@ def load_current():
         sys.exit(1)
     content = html_path.read_text(encoding='utf-8')
     start = content.find('const P=') + 8
-    end   = content.find('\nconst PARTNERS=', start)
+    end   = content.find(';\nconst PARTNERS=', start)
     if end < 0:
         end = content.find(';\nconst ', start)
     if start < 8 or end < 0:
