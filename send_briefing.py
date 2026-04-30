@@ -196,24 +196,38 @@ def build_email(current, changes, stats, contacted_ids):
 
     sections = ''
 
-    # Partner outreach reminders (not_contacted partners)
+    # Partner outreach — top 3 uncontacted by fit score
     partners = load_partner_fees()
-    not_contacted = [p for p in partners if (p.get('status') or 'not_contacted') == 'not_contacted']
+    not_contacted = sorted(
+        [p for p in partners if (p.get('status') or 'not_contacted') == 'not_contacted'],
+        key=lambda x: -(x.get('fit_score') or 0)
+    )
     if not_contacted:
+        top3 = not_contacted[:3]
+        def fit_color(score):
+            if (score or 0) >= 75: return '#059669'
+            if (score or 0) >= 50: return '#d97706'
+            return '#94a3b8'
         p_rows = ''.join(
-            f'<tr style="border-bottom:1px solid #f1f5f9"><td style="padding:8px 12px;font-size:12px;font-weight:600;">{p["name"]}</td>'
-            f'<td style="padding:8px 12px;font-size:12px;color:#64748b;">{p.get("partner_type_label","")}</td>'
-            f'<td style="padding:8px 12px;font-size:12px;color:#64748b;">{p.get("city","")}</td>'
-            f'<td style="padding:8px 12px;font-size:12px;color:#64748b;">{p.get("phone","—")}</td></tr>'
-            for p in not_contacted[:5]
+            f'<tr style="border-bottom:1px solid #f1f5f9">'
+            f'<td style="padding:10px 12px;font-size:12px;font-weight:700;color:#1e293b;">'
+            f'{p.get("fit_stars","⭐")} {p["name"]}</td>'
+            f'<td style="padding:10px 12px;font-size:12px;color:#64748b;">{p.get("partner_type_label","")}</td>'
+            f'<td style="padding:10px 12px;font-size:11px;color:#64748b;">'
+            f'{"  · ".join(p.get("fit_reasons") or [])}</td>'
+            f'<td style="padding:10px 12px;font-size:13px;font-weight:800;color:{fit_color(p.get("fit_score"))};">'
+            f'{p.get("fit_score",0)}</td>'
+            f'<td style="padding:10px 12px;font-size:12px;color:#64748b;">{p.get("phone","—")}</td></tr>'
+            for p in top3
         )
         sections += f"""
         <div style="margin-bottom:24px">
-          <div style="font-size:13px;font-weight:800;color:#1e3a5f;margin-bottom:8px">
-            &#x1F91D; Partner Outreach — {len(not_contacted)} Not Yet Contacted
+          <div style="font-size:13px;font-weight:800;color:#1e3a5f;margin-bottom:4px">
+            🎯 Top Partners to Contact ({len(not_contacted)} not yet reached)
           </div>
+          <div style="font-size:11px;color:#64748b;margin-bottom:8px">Sorted by fit score — highest priority first</div>
           <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden">
-            <tr style="background:#e0f2fe"><th style="padding:8px 12px;text-align:left;font-size:11px;color:#1e3a5f">Business</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#1e3a5f">Type</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#1e3a5f">City</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#1e3a5f">Phone</th></tr>
+            <tr style="background:#ecfdf5"><th style="padding:8px 12px;text-align:left;font-size:11px;color:#059669">Business</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#059669">Type</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#059669">Signals</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#059669">Score</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#059669">Phone</th></tr>
             {p_rows}
           </table>
         </div>"""

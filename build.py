@@ -101,16 +101,185 @@ PINELLAS_ZIPS_SET = {
     '33738','33740','33741','33742','33743','33744','33747','33755','33756',
 }
 
-def build_partner_records(osm_cache=None):
-    """Build partner prospect records using keyword detection on known Pinellas businesses."""
+# Highest-density prospect clusters — used in fit score geography bonus
+PINELLAS_CORE_ZIPS = {
+    '34689','34688','34683','34684','34685',         # Tarpon / Palm Harbor
+    '33755','33756','33759','33760','33761','33762','33765','33767',  # Clearwater
+    '33701','33702','33703','33704','33705','33706','33707','33710',  # St Pete
+    '34698','34695',                                  # Dunedin / Safety Harbor
+    '33770','33771','33772','33773','33774',          # Largo
+}
+
+PARTNER_WEB_CACHE_PATH = Path('data') / 'partner_web_cache.json'
+
+def load_partner_web_cache():
+    try:
+        if PARTNER_WEB_CACHE_PATH.exists():
+            return json.loads(PARTNER_WEB_CACHE_PATH.read_text())
+    except Exception:
+        pass
+    return {}
+
+def save_partner_web_cache(cache):
+    try:
+        PARTNER_WEB_CACHE_PATH.write_text(json.dumps(cache, indent=2))
+    except Exception:
+        pass
+
+def extract_license_year(row):
+    """Extract year first licensed from a DBPR CSV row dict."""
+    for field in ['original_issue_date', 'issue_date', 'license_date', 'first_issue']:
+        val = str(row.get(field, '') or '').strip()
+        if not val or len(val) < 4:
+            continue
+        try:
+            if '/' in val:
+                parts = val.split('/')
+                year = int(parts[2]) if len(parts) == 3 else int(parts[-1])
+            else:
+                year = int(val[:4])
+            if 1980 <= year <= 2026:
+                return year
+        except Exception:
+            pass
+    return None
+
+def get_osm_rating(osm_hit):
+    """Extract rating/review signals from an OSM cache hit."""
+    if not osm_hit:
+        return {}
+    return {
+        'google_rating': float(osm_hit.get('stars', 0) or 0),
+        'review_count':  int(osm_hit.get('review_count', 0) or 0),
+        'description':   str(osm_hit.get('description', '') or ''),
+    }
+
+def scrape_website_keywords(url, timeout=8):
+    """Lightweight food-service keyword extraction from a partner website."""
+    empty = {'website_crawled': False, 'food_keyword_hits': [], 'food_keyword_count': 0}
+    if not url:
+        return empty
+    FOOD_KEYWORDS = [
+        'restaurant', 'food service', 'commercial kitchen', 'hospitality',
+        'bar and grill', 'hotel', 'food safety', 'health inspection',
+        'sanitation', 'grease', 'kitchen', 'dining', 'foodservice',
+        'food establishment',
+    ]
+    try:
+        import requests as _req
+        if not url.startswith('http'):
+            url = 'https://' + url
+        r = _req.get(url,
+                     headers={'User-Agent': 'Mozilla/5.0 (compatible; PIC-Scout/1.0)',
+                               'Accept': 'text/html'},
+                     timeout=timeout, allow_redirects=True)
+        if r.status_code != 200:
+            return empty
+        text = re.sub(r'<[^>]+>', ' ', r.text).lower()
+        text = re.sub(r'\s+', ' ', text)[:5000]
+        hits = [kw for kw in FOOD_KEYWORDS if kw in text]
+        return {'website_crawled': True, 'food_keyword_hits': hits, 'food_keyword_count': len(hits)}
+    except Exception:
+        return empty
+
+def calc_partner_fit_score(partner):
+    """Auto-calculated partner fit score 0-100. Higher = better referral candidate."""
+    score = 0
+    reasons = []
+    warnings = []
+
+    type_scores = {
+        'hood_cleaning': 40, 'pest_control': 35, 'refrigeration': 30,
+        'beverage_equipment': 28, 'hvac': 20, 'kitchen_equipment': 20,
+    }
+    score += type_scores.get(partner.get('partner_type', ''), 0)
+
+    license_year = partner.get('license_year')
+    if license_year:
+        years = 2026 - license_year
+        if years >= 10:
+            score += 20
+            reasons.append(f'{years} yrs in business')
+        elif years >= 5:
+            score += 12
+            reasons.append(f'{years} yrs in business')
+        elif years >= 2:
+            score += 5
+        else:
+            warnings.append('New business (<2 yrs)')
+
+    reviews = int(partner.get('review_count', 0) or 0)
+    if 5 <= reviews <= 50:
+        score += 15
+        reasons.append('small independent')
+    elif 1 <= reviews < 5:
+        score += 8
+    elif 51 <= reviews <= 200:
+        score += 8
+    elif reviews > 200:
+        warnings.append('Large company — lower referral motivation')
+
+    rating = float(partner.get('google_rating', 0) or 0)
+    if rating >= 4.5:
+        score += 10
+        reasons.append('strong client reviews')
+    elif rating >= 4.0:
+        score += 6
+    elif 0 < rating < 3.5:
+        warnings.append('Low rating — relationship quality concern')
+
+    kw_count = int(partner.get('food_keyword_count', 0) or 0)
+    desc = (partner.get('description', '') or '').lower()
+    food_desc_hits = sum(1 for kw in [
+        'restaurant', 'food service', 'commercial kitchen',
+        'hospitality', 'food safety', 'sanitation'
+    ] if kw in desc)
+    total_food = kw_count + food_desc_hits
+    if total_food >= 4:
+        score += 15
+        reasons.append('food service specialist')
+    elif total_food >= 2:
+        score += 8
+        reasons.append('some food service focus')
+    elif total_food == 0 and partner.get('website_crawled'):
+        warnings.append('No food service focus on website')
+
+    if partner.get('zip') in PINELLAS_CORE_ZIPS:
+        score += 10
+        reasons.append('core service area')
+    elif (partner.get('county') or '').lower() == 'pinellas':
+        score += 5
+
+    if partner.get('website'):
+        score += 5
+    if not partner.get('website_crawled') and not partner.get('google_rating'):
+        score = max(0, score - 3)
+
+    score = min(100, max(0, int(score)))
+    if score >= 75:
+        level, stars = 'Strong Fit', '⭐⭐⭐'
+    elif score >= 50:
+        level, stars = 'Good Fit', '⭐⭐'
+    else:
+        level, stars = 'Possible Fit', '⭐'
+
+    return {
+        'fit_score':    score,
+        'fit_level':    level,
+        'fit_stars':    stars,
+        'fit_reasons':  reasons[:3],
+        'fit_warnings': warnings[:2],
+    }
+
+def build_partner_records(osm_cache=None, web_cache=None):
+    """Build partner prospect records with keyword detection, enrichment, and fit scoring."""
     import hashlib
     osm_cache = osm_cache or {}
+    web_cache = web_cache if web_cache is not None else {}
 
-    # Source: well-known Pinellas partner company types seeded from OSM + license data
-    # At CI rebuild time, partner_licenses.csv (if downloaded) supplements this list
     seed_partners = []
 
-    # Try loading contractor license CSV if downloaded
+    # Try loading contractor license CSV if downloaded by download_data.py
     partner_csv = Path('data') / 'partner_licenses.csv'
     if partner_csv.exists():
         try:
@@ -127,66 +296,86 @@ def build_partner_records(osm_cache=None):
                     ptype = classify_partner(name)
                     if not ptype: continue
                     seed_partners.append({
-                        'name': name,
-                        'ptype': ptype,
-                        'city': (row.get('city','') or '').strip().title(),
-                        'zip':  zip5,
-                        'address': (row.get('address','') or '').strip(),
-                        'phone':   (row.get('phone','') or '').strip(),
-                        'owner':   (row.get('licensee_name','') or row.get('qualifier_name','')).strip(),
-                        'license': (row.get('license_number','') or '').strip(),
+                        'name':         name,
+                        'ptype':        ptype,
+                        'city':         (row.get('city','') or '').strip().title(),
+                        'zip':          zip5,
+                        'address':      (row.get('address','') or '').strip(),
+                        'phone':        (row.get('phone','') or '').strip(),
+                        'owner':        (row.get('licensee_name','') or row.get('qualifier_name','')).strip(),
+                        'license':      (row.get('license_number','') or '').strip(),
+                        'license_year': extract_license_year(row),
                     })
         except Exception as e:
             print(f'  Partner CSV load error: {e}')
 
-    # Fallback seed list: well-known Pinellas trade companies used for demos / first run
+    # Fallback seed list with realistic license years for fit scoring
     if not seed_partners:
         seed_partners = [
-            {'name': 'Hood Masters Clearwater', 'ptype': 'hood_cleaning',      'city': 'Clearwater',    'zip': '33755', 'address': '', 'phone': '', 'owner': ''},
-            {'name': 'Bay Area Hood Cleaning',  'ptype': 'hood_cleaning',      'city': 'St. Petersburg','zip': '33711', 'address': '', 'phone': '', 'owner': ''},
-            {'name': 'Pinellas Pest Pros',       'ptype': 'pest_control',       'city': 'Clearwater',    'zip': '33756', 'address': '', 'phone': '', 'owner': ''},
-            {'name': 'Gulf Coast Refrigeration', 'ptype': 'refrigeration',      'city': 'St. Petersburg','zip': '33701', 'address': '', 'phone': '', 'owner': ''},
-            {'name': 'Suncoast Beverage Service','ptype': 'beverage_equipment', 'city': 'Largo',         'zip': '33771', 'address': '', 'phone': '', 'owner': ''},
+            {'name': 'Hood Masters Clearwater', 'ptype': 'hood_cleaning',      'city': 'Clearwater',    'zip': '33755', 'address': '', 'phone': '', 'owner': '', 'license': '', 'license_year': 2010},
+            {'name': 'Bay Area Hood Cleaning',  'ptype': 'hood_cleaning',      'city': 'St. Petersburg','zip': '33711', 'address': '', 'phone': '', 'owner': '', 'license': '', 'license_year': 2015},
+            {'name': 'Pinellas Pest Pros',       'ptype': 'pest_control',       'city': 'Clearwater',    'zip': '33756', 'address': '', 'phone': '', 'owner': '', 'license': '', 'license_year': 2012},
+            {'name': 'Gulf Coast Refrigeration', 'ptype': 'refrigeration',      'city': 'St. Petersburg','zip': '33701', 'address': '', 'phone': '', 'owner': '', 'license': '', 'license_year': 2008},
+            {'name': 'Suncoast Beverage Service','ptype': 'beverage_equipment', 'city': 'Largo',         'zip': '33771', 'address': '', 'phone': '', 'owner': '', 'license': '', 'license_year': 2018},
         ]
 
-    # Deduplicate by name
     seen = set()
     records = []
     for s in seed_partners:
         key = s['name'].lower()
         if key in seen: continue
         seen.add(key)
-        osm = osm_match(s['name'], s['city'], osm_cache) or {} if osm_cache else {}
-        phone   = s['phone'] or osm.get('phone','')
-        website = osm.get('website','')
-        uid = 'p_' + hashlib.md5((s['name']+s['zip']).encode()).hexdigest()[:8]
-        records.append({
-            'id': uid,
-            'name': s['name'],
-            'owner_name': s.get('owner',''),
-            'partner_type': s['ptype'],
-            'partner_type_label': PARTNER_TYPE_LABELS[s['ptype']],
-            'priority': PARTNER_PRIORITY[s['ptype']],
-            'address': s.get('address',''),
-            'city': s.get('city',''),
-            'zip':  s.get('zip',''),
-            'phone': phone,
-            'website': website,
-            'email': '',
-            'license_number': s.get('license',''),
-            'status': 'not_contacted',
-            'outreach_log': [],
-            'referrals': [],
-            'fees_owed': 0,
-            'fees_paid': 0,
-            'rating': 0,
-            'tier': 'bronze',
-            'notes': '',
-            'last_contact': '',
-            'next_followup': '',
-        })
 
-    records.sort(key=lambda x: (x['priority'], x['name']))
+        osm  = osm_match(s['name'], s['city'], osm_cache) or {} if osm_cache else {}
+        phone   = s.get('phone','') or osm.get('phone','')
+        website = osm.get('website','') or ''
+
+        # Website keyword scraping — cached to avoid re-scraping on every build
+        web_data = {}
+        if website:
+            cache_key = website[:120]
+            if cache_key in web_cache:
+                web_data = web_cache[cache_key]
+            else:
+                web_data = scrape_website_keywords(website)
+                web_cache[cache_key] = web_data
+
+        osm_ratings = get_osm_rating(osm)
+        uid = 'p_' + hashlib.md5((s['name'] + s.get('zip','')).encode()).hexdigest()[:8]
+
+        record = {
+            'id':                 uid,
+            'name':               s['name'],
+            'owner_name':         s.get('owner',''),
+            'partner_type':       s['ptype'],
+            'partner_type_label': PARTNER_TYPE_LABELS[s['ptype']],
+            'priority':           PARTNER_PRIORITY[s['ptype']],
+            'address':            s.get('address',''),
+            'city':               s.get('city',''),
+            'zip':                s.get('zip',''),
+            'phone':              phone,
+            'website':            website,
+            'email':              '',
+            'license_number':     s.get('license',''),
+            'license_year':       s.get('license_year'),
+            'google_rating':      osm_ratings.get('google_rating', 0),
+            'review_count':       osm_ratings.get('review_count', 0),
+            'description':        osm_ratings.get('description', ''),
+            'website_crawled':    web_data.get('website_crawled', False),
+            'food_keyword_count': web_data.get('food_keyword_count', 0),
+            'food_keyword_hits':  web_data.get('food_keyword_hits', []),
+            'status':             'not_contacted',
+            'referrals':          [],
+            'tier':               'bronze',
+            'notes':              '',
+            'last_contact':       '',
+        }
+        fit = calc_partner_fit_score(record)
+        record.update(fit)
+        records.append(record)
+
+    # Sort best fit first, then by partner type priority
+    records.sort(key=lambda x: (-x.get('fit_score', 0), x.get('priority', 9)))
     return records
 
 # ── MACHINE ESTIMATION ────────────────────────────────────────────────────────
@@ -2261,7 +2450,16 @@ header{background:var(--navy);
       <button class="pstatus-chip"    data-pstatus="active"         onclick="setPartnerStatusFilter('active')"         ontouchend="event.preventDefault();setPartnerStatusFilter('active')"         style="font-size:9px;padding:4px 9px;border-radius:12px;border:1px solid #e2e8f0;background:#f8fafc;color:#475569;cursor:pointer;font-family:inherit;touch-action:manipulation">Active</button>
       <button class="pstatus-chip"    data-pstatus="in_conversation" onclick="setPartnerStatusFilter('in_conversation')" ontouchend="event.preventDefault();setPartnerStatusFilter('in_conversation')" style="font-size:9px;padding:4px 9px;border-radius:12px;border:1px solid #e2e8f0;background:#f8fafc;color:#475569;cursor:pointer;font-family:inherit;touch-action:manipulation">In Conversation</button>
     </div>
-    <button onclick="generatePayoutReport()" ontouchend="event.preventDefault();generatePayoutReport()" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;background:#f8fafc;font-size:11px;font-weight:700;color:var(--navy);cursor:pointer;font-family:inherit;touch-action:manipulation;margin-bottom:10px">&#x1F4CA; Monthly Payout Report</button>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <button onclick="generatePayoutReport()" ontouchend="event.preventDefault();generatePayoutReport()" style="padding:7px 12px;border:1px solid #e2e8f0;border-radius:8px;background:#f8fafc;font-size:11px;font-weight:700;color:var(--navy);cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4CA; Payout Report</button>
+      <select id="partner-sort" onchange="renderPartners()" style="font-size:11px;padding:5px 8px;border:1px solid #e2e8f0;border-radius:8px;background:#fff;font-family:inherit;color:#475569">
+        <option value="fit">Sort: Best Fit</option>
+        <option value="priority">Sort: Partner Type</option>
+        <option value="name">Sort: Name</option>
+        <option value="status">Sort: Status</option>
+      </select>
+    </div>
+    <div id="partner-top"></div>
     <div id="partner-list"></div>
   </div>
 
@@ -3242,21 +3440,53 @@ function renderPartnerKPIs(merged){
 function partnerCardHTML(p){
   var statusColor=PARTNER_STATUS_COLORS[p.status||\'not_contacted\']||\'#94a3b8\';
   var statusLabel=PARTNER_STATUS_LABELS[p.status||\'not_contacted\']||\'Not Contacted\';
+  var fitScore=p.fit_score||0;
+  var fitColor=fitScore>=75?\'#059669\':fitScore>=50?\'#d97706\':\'#94a3b8\';
   var tierBadge=p.tier&&p.tier!==\'bronze\'?\'<span style="margin-left:6px;font-size:10px;background:\'+(p.tier===\'gold\'?\'#d97706\':\'#64748b\')+\';color:#fff;border-radius:20px;padding:2px 8px;">\'+p.tier.toUpperCase()+\'</span>\':\'\'
   var refs=(p.referrals||[]).length;
+  var reasonsHTML=(p.fit_reasons&&p.fit_reasons.length)?\'<div style="font-size:9px;color:#64748b;margin-top:3px;">\'+p.fit_reasons.join(\' · \')+\'</div>\':\'\'
+  var warnHTML=(p.fit_warnings&&p.fit_warnings.length)?\'<div style="font-size:9px;color:#d97706;margin-top:2px;">⚠ \'+p.fit_warnings[0]+\'</div>\':\'\'
   return \'<div class="partner-card" data-pid="\'+p.id+\'" ontouchend="event.preventDefault();openPartner(this.dataset.pid)" onclick="openPartner(this.dataset.pid)" style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;margin-bottom:10px;cursor:pointer;">\'
-    +\'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">\'
-    +\'<div style="font-weight:700;font-size:14px;color:#1e293b;">\'+p.name+tierBadge+\'</div>\'
-    +\'<div style="font-size:11px;font-weight:600;color:\'+statusColor+\';">\'+statusLabel+\'</div></div>\'
-    +\'<div style="font-size:12px;color:#64748b;">\'+p.partner_type_label+(p.city?\' · \'+p.city:\'\')+\'</div>\'
+    +\'<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px;">\'
+    +\'<div style="flex:1;min-width:0;"><div style="font-weight:700;font-size:14px;color:#1e293b;">\'+p.name+tierBadge+\'</div>\'
+    +\'<div style="font-size:12px;color:#64748b;margin-top:1px;">\'+p.partner_type_label+(p.city?\' · \'+p.city:\'\')+\'</div></div>\'
+    +\'<div style="text-align:right;margin-left:10px;flex-shrink:0;">\'
+    +\'<div style="font-size:12px;font-weight:800;color:\'+fitColor+\'">\'+fitScore+\'</div>\'
+    +\'<div style="font-size:9px;color:\'+fitColor+\';">\'+p.fit_level+\'</div>\'
+    +\'<div style="font-size:10px;color:\'+statusColor+\';margin-top:3px;font-weight:600;">\'+statusLabel+\'</div></div></div>\'
+    +reasonsHTML+warnHTML
     +(refs?\'<div style="font-size:12px;color:#059669;margin-top:4px;">\'+refs+\' referral\'+(refs!==1?\'s\':\'\')+\'</div>\':\'\')+\'</div>\';
+}
+function renderTopPartners(){
+  var data=loadPartnerData();
+  var top=PARTNERS.filter(function(p){return((data[p.id]||{}).status||p.status||\'not_contacted\')===\'not_contacted\';})
+    .sort(function(a,b){return(b.fit_score||0)-(a.fit_score||0);}).slice(0,5);
+  if(!top.length)return \'\';
+  return \'<div style="background:#f0fdf4;border:1px solid #6ee7b7;border-radius:10px;padding:14px;margin-bottom:12px;">\'
+    +\'<div style="font-size:11px;font-weight:800;color:#059669;margin-bottom:2px;">🎯 Best to Contact First</div>\'
+    +\'<div style="font-size:10px;color:#64748b;margin-bottom:10px;">Highest fit score · Not yet contacted</div>\'
+    +top.map(function(p,i){
+      return \'<div class="partner-card" data-pid="\'+p.id+\'" ontouchend="event.preventDefault();openPartner(this.dataset.pid)" onclick="openPartner(this.dataset.pid)" style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #d1fae5;cursor:pointer;">\'
+        +\'<div><div style="font-size:12px;font-weight:700;color:#0f1f38;">\'+(i+1)+\'. \'+p.name+\'</div>\'
+        +\'<div style="font-size:10px;color:#64748b;">\'+p.partner_type_label+\' · \'+(p.city||\'\')+((p.fit_reasons&&p.fit_reasons.length)?\' · \'+p.fit_reasons[0]:\'\')+\'</div></div>\'
+        +\'<div style="font-size:13px;font-weight:800;color:#059669;">\'+((p.fit_stars||\'\')+\' \')+(p.fit_score||0)+\'</div></div>\';
+    }).join(\'\')
+    +\'</div>\';
 }
 function renderPartners(){
   var data=loadPartnerData();
   var merged=PARTNERS.map(function(p){return Object.assign({},p,data[p.id]||{});});
   if(_partnerTypeFilter!==\'all\')merged=merged.filter(function(p){return p.partner_type===_partnerTypeFilter;});
   if(_partnerStatusFilter!==\'all\')merged=merged.filter(function(p){return(p.status||\'not_contacted\')===_partnerStatusFilter;});
+  var sortEl=document.getElementById(\'partner-sort\');
+  var sortBy=sortEl?sortEl.value:\'fit\';
+  if(sortBy===\'fit\'){merged.sort(function(a,b){return(b.fit_score||0)-(a.fit_score||0);});}
+  else if(sortBy===\'priority\'){merged.sort(function(a,b){return(a.priority||9)-(b.priority||9)||(b.fit_score||0)-(a.fit_score||0);});}
+  else if(sortBy===\'name\'){merged.sort(function(a,b){return a.name.localeCompare(b.name);});}
+  else if(sortBy===\'status\'){merged.sort(function(a,b){return(a.status||\'not_contacted\').localeCompare(b.status||\'not_contacted\');});}
   renderPartnerKPIs(PARTNERS.map(function(p){return Object.assign({},p,data[p.id]||{});}));
+  var topEl=document.getElementById(\'partner-top\');
+  if(topEl)topEl.innerHTML=(_partnerTypeFilter===\'all\'&&_partnerStatusFilter===\'all\')?renderTopPartners():\'\';
   var el=document.getElementById(\'partner-list\');
   if(!el)return;
   if(!merged.length){el.innerHTML=\'<div style="color:#94a3b8;text-align:center;padding:32px;">No partners match filters</div>\';return;}
@@ -3284,6 +3514,22 @@ function openPartner(pid){
     +\'<div><div style="font-weight:800;font-size:16px;color:#1e293b;">\'+p.name+\'</div>\'
     +\'<div style="font-size:12px;color:#64748b;margin-top:2px;">\'+p.partner_type_label+(p.city?\' · \'+p.city:\'\')+\'</div></div>\'
     +\'<button ontouchend="event.preventDefault();document.getElementById(\\\'partner-overlay-bg\\\').remove()" onclick="document.getElementById(\\\'partner-overlay-bg\\\').remove()" style="font-size:20px;background:none;border:none;cursor:pointer;color:#64748b;padding:0;">×</button></div>\'
+    +(function(){
+      var fs=p.fit_score||0;
+      var fc=fs>=75?\'#059669\':fs>=50?\'#d97706\':\'#94a3b8\';
+      var fbg=fs>=75?\'#ecfdf5\':fs>=50?\'#fffbeb\':\'#f8fafc\';
+      var fbrd=fs>=75?\'#6ee7b7\':fs>=50?\'#fde68a\':\'#e2e8f0\';
+      var rh=(p.fit_reasons&&p.fit_reasons.length)?p.fit_reasons.map(function(r){return \'<div style="font-size:11px;color:#475569;display:flex;gap:5px;margin-bottom:2px;"><span style="color:#059669">✓</span>\'+r+\'</div>\';}).join(\'\'):\'\';
+      var wh=(p.fit_warnings&&p.fit_warnings.length)?p.fit_warnings.map(function(w){return \'<div style="font-size:11px;color:#d97706;display:flex;gap:5px;margin-bottom:2px;"><span>⚠</span>\'+w+\'</div>\';}).join(\'\'):\'\';
+      var src=\'Score from FL license data\'+(p.website_crawled?\' + website\':\'\')+(p.google_rating?\' + reviews\':\'\');
+      return \'<div style="background:\'+fbg+\';border:1px solid \'+fbrd+\';border-radius:10px;padding:14px;margin-bottom:14px;">\'
+        +\'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">\'
+        +\'<div style="font-size:11px;font-weight:700;color:\'+fc+\';text-transform:uppercase;letter-spacing:.05em;">Partner Fit Score</div>\'
+        +\'<div style="font-size:26px;font-weight:900;color:\'+fc+\'">\'+fs+\'</div></div>\'
+        +\'<div style="font-size:12px;font-weight:700;color:\'+fc+\';margin-bottom:8px;">\'+(p.fit_stars||\'\')+\' \'+(p.fit_level||\'\')+\'</div>\'
+        +rh+wh
+        +\'<div style="font-size:9px;color:#94a3b8;margin-top:6px;">\'+src+\'</div></div>\';
+    })()
     +\'<div style="margin-bottom:12px;"><label style="font-size:12px;font-weight:600;color:#475569;">Status</label>\'
     +\'<select id="po-status" onchange="savePartnerField(_openPartnerId,\\\'status\\\',this.value);renderPartners();" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;margin-top:4px;">\'+statusOpts+\'</select></div>\'
     +(p.phone?\'<div style="margin-bottom:10px;font-size:13px;color:#1e293b;">📞 <a href="tel:\'+p.phone+\'" style="color:var(--navy);text-decoration:none;">\'+p.phone+\'</a></div>\':\'\')
@@ -8025,7 +8271,9 @@ def main():
     records = run(list(map(str, csv_paths)))
     print(f"\nBuilding partner records...")
     osm_cache = load_osm_cache(Path('data'))
-    partners = build_partner_records(osm_cache)
+    web_cache = load_partner_web_cache()
+    partners = build_partner_records(osm_cache, web_cache)
+    save_partner_web_cache(web_cache)
     print(f"  Partner candidates: {len(partners)}")
     print(f"\nGenerating HTML...")
     html = build_html(records, partners)
@@ -8086,7 +8334,9 @@ def main():
     records = run(list(map(str, csv_paths)))
     print(f"\nBuilding partner records...")
     osm_cache = load_osm_cache(Path('data'))
-    partners = build_partner_records(osm_cache)
+    web_cache = load_partner_web_cache()
+    partners = build_partner_records(osm_cache, web_cache)
+    save_partner_web_cache(web_cache)
     print(f"  Partner candidates: {len(partners)}")
     print(f"\nGenerating HTML...")
     html = build_html(records, partners)

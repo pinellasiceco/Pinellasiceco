@@ -131,6 +131,7 @@ If something appears broken, first try force-closing the PWA and reopening — t
 - Nothing from the current feature roadmap is missing
 
 ## Recent Changes
+- **2026-04-30 (s11b):** Partner Fit Score — `calc_partner_fit_score()` auto-scores 0-100 from type, years in business, review count, rating, food service focus, geography, website; `scrape_website_keywords()` caches to `data/partner_web_cache.json`; fit score badge on partner cards; fit score breakdown in detail overlay; "Best to Contact First" top-5 section; sort by fit score; daily briefing shows top 3 by score; sw.js bumped to `pic-20260430b`
 - **2026-04-30 (s11):** Channel Partner Program — Partners tab, partner detection pipeline, referral attribution, payout report, daily briefing integration
 - **2026-04-29 (s10):** Email/Supabase restored — `srSendEmail()`, `emailServiceReport()`, `emailComplianceReport()`, `sendEmailViaProxy()`, `exportToBriefing()`, `saveEmailFnUrl()`, `sb-email-fn` input, Daily Briefing section with export button — were missing from manually-patched s9 index.html; fixed by regenerating index.html directly from build.py
 - **2026-04-29 (s10):** Pricing v2 — `est_deep_clean` now per-machine ($395 + $149 each additional, standalone no-plan); `calc_year1(plan, machines)` Python function; `year1_monthly` + `year1_quarterly` baked into P[]; `calcOnetime()` + `calcYear1()` JS functions; factRows updated with "Filters NOT included"; ATP CTA "$99 to start · Annual plans from $129/mo"
