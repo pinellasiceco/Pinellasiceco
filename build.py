@@ -2261,7 +2261,7 @@ header{background:var(--navy);
     </div>
 
     <!-- KPI bar -->
-    <div id="pipe-kpis" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">
+    <div id="pipe-kpis" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px">
       <div class="dc" style="text-align:center;padding:8px 4px">
         <div style="font-size:9px;color:var(--sub);font-weight:600;margin-bottom:2px">IN PLAY</div>
         <div style="font-size:20px;font-weight:800;color:var(--navy)" id="pipe-kpi-inplay">0</div>
@@ -2273,6 +2273,10 @@ header{background:var(--navy);
       <div class="dc" style="text-align:center;padding:8px 4px">
         <div style="font-size:9px;color:var(--sub);font-weight:600;margin-bottom:2px">CLOSE RATE</div>
         <div style="font-size:20px;font-weight:800;color:#059669" id="pipe-kpi-close">0%</div>
+      </div>
+      <div class="dc" style="text-align:center;padding:8px 4px">
+        <div style="font-size:9px;color:var(--sub);font-weight:600;margin-bottom:2px">FORECAST</div>
+        <div style="font-size:16px;font-weight:800;color:#d97706" id="pipe-kpi-forecast">$0</div>
       </div>
     </div>
 
@@ -2433,7 +2437,10 @@ header{background:var(--navy);
   <div class="panel" id="p-partners">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
       <div style="font-size:15px;font-weight:800;color:var(--navy)">&#x1F91D; Channel Partners</div>
-      <button onclick="openAddPartner()" ontouchend="event.preventDefault();openAddPartner()" style="padding:6px 12px;border:none;border-radius:8px;background:var(--navy);color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">+ Add Partner</button>
+      <div style="display:flex;gap:6px">
+        <button onclick="openLogReferral()" ontouchend="event.preventDefault();openLogReferral()" style="padding:6px 12px;border:none;border-radius:8px;background:#059669;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E8; Log Referral</button>
+        <button onclick="openAddPartner()" ontouchend="event.preventDefault();openAddPartner()" style="padding:6px 12px;border:none;border-radius:8px;background:var(--navy);color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">+ Add Partner</button>
+      </div>
     </div>
     <div id="partner-kpi-bar" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px"></div>
     <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px" id="partner-type-filters">
@@ -2574,6 +2581,14 @@ header{background:var(--navy);
       <button class="dbtn" onclick="clrLog()" style="margin-bottom:4px;width:100%">Clear Call Log</button>
       <button class="dbtn" onclick="clrCustomers()" style="margin-bottom:4px;width:100%">Clear Customer Data</button>
       <button class="dbtn" onclick="clrAll()" style="width:100%">Clear ALL Data (full reset)</button>
+    </div>
+
+    <div class="dc" style="margin-top:12px;border:1px solid #fca5a5;background:#fff5f5">
+      <div class="dct" style="color:#dc2626">&#x26A0;&#xFE0F; Danger Zone</div>
+      <div style="font-size:10px;color:#64748b;margin-bottom:8px">These actions cannot be undone. Use with caution.</div>
+      <button class="dbtn" onclick="doResetFees()" style="margin-bottom:4px;width:100%;background:#fff7ed;color:#d97706;border-color:#fcd34d">Reset Partner Fees (mark all owed)</button>
+      <button class="dbtn" onclick="doResetLocal()" style="margin-bottom:4px;width:100%;background:#fef2f2;color:#dc2626;border-color:#fca5a5">&#x1F5D1; Reset Local Data (calls, customers, partners)</button>
+      <button class="dbtn" onclick="doResetAll()" style="width:100%;background:#dc2626;color:#fff;border-color:#dc2626">&#x26A0; Wipe All Data &amp; Reload</button>
     </div>
 
   </div>
@@ -3310,6 +3325,12 @@ function scOpenClose(p,bg){
     +'<button id="co-cancel" onclick="document.getElementById(\\'close-overlay\\').remove()" ontouchend="event.preventDefault();document.getElementById(\\'close-overlay\\').remove()" style="width:100%;padding:8px;border:none;border-radius:8px;background:transparent;color:#94a3b8;font-size:11px;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
     +'</div>';
   document.body.appendChild(el);
+  // Auto-populate partner if this prospect was referred via an inbound referral
+  var ref=getProspectPartnerRef(p.id);
+  if(ref&&ref.partnerId){
+    var sel=document.getElementById('close-partner-select');
+    if(sel){sel.value=ref.partnerId;}
+  }
 }
 
 function coAdjMachines(delta){
@@ -3450,6 +3471,14 @@ function partnerCardHTML(p){
   var refs=(p.referrals||[]).length;
   var reasonsHTML=(p.fit_reasons&&p.fit_reasons.length)?\'<div style="font-size:9px;color:#64748b;margin-top:3px;">\'+p.fit_reasons.join(\' · \')+\'</div>\':\'\'
   var warnHTML=(p.fit_warnings&&p.fit_warnings.length)?\'<div style="font-size:9px;color:#d97706;margin-top:2px;">⚠ \'+p.fit_warnings[0]+\'</div>\':\'\'
+  var tp=getPartnerTierProgress(p);
+  var tierC={bronze:\'#92400e\',silver:\'#64748b\',gold:\'#d97706\'};
+  var tierBarH=tp.nextTier
+    ?(\'<div style="margin-top:6px;"><div style="display:flex;justify-content:space-between;font-size:9px;color:#64748b;margin-bottom:2px;">\'
+      +\'<span style="font-weight:700;color:\'+tierC[tp.tier]+\';">\'+tp.tier.charAt(0).toUpperCase()+tp.tier.slice(1)+\' ($\'+tp.fee+\'/ref)</span>\'
+      +\'<span>\'+tp.count+\'/\'+tp.nextAt+\' → \'+tp.nextTier.charAt(0).toUpperCase()+tp.nextTier.slice(1)+\'</span></div>\'
+      +\'<div style="height:4px;background:#e2e8f0;border-radius:2px;"><div style="height:4px;background:\'+tierC[tp.tier]+\';border-radius:2px;width:\'+tp.pct+\'%;transition:width .3s"></div></div></div>\')
+    :(\'<div style="margin-top:5px;font-size:9px;font-weight:700;color:#d97706;">&#x1F947; Gold Partner · $150/referral</div>\');
   return \'<div class="partner-card" data-pid="\'+p.id+\'" ontouchend="event.preventDefault();openPartner(this.dataset.pid)" onclick="openPartner(this.dataset.pid)" style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px;margin-bottom:10px;cursor:pointer;">\'
     +\'<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px;">\'
     +\'<div style="flex:1;min-width:0;"><div style="font-weight:700;font-size:14px;color:#1e293b;">\'+p.name+tierBadge+\'</div>\'
@@ -3459,7 +3488,7 @@ function partnerCardHTML(p){
     +\'<div style="font-size:9px;color:\'+fitColor+\';">\'+p.fit_level+\'</div>\'
     +\'<div style="font-size:10px;color:\'+statusColor+\';margin-top:3px;font-weight:600;">\'+statusLabel+\'</div></div></div>\'
     +reasonsHTML+warnHTML
-    +(refs?\'<div style="font-size:12px;color:#059669;margin-top:4px;">\'+refs+\' referral\'+(refs!==1?\'s\':\'\')+\'</div>\':\'\')+\'</div>\';
+    +(refs?\'<div style="font-size:12px;color:#059669;margin-top:4px;">\'+refs+\' referral\'+(refs!==1?\'s\':\'\')+\'</div>\':\'\')+tierBarH+\'</div>\';
 }
 function renderTopPartners(){
   var data=loadPartnerData();
@@ -3540,6 +3569,25 @@ function openPartner(pid){
     +(p.email?\'<div style="margin-bottom:10px;font-size:13px;color:#1e293b;">✉️ <a href="mailto:\'+p.email+\'" style="color:var(--navy);text-decoration:none;">\'+p.email+\'</a></div>\':\'\')
     +\'<div style="margin-bottom:12px;"><label style="font-size:12px;font-weight:600;color:#475569;">Notes</label>\'
     +\'<textarea id="po-notes" rows="3" onchange="savePartnerField(_openPartnerId,\\\'notes\\\',this.value)" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;margin-top:4px;font-family:inherit;box-sizing:border-box;">\'+((p.notes||\'\')+\'\')+\'</textarea></div>\'
+    +(function(){
+      var tp=getPartnerTierProgress(p);
+      var tierC={bronze:\'#92400e\',silver:\'#64748b\',gold:\'#d97706\'};
+      var tierBg={bronze:\'#fef3c7\',silver:\'#f1f5f9\',gold:\'#fffbeb\'};
+      var tierBrd={bronze:\'#fcd34d\',silver:\'#cbd5e1\',gold:\'#fde68a\'};
+      if(tp.nextTier){
+        return \'<div style="background:\'+tierBg[tp.tier]+\';border:1px solid \'+tierBrd[tp.tier]+\';border-radius:10px;padding:12px;margin-bottom:12px;">\'
+          +\'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">\'
+          +\'<div style="font-size:11px;font-weight:700;color:\'+tierC[tp.tier]+\';text-transform:uppercase;letter-spacing:.05em;">\'+tp.tier+\' Tier · $\'+tp.fee+\'/referral</div>\'
+          +\'<div style="font-size:11px;color:#64748b;">\'+tp.count+\' closed</div></div>\'
+          +\'<div style="height:6px;background:#e2e8f0;border-radius:3px;margin-bottom:4px;">\'
+          +\'<div style="height:6px;background:\'+tierC[tp.tier]+\';border-radius:3px;width:\'+tp.pct+\'%;transition:width .3s;"></div></div>\'
+          +\'<div style="font-size:9px;color:#64748b;">\'+tp.count+\'/\'+tp.nextAt+\' referrals to reach \'+tp.nextTier.charAt(0).toUpperCase()+tp.nextTier.slice(1)+\' ($\'+(tp.nextTier===\'gold\'?150:125)+\'/ref)</div>\'
+          +\'</div>\';
+      }
+      return \'<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:12px;margin-bottom:12px;text-align:center;">\'
+        +\'<div style="font-size:14px;font-weight:800;color:#d97706;">&#x1F947; Gold Partner</div>\'
+        +\'<div style="font-size:11px;color:#92400e;margin-top:2px;">$150/referral · \'+tp.count+\' closed deals</div></div>\';
+    })()
     +\'<div style="margin-bottom:6px;font-weight:700;font-size:13px;">Referrals\'+(owed?\'<span style="margin-left:8px;color:#d97706;font-size:12px;">$\'+owed+\' owed</span>\':\'\')+ \'</div>\'
     +refsHTML
     +\'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px;">\'
@@ -3610,6 +3658,96 @@ function generatePayoutReport(){
   var a=document.createElement(\'a\');a.href=URL.createObjectURL(blob);a.download=\'partner_payout_\'+(new Date().toISOString().slice(0,10))+\'.txt\';a.click();
 }
 
+function getProspectPartnerRef(prospectId){
+  var data=loadPartnerData();
+  var result=null;
+  Object.keys(data).forEach(function(pid){
+    var pdata=data[pid]||{};
+    (pdata.inbound_referrals||[]).forEach(function(r){
+      if(r.prospect_id!=null&&String(r.prospect_id)===String(prospectId)){
+        var base=PARTNERS.find(function(p){return p.id===pid;});
+        result={partnerName:(base?base.name:pdata.name)||pid,partnerId:pid,referral:r};
+      }
+    });
+  });
+  return result;
+}
+function getPartnerTierProgress(p){
+  var refs=(p.referrals||[]).filter(function(r){return r.fee_status!==\'void\';});
+  var count=refs.length;
+  var fee=count>=6?150:count>=3?125:99;
+  if(count>=6)return{tier:\'gold\',count:count,nextTier:null,nextAt:null,pct:100,fee:fee};
+  if(count>=3)return{tier:\'silver\',count:count,nextTier:\'gold\',nextAt:6,pct:Math.round((count-3)/3*100),fee:fee};
+  return{tier:\'bronze\',count:count,nextTier:\'silver\',nextAt:3,pct:Math.round(count/3*100),fee:fee};
+}
+function openLogReferral(){
+  var data=loadPartnerData();
+  var allPartners=PARTNERS.map(function(p){return Object.assign({},p,data[p.id]||{});});
+  var active=allPartners.filter(function(p){return(p.status||\'not_contacted\')===\'active\';});
+  var pOpts=(active.length?active:allPartners).map(function(p){
+    return \'<option value="\'+p.id+\'">\'+p.name+\' (\'+p.partner_type_label+\')</option>\';
+  }).join(\'\');
+  if(!pOpts){toast(\'No partners on file — add one first\');return;}
+  var html=\'<div id="ref-overlay-bg" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:900;display:flex;align-items:flex-end;justify-content:center;" ontouchend="event.preventDefault();document.getElementById(\\\'ref-overlay-bg\\\').remove()" onclick="document.getElementById(\\\'ref-overlay-bg\\\').remove()">\'
+    +\'<div ontouchend="event.stopPropagation()" onclick="event.stopPropagation()" style="background:#fff;border-radius:20px 20px 0 0;padding:20px;width:100%;max-width:520px;">\'
+    +\'<div style="font-weight:800;font-size:16px;margin-bottom:4px;">&#x1F4E8; Log Inbound Referral</div>\'
+    +\'<div style="font-size:11px;color:#64748b;margin-bottom:14px;">Capture a new lead sent by a partner</div>\'
+    +\'<div style="font-size:11px;font-weight:600;color:#475569;margin-bottom:4px;">Partner</div>\'
+    +\'<select id="ref-partner" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;margin-bottom:10px;font-family:inherit;background:#fff;box-sizing:border-box;">\'
+    +\'<option value="">— Select partner —</option>\'+pOpts+\'</select>\'
+    +\'<div style="font-size:11px;font-weight:600;color:#475569;margin-bottom:4px;">Business Name</div>\'
+    +\'<input id="ref-biz" type="text" placeholder="e.g. Sunset Grill" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;margin-bottom:10px;font-family:inherit;box-sizing:border-box;">\'
+    +\'<div style="font-size:11px;font-weight:600;color:#475569;margin-bottom:4px;">Contact Name (optional)</div>\'
+    +\'<input id="ref-contact" type="text" placeholder="e.g. Mike Johnson" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;margin-bottom:10px;font-family:inherit;box-sizing:border-box;">\'
+    +\'<div style="font-size:11px;font-weight:600;color:#475569;margin-bottom:4px;">Phone (optional)</div>\'
+    +\'<input id="ref-phone" type="tel" placeholder="(727) 555-0100" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;margin-bottom:10px;font-family:inherit;box-sizing:border-box;">\'
+    +\'<div style="font-size:11px;font-weight:600;color:#475569;margin-bottom:4px;">Note (optional)</div>\'
+    +\'<input id="ref-note" type="text" placeholder="e.g. 2 ice machines, owner says urgent" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;margin-bottom:14px;font-family:inherit;box-sizing:border-box;">\'
+    +\'<button ontouchend="event.preventDefault();saveInboundReferral()" onclick="saveInboundReferral()" style="width:100%;padding:12px;border:none;border-radius:10px;background:var(--navy);color:#fff;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;touch-action:manipulation;">Save Referral</button>\'
+    +\'</div></div>\';
+  document.body.insertAdjacentHTML(\'beforeend\',html);
+}
+function saveInboundReferral(){
+  var pid=((document.getElementById(\'ref-partner\')||{}).value||\'\')||\'\'
+  var biz=((document.getElementById(\'ref-biz\')||{}).value||\'\'). trim();
+  var contact=((document.getElementById(\'ref-contact\')||{}).value||\'\'). trim();
+  var phone=((document.getElementById(\'ref-phone\')||{}).value||\'\'). trim();
+  var note=((document.getElementById(\'ref-note\')||{}).value||\'\'). trim();
+  if(!pid){toast(\'Select a partner\');return;}
+  if(!biz){toast(\'Enter business name\');return;}
+  var matchP=P.find(function(x){return x.name.toLowerCase().includes(biz.toLowerCase())||biz.toLowerCase().includes(x.name.toLowerCase());});
+  var d=loadPartnerData();
+  if(!d[pid])d[pid]={};
+  if(!d[pid].inbound_referrals)d[pid].inbound_referrals=[];
+  d[pid].inbound_referrals.push({id:Date.now(),business_name:biz,prospect_id:matchP?matchP.id:null,contact_name:contact,phone:phone,note:note,date:localISO(new Date()),status:\'new\'});
+  savePartnerData(d);
+  var bg=document.getElementById(\'ref-overlay-bg\');if(bg)bg.remove();
+  toast(matchP?\'Referral logged — matched \'+matchP.name:\'Referral logged\');
+  renderPartners();
+}
+function doResetFees(){
+  if(!confirm(\'Mark all partner referral fees as owed? This resets any previously marked-paid fees.\'))return;
+  var d=loadPartnerData();
+  Object.keys(d).forEach(function(pid){
+    (d[pid].referrals||[]).forEach(function(r){if(r.fee_status===\'paid\')r.fee_status=\'owed\';});
+  });
+  savePartnerData(d);
+  toast(\'All fees reset to owed\');
+  renderPartners();
+}
+function doResetLocal(){
+  if(!confirm(\'Clear all call logs, customer records, and partner data? This cannot be undone.\'))return;
+  [\'pic_v4\',\'pic_customers\',\'pic_partners_v1\',\'pic_settings\',\'pic_phones\',\'pic_goals\',\'pic_route_state\'].forEach(function(k){localStorage.removeItem(k);});
+  toast(\'Local data cleared — reloading…\');
+  setTimeout(function(){location.reload();},1200);
+}
+function doResetAll(){
+  if(!confirm(\'Wipe ALL data from this device? This is permanent and cannot be undone.\'))return;
+  if(!confirm(\'Are you absolutely sure? Every setting and record will be deleted.\'))return;
+  localStorage.clear();
+  toast(\'All data wiped\');
+  setTimeout(function(){location.reload();},1200);
+}
 function setType(t){
   selType=t;
   document.getElementById('mtype-walkin').className='mtype-btn'+(t==='walkin'?' mtype-on':'');
@@ -3770,6 +3908,8 @@ function cardHTML(p){
   const _nsyLabels={'new_callback':'&#x1F195; CALLBACK','new_ice_violation':'&#x1F195; Ice Viol.','priority_escalated':'&#x1F195; Escalated','score_jump':'&#x1F195; Score &#x2191;','new_to_dataset':'&#x1F195; New'};
   const newBadge=p.new_reason?('<span style="font-size:8px;font-weight:700;padding:2px 6px;border-radius:20px;background:#fef9c3;color:#854d0e;border:1px solid #fde047;margin-left:4px">'+(_nsyLabels[p.new_reason]||'&#x1F195;')+'</span>'):'';
   const routeBadge=routeSet.has(p.id)?('<span style="font-size:9px;padding:2px 6px;border-radius:4px;background:#ecfdf5;color:#059669;font-weight:700;margin-left:4px">&#x1F4CD; ON ROUTE</span>'):'';
+  const _pref=getProspectPartnerRef(p.id);
+  const refBadge=_pref?('<span style="font-size:8px;font-weight:700;padding:2px 6px;border-radius:20px;background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd;margin-left:4px">&#x1F4E8; '+_pref.partnerName+'</span>'):'';
 
   const confCol=p.confidence>=75?'#059669':p.confidence>=50?'#d97706':'#9ca3af';
   const confH='<span style="font-size:8px;font-weight:600;color:'+confCol+'" title="Prediction confidence">'+p.confidence+'% conf</span>';
@@ -3778,7 +3918,7 @@ function cardHTML(p){
     ?('<div style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;display:inline-block;margin-bottom:4px;background:'+(p.status==='customer_recurring'?'#ecfdf5':p.status==='customer_once'?'#eff6ff':'#fff7f5')+';color:'+(p.status==='customer_recurring'?'#059669':p.status==='customer_once'?'var(--blu)':'var(--ora)')+'">'+({'customer_recurring':'Recurring Customer','customer_once':'One-Time Customer','quoted':'Quote Sent','churned':'Churned'}[p.status]||p.status)+'</div>')
     :'';
   return '<div class="card '+p.priority+(isC(p.id)?' done':'')+'" data-id="'+p.id+'">'
-    +'<div class="ctop"><div class="cname">'+p.name+tierH+emergH+newBadge+routeBadge+'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px"><span class="pbadge '+p.priority+'">'+p.priority+'</span>'+confH+'</div></div>'
+    +'<div class="ctop"><div class="cname">'+p.name+tierH+emergH+newBadge+routeBadge+refBadge+'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px"><span class="pbadge '+p.priority+'">'+p.priority+'</span>'+confH+'</div></div>'
     +'<div class="cloc">'+p.city+', '+p.county+' '+franchH+'</div>'
     +custStatusH+revenueH+phH+ratH+callH+hrH+golfH+iceH+cbH+codesH+insH
     +'<div class="cmeta">'
@@ -4591,6 +4731,8 @@ function removeStop(id){id=parseInt(id);routeSet.delete(id);route=route.filter(r
 // Works around iOS Safari inline onclick issues on injected divs
 function buildIntelSummary(p){
   var lines=[];
+  var ref=getProspectPartnerRef(p.id);
+  if(ref)lines.push('&#x1F4E8; Referred by '+ref.partnerName+(ref.referral.note?' — '+ref.referral.note:''));
   if(p.n_callbacks>0)lines.push('&#x1F6A8; '+p.n_callbacks+'x callback — inspector returned');
   if(p.chronic)lines.push('&#x1F9CA; Chronic ice — '+p.ice_count+' inspections flagged');
   if(p.ice_fresh)lines.push('&#x26A1; Ice violation within last 6 months');
@@ -5511,12 +5653,24 @@ function renderPipeline(){
   });
   const total=wonCount+lostCount;
   const closeRate=total>0?Math.round(wonCount/total*100):0;
+  let forecastVal=0;
+  P.forEach(p=>{
+    const s=getProspectStage(p);
+    if(s==='inplay'||s==='quoted'){
+      const monthly=p.monthly||149;
+      const entry=p.intro||99;
+      const year1=entry+monthly*12;
+      forecastVal+=Math.round(year1*(s==='inplay'?0.30:0.60));
+    }
+  });
   const kInplay=document.getElementById('pipe-kpi-inplay');
   const kQuoted=document.getElementById('pipe-kpi-quoted');
   const kClose=document.getElementById('pipe-kpi-close');
+  const kForecast=document.getElementById('pipe-kpi-forecast');
   if(kInplay)kInplay.textContent=inplayCount;
   if(kQuoted)kQuoted.textContent=quotedCount;
   if(kClose)kClose.textContent=closeRate+'%';
+  if(kForecast)kForecast.textContent='$'+forecastVal.toLocaleString('en-US');
 
   // Gather items for current stage
   const stageItems=[];
@@ -7552,9 +7706,16 @@ function loadReportClient(){
     reportHTML+
     '</div>'+
     '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px">'+
-      '<button onclick="printReport()" style="padding:10px;border:none;border-radius:8px;background:#0f1f38;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F5A8; Print</button>'+
-      '<button onclick="emailServiceReport('+id+')" style="padding:10px;border:1px solid #0a84ff;border-radius:8px;background:#eff6ff;color:#0a84ff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E7; Email</button>'+
-      '<button onclick="saveReportAndLog('+id+')" style="padding:10px;border:1px solid #059669;border-radius:8px;background:#ecfdf5;color:#059669;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Save &amp; Log</button>'+
+      '<button onclick="printReport()" ontouchend="event.preventDefault();printReport()" style="padding:10px;border:none;border-radius:8px;background:#0f1f38;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F5A8; Print</button>'+
+      '<button onclick="toggleReportEmailRow()" ontouchend="event.preventDefault();toggleReportEmailRow()" style="padding:10px;border:1px solid #0a84ff;border-radius:8px;background:#eff6ff;color:#0a84ff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E7; Email</button>'+
+      '<button onclick="saveReportAndLog('+id+')" ontouchend="event.preventDefault();saveReportAndLog('+id+')" style="padding:10px;border:1px solid #059669;border-radius:8px;background:#ecfdf5;color:#059669;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Save &amp; Log</button>'+
+    '</div>'+
+    '<div id="report-email-row" style="display:none;margin-top:8px;display:none">'+
+      '<div style="font-size:9px;color:#64748b;margin-bottom:4px">Send report to email address:</div>'+
+      '<div style="display:flex;gap:6px">'+
+        '<input id="report-email-to" type="email" value="'+(c.email||'')+'" placeholder="customer@email.com" style="flex:1;padding:9px 10px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;font-family:inherit;outline:none;color:#0f1f38">'+
+        '<button onclick="emailServiceReport('+id+')" ontouchend="event.preventDefault();emailServiceReport('+id+')" style="padding:9px 16px;border:none;border-radius:8px;background:#0a84ff;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Send</button>'+
+      '</div>'+
     '</div>';
 }
 
@@ -7859,39 +8020,112 @@ function srGenerate(p,atpVal){
 function srSendEmail(p,atpVal,emailTo){
   var now=new Date();
   var dateStr=now.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-  var atpStatus,atpColor;
-  if(atpVal<=0){atpStatus='PENDING';atpColor='#64748b';}
-  else if(atpVal<=10){atpStatus='PASS';atpColor='#059669';}
-  else if(atpVal<=100){atpStatus='MARGINAL';atpColor='#d97706';}
-  else{atpStatus='FAIL';atpColor='#dc2626';}
+  var atpStatus,atpColor,atpBgCol,barW;
+  if(atpVal<=0){atpStatus='PENDING';atpColor='#64748b';atpBgCol='#f8fafc';barW=0;}
+  else if(atpVal<=10){atpStatus='PASS';atpColor='#059669';atpBgCol='#ecfdf5';barW=Math.round(atpVal*10);}
+  else if(atpVal<=100){atpStatus='MARGINAL';atpColor='#d97706';atpBgCol='#fffbeb';barW=Math.round(10+((atpVal-10)/90)*60);}
+  else{atpStatus='FAIL';atpColor='#dc2626';atpBgCol='#fef2f2';barW=100;}
+  var barH=atpVal>0
+    ?('<table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:6px"><tr>'
+      +'<td style="background:#e2e8f0;border-radius:6px;height:12px;overflow:hidden">'
+      +'<div style="width:'+barW+'%;height:12px;background:'+atpColor+';border-radius:6px"></div>'
+      +'</td></tr></table>')
+    :'';
+  var inspLines=[];
+  if(p.chronic)inspLines.push('Chronic ice machine violations on FL DBPR record ('+p.ice_count+' flagged inspections)');
+  else if(p.confirmed)inspLines.push('Ice machine violation confirmed on FL DBPR record');
+  if(p.n_callbacks>0)inspLines.push(p.n_callbacks+' callback inspection'+(p.n_callbacks>1?'s':'')+' on record — inspector returned');
+  var inspH=inspLines.length
+    ?('<div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:14px;margin-bottom:14px">'
+      +'<div style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#7f1d1d;margin-bottom:8px">&#x26A0; FL DBPR Inspection Record</div>'
+      +inspLines.map(function(l){return '<div style="font-size:11px;color:#991b1b;margin-bottom:4px">&bull; '+l+'</div>';}).join('')
+      +'</div>')
+    :'';
   var services=['Full ice bin disassembly &amp; deep cleaning','ATP pre/post testing with printed documentation','Dated compliance report for your records','Water distribution system flush &amp; sanitize','Filter inspection &amp; replacement (as needed)','Internal sanitizer application (NSF/ANSI 60 compliant)'];
-  var html='<!DOCTYPE html><html><body style="font-family:system-ui,sans-serif;max-width:600px;margin:0 auto;padding:20px">'
-    +'<div style="font-size:18px;font-weight:800;color:#0f1f38">PINELLAS ICE CO</div>'
-    +'<div style="font-size:14px;font-weight:700;color:#0f1f38;margin:8px 0">ICE MACHINE STATUS REPORT</div>'
-    +'<div style="font-size:11px;color:#64748b">pinellasiceco.com &nbsp;&middot;&nbsp; '+dateStr+'</div>'
-    +'<hr style="border-color:#0f1f38;border-width:2px;margin:12px 0">'
-    +'<div style="font-weight:700;font-size:14px">'+p.name+'</div>'
-    +'<div style="font-size:11px;color:#475569">'+p.address+', '+p.city+', FL '+p.zip+'</div>'
-    +'<div style="margin:12px 0;padding:12px;background:#f8fafc;border-radius:8px">'
-    +'<div style="font-size:12px;font-weight:700;color:#64748b">ATP READING</div>'
-    +(atpVal>0?'<div style="font-size:32px;font-weight:900;color:'+atpColor+'">'+atpVal+' RLU</div>':'<div style="font-size:24px;color:#64748b">&mdash;</div>')
-    +'<div style="font-size:18px;font-weight:900;color:'+atpColor+'">'+atpStatus+'</div>'
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>'
+    +'<body style="margin:0;padding:0;background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,Helvetica Neue,sans-serif">'
+    +'<div style="max-width:600px;margin:0 auto;padding:20px">'
+    +'<table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:12px"><tr>'
+    +'<td><div style="font-size:18px;font-weight:900;color:#0f1f38;letter-spacing:-.01em">PINELLAS ICE CO</div></td>'
+    +'<td align="right"><div style="font-size:11px;color:#64748b">'+dateStr+'</div></td>'
+    +'</tr></table>'
+    +'<div style="font-size:15px;font-weight:800;color:#0f1f38;margin-bottom:10px">ICE MACHINE STATUS REPORT</div>'
+    +'<div style="border-top:2px solid #0f1f38;margin-bottom:14px"></div>'
+    +'<table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:14px">'
+    +'<tr style="background:#f8fafc">'
+    +'<td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;width:55%">Establishment</td>'
+    +'<td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;border-left:1px solid #e2e8f0;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b">ATP Reading</td>'
+    +'</tr><tr>'
+    +'<td style="padding:14px;vertical-align:top">'
+    +'<div style="font-size:14px;font-weight:800;color:#0f1f38;margin-bottom:4px">'+p.name+'</div>'
+    +'<div style="font-size:11px;color:#475569">'+p.address+'</div>'
+    +'<div style="font-size:11px;color:#475569">'+p.city+', FL '+p.zip+'</div>'
+    +'</td>'
+    +'<td style="padding:14px;vertical-align:top;border-left:1px solid #e2e8f0;background:'+atpBgCol+'">'
+    +barH
+    +'<div style="font-size:'+(atpVal>0?'36':'22')+'px;font-weight:900;color:'+atpColor+';line-height:1">'+(atpVal>0?atpVal:'&mdash;')+'</div>'
+    +(atpVal>0?'<div style="font-size:11px;color:'+atpColor+';font-weight:600">RLU</div>':'')
+    +'<div style="font-size:15px;font-weight:900;color:'+atpColor+';letter-spacing:.06em;margin-top:6px;border-top:1px solid '+atpColor+'30;padding-top:6px">'+atpStatus+'</div>'
+    +'</td></tr></table>'
+    +'<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:14px">'
+    +'<div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:8px">About This Reading</div>'
+    +'<div style="font-size:11px;color:#334155;line-height:1.65">ATP (adenosine triphosphate) bioluminescence testing measures biological contamination on food contact surfaces. Readings above 100&nbsp;RLU indicate significant microbial contamination. The FDA Food Code requires &lt;10&nbsp;RLU on food contact surfaces. Ice machine evaporators, water lines, and bin surfaces were tested at this visit.</div>'
+    +'<table width="100%" cellpadding="0" cellspacing="0" style="margin-top:12px"><tr>'
+    +'<td width="32%" style="text-align:center;padding:8px;background:#ecfdf5;border-radius:6px;border:1px solid #6ee7b7"><div style="font-size:15px;font-weight:900;color:#059669">&le;10</div><div style="font-size:8px;color:#059669;font-weight:700;letter-spacing:.05em">PASS</div></td>'
+    +'<td width="4%"></td>'
+    +'<td width="32%" style="text-align:center;padding:8px;background:#fffbeb;border-radius:6px;border:1px solid #fcd34d"><div style="font-size:15px;font-weight:900;color:#d97706">11&ndash;100</div><div style="font-size:8px;color:#d97706;font-weight:700;letter-spacing:.05em">MARGINAL</div></td>'
+    +'<td width="4%"></td>'
+    +'<td width="32%" style="text-align:center;padding:8px;background:#fef2f2;border-radius:6px;border:1px solid #fca5a5"><div style="font-size:15px;font-weight:900;color:#dc2626">&gt;100</div><div style="font-size:8px;color:#dc2626;font-weight:700;letter-spacing:.05em">FAIL</div></td>'
+    +'</tr></table>'
     +'</div>'
-    +'<div style="font-size:12px;font-weight:700;margin-top:12px;color:#0f1f38">Services Performed:</div>'
-    +'<ul style="font-size:11px;color:#475569;padding-left:16px">'+services.map(function(s){return '<li>'+s+'</li>';}).join('')+'</ul>'
-    +'<div style="margin-top:16px;font-size:10px;color:#94a3b8">Pinellas Ice Co &bull; Licensed &amp; Insured &bull; pinellasiceco.com</div>'
-    +'</body></html>';
+    +inspH
+    +'<div style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:14px">'
+    +'<div style="background:#0f1f38;padding:10px 14px;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8">What Pinellas Ice Co Does</div>'
+    +'<div style="padding:12px 14px">'
+    +services.map(function(s){return '<div style="font-size:11px;color:#334155;padding:3px 0"><span style="color:#059669;font-weight:700">&#x2713;</span>&nbsp;&nbsp;'+s+'</div>';}).join('')
+    +'</div></div>'
+    +'<div style="background:#0f1f38;border-radius:10px;padding:14px;text-align:center;margin-bottom:14px">'
+    +'<div style="font-size:8px;color:#94a3b8;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">Intro Offer</div>'
+    +'<div style="font-size:26px;font-weight:900;color:#f97316;margin-bottom:4px">$99 &mdash; First Visit</div>'
+    +'<div style="font-size:11px;color:#e2e8f0;margin-bottom:4px">Full service &middot; ATP documentation &middot; compliance report</div>'
+    +'<div style="font-size:10px;color:#94a3b8;margin-bottom:8px">$99 to start &middot; Annual plans from $129/mo &middot; Annual commitment</div>'
+    +'<div style="font-size:16px;font-weight:800;color:#fff">Call&nbsp;/&nbsp;Text:&nbsp;&nbsp;(727)&nbsp;855-6873</div>'
+    +'<div style="font-size:10px;color:#94a3b8;margin-top:4px">pinellasiceco.com</div>'
+    +'</div>'
+    +'<div style="text-align:center;font-size:9px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:10px">'
+    +'Pinellas Ice Co &nbsp;&middot;&nbsp; pinellasiceco.com &nbsp;&middot;&nbsp; (727) 855-6873<br>'
+    +'FDA Food Code &sect;3-502.12 &nbsp;&middot;&nbsp; FL Administrative Code 64E-11 &nbsp;&middot;&nbsp; ATP testing per NSF/ANSI Standard 63'
+    +'</div>'
+    +'</div></body></html>';
   sendEmailViaProxy(emailTo,'Ice Machine Status Report — '+p.name,html);
+}
+function toggleReportEmailRow(){
+  var row=document.getElementById('report-email-row');
+  if(!row)return;
+  var showing=row.style.display==='block'||row.style.display==='flex';
+  row.style.display=showing?'none':'block';
+  if(!showing){var inp=document.getElementById('report-email-to');if(inp)inp.focus();}
 }
 function emailServiceReport(id){
   var p=P.find(function(x){return x.id===id;});
+  var inp=document.getElementById('report-email-to');
   var c=customers[id]||{};
-  var to=(c.email||'').trim();
-  if(!to){toast('No email saved for this client — add it in Link Records');return;}
+  var to=(inp?(inp.value||'').trim():(c.email||'').trim());
+  if(!to){
+    var row=document.getElementById('report-email-row');
+    if(row)row.style.display='block';
+    var ei=document.getElementById('report-email-to');
+    if(ei){ei.focus();ei.style.borderColor='#dc2626';}
+    toast('Enter the email address to send to');
+    return;
+  }
+  // Save email to customer record for next time
+  if(to&&customers[id]){customers[id].email=to;custSave();}
   var content=document.getElementById('report-content');
-  if(!content){toast('No report loaded — select a client and view the report first');return;}
-  var subject='Service Report — '+(p?p.name:'');
-  sendEmailViaProxy(to,subject,'<!DOCTYPE html><html><body>'+content.outerHTML+'</body></html>');
+  if(!content){toast('No report loaded — select a client first');return;}
+  var subject='Ice Machine Service Report — '+(p?p.name:'');
+  toast('Sending report...');
+  sendEmailViaProxy(to,subject,'<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="font-family:system-ui,sans-serif;max-width:680px;margin:0 auto;padding:20px;background:#f8fafc">'+content.outerHTML+'</body></html>');
 }
 function emailComplianceReport(id){
   var p=P.find(function(x){return x.id===id;});
