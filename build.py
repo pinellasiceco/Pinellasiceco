@@ -2081,7 +2081,7 @@ header{background:var(--navy);
     </div>
 
     <!-- Filters row -->
-    <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;align-items:center">
+    <div style="display:flex;gap:5px;flex-wrap:wrap;overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:8px;align-items:center">
       <select id="ac"     onchange="populateCityFilter();dRa()" class="flt-sel"><option value="">All Counties</option><option>Pinellas</option><option>Hillsborough</option><option>Pasco</option><option>Citrus</option><option>Hernando</option><option>Polk</option><option>Sumter</option></select>
       <select id="ac-city" onchange="dRa()" class="flt-sel"><option value="">All Cities</option></select>
       <select id="ap"     onchange="dRa()" class="flt-sel"><option value="">All Priorities</option><option>CALLBACK</option><option>HOT</option><option>WARM</option><option>WATCH</option></select>
@@ -2096,6 +2096,7 @@ header{background:var(--navy);
       </select>
       <button onclick="enterQueueMode()" style="font-size:10px;padding:5px 10px;border:1px solid var(--blu);border-radius:6px;background:#0a84ff22;color:var(--blu);cursor:pointer;font-family:inherit;font-weight:700;flex-shrink:0">&#x25B6; Queue</button>
       <button onclick="clearFilters()" style="font-size:10px;padding:5px 8px;border:1px solid var(--brd);border-radius:6px;background:transparent;color:var(--sub);cursor:pointer;font-family:inherit;flex-shrink:0">Clear</button>
+      <button id="btn-show-dead" onclick="toggleShowDead()" style="font-size:10px;padding:5px 8px;border:1px solid #94a3b8;border-radius:6px;background:transparent;color:#94a3b8;cursor:pointer;font-family:inherit;flex-shrink:0">&#x26AB; Show Lost</button>
       <span class="fcnt" id="acnt"></span>
     </div>
 
@@ -2311,6 +2312,7 @@ header{background:var(--navy);
         <select id="cust-status" onchange="rCust()">
           <option value="">All Customers</option>
           <option value="customer_recurring">Recurring</option>
+          <option value="customer_quarterly">Quarterly</option>
           <option value="customer_intro">Intro ($99 first visit)</option>
           <option value="customer_once">One-Time ($349)</option>
           <option value="quoted">Quoted - Pending</option>
@@ -2549,9 +2551,13 @@ header{background:var(--navy);
       <div style="font-size:9px;color:var(--sub);margin-bottom:4px">Supabase Edge Function URL for sending in-app emails. Deploy supabase/functions/send-email from the repo, then paste the URL here.</div>
       <input class="phinput" id="sb-email-fn" type="text" placeholder="https://xxxx.supabase.co/functions/v1/send-email" oninput="saveEmailFnUrl()">
       <div style="font-size:9px;color:var(--sub);margin-top:8px;margin-bottom:4px">Supabase Project URL — for Export to Briefing and cloud sync</div>
-      <input class="phinput" id="sb-supabase-url" type="text" placeholder="https://xxxx.supabase.co" oninput="saveSupabaseSettings()">
+      <input class="phinput" id="sb-supabase-url" type="text" placeholder="https://xxxx.supabase.co" oninput="saveSupabaseSettings()" onblur="saveSupabaseSettings();updateSyncDot()" onchange="saveSupabaseSettings();updateSyncDot()">
       <div style="font-size:9px;color:var(--sub);margin-top:8px;margin-bottom:4px">Supabase Anon Key — used as Bearer token for email proxy auth</div>
-      <input class="phinput" id="sb-supabase-key" type="password" placeholder="eyJhbGciOiJIUzI1NiIs..." oninput="saveSupabaseSettings()">
+      <input class="phinput" id="sb-supabase-key" type="password" placeholder="eyJhbGciOiJIUzI1NiIs..." oninput="saveSupabaseSettings()" onblur="saveSupabaseSettings();updateSyncDot()" onchange="saveSupabaseSettings();updateSyncDot()">
+      <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+        <button onclick="saveSupabaseSettings();updateSyncDot();toast('&#x2713; Credentials saved')" ontouchend="event.preventDefault();saveSupabaseSettings();updateSyncDot();toast('&#x2713; Credentials saved')" style="flex:1;padding:8px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Save Credentials</button>
+        <span id="sync-dot" style="width:10px;height:10px;border-radius:50%;background:#e2e8f0;flex-shrink:0;display:inline-block" title="Sync status"></span>
+      </div>
     </div>
 
     <div class="dc" style="margin-top:12px">
@@ -3236,6 +3242,7 @@ function hav(la1,lo1,la2,lo2){
 }
 
 let log={},tab='today',selOut=null,selType=null,selReasonVal=null,cur=null,Q='',route=[],routeSet=new Set(),mapPros=[],routeAnchor=null;
+let _showDead=false;
 let queueList=[],queueIdx=0;
 
 function saveRouteState(){
@@ -3398,7 +3405,7 @@ function scMarkWon(onetime){
   var partnerId=partnerEl?partnerEl.value:'';
   var partnerObj=partnerId?PARTNERS.find(function(x){return x.id===partnerId;}):null;
   var wonNow=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-  var wonStatus=onetime?'customer_recurring':cs.plan==='quarterly'?'customer_quarterly':'customer_recurring';
+  var wonStatus=onetime?'customer_once':cs.plan==='quarterly'?'customer_quarterly':'customer_recurring';
   var monthlyPrice=onetime?0:calcMonthly(cs.plan,m);
   var onetimePrice=onetime?calcOnetime(m):0;
   var standardEntry=99+Math.max(0,m-1)*49;
@@ -3569,6 +3576,14 @@ function openPartner(pid){
     +(p.email?\'<div style="margin-bottom:10px;font-size:13px;color:#1e293b;">✉️ <a href="mailto:\'+p.email+\'" style="color:var(--navy);text-decoration:none;">\'+p.email+\'</a></div>\':\'\')
     +\'<div style="margin-bottom:12px;"><label style="font-size:12px;font-weight:600;color:#475569;">Notes</label>\'
     +\'<textarea id="po-notes" rows="3" onchange="savePartnerField(_openPartnerId,\\\'notes\\\',this.value)" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;margin-top:4px;font-family:inherit;box-sizing:border-box;">\'+((p.notes||\'\')+\'\')+\'</textarea></div>\'
+    +\'<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px;margin-bottom:12px;">\'
+    +\'<div style="font-size:11px;font-weight:700;color:#475569;margin-bottom:8px;">📋 Contact Info</div>\'
+    +\'<input id="po-contact-name" placeholder="Contact name" value="\'+((p.contact_name||\'\')+\'\')+\'" onchange="savePartnerField(_openPartnerId,\\\'contact_name\\\',this.value)" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:7px;font-size:12px;margin-bottom:6px;font-family:inherit;box-sizing:border-box;">\'
+    +\'<input id="po-contact-role" placeholder="Role / Title" value="\'+((p.contact_role||\'\')+\'\')+\'" onchange="savePartnerField(_openPartnerId,\\\'contact_role\\\',this.value)" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:7px;font-size:12px;margin-bottom:6px;font-family:inherit;box-sizing:border-box;">\'
+    +\'<input id="po-contact-phone" placeholder="Direct phone" type="tel" value="\'+((p.contact_phone||\'\')+\'\')+\'" onchange="savePartnerField(_openPartnerId,\\\'contact_phone\\\',this.value)" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:7px;font-size:12px;margin-bottom:6px;font-family:inherit;box-sizing:border-box;">\'
+    +\'<input id="po-contact-email" placeholder="Email address" type="email" value="\'+((p.contact_email||\'\')+\'\')+\'" onchange="savePartnerField(_openPartnerId,\\\'contact_email\\\',this.value)" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:7px;font-size:12px;margin-bottom:6px;font-family:inherit;box-sizing:border-box;">\'
+    +\'<input id="po-contact-address" placeholder="Business address" value="\'+((p.contact_address||\'\')+\'\')+\'" onchange="savePartnerField(_openPartnerId,\\\'contact_address\\\',this.value)" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:7px;font-size:12px;font-family:inherit;box-sizing:border-box;">\'
+    +\'</div>\'
     +(function(){
       var tp=getPartnerTierProgress(p);
       var tierC={bronze:\'#92400e\',silver:\'#64748b\',gold:\'#d97706\'};
@@ -3597,11 +3612,37 @@ function openPartner(pid){
   document.body.insertAdjacentHTML(\'beforeend\',html);
 }
 function logPartnerOutreach(pid){
-  savePartnerField(pid,\'last_outreach\',localISO(new Date()));
-  var p=getMergedPartner(pid);
-  if(p&&(p.status||\'not_contacted\')===\'not_contacted\'){savePartnerField(pid,\'status\',\'reached_out\');}
-  toast(\'Outreach logged\');
+  var existing=document.getElementById(\'po-outreach-modal\');if(existing)existing.remove();
+  var html=\'<div id="po-outreach-modal" style="position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1000;display:flex;align-items:flex-end;justify-content:center;" ontouchend="event.stopPropagation()" onclick="event.stopPropagation()">\'
+    +\'<div style="background:#fff;border-radius:20px 20px 0 0;padding:20px;width:100%;max-width:520px;">\'
+    +\'<div style="font-weight:800;font-size:16px;margin-bottom:12px;">📬 Log Outreach</div>\'
+    +\'<select id="po-method" style="width:100%;padding:9px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;margin-bottom:8px;font-family:inherit;box-sizing:border-box;">\'
+    +\'<option value="email">Email</option><option value="call">Phone Call</option><option value="in_person">In Person</option><option value="text">Text</option></select>\'
+    +\'<select id="po-outcome" style="width:100%;padding:9px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;margin-bottom:8px;font-family:inherit;box-sizing:border-box;">\'
+    +\'<option value="reached_out">Reached Out — awaiting response</option>\'
+    +\'<option value="in_conversation">In Conversation — interested</option>\'
+    +\'<option value="active">Active — agreed to partner</option>\'
+    +\'<option value="inactive">No Interest — not pursuing</option></select>\'
+    +\'<textarea id="po-log-notes" placeholder="Notes (optional)..." rows="3" style="width:100%;padding:9px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;font-family:inherit;resize:none;outline:none;box-sizing:border-box;margin-bottom:12px;"></textarea>\'
+    +\'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">\'
+    +\'<button ontouchend="event.preventDefault();document.getElementById(\\\'po-outreach-modal\\\').remove()" onclick="document.getElementById(\\\'po-outreach-modal\\\').remove()" style="padding:12px;border:1px solid #e2e8f0;border-radius:10px;background:#fff;color:#64748b;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">Cancel</button>\'
+    +\'<button data-pid="\'+pid+\'" ontouchend="event.preventDefault();savePartnerOutreach(this.dataset.pid)" onclick="savePartnerOutreach(this.dataset.pid)" style="padding:12px;border:none;border-radius:10px;background:var(--navy);color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">Save</button>\'
+    +\'</div></div></div>\';
+  document.body.insertAdjacentHTML(\'beforeend\',html);
+}
+function savePartnerOutreach(pid){
+  var method=(document.getElementById(\'po-method\')||{}).value||\'email\';
+  var outcome=(document.getElementById(\'po-outcome\')||{}).value||\'reached_out\';
+  var notes=(document.getElementById(\'po-log-notes\')||{}).value||\'\';
+  var d=loadPartnerData();if(!d[pid])d[pid]={};
+  d[pid].last_outreach=localISO(new Date());
+  d[pid].status=outcome;
+  if(!d[pid].outreach_log)d[pid].outreach_log=[];
+  d[pid].outreach_log.push({date:localISO(new Date()),method:method,outcome:outcome,notes:notes});
+  savePartnerData(d);
+  var modal=document.getElementById(\'po-outreach-modal\');if(modal)modal.remove();
   var bg=document.getElementById(\'partner-overlay-bg\');if(bg)bg.remove();
+  toast(\'Outreach logged\');
   renderPartners();
 }
 function copyOutreachEmail(pid){
@@ -4011,6 +4052,17 @@ function showDebugIfNeeded(){
 }
 
 
+function toggleShowDead(){
+  _showDead=!_showDead;
+  var btn=document.getElementById('btn-show-dead');
+  if(btn){
+    btn.style.background=_showDead?'#f1f5f9':'transparent';
+    btn.style.color=_showDead?'#475569':'#94a3b8';
+    btn.textContent=_showDead?'⚫ Hide Lost':'⚫ Show Lost';
+  }
+  rA();
+}
+
 function rA(){
   const county  = document.getElementById('ac')?.value||'';
   const city    = document.getElementById('ac-city')?.value||'';
@@ -4028,6 +4080,11 @@ function rA(){
       const norm=lc?normO(lc.outcome):'not_contacted';
       if(st==='not_contacted'){if(isC(p.id))return false;}
       else if(norm!==st)return false;
+    }
+    // Hide dead prospects unless _showDead is toggled on
+    if(!_showDead&&!st){
+      const lc=getLC(p.id);
+      if(lc&&normO(lc.outcome)==='dead')return false;
     }
     // Apply preset exclusions
     if(presetFilter&&!presetFilter(p))return false;
@@ -4423,16 +4480,16 @@ function renderMap(){
   if(bounds.length)window._lmap.fitBounds(bounds,{padding:[20,20],maxZoom:13});
 }
 
-function addToRoute(id){
+function addToRoute(id,skipMax){
   id=parseInt(id);
   const p=P.find(x=>x.id===id);if(!p)return;
   if(routeSet.has(id)){
     routeSet.delete(id);route=route.filter(r=>r.id!==id);
     toast(p.name.slice(0,20)+' removed from route');
   } else {
-    if(route.length>=8){toast('Max 8 stops. Open in Maps first.');return;}
+    if(!skipMax&&route.length>=8){toast('Max 8 stops. Open in Maps first.');return;}
     routeSet.add(id);route.push(p);
-    toast('✓ '+p.name.slice(0,20)+' added to route ('+route.length+' stops)');
+    if(!skipMax)toast('✓ '+p.name.slice(0,20)+' added to route ('+route.length+' stops)');
   }
   saveRouteState();
   renderRList();renderMap();renderDayRoute();
@@ -4883,16 +4940,15 @@ function showCard(id){
     +'<button id="sc-type-walkin" data-sctype="walkin" style="flex:1;padding:7px;border:1px solid #e2e8f0;border-radius:7px;background:#f8fafc;color:#475569;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">🚶 Walk-In</button>'
     +'</div>'
     // Outcome buttons
-    +'<div id="sc-obtn-row" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-bottom:8px">'
-    +'<button data-scout="signed" style="padding:8px 4px;border:2px solid #6ee7b7;border-radius:7px;background:#ecfdf5;color:#059669;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">✅ Signed</button>'
+    +'<div id="sc-obtn-row" style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:6px">'
     +'<button data-scout="intro_set" style="padding:8px 4px;border:2px solid #93c5fd;border-radius:7px;background:#eff6ff;color:#2563eb;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">📅 Intro Set</button>'
     +'<button data-scout="in_play" style="padding:8px 4px;border:2px solid #fcd34d;border-radius:7px;background:#fffbeb;color:#d97706;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">🟡 In Play</button>'
     +'<button data-scout="no_contact" style="padding:8px 4px;border:2px solid #c4b5fd;border-radius:7px;background:#f5f3ff;color:#7c3aed;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">🚪 No Contact</button>'
     +'<button data-scout="voicemail" style="padding:8px 4px;border:2px solid #fdba74;border-radius:7px;background:#fff7ed;color:#ea580c;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">📲 Voicemail</button>'
     +'<button data-scout="not_now" style="padding:8px 4px;border:2px solid #fca5a5;border-radius:7px;background:#fef2f2;color:#dc2626;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">❌ Not Now</button>'
-    +'<button data-scout="dead" style="padding:8px 4px;border:2px solid #94a3b8;border-radius:7px;background:#f1f5f9;color:#475569;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation;grid-column:1/3">⚫ Dead — wrong fit/hard no</button>'
-    +'<button data-scout="service_done" style="padding:8px 4px;border:2px solid #86efac;border-radius:7px;background:#f0fdf4;color:#059669;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">🧼 Service Done</button>'
+    +'<button data-scout="dead" style="padding:8px 4px;border:2px solid #94a3b8;border-radius:7px;background:#f1f5f9;color:#475569;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">⚫ Dead</button>'
     +'</div>'
+    +'<button data-scout="quoted" style="width:100%;padding:9px;border:2px solid #7c3aed;border-radius:8px;background:#f5f3ff;color:#7c3aed;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;touch-action:manipulation;margin-bottom:8px">📄 Send Quote / Mark Quoted</button>'
     // Reason picker
     +'<div id="sc-reason-wrap" style="display:none;margin-bottom:8px">'
     +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;margin-bottom:4px">Reason</div>'
@@ -4907,14 +4963,22 @@ function showCard(id){
     +'<button id="sc-save-btn" style="width:100%;padding:13px;background:#059669;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;touch-action:manipulation;-webkit-tap-highlight-color:transparent">Save &amp; Disposition Lead</button>'
     +'</div>';
 
-  // CLOSE DEAL section  
-  var closeH='<div style="margin-bottom:12px">'
-    +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Close Deal</div>'
-    +'<button id="sc-close-deal" style="width:100%;padding:12px;border:2px solid #059669;border-radius:10px;background:#ecfdf5;color:#059669;font-weight:800;font-size:13px;cursor:pointer;font-family:inherit;touch-action:manipulation;margin-bottom:6px">'
-    +'🤝 Close Deal<br><span style="font-size:10px;font-weight:400">$'+(p.intro||99)+' entry · Monthly $'+(p.monthly||149)+'/mo · Quarterly $'+(p.quarterly||129)+'/mo</span></button>'
-    +'<button id="sc-lost-btn" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:8px;background:transparent;color:#94a3b8;font-size:10px;cursor:pointer;font-family:inherit;touch-action:manipulation">'
-    +'Mark as Lost / Churned</button>'
-    +'</div>';
+  // CLOSE DEAL section
+  var _cRec=customers[p.id]||null;
+  var _alreadyWon=_cRec&&['customer_recurring','customer_once','customer_quarterly','customer_intro'].includes(_cRec.status);
+  var closeH=_alreadyWon
+    ?('<div style="margin-bottom:12px;padding:12px;background:#ecfdf5;border:2px solid #6ee7b7;border-radius:10px">'
+      +'<div style="font-size:11px;font-weight:800;color:#059669;margin-bottom:4px">✅ Active Client</div>'
+      +'<div style="font-size:11px;color:#475569;margin-bottom:8px">Won '+(_cRec.won_date||'')+'&nbsp;&nbsp;·&nbsp;&nbsp;'+(_cRec.service_type||'')+(_cRec.monthly?' · $'+_cRec.monthly+'/mo':'')+'</div>'
+      +'<button id="sc-goto-clients" style="width:100%;padding:8px;border:none;border-radius:8px;background:#059669;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">View in Clients Tab →</button>'
+      +'</div>')
+    :('<div style="margin-bottom:12px">'
+      +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Close Deal</div>'
+      +'<button id="sc-close-deal" style="width:100%;padding:12px;border:2px solid #059669;border-radius:10px;background:#ecfdf5;color:#059669;font-weight:800;font-size:13px;cursor:pointer;font-family:inherit;touch-action:manipulation;margin-bottom:6px">'
+      +'🤝 Close Deal<br><span style="font-size:10px;font-weight:400">$'+(p.intro||99)+' entry · Monthly $'+(p.monthly||149)+'/mo · Quarterly $'+(p.quarterly||129)+'/mo</span></button>'
+      +'<button id="sc-lost-btn" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:8px;background:transparent;color:#94a3b8;font-size:10px;cursor:pointer;font-family:inherit;touch-action:manipulation">'
+      +'Mark as Lost / Churned</button>'
+      +'</div>');
 
   // Contacts & Intel section
   var contactsH='<div style="margin-bottom:12px">'
@@ -4995,7 +5059,7 @@ function showCard(id){
     var btn=e.target.closest(
       '[data-scout],[data-sctype],[data-fupdays],[data-scr],[data-ci],'
       +'#sc-close,#sc-route-btn,#sc-report-btn,#sc-save-btn,#sc-phone-save,'
-      +'#sc-save-vendor,#sc-add-contact,#sc-close-deal,'
+      +'#sc-save-vendor,#sc-add-contact,#sc-close-deal,#sc-goto-clients,'
       +'#sc-lost-btn,#sc-ct-save,#sc-ct-cancel'
     );
     if(!btn)return;
@@ -5098,6 +5162,9 @@ function showCard(id){
 
     // Open Close Deal overlay
     if(bid==='sc-close-deal'){scOpenClose(p,bg);return;}
+
+    // Go to Clients tab (active client panel)
+    if(bid==='sc-goto-clients'){bg.remove();sw('clients');return;}
 
     // Lost / Churned
     if(bid==='sc-lost-btn'){
@@ -5772,7 +5839,7 @@ function rCust(){
   const shown=filter?allCusts.filter(p=>p.status===filter):allCusts;
 
   // MRR calculation — prefer customers[] record (actual closed price) over P[] estimate
-  const recurring=allCusts.filter(p=>p.status==='customer_recurring');
+  const recurring=allCusts.filter(p=>p.status==='customer_recurring'||p.status==='customer_quarterly');
   const mrr=recurring.reduce((s,p)=>s+((customers[p.id]||{}).monthly||p.monthly||149),0);
   document.getElementById('mrr-val').textContent='$'+mrr.toLocaleString();
   document.getElementById('cust-count').textContent=recurring.length;
@@ -5786,13 +5853,13 @@ function rCust(){
   em.style.display='none';
 
   const STATUS_LABELS={
-    customer_recurring:'&#x1F504; Recurring',customer_once:'&#x1F9FC; One-Time',
-    customer_intro:'&#x1F525; Intro ($99)',
+    customer_recurring:'&#x1F504; Recurring',customer_quarterly:'&#x1F4C5; Quarterly',
+    customer_once:'&#x1F9FC; One-Time',customer_intro:'&#x1F525; Intro ($99)',
     quoted:'&#x1F4C4; Quote Sent',churned:'&#x274C; Churned'
   };
   const STATUS_COLORS={
-    customer_recurring:'#059669',customer_once:'var(--blu)',
-    customer_intro:'var(--ora)',
+    customer_recurring:'#059669',customer_quarterly:'#0891b2',
+    customer_once:'var(--blu)',customer_intro:'var(--ora)',
     quoted:'#7c3aed',churned:'var(--cb)'
   };
 
@@ -5805,7 +5872,7 @@ function rCust(){
     const c=customers[p.id]||{};
     const col=STATUS_COLORS[p.status]||'var(--sub)';
     const lbl=STATUS_LABELS[p.status]||p.status;
-    const rev=p.status==='customer_recurring'?('$'+(c.monthly||p.monthly||149)+'/mo'):p.status==='customer_once'?('$'+(c.onetime||p.onetime||0)+' one-time'):'';
+    const rev=p.status==='customer_recurring'||p.status==='customer_quarterly'?('$'+(c.monthly||p.monthly||149)+'/mo'):p.status==='customer_once'?('$'+(c.onetime||p.onetime||0)+' one-time'):'';
 
     // Service due indicator
     let serviceDueH='';
@@ -5844,6 +5911,7 @@ function rCust(){
         +serviceDueH
         +'<div style="display:flex;gap:5px;margin-top:3px">'
           +'<button onclick="event.stopPropagation();emailComplianceReport('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();emailComplianceReport('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:1px solid #0a84ff;border-radius:6px;background:#eff6ff;color:#0a84ff;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E7; Email Report</button>'
+          +(c.annual_schedule&&c.annual_schedule.length?'<button onclick="event.stopPropagation();generateICS('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();generateICS('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:1px solid #059669;border-radius:6px;background:#ecfdf5;color:#059669;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4C5; Export Schedule</button>':'')
         +'</div>'
       +'</div>'
       // Action buttons
@@ -5855,9 +5923,9 @@ function rCust(){
         +(c.square_url
           ?'<a href="'+c.square_url+'" target="_blank" onclick="event.stopPropagation()" style="flex:1;font-size:9px;padding:5px;border:1px solid #00c058;border-radius:6px;background:#f0fff4;color:#00c058;cursor:pointer;font-family:inherit;text-decoration:none;text-align:center;display:flex;align-items:center;justify-content:center">Square &#x2197;</a>'
           :'')
-        +(p.status!=='churned'
+        +(c.status!=='churned'
           ?'<button onclick="event.stopPropagation();if(confirm(\\'Mark as churned?\\'))churnClient('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();if(confirm(\\'Mark as churned?\\'))churnClient('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:1px solid #dc2626;border-radius:6px;background:#fef2f2;color:#dc2626;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x274C; Churn</button>'
-          :'')
+          :'<div style="flex:1;font-size:9px;padding:5px;border:1px solid #dc2626;border-radius:6px;background:#fef2f2;color:#dc2626;text-align:center">Churned'+(c.churn_date?' '+c.churn_date.slice(0,10):'')+'</div>')
       +'</div>'
       // URL link fields
       +'<div style="display:flex;flex-direction:column;gap:5px;padding:8px;background:#f5f8fa;border-radius:7px">'
@@ -6174,8 +6242,10 @@ function renderTodaysPlan(){
 }
 function addPlanToRoute(){
   var plan=buildTodaysPlan();
-  plan.forEach(function(p){addToRoute(p.id,true);});
-  toast('Added '+plan.length+' stops to route');
+  var added=0;
+  plan.forEach(function(p){if(!routeSet.has(p.id)){addToRoute(p.id,true);added++;}});
+  saveRouteState();renderRList();renderMap();renderDayRoute();
+  toast('Added '+added+' stop'+(added===1?'':'s')+' to route ('+route.length+' total)');
   setTimeout(function(){sw('route');},300);
 }
 function renderBriefing(){
@@ -6510,6 +6580,32 @@ function exportSchedulePDF(id){
     +'</body></html>');
   win.document.close();
   setTimeout(()=>win.print(),500);
+}
+
+function generateICS(id){
+  const p=P.find(x=>x.id===id);
+  const c=customers[id]||{};
+  if(!p||!c.annual_schedule||!c.annual_schedule.length){toast('No schedule — close a deal first');return;}
+  const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Pinellas Ice Co//Service Schedule//EN','CALSCALE:GREGORIAN'];
+  c.annual_schedule.forEach(function(s,i){
+    var dt=s.date.replace(/-/g,'');
+    var uid='pic-'+id+'-'+i+'@pinellasiceco.com';
+    lines.push('BEGIN:VEVENT');
+    lines.push('UID:'+uid);
+    lines.push('DTSTART;VALUE=DATE:'+dt);
+    lines.push('DTEND;VALUE=DATE:'+dt);
+    lines.push('SUMMARY:'+s.label+' — '+p.name);
+    lines.push('DESCRIPTION:Pinellas Ice Co service visit\\n'+p.address+', '+p.city+', FL');
+    lines.push('STATUS:TENTATIVE');
+    lines.push('END:VEVENT');
+  });
+  lines.push('END:VCALENDAR');
+  var blob=new Blob([lines.join('\r\n')],{type:'text/calendar;charset=utf-8'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='schedule-'+p.name.replace(/[^a-z0-9]/gi,'_').toLowerCase()+'.ics';
+  a.click();
+  toast('📅 Calendar file downloaded');
 }
 
 function geoClusterSchedule(){
@@ -7879,7 +7975,9 @@ function scStatusReport(p){
     +'<input id="atp-val-inp" type="number" min="0" max="9999" placeholder="e.g. 847" inputmode="numeric" '
     +'style="width:100%;padding:14px;border:2px solid #e2e8f0;border-radius:10px;font-size:28px;font-weight:800;font-family:inherit;outline:none;text-align:center;box-sizing:border-box;margin-bottom:8px;color:#0f1f38">'
     +'<input id="atp-email-inp" type="email" placeholder="Email to (optional)" '
-    +'style="width:100%;padding:10px;border:2px solid #e2e8f0;border-radius:10px;font-size:14px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:12px;color:#0f1f38">'
+    +'style="width:100%;padding:10px;border:2px solid #e2e8f0;border-radius:10px;font-size:14px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:8px;color:#0f1f38">'
+    +'<textarea id="atp-notes-inp" placeholder="Technician notes (optional)" rows="2" '
+    +'style="width:100%;padding:10px;border:2px solid #e2e8f0;border-radius:10px;font-size:13px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:12px;color:#0f1f38;resize:none"></textarea>'
     +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">'
     +'<button id="atp-cancel" style="padding:10px;border:1px solid #e2e8f0;border-radius:9px;background:#f8fafc;color:#64748b;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
     +'<button id="atp-email" style="padding:10px;border:1px solid #0a84ff;border-radius:9px;background:#eff6ff;color:#0a84ff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E7; Email</button>'
@@ -7900,22 +7998,23 @@ function scStatusReport(p){
     if(btn.id==='atp-cancel'){atpBg.remove();return;}
     var val=parseInt((inp&&inp.value)||'0')||0;
     var emailTo=((document.getElementById('atp-email-inp')||{}).value||'').trim();
+    var notes=((document.getElementById('atp-notes-inp')||{}).value||'').trim();
     if(btn.id==='atp-email'){
       atpBg.remove();
       if(!emailTo){toast('Enter an email address first');return;}
-      srSendEmail(p,val,emailTo);
+      srSendEmail(p,val,emailTo,notes);
       return;
     }
     if(btn.id==='atp-print'){
       atpBg.remove();
-      srGenerate(p,val);
+      srGenerate(p,val,notes);
     }
   }
   atpBg.addEventListener('click',atpHandle);
   atpBg.addEventListener('touchend',atpHandle);
 }
 
-function srGenerate(p,atpVal){
+function srGenerate(p,atpVal,notes){
   var now=new Date();
   var dateStr=now.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
   var atpStatus,atpColor,atpBgCol,barW;
@@ -8000,6 +8099,10 @@ function srGenerate(p,atpVal){
     +'<div style="font-size:16px;font-weight:800;color:#fff">Call&nbsp;/&nbsp;Text:&nbsp;&nbsp;(727)&nbsp;855-6873</div>'
     +'<div style="font-size:10px;color:#94a3b8;margin-top:4px">pinellasiceco.com</div>'
     +'</div>'
+    +(notes?('<div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:10px">'
+      +'<div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:6px">Technician Notes</div>'
+      +'<div style="font-size:11px;color:#334155;line-height:1.6">'+notes+'</div>'
+      +'</div>'):'')
     +'<table style="width:100%;border-collapse:collapse;margin-bottom:10px"><tr>'
     +'<td style="width:48%;padding-right:14px"><div style="border-bottom:1px solid #94a3b8;height:26px;margin-bottom:3px"></div><div style="font-size:9px;color:#94a3b8">Technician Signature</div></td>'
     +'<td style="width:4%"></td>'
@@ -8017,7 +8120,7 @@ function srGenerate(p,atpVal){
   setTimeout(function(){w.print();},600);
 }
 
-function srSendEmail(p,atpVal,emailTo){
+function srSendEmail(p,atpVal,emailTo,notes){
   var now=new Date();
   var dateStr=now.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
   var atpStatus,atpColor,atpBgCol,barW;
@@ -8092,6 +8195,10 @@ function srSendEmail(p,atpVal,emailTo){
     +'<div style="font-size:16px;font-weight:800;color:#fff">Call&nbsp;/&nbsp;Text:&nbsp;&nbsp;(727)&nbsp;855-6873</div>'
     +'<div style="font-size:10px;color:#94a3b8;margin-top:4px">pinellasiceco.com</div>'
     +'</div>'
+    +(notes?('<div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:14px">'
+      +'<div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:6px">Technician Notes</div>'
+      +'<div style="font-size:11px;color:#334155;line-height:1.6">'+notes+'</div>'
+      +'</div>'):'')
     +'<div style="text-align:center;font-size:9px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:10px">'
     +'Pinellas Ice Co &nbsp;&middot;&nbsp; pinellasiceco.com &nbsp;&middot;&nbsp; (727) 855-6873<br>'
     +'FDA Food Code &sect;3-502.12 &nbsp;&middot;&nbsp; FL Administrative Code 64E-11 &nbsp;&middot;&nbsp; ATP testing per NSF/ANSI Standard 63'
@@ -8129,30 +8236,15 @@ function emailServiceReport(id){
 }
 function emailComplianceReport(id){
   var p=P.find(function(x){return x.id===id;});
+  if(!p){toast('Prospect not found');return;}
   var c=customers[id]||{};
   var to=(c.email||'').trim();
   if(!to){toast('No email saved for this client — add it in Link Records');return;}
-  var now=new Date();
-  var dateStr=now.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
   var atpH=c.atp_history||[];
   var lastAtp=atpH.slice(-1)[0]||{};
-  var nextSvc=c.next_service?new Date(c.next_service.replace(/-/g,'/')).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}):'Not scheduled';
-  var html='<!DOCTYPE html><html><body style="font-family:system-ui,sans-serif;max-width:600px;margin:0 auto;padding:20px">'
-    +'<div style="font-size:18px;font-weight:800;color:#0f1f38">PINELLAS ICE CO</div>'
-    +'<div style="font-size:14px;font-weight:700;margin:8px 0">Compliance Summary — '+dateStr+'</div>'
-    +'<hr style="border-color:#0f1f38;border-width:2px;margin:12px 0">'
-    +'<div style="font-weight:700;font-size:14px">'+(p?p.name:id)+'</div>'
-    +(p?'<div style="font-size:11px;color:#475569">'+p.address+', '+p.city+', FL '+p.zip+'</div>':'')
-    +'<table style="width:100%;border-collapse:collapse;margin-top:12px">'
-    +'<tr style="background:#f8fafc"><td style="padding:8px;font-size:11px;font-weight:600;color:#64748b;width:45%">Last Service</td><td style="padding:8px;font-size:11px">'+(c.last_service||'Not recorded')+'</td></tr>'
-    +'<tr><td style="padding:8px;font-size:11px;font-weight:600;color:#64748b">Next Service Due</td><td style="padding:8px;font-size:11px">'+nextSvc+'</td></tr>'
-    +'<tr style="background:#f8fafc"><td style="padding:8px;font-size:11px;font-weight:600;color:#64748b">ATP Before</td><td style="padding:8px;font-size:11px">'+(lastAtp.pre||'—')+' RLU</td></tr>'
-    +'<tr><td style="padding:8px;font-size:11px;font-weight:600;color:#64748b">ATP After</td><td style="padding:8px;font-size:11px">'+(lastAtp.post||'—')+' RLU</td></tr>'
-    +'<tr style="background:#f8fafc"><td style="padding:8px;font-size:11px;font-weight:600;color:#64748b">Machine</td><td style="padding:8px;font-size:11px">'+(c.machine_brand||'')+(c.machine_model?' / '+c.machine_model:'')+'</td></tr>'
-    +'</table>'
-    +'<div style="margin-top:16px;font-size:10px;color:#94a3b8">Pinellas Ice Co &bull; Licensed &amp; Insured &bull; pinellasiceco.com</div>'
-    +'</body></html>';
-  sendEmailViaProxy(to,'Compliance Summary — '+(p?p.name:id),html);
+  var atpVal=parseInt(lastAtp.post)||0;
+  var svcNote=c.last_service?('Last service: '+c.last_service+(c.next_service?' · Next: '+c.next_service:'')):'';
+  srSendEmail(p,atpVal,to,svcNote);
 }
 
 // ── SETTINGS ─────────────────────────────────────────────────────────────────
@@ -8186,6 +8278,7 @@ function initSettings(){
   if(sbUrlEl)sbUrlEl.value=localStorage.getItem('pic_supabase_url')||'';
   var sbKeyEl=document.getElementById('sb-supabase-key');
   if(sbKeyEl)sbKeyEl.value=localStorage.getItem('pic_supabase_key')||'';
+  setTimeout(updateSyncDot,100);
 }
 function saveEmailFnUrl(){
   var v=(document.getElementById('sb-email-fn')||{}).value||'';
@@ -8197,18 +8290,28 @@ function saveSupabaseSettings(){
   if(u.trim())localStorage.setItem('pic_supabase_url',u.trim());
   if(k.trim())localStorage.setItem('pic_supabase_key',k.trim());
 }
+function updateSyncDot(){
+  var dot=document.getElementById('sync-dot');
+  if(!dot)return;
+  var u=(localStorage.getItem('pic_supabase_url')||'').trim();
+  var k=(localStorage.getItem('pic_supabase_key')||'').trim();
+  var fn=(localStorage.getItem('pic_email_fn_url')||'').trim();
+  if(u&&k&&fn){dot.style.background='#059669';dot.title='Cloud sync configured';}
+  else if(u||k||fn){dot.style.background='#d97706';dot.title='Partially configured — fill all 3 fields';}
+  else{dot.style.background='#e2e8f0';dot.title='Not configured';}
+}
 async function sendEmailViaProxy(to,subject,htmlBody){
   var url=(localStorage.getItem('pic_email_fn_url')||'').trim();
-  if(!url){toast('Email Proxy URL not set — add it in Settings → Email Proxy');return;}
+  if(!url){toast('Email Proxy URL not set — add it in Settings → Email Proxy');return false;}
   var anonKey=(localStorage.getItem('pic_supabase_key')||'').trim();
   var headers={'Content-Type':'application/json'};
   if(anonKey)headers['Authorization']='Bearer '+anonKey;
   try{
     var r=await fetch(url,{method:'POST',headers:headers,body:JSON.stringify({to:to,subject:subject,html:htmlBody})});
     var t=await r.text().catch(function(){return '';});
-    if(r.ok){toast('✓ Email sent to '+to);}
-    else{toast('Email failed: HTTP '+r.status+' — '+t.slice(0,120));}
-  }catch(e){toast('Email error: '+e.message);}
+    if(r.ok){toast('✓ Email sent to '+to);return true;}
+    else{toast('Email failed: HTTP '+r.status+' — '+t.slice(0,120));return false;}
+  }catch(e){toast('Email error: '+e.message);return false;}
 }
 async function exportToBriefing(){
   var sbUrl=(localStorage.getItem('pic_supabase_url')||'').trim();
