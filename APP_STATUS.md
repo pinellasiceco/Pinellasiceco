@@ -1,5 +1,5 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-04-30 (session 11c) by Claude Code*
+*Last updated: 2026-05-05 (session 12) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
@@ -130,6 +130,7 @@ If something appears broken, first try force-closing the PWA and reopening — t
 - Nothing from the current feature roadmap is missing
 
 ## Recent Changes
+- **2026-05-05 (s12):** 18 bug fixes — quarterly plan schedule, prevent re-close on won deals, churn button gating, remove Signed/Service Done buttons, partner Log Outreach modal wiring, Add All to Route 8-stop limit with skipMax param, one-time clean sets `customer_once`, emailComplianceReport reuses srSendEmail HTML output, sendEmailViaProxy returns true/false, ATP notes field in report, hide dead prospects toggle (`_showDead`/`toggleShowDead()`), Supabase input onblur/onchange + Save Credentials button + sync dot indicator, filter bar overflow-x scroll, full-width purple Quoted button in showCard, partner contact fields (name/role/phone/email/address), generateICS() calendar export for quarterly clients
 - **2026-04-30 (s11c):** Bug fixes — (1) Supabase URL + key inputs added to Settings panel so `sendEmailViaProxy()` and `exportToBriefing()` can be configured from UI; (2) ATP PDF guaranteed 1-page via `@page{margin:0.3in}` + `zoom:0.92` + tighter element spacing; (3) Close deal MRR fix: `rCust()` now reads `customers[p.id].monthly` (actual closed price) instead of `p.monthly` (DBPR estimate), and `scMarkWon()` syncs `p.monthly`/`p.machines` back to P[] for consistency; (4) Daily briefing JSON parse fix: `load_current()` delimiter changed to `';\nconst PARTNERS='` so trailing semicolon is excluded from the `json.loads()` slice; duplicate `main()` in build.py removed
 - **2026-04-30 (s11b):** Partner Fit Score — `calc_partner_fit_score()` auto-scores 0-100 from type, years in business, review count, rating, food service focus, geography, website; `scrape_website_keywords()` caches to `data/partner_web_cache.json`; fit score badge on partner cards; fit score breakdown in detail overlay; "Best to Contact First" top-5 section; sort by fit score; daily briefing shows top 3 by score; sw.js bumped to `pic-20260430b`
 - **2026-04-30 (s11):** Channel Partner Program — Partners tab, partner detection pipeline, referral attribution, payout report, daily briefing integration
