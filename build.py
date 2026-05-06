@@ -8621,9 +8621,8 @@ updateOnlineStatus();
 // ── SERVICE WORKER ─────────────────────────────────────────────────────────
 // SW disabled during development - re-enable when stable
 if('serviceWorker' in navigator){
-  // Unregister any existing service worker so browser fetches fresh code
-  navigator.serviceWorker.getRegistrations().then(regs=>{
-    regs.forEach(r=>r.unregister());
+  navigator.serviceWorker.register('/Pinellasiceco/sw.js').then(reg=>{
+    reg.update();
   });
 }
 </script>
