@@ -7694,8 +7694,9 @@ function loadReportClient(){
   const machineBrand=c.machine_brand||'Commercial Ice Machine';
   const machineModel=c.machine_model||'';
   const machineSerial=c.machine_serial||'';
-  const filterReplaced=c.filter_replaced||false;
-  const filterType=c.filter_type||'Everpure i2000(2) Insurice';
+  const lastSvcEntry=(c.service_history||[]).slice(-1)[0]||{};
+  const filterReplaced=lastSvcEntry.filter_replaced||c.filter_replaced||false;
+  const filterType=lastSvcEntry.filter_type||c.filter_type||'Everpure i2000(2) Insurice';
 
   // ATP result color
   function atpColor(val){
@@ -7809,7 +7810,7 @@ function loadReportClient(){
     // ── CONDITION NOTES ──────────────────────────────────────────────────
     '<div style="margin-bottom:14px">'+
       '<div style="font-size:8px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Technician Notes &amp; Observations</div>'+
-      '<textarea id="report-notes-'+id+'" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;font-size:11px;font-family:inherit;color:#1e293b;background:#fff;outline:none;resize:none;line-height:1.6" rows="3" placeholder="Machine condition, scale level, biofilm observed, recommendations, items to monitor...">'+(c.report_notes||'')+'</textarea>'+
+      '<textarea id="report-notes-'+id+'" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;font-size:11px;font-family:inherit;color:#1e293b;background:#fff;outline:none;resize:none;line-height:1.6" rows="3" placeholder="Machine condition, scale level, biofilm observed, recommendations, items to monitor...">'+(c.report_notes||lastSvcEntry.notes||'')+'</textarea>'+
     '</div>'+
 
     // ── CERTIFICATION BLOCK ──────────────────────────────────────────────
@@ -8622,8 +8623,8 @@ updateOnlineStatus();
 // SW disabled during development - re-enable when stable
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('/Pinellasiceco/sw.js').then(reg=>{
-    reg.update();
-  });
+    if(reg)reg.update();
+  }).catch(()=>{});
 }
 </script>
 </body>
