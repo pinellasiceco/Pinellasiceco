@@ -1,9 +1,9 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-05-05 (session 12) by Claude Code*
+*Last updated: 2026-05-06 (session 13) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
-- Last deployed: 2026-04-30 (session 11 — Channel Partner Program)
+- Last deployed: 2026-05-06 (session 13 — compliance PDF notes & ATP status change detection)
 - Build script: `build.py` (repo root) → outputs `index.html` directly
 - `index.html` regenerated from `build.py` using existing P[] data — fully in sync
 
@@ -69,10 +69,11 @@
 - Save Service Visit button: iOS-safe (`onclick` + `ontouchend`)
 
 ### ATP Status Report
-- `scStatusReport(p)` opens ATP input overlay from showCard
-- `srGenerate(p, atpVal)` generates print-ready letter-size HTML report
-- `srSendEmail(p, atpVal, emailTo)` emails same report via proxy (text logo instead of image)
+- `scStatusReport(p)` opens ATP input overlay from showCard; persists entered ATP value + notes to `atp_history` before generating PDF/email
+- `srGenerate(p, atpVal, notes)` generates print-ready letter-size HTML report; shows amber STATUS CHANGE banner if ATP label (PASS/MARGINAL/FAIL) differs from previous visit
+- `srSendEmail(p, atpVal, emailTo, notes)` emails same report via proxy; same status change banner logic
 - Scale: ≤0 = PENDING, ≤10 = PASS, 11–100 = MARGINAL, >100 = FAIL
+- `atp_history` entries: `{date, pre, post, notes}` — notes field populated by both `submitServiceLog` and `scStatusReport`
 - Pop-up blocker fallback toast if `window.open` is blocked
 - 3-button layout: Cancel / 📧 Email / Print
 - Print CSS: `@page { margin: 0.3in }`, `zoom: 0.92`, padding reduced — guaranteed 1-page output on iOS and desktop
@@ -98,7 +99,7 @@
 - Email buttons on: ATP report overlay, service report preview, customer card (compliance summary), service log row
 - Customer email address stored in `customers[id].email` via `saveCustomerEmail()`
 - `emailServiceReport(id)` — emails rendered report HTML from `#report-content`
-- `emailComplianceReport(id)` — emails lightweight compliance summary (last service, ATP, machine, next due)
+- `emailComplianceReport(id)` — emails compliance summary (last service, ATP, machine, next due) + technician notes from most recent `atp_history` entry
 - **Deploy**: any change to `supabase/functions/**` on main auto-triggers `deploy_edge_functions.yml`
 
 ### Date Handling
@@ -130,6 +131,7 @@ If something appears broken, first try force-closing the PWA and reopening — t
 - Nothing from the current feature roadmap is missing
 
 ## Recent Changes
+- **2026-05-06 (s13):** Compliance PDF notes & ATP status change detection — `atp_history.push` now includes `notes` field so repeat inspections of existing locations persist technician notes; `emailComplianceReport` reads notes from most recent `atp_history` entry and appends to email body; `srGenerate`/`srSendEmail` detect PASS/MARGINAL/FAIL status changes between consecutive visits and show amber ⚠ STATUS CHANGE banner; `scStatusReport` persists entered ATP value and notes back to `atp_history` before dispatching PDF/email so subsequent compliance emails can retrieve them; UA test suite remains 75 passed, 0 failed
 - **2026-05-05 (s12):** 18 bug fixes — quarterly plan schedule, prevent re-close on won deals, churn button gating, remove Signed/Service Done buttons, partner Log Outreach modal wiring, Add All to Route 8-stop limit with skipMax param, one-time clean sets `customer_once`, emailComplianceReport reuses srSendEmail HTML output, sendEmailViaProxy returns true/false, ATP notes field in report, hide dead prospects toggle (`_showDead`/`toggleShowDead()`), Supabase input onblur/onchange + Save Credentials button + sync dot indicator, filter bar overflow-x scroll, full-width purple Quoted button in showCard, partner contact fields (name/role/phone/email/address), generateICS() calendar export for quarterly clients
 - **2026-04-30 (s11c):** Bug fixes — (1) Supabase URL + key inputs added to Settings panel so `sendEmailViaProxy()` and `exportToBriefing()` can be configured from UI; (2) ATP PDF guaranteed 1-page via `@page{margin:0.3in}` + `zoom:0.92` + tighter element spacing; (3) Close deal MRR fix: `rCust()` now reads `customers[p.id].monthly` (actual closed price) instead of `p.monthly` (DBPR estimate), and `scMarkWon()` syncs `p.monthly`/`p.machines` back to P[] for consistency; (4) Daily briefing JSON parse fix: `load_current()` delimiter changed to `';\nconst PARTNERS='` so trailing semicolon is excluded from the `json.loads()` slice; duplicate `main()` in build.py removed
 - **2026-04-30 (s11b):** Partner Fit Score — `calc_partner_fit_score()` auto-scores 0-100 from type, years in business, review count, rating, food service focus, geography, website; `scrape_website_keywords()` caches to `data/partner_web_cache.json`; fit score badge on partner cards; fit score breakdown in detail overlay; "Best to Contact First" top-5 section; sort by fit score; daily briefing shows top 3 by score; sw.js bumped to `pic-20260430b`
@@ -171,9 +173,9 @@ If something appears broken, first try force-closing the PWA and reopening — t
 - **2026-04-27 (s7):** `deploy_edge_functions.yml` — auto-deploys Edge Functions from repo; eliminates need to copy-paste code into Supabase dashboard
 
 ## Next Session Priorities
-1. Verify daily briefing email sends after next CI rebuild (JSON parse fix is in place)
-2. Confirm Supabase inputs appear in Settings panel on next rebuild
-3. Test Close Deal: select 1 machine → close → verify MRR shows correct closed price
+1. Verify notes appear in compliance PDF/email after a live service visit
+2. Confirm STATUS CHANGE banner renders correctly when ATP status changes between visits
+3. Verify daily briefing email sends after next CI rebuild
 
 ## iOS PWA Rules (never violate these)
 - **Buttons in injected HTML:** use inline `ontouchend="event.preventDefault();fn()"` + `onclick="fn()"` — NOT `addEventListener` on innerHTML-injected elements
