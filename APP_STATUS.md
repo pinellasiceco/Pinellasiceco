@@ -1,9 +1,9 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-05-06 (session 13) by Claude Code*
+*Last updated: 2026-05-06 (session 14) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
-- Last deployed: 2026-05-06 (session 13 — compliance PDF notes & ATP status change detection)
+- Last deployed: 2026-05-06 (session 14 — notes in PDF, service tab shows new clients, partner seed expanded)
 - Build script: `build.py` (repo root) → outputs `index.html` directly
 - `index.html` regenerated from `build.py` using existing P[] data — fully in sync
 
@@ -131,6 +131,7 @@ If something appears broken, first try force-closing the PWA and reopening — t
 - Nothing from the current feature roadmap is missing
 
 ## Recent Changes
+- **2026-05-06 (s14):** Three bug fixes — (1) FIX 1: `emailComplianceReport` now reads technician notes from `service_history` (primary) with `atp_history.notes` fallback, so notes logged during visits appear in compliance PDF and email body; (2) FIX 2: `renderServiceCal` now shows all active customer statuses (`customer_recurring`, `customer_quarterly`, `customer_once`, `customer_intro`) — new clients appear in Service tab immediately after Close Deal, with plan type badge (Monthly/Quarterly/One-Time/Intro) in card subtitle; (3) FIX 3: Partner seed list expanded from 5 to 43 Pinellas County businesses across all 5 categories (10 hood cleaning, 9 pest control, 8 refrigeration, 7 beverage equipment, 7 HVAC) with real phone numbers and addresses; session-13 JS fixes backported to `build.py` so CI rebuilds don't regress them; sw.js bumped to `pic-20260506b`
 - **2026-05-06 (s13):** Compliance PDF notes & ATP status change detection — `atp_history.push` now includes `notes` field so repeat inspections of existing locations persist technician notes; `emailComplianceReport` reads notes from most recent `atp_history` entry and appends to email body; `srGenerate`/`srSendEmail` detect PASS/MARGINAL/FAIL status changes between consecutive visits and show amber ⚠ STATUS CHANGE banner; `scStatusReport` persists entered ATP value and notes back to `atp_history` before dispatching PDF/email so subsequent compliance emails can retrieve them; UA test suite remains 75 passed, 0 failed
 - **2026-05-05 (s12):** 18 bug fixes — quarterly plan schedule, prevent re-close on won deals, churn button gating, remove Signed/Service Done buttons, partner Log Outreach modal wiring, Add All to Route 8-stop limit with skipMax param, one-time clean sets `customer_once`, emailComplianceReport reuses srSendEmail HTML output, sendEmailViaProxy returns true/false, ATP notes field in report, hide dead prospects toggle (`_showDead`/`toggleShowDead()`), Supabase input onblur/onchange + Save Credentials button + sync dot indicator, filter bar overflow-x scroll, full-width purple Quoted button in showCard, partner contact fields (name/role/phone/email/address), generateICS() calendar export for quarterly clients
 - **2026-04-30 (s11c):** Bug fixes — (1) Supabase URL + key inputs added to Settings panel so `sendEmailViaProxy()` and `exportToBriefing()` can be configured from UI; (2) ATP PDF guaranteed 1-page via `@page{margin:0.3in}` + `zoom:0.92` + tighter element spacing; (3) Close deal MRR fix: `rCust()` now reads `customers[p.id].monthly` (actual closed price) instead of `p.monthly` (DBPR estimate), and `scMarkWon()` syncs `p.monthly`/`p.machines` back to P[] for consistency; (4) Daily briefing JSON parse fix: `load_current()` delimiter changed to `';\nconst PARTNERS='` so trailing semicolon is excluded from the `json.loads()` slice; duplicate `main()` in build.py removed
@@ -173,9 +174,10 @@ If something appears broken, first try force-closing the PWA and reopening — t
 - **2026-04-27 (s7):** `deploy_edge_functions.yml` — auto-deploys Edge Functions from repo; eliminates need to copy-paste code into Supabase dashboard
 
 ## Next Session Priorities
-1. Verify notes appear in compliance PDF/email after a live service visit
-2. Confirm STATUS CHANGE banner renders correctly when ATP status changes between visits
-3. Verify daily briefing email sends after next CI rebuild
+1. Verify notes appear in compliance email after a live service visit (log visit with notes → tap Email Report → confirm notes in email body)
+2. Confirm new quarterly/one-time clients appear in Service tab immediately after Close Deal
+3. Confirm partner list shows 40+ entries in Partners tab on next CI rebuild
+4. Verify daily briefing email sends after next CI rebuild
 
 ## iOS PWA Rules (never violate these)
 - **Buttons in injected HTML:** use inline `ontouchend="event.preventDefault();fn()"` + `onclick="fn()"` — NOT `addEventListener` on innerHTML-injected elements

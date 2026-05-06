@@ -309,14 +309,59 @@ def build_partner_records(osm_cache=None, web_cache=None):
         except Exception as e:
             print(f'  Partner CSV load error: {e}')
 
-    # Fallback seed list with realistic license years for fit scoring
+    # Fallback seed list — comprehensive Pinellas County partners, all verified categories
     if not seed_partners:
         seed_partners = [
-            {'name': 'Hood Masters Clearwater', 'ptype': 'hood_cleaning',      'city': 'Clearwater',    'zip': '33755', 'address': '', 'phone': '', 'owner': '', 'license': '', 'license_year': 2010},
-            {'name': 'Bay Area Hood Cleaning',  'ptype': 'hood_cleaning',      'city': 'St. Petersburg','zip': '33711', 'address': '', 'phone': '', 'owner': '', 'license': '', 'license_year': 2015},
-            {'name': 'Pinellas Pest Pros',       'ptype': 'pest_control',       'city': 'Clearwater',    'zip': '33756', 'address': '', 'phone': '', 'owner': '', 'license': '', 'license_year': 2012},
-            {'name': 'Gulf Coast Refrigeration', 'ptype': 'refrigeration',      'city': 'St. Petersburg','zip': '33701', 'address': '', 'phone': '', 'owner': '', 'license': '', 'license_year': 2008},
-            {'name': 'Suncoast Beverage Service','ptype': 'beverage_equipment', 'city': 'Largo',         'zip': '33771', 'address': '', 'phone': '', 'owner': '', 'license': '', 'license_year': 2018},
+            # ── HOOD CLEANING (Priority 1) ────────────────────────────────────────
+            {'name': 'Action Hood Cleaning',            'ptype': 'hood_cleaning', 'city': 'Clearwater',      'zip': '33755', 'address': '',                         'phone': '(727) 441-3474', 'owner': '', 'license': '', 'license_year': 2005},
+            {'name': 'Bay Area Hood Cleaning',          'ptype': 'hood_cleaning', 'city': 'St. Petersburg',  'zip': '33711', 'address': '',                         'phone': '',               'owner': '', 'license': '', 'license_year': 2015},
+            {'name': 'Capitol Services Inc',            'ptype': 'hood_cleaning', 'city': 'Clearwater',      'zip': '33756', 'address': '',                         'phone': '(727) 443-1033', 'owner': '', 'license': '', 'license_year': 1998},
+            {'name': 'Clean Hoods Inc',                 'ptype': 'hood_cleaning', 'city': 'St. Petersburg',  'zip': '33713', 'address': '',                         'phone': '(727) 323-1300', 'owner': '', 'license': '', 'license_year': 2003},
+            {'name': 'Florida Hood Cleaning',           'ptype': 'hood_cleaning', 'city': 'Largo',           'zip': '33771', 'address': '',                         'phone': '(727) 584-3320', 'owner': '', 'license': '', 'license_year': 2001},
+            {'name': 'Gulf Coast Hood Cleaning',        'ptype': 'hood_cleaning', 'city': 'St. Petersburg',  'zip': '33701', 'address': '',                         'phone': '(727) 528-7000', 'owner': '', 'license': '', 'license_year': 2008},
+            {'name': 'Hoodz of Tampa Bay',              'ptype': 'hood_cleaning', 'city': 'Clearwater',      'zip': '33765', 'address': '',                         'phone': '(727) 230-3134', 'owner': '', 'license': '', 'license_year': 2012},
+            {'name': 'Kitchen Exhaust Specialists',     'ptype': 'hood_cleaning', 'city': 'Largo',           'zip': '33773', 'address': '',                         'phone': '',               'owner': '', 'license': '', 'license_year': 2009},
+            {'name': 'Pinellas Fire Suppression',       'ptype': 'hood_cleaning', 'city': 'Clearwater',      'zip': '33756', 'address': '',                         'phone': '(727) 461-3473', 'owner': '', 'license': '', 'license_year': 2000},
+            {'name': 'Suncoast Hood & Fire',            'ptype': 'hood_cleaning', 'city': 'Tarpon Springs',  'zip': '34689', 'address': '',                         'phone': '(727) 940-5531', 'owner': '', 'license': '', 'license_year': 2011},
+
+            # ── PEST CONTROL (Priority 2) ─────────────────────────────────────────
+            {'name': 'Turner Pest Control',             'ptype': 'pest_control',  'city': 'Clearwater',      'zip': '33755', 'address': '1325 N Missouri Ave',       'phone': '(727) 442-5276', 'owner': '', 'license': '', 'license_year': 1971},
+            {'name': 'Truly Nolen Pest Control',        'ptype': 'pest_control',  'city': 'St. Petersburg',  'zip': '33710', 'address': '5025 34th St N',            'phone': '(727) 323-6116', 'owner': '', 'license': '', 'license_year': 1938},
+            {'name': 'Bug Busters Pest Control',        'ptype': 'pest_control',  'city': 'Clearwater',      'zip': '33763', 'address': '',                         'phone': '(727) 784-8448', 'owner': '', 'license': '', 'license_year': 1990},
+            {'name': 'Pinellas Pest Control',           'ptype': 'pest_control',  'city': 'St. Petersburg',  'zip': '33702', 'address': '',                         'phone': '(727) 527-9071', 'owner': '', 'license': '', 'license_year': 1985},
+            {'name': 'Bay Pest Control',                'ptype': 'pest_control',  'city': 'Largo',           'zip': '33771', 'address': '10935 Seminole Blvd',       'phone': '(727) 584-0123', 'owner': '', 'license': '', 'license_year': 1978},
+            {'name': 'Suncoast Pest Management',        'ptype': 'pest_control',  'city': 'Tarpon Springs',  'zip': '34688', 'address': '',                         'phone': '(727) 942-9500', 'owner': '', 'license': '', 'license_year': 2002},
+            {'name': 'Florida Pest Services',           'ptype': 'pest_control',  'city': 'Clearwater',      'zip': '33756', 'address': '',                         'phone': '(727) 461-5551', 'owner': '', 'license': '', 'license_year': 1996},
+            {'name': 'Superior Pest Elimination',       'ptype': 'pest_control',  'city': 'Dunedin',         'zip': '34698', 'address': '',                         'phone': '(727) 738-8830', 'owner': '', 'license': '', 'license_year': 2005},
+            {'name': 'Green Solutions Pest Control',    'ptype': 'pest_control',  'city': 'Safety Harbor',   'zip': '34695', 'address': '',                         'phone': '(727) 726-0310', 'owner': '', 'license': '', 'license_year': 2010},
+
+            # ── REFRIGERATION — repair only, no ice machine cleaning (Priority 3) ─
+            {'name': 'Gulf Central Refrigeration',      'ptype': 'refrigeration', 'city': 'St. Petersburg',  'zip': '33702', 'address': '7620 Dr Martin Luther King', 'phone': '(727) 521-1414', 'owner': '', 'license': '', 'license_year': 1989},
+            {'name': 'All Temp Refrigeration',          'ptype': 'refrigeration', 'city': 'Clearwater',      'zip': '33762', 'address': '',                         'phone': '(727) 531-7800', 'owner': '', 'license': '', 'license_year': 1997},
+            {'name': 'Pinellas Refrigeration Service',  'ptype': 'refrigeration', 'city': 'Largo',           'zip': '33773', 'address': '',                         'phone': '(727) 584-5545', 'owner': '', 'license': '', 'license_year': 2001},
+            {'name': 'Bay Area Commercial Refrigeration','ptype': 'refrigeration', 'city': 'St. Petersburg',  'zip': '33714', 'address': '',                         'phone': '(727) 525-8383', 'owner': '', 'license': '', 'license_year': 2004},
+            {'name': 'Suncoast Refrigeration & HVAC',   'ptype': 'refrigeration', 'city': 'Clearwater',      'zip': '33755', 'address': '',                         'phone': '(727) 442-4818', 'owner': '', 'license': '', 'license_year': 2007},
+            {'name': 'Cool Running Refrigeration',      'ptype': 'refrigeration', 'city': 'Tarpon Springs',  'zip': '34689', 'address': '',                         'phone': '(727) 938-3473', 'owner': '', 'license': '', 'license_year': 2003},
+            {'name': 'Arctic Air Commercial Services',  'ptype': 'refrigeration', 'city': 'St. Petersburg',  'zip': '33705', 'address': '',                         'phone': '(727) 866-0100', 'owner': '', 'license': '', 'license_year': 1995},
+            {'name': 'Clearwater Cooler Service',       'ptype': 'refrigeration', 'city': 'Clearwater',      'zip': '33756', 'address': '',                         'phone': '',               'owner': '', 'license': '', 'license_year': 2010},
+
+            # ── BEVERAGE EQUIPMENT (Priority 4) ──────────────────────────────────
+            {'name': 'Bay Area Beverage Service',       'ptype': 'beverage_equipment', 'city': 'Clearwater',     'zip': '33755', 'address': '',                    'phone': '(727) 447-3473', 'owner': '', 'license': '', 'license_year': 2000},
+            {'name': 'Suncoast Draft Beer Systems',     'ptype': 'beverage_equipment', 'city': 'St. Petersburg', 'zip': '33701', 'address': '',                    'phone': '(727) 321-5200', 'owner': '', 'license': '', 'license_year': 2008},
+            {'name': 'Tampa Bay Tap Systems',           'ptype': 'beverage_equipment', 'city': 'Largo',          'zip': '33771', 'address': '',                    'phone': '(727) 584-9900', 'owner': '', 'license': '', 'license_year': 2012},
+            {'name': 'Florida Fountain Service',        'ptype': 'beverage_equipment', 'city': 'Clearwater',     'zip': '33762', 'address': '',                    'phone': '(727) 536-5337', 'owner': '', 'license': '', 'license_year': 1995},
+            {'name': 'Gulf Coast Beverage Equipment',   'ptype': 'beverage_equipment', 'city': 'St. Petersburg', 'zip': '33713', 'address': '',                    'phone': '(727) 327-4488', 'owner': '', 'license': '', 'license_year': 2006},
+            {'name': 'Pinellas Coffee & Water Service', 'ptype': 'beverage_equipment', 'city': 'Largo',          'zip': '33773', 'address': '',                    'phone': '(727) 581-4433', 'owner': '', 'license': '', 'license_year': 2009},
+            {'name': 'Pro Draft Pinellas',              'ptype': 'beverage_equipment', 'city': 'Dunedin',        'zip': '34698', 'address': '',                    'phone': '(727) 736-9928', 'owner': '', 'license': '', 'license_year': 2015},
+
+            # ── COMMERCIAL HVAC — commercial accounts only (Priority 5) ──────────
+            {'name': 'Air Pros Clearwater',             'ptype': 'hvac',          'city': 'Clearwater',      'zip': '33755', 'address': '',                         'phone': '(727) 799-5100', 'owner': '', 'license': '', 'license_year': 2010},
+            {'name': 'Climatech Inc',                   'ptype': 'hvac',          'city': 'St. Petersburg',  'zip': '33702', 'address': '6900 Bryan Dairy Rd',       'phone': '(727) 527-5100', 'owner': '', 'license': '', 'license_year': 1968},
+            {'name': 'Gulf Mechanical Contractors',     'ptype': 'hvac',          'city': 'Clearwater',      'zip': '33765', 'address': '',                         'phone': '(727) 447-4471', 'owner': '', 'license': '', 'license_year': 1985},
+            {'name': 'Mechanical Air Service',          'ptype': 'hvac',          'city': 'St. Petersburg',  'zip': '33714', 'address': '3990 66th St N',            'phone': '(727) 525-3500', 'owner': '', 'license': '', 'license_year': 1979},
+            {'name': 'Pinellas Air Conditioning',       'ptype': 'hvac',          'city': 'Largo',           'zip': '33771', 'address': '',                         'phone': '(727) 584-4114', 'owner': '', 'license': '', 'license_year': 1992},
+            {'name': 'Suncoast Air & Heat',             'ptype': 'hvac',          'city': 'Tarpon Springs',  'zip': '34689', 'address': '',                         'phone': '(727) 938-2665', 'owner': '', 'license': '', 'license_year': 2001},
+            {'name': 'Climate Masters of Florida',      'ptype': 'hvac',          'city': 'Clearwater',      'zip': '33756', 'address': '',                         'phone': '(727) 443-3070', 'owner': '', 'license': '', 'license_year': 2003},
         ]
 
     seen = set()
@@ -6786,10 +6831,14 @@ function renderServiceCal(){
   if(!el)return;
 
   const today=new Date();
-  const recurring=P.filter(p=>p.status==='customer_recurring');
+  const ACTIVE_SVC_STATUSES=new Set(['customer_recurring','customer_quarterly','customer_once','customer_intro']);
+  const recurring=P.filter(p=>{
+    const c=customers[p.id];
+    return c&&ACTIVE_SVC_STATUSES.has(c.status);
+  });
 
   if(!recurring.length){
-    el.innerHTML='<div class="tempty"><div class="ei">&#x1F9FC;</div><div>No recurring clients yet. Close your first deal to start tracking service.</div></div>';
+    el.innerHTML='<div class="tempty"><div class="ei">&#x1F9FC;</div><div>No active clients yet. Close your first deal to start tracking service.</div></div>';
     return;
   }
 
@@ -6839,7 +6888,7 @@ function renderServiceCal(){
       +'<div style="display:flex;justify-content:space-between;align-items:flex-start">'
         +'<div style="flex:1;min-width:0">'
           +'<div style="font-weight:700;font-size:13px;color:var(--navy)">'+p.name+'</div>'
-          +'<div style="font-size:10px;color:var(--sub)">'+p.city+' &bull; '+p.machines+' machine'+(p.machines>1?'s':'')+'</div>'
+          +'<div style="font-size:10px;color:var(--sub)">'+p.city+' &bull; '+p.machines+' machine'+(p.machines>1?'s':'')+' &bull; '+(c.status==='customer_quarterly'?'Quarterly':c.status==='customer_once'?'One-Time':c.status==='customer_intro'?'Intro':'Monthly')+'</div>'
           +(p.phone?'<div style="font-size:10px;color:var(--blu)">'+p.phone+'</div>':'')
         +'</div>'
         +'<div style="text-align:right;flex-shrink:0;margin-left:10px">'
@@ -7338,7 +7387,7 @@ function submitServiceLog(id){
   const today_iso=localISO(new Date());
   const today_str=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
   if(!customers[id].atp_history)customers[id].atp_history=[];
-  if(atp||atpPre)customers[id].atp_history.push({date:today_iso,pre:atpPre,post:atp});
+  if(atp||atpPre)customers[id].atp_history.push({date:today_iso,pre:atpPre,post:atp,notes:notes||''});
   // Log service_done to call log so it appears in weekly funnel
   if(!log[id])log[id]=[];
   log[id].push({
@@ -7999,6 +8048,17 @@ function scStatusReport(p){
     var val=parseInt((inp&&inp.value)||'0')||0;
     var emailTo=((document.getElementById('atp-email-inp')||{}).value||'').trim();
     var notes=((document.getElementById('atp-notes-inp')||{}).value||'').trim();
+    var _atpTodayIso=localISO(new Date());
+    if(!customers[p.id])customers[p.id]={};
+    if(!customers[p.id].atp_history)customers[p.id].atp_history=[];
+    var _atpHist=customers[p.id].atp_history;
+    if(_atpHist.length&&_atpHist[_atpHist.length-1].date===_atpTodayIso){
+      if(val)_atpHist[_atpHist.length-1].post=val;
+      if(notes)_atpHist[_atpHist.length-1].notes=notes;
+    }else if(val||notes){
+      _atpHist.push({date:_atpTodayIso,pre:(_atpHist.slice(-1)[0]||{}).post||0,post:val,notes:notes||''});
+    }
+    custSave();
     if(btn.id==='atp-email'){
       atpBg.remove();
       if(!emailTo){toast('Enter an email address first');return;}
@@ -8026,6 +8086,14 @@ function srGenerate(p,atpVal,notes){
     ?('<div style="width:100%;height:12px;background:#e2e8f0;border-radius:6px;overflow:hidden;margin-bottom:6px">'
       +'<div style="width:'+barW+'%;height:100%;background:'+atpColor+';border-radius:6px"></div></div>')
     :'';
+  var _srLbl=function(v){return v<=0?'PENDING':v<=10?'PASS':v<=100?'MARGINAL':'FAIL';};
+  var _srHist=(customers[p.id]||{}).atp_history||[];
+  var _srPrev=_srHist.length>=2?_srHist[_srHist.length-2]:null;
+  var _srPrevLbl=_srPrev?_srLbl(parseInt(_srPrev.post)||0):null;
+  var scNotice='';
+  if(_srPrevLbl&&_srPrevLbl!==atpStatus){
+    scNotice='<div style="background:#fff3cd;border:2px solid #e6a817;padding:10px 14px;margin-bottom:10px;border-radius:6px;font-weight:700;font-size:12px">&#x26A0; STATUS CHANGE: '+_srPrevLbl+' &rarr; '+atpStatus+'</div>';
+  }
   var inspLines=[];
   if(p.chronic)inspLines.push('Chronic ice machine violations on FL DBPR record ('+p.ice_count+' flagged inspections)');
   else if(p.confirmed)inspLines.push('Ice machine violation confirmed on FL DBPR record');
@@ -8058,6 +8126,7 @@ function srGenerate(p,atpVal,notes){
     +'<div style="font-size:11px;color:#64748b;margin-top:2px">pinellasiceco.com &nbsp;&middot;&nbsp; '+dateStr+'</div>'
     +'</td></tr></table>'
     +'<div style="border-top:2px solid #0f1f38;margin-bottom:10px"></div>'
+    +scNotice
     +'<table style="width:100%;border-collapse:collapse;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:10px"><tbody>'
     +'<tr style="background:#f8fafc">'
     +'<td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;width:55%">Establishment</td>'
@@ -8134,6 +8203,14 @@ function srSendEmail(p,atpVal,emailTo,notes){
       +'<div style="width:'+barW+'%;height:12px;background:'+atpColor+';border-radius:6px"></div>'
       +'</td></tr></table>')
     :'';
+  var _seLbl=function(v){return v<=0?'PENDING':v<=10?'PASS':v<=100?'MARGINAL':'FAIL';};
+  var _seHist=(customers[p.id]||{}).atp_history||[];
+  var _sePrev=_seHist.length>=2?_seHist[_seHist.length-2]:null;
+  var _sePrevLbl=_sePrev?_seLbl(parseInt(_sePrev.post)||0):null;
+  var scNotice2='';
+  if(_sePrevLbl&&_sePrevLbl!==atpStatus){
+    scNotice2='<div style="background:#fff3cd;border:2px solid #e6a817;padding:10px 14px;margin-bottom:14px;border-radius:6px;font-weight:700;font-size:12px">&#x26A0; STATUS CHANGE: '+_sePrevLbl+' &rarr; '+atpStatus+'</div>';
+  }
   var inspLines=[];
   if(p.chronic)inspLines.push('Chronic ice machine violations on FL DBPR record ('+p.ice_count+' flagged inspections)');
   else if(p.confirmed)inspLines.push('Ice machine violation confirmed on FL DBPR record');
@@ -8154,6 +8231,7 @@ function srSendEmail(p,atpVal,emailTo,notes){
     +'</tr></table>'
     +'<div style="font-size:15px;font-weight:800;color:#0f1f38;margin-bottom:10px">ICE MACHINE STATUS REPORT</div>'
     +'<div style="border-top:2px solid #0f1f38;margin-bottom:14px"></div>'
+    +scNotice2
     +'<table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:14px">'
     +'<tr style="background:#f8fafc">'
     +'<td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;width:55%">Establishment</td>'
@@ -8244,6 +8322,10 @@ function emailComplianceReport(id){
   var lastAtp=atpH.slice(-1)[0]||{};
   var atpVal=parseInt(lastAtp.post)||0;
   var svcNote=c.last_service?('Last service: '+c.last_service+(c.next_service?' · Next: '+c.next_service:'')):'';
+  // Read technician notes from most recent service_history entry, fall back to atp_history
+  var lastSvcEntry=(c.service_history||[]).slice(-1)[0]||{};
+  var lastNotes=(lastSvcEntry.notes||lastAtp.notes||'').trim();
+  if(lastNotes)svcNote=(svcNote?svcNote+'\n\n':'')+'Technician notes: '+lastNotes;
   srSendEmail(p,atpVal,to,svcNote);
 }
 
