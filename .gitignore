@@ -1,6 +1,11 @@
 # Data files -- large, downloaded fresh each build, don't commit
 data/
 
+# Node / Playwright
+node_modules/
+test-results/
+playwright-report/
+
 # Python
 __pycache__/
 *.pyc

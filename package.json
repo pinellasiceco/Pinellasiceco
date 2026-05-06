@@ -1,0 +1,13 @@
+{
+  "name": "pinellasiceco-tests",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers playwright test",
+    "test:email": "PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers playwright test tests/email.spec.js",
+    "test:briefing": "python3 -m pytest tests/briefing_test.py -v"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1"
+  }
+}
