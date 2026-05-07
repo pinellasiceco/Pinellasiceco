@@ -1,4 +1,4 @@
-const CACHE_NAME='pic-20260507d';
+const CACHE_NAME='pic-20260507';
 const ASSETS=['./','/Pinellasiceco/index.html'];
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(ASSETS).catch(()=>{})));
@@ -16,7 +16,6 @@ self.addEventListener('fetch',e=>{
   }
   const isHTML=e.request.mode==='navigate'||url.pathname.endsWith('.html')||url.pathname==='/Pinellasiceco/'||url.pathname==='/Pinellasiceco';
   if(isHTML){
-    // Network-first for HTML: always serve fresh when online, fall back to cache offline
     e.respondWith(
       fetch(e.request).then(res=>{
         if(res&&res.status===200){const copy=res.clone();caches.open(CACHE_NAME).then(c=>c.put(e.request,copy));}
@@ -24,7 +23,6 @@ self.addEventListener('fetch',e=>{
       }).catch(()=>caches.match(e.request))
     );
   } else {
-    // Cache-first for assets
     e.respondWith(caches.match(e.request).then(cached=>{
       const fresh=fetch(e.request).then(res=>{
         if(res&&res.status===200){const copy=res.clone();caches.open(CACHE_NAME).then(c=>c.put(e.request,copy));}
