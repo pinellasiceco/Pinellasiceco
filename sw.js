@@ -1,5 +1,5 @@
-const CACHE_NAME='pic-20260507d';
-const ASSETS=['./','/Pinellasiceco/index.html'];
+const CACHE_NAME='pic-20260507';
+const ASSETS=['./','./ index.html'];
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(ASSETS).catch(()=>{})));
   self.skipWaiting();
@@ -10,21 +10,7 @@ self.addEventListener('activate',e=>{
 });
 self.addEventListener('fetch',e=>{
   const url=new URL(e.request.url);
-  if(url.origin!==self.location.origin){
-    e.respondWith(fetch(e.request).catch(()=>caches.match(e.request)));
-    return;
-  }
-  const isHTML=e.request.mode==='navigate'||url.pathname.endsWith('.html')||url.pathname==='/Pinellasiceco/'||url.pathname==='/Pinellasiceco';
-  if(isHTML){
-    // Network-first for HTML: always serve fresh when online, fall back to cache offline
-    e.respondWith(
-      fetch(e.request).then(res=>{
-        if(res&&res.status===200){const copy=res.clone();caches.open(CACHE_NAME).then(c=>c.put(e.request,copy));}
-        return res;
-      }).catch(()=>caches.match(e.request))
-    );
-  } else {
-    // Cache-first for assets
+  if(url.origin===self.location.origin){
     e.respondWith(caches.match(e.request).then(cached=>{
       const fresh=fetch(e.request).then(res=>{
         if(res&&res.status===200){const copy=res.clone();caches.open(CACHE_NAME).then(c=>c.put(e.request,copy));}
@@ -32,5 +18,7 @@ self.addEventListener('fetch',e=>{
       }).catch(()=>cached);
       return cached||fresh;
     }));
+  } else {
+    e.respondWith(fetch(e.request).catch(()=>caches.match(e.request)));
   }
 });
