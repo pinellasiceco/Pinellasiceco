@@ -5266,7 +5266,7 @@ function showCard(id){
     if(btn.dataset.scout){
       var outcome=btn.dataset.scout;
       if(btn.dataset.blocked){
-        toast('🔒 Can\'t move backward — stage already at '+( getProspectStage(p)||'prospect'));
+        toast('🔒 Can’t move backward — stage already at '+( getProspectStage(p)||'prospect'));
         return;
       }
       if(outcome==='signed'){
@@ -6783,7 +6783,7 @@ function showLoginScreen(){
       ?'<div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:16px;margin-bottom:20px;text-align:left">'
         +'<div style="font-size:12px;font-weight:700;color:#f59e0b;margin-bottom:8px">&#x26A0; Supabase not configured</div>'
         +'<div style="font-size:11px;color:rgba(255,255,255,.7);line-height:1.6">Enter your Supabase URL &amp; Anon Key in <b style="color:#fff">Settings → Cloud Sync</b>, then tap <b style="color:#fff">Connect &amp; Login</b>.</div>'
-        +'<button ontouchend="event.preventDefault();hideLoginScreen();sw(\'data\')" onclick="hideLoginScreen();sw(\'data\')" style="margin-top:12px;width:100%;padding:10px;border:none;border-radius:8px;background:#c9973a;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Open Settings</button>'
+        +'<button ontouchend="event.preventDefault();hideLoginScreen();sw(&#39;data&#39;)" onclick="hideLoginScreen();sw(&#39;data&#39;)" style="margin-top:12px;width:100%;padding:10px;border:none;border-radius:8px;background:#c9973a;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Open Settings</button>'
         +'</div>'
       :'<div style="margin-bottom:10px">'
         +'<input id="login-email" type="email" placeholder="your@email.com" autocomplete="email" '
@@ -7113,7 +7113,7 @@ function generateICS(id){
     lines.push('END:VEVENT');
   });
   lines.push('END:VCALENDAR');
-  var blob=new Blob([lines.join('\r\n')],{type:'text/calendar;charset=utf-8'});
+  var blob=new Blob([lines.join('\\r\\n')],{type:'text/calendar;charset=utf-8'});
   var a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
   a.download='schedule-'+p.name.replace(/[^a-z0-9]/gi,'_').toLowerCase()+'.ics';
@@ -8794,7 +8794,7 @@ function emailComplianceReport(id){
   // Read technician notes from most recent service_history entry, fall back to atp_history
   var lastSvcEntry=(c.service_history||[]).slice(-1)[0]||{};
   var lastNotes=(lastSvcEntry.notes||lastAtp.notes||'').trim();
-  if(lastNotes)svcNote=(svcNote?svcNote+'\n\n':'')+'Technician notes: '+lastNotes;
+  if(lastNotes)svcNote=(svcNote?svcNote+'\\n\\n':'')+'Technician notes: '+lastNotes;
   srSendEmail(p,atpVal,to,svcNote);
 }
 
