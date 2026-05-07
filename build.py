@@ -6761,35 +6761,76 @@ function showLoginScreen(){
   var d=document.createElement('div');
   d.id='login-screen';
   d.style.cssText='position:fixed;inset:0;background:#0f1f38;display:flex;flex-direction:column;'
-    +'align-items:center;justify-content:center;padding:32px;z-index:9999';
+    +'align-items:center;justify-content:center;padding:32px;z-index:9999;overflow-y:auto';
+  var notConfigured=!_sb;
   d.innerHTML='<div style="text-align:center;max-width:360px;width:100%">'
     +'<div style="font-size:48px;margin-bottom:16px">&#x1F9CA;</div>'
     +'<div style="font-size:24px;font-weight:800;color:#fff;margin-bottom:4px">Pinellas Ice Co</div>'
-    +'<div style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:40px">Prospect &amp; Client Management</div>'
-    +'<div style="margin-bottom:12px">'
-      +'<input id="login-email" type="email" placeholder="your@email.com" '
-      +'style="width:100%;padding:14px;border:none;border-radius:10px;font-size:15px;'
-      +'font-family:inherit;outline:none;box-sizing:border-box;text-align:center">'
-    +'</div>'
-    +'<button id="login-btn" '
-    +'style="width:100%;padding:14px;border:none;border-radius:10px;background:#c9973a;'
-    +'color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">'
-    +'Send Magic Link</button>'
-    +'<div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:20px">Tap the link in your email to log in.<br>No password needed.</div>'
+    +'<div style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:28px">Prospect &amp; Client Management</div>'
+    +(notConfigured
+      ?'<div style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:16px;margin-bottom:20px;text-align:left">'
+        +'<div style="font-size:12px;font-weight:700;color:#f59e0b;margin-bottom:8px">&#x26A0; Supabase not configured</div>'
+        +'<div style="font-size:11px;color:rgba(255,255,255,.7);line-height:1.6">Enter your Supabase URL &amp; Anon Key in <b style="color:#fff">Settings → Cloud Sync</b>, then tap <b style="color:#fff">Connect &amp; Login</b>.</div>'
+        +'<button ontouchend="event.preventDefault();hideLoginScreen();sw(\'data\')" onclick="hideLoginScreen();sw(\'data\')" style="margin-top:12px;width:100%;padding:10px;border:none;border-radius:8px;background:#c9973a;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Open Settings</button>'
+        +'</div>'
+      :'<div style="margin-bottom:10px">'
+        +'<input id="login-email" type="email" placeholder="your@email.com" autocomplete="email" '
+        +'style="width:100%;padding:14px;border:none;border-radius:10px;font-size:15px;'
+        +'font-family:inherit;outline:none;box-sizing:border-box;text-align:center">'
+        +'</div>'
+        +'<button id="login-btn" '
+        +'style="width:100%;padding:14px;border:none;border-radius:10px;background:#c9973a;'
+        +'color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation;margin-bottom:16px">'
+        +'Send Magic Link</button>'
+        +'<div id="otp-section" style="display:none;border-top:1px solid rgba(255,255,255,.15);padding-top:16px;margin-bottom:16px">'
+          +'<div style="font-size:11px;color:rgba(255,255,255,.6);margin-bottom:10px">Link opening in Chrome? Enter the 6-digit code from your email:</div>'
+          +'<input id="login-otp" type="text" inputmode="numeric" placeholder="000000" maxlength="6" '
+          +'style="width:100%;padding:14px;border:none;border-radius:10px;font-size:24px;font-weight:700;'
+          +'font-family:inherit;outline:none;box-sizing:border-box;text-align:center;letter-spacing:6px;margin-bottom:10px">'
+          +'<button id="verify-btn" '
+          +'style="width:100%;padding:14px;border:none;border-radius:10px;background:#0ea5e9;'
+          +'color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">'
+          +'Verify Code</button>'
+        +'</div>'
+        +'<div style="font-size:11px;color:rgba(255,255,255,.35)">Tap the link in your email to log in. No password needed.</div>'
+    )
     +'</div>';
   document.body.appendChild(d);
+  if(notConfigured)return;
+  var emailInput=document.getElementById('login-email');
   var btn=document.getElementById('login-btn');
+  var otpSection=document.getElementById('otp-section');
+  var otpInput=document.getElementById('login-otp');
+  var verifyBtn=document.getElementById('verify-btn');
   if(btn){
     async function _doLogin(e){
       if(e.type==='touchend')e.preventDefault();
-      var email=(document.getElementById('login-email')||{}).value||'';
+      var email=(emailInput||{}).value||'';
       if(!email||!email.includes('@')){toast('Enter your email address');return;}
-      btn.textContent='Sending...';btn.disabled=true;
+      btn.textContent='Sending…';btn.disabled=true;
       var ok=await signInWithMagicLink(email);
-      if(!ok){btn.textContent='Send Magic Link';btn.disabled=false;}
+      btn.disabled=false;
+      if(ok){btn.textContent='Resend Link';if(otpSection)otpSection.style.display='block';}
+      else{btn.textContent='Send Magic Link';}
     }
     btn.addEventListener('touchend',_doLogin,false);
     btn.addEventListener('click',_doLogin,false);
+  }
+  if(verifyBtn){
+    async function _doVerify(e){
+      if(e.type==='touchend')e.preventDefault();
+      var email=(emailInput||{}).value||'';
+      var otp=(otpInput||{}).value||'';
+      if(!email||!email.includes('@')){toast('Enter your email above');return;}
+      if(!otp||otp.replace(/\D/g,'').length<6){toast('Enter the 6-digit code');return;}
+      verifyBtn.textContent='Verifying…';verifyBtn.disabled=true;
+      try{
+        var r=await _sb.auth.verifyOtp({email:email,token:otp.replace(/\D/g,''),type:'email'});
+        if(r.error){toast('Code error: '+r.error.message);verifyBtn.textContent='Verify Code';verifyBtn.disabled=false;}
+      }catch(ex){toast('Error: '+ex.message);verifyBtn.textContent='Verify Code';verifyBtn.disabled=false;}
+    }
+    verifyBtn.addEventListener('touchend',_doVerify,false);
+    verifyBtn.addEventListener('click',_doVerify,false);
   }
 }
 
