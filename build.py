@@ -6738,14 +6738,26 @@ async function checkAuth(){
 async function signInWithMagicLink(email){
   if(!_sb){toast('Supabase not configured');return false;}
   try{
-    var r=await _sb.auth.signInWithOtp({
-      email:email,
-      options:{emailRedirectTo:'https://pinellasiceco.github.io/Pinellasiceco/'}
-    });
-    if(r.error){toast('Error: '+r.error.message);return false;}
-    toast('&#x2713; Magic link sent — check your email');
+    var timeout=new Promise((_,rej)=>setTimeout(()=>rej(new Error('Request timed out — check your Supabase URL in Settings')),12000));
+    var r=await Promise.race([
+      _sb.auth.signInWithOtp({email:email,options:{emailRedirectTo:'https://pinellasiceco.github.io/Pinellasiceco/'}}),
+      timeout
+    ]);
+    if(r.error){
+      var msg=r.error.message||'';
+      if(msg.toLowerCase().includes('rate')||msg.toLowerCase().includes('limit')){
+        toast('Rate limit hit — wait ~1 hour and try again');
+      } else {
+        toast('Error: '+msg);
+      }
+      return false;
+    }
+    toast('&#x2713; Check your email — link + 6-digit code sent');
     return true;
-  }catch(e){toast('Error: '+e.message);return false;}
+  }catch(e){
+    toast(e.message||'Send failed');
+    return false;
+  }
 }
 
 async function signOut(){
