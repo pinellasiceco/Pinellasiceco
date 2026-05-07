@@ -1668,7 +1668,7 @@ HTML_TEMPLATE = """\
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <title>Pinellas Ice Co &#xB7; Prospects</title>
 <!-- Leaflet loaded on-demand when Route tab opens -->
 <link rel="manifest" href="manifest.json">
@@ -1695,13 +1695,14 @@ html,body{height:100%;background:var(--bg);color:var(--txt);
   font-size:13px;overflow:hidden;-webkit-font-smoothing:antialiased}
 #app{display:flex;flex-direction:column;height:100vh}
 header{background:var(--navy);
-  padding:0 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;flex-wrap:wrap;height:52px}
+  padding:0 16px;padding-top:max(0px,env(safe-area-inset-top));display:flex;align-items:center;gap:10px;flex-shrink:0;flex-wrap:nowrap;min-height:52px}
 .logo{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .logo-icon{width:30px;height:30px;border-radius:8px;
   background:var(--ora);
   display:flex;align-items:center;justify-content:center;font-size:16px}
 .logo-name{font-weight:700;font-size:14px;color:#fff;letter-spacing:-.02em}
-.hchips{display:flex;gap:5px;margin-left:auto;flex-wrap:wrap}
+.hchips{display:flex;gap:5px;margin-left:auto;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.hchips::-webkit-scrollbar{display:none}
 .hc{font-size:10px;padding:3px 10px;border-radius:20px;font-weight:600;cursor:pointer;user-select:none;transition:.15s}
 .hc.cb{background:rgba(242,84,91,.2);color:#ffb3b6;border:1px solid rgba(242,84,91,.3)}
 .hc.ht{background:rgba(255,122,89,.2);color:#ffcab8;border:1px solid rgba(255,122,89,.3)}
@@ -1940,8 +1941,8 @@ header{background:var(--navy);
     display:flex;flex-direction:column;align-items:center;gap:2px;
     min-width:48px;
   }
-  /* Add bottom padding so content clears bottom nav */
-  .panels{padding-bottom:80px;}
+  /* Add bottom padding so content clears fixed bottom nav */
+  .panel{padding-bottom:calc(80px + env(safe-area-inset-bottom, 0px));}
   /* Header more compact */
   .hdr{padding:8px 12px 6px;}
   .hdr-title{font-size:13px;}
@@ -2721,6 +2722,12 @@ header{background:var(--navy);
       <button class="dbtn" onclick="doResetFees()" style="margin-bottom:4px;width:100%;background:#fff7ed;color:#d97706;border-color:#fcd34d">Reset Partner Fees (mark all owed)</button>
       <button class="dbtn" onclick="doResetLocal()" style="margin-bottom:4px;width:100%;background:#fef2f2;color:#dc2626;border-color:#fca5a5">&#x1F5D1; Reset Local Data (calls, customers, partners)</button>
       <button class="dbtn" onclick="doResetAll()" style="width:100%;background:#dc2626;color:#fff;border-color:#dc2626">&#x26A0; Wipe All Data &amp; Reload</button>
+    </div>
+
+    <div id="acct-section" class="dc" style="margin-top:12px;display:none">
+      <div class="dct">&#x1F464; Account</div>
+      <div style="font-size:12px;color:#64748b;margin-bottom:8px">Signed in as: <span id="settings-email" style="color:#0f1f38;font-weight:600"></span></div>
+      <button ontouchend="event.preventDefault();doSettingsSignOut()" onclick="doSettingsSignOut()" style="width:100%;padding:10px;border:1px solid #fca5a5;border-radius:8px;background:#fef2f2;color:#dc2626;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">Sign Out</button>
     </div>
 
   </div>
@@ -8767,14 +8774,28 @@ function initSettings(){
   // Show sign-out button and auth status if logged in
   var authRow=document.getElementById('auth-status-row');
   var soBtn=document.getElementById('signout-btn');
+  var acctSection=document.getElementById('acct-section');
+  var settingsEmail=document.getElementById('settings-email');
   if(_userId){
-    if(authRow){authRow.style.display='block';authRow.textContent='&#x2713; Logged in as '+(_session&&_session.user&&_session.user.email?_session.user.email:'user');}
+    var email=_session&&_session.user&&_session.user.email?_session.user.email:'user';
+    if(authRow){authRow.style.display='block';authRow.textContent='✓ Logged in as '+email;}
     if(soBtn)soBtn.style.display='block';
+    if(acctSection)acctSection.style.display='block';
+    if(settingsEmail)settingsEmail.textContent=email;
   } else {
     if(authRow)authRow.style.display='none';
     if(soBtn)soBtn.style.display='none';
+    if(acctSection)acctSection.style.display='none';
   }
   setTimeout(updateSyncDot,100);
+}
+async function doSettingsSignOut(){
+  if(!confirm('Sign out of Pinellas Ice Co?'))return;
+  if(_sb)try{await _sb.auth.signOut();}catch(e){}
+  _session=null;_userId=null;
+  var panel=document.getElementById('p-data');
+  if(panel)panel.classList.remove('on');
+  showLoginScreen();
 }
 function saveEmailFnUrl(){
   var v=(document.getElementById('sb-email-fn')||{}).value||'';
