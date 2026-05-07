@@ -40,9 +40,10 @@ jobs:
           cp prospecting_tool.html index.html
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add index.html sw.js data/snapshot_prev.json || true
+          git fetch origin main
+          git reset --soft origin/main
+          git add -A
           git commit --allow-empty -m "Daily rebuild $(date +'%Y-%m-%d %H:%M')"
-          git pull --rebase origin main
           git push
 
       - name: Send daily briefing email
