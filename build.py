@@ -6820,10 +6820,10 @@ function showLoginScreen(){
       var email=(emailInput||{}).value||'';
       if(!email||!email.includes('@')){toast('Enter your email address');return;}
       btn.textContent='Sending…';btn.disabled=true;
+      if(otpSection)otpSection.style.display='block';
       var ok=await signInWithMagicLink(email);
       btn.disabled=false;
-      if(ok){btn.textContent='Resend Link';if(otpSection)otpSection.style.display='block';}
-      else{btn.textContent='Send Magic Link';}
+      btn.textContent='Resend Link';
     }
     btn.addEventListener('touchend',_doLogin,false);
     btn.addEventListener('click',_doLogin,false);
