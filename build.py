@@ -6649,6 +6649,17 @@ function renderKPIs(){
 
 function swCustomers(){sw('clients');}
 
+function navigateToClientService(id){
+  sw('clients');
+  setTimeout(()=>{
+    setClientTab('service');
+    setTimeout(()=>{
+      const el=document.getElementById('svc-card-'+id);
+      if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.style.outline='2px solid #dc2626';setTimeout(()=>el.style.outline='',2000);}
+    },150);
+  },50);
+}
+
 function buildAnnualSchedule(id){
   if(!customers[id])return;
   const c=customers[id];
@@ -6919,7 +6930,7 @@ function renderAtRisk(){
       return '<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-top:1px solid #fca5a5;font-size:10px">'
         +'<div><div style="font-weight:600;color:var(--navy)">'+p.name+'</div>'
         +'<div style="color:#dc2626;font-size:9px">'+msg+'</div></div>'
-        +'<button onclick="swCustomers()" style="font-size:9px;padding:3px 7px;border:1px solid #dc2626;border-radius:5px;background:#fef2f2;color:#dc2626;cursor:pointer;font-family:inherit">Fix</button>'
+        +'<button onclick="navigateToClientService('+p.id+')" ontouchend="event.preventDefault();navigateToClientService('+p.id+')" style="font-size:9px;padding:3px 7px;border:1px solid #dc2626;border-radius:5px;background:#fef2f2;color:#dc2626;cursor:pointer;font-family:inherit;touch-action:manipulation">Fix</button>'
         +'</div>';
     }).join('')
     +'</div>';
@@ -6983,7 +6994,7 @@ function renderServiceCal(){
       :'Due in '+du+'d';
     const duCol=du===null?'var(--sub)':du<0?'#dc2626':du<=7?'#d97706':'#059669';
 
-    return '<div class="svc-card '+cls+'">'
+    return '<div id="svc-card-'+p.id+'" class="svc-card '+cls+'">'
       // Header row
       +'<div style="display:flex;justify-content:space-between;align-items:flex-start">'
         +'<div style="flex:1;min-width:0">'
