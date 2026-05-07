@@ -1,9 +1,9 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-05-06 (session 14) by Claude Code*
+*Last updated: 2026-05-07 (session 15) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
-- Last deployed: 2026-05-06 (session 14 — notes in PDF, service tab shows new clients, partner seed expanded)
+- Last deployed: 2026-05-07 (session 15 — pipeline routing, disposition rules, iOS touch fixes, briefing severity tiers)
 - Build script: `build.py` (repo root) → outputs `index.html` directly
 - `index.html` regenerated from `build.py` using existing P[] data — fully in sync
 
@@ -29,6 +29,7 @@
 - Strike Zone section shows top-scored prospects by city cluster
 - In Play follow-ups grouped by urgency: Overdue / Today / This Week / This Month
 - Cold targets grid loads on first open
+- **New Since Yesterday** section: split into 🚨 Urgent / ⚠️ Watch / ℹ️ Info tiers based on `change_severity` field baked at CI build time
 
 ### Prospects Tab
 - Full prospect list with search/filter
@@ -58,7 +59,9 @@
 - Won / Lost: chronological list with outcome badge
 - Ice risk badges (High/Med) shown on In Play / Quoted cards
 - Lost `not_now` (Timing) auto-resurfaces after 90 days (not shown in Lost)
-- Quoted outcome button in showCard (purple style, logs `quoted` outcome)
+- Quoted outcome button in showCard logs `quoted` as first-class outcome; shows "📄 Moved to Pipeline → Quoted" toast and navigates to Quoted stage
+- Pipeline cards (`.dc`) have `data-id` + `ontouchend` for iOS tap reliability; also handled in global IIFE
+- **Forward-only disposition rules** (`getBlockedOutcomes(p)`): outcome buttons grey out with 🔒 when move would regress stage; Lost prospects get 🔄 Re-engage button to move back to In Play
 
 ### Clients Tab
 - MRR/ARR calculated from recurring customers (`kpi-mrr`, `kpi-arr`)
@@ -113,6 +116,8 @@
 
 If something appears broken, first try force-closing the PWA and reopening — the sw.js cache bust (`pic-YYYYMMDD`) requires a full app restart on iOS to take effect.
 
+To force a fresh PWA load after a push: open the URL directly in Safari (not the home screen icon), wait for page to load fully, then the home screen icon will serve the updated version.
+
 ### Channel Partners Tab (session 11)
 - 6th tab: &#x1F91D; Partners — channel partner prospect management
 - **Python pipeline** (`build.py`): `classify_partner()`, `build_partner_records()` — keyword detection on FL DBPR contractor license CSV (if downloaded) + fallback seed list; bakes `PARTNERS[]` into HTML at CI rebuild time
@@ -131,6 +136,7 @@ If something appears broken, first try force-closing the PWA and reopening — t
 - Nothing from the current feature roadmap is missing
 
 ## Recent Changes
+- **2026-05-07 (s15):** Four fixes — (1) FIX 1: `normO()` was mapping `'quoted'` → `'in_play'`, breaking `getProspectStage()` so prospects never appeared in Pipeline → Quoted. Removed that mapping; `quoted` is now a first-class outcome with its own OI label ("Quote Sent ✓") and colour. Logging Quoted shows "📄 Moved to Pipeline → Quoted" toast and navigates to that stage. (2) FIX 2: `getBlockedOutcomes(p)` enforces forward-only stage progression — outcome buttons grey with 🔒 when a move would regress stage; Lost prospects get a dedicated 🔄 Re-engage button. (3) FIX 3: Pipeline `.dc` cards get `data-id` + `ontouchend`; Route "Details"/"Remove" buttons and Client "Details" button get `ontouchend`; global IIFE extended to handle `.dc[data-id]` taps — all reliable on iOS Safari. (4) FIX 4: Python `classify_change()` adds `change_severity` field (urgent/warning/info) to every P[] record. Home tab New Since Yesterday splits into 🚨 Urgent / ⚠️ Watch / ℹ️ Info sub-sections. `send_briefing.py` email restructured identically, subject line leads with urgent count. sw.js bumped to `pic-20260507a`; 75/75 tests passing.
 - **2026-05-06 (s14):** Three bug fixes — (1) FIX 1: `emailComplianceReport` now reads technician notes from `service_history` (primary) with `atp_history.notes` fallback, so notes logged during visits appear in compliance PDF and email body; (2) FIX 2: `renderServiceCal` now shows all active customer statuses (`customer_recurring`, `customer_quarterly`, `customer_once`, `customer_intro`) — new clients appear in Service tab immediately after Close Deal, with plan type badge (Monthly/Quarterly/One-Time/Intro) in card subtitle; (3) FIX 3: Partner seed list expanded from 5 to 43 Pinellas County businesses across all 5 categories (10 hood cleaning, 9 pest control, 8 refrigeration, 7 beverage equipment, 7 HVAC) with real phone numbers and addresses; session-13 JS fixes backported to `build.py` so CI rebuilds don't regress them; sw.js bumped to `pic-20260506b`
 - **2026-05-06 (s13):** Compliance PDF notes & ATP status change detection — `atp_history.push` now includes `notes` field so repeat inspections of existing locations persist technician notes; `emailComplianceReport` reads notes from most recent `atp_history` entry and appends to email body; `srGenerate`/`srSendEmail` detect PASS/MARGINAL/FAIL status changes between consecutive visits and show amber ⚠ STATUS CHANGE banner; `scStatusReport` persists entered ATP value and notes back to `atp_history` before dispatching PDF/email so subsequent compliance emails can retrieve them; UA test suite remains 75 passed, 0 failed
 - **2026-05-05 (s12):** 18 bug fixes — quarterly plan schedule, prevent re-close on won deals, churn button gating, remove Signed/Service Done buttons, partner Log Outreach modal wiring, Add All to Route 8-stop limit with skipMax param, one-time clean sets `customer_once`, emailComplianceReport reuses srSendEmail HTML output, sendEmailViaProxy returns true/false, ATP notes field in report, hide dead prospects toggle (`_showDead`/`toggleShowDead()`), Supabase input onblur/onchange + Save Credentials button + sync dot indicator, filter bar overflow-x scroll, full-width purple Quoted button in showCard, partner contact fields (name/role/phone/email/address), generateICS() calendar export for quarterly clients
@@ -174,10 +180,10 @@ If something appears broken, first try force-closing the PWA and reopening — t
 - **2026-04-27 (s7):** `deploy_edge_functions.yml` — auto-deploys Edge Functions from repo; eliminates need to copy-paste code into Supabase dashboard
 
 ## Next Session Priorities
-1. Verify notes appear in compliance email after a live service visit (log visit with notes → tap Email Report → confirm notes in email body)
-2. Confirm new quarterly/one-time clients appear in Service tab immediately after Close Deal
-3. Confirm partner list shows 40+ entries in Partners tab on next CI rebuild
-4. Verify daily briefing email sends after next CI rebuild
+1. Verify Quoted outcome moves prospect to Pipeline → Quoted stage (log a Quoted outcome → confirm Pipeline tab shows it)
+2. Confirm 🔒 blocked buttons appear on a prospect that's already Quoted (open showCard → verify Intro Set / In Play / No Contact / Voicemail are locked)
+3. Verify notes appear in compliance email after a live service visit (log visit with notes → tap Email Report → confirm notes in body)
+4. Confirm New Since Yesterday Urgent/Watch/Info sections appear after next CI rebuild with real data
 
 ## iOS PWA Rules (never violate these)
 - **Buttons in injected HTML:** use inline `ontouchend="event.preventDefault();fn()"` + `onclick="fn()"` — NOT `addEventListener` on innerHTML-injected elements
