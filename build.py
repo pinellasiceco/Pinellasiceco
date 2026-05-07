@@ -6752,7 +6752,7 @@ async function signInWithMagicLink(email){
       }
       return false;
     }
-    toast('&#x2713; Check your email — link + 6-digit code sent');
+    toast('&#x2713; Check your email — link + numeric code sent');
     return true;
   }catch(e){
     toast(e.message||'Send failed');
@@ -6795,8 +6795,8 @@ function showLoginScreen(){
         +'color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation;margin-bottom:16px">'
         +'Send Magic Link</button>'
         +'<div id="otp-section" style="display:none;border-top:1px solid rgba(255,255,255,.15);padding-top:16px;margin-bottom:16px">'
-          +'<div style="font-size:11px;color:rgba(255,255,255,.6);margin-bottom:10px">Link opening in Chrome? Enter the 6-digit code from your email:</div>'
-          +'<input id="login-otp" type="text" inputmode="numeric" placeholder="000000" maxlength="6" '
+          +'<div style="font-size:11px;color:rgba(255,255,255,.6);margin-bottom:10px">Link opening in Chrome? Enter the numeric code from your email:</div>'
+          +'<input id="login-otp" type="text" inputmode="numeric" placeholder="······" maxlength="9" '
           +'style="width:100%;padding:14px;border:none;border-radius:10px;font-size:24px;font-weight:700;'
           +'font-family:inherit;outline:none;box-sizing:border-box;text-align:center;letter-spacing:6px;margin-bottom:10px">'
           +'<button id="verify-btn" '
@@ -6834,7 +6834,7 @@ function showLoginScreen(){
       var email=(emailInput||{}).value||'';
       var otp=(otpInput||{}).value||'';
       if(!email||!email.includes('@')){toast('Enter your email above');return;}
-      if(!otp||otp.replace(/\D/g,'').length<6){toast('Enter the 6-digit code');return;}
+      if(!otp||otp.replace(/\D/g,'').length<6){toast('Enter the code from your email');return;}
       verifyBtn.textContent='Verifying…';verifyBtn.disabled=true;
       try{
         var r=await _sb.auth.verifyOtp({email:email,token:otp.replace(/\D/g,''),type:'email'});
