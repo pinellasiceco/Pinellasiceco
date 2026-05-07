@@ -232,30 +232,58 @@ def build_email(current, changes, stats, contacted_ids):
           </table>
         </div>"""
 
-    # New Since Yesterday
+    # New Since Yesterday — split into Urgent / Watch / Info tiers
     _nsy_labels = {
-        'new_callback':       '🆕 New CALLBACK',
-        'new_ice_violation':  '🆕 New Ice Viol.',
-        'priority_escalated': '🆕 Escalated',
-        'score_jump':         '🆕 Score ↑',
+        'new_callback':       '🚨 New CALLBACK',
+        'new_ice_violation':  '🧊 New Ice Viol.',
+        'priority_escalated': '⚠️ Escalated',
+        'score_jump':         '📈 Score ↑',
         'new_to_dataset':     '🆕 New Business',
     }
-    new_since = sorted(
+    _severity_map = {
+        'new_callback':       'urgent',
+        'new_ice_violation':  'urgent',
+        'priority_escalated': 'warning',
+        'score_jump':         'info',
+        'new_to_dataset':     'info',
+    }
+    _pri_rank = {'CALLBACK': 0, 'HOT': 1, 'WARM': 2, 'WATCH': 3, 'LATER': 4}
+    all_new = sorted(
         [r for r in current if r.get('new_reason')],
-        key=lambda x: ({'CALLBACK': 0, 'HOT': 1, 'WARM': 2, 'WATCH': 3, 'LATER': 4}.get(x.get('priority', ''), 4),
-                       -x.get('score', 0))
-    )[:8]
-    if new_since:
-        rows = ''.join(biz_row(r, _nsy_labels.get(r.get('new_reason', ''), '🆕 New')) for r in new_since)
+        key=lambda x: (_pri_rank.get(x.get('priority', ''), 4), -x.get('score', 0))
+    )
+    nsy_urgent  = [r for r in all_new if (r.get('change_severity') or _severity_map.get(r.get('new_reason',''),'info')) == 'urgent'][:6]
+    nsy_warning = [r for r in all_new if (r.get('change_severity') or _severity_map.get(r.get('new_reason',''),'info')) == 'warning'][:4]
+    nsy_info    = [r for r in all_new if (r.get('change_severity') or _severity_map.get(r.get('new_reason',''),'info')) == 'info'][:4]
+
+    def nsy_table(tier_label, bg, fg, items):
+        if not items:
+            return ''
+        rows = ''.join(biz_row(r, _nsy_labels.get(r.get('new_reason', ''), '🆕')) for r in items)
+        return f"""
+        <div style="margin-bottom:12px">
+          <div style="font-size:12px;font-weight:700;color:{fg};margin-bottom:5px">{tier_label} ({len(items)})</div>
+          <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden">
+            <tr style="background:{bg}">
+              <th style="padding:7px 10px;text-align:left;font-size:10px;color:{fg}">Business</th>
+              <th style="padding:7px 10px;text-align:left;font-size:10px;color:{fg}">City</th>
+              <th style="padding:7px 10px;text-align:left;font-size:10px;color:{fg}">Phone</th>
+              <th style="padding:7px 10px;text-align:left;font-size:10px;color:{fg}">Score</th>
+              <th style="padding:7px 10px;text-align:left;font-size:10px;color:{fg}">Reason</th>
+            </tr>
+            {rows}
+          </table>
+        </div>"""
+
+    if all_new:
         sections += f"""
         <div style="margin-bottom:24px">
           <div style="font-size:13px;font-weight:800;color:#854d0e;margin-bottom:8px">
-            &#x1F195; New Since Yesterday ({len(new_since)})
+            &#x1F195; New Since Yesterday ({len(all_new)})
           </div>
-          <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden">
-            <tr style="background:#fef9c3"><th style="padding:8px 12px;text-align:left;font-size:11px;color:#854d0e">Business</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#854d0e">City</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#854d0e">Phone</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#854d0e">Score</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#854d0e">Reason</th></tr>
-            {rows}
-          </table>
+          {nsy_table('🚨 Urgent', '#fef2f2', '#dc2626', nsy_urgent)}
+          {nsy_table('⚠️ Watch',  '#fefce8', '#d97706', nsy_warning)}
+          {nsy_table('ℹ️ Info',   '#eff6ff', '#0891b2', nsy_info)}
         </div>"""
     else:
         sections += """
@@ -367,12 +395,12 @@ def build_email(current, changes, stats, contacted_ids):
 </html>"""
 
     subject = f"PIC Briefing {datetime.now().strftime('%b %-d')} — "
+    if nsy_urgent:
+        subject += f"🚨 {len(nsy_urgent)} urgent, "
     if changes['emergency_closures']:
-        subject += f"🚨 {len(changes['emergency_closures'])} closures, "
-    if changes['new_callbacks']:
-        subject += f"{len(changes['new_callbacks'])} new callbacks, "
-    if changes['new_ice_fresh']:
-        subject += f"{len(changes['new_ice_fresh'])} fresh ice viol."
+        subject += f"🔴 {len(changes['emergency_closures'])} closures, "
+    if nsy_warning:
+        subject += f"⚠️ {len(nsy_warning)} watch"
     subject = subject.rstrip(', ')
     if subject.endswith('—'):
         subject += ' No major changes'

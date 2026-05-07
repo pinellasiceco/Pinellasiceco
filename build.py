@@ -1059,6 +1059,24 @@ def classify_new(record, prev_snapshot):
     return None
 
 
+CHANGE_SEVERITY = {
+    'new_callback':      'urgent',
+    'new_ice_violation': 'urgent',
+    'priority_escalated':'warning',
+    'score_jump':        'info',
+    'new_to_dataset':    'info',
+}
+
+def classify_change(record, prev_snapshot):
+    """Return (new_reason, severity) or (None, None).
+    severity = 'urgent' | 'warning' | 'info'
+    """
+    reason = classify_new(record, prev_snapshot)
+    if reason is None:
+        return None, None
+    return reason, CHANGE_SEVERITY.get(reason, 'info')
+
+
 def run(csv_paths):
     print(f"\n{'='*55}")
     print(f"  Pinellas Ice Co \u2014 Building Prospect Tool")
@@ -1513,14 +1531,20 @@ def run(csv_paths):
         print("  New-since-yesterday: first run, no baseline (new_reason=None for all)")
         for rec in records:
             rec['new_reason'] = None
+            rec['change_severity'] = None
     else:
         n_new = 0
+        severity_counts = {'urgent': 0, 'warning': 0, 'info': 0}
         for rec in records:
-            reason = classify_new(rec, prev_snapshot)
+            reason, severity = classify_change(rec, prev_snapshot)
             rec['new_reason'] = reason
+            rec['change_severity'] = severity
             if reason:
                 n_new += 1
-        print(f"  New since yesterday: {n_new} businesses flagged")
+                if severity:
+                    severity_counts[severity] = severity_counts.get(severity, 0) + 1
+        print(f"  New since yesterday: {n_new} businesses flagged "
+              f"({severity_counts['urgent']} urgent, {severity_counts['warning']} warning, {severity_counts['info']} info)")
 
     # Save geocoding cache for future runs
     save_geo_cache(geo_cache, data_dir)
@@ -2084,7 +2108,19 @@ header{background:var(--navy);
         <span>&#x1F195; New Since Yesterday</span>
         <span class="tsect-sub">Escalated to CALLBACK/HOT, new ice violation, or big score jump since last rebuild.</span>
       </div>
-      <div class="grid" id="nsy-grid"></div>
+      <div id="nsy-urgent-wrap" style="display:none">
+        <div style="font-size:9px;font-weight:700;color:#dc2626;text-transform:uppercase;letter-spacing:.06em;padding:4px 0 4px;display:flex;align-items:center;gap:5px">&#x1F6A8; Urgent</div>
+        <div class="grid" id="nsy-urgent-grid"></div>
+      </div>
+      <div id="nsy-warning-wrap" style="display:none">
+        <div style="font-size:9px;font-weight:700;color:#d97706;text-transform:uppercase;letter-spacing:.06em;padding:4px 0 4px;display:flex;align-items:center;gap:5px">&#x26A0;&#xFE0F; Watch</div>
+        <div class="grid" id="nsy-warning-grid"></div>
+      </div>
+      <div id="nsy-info-wrap" style="display:none">
+        <div style="font-size:9px;font-weight:700;color:#0891b2;text-transform:uppercase;letter-spacing:.06em;padding:4px 0 4px;display:flex;align-items:center;gap:5px">&#x2139;&#xFE0F; Info</div>
+        <div class="grid" id="nsy-info-grid"></div>
+      </div>
+      <div class="grid" id="nsy-grid" style="display:none"></div>
     </div>
 
     <!-- ── STRIKE ZONE ──────────────────────────────────── -->
@@ -2804,25 +2840,26 @@ const OI={
   // New outcomes
   signed:'Signed ✓', intro_set:'Intro Set', in_play:'In Play',
   no_contact:'No Contact', not_now:'Not Now', dead:'Dead',
-  voicemail:'Voicemail', service_done:'Service Done ✓',
+  voicemail:'Voicemail', service_done:'Service Done ✓', quoted:'Quote Sent ✓',
   // Legacy compat (existing log entries)
   customer_recurring:'Signed ✓', customer_once:'Signed ✓', customer_intro:'Intro Set',
   follow_up:'In Play', interested:'In Play', scheduled:'Intro Set',
-  not_interested:'Not Now', no_answer:'No Contact', quoted:'In Play', churned:'Dead',
+  not_interested:'Not Now', no_answer:'No Contact', churned:'Dead',
 };
 const OI_COLOR={
   signed:'#059669', intro_set:'#0891b2', in_play:'#d97706',
   no_contact:'#64748b', not_now:'#dc2626', dead:'#374151',
-  voicemail:'#7c3aed', service_done:'#059669',
+  voicemail:'#7c3aed', service_done:'#059669', quoted:'#7c3aed',
   customer_recurring:'#059669', customer_once:'#059669', customer_intro:'#0891b2',
   follow_up:'#d97706', interested:'#d97706', scheduled:'#0891b2',
-  not_interested:'#dc2626', no_answer:'#64748b', quoted:'#d97706', churned:'#374151',
+  not_interested:'#dc2626', no_answer:'#64748b', churned:'#374151',
 };
 // Normalize legacy outcomes to new system for filtering
 function normO(o){
+  // 'quoted' is a first-class outcome — do NOT normalize it to 'in_play'
   const map={customer_recurring:'signed',customer_once:'signed',customer_intro:'intro_set',
     follow_up:'in_play',interested:'in_play',scheduled:'intro_set',
-    not_interested:'not_now',no_answer:'no_contact',quoted:'in_play',churned:'dead'};
+    not_interested:'not_now',no_answer:'no_contact',churned:'dead'};
   return map[o]||o;
 }
 const REASONS={
@@ -4618,8 +4655,8 @@ function renderDayRoute(){
         +'</div>'
       +'</div>'
       +'<div style="display:flex;flex-direction:column;gap:3px;flex-shrink:0">'
-        +'<button onclick="showCard('+p.id+')" style="font-size:9px;padding:3px 6px;border:1px solid var(--ora);border-radius:5px;background:#fff7f5;color:var(--ora);cursor:pointer;font-family:inherit">Details</button>'
-        +'<button onclick="removeStop('+p.id+')" style="font-size:9px;padding:3px 6px;border:1px solid var(--brd);border-radius:5px;background:transparent;color:var(--sub);cursor:pointer;font-family:inherit">Remove</button>'
+        +'<button onclick="showCard('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();showCard('+p.id+')" style="font-size:9px;padding:3px 6px;border:1px solid var(--ora);border-radius:5px;background:#fff7f5;color:var(--ora);cursor:pointer;font-family:inherit;touch-action:manipulation">Details</button>'
+        +'<button onclick="removeStop('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();removeStop('+p.id+')" style="font-size:9px;padding:3px 6px;border:1px solid var(--brd);border-radius:5px;background:transparent;color:var(--sub);cursor:pointer;font-family:inherit;touch-action:manipulation">Remove</button>'
       +'</div>'
 
       // Machine profile + contract
@@ -4976,7 +5013,19 @@ function showCard(id){
     +'</div>';
   }
 
-  // Outcome log section
+  // Outcome log section — compute blocked outcomes for forward-only enforcement
+  var _blocked=getBlockedOutcomes(p);
+  var _stage=getProspectStage(p);
+  function _obtn(outcome,label,border,bg,color){
+    var isBlocked=_blocked.has(outcome);
+    if(isBlocked){
+      return '<button data-scout="'+outcome+'" data-blocked="1" style="padding:8px 4px;border:2px solid #e2e8f0;border-radius:7px;background:#f8fafc;color:#94a3b8;font-size:10px;font-weight:600;cursor:not-allowed;font-family:inherit;touch-action:manipulation;opacity:0.6">🔒 '+label.replace(/^[^\s]+ /,'')+'</button>';
+    }
+    return '<button data-scout="'+outcome+'" style="padding:8px 4px;border:2px solid '+border+';border-radius:7px;background:'+bg+';color:'+color+';font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">'+label+'</button>';
+  }
+  var _reengageH=_stage==='lost'
+    ?'<button data-scout="in_play" data-reengage="1" style="width:100%;padding:8px;border:2px solid #059669;border-radius:7px;background:#ecfdf5;color:#059669;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation;margin-bottom:6px">🔄 Re-engage (move back to In Play)</button>'
+    :'';
   var logH='<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px;margin-bottom:10px">'
     +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Log Interaction</div>'
     // Type toggle
@@ -4984,16 +5033,19 @@ function showCard(id){
     +'<button id="sc-type-call" data-sctype="call" style="flex:1;padding:7px;border:1px solid #e2e8f0;border-radius:7px;background:#0f1f38;color:#fff;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">📞 Call</button>'
     +'<button id="sc-type-walkin" data-sctype="walkin" style="flex:1;padding:7px;border:1px solid #e2e8f0;border-radius:7px;background:#f8fafc;color:#475569;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">🚶 Walk-In</button>'
     +'</div>'
+    +_reengageH
     // Outcome buttons
     +'<div id="sc-obtn-row" style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:6px">'
-    +'<button data-scout="intro_set" style="padding:8px 4px;border:2px solid #93c5fd;border-radius:7px;background:#eff6ff;color:#2563eb;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">📅 Intro Set</button>'
-    +'<button data-scout="in_play" style="padding:8px 4px;border:2px solid #fcd34d;border-radius:7px;background:#fffbeb;color:#d97706;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">🟡 In Play</button>'
-    +'<button data-scout="no_contact" style="padding:8px 4px;border:2px solid #c4b5fd;border-radius:7px;background:#f5f3ff;color:#7c3aed;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">🚪 No Contact</button>'
-    +'<button data-scout="voicemail" style="padding:8px 4px;border:2px solid #fdba74;border-radius:7px;background:#fff7ed;color:#ea580c;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">📲 Voicemail</button>'
-    +'<button data-scout="not_now" style="padding:8px 4px;border:2px solid #fca5a5;border-radius:7px;background:#fef2f2;color:#dc2626;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">❌ Not Now</button>'
-    +'<button data-scout="dead" style="padding:8px 4px;border:2px solid #94a3b8;border-radius:7px;background:#f1f5f9;color:#475569;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">⚫ Dead</button>'
+    +_obtn('intro_set','📅 Intro Set','#93c5fd','#eff6ff','#2563eb')
+    +_obtn('in_play','🟡 In Play','#fcd34d','#fffbeb','#d97706')
+    +_obtn('no_contact','🚪 No Contact','#c4b5fd','#f5f3ff','#7c3aed')
+    +_obtn('voicemail','📲 Voicemail','#fdba74','#fff7ed','#ea580c')
+    +_obtn('not_now','❌ Not Now','#fca5a5','#fef2f2','#dc2626')
+    +_obtn('dead','⚫ Dead','#94a3b8','#f1f5f9','#475569')
     +'</div>'
-    +'<button data-scout="quoted" style="width:100%;padding:9px;border:2px solid #7c3aed;border-radius:8px;background:#f5f3ff;color:#7c3aed;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;touch-action:manipulation;margin-bottom:8px">📄 Send Quote / Mark Quoted</button>'
+    +(_blocked.has('quoted')
+      ?'<button data-scout="quoted" data-blocked="1" style="width:100%;padding:9px;border:2px solid #e2e8f0;border-radius:8px;background:#f8fafc;color:#94a3b8;font-size:11px;font-weight:600;cursor:not-allowed;font-family:inherit;touch-action:manipulation;margin-bottom:8px;opacity:0.6">🔒 Send Quote / Mark Quoted</button>'
+      :'<button data-scout="quoted" style="width:100%;padding:9px;border:2px solid #7c3aed;border-radius:8px;background:#f5f3ff;color:#7c3aed;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;touch-action:manipulation;margin-bottom:8px">📄 Send Quote / Mark Quoted</button>')
     // Reason picker
     +'<div id="sc-reason-wrap" style="display:none;margin-bottom:8px">'
     +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;margin-bottom:4px">Reason</div>'
@@ -5148,10 +5200,15 @@ function showCard(id){
     // Outcome selection
     if(btn.dataset.scout){
       var outcome=btn.dataset.scout;
+      if(btn.dataset.blocked){
+        toast('🔒 Can\'t move backward — stage already at '+( getProspectStage(p)||'prospect'));
+        return;
+      }
       if(outcome==='signed'){
         toast('Use the 🤝 Close Deal button below to record a signed deal');
         return;
       }
+      // Re-engage: remove blocked flag so in_play proceeds normally
       selOutcome=outcome;selReason=null;
       bg.querySelectorAll('[data-scout]').forEach(function(b){
         b.style.opacity=b===btn?'1':'0.45';
@@ -5196,12 +5253,18 @@ function showCard(id){
         date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
         notes:logNotes,followup:logFollowup});
       lSave();
-      toast(logFollowup?'✓ '+(OI[selOutcome]||selOutcome)+' — follow-up '+logFollowup:'✓ '+(OI[selOutcome]||selOutcome)+' logged');
-      bg.remove();
-      if(_queueAutoAdvance){_queueAutoAdvance=false;queueIdx++;renderQueueCard();}
-      else if(tab==='today')renderBriefing();
-      else if(tab==='all')rA();
-      else renderKPIs();
+      if(selOutcome==='quoted'){
+        toast('📄 Moved to Pipeline → Quoted');
+        bg.remove();
+        setPipeStage('quoted');sw('pipeline');
+      } else {
+        toast(logFollowup?'✓ '+(OI[selOutcome]||selOutcome)+' — follow-up '+logFollowup:'✓ '+(OI[selOutcome]||selOutcome)+' logged');
+        bg.remove();
+        if(_queueAutoAdvance){_queueAutoAdvance=false;queueIdx++;renderQueueCard();}
+        else if(tab==='today')renderBriefing();
+        else if(tab==='all')rA();
+        else renderKPIs();
+      }
       return;
     }
 
@@ -5744,6 +5807,28 @@ function getProspectStage(p){
   return null;
 }
 
+// Stage order for forward-only enforcement
+const STAGE_RANK={null:0,inplay:1,quoted:2,won:3,lost:-1};
+// Returns set of outcome strings that are BLOCKED for this prospect
+// (can't move backward in the pipeline)
+function getBlockedOutcomes(p){
+  const stage=getProspectStage(p);
+  const blocked=new Set();
+  // If already quoted or further, block backward moves to in-play outcomes
+  if(stage==='quoted'||stage==='won'){
+    ['intro_set','in_play','no_contact','voicemail'].forEach(o=>blocked.add(o));
+  }
+  // If already won, block everything except lost (churn)
+  if(stage==='won'){
+    ['intro_set','in_play','no_contact','voicemail','not_now','dead','quoted'].forEach(o=>blocked.add(o));
+  }
+  // If lost, block forward moves (require explicit re-engage)
+  if(stage==='lost'){
+    ['intro_set','in_play','quoted'].forEach(o=>blocked.add(o));
+  }
+  return blocked;
+}
+
 function renderPipeline(){
   const listEl=document.getElementById('pipeline-list');
   const emptyEl=document.getElementById('pipeline-empty');
@@ -5814,7 +5899,7 @@ function renderPipeline(){
       const oLabel=lc?(OI[normO(lc.outcome)]||OI[lc.outcome]||lc.outcome):(pipeStage==='won'?'Customer':'Lost');
       const notes=lc&&lc.notes?'<div style="font-size:9px;color:var(--sub);margin-top:2px">'+lc.notes.slice(0,60)+(lc.notes.length>60?'…':'')+'</div>':'';
       const dateStr=lc?'<span style="font-size:9px;color:var(--sub)">'+lc.date+'</span>':'';
-      html+='<div class="dc" style="padding:10px 12px;margin-bottom:6px;cursor:pointer" onclick="showCard('+p.id+')">'
+      html+='<div class="dc" data-id="'+p.id+'" style="padding:10px 12px;margin-bottom:6px;cursor:pointer" onclick="showCard('+p.id+')" ontouchend="event.preventDefault();showCard('+p.id+')">'
         +'<div style="display:flex;justify-content:space-between;align-items:flex-start">'
         +'<div style="font-weight:700;font-size:12px;color:var(--navy);flex:1;margin-right:8px">'+p.name+'</div>'
         +'<span style="font-size:9px;padding:2px 7px;border-radius:20px;font-weight:700;white-space:nowrap;background:'+oColor+'18;color:'+oColor+'">'+oLabel+'</span>'
@@ -5863,7 +5948,7 @@ function renderPipeline(){
         :p.ice_risk_level==='Medium'
         ?'<span style="font-size:8px;padding:1px 5px;border-radius:8px;background:#fff7ed;color:#c2410c;margin-left:4px;font-weight:700">&#x1F9CA; Med</span>'
         :'';
-      html+='<div class="dc" style="padding:10px 12px;margin-bottom:6px;cursor:pointer" onclick="showCard('+p.id+')">'
+      html+='<div class="dc" data-id="'+p.id+'" style="padding:10px 12px;margin-bottom:6px;cursor:pointer" onclick="showCard('+p.id+')" ontouchend="event.preventDefault();showCard('+p.id+')">'
         +'<div style="display:flex;justify-content:space-between;align-items:flex-start">'
         +'<div style="font-weight:700;font-size:12px;color:var(--navy);flex:1;margin-right:8px">'+p.name+riskBadge+'</div>'
         +'<span style="font-size:9px;padding:2px 7px;border-radius:20px;font-weight:700;white-space:nowrap;background:'+oColor+'18;color:'+oColor+'">'+oLabel+'</span>'
@@ -5961,7 +6046,7 @@ function rCust(){
       +'</div>'
       // Action buttons
       +'<div style="display:flex;gap:5px;flex-wrap:wrap">'
-        +'<button onclick="event.stopPropagation();openM('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:1px solid var(--brd);border-radius:6px;background:var(--surf);color:var(--navy);cursor:pointer;font-family:inherit">Details</button>'
+        +'<button onclick="event.stopPropagation();openM('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();openM('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:1px solid var(--brd);border-radius:6px;background:var(--surf);color:var(--navy);cursor:pointer;font-family:inherit;touch-action:manipulation">Details</button>'
         +(c.hubspot_url
           ?'<a href="'+c.hubspot_url+'" target="_blank" onclick="event.stopPropagation()" style="flex:1;font-size:9px;padding:5px;border:1px solid #ff7a59;border-radius:6px;background:#fff7f5;color:#ff7a59;cursor:pointer;font-family:inherit;text-decoration:none;text-align:center;display:flex;align-items:center;justify-content:center">HubSpot &#x2197;</a>'
           :'<a href="'+hsUrl+'" target="_blank" onclick="event.stopPropagation()" style="flex:1;font-size:9px;padding:5px;border:1px solid #ff7a59;border-radius:6px;background:#fff7f5;color:#ff7a59;cursor:pointer;font-family:inherit;text-decoration:none;text-align:center;display:flex;align-items:center;justify-content:center">+ HubSpot</a>')
@@ -6484,16 +6569,31 @@ function renderBriefing(){
     }
   }
 
-  // ── NEW SINCE YESTERDAY ───────────────────────────────────────────────
+  // ── NEW SINCE YESTERDAY — Urgent / Watch / Info tiers ────────────────
   const nsyEl=document.getElementById('new-since-yesterday');
-  const nsyGrid=document.getElementById('nsy-grid');
   if(nsyEl){
     const newBizs=P.filter(p=>p.new_reason&&!isC(p.id))
-      .sort((a,b)=>(PO[a.priority]??99)-(PO[b.priority]??99)||(b.score||0)-(a.score||0))
-      .slice(0,5);
+      .sort((a,b)=>(PO[a.priority]??99)-(PO[b.priority]??99)||(b.score||0)-(a.score||0));
     if(newBizs.length){
       nsyEl.style.display='block';
-      if(nsyGrid){nsyGrid.innerHTML=newBizs.map(p=>cardHTML(p)).join('');attachGridListeners(nsyGrid);}
+      const nsyUrgent  =newBizs.filter(p=>p.change_severity==='urgent').slice(0,4);
+      const nsyWarning =newBizs.filter(p=>p.change_severity==='warning').slice(0,3);
+      const nsyInfo    =newBizs.filter(p=>p.change_severity==='info'||!p.change_severity).slice(0,3);
+      function _nsySection(wrapId,gridId,items){
+        const wrap=document.getElementById(wrapId);
+        const grid=document.getElementById(gridId);
+        if(!wrap||!grid)return;
+        if(items.length){
+          wrap.style.display='block';
+          grid.innerHTML=items.map(p=>cardHTML(p)).join('');
+          attachGridListeners(grid);
+        } else {
+          wrap.style.display='none';
+        }
+      }
+      _nsySection('nsy-urgent-wrap','nsy-urgent-grid',nsyUrgent);
+      _nsySection('nsy-warning-wrap','nsy-warning-grid',nsyWarning);
+      _nsySection('nsy-info-wrap','nsy-info-grid',nsyInfo);
     } else {
       nsyEl.style.display='none';
     }
@@ -8577,6 +8677,15 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
       const id=parseInt(card.dataset.id);
       if(id)openM(id);
       e.preventDefault();
+      return;
+    }
+
+    // ── Pipeline stage cards (.dc) tap → showCard ─────────────────────────
+    const dcCard=t.closest('.dc[data-id]');
+    if(dcCard){
+      if(t.closest('a,input,textarea,button,select'))return;
+      const id=parseInt(dcCard.dataset.id);
+      if(id){showCard(id);e.preventDefault();}
       return;
     }
 
