@@ -28,6 +28,11 @@ jobs:
         run: python download_data.py
 
       - name: Build prospect tool
+        env:
+          SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY:    ${{ secrets.SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          SUPABASE_USER_ID:     ${{ secrets.SUPABASE_USER_ID }}
         run: python build.py data/
 
       - name: Commit and push

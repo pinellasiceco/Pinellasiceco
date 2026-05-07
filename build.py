@@ -1585,6 +1585,44 @@ def run(csv_paths):
 # ──────────────────────────────────────────────────────────────────────────────
 # HTML
 # ──────────────────────────────────────────────────────────────────────────────
+# ── SUPABASE BUILD HELPERS ────────────────────────────────────────────────────
+_SUPABASE_URL_ENV  = os.environ.get('SUPABASE_URL', '').strip()
+_SUPABASE_KEY_ENV  = os.environ.get('SUPABASE_SERVICE_KEY', '').strip()  # service role key
+_SUPABASE_ANON_ENV = os.environ.get('SUPABASE_ANON_KEY', '').strip()     # public anon key (baked into HTML)
+_SUPABASE_USER_ID  = os.environ.get('SUPABASE_USER_ID', '').strip()
+
+def push_to_supabase(table, data):
+    """Push a data payload to a Supabase table using the service role key."""
+    if not _SUPABASE_URL_ENV or not _SUPABASE_KEY_ENV or not _SUPABASE_USER_ID:
+        print(f'  Supabase not configured — skipping {table} push')
+        return False
+    try:
+        import requests as _req
+        r = _req.post(
+            f'{_SUPABASE_URL_ENV}/rest/v1/{table}',
+            headers={
+                'Content-Type': 'application/json',
+                'apikey': _SUPABASE_KEY_ENV,
+                'Authorization': f'Bearer {_SUPABASE_KEY_ENV}',
+                'Prefer': 'resolution=merge-duplicates',
+            },
+            json={
+                'user_id': _SUPABASE_USER_ID,
+                'data': data,
+                'built_at': date.today().isoformat(),
+            },
+            timeout=30
+        )
+        if r.status_code in (200, 201):
+            print(f'  ✓ Pushed {len(data)} records to {table}')
+            return True
+        else:
+            print(f'  ✗ Supabase push failed ({table}): {r.status_code} {r.text[:200]}')
+            return False
+    except Exception as e:
+        print(f'  ✗ Supabase push error ({table}): {e}')
+        return False
+
 def build_html(records, partners=None):
     data_js     = json.dumps(records, separators=(',',':')).replace('`', '\\u0060')
     partners_js = json.dumps(partners or [], separators=(',',':')).replace('`', '\\u0060')
@@ -1614,7 +1652,9 @@ def build_html(records, partners=None):
                         .replace('%%NPHONE%%', str(n_phone))\
                         .replace('%%NCHRON%%', str(n_chron))\
                         .replace('%%NGEO%%', str(n_geo))\
-                        .replace('%%NCONF%%', str(sum(1 for r in records if r['confirmed'])))
+                        .replace('%%NCONF%%', str(sum(1 for r in records if r['confirmed'])))\
+                        .replace('%%SUPABASE_URL%%', _SUPABASE_URL_ENV)\
+                        .replace('%%SUPABASE_ANON_KEY%%', _SUPABASE_ANON_ENV)
 
 # ──────────────────────────────────────────────────────────────────────────────
 # HTML TEMPLATE  (everything between the triple-quotes)
@@ -1638,6 +1678,8 @@ HTML_TEMPLATE = """\
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="theme-color" content="#2d3e50">
 <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>var _SUPABASE_URL='%%SUPABASE_URL%%';var _SUPABASE_ANON_KEY='%%SUPABASE_ANON_KEY%%';</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
@@ -2639,6 +2681,8 @@ header{background:var(--navy);
         <button onclick="saveSupabaseSettings();updateSyncDot();toast('&#x2713; Credentials saved')" ontouchend="event.preventDefault();saveSupabaseSettings();updateSyncDot();toast('&#x2713; Credentials saved')" style="flex:1;padding:8px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Save Credentials</button>
         <span id="sync-dot" style="width:10px;height:10px;border-radius:50%;background:#e2e8f0;flex-shrink:0;display:inline-block" title="Sync status"></span>
       </div>
+      <div id="auth-status-row" style="margin-top:10px;padding:8px;background:#f0fdf4;border-radius:8px;font-size:10px;color:#059669;font-weight:600;display:none">&#x2713; Logged in</div>
+      <button id="signout-btn" onclick="if(confirm('Sign out? You will need to tap a magic link to sign back in.'))signOut()" ontouchend="event.preventDefault();if(confirm('Sign out?'))signOut()" style="width:100%;margin-top:8px;padding:9px;border:1px solid #fca5a5;border-radius:8px;background:#fef2f2;color:#dc2626;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation;display:none">Sign Out</button>
     </div>
 
     <div class="dc" style="margin-top:12px">
@@ -2817,6 +2861,9 @@ const P=%%DATA%%;
 const PARTNERS=%%PARTNERS%%;
 const PHONES=%%PHONES%%;
 const ZIPS=%%ZIPS%%;
+
+// ── SUPABASE AUTH GLOBALS ─────────────────────────────────────────────────────
+var _sb=null,_session=null,_userId=null,_realtimeChannel=null;
 
 const PITCHES={
   callback:n=>`"Hi, is this <b>${n}</b>? I'm [Your Name] from Pinellas Ice Co  -  we clean and sanitize commercial ice machines locally. I'm reaching out because you recently had some health inspection issues. Ice machines are almost always part of callback inspections. We can get yours cleaned and documented before the inspector returns  -  usually takes about 2 hours. <b>Do you have time this week?</b>"`,
@@ -3890,6 +3937,10 @@ function lSave(){
     toast('✓ Logged — next');
   }
   try{localStorage.setItem('pic_v4',JSON.stringify(log));}catch(e){}
+  // Write each updated prospect's log to Supabase
+  if(_sb&&_userId){
+    Object.keys(log).forEach(function(pid){sbUpsert('pic_log',pid,log[pid]);});
+  }
 }
 function phLoad(){
   try{
@@ -3906,6 +3957,7 @@ function phSave(id,phone,hours,rating){
   let s={};try{s=JSON.parse(localStorage.getItem('pic_phones')||'{}')||{};}catch(e){}
   s[id]={phone,hours,rating};try{localStorage.setItem('pic_phones',JSON.stringify(s));}catch(e){}
   const p=P.find(x=>x.id===id);if(p){p.phone=phone;p.hours=hours;p.rating=rating;}
+  if(_sb&&_userId)sbUpsert('pic_phones',id,{phone,hours,rating});
 }
 function getLC(id){const e=log[id]||[];return e.length?e[e.length-1]:null;}
 function isC(id){
@@ -5727,7 +5779,12 @@ function custLoad(){
   // Apply saved statuses to P records
   P.forEach(p=>{const c=customers[p.id];if(c)p.status=c.status;});
 }
-function custSave(){try{localStorage.setItem('pic_customers',JSON.stringify(customers));}catch(e){}}
+function custSave(){
+  try{localStorage.setItem('pic_customers',JSON.stringify(customers));}catch(e){}
+  if(_sb&&_userId){
+    Object.keys(customers).forEach(function(pid){sbUpsert('pic_customers',pid,customers[pid]);});
+  }
+}
 
 function markWon(status){
   if(!cur)return;
@@ -6645,6 +6702,239 @@ function renderKPIs(){
   if(el('kpi-clients'))el('kpi-clients').textContent=recurring.length;
   if(el('kpi-pipe'))el('kpi-pipe').textContent=pipeCount;
   if(el('kpi-week'))el('kpi-week').textContent=weekTotal;
+}
+
+// ── SUPABASE AUTH ─────────────────────────────────────────────────────────────
+function initSupabase(){
+  var url=(_SUPABASE_URL&&_SUPABASE_URL!=='%%SUPABASE_URL%%')?_SUPABASE_URL
+         :(localStorage.getItem('pic_supabase_url')||'').trim();
+  var key=(_SUPABASE_ANON_KEY&&_SUPABASE_ANON_KEY!=='%%SUPABASE_ANON_KEY%%')?_SUPABASE_ANON_KEY
+         :(localStorage.getItem('pic_supabase_key')||'').trim();
+  if(!url||!key){console.warn('Supabase not configured');return null;}
+  try{_sb=window.supabase.createClient(url,key);return _sb;}
+  catch(e){console.warn('Supabase init error:',e);return null;}
+}
+
+async function checkAuth(){
+  if(!_sb)return null;
+  try{var r=await _sb.auth.getSession();return r.data&&r.data.session;}
+  catch(e){return null;}
+}
+
+async function signInWithMagicLink(email){
+  if(!_sb){toast('Supabase not configured');return false;}
+  try{
+    var r=await _sb.auth.signInWithOtp({
+      email:email,
+      options:{emailRedirectTo:'https://pinellasiceco.github.io/Pinellasiceco/'}
+    });
+    if(r.error){toast('Error: '+r.error.message);return false;}
+    toast('&#x2713; Magic link sent — check your email');
+    return true;
+  }catch(e){toast('Error: '+e.message);return false;}
+}
+
+async function signOut(){
+  if(_sb)try{await _sb.auth.signOut();}catch(e){}
+  _session=null;_userId=null;
+  showLoginScreen();
+}
+
+function showLoginScreen(){
+  document.getElementById('app').style.display='none';
+  var existing=document.getElementById('login-screen');
+  if(existing)existing.remove();
+  var d=document.createElement('div');
+  d.id='login-screen';
+  d.style.cssText='position:fixed;inset:0;background:#0f1f38;display:flex;flex-direction:column;'
+    +'align-items:center;justify-content:center;padding:32px;z-index:9999';
+  d.innerHTML='<div style="text-align:center;max-width:360px;width:100%">'
+    +'<div style="font-size:48px;margin-bottom:16px">&#x1F9CA;</div>'
+    +'<div style="font-size:24px;font-weight:800;color:#fff;margin-bottom:4px">Pinellas Ice Co</div>'
+    +'<div style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:40px">Prospect &amp; Client Management</div>'
+    +'<div style="margin-bottom:12px">'
+      +'<input id="login-email" type="email" placeholder="your@email.com" '
+      +'style="width:100%;padding:14px;border:none;border-radius:10px;font-size:15px;'
+      +'font-family:inherit;outline:none;box-sizing:border-box;text-align:center">'
+    +'</div>'
+    +'<button id="login-btn" '
+    +'style="width:100%;padding:14px;border:none;border-radius:10px;background:#c9973a;'
+    +'color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">'
+    +'Send Magic Link</button>'
+    +'<div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:20px">Tap the link in your email to log in.<br>No password needed.</div>'
+    +'</div>';
+  document.body.appendChild(d);
+  var btn=document.getElementById('login-btn');
+  if(btn){
+    async function _doLogin(e){
+      if(e.type==='touchend')e.preventDefault();
+      var email=(document.getElementById('login-email')||{}).value||'';
+      if(!email||!email.includes('@')){toast('Enter your email address');return;}
+      btn.textContent='Sending...';btn.disabled=true;
+      var ok=await signInWithMagicLink(email);
+      if(!ok){btn.textContent='Send Magic Link';btn.disabled=false;}
+    }
+    btn.addEventListener('touchend',_doLogin,false);
+    btn.addEventListener('click',_doLogin,false);
+  }
+}
+
+function hideLoginScreen(){
+  var ls=document.getElementById('login-screen');
+  if(ls)ls.remove();
+  document.getElementById('app').style.display='flex';
+}
+
+function showLoadingScreen(msg){
+  var el=document.getElementById('loading-screen');
+  if(!el){
+    el=document.createElement('div');
+    el.id='loading-screen';
+    el.style.cssText='position:fixed;inset:0;background:#0f1f38;display:flex;flex-direction:column;'
+      +'align-items:center;justify-content:center;z-index:9998;color:#fff';
+    document.body.appendChild(el);
+  }
+  el.innerHTML='<div style="font-size:32px;margin-bottom:16px">&#x1F9CA;</div>'
+    +'<div style="font-size:14px;color:rgba(255,255,255,.7)">'+(msg||'Loading...')+'</div>';
+}
+
+function hideLoadingScreen(){
+  var el=document.getElementById('loading-screen');
+  if(el)el.remove();
+}
+
+// ── CLOUD DATA LOADING ────────────────────────────────────────────────────────
+async function loadCloudData(){
+  if(!_sb||!_userId)return;
+  showLoadingScreen('Loading your data...');
+  try{
+    // Prospects — prefer Supabase row, fall back to embedded P[]
+    var r1=await _sb.from('pic_prospects').select('data').eq('user_id',_userId).single();
+    if(r1.data&&r1.data.data&&Array.isArray(r1.data.data)&&r1.data.data.length){
+      P.length=0;r1.data.data.forEach(function(x){P.push(x);});
+      console.log('Loaded '+P.length+' prospects from Supabase');
+    } else {
+      console.log('Using embedded prospect data ('+P.length+' records)');
+    }
+
+    // Partners
+    var r2=await _sb.from('pic_partners').select('data').eq('user_id',_userId).single();
+    if(r2.data&&r2.data.data&&Array.isArray(r2.data.data)){
+      PARTNERS.length=0;r2.data.data.forEach(function(x){PARTNERS.push(x);});
+    }
+
+    // Call log
+    var r3=await _sb.from('pic_log').select('prospect_id,data').eq('user_id',_userId);
+    log={};
+    (r3.data||[]).forEach(function(row){log[row.prospect_id]=row.data;});
+
+    // Customers
+    var r4=await _sb.from('pic_customers').select('prospect_id,data').eq('user_id',_userId);
+    customers={};
+    (r4.data||[]).forEach(function(row){
+      customers[row.prospect_id]=row.data;
+      var p=P.find(function(x){return String(x.id)===String(row.prospect_id);});
+      if(p)p.status=row.data.status;
+    });
+
+    // Phones
+    var r5=await _sb.from('pic_phones').select('prospect_id,data').eq('user_id',_userId);
+    (r5.data||[]).forEach(function(row){
+      if(row.data&&row.data.phone){
+        PHONES[row.prospect_id]=row.data.phone;
+        var p=P.find(function(x){return String(x.id)===String(row.prospect_id);});
+        if(p){p.phone=row.data.phone;if(row.data.hours)p.hours=row.data.hours;if(row.data.rating)p.rating=row.data.rating;}
+      }
+    });
+
+    // Settings
+    var r6=await _sb.from('pic_settings').select('key,data').eq('user_id',_userId);
+    (r6.data||[]).forEach(function(row){
+      if(row.key==='settings')localStorage.setItem('pic_settings',JSON.stringify(row.data));
+      if(row.key==='goals'){goals=row.data;localStorage.setItem('pic_goals',JSON.stringify(goals));}
+    });
+
+    // Partner data
+    var r7=await _sb.from('pic_partner_data').select('key,data').eq('user_id',_userId);
+    var pdRow=(r7.data||[]).find(function(row){return row.key==='partner_data';});
+    if(pdRow)localStorage.setItem('pic_partners_v1',JSON.stringify(pdRow.data));
+
+    // Sync to localStorage cache for offline resilience
+    try{localStorage.setItem('pic_v4',JSON.stringify(log));}catch(e){}
+    try{localStorage.setItem('pic_customers',JSON.stringify(customers));}catch(e){}
+
+    hideLoadingScreen();
+    console.log('Cloud data loaded successfully');
+  }catch(err){
+    hideLoadingScreen();
+    console.error('Failed to load cloud data:',err);
+    toast('Cloud load failed — using local cache');
+  }
+}
+
+// ── REAL-TIME SYNC ─────────────────────────────────────────────────────────────
+function subscribeRealtime(){
+  if(!_sb||!_userId)return;
+  if(_realtimeChannel)_sb.removeChannel(_realtimeChannel);
+  _realtimeChannel=_sb.channel('pic-changes-'+_userId)
+    .on('postgres_changes',{event:'*',schema:'public',table:'pic_log',
+      filter:'user_id=eq.'+_userId},function(payload){
+        var row=payload.new||payload.old;if(!row)return;
+        if(row.data)log[row.prospect_id]=row.data;
+        try{localStorage.setItem('pic_v4',JSON.stringify(log));}catch(e){}
+        if(tab==='home'){renderBriefing();renderTodaysPlan();}
+        else if(tab==='prospects')rA();
+        else if(tab==='pipeline')renderPipeline(pipeStage);
+        flashSyncDot();
+    })
+    .on('postgres_changes',{event:'*',schema:'public',table:'pic_customers',
+      filter:'user_id=eq.'+_userId},function(payload){
+        var row=payload.new||payload.old;if(!row||!row.data)return;
+        customers[row.prospect_id]=row.data;
+        try{localStorage.setItem('pic_customers',JSON.stringify(customers));}catch(e){}
+        var p=P.find(function(x){return String(x.id)===row.prospect_id;});
+        if(p)p.status=row.data.status;
+        if(tab==='clients')rCust();
+        else if(tab==='pipeline')renderPipeline(pipeStage);
+        flashSyncDot();
+    })
+    .subscribe(function(status){
+      console.log('Realtime status:',status);
+      updateSyncDot(status==='SUBSCRIBED'?'synced':'local');
+    });
+}
+
+function flashSyncDot(){
+  var dot=document.getElementById('sync-dot');
+  if(!dot)return;
+  dot.style.opacity='0.3';
+  setTimeout(function(){dot.style.opacity='1';},400);
+}
+
+// ── SUPABASE UPSERT HELPERS ────────────────────────────────────────────────────
+function getUserId(){return _userId||localStorage.getItem('pic_device_id')||null;}
+
+async function sbUpsert(table,prospectId,data){
+  if(!_sb)return;
+  var uid=getUserId();if(!uid)return;
+  try{
+    await _sb.from(table).upsert({
+      user_id:uid,
+      prospect_id:String(prospectId),
+      data:data,
+      updated_at:new Date().toISOString()
+    },{onConflict:'user_id,prospect_id'});
+  }catch(e){console.warn('sbUpsert failed:',table,e);}
+}
+
+async function sbUpsertSetting(key,data){
+  if(!_sb)return;
+  var uid=getUserId();if(!uid)return;
+  try{
+    await _sb.from('pic_settings').upsert({
+      user_id:uid,key:key,data:data,updated_at:new Date().toISOString()
+    },{onConflict:'user_id,key'});
+  }catch(e){console.warn('sbUpsertSetting failed:',e);}
 }
 
 function swCustomers(){sw('clients');}
@@ -8472,6 +8762,16 @@ function initSettings(){
   if(sbUrlEl)sbUrlEl.value=localStorage.getItem('pic_supabase_url')||'';
   var sbKeyEl=document.getElementById('sb-supabase-key');
   if(sbKeyEl)sbKeyEl.value=localStorage.getItem('pic_supabase_key')||'';
+  // Show sign-out button and auth status if logged in
+  var authRow=document.getElementById('auth-status-row');
+  var soBtn=document.getElementById('signout-btn');
+  if(_userId){
+    if(authRow){authRow.style.display='block';authRow.textContent='&#x2713; Logged in as '+(_session&&_session.user&&_session.user.email?_session.user.email:'user');}
+    if(soBtn)soBtn.style.display='block';
+  } else {
+    if(authRow)authRow.style.display='none';
+    if(soBtn)soBtn.style.display='none';
+  }
   setTimeout(updateSyncDot,100);
 }
 function saveEmailFnUrl(){
@@ -8484,20 +8784,26 @@ function saveSupabaseSettings(){
   if(u.trim())localStorage.setItem('pic_supabase_url',u.trim());
   if(k.trim())localStorage.setItem('pic_supabase_key',k.trim());
 }
-function updateSyncDot(){
+function updateSyncDot(mode){
   var dot=document.getElementById('sync-dot');
   if(!dot)return;
-  var u=(localStorage.getItem('pic_supabase_url')||'').trim();
-  var k=(localStorage.getItem('pic_supabase_key')||'').trim();
+  if(mode==='synced'){dot.style.background='#059669';dot.title='Live sync active';return;}
+  if(mode==='local'){dot.style.background='#d97706';dot.title='Reconnecting...';return;}
+  // Legacy: check manual settings
+  var u=(localStorage.getItem('pic_supabase_url')||(_SUPABASE_URL!=='%%SUPABASE_URL%%'?_SUPABASE_URL:'')).trim();
+  var k=(localStorage.getItem('pic_supabase_key')||(_SUPABASE_ANON_KEY!=='%%SUPABASE_ANON_KEY%%'?_SUPABASE_ANON_KEY:'')).trim();
   var fn=(localStorage.getItem('pic_email_fn_url')||'').trim();
-  if(u&&k&&fn){dot.style.background='#059669';dot.title='Cloud sync configured';}
-  else if(u||k||fn){dot.style.background='#d97706';dot.title='Partially configured — fill all 3 fields';}
+  if(_userId){dot.style.background='#059669';dot.title='Logged in — cloud sync active';}
+  else if(u&&k){dot.style.background='#d97706';dot.title='Configured but not logged in';}
   else{dot.style.background='#e2e8f0';dot.title='Not configured';}
 }
 async function sendEmailViaProxy(to,subject,htmlBody){
   var url=(localStorage.getItem('pic_email_fn_url')||'').trim();
   if(!url){toast('Email Proxy URL not set — add it in Settings → Email Proxy');return false;}
-  var anonKey=(localStorage.getItem('pic_supabase_key')||'').trim();
+  // Prefer baked-in anon key, fall back to manual setting
+  var anonKey=(_SUPABASE_ANON_KEY&&_SUPABASE_ANON_KEY!=='%%SUPABASE_ANON_KEY%%')
+    ?_SUPABASE_ANON_KEY
+    :(localStorage.getItem('pic_supabase_key')||'').trim();
   var headers={'Content-Type':'application/json'};
   if(anonKey)headers['Authorization']='Bearer '+anonKey;
   try{
@@ -8508,17 +8814,19 @@ async function sendEmailViaProxy(to,subject,htmlBody){
   }catch(e){toast('Email error: '+e.message);return false;}
 }
 async function exportToBriefing(){
-  var sbUrl=(localStorage.getItem('pic_supabase_url')||'').trim();
-  var sbKey=(localStorage.getItem('pic_supabase_key')||'').trim();
+  var sbUrl=(_SUPABASE_URL&&_SUPABASE_URL!=='%%SUPABASE_URL%%')?_SUPABASE_URL
+            :(localStorage.getItem('pic_supabase_url')||'').trim();
+  var sbKey=(_SUPABASE_ANON_KEY&&_SUPABASE_ANON_KEY!=='%%SUPABASE_ANON_KEY%%')?_SUPABASE_ANON_KEY
+            :(localStorage.getItem('pic_supabase_key')||'').trim();
   if(!sbUrl||!sbKey){toast('Configure Supabase URL and Key in Settings first');return;}
+  var uid=_userId||localStorage.getItem('pic_device_id')||('dev-'+Math.random().toString(36).slice(2));
+  if(!_userId)localStorage.setItem('pic_device_id',uid);
   var contactedIds=Object.keys(log).filter(function(id){return (log[id]||[]).length>0;});
-  var deviceId=localStorage.getItem('pic_device_id')||('dev-'+Math.random().toString(36).slice(2));
-  localStorage.setItem('pic_device_id',deviceId);
   try{
     var r=await fetch(sbUrl+'/rest/v1/pic_briefing_export',{
       method:'POST',
       headers:{'Content-Type':'application/json','apikey':sbKey,'Authorization':'Bearer '+sbKey,'Prefer':'resolution=merge-duplicates'},
-      body:JSON.stringify({device_id:deviceId,contacted_ids:contactedIds,exported_at:new Date().toISOString()})
+      body:JSON.stringify({device_id:uid,contacted_ids:contactedIds,exported_at:new Date().toISOString()})
     });
     if(r.ok){toast('✓ Exported '+contactedIds.length+' contacted prospects to briefing filter');}
     else{var t=await r.text();toast('Export failed: HTTP '+r.status);}
@@ -8598,11 +8906,7 @@ function deleteContact(bizId,idx){
 
 // ── INIT ─────────────────────────────────────────────────────────────────────
 // INIT
-function init(){
-  lLoad();phLoad();custLoad();contactsLoad();initSettings();initGoals();loadRouteState();setTimeout(function(){renderBriefing();renderTodaysPlan();},150);
-  const si=document.getElementById('si');if(si)si.blur();
-  // FAB hidden - using tab navigation instead
-
+function _initTouchHandlers(){
   // Global touch handler - catches taps on dynamically injected cards
   // iOS Safari drops onclick on innerHTML-injected elements; this doesn't
   var _tsx=0,_tsy=0,_tsTime=0;
@@ -8613,16 +8917,12 @@ function init(){
   },{passive:true});
 
   document.addEventListener('touchend',function(e){
-    // Ignore scrolls
     var dx=Math.abs(e.changedTouches[0].clientX-_tsx);
     var dy=Math.abs(e.changedTouches[0].clientY-_tsy);
     if(dx>12||dy>12)return;
-    // Ignore rapid re-fires
     if(Date.now()-_tsTime>1000)return;
 
     var t=e.target;
-
-    // Action button?
     var btn=t.closest('[data-action]');
     if(btn){
       var act=btn.dataset.action;
@@ -8630,23 +8930,75 @@ function init(){
       var id=parseInt(btn.dataset.id||(card&&card.dataset.id)||'0');
       if(!id)return;
       e.preventDefault();
-      if(act==='showCard')      showCard(id);
+      if(act==='showCard')    showCard(id);
       else if(act==='svclog') openServiceLog(id);
       else if(act==='snext')  setNextService(id);
-      else if(act==='skip')     skip(id);
-      else if(act==='route')    addToRoute(id);
-      else if(act==='unskip')   unskip(id);
-      else if(act==='start')    setRouteAnchor(id);
+      else if(act==='skip')   skip(id);
+      else if(act==='route')  addToRoute(id);
+      else if(act==='unskip') unskip(id);
+      else if(act==='start')  setRouteAnchor(id);
       return;
     }
-
-    // Tap on card body?
     var card2=t.closest('[data-id]');
     if(card2&&!t.closest('a')&&!t.closest('input')&&!t.closest('textarea')&&!t.closest('select')){
       var id2=parseInt(card2.dataset.id||'0');
       if(id2){e.preventDefault();showCard(id2);}
     }
   },false);
+}
+
+function _renderApp(){
+  phLoad();contactsLoad();initSettings();initGoals();loadRouteState();
+  updateSyncDot();
+  const si=document.getElementById('si');if(si)si.blur();
+  setTimeout(function(){renderBriefing();renderTodaysPlan();},150);
+}
+
+async function init(){
+  _initTouchHandlers();
+  initSupabase();
+
+  if(!_sb){
+    // No Supabase — local-only mode
+    lLoad();custLoad();
+    _renderApp();
+    return;
+  }
+
+  // Check for existing session
+  var session=await checkAuth();
+
+  // Handle magic-link redirect (access_token in URL hash)
+  if(!session){
+    var hp=new URLSearchParams(window.location.hash.slice(1));
+    if(hp.get('access_token')){
+      var rr=await _sb.auth.getSession();
+      session=rr.data&&rr.data.session;
+      window.history.replaceState({},'',window.location.pathname);
+    }
+  }
+
+  if(!session){
+    // Show login; listen for magic link auth
+    lLoad();custLoad(); // load local cache so app works offline/demo
+    showLoginScreen();
+    _sb.auth.onAuthStateChange(async function(event,newSession){
+      if(event==='SIGNED_IN'&&newSession){
+        _session=newSession;_userId=newSession.user.id;
+        hideLoginScreen();
+        await loadCloudData();
+        _renderApp();
+        subscribeRealtime();
+      }
+    });
+    return;
+  }
+
+  // Already logged in
+  _session=session;_userId=session.user.id;
+  await loadCloudData();
+  _renderApp();
+  subscribeRealtime();
 }
 if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{setTimeout(init,50);}
 
@@ -8838,6 +9190,12 @@ def main():
     sw_path = OUTPUT_FILE.parent / 'sw.js'
     sw_path.write_text(SW_JS.replace('BUILD_DATE', date.today().strftime('%Y%m%d')), encoding='utf-8')
     print(f"  Written: sw.js")
+
+    # Push to Supabase (CI only — skipped when env vars not set)
+    print(f"\nPushing data to Supabase...")
+    push_to_supabase('pic_prospects', records)
+    push_to_supabase('pic_partners', partners)
+
     print(f"\n{'='*55}")
     print(f"  Done! Open prospecting_tool.html in Chrome.")
     print(f"  Your call log carries over automatically.")
