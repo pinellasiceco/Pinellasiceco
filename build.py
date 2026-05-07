@@ -6706,13 +6706,14 @@ function renderKPIs(){
 
 // ── SUPABASE AUTH ─────────────────────────────────────────────────────────────
 function initSupabase(){
-  var url=(_SUPABASE_URL&&_SUPABASE_URL!=='%%SUPABASE_URL%%')?_SUPABASE_URL
-         :(localStorage.getItem('pic_supabase_url')||'').trim();
-  var key=(_SUPABASE_ANON_KEY&&_SUPABASE_ANON_KEY!=='%%SUPABASE_ANON_KEY%%')?_SUPABASE_ANON_KEY
-         :(localStorage.getItem('pic_supabase_key')||'').trim();
-  if(!url||!key){console.warn('Supabase not configured');return null;}
-  try{_sb=window.supabase.createClient(url,key);return _sb;}
-  catch(e){console.warn('Supabase init error:',e);return null;}
+  var url=_SUPABASE_URL||(localStorage.getItem('pic_supabase_url')||'').trim();
+  var key=_SUPABASE_ANON_KEY||(localStorage.getItem('pic_supabase_key')||'').trim();
+  if(!url||!key){console.warn('Running without Supabase — demo mode');return null;}
+  try{
+    _sb=window.supabase.createClient(url,key);
+    console.log('Supabase initialized:',url);
+    return _sb;
+  }catch(e){console.error('Supabase init error:',e);return null;}
 }
 
 async function checkAuth(){
@@ -8789,9 +8790,8 @@ function updateSyncDot(mode){
   if(!dot)return;
   if(mode==='synced'){dot.style.background='#059669';dot.title='Live sync active';return;}
   if(mode==='local'){dot.style.background='#d97706';dot.title='Reconnecting...';return;}
-  // Legacy: check manual settings
-  var u=(localStorage.getItem('pic_supabase_url')||(_SUPABASE_URL!=='%%SUPABASE_URL%%'?_SUPABASE_URL:'')).trim();
-  var k=(localStorage.getItem('pic_supabase_key')||(_SUPABASE_ANON_KEY!=='%%SUPABASE_ANON_KEY%%'?_SUPABASE_ANON_KEY:'')).trim();
+  var u=(_SUPABASE_URL||localStorage.getItem('pic_supabase_url')||'').trim();
+  var k=(_SUPABASE_ANON_KEY||localStorage.getItem('pic_supabase_key')||'').trim();
   var fn=(localStorage.getItem('pic_email_fn_url')||'').trim();
   if(_userId){dot.style.background='#059669';dot.title='Logged in — cloud sync active';}
   else if(u&&k){dot.style.background='#d97706';dot.title='Configured but not logged in';}
@@ -8800,10 +8800,7 @@ function updateSyncDot(mode){
 async function sendEmailViaProxy(to,subject,htmlBody){
   var url=(localStorage.getItem('pic_email_fn_url')||'').trim();
   if(!url){toast('Email Proxy URL not set — add it in Settings → Email Proxy');return false;}
-  // Prefer baked-in anon key, fall back to manual setting
-  var anonKey=(_SUPABASE_ANON_KEY&&_SUPABASE_ANON_KEY!=='%%SUPABASE_ANON_KEY%%')
-    ?_SUPABASE_ANON_KEY
-    :(localStorage.getItem('pic_supabase_key')||'').trim();
+  var anonKey=_SUPABASE_ANON_KEY||(localStorage.getItem('pic_supabase_key')||'').trim();
   var headers={'Content-Type':'application/json'};
   if(anonKey)headers['Authorization']='Bearer '+anonKey;
   try{
@@ -8814,10 +8811,8 @@ async function sendEmailViaProxy(to,subject,htmlBody){
   }catch(e){toast('Email error: '+e.message);return false;}
 }
 async function exportToBriefing(){
-  var sbUrl=(_SUPABASE_URL&&_SUPABASE_URL!=='%%SUPABASE_URL%%')?_SUPABASE_URL
-            :(localStorage.getItem('pic_supabase_url')||'').trim();
-  var sbKey=(_SUPABASE_ANON_KEY&&_SUPABASE_ANON_KEY!=='%%SUPABASE_ANON_KEY%%')?_SUPABASE_ANON_KEY
-            :(localStorage.getItem('pic_supabase_key')||'').trim();
+  var sbUrl=_SUPABASE_URL||(localStorage.getItem('pic_supabase_url')||'').trim();
+  var sbKey=_SUPABASE_ANON_KEY||(localStorage.getItem('pic_supabase_key')||'').trim();
   if(!sbUrl||!sbKey){toast('Configure Supabase URL and Key in Settings first');return;}
   var uid=_userId||localStorage.getItem('pic_device_id')||('dev-'+Math.random().toString(36).slice(2));
   if(!_userId)localStorage.setItem('pic_device_id',uid);
@@ -8959,7 +8954,7 @@ async function init(){
   initSupabase();
 
   if(!_sb){
-    // No Supabase — local-only mode
+    console.warn('Running without Supabase — demo mode');
     lLoad();custLoad();
     _renderApp();
     return;
@@ -8979,8 +8974,8 @@ async function init(){
   }
 
   if(!session){
-    // Show login; listen for magic link auth
-    lLoad();custLoad(); // load local cache so app works offline/demo
+    console.log('No session found — showing login screen');
+    lLoad();custLoad();
     showLoginScreen();
     _sb.auth.onAuthStateChange(async function(event,newSession){
       if(event==='SIGNED_IN'&&newSession){
