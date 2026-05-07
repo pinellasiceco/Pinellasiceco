@@ -2598,6 +2598,16 @@ header{background:var(--navy);
 
   <!-- DATA -->
   <div class="panel" id="p-data">
+    <div id="acct-section" class="dc" style="margin-bottom:12px">
+      <div class="dct">&#x1F464; Account</div>
+      <div id="acct-logged-in" style="display:none">
+        <div style="font-size:12px;color:#64748b;margin-bottom:8px">Signed in as: <span id="settings-email" style="color:#0f1f38;font-weight:600"></span></div>
+        <button ontouchend="event.preventDefault();doSettingsSignOut()" onclick="doSettingsSignOut()" style="width:100%;padding:10px;border:1px solid #fca5a5;border-radius:8px;background:#fef2f2;color:#dc2626;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">Sign Out</button>
+      </div>
+      <div id="acct-logged-out" style="display:none">
+        <div style="font-size:12px;color:#64748b;margin-bottom:8px">Not signed in &mdash; enter credentials below and tap Connect &amp; Login.</div>
+      </div>
+    </div>
     <div class="dc" style="margin-bottom:12px">
       <div class="dct">&#x1F4E6; Dataset &mdash; %%DATE%%</div>
       <div class="ds"><span>Total prospects</span><span class="dsv">%%TOTAL%%</span></div>
@@ -2722,12 +2732,6 @@ header{background:var(--navy);
       <button class="dbtn" onclick="doResetFees()" style="margin-bottom:4px;width:100%;background:#fff7ed;color:#d97706;border-color:#fcd34d">Reset Partner Fees (mark all owed)</button>
       <button class="dbtn" onclick="doResetLocal()" style="margin-bottom:4px;width:100%;background:#fef2f2;color:#dc2626;border-color:#fca5a5">&#x1F5D1; Reset Local Data (calls, customers, partners)</button>
       <button class="dbtn" onclick="doResetAll()" style="width:100%;background:#dc2626;color:#fff;border-color:#dc2626">&#x26A0; Wipe All Data &amp; Reload</button>
-    </div>
-
-    <div id="acct-section" class="dc" style="margin-top:12px;display:none">
-      <div class="dct">&#x1F464; Account</div>
-      <div style="font-size:12px;color:#64748b;margin-bottom:8px">Signed in as: <span id="settings-email" style="color:#0f1f38;font-weight:600"></span></div>
-      <button ontouchend="event.preventDefault();doSettingsSignOut()" onclick="doSettingsSignOut()" style="width:100%;padding:10px;border:1px solid #fca5a5;border-radius:8px;background:#fef2f2;color:#dc2626;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">Sign Out</button>
     </div>
 
   </div>
@@ -8775,18 +8779,21 @@ function initSettings(){
   // Show sign-out button and auth status if logged in
   var authRow=document.getElementById('auth-status-row');
   var soBtn=document.getElementById('signout-btn');
-  var acctSection=document.getElementById('acct-section');
+  var acctIn=document.getElementById('acct-logged-in');
+  var acctOut=document.getElementById('acct-logged-out');
   var settingsEmail=document.getElementById('settings-email');
   if(_userId){
     var email=_session&&_session.user&&_session.user.email?_session.user.email:'user';
     if(authRow){authRow.style.display='block';authRow.textContent='✓ Logged in as '+email;}
     if(soBtn)soBtn.style.display='block';
-    if(acctSection)acctSection.style.display='block';
+    if(acctIn)acctIn.style.display='block';
+    if(acctOut)acctOut.style.display='none';
     if(settingsEmail)settingsEmail.textContent=email;
   } else {
     if(authRow)authRow.style.display='none';
     if(soBtn)soBtn.style.display='none';
-    if(acctSection)acctSection.style.display='none';
+    if(acctIn)acctIn.style.display='none';
+    if(acctOut)acctOut.style.display='block';
   }
   setTimeout(updateSyncDot,100);
 }
