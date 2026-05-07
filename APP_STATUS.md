@@ -1,9 +1,9 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-05-07 (session 15) by Claude Code*
+*Last updated: 2026-05-07 (session 16 — cloud migration) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
-- Last deployed: 2026-05-07 (session 15 — pipeline routing, disposition rules, iOS touch fixes, briefing severity tiers)
+- Last deployed: 2026-05-07 (session 16 — Supabase Auth + real-time sync + cloud data migration)
 - Build script: `build.py` (repo root) → outputs `index.html` directly
 - `index.html` regenerated from `build.py` using existing P[] data — fully in sync
 
@@ -136,6 +136,8 @@ To force a fresh PWA load after a push: open the URL directly in Safari (not the
 - Nothing from the current feature roadmap is missing
 
 ## Recent Changes
+- **2026-05-07 (s16):** Full cloud migration — Supabase Auth + magic link login + real-time sync. `initSupabase()` bootstraps from baked-in credentials (replaced by `build_html()` at CI time). `init()` is now async: checks auth session, shows `showLoginScreen()` if none, listens for `onAuthStateChange`. `loadCloudData()` loads all data from Supabase tables with localStorage fallback as offline cache. `subscribeRealtime()` subscribes to `pic_log` + `pic_customers` postgres_changes for live cross-device sync. `lSave()` / `custSave()` / `phSave()` now write to Supabase via `sbUpsert()` in addition to localStorage. Python `push_to_supabase()` pushes P[] and PARTNERS[] to Supabase at CI build time. `rebuild.yml` passes new secrets to build step. Settings overlay shows logged-in email + Sign Out button. Offline/demo mode preserved: if Supabase not configured, login screen skipped and app uses localStorage. 75/75 tests passing. sw.js bumped to `pic-20260507c`. **Requires Supabase SQL setup + 4 GitHub Secrets before login flow works** — see Next Session Priorities.
+- **2026-05-07 (s15 patch):** Fix button in churn-risk widget now calls `navigateToClientService(id)` — switches to Clients tab, opens Service sub-tab, smooth-scrolls to `#svc-card-{id}` with 2s red outline highlight. Each `.svc-card` now has `id="svc-card-{p.id}"`. iOS `ontouchend` on Fix button. sw.js bumped to `pic-20260507b`.
 - **2026-05-07 (s15):** Four fixes — (1) FIX 1: `normO()` was mapping `'quoted'` → `'in_play'`, breaking `getProspectStage()` so prospects never appeared in Pipeline → Quoted. Removed that mapping; `quoted` is now a first-class outcome with its own OI label ("Quote Sent ✓") and colour. Logging Quoted shows "📄 Moved to Pipeline → Quoted" toast and navigates to that stage. (2) FIX 2: `getBlockedOutcomes(p)` enforces forward-only stage progression — outcome buttons grey with 🔒 when a move would regress stage; Lost prospects get a dedicated 🔄 Re-engage button. (3) FIX 3: Pipeline `.dc` cards get `data-id` + `ontouchend`; Route "Details"/"Remove" buttons and Client "Details" button get `ontouchend`; global IIFE extended to handle `.dc[data-id]` taps — all reliable on iOS Safari. (4) FIX 4: Python `classify_change()` adds `change_severity` field (urgent/warning/info) to every P[] record. Home tab New Since Yesterday splits into 🚨 Urgent / ⚠️ Watch / ℹ️ Info sub-sections. `send_briefing.py` email restructured identically, subject line leads with urgent count. sw.js bumped to `pic-20260507a`; 75/75 tests passing.
 - **2026-05-06 (s14):** Three bug fixes — (1) FIX 1: `emailComplianceReport` now reads technician notes from `service_history` (primary) with `atp_history.notes` fallback, so notes logged during visits appear in compliance PDF and email body; (2) FIX 2: `renderServiceCal` now shows all active customer statuses (`customer_recurring`, `customer_quarterly`, `customer_once`, `customer_intro`) — new clients appear in Service tab immediately after Close Deal, with plan type badge (Monthly/Quarterly/One-Time/Intro) in card subtitle; (3) FIX 3: Partner seed list expanded from 5 to 43 Pinellas County businesses across all 5 categories (10 hood cleaning, 9 pest control, 8 refrigeration, 7 beverage equipment, 7 HVAC) with real phone numbers and addresses; session-13 JS fixes backported to `build.py` so CI rebuilds don't regress them; sw.js bumped to `pic-20260506b`
 - **2026-05-06 (s13):** Compliance PDF notes & ATP status change detection — `atp_history.push` now includes `notes` field so repeat inspections of existing locations persist technician notes; `emailComplianceReport` reads notes from most recent `atp_history` entry and appends to email body; `srGenerate`/`srSendEmail` detect PASS/MARGINAL/FAIL status changes between consecutive visits and show amber ⚠ STATUS CHANGE banner; `scStatusReport` persists entered ATP value and notes back to `atp_history` before dispatching PDF/email so subsequent compliance emails can retrieve them; UA test suite remains 75 passed, 0 failed
@@ -179,11 +181,57 @@ To force a fresh PWA load after a push: open the URL directly in Safari (not the
 - **2026-04-27 (s7):** Daily briefing reliability — decoupled from `rebuild.yml` into dedicated `send_briefing.yml` triggered on push to main (fixes silent cron failure on low-activity repos)
 - **2026-04-27 (s7):** `deploy_edge_functions.yml` — auto-deploys Edge Functions from repo; eliminates need to copy-paste code into Supabase dashboard
 
+## Cloud / Auth Architecture (session 16)
+
+### Login Flow
+- `initSupabase()` — creates Supabase client from baked-in `_SUPABASE_URL` / `_SUPABASE_ANON_KEY` (replaced at CI build time); falls back to localStorage `pic_supabase_url` / `pic_supabase_key`
+- `init()` — async, auth-first: checks session → shows login screen if none → listens for `onAuthStateChange` → on SIGNED_IN loads cloud data + subscribes realtime
+- `showLoginScreen()` — full-screen navy overlay with ice cube emoji, email input, "Send Magic Link" button; `addEventListener` pattern (iOS-safe)
+- `hideLoginScreen()` — removes overlay, restores `#app` display
+- `showLoadingScreen(msg)` / `hideLoadingScreen()` — navy loading overlay shown during `loadCloudData()`
+- Magic link redirect: `access_token` in URL hash handled automatically by Supabase JS client; URL cleaned with `history.replaceState`
+- Settings overlay shows "✓ Logged in as email@..." + **Sign Out** button when `_userId` is set
+
+### Data Loading (`loadCloudData()`)
+- Loads in order: pic_prospects → pic_partners → pic_log → pic_customers → pic_phones → pic_settings → pic_partner_data
+- Prospects: if Supabase row exists, replaces embedded `P[]` array; otherwise falls back to embedded data from build
+- All loaded data also written to localStorage as offline cache
+
+### Real-time Sync (`subscribeRealtime()`)
+- Channel: `pic-changes-{userId}` with `postgres_changes` listeners on `pic_log` and `pic_customers`
+- On change: updates in-memory `log`/`customers`, re-renders active tab, flashes `sync-dot`, writes to localStorage cache
+- `sync-dot` turns green when realtime `SUBSCRIBED`, amber on reconnect
+
+### Save Functions
+- `lSave()` — writes to localStorage + calls `sbUpsert('pic_log', pid, data)` for each pid if logged in
+- `custSave()` — writes to localStorage + calls `sbUpsert('pic_customers', pid, data)` if logged in
+- `phSave()` — writes to localStorage + calls `sbUpsert('pic_phones', id, data)` if logged in
+- `sbUpsert(table, prospectId, data)` — upserts with `{user_id, prospect_id, data, updated_at}` using `onConflict:'user_id,prospect_id'`
+
+### Build Pipeline (CI)
+- `push_to_supabase(table, data)` Python function at end of `main()` pushes `records` → `pic_prospects` and `partners` → `pic_partners`
+- `build_html()` replaces `%%SUPABASE_URL%%` and `%%SUPABASE_ANON_KEY%%` from env vars
+- `rebuild.yml` passes `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_KEY`, `SUPABASE_USER_ID` to build step
+
+### GitHub Secrets Required
+| Secret | Where to find |
+|--------|--------------|
+| `SUPABASE_URL` | Supabase → Settings → API |
+| `SUPABASE_ANON_KEY` | Supabase → Settings → API (public anon key) |
+| `SUPABASE_SERVICE_KEY` | Supabase → Settings → API (service_role key) |
+| `SUPABASE_USER_ID` | `select id from auth.users` after first login |
+
+### Supabase SQL to Run (one-time setup)
+See the SQL in the prompt — creates `pic_prospects`, `pic_partners`, adds `user_id` column to existing tables, enables RLS, creates `own_*` policies. Enable realtime on `pic_log` and `pic_customers` in Supabase dashboard → Database → Replication.
+
+### Offline / Demo Mode
+- If Supabase is not configured (no URL/key in env or localStorage), app runs in local-only mode — login screen is skipped, localStorage data used directly. Zero regression for existing usage.
+
 ## Next Session Priorities
-1. Verify Quoted outcome moves prospect to Pipeline → Quoted stage (log a Quoted outcome → confirm Pipeline tab shows it)
-2. Confirm 🔒 blocked buttons appear on a prospect that's already Quoted (open showCard → verify Intro Set / In Play / No Contact / Voicemail are locked)
-3. Verify notes appear in compliance email after a live service visit (log visit with notes → tap Email Report → confirm notes in body)
-4. Confirm New Since Yesterday Urgent/Watch/Info sections appear after next CI rebuild with real data
+1. **Supabase setup**: Run the SQL from the prompt in Supabase SQL Editor; enable realtime on `pic_log` + `pic_customers`; add 4 GitHub Secrets (`SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_KEY`, `SUPABASE_USER_ID`)
+2. **First login test**: Open app → confirm login screen appears; enter email → confirm magic link email received; tap link → confirm app loads with data
+3. **Real-time test**: Open on iPhone + iPad simultaneously; log outcome on one → confirm it appears on the other within 2 seconds
+4. **CI rebuild**: Trigger manual rebuild → confirm `pic_prospects` row updated in Supabase SQL Editor
 
 ## iOS PWA Rules (never violate these)
 - **Buttons in injected HTML:** use inline `ontouchend="event.preventDefault();fn()"` + `onclick="fn()"` — NOT `addEventListener` on innerHTML-injected elements
