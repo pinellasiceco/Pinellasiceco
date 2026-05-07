@@ -4020,6 +4020,7 @@ function sw(t){
   else if(t==='route'){rRoute();}
   else if(t==='clients'){if(clientTab==='service')rService();else rCust();}
   else if(t==='partners'){renderPartners();}
+  else if(t==='data'){initSettings();}
   if(t==='route'&&typeof L==='undefined')loadLeaflet();
 }
 function setPipeStage(s){
