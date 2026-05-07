@@ -1,5 +1,5 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-05-07 (session 16b — login screen fix) by Claude Code*
+*Last updated: 2026-05-07 (session 16c — magic link redirect + Connect & Login button) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
@@ -136,6 +136,7 @@ To force a fresh PWA load after a push: open the URL directly in Safari (not the
 - Nothing from the current feature roadmap is missing
 
 ## Recent Changes
+- **2026-05-07 (s16c):** Two fixes — (1) **Connect & Login button** added to Settings → Cloud Sync section (sky-blue button below "Save Credentials"): saves URL + anon key to localStorage then calls `location.reload()` so `init()` re-runs, picks up credentials, and shows the magic link login screen — fixes "no login screen after clearing Safari history" when CI hasn't baked credentials yet; (2) **Magic link redirect** verified correct — `emailRedirectTo` is already `https://pinellasiceco.github.io/Pinellasiceco/` in `signInWithMagicLink()`; no `localhost` references found in `build.py` or `index.html`; Supabase dashboard Site URL fix by user is the complete solution.
 - **2026-05-07 (s16b):** Fix login screen not appearing. Root cause: `build_html()` replaces ALL `%%SUPABASE_URL%%` occurrences in the HTML template, including the guard checks inside `initSupabase()` like `_SUPABASE_URL!=='%%SUPABASE_URL%%'`. After replacement this became `_SUPABASE_URL!=='https://actual-url'` — always false — so `url` always fell through to localStorage (empty), `initSupabase()` returned null, and the app silently entered demo mode with no login screen. Fixed all 7 occurrences across `initSupabase()`, `updateSyncDot()`, `sendEmailViaProxy()`, `exportToBriefing()` in both `build.py` and `index.html`. Simple truthy check now: `var url=_SUPABASE_URL||localStorage.getItem('pic_supabase_url')||''`. Added `console.log('Supabase initialized: <url>')`, `console.log('No session found — showing login screen')`, `console.warn('Running without Supabase — demo mode')` for diagnostics.
 - **2026-05-07 (s16):** Full cloud migration — Supabase Auth + magic link login + real-time sync. `initSupabase()` bootstraps from baked-in credentials (replaced by `build_html()` at CI time). `init()` is now async: checks auth session, shows `showLoginScreen()` if none, listens for `onAuthStateChange`. `loadCloudData()` loads all data from Supabase tables with localStorage fallback as offline cache. `subscribeRealtime()` subscribes to `pic_log` + `pic_customers` postgres_changes for live cross-device sync. `lSave()` / `custSave()` / `phSave()` now write to Supabase via `sbUpsert()` in addition to localStorage. Python `push_to_supabase()` pushes P[] and PARTNERS[] to Supabase at CI build time. `rebuild.yml` passes new secrets to build step. Settings overlay shows logged-in email + Sign Out button. Offline/demo mode preserved: if Supabase not configured, login screen skipped and app uses localStorage. 75/75 tests passing. sw.js bumped to `pic-20260507c`. **Requires Supabase SQL setup + 4 GitHub Secrets before login flow works** — see Next Session Priorities.
 - **2026-05-07 (s15 patch):** Fix button in churn-risk widget now calls `navigateToClientService(id)` — switches to Clients tab, opens Service sub-tab, smooth-scrolls to `#svc-card-{id}` with 2s red outline highlight. Each `.svc-card` now has `id="svc-card-{p.id}"`. iOS `ontouchend` on Fix button. sw.js bumped to `pic-20260507b`.
@@ -229,10 +230,10 @@ See the SQL in the prompt — creates `pic_prospects`, `pic_partners`, adds `use
 - If Supabase is not configured (no URL/key in env or localStorage), app runs in local-only mode — login screen is skipped, localStorage data used directly. Zero regression for existing usage.
 
 ## Next Session Priorities
-1. **Supabase setup**: Run the SQL from the prompt in Supabase SQL Editor; enable realtime on `pic_log` + `pic_customers`; add 4 GitHub Secrets (`SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_KEY`, `SUPABASE_USER_ID`)
-2. **First login test**: Open app → confirm login screen appears; enter email → confirm magic link email received; tap link → confirm app loads with data
+1. **Verify login flow end-to-end**: Open Settings → enter Supabase URL + anon key → tap "Connect & Login" → confirm login screen appears → request magic link → confirm email arrives → tap link → confirm redirects to `pinellasiceco.github.io` (not localhost) → confirm app loads with data
+2. **CI rebuild with secrets**: Trigger manual rebuild in GitHub Actions → confirm `index.html` gets real credentials baked in → confirm login screen appears on fresh load without needing Settings
 3. **Real-time test**: Open on iPhone + iPad simultaneously; log outcome on one → confirm it appears on the other within 2 seconds
-4. **CI rebuild**: Trigger manual rebuild → confirm `pic_prospects` row updated in Supabase SQL Editor
+4. **SUPABASE_USER_ID secret**: After first login, run `select id from auth.users` in Supabase SQL Editor → add as GitHub Secret → trigger CI rebuild so briefing email uses correct user ID
 
 ## iOS PWA Rules (never violate these)
 - **Buttons in injected HTML:** use inline `ontouchend="event.preventDefault();fn()"` + `onclick="fn()"` — NOT `addEventListener` on innerHTML-injected elements
