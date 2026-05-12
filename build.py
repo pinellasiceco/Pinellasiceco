@@ -7592,8 +7592,8 @@ function openServiceLog(id){
     // Photos
     +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;margin-bottom:6px">Before/After Photos</div>'
     +'<div id="svc-photo-preview" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px"></div>'
-    +'<button id="svc-add-photo-btn" style="width:100%;padding:10px;border:2px dashed #e2e8f0;border-radius:8px;background:#f8fafc;color:#64748b;font-size:12px;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4F7; Add Photos (before/after)</button>'
-    +'<input id="svc-photo-input" type="file" accept="image/*" multiple style="display:none">'
+    +'<label for="svc-photo-input" id="svc-add-photo-btn" style="display:block;width:100%;padding:10px;border:2px dashed #e2e8f0;border-radius:8px;background:#f8fafc;color:#64748b;font-size:12px;cursor:pointer;font-family:inherit;text-align:center;box-sizing:border-box">&#x1F4F7; Add Photos (before/after)</label>'
+    +'<input id="svc-photo-input" type="file" accept="image/*" multiple style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden">'
 
     // Previous service info
     +(lastSvc?'<div style="background:#f5f8fa;border-radius:7px;padding:8px;margin-bottom:10px;font-size:10px;color:var(--sub)">'
@@ -7630,10 +7630,8 @@ function openServiceLog(id){
   _svcPhotos=[];
   var photoBtn=document.getElementById('svc-add-photo-btn');
   var photoInput=document.getElementById('svc-photo-input');
-  if(photoBtn&&photoInput){
-    photoBtn.addEventListener('touchend',function(e){e.preventDefault();photoInput.click();},false);
-    photoBtn.addEventListener('click',function(){photoInput.click();},false);
-    photoInput.addEventListener('change',function(){_handlePhotoSelection(this.files,photoBtn);},false);
+  if(photoInput){
+    photoInput.addEventListener('change',function(){_handlePhotoSelection(this.files,document.getElementById('svc-add-photo-btn'));},false);
   }
 }
 
@@ -7689,12 +7687,14 @@ async function _uploadServicePhotos(prospectId,visitDate,photos){
     try{
       var compressed=await _compressImage(file,800,0.7);
       var up=await _sb.storage.from('service-photos').upload(path,compressed,{upsert:true,contentType:'image/jpeg'});
-      if(!up.error){
+      if(up.error){toast('Photo upload error: '+up.error.message);}
+      else{
         var sd=await _sb.storage.from('service-photos').createSignedUrl(path,31536000);
         if(sd.data)urls.push(sd.data.signedUrl);
       }
-    }catch(e){console.warn('Photo upload failed:',e);}
+    }catch(e){toast('Photo upload failed: '+(e.message||e));console.warn('Photo upload failed:',e);}
   }
+  if(urls.length)toast(urls.length+' photo'+(urls.length>1?'s':'')+' uploaded ✓');
   return urls;
 }
 
