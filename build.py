@@ -414,6 +414,7 @@ def build_partner_records(osm_cache=None, web_cache=None):
             'tier':               'bronze',
             'notes':              '',
             'last_contact':       '',
+            'build_date':         str(TODAY),
         }
         fit = calc_partner_fit_score(record)
         record.update(fit)
@@ -1506,6 +1507,7 @@ def run(csv_paths):
                 'phone':       phone_raw,
                 'status':      'prospect',
                 'rating':      0,
+                'build_date':  str(TODAY),
                 'hours':       hours_raw,
                 # New intelligence signals
                 'n_callbacks':    int(row.n_callbacks) if hasattr(row,'n_callbacks') else 0,
@@ -2050,7 +2052,7 @@ header{background:var(--navy);
     <div class="logo">
       <div class="logo-icon">&#x1F9CA;</div>
       <div><div class="logo-name">Pinellas Ice Co</div>
-        <div style="font-size:8px;color:var(--sub);letter-spacing:.04em">PROSPECT TOOL &bull; %%DATE%% &bull; v5</div>
+        <div style="font-size:8px;color:var(--sub);letter-spacing:.04em">PROSPECT TOOL &bull; %%DATE%% &bull; v5 &bull; <span id="data-freshness"></span></div>
       </div>
     </div>
     <div class="hchips">
@@ -5070,9 +5072,11 @@ function showCard(id){
     svcHistH='<div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Service History</div>'
       +[...svcHistory].reverse().slice(0,4).map(function(sv){
         var atpStr=sv.atp?(' · ATP: '+sv.atp+' RLU'):'';  
+        var photoCount=(sv.photo_urls&&sv.photo_urls.length)||0;
+        var photoLink=photoCount?'<span style="font-size:10px;color:#2563eb;cursor:pointer;margin-left:6px" onclick="viewServicePhotos(\''+JSON.stringify(sv.photo_urls||[]).replace(/'/g,'&#39;')+'\')" ontouchend="event.preventDefault();viewServicePhotos(\''+JSON.stringify(sv.photo_urls||[]).replace(/'/g,'&#39;')+'\')" >&#x1F4F7; '+photoCount+'</span>':'';
         return '<div style="padding:5px 0;border-bottom:1px solid #f1f5f9">'
-          +'<div style="font-size:10px;font-weight:700;color:#0f1f38">'+sv.date_display+(sv.type==='deep_clean'?' · 🧼 Deep Clean':' · 🔧 60-Day Maint.')+atpStr+'</div>'
-          +(sv.notes?'<div style="font-size:9px;color:#475569;font-style:italic">'+sv.notes+'</div>':'')  
+          +'<div style="font-size:10px;font-weight:700;color:#0f1f38">'+sv.date_display+(sv.type==='deep_clean'?' · 🧼 Deep Clean':' · 🔧 60-Day Maint.')+atpStr+photoLink+'</div>'
+          +(sv.notes?'<div style="font-size:9px;color:#475569;font-style:italic">'+sv.notes+'</div>':'')
           +'</div>';
       }).join('')
     +'</div>';
@@ -7452,6 +7456,7 @@ function logServiceFromCal(id,opts){
     machine_serial: opts.machine_serial||c.machine_serial||'',
     units: opts.units||1,
     notes: opts.notes||'',
+    photo_urls: opts.photo_urls||[],
     tech: 'Pinellas Ice Co',
   };
 
@@ -7553,6 +7558,12 @@ function openServiceLog(id){
     +'<textarea id="svc-notes" rows="3" placeholder="Machine condition, issues found, recommendations..."'
       +' style="width:100%;padding:8px;border:1px solid var(--brd);border-radius:7px;font-size:11px;font-family:inherit;background:var(--surf);color:var(--txt);outline:none;resize:none;margin-bottom:10px"></textarea>'
 
+    // Photos
+    +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;margin-bottom:6px">Before/After Photos</div>'
+    +'<div id="svc-photo-preview" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px"></div>'
+    +'<button id="svc-add-photo-btn" style="width:100%;padding:10px;border:2px dashed #e2e8f0;border-radius:8px;background:#f8fafc;color:#64748b;font-size:12px;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4F7; Add Photos (before/after)</button>'
+    +'<input id="svc-photo-input" type="file" accept="image/*" multiple style="display:none" capture="environment">'
+
     // Previous service info
     +(lastSvc?'<div style="background:#f5f8fa;border-radius:7px;padding:8px;margin-bottom:10px;font-size:10px;color:var(--sub)">'
       +'<span style="font-weight:600;color:var(--navy)">Previous: </span>'+lastSvc.date_display
@@ -7583,11 +7594,89 @@ function openServiceLog(id){
       else{ind.textContent='Retest/Reservice';ind.style.background='#fef2f2';ind.style.color='#dc2626';}
     });
   }
+
+  // Photo button wiring (addEventListener required — file input interaction)
+  _svcPhotos=[];
+  var photoBtn=document.getElementById('svc-add-photo-btn');
+  var photoInput=document.getElementById('svc-photo-input');
+  if(photoBtn&&photoInput){
+    photoBtn.addEventListener('touchend',function(e){e.preventDefault();photoInput.click();},false);
+    photoBtn.addEventListener('click',function(){photoInput.click();},false);
+    photoInput.addEventListener('change',function(){_handlePhotoSelection(this.files,photoBtn);},false);
+  }
 }
 
 let _svcType='maintenance_60';
+var _svcPhotos=[];
 function closeSvcLog(){const el=document.getElementById('svc-log-bg');if(el)el.remove();}
 function toggleStep(el){const next=el.nextElementSibling;if(next)next.style.display=next.style.display==='none'?'block':'none';}
+
+function _handlePhotoSelection(files,photoBtn){
+  var preview=document.getElementById('svc-photo-preview');
+  var maxPhotos=8;
+  Array.from(files).slice(0,maxPhotos-_svcPhotos.length).forEach(function(file){
+    _svcPhotos.push(file);
+    var reader=new FileReader();
+    reader.onload=function(e){
+      var thumb=document.createElement('div');
+      thumb.style.cssText='position:relative;width:70px;height:70px';
+      var idx=_svcPhotos.indexOf(file);
+      thumb.innerHTML='<img src="'+e.target.result+'" style="width:70px;height:70px;object-fit:cover;border-radius:6px;border:1px solid #e2e8f0">'
+        +'<div style="position:absolute;top:2px;right:2px;width:18px;height:18px;background:rgba(0,0,0,.5);border-radius:50%;color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;cursor:pointer" onclick="this.parentElement.remove();_svcPhotos.splice('+_svcPhotos.length-1+',1)">&#x2715;</div>';
+      if(preview)preview.appendChild(thumb);
+    };
+    reader.readAsDataURL(file);
+  });
+  if(photoBtn)photoBtn.textContent='&#x1F4F7; '+_svcPhotos.length+' photo'+(_svcPhotos.length!==1?'s':'')+' selected — tap to add more';
+}
+
+async function _compressImage(file,maxWidth,quality){
+  return new Promise(function(resolve){
+    var img=new Image();
+    var url=URL.createObjectURL(file);
+    img.onload=function(){
+      var canvas=document.createElement('canvas');
+      var ratio=Math.min(maxWidth/img.width,1);
+      canvas.width=img.width*ratio;
+      canvas.height=img.height*ratio;
+      canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+      canvas.toBlob(function(blob){URL.revokeObjectURL(url);resolve(blob);},'image/jpeg',quality);
+    };
+    img.onerror=function(){URL.revokeObjectURL(url);resolve(file);};
+    img.src=url;
+  });
+}
+
+async function _uploadServicePhotos(prospectId,visitDate,photos){
+  if(!_sb||!_userId||!photos.length)return[];
+  var urls=[];
+  var folder=_userId+'/'+prospectId+'/'+visitDate;
+  for(var i=0;i<photos.length;i++){
+    var file=photos[i];
+    var ext=(file.name||'').split('.').pop()||'jpg';
+    var path=folder+'/photo_'+(i+1)+'.'+ext;
+    try{
+      var compressed=await _compressImage(file,800,0.7);
+      var up=await _sb.storage.from('service-photos').upload(path,compressed,{upsert:true,contentType:'image/jpeg'});
+      if(!up.error){
+        var sd=await _sb.storage.from('service-photos').createSignedUrl(path,31536000);
+        if(sd.data)urls.push(sd.data.signedUrl);
+      }
+    }catch(e){console.warn('Photo upload failed:',e);}
+  }
+  return urls;
+}
+
+function viewServicePhotos(urlsJson){
+  var urls=JSON.parse(urlsJson);
+  var bg=document.createElement('div');
+  bg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:900;overflow-y:auto;padding:16px;-webkit-overflow-scrolling:touch';
+  bg.innerHTML='<div style="max-width:480px;margin:0 auto">'
+    +'<button onclick="this.closest(\'[style*=fixed]\').remove()" ontouchend="event.preventDefault();this.closest(\'[style*=fixed]\').remove()" style="color:#fff;background:none;border:none;font-size:14px;cursor:pointer;margin-bottom:12px;font-family:inherit;touch-action:manipulation">&#x2715; Close</button>'
+    +urls.map(function(url){return'<img src="'+url+'" style="width:100%;border-radius:8px;margin-bottom:8px">';}).join('')
+    +'</div>';
+  document.body.appendChild(bg);
+}
 
 function getDiagram(brand){
   const diagrams={
@@ -7815,7 +7904,7 @@ function toggleFilterType(){
   const row=document.getElementById('svc-filter-type-row');
   if(row)row.style.display=cb&&cb.checked?'block':'none';
 }
-function submitServiceLog(id){
+async function submitServiceLog(id){
   const atp=(document.getElementById('svc-atp')||{}).value||'';
   const atpPre=(document.getElementById('svc-atp-pre')||{}).value||'';
   const notes=(document.getElementById('svc-notes')||{}).value||'';
@@ -7827,6 +7916,11 @@ function submitServiceLog(id){
   const machineSerial=(document.getElementById('svc-machine-serial')||{}).value||'';
   const units=parseInt((document.getElementById('svc-units')||{}).value||'1')||1;
 
+  // Upload photos before saving so URLs are included in the service record
+  const today_iso=localISO(new Date());
+  var photoUrls=await _uploadServicePhotos(id,today_iso,_svcPhotos);
+  _svcPhotos=[];
+
   logServiceFromCal(id,{
     type:_svcType,
     atp,atp_pre:atpPre,notes,
@@ -7836,6 +7930,7 @@ function submitServiceLog(id){
     machine_model:machineModel,
     machine_serial:machineSerial,
     units,
+    photo_urls:photoUrls,
   });
 
   // Save machine info and filter to customer record for future reports
@@ -7852,7 +7947,6 @@ function submitServiceLog(id){
     customers[id].filter_installed=localISO(new Date());
   }
   // ATP history (logServiceFromCal covers service_history/last_service/next_service/custSave)
-  const today_iso=localISO(new Date());
   const today_str=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
   if(!customers[id].atp_history)customers[id].atp_history=[];
   if(atp||atpPre)customers[id].atp_history.push({date:today_iso,pre:atpPre,post:atp,notes:notes||''});
@@ -8746,6 +8840,17 @@ function srSendEmail(p,atpVal,emailTo,notes){
       +'<div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:6px">Technician Notes</div>'
       +'<div style="font-size:11px;color:#334155;line-height:1.6">'+notes+'</div>'
       +'</div>'):'')
+    +(function(){var lastSvc=((customers[p.id]||{}).service_history||[]).slice(-1)[0]||{};var pUrls=lastSvc.photo_urls||[];
+      if(!pUrls.length)return'';
+      return'<div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:14px">'
+        +'<div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:10px">Before / After Photos</div>'
+        +'<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px">'
+        +pUrls.map(function(url,i){
+          return'<div style="text-align:center"><img src="'+url+'" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;object-fit:cover;aspect-ratio:1">'
+            +'<div style="font-size:9px;color:#94a3b8;margin-top:3px">Photo '+(i+1)+'</div></div>';
+        }).join('')
+        +'</div></div>';
+    }())
     +'<div style="text-align:center;font-size:9px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:10px">'
     +'Pinellas Ice Co &nbsp;&middot;&nbsp; pinellasiceco.com &nbsp;&middot;&nbsp; (727) 855-6873<br>'
     +'FDA Food Code &sect;3-502.12 &nbsp;&middot;&nbsp; FL Administrative Code 64E-11 &nbsp;&middot;&nbsp; ATP testing per NSF/ANSI Standard 63'
@@ -9032,6 +9137,34 @@ function _renderApp(){
   setTimeout(function(){renderBriefing();renderTodaysPlan();},150);
 }
 
+function updateDataFreshness(){
+  var el=document.getElementById('data-freshness');
+  if(!el)return;
+  var buildDate=P&&P.length&&P[0].build_date?P[0].build_date:null;
+  if(!buildDate){el.textContent='';return;}
+  var parts=buildDate.split('-').map(Number);
+  var built=new Date(parts[0],parts[1]-1,parts[2],12,0,0);
+  var today=new Date();today.setHours(12,0,0,0);
+  var daysOld=Math.floor((today-built)/864e5);
+  if(daysOld===0){el.textContent='Data: today';el.style.color='rgba(110,231,183,.8)';}
+  else if(daysOld===1){el.textContent='Data: yesterday';el.style.color='rgba(255,255,255,.5)';}
+  else{el.textContent='Data: '+daysOld+'d old';el.style.color=daysOld>3?'#fca5a5':'rgba(255,255,255,.5)';}
+}
+function checkDataStaleness(){
+  if(!P||!P.length||!P[0].build_date)return;
+  var parts=P[0].build_date.split('-').map(Number);
+  var built=new Date(parts[0],parts[1]-1,parts[2],12,0,0);
+  var daysOld=Math.floor((new Date()-built)/864e5);
+  if(daysOld<3)return;
+  var banner=document.getElementById('stale-banner');
+  if(banner)return;
+  banner=document.createElement('div');
+  banner.id='stale-banner';
+  banner.style.cssText='background:#fef3c7;border-bottom:1px solid #fde68a;padding:6px 16px;font-size:11px;color:#92400e;text-align:center';
+  banner.textContent='\\u26A0 Inspection data is '+daysOld+' days old — daily rebuild may have failed';
+  var app=document.getElementById('app');
+  if(app)app.insertBefore(banner,app.firstChild.nextSibling);
+}
 async function init(){
   _initTouchHandlers();
   initSupabase();
@@ -9040,6 +9173,7 @@ async function init(){
     console.warn('Running without Supabase — demo mode');
     lLoad();custLoad();
     _renderApp();
+    updateDataFreshness();checkDataStaleness();
     return;
   }
 
@@ -9066,6 +9200,7 @@ async function init(){
         hideLoginScreen();
         await loadCloudData();
         _renderApp();
+        updateDataFreshness();checkDataStaleness();
         subscribeRealtime();
       }
     });
@@ -9076,6 +9211,7 @@ async function init(){
   _session=session;_userId=session.user.id;
   await loadCloudData();
   _renderApp();
+  updateDataFreshness();checkDataStaleness();
   subscribeRealtime();
 }
 if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{setTimeout(init,50);}
