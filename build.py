@@ -8003,6 +8003,9 @@ async function submitServiceLog(id){
   custSave();
   document.getElementById('svc-log-bg').remove();
   if(typeof rCust==='function')rCust();
+  // Offer report immediately after saving — pre-fill ATP and notes from the form
+  var _rptP=P.find(function(x){return x.id===id;});
+  if(_rptP){setTimeout(function(){scStatusReport(_rptP,{atp:parseInt(atp)||0,notes:notes});},300);}
 }
 
 function reschedule(id){
@@ -8617,15 +8620,16 @@ function saveReferredBy(bizId,refId){
 }
 
 // ── ATP STATUS REPORT ─────────────────────────────────────────────────────────
-function scStatusReport(p){
+function scStatusReport(p,prefill){
   var atpBg=document.createElement('div');
   atpBg.id='atp-bg';
   atpBg.style.cssText='position:fixed;inset:0;z-index:600;background:rgba(15,31,56,.88);display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box';
   var box=document.createElement('div');
   box.style.cssText='background:#fff;border-radius:16px;padding:24px;width:100%;max-width:340px';
+  var hasPrefill=prefill&&(prefill.atp||prefill.notes);
   box.innerHTML=
     '<div style="font-size:14px;font-weight:800;color:#0f1f38;margin-bottom:4px">&#x1F4CB; ATP Status Report</div>'
-    +'<div style="font-size:11px;color:#64748b;margin-bottom:16px">Enter the ATP reading from the test (RLU). Leave blank if not yet tested.</div>'
+    +'<div style="font-size:11px;color:#64748b;margin-bottom:16px">'+(hasPrefill?'Review the ATP reading and add an email to send the report.':'Enter the ATP reading from the test (RLU). Leave blank if not yet tested.')+'</div>'
     +'<input id="atp-val-inp" type="number" min="0" max="9999" placeholder="e.g. 847" inputmode="numeric" '
     +'style="width:100%;padding:14px;border:2px solid #e2e8f0;border-radius:10px;font-size:28px;font-weight:800;font-family:inherit;outline:none;text-align:center;box-sizing:border-box;margin-bottom:8px;color:#0f1f38">'
     +'<input id="atp-email-inp" type="email" placeholder="Email to (optional)" '
@@ -8640,7 +8644,9 @@ function scStatusReport(p){
   atpBg.appendChild(box);
   document.body.appendChild(atpBg);
   var inp=document.getElementById('atp-val-inp');
-  setTimeout(function(){if(inp)inp.focus();},120);
+  if(prefill&&prefill.atp&&inp)inp.value=prefill.atp;
+  if(prefill&&prefill.notes){var ni=document.getElementById('atp-notes-inp');if(ni)ni.value=prefill.notes;}
+  setTimeout(function(){if(inp&&!prefill)inp.focus();else{var ei=document.getElementById('atp-email-inp');if(ei)ei.focus();}},120);
   var _lt=0;
   function atpHandle(e){
     if(e.type==='click'&&Date.now()-_lt<350)return;
