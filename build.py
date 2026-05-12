@@ -4262,10 +4262,15 @@ function rA(){
   if(list.length===0){g.innerHTML='';empty.style.display='flex';return;}
   empty.style.display='none';
   requestAnimationFrame(()=>{
-    const visible=list.slice(0,50);
-    g.innerHTML=visible.map(p=>cardHTML(p)).join('');
-    if(list.length>50){g.innerHTML+='<div style="padding:12px;text-align:center;font-size:11px;color:var(--sub)">Showing 50 of '+list.length+' — use filters to narrow results</div>';}
-    attachGridListeners(g);
+    try{
+      const visible=list.slice(0,50);
+      g.innerHTML=visible.map(p=>cardHTML(p)).join('');
+      if(list.length>50){g.innerHTML+='<div style="padding:12px;text-align:center;font-size:11px;color:var(--sub)">Showing 50 of '+list.length+' — use filters to narrow results</div>';}
+      attachGridListeners(g);
+    }catch(e){
+      console.error('Prospects render error:',e);
+      g.innerHTML='<div style="padding:20px;text-align:center;font-size:12px;color:#dc2626">Display error — try refreshing.<br><span style="font-size:10px;color:#94a3b8">'+e.message+'</span></div>';
+    }
   });
 }
 
@@ -5884,7 +5889,7 @@ function markWon(status){
 
 function getProspectStage(p){
   // Won = customer statuses
-  const CUST=new Set(['customer_recurring','customer_intro','customer_once']);
+  const CUST=new Set(['customer_recurring','customer_quarterly','customer_intro','customer_once']);
   if(CUST.has(p.status))return 'won';
   if(p.status==='churned')return 'lost';
   if(p.status==='quoted')return 'quoted';
@@ -6493,10 +6498,10 @@ function renderBriefing(){
   const weekEntries=allEntries.filter(e=>{ const d=parseD(e.date);return d&&d>=weekAgo;});
 
   // ── KPI ROW ───────────────────────────────────────────────────────────
-  const recurring=P.filter(p=>{
-    const lc=getLC(p.id);return lc&&['signed','customer_recurring','customer_once'].includes(lc.outcome);
-  });
-  const mrr=recurring.reduce((s,p)=>s+(p.monthly||149),0);
+  const recurring=P.filter(p=>
+    ['customer_recurring','customer_quarterly','customer_once','customer_intro'].includes(p.status)
+  );
+  const mrr=recurring.reduce((s,p)=>s+((customers[p.id]||{}).monthly||p.monthly||149),0);
   const clientCount=recurring.length;
 
   // Pipeline = intro_set + in_play prospects
@@ -6732,8 +6737,8 @@ function renderKPIs(){
   // Fast-path: just update the 4 KPI numbers without re-rendering cards
   const now=new Date();
   const weekAgo=new Date(now-7*864e5);
-  const recurring=P.filter(p=>{const lc=getLC(p.id);return lc&&['signed','customer_recurring','customer_once'].includes(lc.outcome);});
-  const mrr=recurring.reduce((s,p)=>s+(p.monthly||149),0);
+  const recurring=P.filter(p=>['customer_recurring','customer_quarterly','customer_once','customer_intro'].includes(p.status));
+  const mrr=recurring.reduce((s,p)=>s+((customers[p.id]||{}).monthly||p.monthly||149),0);
   const pipeCount=Object.keys(log).filter(id=>{const lc=getLC(parseInt(id));return lc&&['in_play','intro_set','follow_up','interested','scheduled','quoted'].includes(lc.outcome);}).length;
   const weekEntries=[];
   Object.values(log).forEach(entries=>entries.forEach(e=>{const d=new Date(e.date);if(d>=weekAgo)weekEntries.push(e);}));
@@ -7594,7 +7599,7 @@ function openServiceLog(id){
     +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;margin-bottom:6px">Before/After Photos</div>'
     +'<div id="svc-photo-preview" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px"></div>'
     +'<button id="svc-add-photo-btn" style="width:100%;padding:10px;border:2px dashed #e2e8f0;border-radius:8px;background:#f8fafc;color:#64748b;font-size:12px;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4F7; Add Photos (before/after)</button>'
-    +'<input id="svc-photo-input" type="file" accept="image/*" multiple style="display:none" capture="environment">'
+    +'<input id="svc-photo-input" type="file" accept="image/*" multiple style="display:none">'
 
     // Previous service info
     +(lastSvc?'<div style="background:#f5f8fa;border-radius:7px;padding:8px;margin-bottom:10px;font-size:10px;color:var(--sub)">'
