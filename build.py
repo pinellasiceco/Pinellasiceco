@@ -2725,7 +2725,8 @@ header{background:var(--navy);
       <button class="xbtn" onclick="exportDirectoryData()" style="background:#059669;color:#fff;border-color:#059669;margin-bottom:10px;width:100%">&#x1F4E5; Export Directory Data</button>
       <button class="dbtn" onclick="clrLog()" style="margin-bottom:4px;width:100%">Clear Call Log</button>
       <button class="dbtn" onclick="clrCustomers()" style="margin-bottom:4px;width:100%">Clear Customer Data</button>
-      <button class="dbtn" onclick="clrAll()" style="width:100%">Clear ALL Data (full reset)</button>
+      <button class="dbtn" onclick="clrAll()" style="margin-bottom:4px;width:100%">Clear ALL Data (local reset)</button>
+      <button class="dbtn" onclick="clrAllCloud()" style="width:100%;background:#7c3aed;color:#fff;border-color:#7c3aed">&#x2601;&#xFE0F; Clear ALL Data + Cloud (fresh start)</button>
     </div>
 
     <div class="dc" style="margin-top:12px;border:1px solid #fca5a5;background:#fff5f5">
@@ -5785,6 +5786,30 @@ function clrAll(){
   else{rT();renderBriefing();}
   toast('All data cleared. Reloading...');
   setTimeout(()=>window.location.reload(),1200);
+}
+async function clrAllCloud(){
+  if(!confirm('Clear all call logs and client records on THIS device AND in the cloud? Cannot be undone.'))return;
+  if(!_sb||!_userId){
+    toast('Not logged in — cloud not cleared. Use "Clear ALL Data" instead.');
+    return;
+  }
+  // Clear locally
+  log={};lSave();
+  customers={};custSave();
+  contacts={};contactsSave();
+  vendors={};vendorsSave();
+  P.forEach(p=>{p.status='prospect';});
+  // Clear cloud tables for this user
+  try{
+    await Promise.all([
+      _sb.from('pic_log').delete().eq('user_id',_userId),
+      _sb.from('pic_customers').delete().eq('user_id',_userId)
+    ]);
+    toast('Local + cloud data cleared — reloading…');
+  }catch(e){
+    toast('Local cleared; cloud error: '+(e.message||e));
+  }
+  setTimeout(()=>window.location.reload(),1500);
 }
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2200);}
 
