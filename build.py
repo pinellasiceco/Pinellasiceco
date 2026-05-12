@@ -6894,19 +6894,23 @@ async function loadCloudData(){
       PARTNERS.length=0;r2.data.data.forEach(function(x){PARTNERS.push(x);});
     }
 
-    // Call log
+    // Call log — only replace if Supabase actually has records (don't wipe localStorage when tables are empty/missing)
     var r3=await _sb.from('pic_log').select('prospect_id,data').eq('user_id',_userId);
-    log={};
-    (r3.data||[]).forEach(function(row){log[row.prospect_id]=row.data;});
+    if(r3.data&&r3.data.length){
+      log={};
+      r3.data.forEach(function(row){log[row.prospect_id]=row.data;});
+    }
 
-    // Customers
+    // Customers — only replace if Supabase actually has records
     var r4=await _sb.from('pic_customers').select('prospect_id,data').eq('user_id',_userId);
-    customers={};
-    (r4.data||[]).forEach(function(row){
-      customers[row.prospect_id]=row.data;
-      var p=P.find(function(x){return String(x.id)===String(row.prospect_id);});
-      if(p)p.status=row.data.status;
-    });
+    if(r4.data&&r4.data.length){
+      customers={};
+      r4.data.forEach(function(row){
+        customers[row.prospect_id]=row.data;
+        var p=P.find(function(x){return String(x.id)===String(row.prospect_id);});
+        if(p)p.status=row.data.status;
+      });
+    }
 
     // Phones
     var r5=await _sb.from('pic_phones').select('prospect_id,data').eq('user_id',_userId);
