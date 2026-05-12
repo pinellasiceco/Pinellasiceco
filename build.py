@@ -8783,6 +8783,17 @@ function srGenerate(p,atpVal,notes){
       +'<div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:6px">Technician Notes</div>'
       +'<div style="font-size:11px;color:#334155;line-height:1.6">'+notes+'</div>'
       +'</div>'):'')
+    +(function(){var lastSvc=((customers[p.id]||{}).service_history||[]).slice(-1)[0]||{};var pUrls=lastSvc.photo_urls||[];
+      if(!pUrls.length)return'';
+      return'<div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:10px">'
+        +'<div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:10px">Before / After Photos</div>'
+        +'<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px">'
+        +pUrls.map(function(url,i){
+          return'<div style="text-align:center"><img src="'+url+'" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;object-fit:cover;aspect-ratio:1">'
+            +'<div style="font-size:9px;color:#94a3b8;margin-top:3px">Photo '+(i+1)+'</div></div>';
+        }).join('')
+        +'</div></div>';
+    }())
     +'<table style="width:100%;border-collapse:collapse;margin-bottom:10px"><tr>'
     +'<td style="width:48%;padding-right:14px"><div style="border-bottom:1px solid #94a3b8;height:26px;margin-bottom:3px"></div><div style="font-size:9px;color:#94a3b8">Technician Signature</div></td>'
     +'<td style="width:4%"></td>'
