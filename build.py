@@ -6878,6 +6878,7 @@ function hideLoadingScreen(){
 async function loadCloudData(){
   if(!_sb||!_userId)return;
   showLoadingScreen('Loading your data...');
+  var _loadTimeout=setTimeout(function(){hideLoadingScreen();console.warn('loadCloudData timed out');},10000);
   try{
     // Prospects — prefer Supabase row, fall back to embedded P[]
     var r1=await _sb.from('pic_prospects').select('data').eq('user_id',_userId).single();
@@ -6938,9 +6939,11 @@ async function loadCloudData(){
     try{localStorage.setItem('pic_v4',JSON.stringify(log));}catch(e){}
     try{localStorage.setItem('pic_customers',JSON.stringify(customers));}catch(e){}
 
+    clearTimeout(_loadTimeout);
     hideLoadingScreen();
     console.log('Cloud data loaded successfully');
   }catch(err){
+    clearTimeout(_loadTimeout);
     hideLoadingScreen();
     console.error('Failed to load cloud data:',err);
     toast('Cloud load failed — using local cache');
@@ -9332,7 +9335,7 @@ if('serviceWorker' in navigator){
 # ──────────────────────────────────────────────────────────────────────────────
 # ENTRY POINT
 # ──────────────────────────────────────────────────────────────────────────────
-SW_JS = """const CACHE_NAME='pic-BUILD_DATE';
+SW_JS = """const CACHE_NAME='pic-BUILD_DATE-b';
 const ASSETS=['./','/Pinellasiceco/index.html'];
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(ASSETS).catch(()=>{})));
