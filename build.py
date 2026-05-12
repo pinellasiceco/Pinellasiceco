@@ -2725,7 +2725,8 @@ header{background:var(--navy);
       <button class="xbtn" onclick="exportDirectoryData()" style="background:#059669;color:#fff;border-color:#059669;margin-bottom:10px;width:100%">&#x1F4E5; Export Directory Data</button>
       <button class="dbtn" onclick="clrLog()" style="margin-bottom:4px;width:100%">Clear Call Log</button>
       <button class="dbtn" onclick="clrCustomers()" style="margin-bottom:4px;width:100%">Clear Customer Data</button>
-      <button class="dbtn" onclick="clrAll()" style="width:100%">Clear ALL Data (full reset)</button>
+      <button class="dbtn" onclick="clrAll()" style="margin-bottom:4px;width:100%">Clear ALL Data (local reset)</button>
+      <button class="dbtn" onclick="clrAllCloud()" style="width:100%;background:#7c3aed;color:#fff;border-color:#7c3aed">&#x2601;&#xFE0F; Clear ALL Data + Cloud (fresh start)</button>
     </div>
 
     <div class="dc" style="margin-top:12px;border:1px solid #fca5a5;background:#fff5f5">
@@ -4261,10 +4262,15 @@ function rA(){
   if(list.length===0){g.innerHTML='';empty.style.display='flex';return;}
   empty.style.display='none';
   requestAnimationFrame(()=>{
-    const visible=list.slice(0,50);
-    g.innerHTML=visible.map(p=>cardHTML(p)).join('');
-    if(list.length>50){g.innerHTML+='<div style="padding:12px;text-align:center;font-size:11px;color:var(--sub)">Showing 50 of '+list.length+' — use filters to narrow results</div>';}
-    attachGridListeners(g);
+    try{
+      const visible=list.slice(0,50);
+      g.innerHTML=visible.map(p=>cardHTML(p)).join('');
+      if(list.length>50){g.innerHTML+='<div style="padding:12px;text-align:center;font-size:11px;color:var(--sub)">Showing 50 of '+list.length+' — use filters to narrow results</div>';}
+      attachGridListeners(g);
+    }catch(e){
+      console.error('Prospects render error:',e);
+      g.innerHTML='<div style="padding:20px;text-align:center;font-size:12px;color:#dc2626">Display error — try refreshing.<br><span style="font-size:10px;color:#94a3b8">'+e.message+'</span></div>';
+    }
   });
 }
 
@@ -5786,6 +5792,30 @@ function clrAll(){
   toast('All data cleared. Reloading...');
   setTimeout(()=>window.location.reload(),1200);
 }
+async function clrAllCloud(){
+  if(!confirm('Clear all call logs and client records on THIS device AND in the cloud? Cannot be undone.'))return;
+  if(!_sb||!_userId){
+    toast('Not logged in — cloud not cleared. Use "Clear ALL Data" instead.');
+    return;
+  }
+  // Clear locally
+  log={};lSave();
+  customers={};custSave();
+  contacts={};contactsSave();
+  vendors={};vendorsSave();
+  P.forEach(p=>{p.status='prospect';});
+  // Clear cloud tables for this user
+  try{
+    await Promise.all([
+      _sb.from('pic_log').delete().eq('user_id',_userId),
+      _sb.from('pic_customers').delete().eq('user_id',_userId)
+    ]);
+    toast('Local + cloud data cleared — reloading…');
+  }catch(e){
+    toast('Local cleared; cloud error: '+(e.message||e));
+  }
+  setTimeout(()=>window.location.reload(),1500);
+}
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2200);}
 
 // ── CUSTOMER LIFECYCLE ────────────────────────────────────────────────────────
@@ -5859,7 +5889,7 @@ function markWon(status){
 
 function getProspectStage(p){
   // Won = customer statuses
-  const CUST=new Set(['customer_recurring','customer_intro','customer_once']);
+  const CUST=new Set(['customer_recurring','customer_quarterly','customer_intro','customer_once']);
   if(CUST.has(p.status))return 'won';
   if(p.status==='churned')return 'lost';
   if(p.status==='quoted')return 'quoted';
@@ -6468,10 +6498,10 @@ function renderBriefing(){
   const weekEntries=allEntries.filter(e=>{ const d=parseD(e.date);return d&&d>=weekAgo;});
 
   // ── KPI ROW ───────────────────────────────────────────────────────────
-  const recurring=P.filter(p=>{
-    const lc=getLC(p.id);return lc&&['signed','customer_recurring','customer_once'].includes(lc.outcome);
-  });
-  const mrr=recurring.reduce((s,p)=>s+(p.monthly||149),0);
+  const recurring=P.filter(p=>
+    ['customer_recurring','customer_quarterly','customer_once','customer_intro'].includes(p.status)
+  );
+  const mrr=recurring.reduce((s,p)=>s+((customers[p.id]||{}).monthly||p.monthly||149),0);
   const clientCount=recurring.length;
 
   // Pipeline = intro_set + in_play prospects
@@ -6707,8 +6737,8 @@ function renderKPIs(){
   // Fast-path: just update the 4 KPI numbers without re-rendering cards
   const now=new Date();
   const weekAgo=new Date(now-7*864e5);
-  const recurring=P.filter(p=>{const lc=getLC(p.id);return lc&&['signed','customer_recurring','customer_once'].includes(lc.outcome);});
-  const mrr=recurring.reduce((s,p)=>s+(p.monthly||149),0);
+  const recurring=P.filter(p=>['customer_recurring','customer_quarterly','customer_once','customer_intro'].includes(p.status));
+  const mrr=recurring.reduce((s,p)=>s+((customers[p.id]||{}).monthly||p.monthly||149),0);
   const pipeCount=Object.keys(log).filter(id=>{const lc=getLC(parseInt(id));return lc&&['in_play','intro_set','follow_up','interested','scheduled','quoted'].includes(lc.outcome);}).length;
   const weekEntries=[];
   Object.values(log).forEach(entries=>entries.forEach(e=>{const d=new Date(e.date);if(d>=weekAgo)weekEntries.push(e);}));
@@ -7569,7 +7599,7 @@ function openServiceLog(id){
     +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;margin-bottom:6px">Before/After Photos</div>'
     +'<div id="svc-photo-preview" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px"></div>'
     +'<button id="svc-add-photo-btn" style="width:100%;padding:10px;border:2px dashed #e2e8f0;border-radius:8px;background:#f8fafc;color:#64748b;font-size:12px;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4F7; Add Photos (before/after)</button>'
-    +'<input id="svc-photo-input" type="file" accept="image/*" multiple style="display:none" capture="environment">'
+    +'<input id="svc-photo-input" type="file" accept="image/*" multiple style="display:none">'
 
     // Previous service info
     +(lastSvc?'<div style="background:#f5f8fa;border-radius:7px;padding:8px;margin-bottom:10px;font-size:10px;color:var(--sub)">'
@@ -7973,6 +8003,9 @@ async function submitServiceLog(id){
   custSave();
   document.getElementById('svc-log-bg').remove();
   if(typeof rCust==='function')rCust();
+  // Offer report immediately after saving — pre-fill ATP and notes from the form
+  var _rptP=P.find(function(x){return x.id===id;});
+  if(_rptP){setTimeout(function(){scStatusReport(_rptP,{atp:parseInt(atp)||0,notes:notes});},300);}
 }
 
 function reschedule(id){
@@ -8587,15 +8620,16 @@ function saveReferredBy(bizId,refId){
 }
 
 // ── ATP STATUS REPORT ─────────────────────────────────────────────────────────
-function scStatusReport(p){
+function scStatusReport(p,prefill){
   var atpBg=document.createElement('div');
   atpBg.id='atp-bg';
   atpBg.style.cssText='position:fixed;inset:0;z-index:600;background:rgba(15,31,56,.88);display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box';
   var box=document.createElement('div');
   box.style.cssText='background:#fff;border-radius:16px;padding:24px;width:100%;max-width:340px';
+  var hasPrefill=prefill&&(prefill.atp||prefill.notes);
   box.innerHTML=
     '<div style="font-size:14px;font-weight:800;color:#0f1f38;margin-bottom:4px">&#x1F4CB; ATP Status Report</div>'
-    +'<div style="font-size:11px;color:#64748b;margin-bottom:16px">Enter the ATP reading from the test (RLU). Leave blank if not yet tested.</div>'
+    +'<div style="font-size:11px;color:#64748b;margin-bottom:16px">'+(hasPrefill?'Review the ATP reading and add an email to send the report.':'Enter the ATP reading from the test (RLU). Leave blank if not yet tested.')+'</div>'
     +'<input id="atp-val-inp" type="number" min="0" max="9999" placeholder="e.g. 847" inputmode="numeric" '
     +'style="width:100%;padding:14px;border:2px solid #e2e8f0;border-radius:10px;font-size:28px;font-weight:800;font-family:inherit;outline:none;text-align:center;box-sizing:border-box;margin-bottom:8px;color:#0f1f38">'
     +'<input id="atp-email-inp" type="email" placeholder="Email to (optional)" '
@@ -8610,7 +8644,9 @@ function scStatusReport(p){
   atpBg.appendChild(box);
   document.body.appendChild(atpBg);
   var inp=document.getElementById('atp-val-inp');
-  setTimeout(function(){if(inp)inp.focus();},120);
+  if(prefill&&prefill.atp&&inp)inp.value=prefill.atp;
+  if(prefill&&prefill.notes){var ni=document.getElementById('atp-notes-inp');if(ni)ni.value=prefill.notes;}
+  setTimeout(function(){if(inp&&!prefill)inp.focus();else{var ei=document.getElementById('atp-email-inp');if(ei)ei.focus();}},120);
   var _lt=0;
   function atpHandle(e){
     if(e.type==='click'&&Date.now()-_lt<350)return;
@@ -8747,6 +8783,17 @@ function srGenerate(p,atpVal,notes){
       +'<div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:6px">Technician Notes</div>'
       +'<div style="font-size:11px;color:#334155;line-height:1.6">'+notes+'</div>'
       +'</div>'):'')
+    +(function(){var lastSvc=((customers[p.id]||{}).service_history||[]).slice(-1)[0]||{};var pUrls=lastSvc.photo_urls||[];
+      if(!pUrls.length)return'';
+      return'<div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:10px">'
+        +'<div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:10px">Before / After Photos</div>'
+        +'<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px">'
+        +pUrls.map(function(url,i){
+          return'<div style="text-align:center"><img src="'+url+'" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;object-fit:cover;aspect-ratio:1">'
+            +'<div style="font-size:9px;color:#94a3b8;margin-top:3px">Photo '+(i+1)+'</div></div>';
+        }).join('')
+        +'</div></div>';
+    }())
     +'<table style="width:100%;border-collapse:collapse;margin-bottom:10px"><tr>'
     +'<td style="width:48%;padding-right:14px"><div style="border-bottom:1px solid #94a3b8;height:26px;margin-bottom:3px"></div><div style="font-size:9px;color:#94a3b8">Technician Signature</div></td>'
     +'<td style="width:4%"></td>'
