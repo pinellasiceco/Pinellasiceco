@@ -1,5 +1,5 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-05-07 (session 16d — sign out button + header CSS fixes) by Claude Code*
+*Last updated: 2026-05-12 (session 17 — data freshness indicator + before/after photos) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
@@ -110,6 +110,23 @@
 - All 23 date storage sites use `localISO()` — no UTC off-by-one after 8pm ET
 - Prospect follow-up dates: stored as local ISO string, compared correctly
 
+### Data Freshness Indicator
+- `build_date` field baked into every P[] record at CI build time
+- Header subtitle shows `Data: today` (green) / `Data: yesterday` / `Data: Xd old` (red if >3 days)
+- Yellow stale-data warning banner injected below header after 3+ days
+- Both updated via `updateDataFreshness()` + `checkDataStaleness()` called after every `_renderApp()`
+- Daily briefing email shows "Data updated: Month Day, Year · N prospects · N CALLBACK" above stats
+
+### Before/After Photos on Service Visits
+- 📷 Add Photos button in service log modal opens camera/photo library (iOS: `capture=environment`)
+- Up to 8 photos per visit; thumbnail previews with ✕ remove
+- `_compressImage()` canvas-compresses to 800px wide / 0.7 JPEG quality before upload
+- `_uploadServicePhotos()` uploads to Supabase Storage `service-photos` bucket; stores 1-year signed URLs
+- `submitServiceLog()` is async — uploads photos first, stores `photo_urls` array in `service_history` entry
+- Photos included inline in compliance email HTML (auto-grid layout)
+- Service history rows show 📷 count; tap opens fullscreen `viewServicePhotos()` overlay
+- **Requires**: create `service-photos` bucket (private, 5MB limit) in Supabase Storage + RLS policy
+
 ## What's Broken / Watch List ⚠️
 
 - **iPad copy-paste**: copying code blocks from chat on iPad adds angle brackets around URLs. Never paste code directly into Supabase editor — use the GitHub Actions deploy workflow instead.
@@ -133,9 +150,12 @@ To force a fresh PWA load after a push: open the URL directly in Safari (not the
 - **sw.js**: bumped to `pic-20260430a`
 
 ## What's Missing 🔲
-- Nothing from the current feature roadmap is missing
+- **Supabase Storage bucket**: user must create `service-photos` bucket (private, 5MB limit) in Supabase dashboard → Storage, then add RLS policy: `create policy "own_photos" on storage.objects for all using (auth.uid()::text = (storage.foldername(name))[1]);` — photos silently skip upload if bucket doesn't exist (no crash)
+- `build_date` in P[] records will appear after next CI rebuild; existing records have no `build_date` so freshness indicator shows nothing until rebuilt
 
 ## Recent Changes
+- **2026-05-12 (s17):** Two features — (1) **Data Freshness Indicator**: `build_date` field baked into every prospect record at CI build time (`str(TODAY)`); header subtitle shows `Data: today` (green) / `Data: yesterday` / `Data: Xd old` (red if >3 days) via `updateDataFreshness()`; yellow warning banner injected below header if data is 3+ days old via `checkDataStaleness()`; both called after every `_renderApp()` in all three `init()` branches; daily briefing email now shows "Data updated: Month Day, Year · N prospects · N CALLBACK" bar between header and stats. (2) **Before/After Photos on Service Visits**: photo section added to service log modal (📷 Add Photos button + hidden `<input type=file multiple>`); `addEventListener` wired after `appendChild` per iOS PWA rules; `_handlePhotoSelection()` shows thumbnails with ✕ remove; `_compressImage()` canvas-compresses to 800px/0.7 quality JPEG; `_uploadServicePhotos()` uploads to Supabase Storage bucket `service-photos` with signed 1-year URLs; `submitServiceLog()` made async — uploads first, passes `photo_urls` array to `logServiceFromCal()`; photos included inline in compliance email via IIFE in `srSendEmail()`; service history rows show 📷 N count with tap-to-view fullscreen overlay via `viewServicePhotos()`; requires user to create `service-photos` bucket in Supabase Storage (private, 5MB limit) + RLS policy (see brief).
+- **2026-05-12 (s16e):** Fix JS syntax errors from Python triple-quoted string escaping — `Can\'t` → `Can't` (typographic apostrophe), `sw(\'data\')` in onclick → `sw(&#39;data&#39;)`, `lines.join('\r\n')` → `\\r\\n` (iCal), `svcNote+'\n\n'` → `\\n\\n`; any one of these caused entire script block to fail parsing, silently breaking all buttons.
 - **2026-05-07 (s16d):** Two fixes — (1) **Account section in Settings**: new `#acct-section` `.dc` block at bottom of `#p-data` panel shows "Signed in as: [email]" + red **Sign Out** button (`doSettingsSignOut()`); shown/hidden by `initSettings()` based on `_userId`; confirms before signing out + calls `_sb.auth.signOut()` + shows login screen; hidden in demo/offline mode. (2) **Header/tab bar CSS**: added `viewport-fit=cover` to viewport meta so `env(safe-area-inset-*)` is populated on iPhone PWA; `header` uses `padding-top:max(0px,env(safe-area-inset-top))` + `flex-wrap:nowrap` so status bar is never covered and chips never wrap to a clipped second row; `.hchips` changed to `flex-wrap:nowrap;overflow-x:auto` so filter chips scroll horizontally rather than wrapping; fixed `.panels` typo → `.panel` in mobile `@media(max-width:480px)` block (was targeting nonexistent class) so `padding-bottom:calc(80px + env(safe-area-inset-bottom))` now actually clears the fixed bottom tab bar.
 - **2026-05-07 (s16c):** Two fixes — (1) **Connect & Login button** added to Settings → Cloud Sync section (sky-blue button below "Save Credentials"): saves URL + anon key to localStorage then calls `location.reload()` so `init()` re-runs, picks up credentials, and shows the magic link login screen — fixes "no login screen after clearing Safari history" when CI hasn't baked credentials yet; (2) **Magic link redirect** verified correct — `emailRedirectTo` is already `https://pinellasiceco.github.io/Pinellasiceco/` in `signInWithMagicLink()`; no `localhost` references found in `build.py` or `index.html`; Supabase dashboard Site URL fix by user is the complete solution.
 - **2026-05-07 (s16b):** Fix login screen not appearing. Root cause: `build_html()` replaces ALL `%%SUPABASE_URL%%` occurrences in the HTML template, including the guard checks inside `initSupabase()` like `_SUPABASE_URL!=='%%SUPABASE_URL%%'`. After replacement this became `_SUPABASE_URL!=='https://actual-url'` — always false — so `url` always fell through to localStorage (empty), `initSupabase()` returned null, and the app silently entered demo mode with no login screen. Fixed all 7 occurrences across `initSupabase()`, `updateSyncDot()`, `sendEmailViaProxy()`, `exportToBriefing()` in both `build.py` and `index.html`. Simple truthy check now: `var url=_SUPABASE_URL||localStorage.getItem('pic_supabase_url')||''`. Added `console.log('Supabase initialized: <url>')`, `console.log('No session found — showing login screen')`, `console.warn('Running without Supabase — demo mode')` for diagnostics.
@@ -218,7 +238,7 @@ To force a fresh PWA load after a push: open the URL directly in Safari (not the
 
 ### GitHub Secrets Required
 | Secret | Where to find |
-|--------|--------------|
+|--------|---------------|
 | `SUPABASE_URL` | Supabase → Settings → API |
 | `SUPABASE_ANON_KEY` | Supabase → Settings → API (public anon key) |
 | `SUPABASE_SERVICE_KEY` | Supabase → Settings → API (service_role key) |
@@ -231,11 +251,10 @@ See the SQL in the prompt — creates `pic_prospects`, `pic_partners`, adds `use
 - If Supabase is not configured (no URL/key in env or localStorage), app runs in local-only mode — login screen is skipped, localStorage data used directly. Zero regression for existing usage.
 
 ## Next Session Priorities
-1. **Verify login flow end-to-end**: Open Settings → enter Supabase URL + anon key → tap "Connect & Login" → confirm login screen appears → request magic link → confirm email arrives → tap link → confirm redirects to `pinellasiceco.github.io` → confirm app loads with data
-2. **Verify Account section**: After logging in, open Settings → scroll to bottom → confirm Account section shows email + Sign Out button; tap Sign Out → confirm login screen reappears
-3. **Verify header chips**: On iPhone, open Prospects tab → confirm filter chips (CALLBACK / HOT / WARM / etc.) scroll horizontally and don't wrap or get clipped
-4. **CI rebuild with secrets**: Trigger manual rebuild in GitHub Actions → confirm `index.html` gets real credentials baked in → login screen appears on fresh load without Settings
-5. **SUPABASE_USER_ID secret**: After first login, run `select id from auth.users` in Supabase SQL Editor → add as GitHub Secret → trigger CI rebuild
+1. Trigger manual CI rebuild in GitHub Actions — this will regenerate `index.html` from updated `build.py`, baking in `build_date` on all records and the photo/freshness JS
+2. **Create Supabase Storage bucket**: Supabase dashboard → Storage → New bucket → name `service-photos`, Public: NO, 5MB limit; then run RLS SQL policy
+3. Verify data freshness indicator appears in header after rebuild
+4. Test photo upload: open a service log → add a photo → save → check storage bucket
 
 ## iOS PWA Rules (never violate these)
 - **Buttons in injected HTML:** use inline `ontouchend="event.preventDefault();fn()"` + `onclick="fn()"` — NOT `addEventListener` on innerHTML-injected elements
@@ -248,7 +267,7 @@ See the SQL in the prompt — creates `pic_prospects`, `pic_partners`, adds `use
 
 ## Key Files
 | File | Purpose |
-|------|---------|
+|------|--------|
 | `build.py` | **Edit this** — generates prospecting_tool.html; also stamps sw.js cache date |
 | `index.html` | Deployed output — keep in sync with build.py; overwritten by CI daily |
 | `sw.js` | Service worker — auto date-stamped by build.py; bump manually after direct edits |
