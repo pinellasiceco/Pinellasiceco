@@ -6771,7 +6771,6 @@ async function signOut(){
 }
 
 function showLoginScreen(){
-  document.getElementById('app').style.display='none';
   var existing=document.getElementById('login-screen');
   if(existing)existing.remove();
   var d=document.createElement('div');
@@ -6809,6 +6808,7 @@ function showLoginScreen(){
           +'Verify Code</button>'
         +'</div>'
         +'<div style="font-size:11px;color:rgba(255,255,255,.35)">Tap the link in your email to log in. No password needed.</div>'
+        +'<button id="skip-login-btn" ontouchend="event.preventDefault();hideLoginScreen()" onclick="hideLoginScreen()" style="margin-top:20px;width:100%;padding:10px;border:1px solid rgba(255,255,255,.2);border-radius:10px;background:transparent;color:rgba(255,255,255,.5);font-size:13px;cursor:pointer;font-family:inherit;touch-action:manipulation">Use without signing in (local only)</button>'
     )
     +'</div>';
   document.body.appendChild(d);
@@ -9178,30 +9178,33 @@ async function init(){
   _initTouchHandlers();
   initSupabase();
 
+  // Always render app immediately from local cache so UI is never blocked
+  lLoad();custLoad();
+  _renderApp();
+  updateDataFreshness();checkDataStaleness();
+
   if(!_sb){
-    console.warn('Running without Supabase — demo mode');
-    lLoad();custLoad();
-    _renderApp();
-    updateDataFreshness();checkDataStaleness();
+    console.warn('Running without Supabase — local mode');
     return;
   }
 
-  // Check for existing session
-  var session=await checkAuth();
+  // Check for existing session with 6-second timeout so a slow network never freezes the UI
+  var session=await Promise.race([
+    checkAuth(),
+    new Promise(function(res){setTimeout(function(){res(null);},6000);})
+  ]);
 
   // Handle magic-link redirect (access_token in URL hash)
   if(!session){
     var hp=new URLSearchParams(window.location.hash.slice(1));
     if(hp.get('access_token')){
-      var rr=await _sb.auth.getSession();
-      session=rr.data&&rr.data.session;
+      try{var rr=await _sb.auth.getSession();session=rr.data&&rr.data.session;}catch(e){}
       window.history.replaceState({},'',window.location.pathname);
     }
   }
 
   if(!session){
-    console.log('No session found — showing login screen');
-    lLoad();custLoad();
+    console.log('No session — showing login screen');
     showLoginScreen();
     _sb.auth.onAuthStateChange(async function(event,newSession){
       if(event==='SIGNED_IN'&&newSession){
@@ -9216,7 +9219,7 @@ async function init(){
     return;
   }
 
-  // Already logged in
+  // Already logged in — sync cloud data then re-render
   _session=session;_userId=session.user.id;
   await loadCloudData();
   _renderApp();
