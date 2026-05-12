@@ -5073,7 +5073,7 @@ function showCard(id){
       +[...svcHistory].reverse().slice(0,4).map(function(sv){
         var atpStr=sv.atp?(' · ATP: '+sv.atp+' RLU'):'';  
         var photoCount=(sv.photo_urls&&sv.photo_urls.length)||0;
-        var photoLink=photoCount?'<span style="font-size:10px;color:#2563eb;cursor:pointer;margin-left:6px" onclick="viewServicePhotos(\''+JSON.stringify(sv.photo_urls||[]).replace(/'/g,'&#39;')+'\')" ontouchend="event.preventDefault();viewServicePhotos(\''+JSON.stringify(sv.photo_urls||[]).replace(/'/g,'&#39;')+'\')" >&#x1F4F7; '+photoCount+'</span>':'';
+        var photoLink=photoCount?'<span data-photos="'+JSON.stringify(sv.photo_urls||[]).replace(/"/g,'&quot;')+'" style="font-size:10px;color:#2563eb;cursor:pointer;margin-left:6px" onclick="viewServicePhotos(this.dataset.photos)" ontouchend="event.preventDefault();viewServicePhotos(this.dataset.photos)">&#x1F4F7; '+photoCount+'</span>':'';
         return '<div style="padding:5px 0;border-bottom:1px solid #f1f5f9">'
           +'<div style="font-size:10px;font-weight:700;color:#0f1f38">'+sv.date_display+(sv.type==='deep_clean'?' · 🧼 Deep Clean':' · 🔧 60-Day Maint.')+atpStr+photoLink+'</div>'
           +(sv.notes?'<div style="font-size:9px;color:#475569;font-style:italic">'+sv.notes+'</div>':'')
@@ -7676,10 +7676,15 @@ function viewServicePhotos(urlsJson){
   var bg=document.createElement('div');
   bg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:900;overflow-y:auto;padding:16px;-webkit-overflow-scrolling:touch';
   bg.innerHTML='<div style="max-width:480px;margin:0 auto">'
-    +'<button onclick="this.closest(\'[style*=fixed]\').remove()" ontouchend="event.preventDefault();this.closest(\'[style*=fixed]\').remove()" style="color:#fff;background:none;border:none;font-size:14px;cursor:pointer;margin-bottom:12px;font-family:inherit;touch-action:manipulation">&#x2715; Close</button>'
+    +'<button id="vsp-close" style="color:#fff;background:none;border:none;font-size:14px;cursor:pointer;margin-bottom:12px;font-family:inherit;touch-action:manipulation">&#x2715; Close</button>'
     +urls.map(function(url){return'<img src="'+url+'" style="width:100%;border-radius:8px;margin-bottom:8px">';}).join('')
     +'</div>';
   document.body.appendChild(bg);
+  var closeBtn=document.getElementById('vsp-close');
+  if(closeBtn){
+    closeBtn.addEventListener('click',function(){bg.remove();},false);
+    closeBtn.addEventListener('touchend',function(e){e.preventDefault();bg.remove();},false);
+  }
 }
 
 function getDiagram(brand){
