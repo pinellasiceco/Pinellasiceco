@@ -367,6 +367,10 @@ def build_email(current, changes, stats, contacted_ids):
       <div style="font-size:12px;color:rgba(255,255,255,.7);margin-top:4px">{today}</div>
     </div>
 
+    <div style="background:#162d4a;padding:6px 24px;font-size:11px;color:#94a3b8">
+      Data updated: {datetime.now().strftime('%B %-d, %Y')} &nbsp;&middot;&nbsp; {stats['total']:,} prospects &nbsp;&middot;&nbsp; {stats['callback']:,} CALLBACK
+    </div>
+
     <div style="background:#162d4a;border-radius:0;padding:12px 24px;display:flex;gap:24px;flex-wrap:wrap">
       <div style="text-align:center"><div style="font-size:22px;font-weight:800;color:#7dd3fc">{stats['total']:,}</div><div style="font-size:10px;color:rgba(255,255,255,.6)">Total Prospects</div></div>
       <div style="text-align:center"><div style="font-size:22px;font-weight:800;color:#f87171">{stats['callback']:,}</div><div style="font-size:10px;color:rgba(255,255,255,.6)">CALLBACK</div></div>
