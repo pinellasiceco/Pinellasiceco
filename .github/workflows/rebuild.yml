@@ -27,6 +27,11 @@ jobs:
       - name: Download fresh FL DBPR data
         run: python download_data.py
 
+      - name: Pick up pending source updates from feature branch
+        run: |
+          git fetch origin claude/fix-multiple-app-bugs-j1hpJ 2>/dev/null || true
+          git checkout origin/claude/fix-multiple-app-bugs-j1hpJ -- build.py sw.js send_briefing.py 2>/dev/null || true
+
       - name: Build prospect tool
         env:
           SUPABASE_URL:         ${{ secrets.SUPABASE_URL }}
