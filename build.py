@@ -1722,7 +1722,7 @@ header{background:var(--navy);
   color:var(--sub);cursor:pointer;border-bottom:2px solid transparent;
   margin-bottom:-2px;transition:.15s;user-select:none}
 .tab.on{color:var(--ora);border-color:var(--ora)}
-.panel{flex:1;overflow-y:auto;padding:14px 16px;display:none;background:var(--bg)}
+.panel{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 16px;display:none;background:var(--bg);min-height:0}
 .panel.on{display:block}
 .fbar{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
 .fbar select{background:var(--surf);border:1px solid var(--brd);border-radius:6px;
@@ -4259,19 +4259,13 @@ function rA(){
   document.getElementById('acnt').textContent=list.length+' prospects';
   const g=document.getElementById('agrid');
   const empty=document.getElementById('a-empty');
-  if(list.length===0){g.innerHTML='';empty.style.display='flex';return;}
-  empty.style.display='none';
-  requestAnimationFrame(()=>{
-    try{
-      const visible=list.slice(0,50);
-      g.innerHTML=visible.map(p=>cardHTML(p)).join('');
-      if(list.length>50){g.innerHTML+='<div style="padding:12px;text-align:center;font-size:11px;color:var(--sub)">Showing 50 of '+list.length+' — use filters to narrow results</div>';}
-      attachGridListeners(g);
-    }catch(e){
-      console.error('Prospects render error:',e);
-      g.innerHTML='<div style="padding:20px;text-align:center;font-size:12px;color:#dc2626">Display error — try refreshing.<br><span style="font-size:10px;color:#94a3b8">'+e.message+'</span></div>';
-    }
-  });
+  if(!g)return;
+  if(list.length===0){g.innerHTML='';if(empty)empty.style.display='flex';return;}
+  if(empty)empty.style.display='none';
+  const visible=list.slice(0,50);
+  const cards=visible.map(p=>{try{return cardHTML(p);}catch(e){console.warn('card err',p.id,e);return'';}}).join('');
+  g.innerHTML=cards+(list.length>50?'<div style="padding:12px;text-align:center;font-size:11px;color:var(--sub)">Showing 50 of '+list.length+' — use filters to narrow results</div>':'');
+  attachGridListeners(g);
 }
 
 let presetFilter=null;
