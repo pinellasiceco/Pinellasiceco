@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Manitowoc — PIC Field Manual</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="page-header">
+    <a class="back-btn" href="index.html">&#8592; Home</a>
+    <h1>MANITOWOC</h1>
+    <div class="subtitle">Indigo Series · S-Series · Flakers</div>
+  </div>
+
+  <div class="page-content">
+
+    <div class="callout important" style="margin: 12px 16px;">
+      <strong>Cleaning Mode Entry — Read First</strong>
+      Manitowoc cleaning mode entry varies by model. Do not assume it works the same as Hoshizaki. Look for a cleaning instruction sticker inside the front panel on every Manitowoc — it's there on most models and tells you exactly what to do for that specific machine.<br><br>
+      <strong>Indigo series:</strong> Press and hold OFF for 5 seconds → display shows OFF → press CLEAN (or hold CLEAN + OFF for 3 seconds simultaneously). Display should show CLEAN.<br><br>
+      <strong>S-series:</strong> Toggle switch has 3 positions — ICE / OFF / CLEAN. Move directly to CLEAN.
+    </div>
+
+    <div class="callout info" style="margin: 12px 16px;">
+      <strong>Distribution Tube — Most Important Manitowoc Task</strong>
+      The water distribution tube is the horizontal tube running across the top of the evaporator with small holes that drip water into each cube cell. When holes are partially blocked: ice cubes are smaller than normal, some cells produce hollow ice, ice production is lower than capacity.<br><br>
+      Check and clear every hole on EVERY visit — deep clean and routine. Use a toothpick or thin wire to clear blocked holes. Hold tube up to light to confirm every hole is open.
+    </div>
+
+    <!-- 1. Quick Facts -->
+    <div class="section-card">
+      <div class="section-header quick-facts" onclick="toggleSection(this)">
+        <span>⚡ Quick Facts</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="problem-label">Market Share</div>
+        <p style="font-size:14px; margin-bottom:12px;">~25% of commercial ice machine fleet</p>
+
+        <div class="problem-label">Found In</div>
+        <p style="font-size:14px; margin-bottom:12px;">Hotels, cafeterias, healthcare facilities, larger restaurants</p>
+
+        <div class="problem-label">Key Differences</div>
+        <ul class="checklist">
+          <li>Cube-style ice — full cube and half cube variations. Ice is clear, square or rectangular.</li>
+          <li>Indigo series has a digital diagnostic display with text error codes.</li>
+          <li>Distribution tube cleaning is the most important Manitowoc-specific step — not found on Hoshizaki.</li>
+          <li>Scale buildup in distribution tube holes is the #1 cause of poor ice production on this brand.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 2. Identify This Machine -->
+    <div class="section-card">
+      <div class="section-header identify" onclick="toggleSection(this)">
+        <span>📋 Identify This Machine</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <p style="font-size:14px; margin-bottom:12px;">Ice is full cube or half cube — clear, square or rectangular. Model sticker is inside the front panel (remove panel with the tab — no tools needed). The S-prefix indicates S-series; the 4-digit number is approximate daily production in pounds.</p>
+
+        <div class="problem-label">S-Series</div>
+        <p style="font-size:14px; margin-bottom:12px;">Toggle switch on exterior with three positions (ICE / OFF / CLEAN). Simpler controls, no digital display. Very common in older installs.</p>
+
+        <div class="problem-label">Indigo Series</div>
+        <p style="font-size:14px; margin-bottom:12px;">Digital display on front panel showing production status and error codes. Electronic push-button controls. Current-generation Manitowoc.</p>
+
+        <div class="problem-label">Q-Series</div>
+        <p style="font-size:14px; margin-bottom:12px;">Quiet operation design. Cleaning procedure is similar to Indigo. Cleaning mode entry follows the same Indigo button sequence.</p>
+
+        <div class="problem-label">The Distribution Tube</div>
+        <p style="font-size:14px; margin-bottom:0;">A horizontal white plastic tube at the top of the evaporator section, running the full width of the machine. Small holes drip water down into each individual cube cell in the evaporator grid. This is Manitowoc's most unique and maintenance-critical component — no other major brand uses the same design.</p>
+      </div>
+    </div>
+
+    <!-- 3. Before You Start -->
+    <div class="section-card">
+      <div class="section-header before-start" onclick="toggleSection(this)">
+        <span>🔵 Before You Start</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text"><strong>Find and read the instruction sticker inside the front panel.</strong> Every Manitowoc has a cleaning mode entry sticker — read it for this specific machine before touching any controls. Do not assume the sequence is the same as the last Manitowoc you serviced.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text"><strong>Tell the owner ice production stops for 1.5–3 hours.</strong> Get acknowledgment before you begin. Note the time in your service log.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text"><strong>Locate and note the cleaning mode toggle or button position.</strong> For S-series, confirm the toggle is currently in ICE position. For Indigo, confirm the display is showing normal operation before you change anything.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-text"><strong>Locate the water supply valve behind the machine.</strong> Know where it is before you need it. Confirm it's fully open at the start of service.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-text"><strong>Confirm all supplies are ready.</strong> Cleaner, sanitizer, spray bottle, brush, cloths, ATP swabs, gloves, phone. Bring a toothpick or thin wire specifically for distribution tube hole clearing — this is non-negotiable on every Manitowoc visit.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Deep Clean -->
+    <div class="section-card">
+      <div class="section-header deep-clean" onclick="toggleSection(this)">
+        <span>🟡 Deep Clean</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+
+        <div class="phase-header">Phase 1 — Document</div>
+
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text"><strong>Photograph the machine — front panel, evaporator condition, distribution tube (close-up), bin walls, and trough area.</strong> These are your before photos. Take them before touching anything.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text"><strong>Pre-clean ATP — water trough interior.</strong> Z-pattern swab, firm pressure, 4 seconds of contact. Record the reading. This is your most important baseline number.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text"><strong>Pre-clean ATP — distribution tube (swab along the full exterior length).</strong> Press the swab firmly along the tube surface. Record the reading.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-text"><strong>Pre-clean ATP — bin drain area.</strong> Swab around and inside the drain plug area. Record the reading.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-text"><strong>Pre-clean ATP — curtain/splash guard underside.</strong> Full surface contact. Record the reading.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">6</div>
+          <div class="step-text"><strong>Pre-clean ATP — ice scoop handle.</strong> Full circumference of the handle. Record the reading. All five pre-clean readings are now in your log.</div>
+        </div>
+
+        <div class="phase-header">Phase 2 — Prepare</div>
+
+        <div class="step">
+          <div class="step-num">7</div>
+          <div class="step-text"><strong>Scoop and discard all ice from the bin.</strong> Do not let it melt in place — contaminated melt water can recontaminate surfaces you've cleaned. Bag and dispose.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">8</div>
+          <div class="step-text"><strong>Enter cleaning mode per the instruction sticker.</strong> Indigo: press and hold OFF for a full 5 seconds until the display shows OFF, then press CLEAN (or hold CLEAN + OFF simultaneously for 3 seconds). Display should show CLEAN. S-series: move the toggle switch directly to the CLEAN position.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">9</div>
+          <div class="step-text"><strong>Machine harvests remaining ice from the evaporator — wait for this to complete, then discard that ice.</strong> Do not rush this step. The machine is clearing the evaporator grid before cleaning.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">10</div>
+          <div class="step-text"><strong>Machine drains the trough — wait for a full drain and confirm the trough is empty before proceeding.</strong> Look inside the trough. It should be visually empty of standing water.</div>
+        </div>
+
+        <div class="phase-header">Phase 3 — First Cleaning Cycle</div>
+
+        <div class="step">
+          <div class="step-num">11</div>
+          <div class="step-text"><strong>Mix cleaning solution: 4 oz Nu-Calgon Nickel-Safe Cleaner to 16 oz water.</strong> Measure precisely. Use this full-strength deep clean ratio.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">12</div>
+          <div class="step-text"><strong>Pour cleaning solution into the trough.</strong> Pour steadily — do not splash onto electrical components or the display.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">13</div>
+          <div class="step-text"><strong>Start the cleaning cycle.</strong> The machine will circulate the solution through the water system. Set a 20-minute timer.</div>
+        </div>
+
+        <div class="phase-header">Phase 4 — Manual Cleaning While Cycle Runs</div>
+
+        <div class="step">
+          <div class="step-num">14</div>
+          <div class="step-text"><strong>Remove the splash guard/curtain.</strong> It typically lifts up and out. Set aside for thorough cleaning.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">15</div>
+          <div class="step-text"><strong>Remove the distribution tube.</strong> It usually clips into position — lift straight up to release. Handle carefully; the small holes are the critical feature.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">16</div>
+          <div class="step-text"><strong>Inspect every hole in the distribution tube against a light source.</strong> Hold it up to the light and look through each hole individually. Any hole that appears dark, blocked, or reduced is a problem.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">17</div>
+          <div class="step-text"><strong>Clear any blocked holes with a toothpick or thin wire.</strong> Work through each hole from both sides. Do not use anything that could enlarge or damage the hole. One blocked hole = one missing or hollow ice cube per cycle.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">18</div>
+          <div class="step-text"><strong>Rinse the distribution tube under running water.</strong> Hold the tube over the sink and run water through it. Watch water flow from each hole — confirm even flow from all.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">19</div>
+          <div class="step-text"><strong>Soak distribution tube in cleaning solution.</strong> Place tube in your bucket with a solution of 2 oz cleaner to 16 oz water. Let soak for at least 10 minutes.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">20</div>
+          <div class="step-text"><strong>Scrub the evaporator surface lightly with a soft nylon brush.</strong> Work between the plates with gentle strokes. Do not use metal brushes or abrasive pads — you will damage the nickel coating.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">21</div>
+          <div class="step-text"><strong>Scrub bin walls top to bottom — corners, pink slime areas, and any mold.</strong> Use your brush with cleaning solution. Pay special attention to seams and corners where biofilm accumulates.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">22</div>
+          <div class="step-text"><strong>Scrub the bin floor.</strong> The floor often has the highest biofilm concentration from ice melt accumulation. Scrub thoroughly in all directions.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">23</div>
+          <div class="step-text"><strong>Scrub the door gasket folds.</strong> Work the brush into the gasket channels — these are prime biofilm locations. Pink slime here is common and expected.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">24</div>
+          <div class="step-text"><strong>Scrub the ice chute.</strong> Use brush and cleaning solution on all reachable surfaces of the chute. This is a frequent customer-contact surface.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">25</div>
+          <div class="step-text"><strong>Remove the drain plug, clean it thoroughly, and set it aside.</strong> Inspect the drain plug for scale or biofilm. Clean the plug and the drain port area with brush and solution.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">26</div>
+          <div class="step-text"><strong>Remove the air filter, rinse under running water, and set aside to dry.</strong> The air filter must be completely dry before reinstalling. Never reinstall a wet air filter — it restricts airflow.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">27</div>
+          <div class="step-text"><strong>Scrub the splash guard/curtain on both sides.</strong> Use brush and cleaning solution. Check underside carefully — biofilm accumulates heavily there.</div>
+        </div>
+
+        <div class="phase-header">Phase 5 — Assess for Second Cycle</div>
+
+        <div class="step">
+          <div class="step-num">28</div>
+          <div class="step-text"><strong>When the 20-minute cycle ends, inspect the trough, evaporator, and distribution tube.</strong> Assess: Is there visible scale remaining on the trough walls or evaporator? Is there visible biofilm (pink, orange, or gray film)? Were there blocked distribution tube holes even after clearing? If yes to any — run a second cycle with the same solution concentration before proceeding.</div>
+        </div>
+
+        <div class="phase-header">Phase 6 — Rinse Cycles</div>
+
+        <div class="step">
+          <div class="step-num">29</div>
+          <div class="step-text"><strong>Reinstall the drain plug before starting rinse cycles.</strong> Confirm it is fully seated before adding any water to the trough.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">30</div>
+          <div class="step-text"><strong>First rinse cycle: fill trough with clean water, run for 10 minutes, then drain completely.</strong> The water running out should be clearer than when you started.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">31</div>
+          <div class="step-text"><strong>Second rinse cycle: fill trough with clean water, run for 10 minutes, then drain completely.</strong> Check the drain water — it should be clear with no foam. If foam is visible, run a third rinse cycle.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">32</div>
+          <div class="step-text"><strong>Third rinse cycle minimum: fill, run 10 minutes, drain.</strong> Water must run clear with no foam before proceeding to sanitizer. Run additional cycles if needed — do not skip this.</div>
+        </div>
+
+        <div class="phase-header">Phase 7 — Sanitizer</div>
+
+        <div class="step">
+          <div class="step-num">33</div>
+          <div class="step-text"><strong>Mix sanitizer solution: 0.5 oz Nu-Calgon No-Rinse Sanitizer per gallon of water.</strong> Fill your dedicated sanitizer spray bottle.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">34</div>
+          <div class="step-text"><strong>Spray all interior surfaces — bin walls, bin floor, door gasket, ice chute, evaporator, and splash guard.</strong> Thorough coverage on every surface the solution or ice will contact.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">35</div>
+          <div class="step-text"><strong>Pour remaining sanitizer solution into the trough.</strong> This sanitizes the trough and internal water circuit.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">36</div>
+          <div class="step-text"><strong>NO RINSE — allow all sanitized surfaces to air dry for at least 5 minutes.</strong> Do not wipe or rinse the sanitizer off. Rinsing removes the protection.</div>
+        </div>
+
+        <div class="phase-header">Phase 8 — Reassemble</div>
+
+        <div class="step">
+          <div class="step-num">37</div>
+          <div class="step-text"><strong>Reinstall the distribution tube — confirm all holes face downward, toward the evaporator.</strong> Clip or press firmly into its mounting position. This is the most critical reassembly step on any Manitowoc.</div>
+        </div>
+
+        <div class="callout tip">
+          <strong>Distribution Tube Orientation — Critical Check</strong>
+          The distribution tube holes must face downward — toward the evaporator. If installed backwards, water won't reach the cube cells and the machine will make partial or no ice. Before closing the panel, visually confirm the holes are pointing toward the evaporator plates. Double-check before closing the panel.
+        </div>
+
+        <div class="step">
+          <div class="step-num">38</div>
+          <div class="step-text"><strong>Reinstall the splash guard/curtain.</strong> Confirm it seats correctly and moves freely — it should swing or flex without catching.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">39</div>
+          <div class="step-text"><strong>Reinstall the drain plug and tug firmly to confirm seating.</strong> Tug it twice. A loose drain plug will empty the machine during operation — this is the most common cause of callbacks. If it won't seat firmly, inspect the plug and port for damage.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">40</div>
+          <div class="step-text"><strong>Reinstall the air filter only if completely dry.</strong> If still damp, leave it out and return it to the owner with instructions to reinstall when dry, or allow it to finish air-drying before closing the panel.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">41</div>
+          <div class="step-text"><strong>Close the front panel.</strong> Confirm the panel is fully seated and latched.</div>
+        </div>
+
+        <div class="phase-header">Phase 9 — Restart and Verify</div>
+
+        <div class="step">
+          <div class="step-num">42</div>
+          <div class="step-text"><strong>Return the machine to ICE mode.</strong> Indigo: press ICE on the control panel. S-series: move toggle to ICE position. Confirm the display or indicator shows normal operation startup.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">43</div>
+          <div class="step-text"><strong>Wait 20 minutes for the machine to complete its startup and produce its first harvest.</strong> Do not rush this. The machine is going through its normal freeze cycle to first ice production.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">44</div>
+          <div class="step-text"><strong>Discard the first harvest completely.</strong> The first batch of ice may contain residual sanitizer. It is safe but should not be served. Confirm with the owner that the bin has been stocked with fresh ice.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">45</div>
+          <div class="step-text"><strong>Post-clean ATP — trough, distribution tube exterior, and bin wall.</strong> Record all three readings. Photograph the luminometer display for each. All readings should be under 10 RLU. If any reading is above 10, re-apply sanitizer to that location, wait 5 minutes, and retest. Log all results in the app and show the owner the before and after readings.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 5. Routine Maintenance -->
+    <div class="section-card">
+      <div class="section-header routine" onclick="toggleSection(this)">
+        <span>🟢 Routine Maintenance</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text"><strong>Open panel, photograph the machine, and take pre-clean ATP readings.</strong> Minimum locations: water trough and distribution tube exterior. Record all readings before touching anything else.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text"><strong>If any pre-clean reading is above 400 RLU on a previously-serviced machine — upgrade to a full deep clean.</strong> A reading above 400 on a machine that was recently cleaned indicates conditions that a routine service will not fully resolve.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text"><strong>Scoop and discard all ice from the bin.</strong> Dispose of ice — do not allow melt water to drip back onto cleaned surfaces.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-text"><strong>Enter cleaning mode.</strong> Check the instruction sticker first — refer to the cleaning mode entry on this machine specifically. Indigo: hold OFF 5 seconds, then press CLEAN. S-series: toggle to CLEAN.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-text"><strong>Mix cleaning solution: 2 oz cleaner to 16 oz water.</strong> Routine maintenance concentration — half the deep clean strength.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">6</div>
+          <div class="step-text"><strong>Pour into trough, start the cleaning cycle, and set a 20-minute timer.</strong> Machine will circulate the solution through its internal water system.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">7</div>
+          <div class="step-text"><strong>While cycle runs — perform all manual cleaning tasks:</strong> Remove the distribution tube and inspect every single hole against a light source. Clear any blocked holes with a toothpick or wire — even if the machine was recently serviced. Remove the splash guard and wipe both sides thoroughly. Wipe bin walls top to bottom, paying attention to corners and any pink slime. Wipe the bin floor. Wipe the door gasket folds. Wipe the ice chute. Remove the air filter and rinse under running water — set aside to dry.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">8</div>
+          <div class="step-text"><strong>When the cleaning cycle ends, drain the trough completely.</strong> Remove the drain plug and allow full drainage before starting rinse cycles.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">9</div>
+          <div class="step-text"><strong>Two rinse cycles: fill trough with clean water, run 10 minutes, drain after each.</strong> Water should run clear with no foam after the second rinse. If foam is still visible, run a third rinse.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">10</div>
+          <div class="step-text"><strong>Apply sanitizer to all interior surfaces and pour remaining solution into trough.</strong> NO rinse. Allow surfaces to air dry for at least 5 minutes before reassembly.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">11</div>
+          <div class="step-text"><strong>Reassemble — confirm distribution tube holes face toward the evaporator, and that the drain plug is fully seated and tugged firmly.</strong> Reinstall the splash guard. Reinstall the air filter only if completely dry. Close the front panel.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">12</div>
+          <div class="step-text"><strong>Return to ICE mode, discard the first harvest, take post-clean ATP readings, and log everything in the app.</strong> Show the owner the before and after ATP readings. Photograph the post-clean readings.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Time Estimates -->
+    <div class="section-card">
+      <div class="section-header time-estimates" onclick="toggleSection(this)">
+        <span>⏱ Time Estimates</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <table>
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Capacity</th>
+              <th>Deep Clean</th>
+              <th>Routine</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>S-320</strong></td>
+              <td>340 lbs/day</td>
+              <td>2–2.5 hrs</td>
+              <td>60–75 min</td>
+            </tr>
+            <tr>
+              <td><strong>S-450</strong></td>
+              <td>475 lbs/day</td>
+              <td>2.5–3 hrs</td>
+              <td>75–90 min</td>
+            </tr>
+            <tr>
+              <td><strong>S-650</strong></td>
+              <td>640 lbs/day</td>
+              <td>2.5–3 hrs</td>
+              <td>75–90 min</td>
+            </tr>
+            <tr>
+              <td><strong>S-850</strong></td>
+              <td>826 lbs/day</td>
+              <td>3–3.5 hrs</td>
+              <td>90–105 min</td>
+            </tr>
+            <tr>
+              <td><strong>S-1200</strong></td>
+              <td>1190 lbs/day</td>
+              <td>3.5–4 hrs</td>
+              <td>105–120 min</td>
+            </tr>
+            <tr>
+              <td><strong>Indigo 320</strong></td>
+              <td>348 lbs/day</td>
+              <td>2–2.5 hrs</td>
+              <td>60–75 min</td>
+            </tr>
+            <tr>
+              <td><strong>Indigo 600</strong></td>
+              <td>631 lbs/day</td>
+              <td>2.5–3 hrs</td>
+              <td>75–90 min</td>
+            </tr>
+            <tr>
+              <td><strong>Indigo 900</strong></td>
+              <td>912 lbs/day</td>
+              <td>3–3.5 hrs</td>
+              <td>90–105 min</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="callout info" style="margin-top:12px;">
+          <strong>Time Modifiers</strong>
+          Add 45–60 minutes if a second cleaning cycle is needed. Add 30 minutes for first-visit machines — extra documentation, orientation, and often heavier contamination.
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. Common Problems -->
+    <div class="section-card">
+      <div class="section-header problems" onclick="toggleSection(this)">
+        <span>🔧 Common Problems</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+
+        <div class="problem-block">
+          <div class="problem-title">Small or Hollow Ice Cubes</div>
+          <div class="problem-label">What It Looks Like</div>
+          <p style="font-size:14px; margin-bottom:8px;">Cubes smaller than normal, hollow centers, incomplete cubes. Often only some cells in the evaporator are affected — you may see a mix of full and hollow cubes in the bin.</p>
+          <div class="problem-label">What to Do</div>
+          <p style="font-size:14px; margin-bottom:8px;">Remove and inspect the distribution tube. Clear every hole — even one blocked hole causes a missing or hollow cube in that cell. This is the most common Manitowoc-specific problem and is almost always the distribution tube. After clearing, hold tube to light to confirm all holes are fully open, then reinstall with holes facing down.</p>
+          <div class="problem-label">Refer Out If</div>
+          <p style="font-size:14px; margin-bottom:0;">Distribution tube is cracked, split, or structurally damaged. A cracked tube cannot be cleared — it needs replacement before the next service.</p>
+        </div>
+
+        <div class="problem-block">
+          <div class="problem-title">Low Ice Production</div>
+          <div class="problem-label">What It Looks Like</div>
+          <p style="font-size:14px; margin-bottom:8px;">Machine is running continuously through its cycle but producing significantly below its rated capacity. The bin may take much longer than expected to fill.</p>
+          <div class="problem-label">What to Do</div>
+          <p style="font-size:14px; margin-bottom:8px;">Check the distribution tube holes first — this is almost always the cause. Then check: water supply valve is fully open, air filter is clean and not restricting airflow, condenser coils (accessible from back or side panel) are free of dust and debris.</p>
+          <div class="problem-label">Refer Out If</div>
+          <p style="font-size:14px; margin-bottom:0;">Distribution tube is clear, filter is clean, water valve is fully open, and production is still significantly below the nameplate rating after cleaning.</p>
+        </div>
+
+        <div class="problem-block">
+          <div class="problem-title">Machine Not Entering Cleaning Mode</div>
+          <div class="problem-label">What It Looks Like</div>
+          <p style="font-size:14px; margin-bottom:8px;">Pressing buttons doesn't enter CLEAN mode, display shows something unexpected, or the machine doesn't respond to the cleaning mode sequence.</p>
+          <div class="problem-label">What to Do</div>
+          <p style="font-size:14px; margin-bottom:8px;">Check the instruction sticker inside the front panel again — carefully. For Indigo: hold the OFF button for a full 5 seconds (count it out — 1, 2, 3, 4, 5) before pressing CLEAN. Don't release early. For S-series: the toggle must physically move to the CLEAN position — confirm it is not stuck at OFF.</p>
+          <div class="problem-label">Refer Out If</div>
+          <p style="font-size:14px; margin-bottom:0;">Controls appear unresponsive to all input, or the display shows SERVICE. Document with photographs before referring.</p>
+        </div>
+
+        <div class="problem-block">
+          <div class="problem-title">Ice Production Stops Mid-Shift</div>
+          <div class="problem-label">What It Looks Like</div>
+          <p style="font-size:14px; margin-bottom:8px;">Owner reports the machine stopped making ice during a busy service period. Bin may appear partially full or the machine may be sitting idle.</p>
+          <div class="problem-label">What to Do</div>
+          <p style="font-size:14px; margin-bottom:8px;">Check the bin level first — if it's full, the bin full sensor triggered normally and the machine is working correctly. Check that the machine is in ICE mode and has not been accidentally switched. Check water supply. Run an ATP test on the bin sensor area — biofilm near the bin sensor can cause false full readings.</p>
+          <div class="problem-label">Refer Out If</div>
+          <p style="font-size:14px; margin-bottom:0;">Machine enters an error state or shows an error code that doesn't clear after one power cycle (off for 30 seconds, then back on).</p>
+        </div>
+
+        <div class="problem-block">
+          <div class="problem-title">Pink Slime in Bin</div>
+          <div class="problem-label">What It Looks Like</div>
+          <p style="font-size:14px; margin-bottom:8px;">Pink, orange, or salmon-colored film or streaks on bin walls, the curtain, or other interior surfaces. Can be alarming to owners who discover it.</p>
+          <div class="problem-label">What to Do</div>
+          <p style="font-size:14px; margin-bottom:8px;">This is Serratia marcescens — airborne bacteria that is extremely common in Florida's climate. It is not a sign of negligence, equipment failure, or unsafe conditions. It is handled completely by standard cleaning and sanitizing procedures. Document with photographs before cleaning.</p>
+          <div class="problem-label">Owner Script</div>
+          <p style="font-size:14px; margin-bottom:0;">"This is very common in Florida — it's an airborne bacteria that settles in moist environments, especially ice machines. That's exactly why you have us here. Our cleaning process removes and sanitizes it completely."</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 8. Error Codes -->
+    <div class="section-card">
+      <div class="section-header error-codes" onclick="toggleSection(this)">
+        <span>⚠️ Error Codes</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <p style="font-size:14px; margin-bottom:12px;">Indigo series shows text codes on the digital display. S-series uses LED indicator patterns — consult the model label inside the panel for S-series LED meanings.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Meaning</th>
+              <th>Your Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>HARVEST</strong></td>
+              <td>Harvest failure — ice is taking too long to release from evaporator</td>
+              <td>Refer out. Do not clean.</td>
+            </tr>
+            <tr>
+              <td><strong>WATER</strong></td>
+              <td>Water supply issue detected</td>
+              <td>Check supply valve (fully open) and inlet filter. If clear, refer out.</td>
+            </tr>
+            <tr>
+              <td><strong>ICE FULL</strong></td>
+              <td>Bin full sensor active</td>
+              <td>Check bin level and sensor area for ice bridging or buildup blocking the sensor.</td>
+            </tr>
+            <tr>
+              <td><strong>TEMP</strong></td>
+              <td>High temperature fault — discharge temp exceeded limit</td>
+              <td>Check and clean the air filter. Confirm 6" clearance on all sides. If clear, refer out.</td>
+            </tr>
+            <tr>
+              <td><strong>SERVICE / wrench icon</strong></td>
+              <td>Scheduled maintenance reminder based on operating hours</td>
+              <td>Your service satisfies this — it will clear after the cleaning cycle is complete and machine returns to ICE mode.</td>
+            </tr>
+            <tr>
+              <td><strong>E1</strong></td>
+              <td>Thermistor fault</td>
+              <td>Refer out immediately.</td>
+            </tr>
+            <tr>
+              <td><strong>E2</strong></td>
+              <td>Harvest thermistor fault</td>
+              <td>Refer out immediately.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout warning" style="margin-top:14px;">
+          <strong>HARVEST Error — Do Not Clean</strong>
+          Do not clean a machine showing a HARVEST fault. This indicates a refrigeration system problem — not a sanitation issue. Cleaning it will not resolve the fault and may delay diagnosis. Document thoroughly, photograph the display, and refer out.
+        </div>
+
+        <div class="callout tip">
+          <strong>SERVICE / Wrench Icon</strong>
+          This is a maintenance reminder triggered by operating hours — it is not a fault code. Your cleaning service satisfies the reminder. The icon should clear automatically after you complete the cleaning cycle and return the machine to ICE mode.
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. ATP Swab Locations -->
+    <div class="section-card">
+      <div class="section-header atp" onclick="toggleSection(this)">
+        <span>🧪 ATP Swab Locations</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+
+        <div class="phase-header">Pre-Clean</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Location</th>
+              <th>Technique</th>
+              <th>Typical Range</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Water trough interior</strong></td>
+              <td>Z-pattern, firm pressure, 4 seconds of contact</td>
+              <td>300–3000+ RLU</td>
+            </tr>
+            <tr>
+              <td><strong>Distribution tube — along length</strong></td>
+              <td>Press swab along full exterior of tube</td>
+              <td>100–800 RLU</td>
+            </tr>
+            <tr>
+              <td><strong>Bin drain area</strong></td>
+              <td>Around and inside drain plug port</td>
+              <td>100–800 RLU</td>
+            </tr>
+            <tr>
+              <td><strong>Splash guard underside</strong></td>
+              <td>Full surface, firm contact</td>
+              <td>100–1000 RLU</td>
+            </tr>
+            <tr>
+              <td><strong>Ice scoop handle</strong></td>
+              <td>Full circumference of handle</td>
+              <td>50–600 RLU</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="phase-header">Post-Clean</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Location</th>
+              <th>Target</th>
+              <th>Action if Above Target</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Water trough interior</strong></td>
+              <td>Under 10 RLU</td>
+              <td>Re-apply sanitizer to trough, wait 5 minutes, retest</td>
+            </tr>
+            <tr>
+              <td><strong>Distribution tube exterior</strong></td>
+              <td>Under 10 RLU</td>
+              <td>Re-apply sanitizer directly to tube surface</td>
+            </tr>
+            <tr>
+              <td><strong>Bin wall mid-height</strong></td>
+              <td>Under 10 RLU</td>
+              <td>Check sanitizer dilution — may be too weak. Re-apply and retest.</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+
+    <!-- 10. When to Refer Out -->
+    <div class="section-card">
+      <div class="section-header refer-out" onclick="toggleSection(this)">
+        <span>🔴 When to Refer Out</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+
+        <div class="callout warning">
+          <strong>Stop Immediately — Do Not Continue Service</strong>
+        </div>
+
+        <ul class="checklist">
+          <li><strong>HARVEST error that does not clear after one power cycle</strong> — document, photograph display, and refer out. Do not clean.</li>
+          <li><strong>Any burning smell</strong> — shut the machine off immediately, document, and refer out.</li>
+          <li><strong>Sparking or visible electrical damage</strong> — do not touch, do not operate. Refer out and notify manager.</li>
+          <li><strong>Compressor grinding, knocking, or screeching sounds</strong> — stop service, document, and refer out.</li>
+          <li><strong>Machine not producing ice 30+ minutes after a correct restart</strong> — document and refer out.</li>
+          <li><strong>E1 or E2 error codes</strong> — thermistor faults require a refrigeration technician. Refer out.</li>
+          <li><strong>Visible refrigerant oil staining</strong> — yellowish, oily residue around fittings or near the compressor. Stop, document, refer out.</li>
+        </ul>
+
+        <div class="callout important" style="margin-top:12px;">
+          <strong>Note and Recommend — Flag for Owner Before Leaving</strong>
+        </div>
+
+        <ul class="checklist">
+          <li><strong>Distribution tube cracked or structurally damaged</strong> — clean what you can, but document clearly. The tube must be replaced before the next service visit.</li>
+          <li><strong>Condenser coils heavily fouled</strong> — note location and severity. This is a refrigeration technician task if cleaning doesn't resolve it.</li>
+          <li><strong>Door gasket cracked or mold deeply embedded</strong> — note and recommend gasket replacement at next service.</li>
+          <li><strong>Water inlet valve dripping continuously</strong> — note for owner. Will eventually cause water supply issues.</li>
+        </ul>
+
+        <div class="callout tip" style="margin-top:12px;">
+          <strong>Refer Out Script</strong>
+          "Everything from a sanitation and compliance standpoint is complete and documented. I noticed [specific issue] while I was in there — that's a mechanical matter outside what I do. You'll want a refrigeration tech to look at that. I can refer you to someone if that's helpful."
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <nav class="bottom-nav">
+    <a class="nav-item" href="index.html"><span class="nav-icon">🏠</span>Home</a>
+    <a class="nav-item" href="hoshizaki.html"><span class="nav-icon">H</span>Hoshizaki</a>
+    <a class="nav-item active" href="manitowoc.html"><span class="nav-icon">M</span>Manitowoc</a>
+    <a class="nav-item" href="scotsman.html"><span class="nav-icon">S</span>Scotsman</a>
+    <a class="nav-item" href="iceomatic.html"><span class="nav-icon">IO</span>Ice-O-Matic</a>
+    <a class="nav-item" href="follett.html"><span class="nav-icon">F</span>Follett</a>
+    <a class="nav-item" href="reference.html"><span class="nav-icon">⚡</span>Reference</a>
+  </nav>
+
+  <script>
+    function toggleSection(el) {
+      var body = el.nextElementSibling;
+      body.classList.toggle('open');
+      el.classList.toggle('open');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var first = document.querySelector('.section-header');
+      if (first) toggleSection(first);
+    });
+  </script>
+
+</body>
+</html>

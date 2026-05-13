@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Quick Reference — PIC Field Manual</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="page-header">
+    <a class="back-btn" href="index.html">&#8592; Home</a>
+    <h1>⚡ Quick Reference</h1>
+    <div class="subtitle">Universal rules and quick lookups</div>
+  </div>
+
+  <div class="page-content">
+
+    <!-- 1. What You Need Every Time -->
+    <div class="section-card">
+      <div class="section-header quick-facts open" onclick="toggleSection(this)">
+        <span>📋 What You Need Every Time</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body open">
+        <ul class="checklist">
+          <li>Nu-Calgon Nickel-Safe Cleaner 4287-08 (1 gallon)</li>
+          <li>Nu-Calgon Ice Machine Sanitizer No-Rinse 4211-34 (16 oz)</li>
+          <li>Hygiena Ensure luminometer + Ultrasnap swabs</li>
+          <li>Clean spray bottle (dedicated to sanitizer only — label it)</li>
+          <li>Soft bristle brush (nylon, never metal or abrasive)</li>
+          <li>Clean white cloths or heavy paper towels</li>
+          <li>Small bucket</li>
+          <li>Nitrile gloves</li>
+          <li>Phone for photos</li>
+          <li>Permanent marker (for dating filters)</li>
+          <li>Flashlight (bins are dark)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 2. Chemical Dilution -->
+    <div class="section-card">
+      <div class="section-header deep-clean open" onclick="toggleSection(this)">
+        <span>🧪 Chemical Dilution</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body open">
+        <table class="quick-ref-table">
+          <thead>
+            <tr>
+              <th>Application</th>
+              <th>Cleaner Amount</th>
+              <th>Water Amount</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Deep clean</strong></td>
+              <td>4 oz</td>
+              <td>16 oz</td>
+              <td>First visits, neglected machines</td>
+            </tr>
+            <tr>
+              <td><strong>Routine maintenance</strong></td>
+              <td>2 oz</td>
+              <td>16 oz</td>
+              <td>Return visits, good condition</td>
+            </tr>
+            <tr>
+              <td><strong>Sanitizer</strong></td>
+              <td>0.5 oz</td>
+              <td>1 gallon</td>
+              <td>ALWAYS — no-rinse, never skip</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 3. ATP Quick Reference -->
+    <div class="section-card">
+      <div class="section-header atp open" onclick="toggleSection(this)">
+        <span>🔬 ATP Quick Reference</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body open">
+        <table class="quick-ref-table">
+          <thead>
+            <tr>
+              <th>Reading</th>
+              <th>Status</th>
+              <th>What It Means</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>0–10 RLU</strong></td>
+              <td>✅ PASS</td>
+              <td>At or below FDA food contact standard</td>
+            </tr>
+            <tr>
+              <td><strong>11–100 RLU</strong></td>
+              <td>⚠️ MARGINAL</td>
+              <td>Elevated — document carefully</td>
+            </tr>
+            <tr>
+              <td><strong>101–500 RLU</strong></td>
+              <td>❌ FAIL</td>
+              <td>Significant contamination</td>
+            </tr>
+            <tr>
+              <td><strong>500+ RLU</strong></td>
+              <td>❌❌ FAIL</td>
+              <td>Severe — excellent sales documentation</td>
+            </tr>
+            <tr>
+              <td><strong>1000+ RLU</strong></td>
+              <td>❌❌❌ FAIL</td>
+              <td>Extreme — photograph luminometer display</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 4. Error Codes — All Brands -->
+    <div class="section-card">
+      <div class="section-header error-codes open" onclick="toggleSection(this)">
+        <span>⚠️ Error Codes — All Brands</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body open">
+
+        <div class="problem-block">
+          <div class="problem-title">Hoshizaki</div>
+          <table>
+            <thead>
+              <tr><th>Code</th><th>Meaning</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>F1</strong></td><td>Long ice (freeze) cycle — water supply or ambient temp issue</td></tr>
+              <tr><td><strong>F2</strong></td><td>Long harvest cycle — refrigerant or harvest assist issue</td></tr>
+              <tr><td><strong>F3</strong></td><td>High evaporator temperature — refrigerant or airflow issue</td></tr>
+              <tr><td><strong>F4</strong></td><td>Low evaporator temperature — refrigerant or thermistor issue</td></tr>
+              <tr><td><strong>F5</strong></td><td>Water inlet float switch fault — check water supply and valve</td></tr>
+              <tr><td><strong>F6</strong></td><td>Drain fault — check drain line and pump</td></tr>
+              <tr><td><strong>F7</strong></td><td>Gear motor fault (nugget models only) — auger jam or motor failure</td></tr>
+              <tr><td><strong>F8</strong></td><td>Bin control fault — bin thermostat or sensor issue</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="problem-block">
+          <div class="problem-title">Manitowoc Indigo</div>
+          <table>
+            <thead>
+              <tr><th>Code</th><th>Meaning</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>HARVEST</strong></td><td>Machine stuck in harvest cycle — harvest assist or refrigerant issue</td></tr>
+              <tr><td><strong>WATER</strong></td><td>No water detected — check supply line, valve, float</td></tr>
+              <tr><td><strong>ICE FULL</strong></td><td>Bin sensor tripped — check bin level and curtain sensor</td></tr>
+              <tr><td><strong>TEMP</strong></td><td>High discharge temperature — condenser or refrigerant issue</td></tr>
+              <tr><td><strong>SERVICE</strong></td><td>Call technician — control board or critical fault</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="problem-block">
+          <div class="problem-title">Scotsman</div>
+          <table>
+            <thead>
+              <tr><th>Indicator</th><th>Meaning</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Long Ice LED</strong></td><td>Extended freeze cycle — water, ambient temp, or refrigerant</td></tr>
+              <tr><td><strong>Long Harvest LED</strong></td><td>Stuck harvest — hot gas valve or refrigerant issue</td></tr>
+              <tr><td><strong>No Water LED</strong></td><td>Water supply issue — check inlet valve and supply pressure</td></tr>
+              <tr><td><strong>Bin Full LED</strong></td><td>Bin sensor blocked or ice bridge — clear bin and reset</td></tr>
+              <tr><td><strong>CLEAN reminder</strong></td><td>Scheduled cleaning alert — perform full cleaning cycle</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="problem-block">
+          <div class="problem-title">Ice-O-Matic</div>
+          <table>
+            <thead>
+              <tr><th>Indicator</th><th>Meaning</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Red solid</strong></td><td>High temperature or safety lockout — check condenser and airflow</td></tr>
+              <tr><td><strong>Red flashing</strong></td><td>Long freeze cycle — water supply or refrigerant issue</td></tr>
+              <tr><td><strong>Amber</strong></td><td>Water supply issue — check inlet valve and water pressure</td></tr>
+              <tr><td><strong>All LEDs flashing</strong></td><td>Critical fault — call for service, do not operate</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="problem-block">
+          <div class="problem-title">Follett</div>
+          <table>
+            <thead>
+              <tr><th>Indicator</th><th>Meaning</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Green solid</strong></td><td>Normal operation — machine is running correctly</td></tr>
+              <tr><td><strong>Green flashing</strong></td><td>Making ice — auger and refrigeration cycle active</td></tr>
+              <tr><td><strong>Amber</strong></td><td>Service advisory — non-critical alert, check display message</td></tr>
+              <tr><td><strong>Red solid</strong></td><td>Fault — check display for fault code, refer out if needed</td></tr>
+              <tr><td><strong>Red flashing</strong></td><td>Critical fault — machine has shut down, refer to senior tech</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 5. When to Refer Out -->
+    <div class="section-card">
+      <div class="section-header refer-out open" onclick="toggleSection(this)">
+        <span>🚫 When to Refer Out — Universal Rules</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body open">
+        <div class="callout warning">
+          <strong>Stop and refer out if you encounter any of the following:</strong>
+        </div>
+        <ul class="checklist">
+          <li><strong>Refrigerant leak</strong> — oily residue near fittings, frost patterns, hissing sound. Do not operate. Refer to licensed HVAC/R technician immediately.</li>
+          <li><strong>Compressor failure</strong> — compressor not starting, loud knocking, trips breaker. Refer out — this is beyond PM scope.</li>
+          <li><strong>Electrical issues</strong> — burned wiring, tripped GFCI that won't reset, scorched control board, burning smell. Refer to senior tech or licensed electrician.</li>
+          <li><strong>Water inlet valve failure</strong> — valve not opening or closing, continuous water flow, flooding. Refer out if valve replacement required.</li>
+          <li><strong>Control board errors</strong> — SERVICE fault, multiple repeating error codes after reset, unresponsive display. Refer to senior tech.</li>
+          <li><strong>Structural damage</strong> — cracked evaporator, damaged bin, bent or broken components that affect food safety. Document and refer out.</li>
+          <li><strong>Active mold (black/green)</strong> — visible mold beyond normal pink slime. Document with photos, sanitize what you can, escalate for remediation protocol.</li>
+          <li><strong>Rodent or pest evidence</strong> — droppings, nesting, chewed wiring. Halt service, document with photos, notify manager and refer to pest control first.</li>
+          <li><strong>Customer requests repair beyond PM scope</strong> — any repair requiring parts, refrigerant, or electrical work is outside PM scope. Quote separately or refer to senior tech.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 6. Everpure Filter Replacement -->
+    <div class="section-card">
+      <div class="section-header routine open" onclick="toggleSection(this)">
+        <span>💧 Everpure Filter Replacement EV9612-22</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body open">
+        <div class="callout tip">
+          <strong>When to replace</strong>
+          Replace every 6 months or when the capacity limit is reached — whichever comes first. Always check the installation date marked on the housing.
+        </div>
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text"><strong>Turn off the water supply.</strong> Locate the shut-off valve on the supply line feeding the filter head and close it completely.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text"><strong>Relieve line pressure.</strong> Press the red pressure relief button on the filter head (if present) or slowly loosen the sump to bleed pressure. Have a towel ready.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text"><strong>Remove the old filter.</strong> Turn the filter cartridge counterclockwise (left) and pull straight down. Dispose of properly — do not attempt to clean or reuse.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-text"><strong>Inspect the filter head.</strong> Wipe the head gasket seat with a clean damp cloth. Check the O-ring or gasket — replace if cracked, flattened, or missing.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-text"><strong>Install the new EV9612-22 filter.</strong> Push up and turn clockwise until snug. Do not overtighten — hand-tight plus a quarter turn is sufficient.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">6</div>
+          <div class="step-text"><strong>Turn water supply back on slowly.</strong> Open the supply valve gradually and check immediately for leaks at the filter head connection.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">7</div>
+          <div class="step-text"><strong>Flush the filter for 5 minutes.</strong> Allow water to flow through the system continuously for a full 5 minutes to purge carbon fines and activate the filter media.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">8</div>
+          <div class="step-text"><strong>Check for leaks a second time.</strong> After flushing, inspect all connections again with the system pressurized. Dry any wet surfaces and watch for drips.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">9</div>
+          <div class="step-text"><strong>Mark the installation date.</strong> Write the date clearly on the new filter housing with a permanent marker. Record in your service notes.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. Drain Plug Checklist -->
+    <div class="section-card">
+      <div class="section-header refer-out open" onclick="toggleSection(this)">
+        <span>🔌 Drain Plug Checklist</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body open">
+        <div class="callout warning">
+          <strong>Critical — Never Skip</strong>
+          A loose drain plug = machine drains during operation = no ice = callback from a frustrated client.
+        </div>
+        <ul class="checklist">
+          <li><strong>Before cleaning:</strong> Remove the drain plug and allow the sump/reservoir to fully drain before adding cleaner solution.</li>
+          <li><strong>During cleaning:</strong> Keep drain plug out while circulating cleaner. Never leave the machine unattended while draining.</li>
+          <li><strong>Before sanitizing:</strong> Reinstall the drain plug securely before adding sanitizer solution. Confirm it is fully seated and locked.</li>
+          <li><strong>Before restart:</strong> Do a final visual check — drain plug is in, tight, and the drain line is clear. Only then restart the machine.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 8. Universal Safety Rules -->
+    <div class="section-card">
+      <div class="section-header refer-out open" onclick="toggleSection(this)">
+        <span>🛡️ Universal Safety Rules</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body open">
+        <ul class="checklist">
+          <li><strong>Wear nitrile gloves at all times</strong> when handling cleaner or sanitizer chemicals. Both products can cause skin and eye irritation. If splash occurs, flush with water immediately.</li>
+          <li><strong>Never mix chemicals.</strong> Cleaner and sanitizer are used sequentially, never together. Do not add any other products to the machine. Do not use bleach.</li>
+          <li><strong>Photograph before you touch anything.</strong> Document initial condition, any error codes showing on the display, and any visible contamination. This protects you and the company.</li>
+          <li><strong>Never operate a machine you believe has a refrigerant leak.</strong> Oil staining around fittings, abnormal frost patterns, or hissing sounds are stop-work conditions. Tag the unit and refer out.</li>
+          <li><strong>Leave the machine cleaner than you found it — or don't restart it.</strong> If conditions are unsafe (active pests, severe mold, electrical hazard), document thoroughly, do not restart the machine, and notify your manager before leaving the site.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <nav class="bottom-nav">
+    <a class="nav-item" href="index.html"><span class="nav-icon">🏠</span>Home</a>
+    <a class="nav-item" href="hoshizaki.html"><span class="nav-icon">H</span>Hoshizaki</a>
+    <a class="nav-item" href="manitowoc.html"><span class="nav-icon">M</span>Manitowoc</a>
+    <a class="nav-item" href="scotsman.html"><span class="nav-icon">S</span>Scotsman</a>
+    <a class="nav-item" href="iceomatic.html"><span class="nav-icon">IO</span>Ice-O-Matic</a>
+    <a class="nav-item" href="follett.html"><span class="nav-icon">F</span>Follett</a>
+    <a class="nav-item active" href="reference.html"><span class="nav-icon">⚡</span>Reference</a>
+  </nav>
+
+  <script>
+    function toggleSection(header) {
+      const body = header.nextElementSibling;
+      const isOpen = body.classList.contains('open');
+      body.classList.toggle('open', !isOpen);
+      header.classList.toggle('open', !isOpen);
+    }
+  </script>
+
+</body>
+</html>
