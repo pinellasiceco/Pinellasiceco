@@ -5802,8 +5802,8 @@ async function clrAllCloud(){
   // Clear cloud tables for this user
   try{
     await Promise.all([
-      _sb.from('pic_log').delete().eq('user_id',_userId),
-      _sb.from('pic_customers').delete().eq('user_id',_userId)
+      _sb.from('pic_log').delete().eq('device_id',_userId),
+      _sb.from('pic_customers').delete().eq('device_id',_userId)
     ]);
     toast('Local + cloud data cleared — reloading…');
   }catch(e){
@@ -6931,7 +6931,7 @@ async function loadCloudData(){
     // Customers — merge Supabase records into existing customers dict.
     // Do NOT wipe customers first: localStorage data from a recent markWon() must survive
     // even if the async sbUpsert hasn't completed yet or failed silently.
-    var r4=await _sb.from('pic_customers').select('prospect_id,data').eq('user_id',_userId);
+    var r4=await _sb.from('pic_customers').select('prospect_id,data').eq('device_id',_userId);
     var _repairIds=[];
     (r4.data||[]).forEach(function(row){
       if(!row.data)return;
@@ -7049,22 +7049,24 @@ async function sbUpsert(table,prospectId,data){
   if(!_sb)return;
   var uid=getUserId();if(!uid)return;
   try{
-    await _sb.from(table).upsert({
-      user_id:uid,
+    var res=await _sb.from(table).upsert({
+      device_id:uid,
       prospect_id:String(prospectId),
       data:data,
       updated_at:new Date().toISOString()
-    },{onConflict:'user_id,prospect_id'});
-  }catch(e){console.warn('sbUpsert failed:',table,e);if(table==='pic_customers')toast('⚠️ Save failed — data stored locally only. Check Supabase connection.');}
+    },{onConflict:'device_id,prospect_id'});
+    if(res&&res.error){console.warn('sbUpsert error:',table,res.error);toast('⚠️ Save failed: '+res.error.message);}
+  }catch(e){console.warn('sbUpsert failed:',table,e);toast('⚠️ Save failed — check connection');}
 }
 
 async function sbUpsertSetting(key,data){
   if(!_sb)return;
   var uid=getUserId();if(!uid)return;
   try{
-    await _sb.from('pic_settings').upsert({
-      user_id:uid,key:key,data:data,updated_at:new Date().toISOString()
-    },{onConflict:'user_id,key'});
+    var res=await _sb.from('pic_settings').upsert({
+      device_id:uid,key:key,data:data,updated_at:new Date().toISOString()
+    },{onConflict:'device_id,key'});
+    if(res&&res.error)console.warn('sbUpsertSetting error:',res.error);
   }catch(e){console.warn('sbUpsertSetting failed:',e);}
 }
 
