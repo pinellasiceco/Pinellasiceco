@@ -6064,11 +6064,12 @@ function renderPipeline(){
 
 function rCust(){
   const filter=document.getElementById('cust-status').value;
-  const allCusts=P.filter(p=>p.status&&p.status!=='prospect');
-  const shown=filter?allCusts.filter(p=>p.status===filter):allCusts;
+  // Use customers dict status as authoritative fallback if p.status is missing/wrong
+  const allCusts=P.filter(p=>{const st=(customers[p.id]||{}).status||p.status;return st&&st!=='prospect';});
+  const shown=filter?allCusts.filter(p=>{const st=(customers[p.id]||{}).status||p.status;return st===filter;}):allCusts;
 
   // MRR calculation — prefer customers[] record (actual closed price) over P[] estimate
-  const recurring=allCusts.filter(p=>p.status==='customer_recurring'||p.status==='customer_quarterly');
+  const recurring=allCusts.filter(p=>{const st=(customers[p.id]||{}).status||p.status;return st==='customer_recurring'||st==='customer_quarterly';});
   const mrr=recurring.reduce((s,p)=>s+((customers[p.id]||{}).monthly||p.monthly||149),0);
   document.getElementById('mrr-val').textContent='$'+mrr.toLocaleString();
   document.getElementById('cust-count').textContent=recurring.length;
@@ -6973,6 +6974,13 @@ async function loadCloudData(){
     var r7=await _sb.from('pic_partner_data').select('key,data').eq('user_id',_userId);
     var pdRow=(r7.data||[]).find(function(row){return row.key==='partner_data';});
     if(pdRow)localStorage.setItem('pic_partners_v1',JSON.stringify(pdRow.data));
+
+    // Final status sync: ensure p.status matches customers dict for every loaded customer.
+    // This is belt-and-suspenders in case P.find() missed any entry above.
+    P.forEach(function(p){
+      var c=customers[p.id]||customers[String(p.id)];
+      if(c&&c.status&&c.status!=='prospect'){p.status=c.status;}
+    });
 
     // Sync to localStorage cache for offline resilience
     try{localStorage.setItem('pic_v4',JSON.stringify(log));}catch(e){}
