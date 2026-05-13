@@ -2,7 +2,7 @@ name: Rebuild Prospect Tool
 
 on:
   push:
-    branches: [main]
+    branches: [main, claude/fix-multiple-app-bugs-j1hpJ]
   schedule:
     - cron: '0 11 * * *'   # Daily at 11:00 UTC (7am ET)
   workflow_dispatch:         # Manual trigger
