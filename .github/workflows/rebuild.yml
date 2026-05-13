@@ -2,7 +2,7 @@ name: Rebuild Prospect Tool
 
 on:
   push:
-    branches: [main]
+    branches: [main, claude/fix-multiple-app-bugs-j1hpJ]
   schedule:
     - cron: '0 11 * * *'   # Daily at 11:00 UTC (7am ET)
   workflow_dispatch:         # Manual trigger
@@ -52,7 +52,7 @@ jobs:
           git reset --soft origin/main
           git add -A
           git commit --allow-empty -m "Daily rebuild $(date +'%Y-%m-%d %H:%M')"
-          git push
+          git push origin HEAD:main
 
       - name: Send daily briefing email
         env:

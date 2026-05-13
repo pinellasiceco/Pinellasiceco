@@ -110,23 +110,6 @@
 - All 23 date storage sites use `localISO()` — no UTC off-by-one after 8pm ET
 - Prospect follow-up dates: stored as local ISO string, compared correctly
 
-### Data Freshness Indicator
-- `build_date` field baked into every P[] record at CI build time
-- Header subtitle shows `Data: today` (green) / `Data: yesterday` / `Data: Xd old` (red if >3 days)
-- Yellow stale-data warning banner injected below header after 3+ days
-- Both updated via `updateDataFreshness()` + `checkDataStaleness()` called after every `_renderApp()`
-- Daily briefing email shows "Data updated: Month Day, Year · N prospects · N CALLBACK" above stats
-
-### Before/After Photos on Service Visits
-- 📷 Add Photos button in service log modal opens camera/photo library (iOS: `capture=environment`)
-- Up to 8 photos per visit; thumbnail previews with ✕ remove
-- `_compressImage()` canvas-compresses to 800px wide / 0.7 JPEG quality before upload
-- `_uploadServicePhotos()` uploads to Supabase Storage `service-photos` bucket; stores 1-year signed URLs
-- `submitServiceLog()` is async — uploads photos first, stores `photo_urls` array in `service_history` entry
-- Photos included inline in compliance email HTML (auto-grid layout)
-- Service history rows show 📷 count; tap opens fullscreen `viewServicePhotos()` overlay
-- **Requires**: create `service-photos` bucket (private, 5MB limit) in Supabase Storage + RLS policy
-
 ## What's Broken / Watch List ⚠️
 
 - **iPad copy-paste**: copying code blocks from chat on iPad adds angle brackets around URLs. Never paste code directly into Supabase editor — use the GitHub Actions deploy workflow instead.
@@ -238,7 +221,7 @@ To force a fresh PWA load after a push: open the URL directly in Safari (not the
 
 ### GitHub Secrets Required
 | Secret | Where to find |
-|--------|---------------|
+|--------|--------------|
 | `SUPABASE_URL` | Supabase → Settings → API |
 | `SUPABASE_ANON_KEY` | Supabase → Settings → API (public anon key) |
 | `SUPABASE_SERVICE_KEY` | Supabase → Settings → API (service_role key) |
@@ -251,10 +234,11 @@ See the SQL in the prompt — creates `pic_prospects`, `pic_partners`, adds `use
 - If Supabase is not configured (no URL/key in env or localStorage), app runs in local-only mode — login screen is skipped, localStorage data used directly. Zero regression for existing usage.
 
 ## Next Session Priorities
-1. Trigger manual CI rebuild in GitHub Actions — this will regenerate `index.html` from updated `build.py`, baking in `build_date` on all records and the photo/freshness JS
-2. **Create Supabase Storage bucket**: Supabase dashboard → Storage → New bucket → name `service-photos`, Public: NO, 5MB limit; then run RLS SQL policy
-3. Verify data freshness indicator appears in header after rebuild
-4. Test photo upload: open a service log → add a photo → save → check storage bucket
+1. **Verify login flow end-to-end**: Open Settings → enter Supabase URL + anon key → tap "Connect & Login" → confirm login screen appears → request magic link → confirm email arrives → tap link → confirm redirects to `pinellasiceco.github.io` → confirm app loads with data
+2. **Verify Account section**: After logging in, open Settings → scroll to bottom → confirm Account section shows email + Sign Out button; tap Sign Out → confirm login screen reappears
+3. **Verify header chips**: On iPhone, open Prospects tab → confirm filter chips (CALLBACK / HOT / WARM / etc.) scroll horizontally and don't wrap or get clipped
+4. **CI rebuild with secrets**: Trigger manual rebuild in GitHub Actions → confirm `index.html` gets real credentials baked in → login screen appears on fresh load without Settings
+5. **SUPABASE_USER_ID secret**: After first login, run `select id from auth.users` in Supabase SQL Editor → add as GitHub Secret → trigger CI rebuild
 
 ## iOS PWA Rules (never violate these)
 - **Buttons in injected HTML:** use inline `ontouchend="event.preventDefault();fn()"` + `onclick="fn()"` — NOT `addEventListener` on innerHTML-injected elements
@@ -267,7 +251,7 @@ See the SQL in the prompt — creates `pic_prospects`, `pic_partners`, adds `use
 
 ## Key Files
 | File | Purpose |
-|------|--------|
+|------|---------|
 | `build.py` | **Edit this** — generates prospecting_tool.html; also stamps sw.js cache date |
 | `index.html` | Deployed output — keep in sync with build.py; overwritten by CI daily |
 | `sw.js` | Service worker — auto date-stamped by build.py; bump manually after direct edits |
