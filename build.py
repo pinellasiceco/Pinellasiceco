@@ -2052,7 +2052,7 @@ header{background:var(--navy);
     <div class="logo">
       <div class="logo-icon">&#x1F9CA;</div>
       <div><div class="logo-name">Pinellas Ice Co</div>
-        <div style="font-size:8px;color:var(--sub);letter-spacing:.04em">PROSPECT TOOL &bull; %%DATE%% &bull; v5 &bull; <span id="data-freshness"></span></div>
+        <div style="font-size:8px;color:var(--sub);letter-spacing:.04em">PROSPECT TOOL &bull; %%DATE%% &bull; v7 &bull; <span id="data-freshness"></span></div>
       </div>
     </div>
     <div class="hchips">
@@ -7049,13 +7049,14 @@ async function sbUpsert(table,prospectId,data){
   if(!_sb)return;
   var uid=getUserId();if(!uid)return;
   try{
-    var res=await _sb.from(table).upsert({
+    await _sb.from(table).delete().eq('device_id',uid).eq('prospect_id',String(prospectId));
+    var res=await _sb.from(table).insert({
       device_id:uid,
       prospect_id:String(prospectId),
       data:data,
       updated_at:new Date().toISOString()
-    },{onConflict:'device_id,prospect_id'});
-    if(res&&res.error){console.warn('sbUpsert error:',table,res.error);toast('⚠️ Save failed: '+res.error.message);}
+    });
+    if(res&&res.error){console.warn('sbUpsert insert error:',table,res.error);toast('⚠️ Save failed: '+res.error.message);}
   }catch(e){console.warn('sbUpsert failed:',table,e);toast('⚠️ Save failed — check connection');}
 }
 
@@ -7063,9 +7064,10 @@ async function sbUpsertSetting(key,data){
   if(!_sb)return;
   var uid=getUserId();if(!uid)return;
   try{
-    var res=await _sb.from('pic_settings').upsert({
+    await _sb.from('pic_settings').delete().eq('device_id',uid).eq('key',key);
+    var res=await _sb.from('pic_settings').insert({
       device_id:uid,key:key,data:data,updated_at:new Date().toISOString()
-    },{onConflict:'device_id,key'});
+    });
     if(res&&res.error)console.warn('sbUpsertSetting error:',res.error);
   }catch(e){console.warn('sbUpsertSetting failed:',e);}
 }
@@ -8296,7 +8298,8 @@ function openServiceMaps(){
 function renderReports(){
   const sel=document.getElementById('svc-report-client');
   if(!sel)return;
-  const recurring=P.filter(p=>p.status==='customer_recurring'||p.status==='customer_once'||p.status==='customer_intro');
+  const CUST_ST=new Set(['customer_recurring','customer_once','customer_intro','customer_quarterly']);
+  const recurring=P.filter(p=>{const st=(customers[p.id]||{}).status||p.status;return CUST_ST.has(st);});
   sel.innerHTML='<option value="">Select a client...</option>'
     +recurring.map(p=>'<option value="'+p.id+'">'+p.name+' — '+p.city+'</option>').join('');
   document.getElementById('svc-report-preview').innerHTML='';
