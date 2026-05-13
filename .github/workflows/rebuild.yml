@@ -52,7 +52,7 @@ jobs:
           git reset --soft origin/main
           git add -A
           git commit --allow-empty -m "Daily rebuild $(date +'%Y-%m-%d %H:%M')"
-          git push
+          git push origin HEAD:main
 
       - name: Send daily briefing email
         env:
