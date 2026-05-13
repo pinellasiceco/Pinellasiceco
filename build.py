@@ -6922,7 +6922,7 @@ async function loadCloudData(){
     }
 
     // Call log — only replace if Supabase actually has records (don't wipe localStorage when tables are empty/missing)
-    var r3=await _sb.from('pic_log').select('prospect_id,data').eq('user_id',_userId);
+    var r3=await _sb.from('pic_log').select('prospect_id,data').eq('device_id',_userId);
     if(r3.data&&r3.data.length){
       log={};
       r3.data.forEach(function(row){log[row.prospect_id]=row.data;});
@@ -6953,7 +6953,7 @@ async function loadCloudData(){
     }
 
     // Phones
-    var r5=await _sb.from('pic_phones').select('prospect_id,data').eq('user_id',_userId);
+    var r5=await _sb.from('pic_phones').select('prospect_id,data').eq('device_id',_userId);
     (r5.data||[]).forEach(function(row){
       if(row.data&&row.data.phone){
         PHONES[row.prospect_id]=row.data.phone;
@@ -6963,14 +6963,14 @@ async function loadCloudData(){
     });
 
     // Settings
-    var r6=await _sb.from('pic_settings').select('key,data').eq('user_id',_userId);
+    var r6=await _sb.from('pic_settings').select('key,data').eq('device_id',_userId);
     (r6.data||[]).forEach(function(row){
       if(row.key==='settings')localStorage.setItem('pic_settings',JSON.stringify(row.data));
       if(row.key==='goals'){goals=row.data;localStorage.setItem('pic_goals',JSON.stringify(goals));}
     });
 
     // Partner data
-    var r7=await _sb.from('pic_partner_data').select('key,data').eq('user_id',_userId);
+    var r7=await _sb.from('pic_partner_data').select('key,data').eq('device_id',_userId);
     var pdRow=(r7.data||[]).find(function(row){return row.key==='partner_data';});
     if(pdRow)localStorage.setItem('pic_partners_v1',JSON.stringify(pdRow.data));
 
