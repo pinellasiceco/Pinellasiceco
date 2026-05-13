@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>PIC Field Manual — Pinellas Ice Co</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="page-header">
+    <h1>🧊 PIC Field Manual</h1>
+    <div class="subtitle">Pinellas Ice Co — Technician Reference</div>
+  </div>
+
+  <div class="search-bar">
+    <input type="search" id="searchInput" placeholder="Search machines, problems, error codes…" autocomplete="off" autocorrect="off" spellcheck="false">
+  </div>
+
+  <div class="page-content" id="mainContent">
+
+    <div class="section-label">BRANDS BY MARKET SHARE</div>
+
+    <a class="brand-card" href="hoshizaki.html">
+      <div class="brand-header-row">
+        <div class="brand-name">Hoshizaki</div>
+        <div class="brand-share">30% of fleet</div>
+      </div>
+      <div class="brand-types">Crescent cube · Half cube · Nugget</div>
+      <div class="brand-where">Restaurants, hotels, healthcare — reliable workhorses</div>
+    </a>
+
+    <a class="brand-card" href="manitowoc.html">
+      <div class="brand-header-row">
+        <div class="brand-name">Manitowoc</div>
+        <div class="brand-share">25% of fleet</div>
+      </div>
+      <div class="brand-types">Full cube · Half cube · Flake</div>
+      <div class="brand-where">Bars, restaurants, convenience stores</div>
+    </a>
+
+    <a class="brand-card" href="scotsman.html">
+      <div class="brand-header-row">
+        <div class="brand-name">Scotsman</div>
+        <div class="brand-share">20% of fleet</div>
+      </div>
+      <div class="brand-types">Gourmet cube · Nugget · Flake · Pearl</div>
+      <div class="brand-where">Hotels, healthcare, upscale foodservice</div>
+    </a>
+
+    <a class="brand-card" href="iceomatic.html">
+      <div class="brand-header-row">
+        <div class="brand-name">Ice-O-Matic</div>
+        <div class="brand-share">15% of fleet</div>
+      </div>
+      <div class="brand-types">Full cube · Half cube · Nugget</div>
+      <div class="brand-where">Restaurants, quick service, offices</div>
+    </a>
+
+    <a class="brand-card" href="follett.html">
+      <div class="brand-header-row">
+        <div class="brand-name">Follett</div>
+        <div class="brand-share">10% of fleet</div>
+      </div>
+      <div class="brand-types">Nugget (Chewblet) · Flake</div>
+      <div class="brand-where">Healthcare, schools, senior living — auger-based systems</div>
+    </a>
+
+    <div class="section-label">UNIVERSAL</div>
+
+    <a class="brand-card" href="reference.html" style="border-color: #c9973a;">
+      <div class="brand-header-row">
+        <div class="brand-name" style="color: #c9973a;">⚡ Quick Reference</div>
+      </div>
+      <div class="brand-types">Chemical dilutions · ATP standards · All error codes · Drain plug · Filter steps · Safety rules</div>
+      <div class="brand-where">Universal rules that apply to every machine</div>
+    </a>
+
+  </div>
+
+  <div class="search-results" id="searchResults" style="display:none;"></div>
+
+  <nav class="bottom-nav">
+    <a class="nav-item active" href="index.html"><span class="nav-icon">🏠</span>Home</a>
+    <a class="nav-item" href="hoshizaki.html"><span class="nav-icon">H</span>Hoshizaki</a>
+    <a class="nav-item" href="manitowoc.html"><span class="nav-icon">M</span>Manitowoc</a>
+    <a class="nav-item" href="scotsman.html"><span class="nav-icon">S</span>Scotsman</a>
+    <a class="nav-item" href="iceomatic.html"><span class="nav-icon">IO</span>Ice-O-Matic</a>
+    <a class="nav-item" href="follett.html"><span class="nav-icon">F</span>Follett</a>
+    <a class="nav-item" href="reference.html"><span class="nav-icon">⚡</span>Reference</a>
+  </nav>
+
+  <script>
+    const SEARCH_INDEX = [
+      {
+        brand: 'Universal',
+        title: 'Chemical Dilution — Deep Clean',
+        snippet: 'Deep clean: 4 oz cleaner to 16 oz water. First visits and neglected machines.',
+        url: 'reference.html'
+      },
+      {
+        brand: 'Universal',
+        title: 'Chemical Dilution — Routine Maintenance',
+        snippet: 'Routine maintenance: 2 oz cleaner to 16 oz water. Return visits in good condition.',
+        url: 'reference.html'
+      },
+      {
+        brand: 'Universal',
+        title: 'ATP Swab Standards',
+        snippet: '0–10 RLU pass, 11–100 marginal, 101–500 fail, 500+ severe fail. Use Hygiena Ensure luminometer with Ultrasnap swabs.',
+        url: 'reference.html'
+      },
+      {
+        brand: 'Universal',
+        title: 'Drain Plug Checklist',
+        snippet: 'Always reinstall drain plug after cleaning. A loose drain plug = machine drains during operation = no ice = callback.',
+        url: 'reference.html'
+      },
+      {
+        brand: 'Universal',
+        title: 'Everpure Filter Replacement EV9612-22',
+        snippet: 'Turn off water supply, relieve pressure, remove old filter, install new, flush 5 minutes, mark date with permanent marker.',
+        url: 'reference.html'
+      },
+      {
+        brand: 'Universal',
+        title: 'Scale / Mineral Deposits',
+        snippet: 'Scale and mineral deposits cause slow ice production, small cubes, and noisy operation. Use Nu-Calgon Nickel-Safe Cleaner 4287-08 to dissolve scale.',
+        url: 'reference.html'
+      },
+      {
+        brand: 'Universal',
+        title: 'Pink Slime (Serratia marcescens)',
+        snippet: 'Pink or orange biofilm on bin walls, curtain, or distribution components. Sanitize with Nu-Calgon no-rinse sanitizer 4211-34.',
+        url: 'reference.html'
+      },
+      {
+        brand: 'Universal',
+        title: 'When to Refer Out',
+        snippet: 'Refrigerant leak, compressor failure, electrical issues, water valve failure, control board errors — refer to senior tech or HVAC/R specialist.',
+        url: 'reference.html'
+      },
+      {
+        brand: 'Hoshizaki',
+        title: 'Hoshizaki Error Codes F1–F8',
+        snippet: 'F1 long ice cycle, F2 long harvest, F3 high temp, F4 low temp, F5 water inlet, F6 drain, F7 gear motor (nugget), F8 bin control.',
+        url: 'hoshizaki.html'
+      },
+      {
+        brand: 'Hoshizaki',
+        title: 'Hoshizaki Cleaning Mode',
+        snippet: 'Press and hold CLEAN button for 3 seconds to enter cleaning mode. Machine will harvest remaining ice, then begin cleaning cycle.',
+        url: 'hoshizaki.html'
+      },
+      {
+        brand: 'Hoshizaki',
+        title: 'Hoshizaki Water Curtain',
+        snippet: 'Remove water curtain — lifts straight up and out. Soak in cleaner solution. Inspect for scale, cracks, pink slime.',
+        url: 'hoshizaki.html'
+      },
+      {
+        brand: 'Manitowoc',
+        title: 'Manitowoc Indigo Error Codes',
+        snippet: 'HARVEST — stuck in harvest; WATER — no water; ICE FULL — bin sensor; TEMP — high discharge temp; SERVICE — call technician.',
+        url: 'manitowoc.html'
+      },
+      {
+        brand: 'Manitowoc',
+        title: 'Manitowoc Distribution Tube',
+        snippet: 'Remove and inspect distribution tube for scale and algae. Soak in cleaner solution. Ensure holes are clear before reinstalling.',
+        url: 'manitowoc.html'
+      },
+      {
+        brand: 'Manitowoc',
+        title: 'Manitowoc Cleaning Mode',
+        snippet: 'Press CLEAN button — machine enters cleaning/sanitizing mode automatically. Follow Indigo NXT display prompts.',
+        url: 'manitowoc.html'
+      },
+      {
+        brand: 'Scotsman',
+        title: 'Scotsman Error Codes / LED Indicators',
+        snippet: 'Long Ice LED — extended freeze; Long Harvest LED — stuck harvest; No Water — supply issue; Bin Full — sensor blocked; CLEAN reminder.',
+        url: 'scotsman.html'
+      },
+      {
+        brand: 'Scotsman',
+        title: 'Scotsman Auger System',
+        snippet: 'Auger-based nugget machines: inspect auger for scale buildup. Scale causes auger jams and motor strain. Clean thoroughly.',
+        url: 'scotsman.html'
+      },
+      {
+        brand: 'Ice-O-Matic',
+        title: 'Ice-O-Matic LED Error Codes',
+        snippet: 'Red solid — high temperature or safety lockout; Red flashing — long freeze cycle; Amber — water supply issue; All LEDs flashing — call for service.',
+        url: 'iceomatic.html'
+      },
+      {
+        brand: 'Ice-O-Matic',
+        title: 'Ice-O-Matic Cleaning Mode',
+        snippet: 'Press and hold the CLEAN button to initiate cleaning cycle. Display will confirm mode. Follow panel prompts.',
+        url: 'iceomatic.html'
+      },
+      {
+        brand: 'Follett',
+        title: 'Follett LED Status Codes',
+        snippet: 'Green solid — normal; Green flashing — making ice; Amber — service advisory; Red solid — fault, check display; Red flashing — critical fault.',
+        url: 'follett.html'
+      },
+      {
+        brand: 'Follett',
+        title: 'Follett Auger / Chewblet System',
+        snippet: 'Follett uses an auger (evaporator auger) to produce Chewblet nugget ice. Scale on auger causes jams and noisy operation.',
+        url: 'follett.html'
+      },
+      {
+        brand: 'Universal',
+        title: 'Filter Replacement — When to Replace',
+        snippet: 'Replace Everpure EV9612-22 filter every 6 months or at capacity limit. Mark installation date with permanent marker.',
+        url: 'reference.html'
+      }
+    ];
+
+    function highlight(text, query) {
+      if (!query) return text;
+      const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      return text.replace(new RegExp(`(${escaped})`, 'gi'), '<mark>$1</mark>');
+    }
+
+    function doSearch(query) {
+      const mainContent = document.getElementById('mainContent');
+      const searchResults = document.getElementById('searchResults');
+
+      if (!query || query.trim().length < 2) {
+        mainContent.style.display = '';
+        searchResults.style.display = 'none';
+        searchResults.innerHTML = '';
+        return;
+      }
+
+      const q = query.trim().toLowerCase();
+      const terms = q.split(/\s+/);
+
+      const results = SEARCH_INDEX.filter(item => {
+        const haystack = (item.brand + ' ' + item.title + ' ' + item.snippet).toLowerCase();
+        return terms.every(term => haystack.includes(term));
+      });
+
+      mainContent.style.display = 'none';
+      searchResults.style.display = '';
+
+      if (results.length === 0) {
+        searchResults.innerHTML = '<div class="no-results">No results for "<strong>' + query + '</strong>"<br><span style="font-size:12px;margin-top:8px;display:block;">Try: scale, error code, drain plug, ATP, filter, auger</span></div>';
+        return;
+      }
+
+      searchResults.innerHTML = results.map(item => `
+        <a class="search-result-item" href="${item.url}">
+          <div class="search-result-brand">${highlight(item.brand, query)}</div>
+          <div class="search-result-title">${highlight(item.title, query)}</div>
+          <div class="search-result-snippet">${highlight(item.snippet, query)}</div>
+        </a>
+      `).join('');
+    }
+
+    function toggleSection(header) {
+      const body = header.nextElementSibling;
+      const isOpen = body.classList.contains('open');
+      body.classList.toggle('open', !isOpen);
+      header.classList.toggle('open', !isOpen);
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const searchInput = document.getElementById('searchInput');
+      let debounceTimer;
+
+      searchInput.addEventListener('input', function () {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => doSearch(this.value), 200);
+      });
+
+      searchInput.addEventListener('search', function () {
+        doSearch(this.value);
+      });
+
+      // Wire up any section headers on this page
+      document.querySelectorAll('.section-header').forEach(function (header) {
+        header.addEventListener('click', function () {
+          toggleSection(this);
+        });
+      });
+    });
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(function(){});
+    }
+  </script>
+</body>
+</html>

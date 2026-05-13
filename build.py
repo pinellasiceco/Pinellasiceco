@@ -2737,6 +2737,12 @@ header{background:var(--navy);
       <button class="dbtn" onclick="doResetAll()" style="width:100%;background:#dc2626;color:#fff;border-color:#dc2626">&#x26A0; Wipe All Data &amp; Reload</button>
     </div>
 
+    <div class="dc" style="margin-top:12px">
+      <div class="dct">&#x1F4D6; Field Manual</div>
+      <div style="font-size:10px;color:var(--sub);margin-bottom:8px">Step-by-step cleaning procedures for all 5 brands. Works offline after first load.</div>
+      <a href="/Pinellasiceco/docs/fieldmanual/" target="_blank" style="display:block;padding:10px;background:#ecfdf5;border:1px solid #6ee7b7;border-radius:8px;text-align:center;color:#059669;font-size:13px;font-weight:700;text-decoration:none">&#x1F9CA; Open Field Manual</a>
+    </div>
+
   </div>
 
   <div id="mbg" onclick="closeM(event)">
