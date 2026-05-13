@@ -9396,6 +9396,9 @@ if('serviceWorker' in navigator){
   navigator.serviceWorker.register('/Pinellasiceco/sw.js').then(reg=>{
     if(reg)reg.update();
   }).catch(()=>{});
+  navigator.serviceWorker.addEventListener('controllerchange',function(){
+    window.location.reload();
+  });
 }
 </script>
 </body>
@@ -9405,7 +9408,7 @@ if('serviceWorker' in navigator){
 # ──────────────────────────────────────────────────────────────────────────────
 # ENTRY POINT
 # ──────────────────────────────────────────────────────────────────────────────
-SW_JS = """const CACHE_NAME='pic-BUILD_DATE-d';
+SW_JS = """const CACHE_NAME='pic-BUILD_TS';
 const ASSETS=['./','/Pinellasiceco/index.html'];
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(ASSETS).catch(()=>{})));
@@ -9497,7 +9500,8 @@ def main():
     print(f"  Written: {OUTPUT_FILE.name} ({size_kb}KB)")
     # Write sw.js for PWA offline support
     sw_path = OUTPUT_FILE.parent / 'sw.js'
-    sw_path.write_text(SW_JS.replace('BUILD_DATE', date.today().strftime('%Y%m%d')), encoding='utf-8')
+    from datetime import datetime as _dt
+    sw_path.write_text(SW_JS.replace('BUILD_TS', _dt.now().strftime('%Y%m%d%H%M')), encoding='utf-8')
     print(f"  Written: sw.js")
 
     # Push to Supabase (CI only — skipped when env vars not set)
