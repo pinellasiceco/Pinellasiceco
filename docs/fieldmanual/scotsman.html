@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Scotsman — PIC Field Manual</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="page-header">
+    <a class="back-btn" href="index.html">&#8592; Home</a>
+    <h1>SCOTSMAN</h1>
+    <div class="subtitle">C Series Cubers · Brilliance Nugget · HID Gourmet · AF Flaker</div>
+  </div>
+
+  <div class="page-content">
+
+    <div class="callout important" style="margin: 12px 16px;">
+      <strong>Cleaning Mode — Varies by Model</strong>
+      Some older Scotsman C series machines have the WASH/CLEAN control behind the front panel on the control board itself — not on the exterior. If you don't see a WASH or CLEAN button on the front, open the panel and look for a small toggle switch on the board.
+    </div>
+
+    <div class="callout warning" style="margin: 12px 16px;">
+      <strong>⚠️ Brilliance/Nugget — Auger Injury Hazard</strong>
+      The auger in Scotsman Brilliance machines is a serious injury hazard. POWER OFF COMPLETELY and wait 2 full minutes before reaching inside. If you are not confident disassembling the auger components on a specific model, clean all accessible surfaces and refer the auger work to a tech. A partial clean is better than a reassembly you cannot complete correctly.
+    </div>
+
+    <!-- 1. Quick Facts -->
+    <div class="section-card">
+      <div class="section-header quick-facts" onclick="toggleSection(this)">
+        <span>⚡ Quick Facts</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="problem-label">Market Share</div>
+        <p style="font-size:14px; margin-bottom:12px;">~20% of commercial ice machine fleet</p>
+
+        <div class="problem-label">Found In</div>
+        <p style="font-size:14px; margin-bottom:12px;">Convenience stores, quick service restaurants, healthcare facilities, some hotels</p>
+
+        <div class="problem-label">Key Differences by Series</div>
+        <ul class="checklist">
+          <li><strong>C-series</strong> produces full or half cube ice — clear, square or rectangular. The most common Scotsman in the field.</li>
+          <li><strong>Brilliance series</strong> produces nugget/cubelet ice using an auger system. Different cleaning approach — the auger requires special attention and injury awareness.</li>
+          <li><strong>HID gourmet series</strong> produces large, very clear, slow-melting cubes for upscale bar use. Larger and typically wider than standard C-series. Found in hotel bars and upscale restaurants.</li>
+          <li><strong>AF flaker</strong> produces thin flaked ice. Common in healthcare settings and fish markets.</li>
+          <li>Scotsman color-codes some components for easy identification — look for color-matched handles and tabs on access panels.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 2. Identify This Machine -->
+    <div class="section-card">
+      <div class="section-header identify" onclick="toggleSection(this)">
+        <span>📋 Identify This Machine</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="problem-label">C-Series (Cube)</div>
+        <p style="font-size:14px; margin-bottom:12px;">Produces cube ice — square or rectangular, clear. Model sticker inside the front panel. "C" prefix followed by a number indicates approximate daily capacity in lbs. Example: C-0522 = approximately 490 lbs/day.</p>
+
+        <div class="problem-label">Brilliance / Nugget</div>
+        <p style="font-size:14px; margin-bottom:12px;">Produces round nugget ice (chewable, smaller than cubes). Larger footprint than C-series. Auger assembly visible through front access panel when open. The Brilliance has distinctly different internal components from the C-series — identify it before starting.</p>
+
+        <div class="problem-label">HID Series (Gourmet)</div>
+        <p style="font-size:14px; margin-bottom:12px;">Gourmet cuber — produces large, very clear, slow-melt cubes prized by upscale bars. Wider than standard C-series. Found in hotel bars, craft cocktail establishments, and upscale restaurants. Cleaning procedure is similar to C-series.</p>
+
+        <div class="problem-label">AF Series (Flaker)</div>
+        <p style="font-size:14px; margin-bottom:12px;">Produces thin flaked ice. Common in healthcare (patient hydration), fish counters, and produce displays. Cleaning procedure differs from cube machines — consult model-specific reference if encountered.</p>
+
+        <div class="problem-label">Controls Location</div>
+        <p style="font-size:14px; margin-bottom:0;">Newer C-series: push buttons on the front panel exterior. Older C-series: toggle switch on the front panel exterior, or on the control board behind the front panel — open it if you don't see controls on the outside. Brilliance: controls on the front panel.</p>
+      </div>
+    </div>
+
+    <!-- 3. Before You Start -->
+    <div class="section-card">
+      <div class="section-header before-start" onclick="toggleSection(this)">
+        <span>🔵 Before You Start</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text"><strong>Identify the model and series before touching any controls.</strong> C-series, Brilliance, HID, and AF series each have different procedures. Confirm which machine you're working on from the model sticker before anything else.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text"><strong>Locate the WASH/CLEAN button or switch — check the front panel exterior first, then open the panel if not visible on the outside.</strong> On older C-series machines, the cleaning switch is on the control board inside the panel. Do not mistake other switches for the cleaning control.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text"><strong>Tell the owner ice production stops for 1.5–3 hours.</strong> Get acknowledgment before you begin. Note the time in your service log.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-text"><strong>For Brilliance nugget machines: plan an additional 15 minutes for auger access and reassembly.</strong> Do not rush the Brilliance. If you are not confident with a specific Brilliance model's auger disassembly, clean all accessible surfaces and refer the auger work out.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-text"><strong>Locate the water supply valve and confirm all supplies are ready.</strong> Cleaner, sanitizer, spray bottle, brush, cloths, ATP swabs, gloves, phone. For Brilliance: also have your soft brush and a flashlight for auger access.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Deep Clean — C Series -->
+    <div class="section-card">
+      <div class="section-header deep-clean" onclick="toggleSection(this)">
+        <span>🟡 Deep Clean — C Series</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+
+        <div class="phase-header">Phase 1 — Document</div>
+
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text"><strong>Photograph the machine — front panel, bin walls, trough/sump area, and evaporator condition.</strong> These are your before photos. Take them before touching anything.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text"><strong>Pre-clean ATP — sump interior.</strong> Z-pattern swab, firm pressure, 4 seconds of contact. Record the reading.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text"><strong>Pre-clean ATP — curtain/splash shield underside.</strong> Full surface contact. Record the reading.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-text"><strong>Pre-clean ATP — bin drain area.</strong> Swab around and inside the drain plug port. Record the reading.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-text"><strong>Pre-clean ATP — ice scoop handle.</strong> Full circumference of the handle. Record the reading.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">6</div>
+          <div class="step-text"><strong>Pre-clean ATP — bin wall mid-height.</strong> Press swab firmly against wall surface. Record the reading. All five pre-clean readings are now in your log.</div>
+        </div>
+
+        <div class="phase-header">Phase 2 — Enter Wash Mode</div>
+
+        <div class="step">
+          <div class="step-num">7</div>
+          <div class="step-text"><strong>Look for a WASH or CLEAN button on the front panel exterior.</strong> If present, press to initiate. If not present on the exterior — open the front panel and look for a small toggle switch on the control board, usually labeled WASH/ICE or CLEAN/ICE.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">8</div>
+          <div class="step-text"><strong>Move the control to WASH or CLEAN position.</strong> The machine will begin harvesting remaining ice from the evaporator. Wait for this harvest cycle to complete.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">9</div>
+          <div class="step-text"><strong>Discard harvested ice.</strong> Do not leave this ice in the bin — it was produced before cleaning and the bin will be cleaned.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">10</div>
+          <div class="step-text"><strong>Machine drains the sump — wait for complete drainage before proceeding.</strong> Confirm the sump is visually empty of standing water before adding cleaning solution.</div>
+        </div>
+
+        <div class="phase-header">Phase 3 — First Cleaning Cycle</div>
+
+        <div class="step">
+          <div class="step-num">11</div>
+          <div class="step-text"><strong>Mix cleaning solution: 4 oz Nu-Calgon Nickel-Safe Cleaner to 16 oz water.</strong> Full deep clean concentration. Measure precisely.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">12</div>
+          <div class="step-text"><strong>Pour cleaning solution into the sump.</strong> Pour steadily and avoid splashing onto electrical components or the control board.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">13</div>
+          <div class="step-text"><strong>Start the WASH cycle.</strong> Machine will circulate solution through the water system. Set a 20-minute timer.</div>
+        </div>
+
+        <div class="phase-header">Phase 4 — Manual Cleaning While Cycle Runs</div>
+
+        <div class="step">
+          <div class="step-num">14</div>
+          <div class="step-text"><strong>Remove and scrub the splash shield on both sides.</strong> Use your brush with cleaning solution. The underside typically has the highest biofilm concentration. Scrub all surfaces thoroughly.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">15</div>
+          <div class="step-text"><strong>Scrub bin walls top to bottom — corners, any pink slime areas, and visible mold.</strong> Work the brush into all seams and corners. These are prime biofilm locations.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">16</div>
+          <div class="step-text"><strong>Scrub the bin floor.</strong> Ice melt accumulates here continuously. Scrub in all directions, paying attention to drain area and corners.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">17</div>
+          <div class="step-text"><strong>Scrub the door gasket folds.</strong> Work the brush into the gasket channels. Pink slime here is common and expected. Replace gasket if it is cracked or mold is deeply embedded in the material.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">18</div>
+          <div class="step-text"><strong>Scrub the ice chute.</strong> Use brush and cleaning solution on all reachable surfaces. This is a frequent customer-contact surface.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">19</div>
+          <div class="step-text"><strong>Scrub the evaporator surface lightly with a soft nylon brush.</strong> Work between the evaporator plates with gentle strokes. Do not use metal brushes or abrasive pads — this will damage the evaporator coating.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">20</div>
+          <div class="step-text"><strong>Clean the sump area walls with brush and cleaning solution.</strong> The sump walls accumulate scale from water evaporation during normal operation.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">21</div>
+          <div class="step-text"><strong>Remove the drain plug, clean it and the drain port thoroughly, and set aside.</strong> Do not reinstall the drain plug yet — you will need it accessible for draining after the cycle.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">22</div>
+          <div class="step-text"><strong>Remove the air filter, rinse under running water, and set aside to dry.</strong> Never reinstall a wet air filter — restricted airflow causes overheating faults.</div>
+        </div>
+
+        <div class="phase-header">Phase 5 — Assess for Second Cycle</div>
+
+        <div class="step">
+          <div class="step-num">23</div>
+          <div class="step-text"><strong>When the 20-minute cycle ends, inspect the sump, evaporator, and all cleaned surfaces.</strong> Is there visible scale remaining? Visible biofilm? If yes to either — run a second cycle with the same 4 oz : 16 oz concentration before proceeding.</div>
+        </div>
+
+        <div class="phase-header">Phase 6 — Rinse Cycles</div>
+
+        <div class="step">
+          <div class="step-num">24</div>
+          <div class="step-text"><strong>Reinstall the drain plug before starting rinse cycles.</strong> Confirm fully seated before adding any water.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">25</div>
+          <div class="step-text"><strong>First rinse cycle: fill sump with clean water, run for 10 minutes, then drain completely.</strong> Pull the drain plug and allow full drainage.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">26</div>
+          <div class="step-text"><strong>Second rinse cycle: fill sump with clean water, run for 10 minutes, then drain completely.</strong> Check the drain water — it should be clear with no foam.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">27</div>
+          <div class="step-text"><strong>Third rinse cycle minimum: fill, run 10 minutes, drain fully.</strong> Water must run clear with no foam before proceeding. Run additional cycles if foam persists.</div>
+        </div>
+
+        <div class="phase-header">Phase 7 — Sanitizer</div>
+
+        <div class="step">
+          <div class="step-num">28</div>
+          <div class="step-text"><strong>Mix sanitizer: 0.5 oz Nu-Calgon No-Rinse Sanitizer per gallon of water.</strong> Fill your dedicated sanitizer spray bottle.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">29</div>
+          <div class="step-text"><strong>Spray all interior surfaces — bin walls, bin floor, door gasket, ice chute, evaporator, and splash shield.</strong> Full coverage on every surface ice or water will contact.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">30</div>
+          <div class="step-text"><strong>Pour remaining sanitizer solution into the sump.</strong> This sanitizes the sump and internal water circuit.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">31</div>
+          <div class="step-text"><strong>NO RINSE — allow all surfaces to air dry for at least 5 minutes.</strong> Do not wipe or rinse the sanitizer. Rinsing eliminates the sanitizer's protection.</div>
+        </div>
+
+        <div class="phase-header">Phase 8 — Reassemble</div>
+
+        <div class="step">
+          <div class="step-num">32</div>
+          <div class="step-text"><strong>Reinstall the splash shield.</strong> Confirm it seats correctly and moves freely — it should swing or flex without catching on adjacent components.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">33</div>
+          <div class="step-text"><strong>Reinstall the drain plug and tug firmly to confirm seating.</strong> Tug it twice. A loose drain plug empties the machine during operation and causes a callback.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">34</div>
+          <div class="step-text"><strong>Reinstall the air filter only if completely dry.</strong> If still damp, leave out until dry or inform the owner it needs to be reinstalled when dry.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">35</div>
+          <div class="step-text"><strong>Close the front panel.</strong> Confirm fully seated and latched.</div>
+        </div>
+
+        <div class="phase-header">Phase 9 — Restart and Verify</div>
+
+        <div class="step">
+          <div class="step-num">36</div>
+          <div class="step-text"><strong>Return the machine to ICE mode.</strong> Press the ICE button or move the toggle to ICE. Confirm normal startup behavior begins — fan and compressor should engage.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">37</div>
+          <div class="step-text"><strong>Wait 15–20 minutes for the machine to complete its startup and produce its first harvest.</strong> Do not rush this step — the machine is completing a full freeze cycle.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">38</div>
+          <div class="step-text"><strong>Discard the first harvest completely.</strong> The first batch may contain residual sanitizer. It is safe but should not be served.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">39</div>
+          <div class="step-text"><strong>Post-clean ATP — sump interior, evaporator surface, and bin wall mid-height.</strong> Record all three readings. Photograph each reading. All should be under 10 RLU. If any reading is above 10, re-apply sanitizer to that location, wait 5 minutes, and retest. Log in the app and show the owner before and after results.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 5. Brilliance Additional Steps -->
+    <div class="section-card">
+      <div class="section-header deep-clean" onclick="toggleSection(this)">
+        <span>🟡 Brilliance — Nugget Machine Additional Steps</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+
+        <div class="callout warning">
+          <strong>Auger Injury Hazard — Read Before Proceeding</strong>
+          The auger in Scotsman Brilliance machines can cause serious injury. POWER OFF COMPLETELY and wait a full 2 minutes before reaching inside. Confirm power is off at the switch and at the breaker if you are uncertain. If you are not confident in disassembling and correctly reassembling the auger components on this specific model, clean all accessible surfaces only and refer the auger work to a technician.
+        </div>
+
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text"><strong>Power off the machine completely at the controls and confirm no movement from any internal components.</strong> Wait a full 2 minutes before reaching inside. Do not skip this wait time.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text"><strong>Locate and remove the top access panel.</strong> Usually secured with 2–4 screws. Set screws aside in a safe location — do not let them fall into the machine.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text"><strong>Identify the auger housing — the large cylindrical component at the center of the machine.</strong> This is the core of the nugget production system. Familiarize yourself with the component layout before applying any cleaning solution.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-text"><strong>Apply cleaning solution to accessible auger and cylinder surfaces using your spray bottle.</strong> Do not submerge any component and do not spray directly onto electrical components. Spray the auger housing surfaces and any accessible tubing.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-text"><strong>Allow 10 minutes of soak time on all auger surfaces.</strong> Set a timer. The solution needs contact time to dissolve scale and biofilm on these surfaces.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">6</div>
+          <div class="step-text"><strong>Scrub accessible surfaces with a soft nylon brush.</strong> Work cleaning solution into all reachable areas. Focus on areas with visible scale or biofilm discoloration.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">7</div>
+          <div class="step-text"><strong>Rinse accessible surfaces with clean water.</strong> Use a damp cloth or carefully poured rinse water. Remove all cleaner residue from accessible areas.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">8</div>
+          <div class="step-text"><strong>Apply sanitizer to all accessible surfaces.</strong> Spray thoroughly. No-rinse formula — do not wipe off. Allow 5 minutes of air dry time.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">9</div>
+          <div class="step-text"><strong>Reinstall the top access panel before restarting the machine.</strong> Confirm all screws are in and panel is fully seated. Never restart the machine with access panels removed.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">10</div>
+          <div class="step-text"><strong>Run the first 2 production cycles into a container and discard — not just 1 cycle.</strong> Brilliance machines require two discarded harvests after cleaning to ensure no residual cleaning agents enter the ice supply.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">11</div>
+          <div class="step-text"><strong>Post-clean ATP: ice chute exit, bin wall, and sump.</strong> All readings should be under 10 RLU. If any are above, re-apply sanitizer to that location, wait 5 minutes, and retest. Record all readings in the app.</div>
+        </div>
+
+        <div class="callout warning" style="margin-top:4px;">
+          <strong>Unusual Auger Sounds — Stop Immediately</strong>
+          If the auger makes grinding, clicking, or irregular sounds during restart — power off immediately. Do not attempt to diagnose auger mechanical issues. Document the sound description carefully and refer out. Auger wear and bearing failure are mechanical issues requiring a refrigeration technician.
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 6. Time Estimates -->
+    <div class="section-card">
+      <div class="section-header time-estimates" onclick="toggleSection(this)">
+        <span>⏱ Time Estimates</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <table>
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Capacity</th>
+              <th>Deep Clean</th>
+              <th>Routine</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>C-0322</strong></td>
+              <td>315 lbs/day</td>
+              <td>2–2.5 hrs</td>
+              <td>60–75 min</td>
+            </tr>
+            <tr>
+              <td><strong>C-0522</strong></td>
+              <td>490 lbs/day</td>
+              <td>2.5–3 hrs</td>
+              <td>75–90 min</td>
+            </tr>
+            <tr>
+              <td><strong>C-0722</strong></td>
+              <td>718 lbs/day</td>
+              <td>2.5–3 hrs</td>
+              <td>75–90 min</td>
+            </tr>
+            <tr>
+              <td><strong>C-1448</strong></td>
+              <td>1400 lbs/day</td>
+              <td>3.5–4 hrs</td>
+              <td>105–120 min</td>
+            </tr>
+            <tr>
+              <td><strong>Brilliance 500</strong></td>
+              <td>500 lbs/day</td>
+              <td>3–3.5 hrs</td>
+              <td>90–105 min</td>
+            </tr>
+            <tr>
+              <td><strong>Brilliance 1000</strong></td>
+              <td>1000 lbs/day</td>
+              <td>3.5–4 hrs</td>
+              <td>105–120 min</td>
+            </tr>
+            <tr>
+              <td><strong>HID 185</strong></td>
+              <td>185 lbs/day</td>
+              <td>2–2.5 hrs</td>
+              <td>60–75 min</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="callout info" style="margin-top:12px;">
+          <strong>Time Modifiers</strong>
+          Add 45–60 minutes if a second cleaning cycle is needed. Add 30 minutes for first-visit machines. Add 20 minutes for Brilliance nugget machines due to auger access and reassembly.
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. Common Problems -->
+    <div class="section-card">
+      <div class="section-header problems" onclick="toggleSection(this)">
+        <span>🔧 Common Problems</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+
+        <div class="problem-block">
+          <div class="problem-title">Cleaning Mode Button Not Found</div>
+          <div class="problem-label">What It Looks Like</div>
+          <p style="font-size:14px; margin-bottom:8px;">No WASH or CLEAN button visible on the front panel exterior. Common on older C-series models manufactured before Scotsman standardized the front-panel control layout.</p>
+          <div class="problem-label">What to Do</div>
+          <p style="font-size:14px; margin-bottom:8px;">Open the front panel. Look for a small toggle switch on the control board — it is usually labeled WASH/ICE or CLEAN/ICE. Move it to the WASH or CLEAN position. The switch may be located on the main control board or on a secondary board mounted nearby.</p>
+          <div class="problem-label">Note</div>
+          <p style="font-size:14px; margin-bottom:0;">Some very old Scotsman models require a manual wash sequence rather than an automated wash cycle. If the control board switch is not found, check the model number against Scotsman's technical documentation online before proceeding.</p>
+        </div>
+
+        <div class="problem-block">
+          <div class="problem-title">Scale on Evaporator Fins</div>
+          <div class="problem-label">What It Looks Like</div>
+          <p style="font-size:14px; margin-bottom:8px;">White or off-white mineral deposits between the evaporator plates or on the fin surfaces. Can appear as a hard white crust, chalky film, or visible buildup reducing the gap between fins.</p>
+          <div class="problem-label">What to Do</div>
+          <p style="font-size:14px; margin-bottom:8px;">Use deep clean concentration (4 oz : 16 oz — the 1:4 ratio). Extend the cleaning cycle to 40 minutes rather than the standard 20. Use a soft nylon brush between the fins with gentle strokes. Run a second full cycle if visible scale remains after the first. Allow adequate soak time — scale dissolves slowly.</p>
+          <div class="problem-label">Refer Out If</div>
+          <p style="font-size:14px; margin-bottom:0;">Evaporator fins appear physically bent, separated, or compressed together — that is mechanical damage, not a cleaning issue. Document with photographs and refer out.</p>
+        </div>
+
+        <div class="problem-block">
+          <div class="problem-title">Small or Thin Cubes</div>
+          <div class="problem-label">What It Looks Like</div>
+          <p style="font-size:14px; margin-bottom:8px;">Ice cubes are noticeably smaller than expected for the model, thinner than normal, or inconsistent in size across the evaporator grid.</p>
+          <div class="problem-label">What to Do</div>
+          <p style="font-size:14px; margin-bottom:8px;">Check the water supply valve first — it must be fully open. Check the water filter for clogging (a clogged filter reduces water flow and cube size). Inspect the evaporator for scale — scale on evaporator surfaces reduces freeze efficiency and cube formation. If water supply and filter are clear and the evaporator is clean, the cause may be water temperature that is too warm — this is a refrigeration issue.</p>
+          <div class="problem-label">Refer Out If</div>
+          <p style="font-size:14px; margin-bottom:0;">Water supply is confirmed open, filter is clean, evaporator is clean after service, and cubes are still consistently undersized. Refer to a refrigeration technician.</p>
+        </div>
+
+        <div class="problem-block">
+          <div class="problem-title">Auger Noise (Brilliance)</div>
+          <div class="problem-label">What It Looks Like</div>
+          <p style="font-size:14px; margin-bottom:8px;">Grinding, clicking, or irregular mechanical sounds coming from the nugget machine during startup or operation after cleaning. May also manifest as vibration or a rhythmic knocking pattern.</p>
+          <div class="problem-label">What to Do</div>
+          <p style="font-size:14px; margin-bottom:8px;">Power off immediately. Do not attempt to restart or diagnose the source. Document the sound — describe it in writing in your service notes (grinding, clicking, continuous, intermittent, loud, soft).</p>
+          <div class="problem-label">Refer Out</div>
+          <p style="font-size:14px; margin-bottom:0;">Always refer out any unusual auger sounds. Auger wear, bearing failure, and auger jamming are mechanical issues that require a refrigeration technician. Do not attempt to force the auger to turn or reach inside while power is on.</p>
+        </div>
+
+        <div class="problem-block">
+          <div class="problem-title">Machine Stuck in Wash Cycle</div>
+          <div class="problem-label">What It Looks Like</div>
+          <p style="font-size:14px; margin-bottom:8px;">Machine has been in WASH mode for over 45 minutes and hasn't drained or progressed to the next stage of the cycle. No drain sound, no indication the cycle completed.</p>
+          <div class="problem-label">What to Do</div>
+          <p style="font-size:14px; margin-bottom:8px;">Power cycle the machine: turn it completely off, wait 30 seconds, then power back on. Re-enter WASH mode and observe. If the machine completes the cycle normally, proceed with the rest of the cleaning. If it gets stuck in WASH again on the same visit — refer out. A repeated stuck wash cycle indicates a control board issue.</p>
+          <div class="problem-label">Refer Out If</div>
+          <p style="font-size:14px; margin-bottom:0;">Machine gets stuck in wash cycle on two consecutive attempts. Do not leave the machine in a partially cleaned state if you cannot complete the rinse and sanitize steps — contact your manager before leaving the site.</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 8. Error Codes -->
+    <div class="section-card">
+      <div class="section-header error-codes" onclick="toggleSection(this)">
+        <span>⚠️ Error Codes</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <p style="font-size:14px; margin-bottom:12px;">Scotsman uses LED indicator lights on older models and digital displays on newer ones. LED indicator patterns vary by model — consult the label inside the front panel if LED meanings are not immediately clear.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Code / Indicator</th>
+              <th>Meaning</th>
+              <th>Your Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Long Ice LED</strong></td>
+              <td>Extended freeze cycle — ice is taking too long to form on the evaporator</td>
+              <td>Refer out. Do not clean.</td>
+            </tr>
+            <tr>
+              <td><strong>Long Harvest LED</strong></td>
+              <td>Harvest failure — ice is not releasing from the evaporator on schedule</td>
+              <td>Refer out. Do not clean.</td>
+            </tr>
+            <tr>
+              <td><strong>No Water LED</strong></td>
+              <td>Water supply fault detected</td>
+              <td>Check supply valve (fully open) and water filter. If clear, refer out.</td>
+            </tr>
+            <tr>
+              <td><strong>Bin Full LED</strong></td>
+              <td>Bin level sensor active — bin is full or sensor is blocked</td>
+              <td>Check bin level and sensor area for ice bridging or buildup blocking the sensor.</td>
+            </tr>
+            <tr>
+              <td><strong>CLEAN reminder</strong></td>
+              <td>Scheduled cleaning reminder based on operating hours</td>
+              <td>Your service satisfies this. It will clear after the cleaning cycle is complete.</td>
+            </tr>
+            <tr>
+              <td><strong>High Temp LED</strong></td>
+              <td>Overtemperature condition detected</td>
+              <td>Check and clean the air filter. Confirm adequate clearance around unit. If clear, refer out.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout warning" style="margin-top:14px;">
+          <strong>Long Ice and Long Harvest — Do Not Clean</strong>
+          Long Ice and Long Harvest codes indicate refrigeration system problems. Do not clean a machine showing either of these codes — document with photographs, record the code, and refer out. Cleaning will not resolve these faults.
+        </div>
+
+        <div class="callout tip">
+          <strong>CLEAN Reminder</strong>
+          Like Manitowoc's SERVICE light, the Scotsman CLEAN reminder is triggered by operating hours — it is a maintenance reminder, not a fault. Your cleaning service satisfies the reminder and it will clear after the cleaning cycle is complete and the machine returns to normal ICE production.
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 9. ATP Swab Locations -->
+    <div class="section-card">
+      <div class="section-header atp" onclick="toggleSection(this)">
+        <span>🧪 ATP Swab Locations</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+
+        <div class="phase-header">Pre-Clean</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Location</th>
+              <th>Technique</th>
+              <th>Typical Range</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Sump interior</strong></td>
+              <td>Z-pattern, firm pressure, 4 seconds of contact</td>
+              <td>300–3000+ RLU</td>
+            </tr>
+            <tr>
+              <td><strong>Curtain/splash shield underside</strong></td>
+              <td>Full surface, firm contact</td>
+              <td>100–1000 RLU</td>
+            </tr>
+            <tr>
+              <td><strong>Bin drain area</strong></td>
+              <td>Around and inside drain plug port</td>
+              <td>100–800 RLU</td>
+            </tr>
+            <tr>
+              <td><strong>Ice scoop handle</strong></td>
+              <td>Full circumference of handle</td>
+              <td>50–600 RLU</td>
+            </tr>
+            <tr>
+              <td><strong>Bin wall mid-height</strong></td>
+              <td>Press swab firmly against wall</td>
+              <td>100–800 RLU</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="phase-header">Post-Clean</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Location</th>
+              <th>Target</th>
+              <th>Action if Above Target</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Sump interior</strong></td>
+              <td>Under 10 RLU</td>
+              <td>Re-apply sanitizer to sump, wait 5 minutes, retest</td>
+            </tr>
+            <tr>
+              <td><strong>Evaporator surface</strong></td>
+              <td>Under 10 RLU</td>
+              <td>Additional sanitizer application and contact time</td>
+            </tr>
+            <tr>
+              <td><strong>Bin wall</strong></td>
+              <td>Under 10 RLU</td>
+              <td>Check sanitizer dilution — may be too weak. Re-apply and retest.</td>
+            </tr>
+            <tr>
+              <td><strong>Ice chute exit (Brilliance)</strong></td>
+              <td>Under 10 RLU</td>
+              <td>Additional sanitizer application directly to chute. Retest before logging complete.</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+
+    <!-- 10. When to Refer Out -->
+    <div class="section-card">
+      <div class="section-header refer-out" onclick="toggleSection(this)">
+        <span>🔴 When to Refer Out</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+
+        <div class="callout warning">
+          <strong>Stop Immediately — Do Not Continue Service</strong>
+        </div>
+
+        <ul class="checklist">
+          <li><strong>Long Ice or Long Harvest codes that don't clear after one power cycle</strong> — document, photograph the display, and refer out. Do not clean.</li>
+          <li><strong>Any burning smell</strong> — shut the machine off immediately, document, and refer out.</li>
+          <li><strong>Sparking or visible electrical damage</strong> — do not touch, do not operate. Refer out and notify manager.</li>
+          <li><strong>Compressor grinding, knocking, or screeching sounds</strong> — stop service, document, and refer out.</li>
+          <li><strong>Auger making any unusual sounds on a Brilliance machine</strong> — power off immediately, document the sound description, and always refer out. Do not attempt to diagnose or continue.</li>
+          <li><strong>Machine not producing ice 30+ minutes after a correct restart</strong> — document and refer out.</li>
+          <li><strong>Refrigerant oil staining</strong> — yellowish, oily residue around refrigerant fittings or near the compressor. Stop, document, refer out.</li>
+        </ul>
+
+        <div class="callout important" style="margin-top:12px;">
+          <strong>Note and Recommend — Flag for Owner Before Leaving</strong>
+        </div>
+
+        <ul class="checklist">
+          <li><strong>Condenser coils heavily fouled</strong> — note location and severity. Cleaning coils beyond routine brushing requires a technician.</li>
+          <li><strong>Door gasket cracked or deeply molded</strong> — note and recommend replacement at next service visit.</li>
+          <li><strong>Water inlet valve dripping continuously</strong> — note for owner. This is a slow water waste issue that will eventually cause water supply and water level problems.</li>
+          <li><strong>Cubes consistently smaller than expected after cleaning</strong> — if water supply, filter, and evaporator have all been addressed, document and recommend a refrigeration technician evaluation.</li>
+        </ul>
+
+        <div class="callout tip" style="margin-top:12px;">
+          <strong>Refer Out Script</strong>
+          "Everything from a sanitation and compliance standpoint is complete and documented. I noticed [specific issue] while I was in there — that's a mechanical matter outside what I do. You'll want a refrigeration tech to look at that. I can refer you to someone if that's helpful."
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <nav class="bottom-nav">
+    <a class="nav-item" href="index.html"><span class="nav-icon">🏠</span>Home</a>
+    <a class="nav-item" href="hoshizaki.html"><span class="nav-icon">H</span>Hoshizaki</a>
+    <a class="nav-item" href="manitowoc.html"><span class="nav-icon">M</span>Manitowoc</a>
+    <a class="nav-item active" href="scotsman.html"><span class="nav-icon">S</span>Scotsman</a>
+    <a class="nav-item" href="iceomatic.html"><span class="nav-icon">IO</span>Ice-O-Matic</a>
+    <a class="nav-item" href="follett.html"><span class="nav-icon">F</span>Follett</a>
+    <a class="nav-item" href="reference.html"><span class="nav-icon">⚡</span>Reference</a>
+  </nav>
+
+  <script>
+    function toggleSection(el) {
+      var body = el.nextElementSibling;
+      body.classList.toggle('open');
+      el.classList.toggle('open');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var first = document.querySelector('.section-header');
+      if (first) toggleSection(first);
+    });
+  </script>
+
+</body>
+</html>
