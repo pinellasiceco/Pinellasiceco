@@ -6928,29 +6928,28 @@ async function loadCloudData(){
       r3.data.forEach(function(row){log[row.prospect_id]=row.data;});
     }
 
-    // Customers — only replace if Supabase actually has records
+    // Customers — merge Supabase records into existing customers dict.
+    // Do NOT wipe customers first: localStorage data from a recent markWon() must survive
+    // even if the async sbUpsert hasn't completed yet or failed silently.
     var r4=await _sb.from('pic_customers').select('prospect_id,data').eq('user_id',_userId);
-    if(r4.data&&r4.data.length){
-      customers={};
-      var _repairIds=[];
-      r4.data.forEach(function(row){
-        if(!row.data)return;
-        customers[row.prospect_id]=row.data;
-        var p=P.find(function(x){return String(x.id)===String(row.prospect_id);});
-        if(p){
-          if(row.data.status){
-            p.status=row.data.status;
-          } else if((row.data.service_history&&row.data.service_history.length)||row.data.won_date){
-            customers[row.prospect_id].status='customer_recurring';
-            p.status='customer_recurring';
-            _repairIds.push(row.prospect_id);
-          }
+    var _repairIds=[];
+    (r4.data||[]).forEach(function(row){
+      if(!row.data)return;
+      customers[row.prospect_id]=row.data; // Supabase takes precedence for known records
+      var p=P.find(function(x){return String(x.id)===String(row.prospect_id);});
+      if(p){
+        if(row.data.status){
+          p.status=row.data.status;
+        } else if((row.data.service_history&&row.data.service_history.length)||row.data.won_date){
+          customers[row.prospect_id].status='customer_recurring';
+          p.status='customer_recurring';
+          _repairIds.push(row.prospect_id);
         }
-      });
-      if(_repairIds.length){
-        _repairIds.forEach(function(pid){sbUpsert('pic_customers',pid,customers[pid]);});
-        toast('Restored '+_repairIds.length+' client'+(_repairIds.length>1?'s':'')+' from service history ✓');
       }
+    });
+    if(_repairIds.length){
+      _repairIds.forEach(function(pid){sbUpsert('pic_customers',pid,customers[pid]);});
+      toast('Restored '+_repairIds.length+' client'+(_repairIds.length>1?'s':'')+' from service history ✓');
     }
 
     // Phones
@@ -7056,7 +7055,7 @@ async function sbUpsert(table,prospectId,data){
       data:data,
       updated_at:new Date().toISOString()
     },{onConflict:'user_id,prospect_id'});
-  }catch(e){console.warn('sbUpsert failed:',table,e);}
+  }catch(e){console.warn('sbUpsert failed:',table,e);if(table==='pic_customers')toast('⚠️ Save failed — data stored locally only. Check Supabase connection.');}
 }
 
 async function sbUpsertSetting(key,data){
