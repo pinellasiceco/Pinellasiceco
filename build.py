@@ -2052,7 +2052,7 @@ header{background:var(--navy);
     <div class="logo">
       <div class="logo-icon">&#x1F9CA;</div>
       <div><div class="logo-name">Pinellas Ice Co</div>
-        <div id="app-version" onclick="diagTap()" style="font-size:8px;color:var(--sub);letter-spacing:.04em;cursor:pointer">PROSPECT TOOL &bull; %%DATE%% &bull; v7 &bull; <span id="data-freshness"></span></div>
+        <div id="app-version" onclick="diagTap()" style="font-size:8px;color:var(--sub);letter-spacing:.04em;cursor:pointer">PROSPECT TOOL &bull; %%DATE%% &bull; v8 &bull; <span id="data-freshness"></span></div>
       </div>
     </div>
     <div class="hchips">
@@ -9105,32 +9105,68 @@ function updateSyncDot(mode){
 }
 async function sbHealthCheck(){
   if(!_sb||!_userId)return;
+  var uid=_userId;
+  var results=[];
+  var anyFail=false;
+
+  // Test 1: pic_settings write+read (basic connectivity)
   try{
-    var uid=_userId;
-    var del=await _sb.from('pic_settings').delete().eq('device_id',uid).eq('key','__health__');
+    await _sb.from('pic_settings').delete().eq('device_id',uid).eq('key','__health__');
     var ts=Date.now();
     var wr=await _sb.from('pic_settings').insert({device_id:uid,key:'__health__',data:{ok:true,ts:ts},updated_at:new Date().toISOString()});
     if(wr&&wr.error){
-      _syncErrors++;updateSyncDot('error');
-      console.error('[health] write failed:',wr.error);
-      toast('⚠️ Supabase write test FAILED: '+wr.error.message+' — tap version for diagnostics');
-      return;
+      results.push('pic_settings WRITE: ❌ '+wr.error.message);anyFail=true;
+    } else {
+      var rr=await _sb.from('pic_settings').select('data').eq('device_id',uid).eq('key','__health__').single();
+      if(!rr||rr.error||!rr.data||!rr.data.data||rr.data.data.ts!==ts){
+        results.push('pic_settings READ: ❌ '+(rr&&rr.error?rr.error.message:'mismatch'));anyFail=true;
+      } else {
+        results.push('pic_settings: ✅ write+read OK');
+      }
     }
-    var rr=await _sb.from('pic_settings').select('data').eq('device_id',uid).eq('key','__health__').single();
-    if(!rr||rr.error||!rr.data||!rr.data.data||rr.data.data.ts!==ts){
-      _syncErrors++;updateSyncDot('error');
-      console.error('[health] read-back failed or mismatch:',rr&&rr.error);
-      toast('⚠️ Supabase read-back FAILED — check RLS policies in Supabase dashboard');
-      return;
+  }catch(e){results.push('pic_settings: ❌ exception: '+e.message);anyFail=true;}
+
+  // Test 2: pic_customers write+read (the critical table)
+  try{
+    await _sb.from('pic_customers').delete().eq('device_id',uid).eq('prospect_id','__health__');
+    var ts2=Date.now();
+    var wr2=await _sb.from('pic_customers').insert({device_id:uid,prospect_id:'__health__',data:{ok:true,ts:ts2},updated_at:new Date().toISOString()});
+    if(wr2&&wr2.error){
+      results.push('pic_customers WRITE: ❌ '+wr2.error.message);anyFail=true;
+    } else {
+      var rr2=await _sb.from('pic_customers').select('data').eq('device_id',uid).eq('prospect_id','__health__').single();
+      if(!rr2||rr2.error||!rr2.data||!rr2.data.data||rr2.data.data.ts!==ts2){
+        results.push('pic_customers READ: ❌ '+(rr2&&rr2.error?rr2.error.message:'mismatch'));anyFail=true;
+      } else {
+        results.push('pic_customers: ✅ write+read OK');
+        // Clean up test row
+        await _sb.from('pic_customers').delete().eq('device_id',uid).eq('prospect_id','__health__');
+      }
     }
-    _lastSyncOk=new Date();
-    updateSyncDot('synced');
-    console.log('[health] Supabase write+read OK at',_lastSyncOk.toLocaleTimeString());
-  }catch(e){
+  }catch(e){results.push('pic_customers: ❌ exception: '+e.message);anyFail=true;}
+
+  // Test 3: pic_log write+read
+  try{
+    await _sb.from('pic_log').delete().eq('device_id',uid).eq('prospect_id','__health__');
+    var wr3=await _sb.from('pic_log').insert({device_id:uid,prospect_id:'__health__',data:{ok:true},updated_at:new Date().toISOString()});
+    if(wr3&&wr3.error){
+      results.push('pic_log WRITE: ❌ '+wr3.error.message);anyFail=true;
+    } else {
+      results.push('pic_log: ✅ write OK');
+      await _sb.from('pic_log').delete().eq('device_id',uid).eq('prospect_id','__health__');
+    }
+  }catch(e){results.push('pic_log: ❌ '+e.message);anyFail=true;}
+
+  if(anyFail){
     _syncErrors++;updateSyncDot('error');
-    console.error('[health] exception:',e);
-    toast('⚠️ Supabase health check error: '+e.message);
+    console.error('[health] FAILED:',results);
+    toast('⚠️ DB check failed — tap version 3× for details');
+  } else {
+    _lastSyncOk=new Date();updateSyncDot('synced');
+    console.log('[health] All tables OK:',results);
+    toast('✓ DB check passed — all tables writable');
   }
+  return results;
 }
 function diagTap(){
   _diagTaps++;
@@ -9145,7 +9181,7 @@ async function showDiagnostics(){
   inner.style.cssText='background:#1e293b;border-radius:14px;padding:20px;max-width:380px;width:100%;color:#e2e8f0;font-size:11px;line-height:2;font-family:monospace;margin-top:40px';
   var uid=getUserId()||'none';
   var sbUrl=(localStorage.getItem('pic_supabase_url')||'').trim();
-  inner.innerHTML='<div style="font-weight:700;font-size:13px;color:#fff;margin-bottom:8px">Diagnostics v7</div>'
+  inner.innerHTML='<div style="font-weight:700;font-size:13px;color:#fff;margin-bottom:8px">Diagnostics v8</div>'
     +'<div style="color:#94a3b8;font-size:10px;margin-bottom:12px">Tap 3× the version string to open this</div>'
     +'Device ID: <span style="color:#34d399">'+uid.slice(0,16)+'…</span><br>'
     +'Session: <span style="color:'+((_userId)?'#34d399':'#f87171')+'">'+((_userId)?'✓ logged in':'✗ not logged in')+'</span><br>'
@@ -9154,9 +9190,9 @@ async function showDiagnostics(){
     +'Write errors: <span style="color:'+(_syncErrors?'#f87171':'#34d399')+'">'+_syncErrors+'</span><br>'
     +'Customers in RAM: <span style="color:#fbbf24">'+Object.keys(customers).length+'</span><br>'
     +'Prospects loaded: <span style="color:#fbbf24">'+P.length+'</span><br>'
-    +'<div id="diag-counts" style="margin-top:8px;color:#94a3b8">Fetching table counts…</div>'
+    +'<div id="diag-counts" style="margin-top:8px;color:#94a3b8">Running checks…</div>'
     +'<br><button onclick="this.closest(\'div[style*=\"position:fixed\"]\').remove()" style="padding:8px 20px;background:#0f1f38;color:#fff;border:1px solid #334155;border-radius:8px;font-family:inherit;cursor:pointer;font-size:11px">Close</button>'
-    +'  <button onclick="sbHealthCheck().then(()=>{var d=document.getElementById(\'diag-counts\');if(d)d.innerHTML=\'Health check done — see toast\'})" style="padding:8px 20px;background:#059669;color:#fff;border:none;border-radius:8px;font-family:inherit;cursor:pointer;font-size:11px">Run Health Check</button>';
+    +'  <button onclick="(async function(){var dc=document.getElementById(\'diag-counts\');if(dc)dc.innerHTML=\'Running…\';var r=await sbHealthCheck();if(dc&&r)dc.innerHTML=\'<div style=\\\'font-weight:700;color:#fff;margin-top:8px\\\'>Write Test Results</div>\'+r.join(\'<br>\')+\'<br>\'+dc.innerHTML;})()" style="padding:8px 20px;background:#059669;color:#fff;border:none;border-radius:8px;font-family:inherit;cursor:pointer;font-size:11px">▶ Test Writes Now</button>';
   m.appendChild(inner);
   document.body.appendChild(m);
   if(_sb&&_userId){
@@ -9167,8 +9203,11 @@ async function showDiagnostics(){
       if(cr.error)countLines.push(t+': <span style="color:#f87171">ERR — '+cr.error.message+'</span>');
       else countLines.push(t+': <span style="color:#34d399">'+(cr.count||0)+' rows</span>');
     }
+    // Also auto-run health check when diagnostics opens
+    var hcResults=await sbHealthCheck();
     var dc=document.getElementById('diag-counts');
-    if(dc)dc.innerHTML='<div style="font-weight:700;color:#fff;margin-top:8px">Table row counts</div>'+countLines.join('<br>');
+    if(dc)dc.innerHTML='<div style="font-weight:700;color:#fff;margin-top:8px">Table row counts</div>'+countLines.join('<br>')
+      +'<div style="font-weight:700;color:#fff;margin-top:8px">Write test results</div>'+(hcResults||[]).join('<br>');
   }
 }
 async function sendEmailViaProxy(to,subject,htmlBody){
