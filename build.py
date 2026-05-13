@@ -2052,7 +2052,7 @@ header{background:var(--navy);
     <div class="logo">
       <div class="logo-icon">&#x1F9CA;</div>
       <div><div class="logo-name">Pinellas Ice Co</div>
-        <div style="font-size:8px;color:var(--sub);letter-spacing:.04em">PROSPECT TOOL &bull; %%DATE%% &bull; v7 &bull; <span id="data-freshness"></span></div>
+        <div id="app-version" onclick="diagTap()" style="font-size:8px;color:var(--sub);letter-spacing:.04em;cursor:pointer">PROSPECT TOOL &bull; %%DATE%% &bull; v7 &bull; <span id="data-freshness"></span></div>
       </div>
     </div>
     <div class="hchips">
@@ -2879,6 +2879,7 @@ const ZIPS=%%ZIPS%%;
 
 // ── SUPABASE AUTH GLOBALS ─────────────────────────────────────────────────────
 var _sb=null,_session=null,_userId=null,_realtimeChannel=null;
+var _syncErrors=0,_lastSyncOk=null,_diagTaps=0,_diagTapTimer=null;
 
 const PITCHES={
   callback:n=>`"Hi, is this <b>${n}</b>? I'm [Your Name] from Pinellas Ice Co  -  we clean and sanitize commercial ice machines locally. I'm reaching out because you recently had some health inspection issues. Ice machines are almost always part of callback inspections. We can get yours cleaned and documented before the inspector returns  -  usually takes about 2 hours. <b>Do you have time this week?</b>"`,
@@ -5861,6 +5862,21 @@ function markWon(status){
   };
   p.status=status;
   custSave();
+  // Verify cloud write landed — read back after 2.5s
+  if(_sb&&_userId){
+    var _wvId=p.id;var _wvName=p.name;
+    setTimeout(async function(){
+      var vr=await _sb.from('pic_customers').select('prospect_id').eq('device_id',_userId).eq('prospect_id',String(_wvId));
+      if(!vr||vr.error||!vr.data||!vr.data.length){
+        _syncErrors++;updateSyncDot('error');
+        toast('⚠️ '+_wvName+' may not have saved to cloud — check sync dot');
+        console.error('[markWon] verify failed for',_wvId,vr&&vr.error);
+      } else {
+        _lastSyncOk=new Date();updateSyncDot('synced');
+        console.log('[markWon] verified',_wvName,'in pic_customers');
+      }
+    },2500);
+  }
   // Log it
   if(!log[p.id])log[p.id]=[];
   log[p.id].push({outcome:status,date:now,notes:'Deal closed'});
@@ -7056,8 +7072,14 @@ async function sbUpsert(table,prospectId,data){
       data:data,
       updated_at:new Date().toISOString()
     });
-    if(res&&res.error){console.warn('sbUpsert insert error:',table,res.error);toast('⚠️ Save failed: '+res.error.message);}
-  }catch(e){console.warn('sbUpsert failed:',table,e);toast('⚠️ Save failed — check connection');}
+    if(res&&res.error){
+      _syncErrors++;updateSyncDot('error');
+      console.error('[sbUpsert] insert error:',table,prospectId,res.error);
+      toast('⚠️ Save failed ('+table+'): '+res.error.message);
+    } else {
+      _lastSyncOk=new Date();
+    }
+  }catch(e){_syncErrors++;updateSyncDot('error');console.error('[sbUpsert] exception:',table,e);toast('⚠️ Save failed — check connection');}
 }
 
 async function sbUpsertSetting(key,data){
@@ -9065,14 +9087,83 @@ function saveSupabaseSettings(){
 function updateSyncDot(mode){
   var dot=document.getElementById('sync-dot');
   if(!dot)return;
-  if(mode==='synced'){dot.style.background='#059669';dot.title='Live sync active';return;}
+  if(mode==='error'){dot.style.background='#dc2626';dot.title='⚠️ '+_syncErrors+' save error(s) — tap version string for diagnostics';return;}
+  if(mode==='synced'){dot.style.background='#059669';dot.title='Cloud sync active'+((_lastSyncOk)?' — last OK '+_lastSyncOk.toLocaleTimeString():'');return;}
   if(mode==='local'){dot.style.background='#d97706';dot.title='Reconnecting...';return;}
+  if(_syncErrors>0){dot.style.background='#dc2626';dot.title='⚠️ '+_syncErrors+' save error(s) this session';return;}
   var u=(_SUPABASE_URL||localStorage.getItem('pic_supabase_url')||'').trim();
   var k=(_SUPABASE_ANON_KEY||localStorage.getItem('pic_supabase_key')||'').trim();
-  var fn=(localStorage.getItem('pic_email_fn_url')||'').trim();
   if(_userId){dot.style.background='#059669';dot.title='Logged in — cloud sync active';}
   else if(u&&k){dot.style.background='#d97706';dot.title='Configured but not logged in';}
   else{dot.style.background='#e2e8f0';dot.title='Not configured';}
+}
+async function sbHealthCheck(){
+  if(!_sb||!_userId)return;
+  try{
+    var uid=_userId;
+    var del=await _sb.from('pic_settings').delete().eq('device_id',uid).eq('key','__health__');
+    var ts=Date.now();
+    var wr=await _sb.from('pic_settings').insert({device_id:uid,key:'__health__',data:{ok:true,ts:ts},updated_at:new Date().toISOString()});
+    if(wr&&wr.error){
+      _syncErrors++;updateSyncDot('error');
+      console.error('[health] write failed:',wr.error);
+      toast('⚠️ Supabase write test FAILED: '+wr.error.message+' — tap version for diagnostics');
+      return;
+    }
+    var rr=await _sb.from('pic_settings').select('data').eq('device_id',uid).eq('key','__health__').single();
+    if(!rr||rr.error||!rr.data||!rr.data.data||rr.data.data.ts!==ts){
+      _syncErrors++;updateSyncDot('error');
+      console.error('[health] read-back failed or mismatch:',rr&&rr.error);
+      toast('⚠️ Supabase read-back FAILED — check RLS policies in Supabase dashboard');
+      return;
+    }
+    _lastSyncOk=new Date();
+    updateSyncDot('synced');
+    console.log('[health] Supabase write+read OK at',_lastSyncOk.toLocaleTimeString());
+  }catch(e){
+    _syncErrors++;updateSyncDot('error');
+    console.error('[health] exception:',e);
+    toast('⚠️ Supabase health check error: '+e.message);
+  }
+}
+function diagTap(){
+  _diagTaps++;
+  clearTimeout(_diagTapTimer);
+  _diagTapTimer=setTimeout(function(){_diagTaps=0;},800);
+  if(_diagTaps>=3){_diagTaps=0;showDiagnostics();}
+}
+async function showDiagnostics(){
+  var m=document.createElement('div');
+  m.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99999;display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto';
+  var inner=document.createElement('div');
+  inner.style.cssText='background:#1e293b;border-radius:14px;padding:20px;max-width:380px;width:100%;color:#e2e8f0;font-size:11px;line-height:2;font-family:monospace;margin-top:40px';
+  var uid=getUserId()||'none';
+  var sbUrl=(localStorage.getItem('pic_supabase_url')||'').trim();
+  inner.innerHTML='<div style="font-weight:700;font-size:13px;color:#fff;margin-bottom:8px">Diagnostics v7</div>'
+    +'<div style="color:#94a3b8;font-size:10px;margin-bottom:12px">Tap 3× the version string to open this</div>'
+    +'Device ID: <span style="color:#34d399">'+uid.slice(0,16)+'…</span><br>'
+    +'Session: <span style="color:'+((_userId)?'#34d399':'#f87171')+'">'+((_userId)?'✓ logged in':'✗ not logged in')+'</span><br>'
+    +'Supabase: <span style="color:#94a3b8">'+(sbUrl?sbUrl.slice(0,30)+'…':'not configured')+'</span><br>'
+    +'Last sync OK: <span style="color:'+((_lastSyncOk)?'#34d399':'#f87171')+'">'+((_lastSyncOk)?_lastSyncOk.toLocaleTimeString():'never')+'</span><br>'
+    +'Write errors: <span style="color:'+(_syncErrors?'#f87171':'#34d399')+'">'+_syncErrors+'</span><br>'
+    +'Customers in RAM: <span style="color:#fbbf24">'+Object.keys(customers).length+'</span><br>'
+    +'Prospects loaded: <span style="color:#fbbf24">'+P.length+'</span><br>'
+    +'<div id="diag-counts" style="margin-top:8px;color:#94a3b8">Fetching table counts…</div>'
+    +'<br><button onclick="this.closest(\'div[style*=\"position:fixed\"]\').remove()" style="padding:8px 20px;background:#0f1f38;color:#fff;border:1px solid #334155;border-radius:8px;font-family:inherit;cursor:pointer;font-size:11px">Close</button>'
+    +'  <button onclick="sbHealthCheck().then(()=>{var d=document.getElementById(\'diag-counts\');if(d)d.innerHTML=\'Health check done — see toast\'})" style="padding:8px 20px;background:#059669;color:#fff;border:none;border-radius:8px;font-family:inherit;cursor:pointer;font-size:11px">Run Health Check</button>';
+  m.appendChild(inner);
+  document.body.appendChild(m);
+  if(_sb&&_userId){
+    var tables=['pic_customers','pic_log','pic_phones','pic_settings','pic_partner_data'];
+    var countLines=[];
+    for(var t of tables){
+      var cr=await _sb.from(t).select('*',{count:'exact',head:true}).eq('device_id',_userId);
+      if(cr.error)countLines.push(t+': <span style="color:#f87171">ERR — '+cr.error.message+'</span>');
+      else countLines.push(t+': <span style="color:#34d399">'+(cr.count||0)+' rows</span>');
+    }
+    var dc=document.getElementById('diag-counts');
+    if(dc)dc.innerHTML='<div style="font-weight:700;color:#fff;margin-top:8px">Table row counts</div>'+countLines.join('<br>');
+  }
 }
 async function sendEmailViaProxy(to,subject,htmlBody){
   var url=(localStorage.getItem('pic_email_fn_url')||'').trim();
@@ -9299,6 +9390,7 @@ async function init(){
         _renderApp();
         updateDataFreshness();checkDataStaleness();
         subscribeRealtime();
+        sbHealthCheck();
       }
     });
     return;
@@ -9310,6 +9402,7 @@ async function init(){
   _renderApp();
   updateDataFreshness();checkDataStaleness();
   subscribeRealtime();
+  sbHealthCheck();
 }
 if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{setTimeout(init,50);}
 
