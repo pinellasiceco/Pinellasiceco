@@ -1723,7 +1723,7 @@ header{background:var(--navy);
   margin-bottom:-2px;transition:.15s;user-select:none}
 .tab.on{color:var(--ora);border-color:var(--ora)}
 .panel{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 16px;display:none;background:var(--bg);min-height:0}
-.panel.on{display:block}
+.panel.on{display:block;height:100%}
 .fbar{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
 .fbar select{background:var(--surf);border:1px solid var(--brd);border-radius:6px;
   padding:5px 9px;color:var(--txt);font-size:11px;outline:none;cursor:pointer;
@@ -4022,7 +4022,7 @@ function sw(t){
   const panel=document.getElementById(panelId);
   if(panel)panel.classList.add('on');
   if(t==='today'){renderBriefing();renderTodaysPlan();}
-  else if(t==='all'){const ag=document.getElementById('agrid');if(ag)delete ag._glAttached;showDebugIfNeeded();populateCityFilter();rA();}
+  else if(t==='all'){const ag=document.getElementById('agrid');if(ag)delete ag._glAttached;showDebugIfNeeded();populateCityFilter();var _pan=document.getElementById('p-all');if(_pan)void _pan.offsetHeight;rA();}
   else if(t==='pipeline'){renderPipeline();}
   else if(t==='route'){rRoute();}
   else if(t==='clients'){if(clientTab==='service')rService();else rCust();}
@@ -4266,6 +4266,7 @@ function rA(){
   const cards=visible.map(p=>{try{return cardHTML(p);}catch(e){console.warn('card err',p.id,e);return'';}}).join('');
   g.innerHTML=cards+(list.length>50?'<div style="padding:12px;text-align:center;font-size:11px;color:var(--sub)">Showing 50 of '+list.length+' — use filters to narrow results</div>':'');
   attachGridListeners(g);
+  if(!cards.trim()&&visible.length>0)console.error('[rA] All '+visible.length+' cardHTML calls returned empty. First prospect:',visible[0]);
 }
 
 let presetFilter=null;
@@ -6906,7 +6907,7 @@ async function loadCloudData(){
   try{
     // Prospects — prefer Supabase row, fall back to embedded P[]
     var r1=await _sb.from('pic_prospects').select('data').eq('user_id',_userId).single();
-    if(r1.data&&r1.data.data&&Array.isArray(r1.data.data)&&r1.data.data.length){
+    if(r1.data&&r1.data.data&&Array.isArray(r1.data.data)&&r1.data.data.length&&r1.data.data[0]&&r1.data.data[0].name){
       P.length=0;r1.data.data.forEach(function(x){P.push(x);});
       console.log('Loaded '+P.length+' prospects from Supabase');
     } else {
@@ -6930,11 +6931,25 @@ async function loadCloudData(){
     var r4=await _sb.from('pic_customers').select('prospect_id,data').eq('user_id',_userId);
     if(r4.data&&r4.data.length){
       customers={};
+      var _repairIds=[];
       r4.data.forEach(function(row){
+        if(!row.data)return;
         customers[row.prospect_id]=row.data;
         var p=P.find(function(x){return String(x.id)===String(row.prospect_id);});
-        if(p)p.status=row.data.status;
+        if(p){
+          if(row.data.status){
+            p.status=row.data.status;
+          } else if((row.data.service_history&&row.data.service_history.length)||row.data.won_date){
+            customers[row.prospect_id].status='customer_recurring';
+            p.status='customer_recurring';
+            _repairIds.push(row.prospect_id);
+          }
+        }
       });
+      if(_repairIds.length){
+        _repairIds.forEach(function(pid){sbUpsert('pic_customers',pid,customers[pid]);});
+        toast('Restored '+_repairIds.length+' client'+(_repairIds.length>1?'s':'')+' from service history ✓');
+      }
     }
 
     // Phones
@@ -6995,7 +7010,14 @@ function subscribeRealtime(){
         customers[row.prospect_id]=row.data;
         try{localStorage.setItem('pic_customers',JSON.stringify(customers));}catch(e){}
         var p=P.find(function(x){return String(x.id)===row.prospect_id;});
-        if(p)p.status=row.data.status;
+        if(p){
+          if(row.data.status){
+            p.status=row.data.status;
+          } else if((row.data.service_history&&row.data.service_history.length)||row.data.won_date){
+            p.status='customer_recurring';
+            customers[row.prospect_id].status='customer_recurring';
+          }
+        }
         if(tab==='clients')rCust();
         else if(tab==='pipeline')renderPipeline(pipeStage);
         flashSyncDot();
@@ -7461,6 +7483,7 @@ function logServiceFromCal(id,opts){
   const todayStr=today.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
   const timeStr=today.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
   if(!customers[id])customers[id]={};
+  if(!customers[id].status){var _p0=P.find(function(x){return String(x.id)===String(id);});if(_p0&&_p0.status&&_p0.status!=='prospect')customers[id].status=_p0.status;}
   const c=customers[id];
 
   // Determine if this is a 6-month deep clean
@@ -7593,7 +7616,7 @@ function openServiceLog(id){
     +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;margin-bottom:6px">Before/After Photos</div>'
     +'<div id="svc-photo-preview" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px"></div>'
     +'<label for="svc-photo-input" id="svc-add-photo-btn" style="display:block;width:100%;padding:10px;border:2px dashed #e2e8f0;border-radius:8px;background:#f8fafc;color:#64748b;font-size:12px;cursor:pointer;font-family:inherit;text-align:center;box-sizing:border-box">&#x1F4F7; Add Photos (before/after)</label>'
-    +'<input id="svc-photo-input" type="file" accept="image/*" multiple style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden">'
+    +'<input id="svc-photo-input" type="file" accept="image/*" multiple style="position:fixed;top:0;left:0;width:1px;height:1px;opacity:0">'
 
     // Previous service info
     +(lastSvc?'<div style="background:#f5f8fa;border-radius:7px;padding:8px;margin-bottom:10px;font-size:10px;color:var(--sub)">'
@@ -7971,6 +7994,7 @@ async function submitServiceLog(id){
 
   // Save machine info and filter to customer record for future reports
   if(!customers[id])customers[id]={};
+  if(!customers[id].status){var _p0=P.find(function(x){return String(x.id)===String(id);});if(_p0&&_p0.status&&_p0.status!=='prospect')customers[id].status=_p0.status;}
   if(machineBrand)customers[id].machine_brand=machineBrand;
   if(machineType)customers[id].machine_type=machineType;
   if(machineModel)customers[id].machine_model=machineModel;
@@ -9187,7 +9211,12 @@ function _renderApp(){
   phLoad();contactsLoad();initSettings();initGoals();loadRouteState();
   updateSyncDot();
   const si=document.getElementById('si');if(si)si.blur();
-  setTimeout(function(){renderBriefing();renderTodaysPlan();},150);
+  setTimeout(function(){
+    renderBriefing();renderTodaysPlan();
+    if(tab==='all')rA();
+    else if(tab==='clients'){if(clientTab==='service')rService();else rCust();}
+    else if(tab==='pipeline')renderPipeline();
+  },150);
 }
 
 function updateDataFreshness(){
@@ -9376,7 +9405,7 @@ if('serviceWorker' in navigator){
 # ──────────────────────────────────────────────────────────────────────────────
 # ENTRY POINT
 # ──────────────────────────────────────────────────────────────────────────────
-SW_JS = """const CACHE_NAME='pic-BUILD_DATE-c';
+SW_JS = """const CACHE_NAME='pic-BUILD_DATE-d';
 const ASSETS=['./','/Pinellasiceco/index.html'];
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(ASSETS).catch(()=>{})));
