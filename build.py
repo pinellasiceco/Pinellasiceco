@@ -2052,7 +2052,7 @@ header{background:var(--navy);
     <div class="logo">
       <div class="logo-icon">&#x1F9CA;</div>
       <div><div class="logo-name">Pinellas Ice Co</div>
-        <div id="app-version" onclick="diagTap()" style="font-size:8px;color:var(--sub);letter-spacing:.04em;cursor:pointer">PROSPECT TOOL &bull; %%DATE%% &bull; v8 &bull; <span id="data-freshness"></span></div>
+        <div style="font-size:8px;color:var(--sub);letter-spacing:.04em">PROSPECT TOOL &bull; %%DATE%% &bull; v5 &bull; <span id="data-freshness"></span></div>
       </div>
     </div>
     <div class="hchips">
@@ -2737,12 +2737,6 @@ header{background:var(--navy);
       <button class="dbtn" onclick="doResetAll()" style="width:100%;background:#dc2626;color:#fff;border-color:#dc2626">&#x26A0; Wipe All Data &amp; Reload</button>
     </div>
 
-    <div class="dc" style="margin-top:12px">
-      <div class="dct">&#x1F4D6; Field Manual</div>
-      <div style="font-size:10px;color:var(--sub);margin-bottom:8px">Step-by-step cleaning procedures for all 5 brands. Works offline after first load.</div>
-      <a href="/Pinellasiceco/docs/fieldmanual/" target="_blank" style="display:block;padding:10px;background:#ecfdf5;border:1px solid #6ee7b7;border-radius:8px;text-align:center;color:#059669;font-size:13px;font-weight:700;text-decoration:none">&#x1F9CA; Open Field Manual</a>
-    </div>
-
   </div>
 
   <div id="mbg" onclick="closeM(event)">
@@ -2885,7 +2879,6 @@ const ZIPS=%%ZIPS%%;
 
 // ── SUPABASE AUTH GLOBALS ─────────────────────────────────────────────────────
 var _sb=null,_session=null,_userId=null,_realtimeChannel=null;
-var _syncErrors=0,_lastSyncOk=null,_diagTaps=0,_diagTapTimer=null;
 
 const PITCHES={
   callback:n=>`"Hi, is this <b>${n}</b>? I'm [Your Name] from Pinellas Ice Co  -  we clean and sanitize commercial ice machines locally. I'm reaching out because you recently had some health inspection issues. Ice machines are almost always part of callback inspections. We can get yours cleaned and documented before the inspector returns  -  usually takes about 2 hours. <b>Do you have time this week?</b>"`,
@@ -5809,8 +5802,8 @@ async function clrAllCloud(){
   // Clear cloud tables for this user
   try{
     await Promise.all([
-      _sb.from('pic_log').delete().eq('device_id',_userId),
-      _sb.from('pic_customers').delete().eq('device_id',_userId)
+      _sb.from('pic_log').delete().eq('user_id',_userId),
+      _sb.from('pic_customers').delete().eq('user_id',_userId)
     ]);
     toast('Local + cloud data cleared — reloading…');
   }catch(e){
@@ -5868,21 +5861,6 @@ function markWon(status){
   };
   p.status=status;
   custSave();
-  // Verify cloud write landed — read back after 2.5s
-  if(_sb&&_userId){
-    var _wvId=p.id;var _wvName=p.name;
-    setTimeout(async function(){
-      var vr=await _sb.from('pic_customers').select('prospect_id').eq('device_id',_userId).eq('prospect_id',String(_wvId));
-      if(!vr||vr.error||!vr.data||!vr.data.length){
-        _syncErrors++;updateSyncDot('error');
-        toast('⚠️ '+_wvName+' may not have saved to cloud — check sync dot');
-        console.error('[markWon] verify failed for',_wvId,vr&&vr.error);
-      } else {
-        _lastSyncOk=new Date();updateSyncDot('synced');
-        console.log('[markWon] verified',_wvName,'in pic_customers');
-      }
-    },2500);
-  }
   // Log it
   if(!log[p.id])log[p.id]=[];
   log[p.id].push({outcome:status,date:now,notes:'Deal closed'});
@@ -6086,12 +6064,11 @@ function renderPipeline(){
 
 function rCust(){
   const filter=document.getElementById('cust-status').value;
-  // Use customers dict status as authoritative fallback if p.status is missing/wrong
-  const allCusts=P.filter(p=>{const st=(customers[p.id]||{}).status||p.status;return st&&st!=='prospect';});
-  const shown=filter?allCusts.filter(p=>{const st=(customers[p.id]||{}).status||p.status;return st===filter;}):allCusts;
+  const allCusts=P.filter(p=>p.status&&p.status!=='prospect');
+  const shown=filter?allCusts.filter(p=>p.status===filter):allCusts;
 
   // MRR calculation — prefer customers[] record (actual closed price) over P[] estimate
-  const recurring=allCusts.filter(p=>{const st=(customers[p.id]||{}).status||p.status;return st==='customer_recurring'||st==='customer_quarterly';});
+  const recurring=allCusts.filter(p=>p.status==='customer_recurring'||p.status==='customer_quarterly');
   const mrr=recurring.reduce((s,p)=>s+((customers[p.id]||{}).monthly||p.monthly||149),0);
   document.getElementById('mrr-val').textContent='$'+mrr.toLocaleString();
   document.getElementById('cust-count').textContent=recurring.length;
@@ -6944,38 +6921,39 @@ async function loadCloudData(){
     }
 
     // Call log — only replace if Supabase actually has records (don't wipe localStorage when tables are empty/missing)
-    var r3=await _sb.from('pic_log').select('prospect_id,data').eq('device_id',_userId);
+    var r3=await _sb.from('pic_log').select('prospect_id,data').eq('user_id',_userId);
     if(r3.data&&r3.data.length){
       log={};
       r3.data.forEach(function(row){log[row.prospect_id]=row.data;});
     }
 
-    // Customers — merge Supabase records into existing customers dict.
-    // Do NOT wipe customers first: localStorage data from a recent markWon() must survive
-    // even if the async sbUpsert hasn't completed yet or failed silently.
-    var r4=await _sb.from('pic_customers').select('prospect_id,data').eq('device_id',_userId);
-    var _repairIds=[];
-    (r4.data||[]).forEach(function(row){
-      if(!row.data)return;
-      customers[row.prospect_id]=row.data; // Supabase takes precedence for known records
-      var p=P.find(function(x){return String(x.id)===String(row.prospect_id);});
-      if(p){
-        if(row.data.status){
-          p.status=row.data.status;
-        } else if((row.data.service_history&&row.data.service_history.length)||row.data.won_date){
-          customers[row.prospect_id].status='customer_recurring';
-          p.status='customer_recurring';
-          _repairIds.push(row.prospect_id);
+    // Customers — only replace if Supabase actually has records
+    var r4=await _sb.from('pic_customers').select('prospect_id,data').eq('user_id',_userId);
+    if(r4.data&&r4.data.length){
+      customers={};
+      var _repairIds=[];
+      r4.data.forEach(function(row){
+        if(!row.data)return;
+        customers[row.prospect_id]=row.data;
+        var p=P.find(function(x){return String(x.id)===String(row.prospect_id);});
+        if(p){
+          if(row.data.status){
+            p.status=row.data.status;
+          } else if((row.data.service_history&&row.data.service_history.length)||row.data.won_date){
+            customers[row.prospect_id].status='customer_recurring';
+            p.status='customer_recurring';
+            _repairIds.push(row.prospect_id);
+          }
         }
+      });
+      if(_repairIds.length){
+        _repairIds.forEach(function(pid){sbUpsert('pic_customers',pid,customers[pid]);});
+        toast('Restored '+_repairIds.length+' client'+(_repairIds.length>1?'s':'')+' from service history ✓');
       }
-    });
-    if(_repairIds.length){
-      _repairIds.forEach(function(pid){sbUpsert('pic_customers',pid,customers[pid]);});
-      toast('Restored '+_repairIds.length+' client'+(_repairIds.length>1?'s':'')+' from service history ✓');
     }
 
     // Phones
-    var r5=await _sb.from('pic_phones').select('prospect_id,data').eq('device_id',_userId);
+    var r5=await _sb.from('pic_phones').select('prospect_id,data').eq('user_id',_userId);
     (r5.data||[]).forEach(function(row){
       if(row.data&&row.data.phone){
         PHONES[row.prospect_id]=row.data.phone;
@@ -6985,23 +6963,16 @@ async function loadCloudData(){
     });
 
     // Settings
-    var r6=await _sb.from('pic_settings').select('key,data').eq('device_id',_userId);
+    var r6=await _sb.from('pic_settings').select('key,data').eq('user_id',_userId);
     (r6.data||[]).forEach(function(row){
       if(row.key==='settings')localStorage.setItem('pic_settings',JSON.stringify(row.data));
       if(row.key==='goals'){goals=row.data;localStorage.setItem('pic_goals',JSON.stringify(goals));}
     });
 
     // Partner data
-    var r7=await _sb.from('pic_partner_data').select('key,data').eq('device_id',_userId);
+    var r7=await _sb.from('pic_partner_data').select('key,data').eq('user_id',_userId);
     var pdRow=(r7.data||[]).find(function(row){return row.key==='partner_data';});
     if(pdRow)localStorage.setItem('pic_partners_v1',JSON.stringify(pdRow.data));
-
-    // Final status sync: ensure p.status matches customers dict for every loaded customer.
-    // This is belt-and-suspenders in case P.find() missed any entry above.
-    P.forEach(function(p){
-      var c=customers[p.id]||customers[String(p.id)];
-      if(c&&c.status&&c.status!=='prospect'){p.status=c.status;}
-    });
 
     // Sync to localStorage cache for offline resilience
     try{localStorage.setItem('pic_v4',JSON.stringify(log));}catch(e){}
@@ -7071,32 +7042,22 @@ async function sbUpsert(table,prospectId,data){
   if(!_sb)return;
   var uid=getUserId();if(!uid)return;
   try{
-    await _sb.from(table).delete().eq('device_id',uid).eq('prospect_id',String(prospectId));
-    var res=await _sb.from(table).insert({
-      device_id:uid,
+    await _sb.from(table).upsert({
+      user_id:uid,
       prospect_id:String(prospectId),
       data:data,
       updated_at:new Date().toISOString()
-    });
-    if(res&&res.error){
-      _syncErrors++;updateSyncDot('error');
-      console.error('[sbUpsert] insert error:',table,prospectId,res.error);
-      toast('⚠️ Save failed ('+table+'): '+res.error.message);
-    } else {
-      _lastSyncOk=new Date();
-    }
-  }catch(e){_syncErrors++;updateSyncDot('error');console.error('[sbUpsert] exception:',table,e);toast('⚠️ Save failed — check connection');}
+    },{onConflict:'user_id,prospect_id'});
+  }catch(e){console.warn('sbUpsert failed:',table,e);}
 }
 
 async function sbUpsertSetting(key,data){
   if(!_sb)return;
   var uid=getUserId();if(!uid)return;
   try{
-    await _sb.from('pic_settings').delete().eq('device_id',uid).eq('key',key);
-    var res=await _sb.from('pic_settings').insert({
-      device_id:uid,key:key,data:data,updated_at:new Date().toISOString()
-    });
-    if(res&&res.error)console.warn('sbUpsertSetting error:',res.error);
+    await _sb.from('pic_settings').upsert({
+      user_id:uid,key:key,data:data,updated_at:new Date().toISOString()
+    },{onConflict:'user_id,key'});
   }catch(e){console.warn('sbUpsertSetting failed:',e);}
 }
 
@@ -8326,8 +8287,7 @@ function openServiceMaps(){
 function renderReports(){
   const sel=document.getElementById('svc-report-client');
   if(!sel)return;
-  const CUST_ST=new Set(['customer_recurring','customer_once','customer_intro','customer_quarterly']);
-  const recurring=P.filter(p=>{const st=(customers[p.id]||{}).status||p.status;return CUST_ST.has(st);});
+  const recurring=P.filter(p=>p.status==='customer_recurring'||p.status==='customer_once'||p.status==='customer_intro');
   sel.innerHTML='<option value="">Select a client...</option>'
     +recurring.map(p=>'<option value="'+p.id+'">'+p.name+' — '+p.city+'</option>').join('');
   document.getElementById('svc-report-preview').innerHTML='';
@@ -9093,122 +9053,14 @@ function saveSupabaseSettings(){
 function updateSyncDot(mode){
   var dot=document.getElementById('sync-dot');
   if(!dot)return;
-  if(mode==='error'){dot.style.background='#dc2626';dot.title='⚠️ '+_syncErrors+' save error(s) — tap version string for diagnostics';return;}
-  if(mode==='synced'){dot.style.background='#059669';dot.title='Cloud sync active'+((_lastSyncOk)?' — last OK '+_lastSyncOk.toLocaleTimeString():'');return;}
+  if(mode==='synced'){dot.style.background='#059669';dot.title='Live sync active';return;}
   if(mode==='local'){dot.style.background='#d97706';dot.title='Reconnecting...';return;}
-  if(_syncErrors>0){dot.style.background='#dc2626';dot.title='⚠️ '+_syncErrors+' save error(s) this session';return;}
   var u=(_SUPABASE_URL||localStorage.getItem('pic_supabase_url')||'').trim();
   var k=(_SUPABASE_ANON_KEY||localStorage.getItem('pic_supabase_key')||'').trim();
+  var fn=(localStorage.getItem('pic_email_fn_url')||'').trim();
   if(_userId){dot.style.background='#059669';dot.title='Logged in — cloud sync active';}
   else if(u&&k){dot.style.background='#d97706';dot.title='Configured but not logged in';}
   else{dot.style.background='#e2e8f0';dot.title='Not configured';}
-}
-async function sbHealthCheck(){
-  if(!_sb||!_userId)return;
-  var uid=_userId;
-  var results=[];
-  var anyFail=false;
-
-  // Test 1: pic_settings write+read (basic connectivity)
-  try{
-    await _sb.from('pic_settings').delete().eq('device_id',uid).eq('key','__health__');
-    var ts=Date.now();
-    var wr=await _sb.from('pic_settings').insert({device_id:uid,key:'__health__',data:{ok:true,ts:ts},updated_at:new Date().toISOString()});
-    if(wr&&wr.error){
-      results.push('pic_settings WRITE: ❌ '+wr.error.message);anyFail=true;
-    } else {
-      var rr=await _sb.from('pic_settings').select('data').eq('device_id',uid).eq('key','__health__').single();
-      if(!rr||rr.error||!rr.data||!rr.data.data||rr.data.data.ts!==ts){
-        results.push('pic_settings READ: ❌ '+(rr&&rr.error?rr.error.message:'mismatch'));anyFail=true;
-      } else {
-        results.push('pic_settings: ✅ write+read OK');
-      }
-    }
-  }catch(e){results.push('pic_settings: ❌ exception: '+e.message);anyFail=true;}
-
-  // Test 2: pic_customers write+read (the critical table)
-  try{
-    await _sb.from('pic_customers').delete().eq('device_id',uid).eq('prospect_id','__health__');
-    var ts2=Date.now();
-    var wr2=await _sb.from('pic_customers').insert({device_id:uid,prospect_id:'__health__',data:{ok:true,ts:ts2},updated_at:new Date().toISOString()});
-    if(wr2&&wr2.error){
-      results.push('pic_customers WRITE: ❌ '+wr2.error.message);anyFail=true;
-    } else {
-      var rr2=await _sb.from('pic_customers').select('data').eq('device_id',uid).eq('prospect_id','__health__').single();
-      if(!rr2||rr2.error||!rr2.data||!rr2.data.data||rr2.data.data.ts!==ts2){
-        results.push('pic_customers READ: ❌ '+(rr2&&rr2.error?rr2.error.message:'mismatch'));anyFail=true;
-      } else {
-        results.push('pic_customers: ✅ write+read OK');
-        // Clean up test row
-        await _sb.from('pic_customers').delete().eq('device_id',uid).eq('prospect_id','__health__');
-      }
-    }
-  }catch(e){results.push('pic_customers: ❌ exception: '+e.message);anyFail=true;}
-
-  // Test 3: pic_log write+read
-  try{
-    await _sb.from('pic_log').delete().eq('device_id',uid).eq('prospect_id','__health__');
-    var wr3=await _sb.from('pic_log').insert({device_id:uid,prospect_id:'__health__',data:{ok:true},updated_at:new Date().toISOString()});
-    if(wr3&&wr3.error){
-      results.push('pic_log WRITE: ❌ '+wr3.error.message);anyFail=true;
-    } else {
-      results.push('pic_log: ✅ write OK');
-      await _sb.from('pic_log').delete().eq('device_id',uid).eq('prospect_id','__health__');
-    }
-  }catch(e){results.push('pic_log: ❌ '+e.message);anyFail=true;}
-
-  if(anyFail){
-    _syncErrors++;updateSyncDot('error');
-    console.error('[health] FAILED:',results);
-    toast('⚠️ DB check failed — tap version 3× for details');
-  } else {
-    _lastSyncOk=new Date();updateSyncDot('synced');
-    console.log('[health] All tables OK:',results);
-    toast('✓ DB check passed — all tables writable');
-  }
-  return results;
-}
-function diagTap(){
-  _diagTaps++;
-  clearTimeout(_diagTapTimer);
-  _diagTapTimer=setTimeout(function(){_diagTaps=0;},800);
-  if(_diagTaps>=3){_diagTaps=0;showDiagnostics();}
-}
-async function showDiagnostics(){
-  var m=document.createElement('div');
-  m.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:99999;display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto';
-  var inner=document.createElement('div');
-  inner.style.cssText='background:#1e293b;border-radius:14px;padding:20px;max-width:380px;width:100%;color:#e2e8f0;font-size:11px;line-height:2;font-family:monospace;margin-top:40px';
-  var uid=getUserId()||'none';
-  var sbUrl=(localStorage.getItem('pic_supabase_url')||'').trim();
-  inner.innerHTML='<div style="font-weight:700;font-size:13px;color:#fff;margin-bottom:8px">Diagnostics v8</div>'
-    +'<div style="color:#94a3b8;font-size:10px;margin-bottom:12px">Tap 3× the version string to open this</div>'
-    +'Device ID: <span style="color:#34d399">'+uid.slice(0,16)+'…</span><br>'
-    +'Session: <span style="color:'+((_userId)?'#34d399':'#f87171')+'">'+((_userId)?'✓ logged in':'✗ not logged in')+'</span><br>'
-    +'Supabase: <span style="color:#94a3b8">'+(sbUrl?sbUrl.slice(0,30)+'…':'not configured')+'</span><br>'
-    +'Last sync OK: <span style="color:'+((_lastSyncOk)?'#34d399':'#f87171')+'">'+((_lastSyncOk)?_lastSyncOk.toLocaleTimeString():'never')+'</span><br>'
-    +'Write errors: <span style="color:'+(_syncErrors?'#f87171':'#34d399')+'">'+_syncErrors+'</span><br>'
-    +'Customers in RAM: <span style="color:#fbbf24">'+Object.keys(customers).length+'</span><br>'
-    +'Prospects loaded: <span style="color:#fbbf24">'+P.length+'</span><br>'
-    +'<div id="diag-counts" style="margin-top:8px;color:#94a3b8">Running checks…</div>'
-    +'<br><button onclick="this.closest(\'div[style*=\"position:fixed\"]\').remove()" style="padding:8px 20px;background:#0f1f38;color:#fff;border:1px solid #334155;border-radius:8px;font-family:inherit;cursor:pointer;font-size:11px">Close</button>'
-    +'  <button onclick="(async function(){var dc=document.getElementById(\'diag-counts\');if(dc)dc.innerHTML=\'Running…\';var r=await sbHealthCheck();if(dc&&r)dc.innerHTML=\'<div style=\\\'font-weight:700;color:#fff;margin-top:8px\\\'>Write Test Results</div>\'+r.join(\'<br>\')+\'<br>\'+dc.innerHTML;})()" style="padding:8px 20px;background:#059669;color:#fff;border:none;border-radius:8px;font-family:inherit;cursor:pointer;font-size:11px">▶ Test Writes Now</button>';
-  m.appendChild(inner);
-  document.body.appendChild(m);
-  if(_sb&&_userId){
-    var tables=['pic_customers','pic_log','pic_phones','pic_settings','pic_partner_data'];
-    var countLines=[];
-    for(var t of tables){
-      var cr=await _sb.from(t).select('*',{count:'exact',head:true}).eq('device_id',_userId);
-      if(cr.error)countLines.push(t+': <span style="color:#f87171">ERR — '+cr.error.message+'</span>');
-      else countLines.push(t+': <span style="color:#34d399">'+(cr.count||0)+' rows</span>');
-    }
-    // Also auto-run health check when diagnostics opens
-    var hcResults=await sbHealthCheck();
-    var dc=document.getElementById('diag-counts');
-    if(dc)dc.innerHTML='<div style="font-weight:700;color:#fff;margin-top:8px">Table row counts</div>'+countLines.join('<br>')
-      +'<div style="font-weight:700;color:#fff;margin-top:8px">Write test results</div>'+(hcResults||[]).join('<br>');
-  }
 }
 async function sendEmailViaProxy(to,subject,htmlBody){
   var url=(localStorage.getItem('pic_email_fn_url')||'').trim();
@@ -9435,7 +9287,6 @@ async function init(){
         _renderApp();
         updateDataFreshness();checkDataStaleness();
         subscribeRealtime();
-        sbHealthCheck();
       }
     });
     return;
@@ -9447,7 +9298,6 @@ async function init(){
   _renderApp();
   updateDataFreshness();checkDataStaleness();
   subscribeRealtime();
-  sbHealthCheck();
 }
 if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{setTimeout(init,50);}
 
