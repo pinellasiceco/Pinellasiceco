@@ -5808,8 +5808,8 @@ async function clrAllCloud(){
   // Clear cloud tables for this user
   try{
     await Promise.all([
-      _sb.from('pic_log').delete().eq('user_id',_userId),
-      _sb.from('pic_customers').delete().eq('user_id',_userId)
+      _sb.from('pic_log').delete().eq('device_id',_userId),
+      _sb.from('pic_customers').delete().eq('device_id',_userId)
     ]);
     toast('Local + cloud data cleared — reloading…');
   }catch(e){
@@ -5874,7 +5874,7 @@ function markWon(status){
   // Verify write reached Supabase after short delay
   setTimeout(async function(){
     if(!_sb||!_userId)return;
-    var chk=await _sb.from('pic_customers').select('prospect_id').eq('user_id',_userId).eq('prospect_id',String(p.id)).single();
+    var chk=await _sb.from('pic_customers').select('prospect_id').eq('device_id',_userId).eq('prospect_id',String(p.id)).single();
     if(chk.error||!chk.data){
       toast('⚠ Cloud save may not have gone through — tap sync dot to retry');
       console.warn('markWon verify: row missing after write',chk.error);
@@ -6937,14 +6937,14 @@ async function loadCloudData(){
     }
 
     // Call log — only replace if Supabase actually has records (don't wipe localStorage when tables are empty/missing)
-    var r3=await _sb.from('pic_log').select('prospect_id,data').eq('user_id',_userId);
+    var r3=await _sb.from('pic_log').select('prospect_id,data').eq('device_id',_userId);
     if(r3.data&&r3.data.length){
       log={};
       r3.data.forEach(function(row){log[row.prospect_id]=row.data;});
     }
 
     // Customers — merge into existing; never wipe (avoids data loss if Supabase returns subset)
-    var r4=await _sb.from('pic_customers').select('prospect_id,data').eq('user_id',_userId);
+    var r4=await _sb.from('pic_customers').select('prospect_id,data').eq('device_id',_userId);
     if(r4.data&&r4.data.length){
       var _repairIds=[];
       r4.data.forEach(function(row){
@@ -6968,7 +6968,7 @@ async function loadCloudData(){
     }
 
     // Phones
-    var r5=await _sb.from('pic_phones').select('prospect_id,data').eq('user_id',_userId);
+    var r5=await _sb.from('pic_phones').select('prospect_id,data').eq('device_id',_userId);
     (r5.data||[]).forEach(function(row){
       if(row.data&&row.data.phone){
         PHONES[row.prospect_id]=row.data.phone;
@@ -6978,14 +6978,14 @@ async function loadCloudData(){
     });
 
     // Settings
-    var r6=await _sb.from('pic_settings').select('key,data').eq('user_id',_userId);
+    var r6=await _sb.from('pic_settings').select('key,data').eq('device_id',_userId);
     (r6.data||[]).forEach(function(row){
       if(row.key==='settings')localStorage.setItem('pic_settings',JSON.stringify(row.data));
       if(row.key==='goals'){goals=row.data;localStorage.setItem('pic_goals',JSON.stringify(goals));}
     });
 
     // Partner data
-    var r7=await _sb.from('pic_partner_data').select('key,data').eq('user_id',_userId);
+    var r7=await _sb.from('pic_partner_data').select('key,data').eq('device_id',_userId);
     var pdRow=(r7.data||[]).find(function(row){return row.key==='partner_data';});
     if(pdRow)localStorage.setItem('pic_partners_v1',JSON.stringify(pdRow.data));
 
@@ -7010,7 +7010,7 @@ function subscribeRealtime(){
   if(_realtimeChannel)_sb.removeChannel(_realtimeChannel);
   _realtimeChannel=_sb.channel('pic-changes-'+_userId)
     .on('postgres_changes',{event:'*',schema:'public',table:'pic_log',
-      filter:'user_id=eq.'+_userId},function(payload){
+      filter:'device_id=eq.'+_userId},function(payload){
         var row=payload.new||payload.old;if(!row)return;
         if(row.data)log[row.prospect_id]=row.data;
         try{localStorage.setItem('pic_v4',JSON.stringify(log));}catch(e){}
@@ -7020,7 +7020,7 @@ function subscribeRealtime(){
         flashSyncDot();
     })
     .on('postgres_changes',{event:'*',schema:'public',table:'pic_customers',
-      filter:'user_id=eq.'+_userId},function(payload){
+      filter:'device_id=eq.'+_userId},function(payload){
         var row=payload.new||payload.old;if(!row||!row.data)return;
         customers[row.prospect_id]=row.data;
         try{localStorage.setItem('pic_customers',JSON.stringify(customers));}catch(e){}
@@ -7057,9 +7057,9 @@ async function sbUpsert(table,prospectId,data){
   if(!_sb)return;
   var uid=getUserId();if(!uid)return;
   var pid=String(prospectId);
-  var r=await _sb.from(table).delete().eq('user_id',uid).eq('prospect_id',pid);
+  var r=await _sb.from(table).delete().eq('device_id',uid).eq('prospect_id',pid);
   if(r.error){_syncErrors++;console.warn('sbUpsert delete failed:',table,r.error);updateSyncDot('error');return;}
-  var r2=await _sb.from(table).insert({user_id:uid,prospect_id:pid,data:data,updated_at:new Date().toISOString()});
+  var r2=await _sb.from(table).insert({device_id:uid,user_id:uid,prospect_id:pid,data:data,updated_at:new Date().toISOString()});
   if(r2.error){_syncErrors++;console.warn('sbUpsert insert failed:',table,r2.error);updateSyncDot('error');toast('⚠ Sync error — '+table+' write failed');return;}
   _lastSyncOk=new Date();
 }
@@ -7067,9 +7067,9 @@ async function sbUpsert(table,prospectId,data){
 async function sbUpsertSetting(key,data){
   if(!_sb)return;
   var uid=getUserId();if(!uid)return;
-  var r=await _sb.from('pic_settings').delete().eq('user_id',uid).eq('key',key);
+  var r=await _sb.from('pic_settings').delete().eq('device_id',uid).eq('key',key);
   if(r.error){_syncErrors++;console.warn('sbUpsertSetting delete failed:',r.error);updateSyncDot('error');return;}
-  var r2=await _sb.from('pic_settings').insert({user_id:uid,key:key,data:data,updated_at:new Date().toISOString()});
+  var r2=await _sb.from('pic_settings').insert({device_id:uid,user_id:uid,key:key,data:data,updated_at:new Date().toISOString()});
   if(r2.error){_syncErrors++;console.warn('sbUpsertSetting insert failed:',r2.error);updateSyncDot('error');return;}
   _lastSyncOk=new Date();
 }
@@ -9099,15 +9099,15 @@ async function showDiagnostics(){
     ''];
   if(_sb&&_userId){
     lines.push('Checking tables...');
-    var t1=await _sb.from('pic_customers').select('prospect_id',{count:'exact',head:true}).eq('user_id',_userId);
+    var t1=await _sb.from('pic_customers').select('prospect_id',{count:'exact',head:true}).eq('device_id',_userId);
     lines.push('pic_customers rows: '+(t1.count!=null?t1.count:(t1.error?'ERROR: '+t1.error.message:'?')));
-    var t2=await _sb.from('pic_log').select('prospect_id',{count:'exact',head:true}).eq('user_id',_userId);
+    var t2=await _sb.from('pic_log').select('prospect_id',{count:'exact',head:true}).eq('device_id',_userId);
     lines.push('pic_log rows: '+(t2.count!=null?t2.count:(t2.error?'ERROR: '+t2.error.message:'?')));
-    var t3=await _sb.from('pic_settings').select('key',{count:'exact',head:true}).eq('user_id',_userId);
+    var t3=await _sb.from('pic_settings').select('key',{count:'exact',head:true}).eq('device_id',_userId);
     lines.push('pic_settings rows: '+(t3.count!=null?t3.count:(t3.error?'ERROR: '+t3.error.message:'?')));
     // Write test
-    var tw=await _sb.from('pic_settings').delete().eq('user_id',_userId).eq('key','_diag_test');
-    var tw2=await _sb.from('pic_settings').insert({user_id:_userId,key:'_diag_test',data:{t:Date.now()},updated_at:new Date().toISOString()});
+    var tw=await _sb.from('pic_settings').delete().eq('device_id',_userId).eq('key','_diag_test');
+    var tw2=await _sb.from('pic_settings').insert({device_id:_userId,user_id:_userId,key:'_diag_test',data:{t:Date.now()},updated_at:new Date().toISOString()});
     lines.push('Write test: '+(tw2.error?'FAIL — '+tw2.error.message:'OK'));
   } else {
     lines.push('Supabase: not connected');
@@ -9119,8 +9119,8 @@ async function sbHealthCheck(){
   if(!_sb||!_userId)return;
   var uid=_userId;
   // Test write to pic_settings
-  var d=await _sb.from('pic_settings').delete().eq('user_id',uid).eq('key','_hc');
-  var w=await _sb.from('pic_settings').insert({user_id:uid,key:'_hc',data:{t:Date.now()},updated_at:new Date().toISOString()});
+  var d=await _sb.from('pic_settings').delete().eq('device_id',uid).eq('key','_hc');
+  var w=await _sb.from('pic_settings').insert({device_id:uid,user_id:uid,key:'_hc',data:{t:Date.now()},updated_at:new Date().toISOString()});
   if(w.error){
     _syncErrors++;
     updateSyncDot('error');
@@ -9129,7 +9129,7 @@ async function sbHealthCheck(){
     return;
   }
   // Test read-back
-  var r=await _sb.from('pic_settings').select('data').eq('user_id',uid).eq('key','_hc').single();
+  var r=await _sb.from('pic_settings').select('data').eq('device_id',uid).eq('key','_hc').single();
   if(r.error||!r.data){
     _syncErrors++;
     updateSyncDot('error');
