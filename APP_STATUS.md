@@ -118,7 +118,8 @@
   - Contractions: `We'll`, `can't`, `don't`, `it's`, `you'll` — use `&#39;` or reword
   - Possessives: `client's`, `today's` — use `&#39;`
   - `\'` in Python triple-quoted strings outputs a bare `'` in JS — does NOT escape it in JS context
-  - **Review rule**: after writing any new JS string content (especially email HTML, toast messages, button labels), scan for apostrophes and replace with `&#39;`
+  - **`win.document.write('...')` trap**: any `alert('...')`, `toast('...')`, or string with `'` inside a `document.write('...')` call breaks the outer JS string — use `&#39;` or avoid inline single-quoted strings inside document.write entirely
+  - **Review rule**: after writing any new JS string content (especially email HTML, toast messages, button labels, document.write calls), scan for apostrophes and replace with `&#39;`
 
 If something appears broken, first try force-closing the PWA and reopening — the sw.js cache bust (`pic-YYYYMMDD`) requires a full app restart on iOS to take effect.
 
