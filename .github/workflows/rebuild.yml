@@ -59,6 +59,12 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git fetch origin main
           git reset --soft origin/main
+          # Restore files that live on main but not in the feature branch
+          # (user-uploaded CSVs, scraper output). Without this, git add -A
+          # would stage them as deleted and the rebuild push would wipe them.
+          git checkout origin/main -- "pinellas v22 to scrape.csv" 2>/dev/null || true
+          git checkout origin/main -- pinellas_v22_narratives.csv 2>/dev/null || true
+          git checkout origin/main -- scraper_progress.txt 2>/dev/null || true
           git add -A
           git commit --allow-empty -m "Daily rebuild $(date +'%Y-%m-%d %H:%M')"
           git push origin HEAD:main
