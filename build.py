@@ -8461,6 +8461,9 @@ function loadReportClient(){
       '</div>'+
     '</div>'+
 
+    // ── PHOTOS ───────────────────────────────────────────────────────────
+    (function(){var pUrls=lastSvcEntry.photo_urls||[];if(!pUrls.length)return'';return'<div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:14px">'+'<div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:10px">Before / After Photos</div>'+'<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px">'+pUrls.map(function(url,i){return'<div style="text-align:center"><img src="'+url+'" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;object-fit:cover;aspect-ratio:1"><div style="font-size:9px;color:#94a3b8;margin-top:3px">Photo '+(i+1)+'</div></div>';}).join('')+'</div></div>';}())+
+
     // ── SIGNATURES ───────────────────────────────────────────────────────
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:14px">'+
       '<div>'+
@@ -8918,14 +8921,7 @@ function srSendEmail(p,atpVal,emailTo,notes){
     +'<div style="padding:12px 14px">'
     +services.map(function(s){return '<div style="font-size:11px;color:#334155;padding:3px 0"><span style="color:#059669;font-weight:700">&#x2713;</span>&nbsp;&nbsp;'+s+'</div>';}).join('')
     +'</div></div>'
-    +'<div style="background:#0f1f38;border-radius:10px;padding:14px;text-align:center;margin-bottom:14px">'
-    +'<div style="font-size:8px;color:#94a3b8;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">Intro Offer</div>'
-    +'<div style="font-size:26px;font-weight:900;color:#f97316;margin-bottom:4px">$99 &mdash; First Visit</div>'
-    +'<div style="font-size:11px;color:#e2e8f0;margin-bottom:4px">Full service &middot; ATP documentation &middot; compliance report</div>'
-    +'<div style="font-size:10px;color:#94a3b8;margin-bottom:8px">$99 to start &middot; Annual plans from $129/mo &middot; Annual commitment</div>'
-    +'<div style="font-size:16px;font-weight:800;color:#fff">Call&nbsp;/&nbsp;Text:&nbsp;&nbsp;(727)&nbsp;855-6873</div>'
-    +'<div style="font-size:10px;color:#94a3b8;margin-top:4px">pinellasiceco.com</div>'
-    +'</div>'
+    +(function(){var ns=(customers[p.id]||{}).next_service;var nsStr=ns?new Date(ns.replace(/-/g,'/')).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}):'Contact us to schedule';return'<div style="background:#0f1f38;border-radius:10px;padding:14px;text-align:center;margin-bottom:14px">'+'<div style="font-size:8px;color:#94a3b8;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">Next Scheduled Service</div>'+'<div style="font-size:18px;font-weight:900;color:#f97316;margin-bottom:4px">'+nsStr+'</div>'+'<div style="font-size:11px;color:#e2e8f0;margin-bottom:8px">Thank you for choosing Pinellas Ice Co</div>'+'<div style="font-size:16px;font-weight:800;color:#fff">Call&nbsp;/&nbsp;Text:&nbsp;&nbsp;(727)&nbsp;855-6873</div>'+'<div style="font-size:10px;color:#94a3b8;margin-top:4px">pinellasiceco.com</div>'+'</div>';}())
     +(notes?('<div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:14px">'
       +'<div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:6px">Technician Notes</div>'
       +'<div style="font-size:11px;color:#334155;line-height:1.6">'+notes+'</div>'
