@@ -114,6 +114,11 @@
 
 - **iPad copy-paste**: copying code blocks from chat on iPad adds angle brackets around URLs. Never paste code directly into Supabase editor — use the GitHub Actions deploy workflow instead.
 - **`\n` in build.py strings**: never use `\n` inside Python triple-quoted strings for JS string literals — the literal newline breaks JS parsing and silently disables all buttons. Always use `\\n`.
+- **Apostrophes/single quotes in JS strings**: any `'` character inside a single-quoted JS string literal in the HTML template breaks parsing — one broken string kills ALL buttons app-wide (silent failure). Common traps:
+  - Contractions: `We'll`, `can't`, `don't`, `it's`, `you'll` — use `&#39;` or reword
+  - Possessives: `client's`, `today's` — use `&#39;`
+  - `\'` in Python triple-quoted strings outputs a bare `'` in JS — does NOT escape it in JS context
+  - **Review rule**: after writing any new JS string content (especially email HTML, toast messages, button labels), scan for apostrophes and replace with `&#39;`
 
 If something appears broken, first try force-closing the PWA and reopening — the sw.js cache bust (`pic-YYYYMMDD`) requires a full app restart on iOS to take effect.
 
