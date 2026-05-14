@@ -1,9 +1,9 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-05-14 (session 18 — data persistence fixed, email working, report UX improvements) by Claude Code*
+*Last updated: 2026-05-14 (session 20 — follow-up filter, email schedule modal, Pinellas/recency filters, send confirmation UX, CI race fix) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
-- Last deployed: 2026-05-07 (session 16 — Supabase Auth + real-time sync + cloud data migration)
+- Last deployed: 2026-05-14 (session 20 — follow-up filter, email schedule modal, send confirmation UX)
 - Build script: `build.py` (repo root) → outputs `index.html` directly
 - `index.html` regenerated from `build.py` using existing P[] data — fully in sync
 
@@ -16,6 +16,7 @@
 - `send_briefing.py` runs as **final step in rebuild.yml** — always sends after fresh data is built
 - Daily briefing fallback: `send_briefing.yml` cron at 13:00 UTC (9am ET) if rebuild fails
 - sw.js cache bumped manually when patching index.html; `build.py` auto-stamps on CI rebuild
+- **Concurrency group `rebuild`** in `rebuild.yml` — rapid-fire branch pushes cancel in-progress CI runs so only the latest commit builds; prevents parallel runs racing on `git push origin HEAD:main`
 
 ### Navigation
 - 6-tab layout: Home / Prospects / Pipeline / Route / Clients / Partners
@@ -98,11 +99,13 @@
 - Edge Function: `supabase/functions/send-email/index.ts` — deployed via GitHub Actions (`deploy_edge_functions.yml`)
 - App setting: `pic_email_fn_url` (localStorage) = Edge Function URL; set in Settings → Cloud Sync
 - App setting: `pic_supabase_key` (localStorage) = Supabase anon key (used as Bearer token)
-- `sendEmailViaProxy(to, subject, html)` — central send function used by all email buttons
+- `sendEmailViaProxy(to, subject, html)` — central send function used by all email buttons; returns Promise<bool>
+- `sendWithConfirmation(btn, sendFn)` — wraps any send operation: disables button, shows "Sending…", turns green "✓ Sent" on success, restores after 3s
 - Email buttons on: ATP report overlay, service report preview, customer card (compliance summary), service log row
 - Customer email address stored in `customers[id].email` via `saveCustomerEmail()`
 - `emailServiceReport(id)` — emails rendered report HTML from `#report-content`
-- `emailComplianceReport(id)` — emails compliance summary (last service, ATP, machine, next due) + technician notes from most recent `atp_history` entry
+- `emailComplianceReport(id, btn)` — emails compliance summary (last service, ATP, machine, next due) + technician notes; accepts optional `btn` param for `sendWithConfirmation` UX
+- `emailServiceSchedule(id)` — opens modal asking for recipient email (pre-fills `customers[id].email`); shows "Sending…" → "✓ Sent"; saves email address to customer record on send
 - **Deploy**: any change to `supabase/functions/**` on main auto-triggers `deploy_edge_functions.yml`
 
 ### Date Handling
@@ -118,7 +121,8 @@
   - Contractions: `We'll`, `can't`, `don't`, `it's`, `you'll` — use `&#39;` or reword
   - Possessives: `client's`, `today's` — use `&#39;`
   - `\'` in Python triple-quoted strings outputs a bare `'` in JS — does NOT escape it in JS context
-  - **Review rule**: after writing any new JS string content (especially email HTML, toast messages, button labels), scan for apostrophes and replace with `&#39;`
+  - **`win.document.write('...')` trap**: any `alert('...')`, `toast('...')`, or string with `'` inside a `document.write('...')` call breaks the outer JS string — use `&#39;` or avoid inline single-quoted strings inside document.write entirely
+  - **Review rule**: after writing any new JS string content (especially email HTML, toast messages, button labels, document.write calls), scan for apostrophes and replace with `&#39;`
 
 If something appears broken, first try force-closing the PWA and reopening — the sw.js cache bust (`pic-YYYYMMDD`) requires a full app restart on iOS to take effect.
 
@@ -143,6 +147,7 @@ To force a fresh PWA load after a push: open the URL directly in Safari (not the
 - `build_date` in P[] records will appear after next CI rebuild; existing records have no `build_date` so freshness indicator shows nothing until rebuilt
 
 ## Recent Changes
+- **2026-05-14 (s19/20):** Nine fixes across data integrity, UX, filters, and CI — (1) **Status guard in `loadCloudData()`**: null/undefined `row.data.status` no longer overwrites `p.status`; self-repair logic restores missing status from service evidence (`service_history` or `won_date`) and re-saves to Supabase with a "Restored N clients" toast. (2) **Same guard in `subscribeRealtime()`**: real-time payloads with null status can't corrupt live session state. (3) **P[] validation in `loadCloudData()`**: cloud data only replaces the embedded `P[]` array if records have a `name` field — prevents malformed Supabase data from producing a blank Prospects grid. (4) **`logServiceFromCal()` + `submitServiceLog()`**: both now preserve `p.status` when creating a new `customers[id]` object so every Supabase write includes status. (5) **`_renderApp()` re-renders active tab** after cloud load — Clients/Prospects/Pipeline no longer stay stale after data syncs. (6) **CSS `.panel.on{height:100%}`** + **`sw('all')` reflow trigger** (`void el.offsetHeight`) — fixes iOS Safari collapsing panel to 0 height when switching from `display:none` to `display:block`. (7) **Photo input `position:fixed`** — removes `overflow:hidden` container constraint that prevented iOS gallery picker from appearing (was camera-only). (8) **Follow-up filter fixed**: `followups` preset and `allFollowups` in `renderBriefing()` were using `!isC(p.id)` (no log entries) which always returned empty because you must log a contact to set a follow-up date — changed to `status==='prospect'` check. (9) **`send_briefing.py` Pinellas/recency filters**: all daily briefing sections (callbacks, strike zone, cold targets, NSY) now filter to Pinellas-only prospects with contact recency thresholds (7-day for urgent callbacks, 30-day for others) matching the in-app Home tab behavior. **Email UX**: `emailServiceSchedule(id)` now shows an address input modal (pre-fills saved email, confirms send with "Sending…" → "✓ Sent"); `emailComplianceReport` and ATP Email button now use `sendWithConfirmation()` helper for same UX; `srSendEmail` returns the proxy Promise. **CI**: added `concurrency: group: rebuild` to `rebuild.yml` — concurrent CI runs triggered by rapid commits now cancel in-progress builds instead of racing to push main (fixes the `! [rejected] HEAD -> main (fetch first)` error). **JS syntax errors fixed**: `We'll` apostrophe in emailServiceSchedule broke all buttons — replaced with `&#39;`; `alert('...')` inside `win.document.write('...')` broke outer JS string — removed entirely; both patterns documented in APP_STATUS.md watch list.
 - **2026-05-14 (s18):** Eight fixes across data persistence, email, and report UX — (1) **Root cause of data loss fixed**: Supabase tables `pic_log`, `pic_customers`, `pic_phones`, `pic_settings`, `pic_partner_data` have BOTH `device_id` (NOT NULL original column) AND `user_id` (nullable, added later); all inserts now include both columns; reads/filters use `device_id`; `pic_prospects` and `pic_partners` use `user_id` only. (2) **Status guard in `loadCloudData`**: null/undefined `row.data.status` no longer overwrites `p.status`; self-repair restores missing status from service evidence and re-saves to Supabase. (3) **Same guard in `subscribeRealtime`**: real-time payloads with null status can't corrupt live session. (4) **`_renderApp()` re-renders active tab** after cloud load so Clients/Prospects/Pipeline don't stay stale. (5) **Pages CI fixed**: GITHUB_TOKEN pushes to main don't trigger other workflows; `pages.yml` now has a `workflow_run` trigger on "Rebuild Prospect Tool" completion so Pages deploys after every bot-pushed rebuild. (6) **Email proxy auto-derives URL**: `sendEmailViaProxy` now constructs `pic_email_fn_url` from the baked-in `_SUPABASE_URL` + `/functions/v1/send-email` if not already set — no manual Settings entry needed. Toast z-index raised to 9999 so it's always visible above modals. (7) **Service report email uses customer version**: `srSendEmail` (post-service-log ATP modal) now shows "Next Scheduled Service" date block instead of `$99 First Visit` prospect pitch. (8) **Service → Reports improvements**: photos now included in report HTML; visit dropdown appears when client has multiple visits (most recent first, date + ATP RLU label) — selecting a past visit regenerates the full report for that date including its ATP, photos, filter info, and report number; scroll fixed by removing inner overflow container (buttons now always reachable); Send button disables + shows "Sending…" on tap, turns green "✓ Sent" on success. **Storage**: `service-photos` bucket created with `own_photos` policy (SELECT/INSERT/UPDATE/DELETE, `bucket_id = 'service-photos'`). **RESEND_API_KEY** confirmed present in Supabase Edge Function secrets.
 - **2026-05-12 (s17):** Two features — (1) **Data Freshness Indicator**: `build_date` field baked into every prospect record at CI build time (`str(TODAY)`); header subtitle shows `Data: today` (green) / `Data: yesterday` / `Data: Xd old` (red if >3 days) via `updateDataFreshness()`; yellow warning banner injected below header if data is 3+ days old via `checkDataStaleness()`; both called after every `_renderApp()` in all three `init()` branches; daily briefing email now shows "Data updated: Month Day, Year · N prospects · N CALLBACK" bar between header and stats. (2) **Before/After Photos on Service Visits**: photo section added to service log modal (📷 Add Photos button + hidden `<input type=file multiple>`); `addEventListener` wired after `appendChild` per iOS PWA rules; `_handlePhotoSelection()` shows thumbnails with ✕ remove; `_compressImage()` canvas-compresses to 800px/0.7 quality JPEG; `_uploadServicePhotos()` uploads to Supabase Storage bucket `service-photos` with signed 1-year URLs; `submitServiceLog()` made async — uploads first, passes `photo_urls` array to `logServiceFromCal()`; photos included inline in compliance email via IIFE in `srSendEmail()`; service history rows show 📷 N count with tap-to-view fullscreen overlay via `viewServicePhotos()`; requires user to create `service-photos` bucket in Supabase Storage (private, 5MB limit) + RLS policy (see brief).
 - **2026-05-12 (s16e):** Fix JS syntax errors from Python triple-quoted string escaping — `Can\'t` → `Can't` (typographic apostrophe), `sw(\'data\')` in onclick → `sw(&#39;data&#39;)`, `lines.join('\r\n')` → `\\r\\n` (iCal), `svcNote+'\n\n'` → `\\n\\n`; any one of these caused entire script block to fail parsing, silently breaking all buttons.
@@ -241,9 +246,9 @@ See the SQL in the prompt — creates `pic_prospects`, `pic_partners`, adds `use
 - If Supabase is not configured (no URL/key in env or localStorage), app runs in local-only mode — login screen is skipped, localStorage data used directly. Zero regression for existing usage.
 
 ## Next Session Priorities
-1. **Per-customer report history**: Add a "Reports" sub-tab inside each customer card showing all past service visits with ability to view/print/email any individual report — the visit dropdown in Service → Reports is the interim solution
-2. **Verify photos end-to-end**: Log a service visit with photos → confirm upload toast → go to Service → Reports → confirm photos appear in preview and in the emailed report
-3. **Verify email confirmation**: Send a report → confirm button shows "Sending..." → turns green "✓ Sent" → email actually arrives
+1. **Verify s19/20 fixes**: (a) Toscana Island Clubhouse appears in Clients tab and has correct MRR/ARR after reload; (b) "Follow-Ups" filter on Prospects tab shows prospects with scheduled follow-up dates; (c) Home tab Strike Zone / Cold Targets / Today's Plan only show Pinellas prospects not contacted recently; (d) Email Schedule modal asks for email, pre-fills saved address, shows Sending → ✓ Sent; (e) Compliance Email button shows same send confirmation UX
+2. **Per-customer report history**: Add a "Reports" sub-tab inside each customer card showing all past service visits with ability to view/print/email any individual report — the visit dropdown in Service → Reports is the interim solution
+3. **Verify photos end-to-end**: Log a service visit with photos → confirm upload toast → go to Service → Reports → confirm photos appear in preview and in the emailed report
 
 ## iOS PWA Rules (never violate these)
 - **Buttons in injected HTML:** use inline `ontouchend="event.preventDefault();fn()"` + `onclick="fn()"` — NOT `addEventListener` on innerHTML-injected elements
