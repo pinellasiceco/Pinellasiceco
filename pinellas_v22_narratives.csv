@@ -1,0 +1,949 @@
+visit_id,business_name,city,inspection_date,inspection_type,violation_code,observation,ice_machine_mention,ice_keyword_found,license_number,license_id
+13624053,LA QUINTA INN & SUITES CLEARWATER CENTRAL,CLEARWATER,02/03/2026,Complaint Full,26-03-4,Basic - Dumpster lid open. Manager closed dumpster lids  **Corrected On-Site**,NO,,6215501,6029810
+13624053,LA QUINTA INN & SUITES CLEARWATER CENTRAL,CLEARWATER,02/03/2026,Complaint Full,15-16-5,Basic - Mold-like substance  on caulking of the bathroom tub area in room 170. Manager put the room out of order to replace  the caulking . **Corrective Action Taken**,NO,,6215501,6029810
+13624053,LA QUINTA INN & SUITES CLEARWATER CENTRAL,CLEARWATER,02/03/2026,Complaint Full,22-17-4,High Priority - Ice chute soiled with mold-like substance/slime/dry debris near main laundry room . Employee cleaned ice chute . **Corrected On-Site** **Repeat Violation**,NO,,6215501,6029810
+13624053,LA QUINTA INN & SUITES CLEARWATER CENTRAL,CLEARWATER,02/03/2026,Complaint Full,01-02-4,Portable fire extinguisher pressure gauge indicates the extinguisher is in need of recharge in building C near room 161 . Manager contacted the fire extinguisher service and scheduled a replacement for the following day  . For reporting purposes only. **Corrective Action Taken**,NO,,6215501,6029810
+10865634,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,07/10/2025,Complaint Full,22-20-5,Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Black mold like debris interior of ice machine.,YES,ice machine,6200003,2233783
+10865634,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,07/10/2025,Complaint Full,51-11-4,Basic - Carbon dioxide/helium tanks not adequately secured.  Co2 tanks not secured in rear ice machine room.,YES,ice machine,6200003,2233783
+10865634,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,07/10/2025,Complaint Full,14-11-5,Basic - Equipment in poor repair. Torn gasket on true reach in cooler in prep area.,NO,,6200003,2233783
+10865634,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,07/10/2025,Complaint Full,36-17-5,Basic - Floor tiles missing and/or in disrepair. Floor tile in rear prep area broken.,NO,,6200003,2233783
+10865634,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,07/10/2025,Complaint Full,08B-38-4,Basic - Food stored on floor. Container of sauce on the floor in walk in cooler. Employee moved container of sauce to riser.  **Corrected On-Site**,NO,,6200003,2233783
+10865634,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,07/10/2025,Complaint Full,10-14-5,Basic - Ice bucket/shovel stored on floor between uses. Ice buckets on floor in rear ice machine room.  Employee removed ice buckets.   **Corrective Action Taken**,YES,ice machine,6200003,2233783
+10865634,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,07/10/2025,Complaint Full,23-03-4,"Basic - Nonfood-contact surface soiled with grease, food debris, dirt, slime or dust. Dusty equipment in rear prep area.",NO,,6200003,2233783
+10865634,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,07/10/2025,Complaint Full,12B-13-4,Basic - Opened employee beverage container in a cold holding unit with food to be served to customers. Employee water in reach in cooler on front counter over foods to be served to the public.,NO,,6200003,2233783
+10865634,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,07/10/2025,Complaint Full,08B-17-4,Basic - Unwashed fruits/vegetables stored with ready-to-eat food. Unwashed tomatoes over mozzarella in walk in cooler.  Employee moved tomatoes to lower shelf.  **Corrected On-Site**,NO,,6200003,2233783
+10865634,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,07/10/2025,Complaint Full,21-12-4,Basic - Wet wiping cloth not stored in sanitizing solution between uses. Wet cloth on cutting board in prep area.  Employee put wet cloth in sanitizer bucket.  **Corrected On-Site**,NO,,6200003,2233783
+10865634,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,07/10/2025,Complaint Full,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime. Containers holding dough soiled interior and exterior, mixer head and bowl soiled with flour and food debris, soda nozzle area on self service drink machine soiled with black mold like debris.  **Repeat Violation**",YES,black mold,6200003,2233783
+10865634,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,07/10/2025,Complaint Full,02C-02-5,"Intermediate - Ready-to-eat, time/temperature control for safety food prepared onsite and held more than 24 hours not properly date marked. Lasagna made 7-9 in the am no date mark. Employee dated lasagna.  **Corrected On-Site**",NO,,6200003,2233783
+13526219,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,10/03/2025,Complaint Full,22-20-5,Basic - Accumulation of black/pink mold-like substance in the interior of the ice machine. **Repeat Violation**,YES,ice machine,6200003,2233783
+13526219,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,10/03/2025,Complaint Full,23-24-4,Basic - Buildup of food debris/soil residue on walk in cooler door handle and microwave handles.,NO,,6200003,2233783
+13526219,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,10/03/2025,Complaint Full,51-11-4,"Basic - Carbon dioxide tanks not adequately secured in back room by ice machine. 
+Operator attempted to secure with bungee cord, but there was nothing to tie it down to on one side.  **Repeat Violation**",YES,ice machine,6200003,2233783
+13526219,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,10/03/2025,Complaint Full,14-05-4,Basic - Cardboard used to line food-contact shelves in walk in cooler.,NO,,6200003,2233783
+13526219,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,10/03/2025,Complaint Full,36-34-5,"Basic - Ceiling/ceiling tiles/vents soiled with accumulated food debris, grease, dust, or mold-like substance.
+-ceiling/ wall over deli cooler used for sandwich prep has accumulation of dust and grease debris",NO,,6200003,2233783
+13526219,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,10/03/2025,Complaint Full,40-06-5,"Basic - Employee personal items stored in or above a food preparation area, food, clean equipment and utensils, or single-service items.
+-employee bad stored on dry storage shelf next to cans of food 
+Operator moved away from food areas **Corrected On-Site**",NO,,6200003,2233783
+13526219,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,10/03/2025,Complaint Full,36-22-4,Basic - Floor area(s) covered with standing water in back room by ice machine,YES,ice machine,6200003,2233783
+13526219,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,10/03/2025,Complaint Full,36-73-4,Basic - Floor soiled/has accumulation of debris in walk in cooler.,NO,,6200003,2233783
+13526219,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,10/03/2025,Complaint Full,36-17-5,Basic - Floor tiles missing and/or in disrepair in back of kitchen causing hole and unfinished surface that's not easily cleanable.  **Repeat Violation**,NO,,6200003,2233783
+13526219,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,10/03/2025,Complaint Full,08B-38-4,"Basic - Food stored on floor. 
+-pot of sauce, buckets of pepperoncinis in walk in cooler in kitchen 
+- boxes of canned food in dry storage area
+-boxes of mozzarella cheese in walk in cooler in outdoor shed.  **Repeat Violation**",NO,,6200003,2233783
+13526219,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,10/03/2025,Complaint Full,10-14-5,"Basic - Ice bucket stored on floor between uses.
+Operator removed from floor and hung up inverted.  **Corrected On-Site** **Repeat Violation**",NO,,6200003,2233783
+13526219,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,10/03/2025,Complaint Full,10-08-5,Basic - Ice scoop handle in contact with ice in ice machine.,YES,ice machine,6200003,2233783
+13526219,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,10/03/2025,Complaint Full,22-16-4,Basic - Walk-in cooler interior and shelves have accumulation of grease and food residues.,NO,,6200003,2233783
+13526219,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,10/03/2025,Complaint Full,36-27-5,"Basic - Wall soiled with accumulated grease, and food debris in walk in cooler.",NO,,6200003,2233783
+13526219,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,10/03/2025,Complaint Full,29-03-4,Basic - Water from mop sink accumulating onto ground outside causing large puddle of standing water.,NO,,6200003,2233783
+13526219,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,10/03/2025,Complaint Full,21-07-4,"Basic - Wiping cloth chlorine sanitizing solution not at proper minimum strength, 10 ppm. 
+Operator added chlorine sanitizer and retested at 50 PPM.",NO,,6200003,2233783
+13526219,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,10/03/2025,Complaint Full,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+-Metal dough containers soiled with accumulation of grease and food debris 
+-Soda nozzles soiled with black slime  **Repeat Violation**",NO,,6200003,2233783
+13526219,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,10/03/2025,Complaint Full,11-26-1,"Intermediate - No proof provided that food employees are informed of their responsibility to report to the person in charge information about their health and activities related to foodborne illnesses.
+Two employees, one food handling, one cashiering and sanitizing tables lack proof of health reporting responsibility. 
+Operator had employees sign Health reporting agreement.  **Corrected On-Site**",NO,,6200003,2233783
+13526219,LITTLE ITALY PIZZA SHOP,ST PETERSBURG,10/03/2025,Complaint Full,53B-13-5,"Intermediate - Proof of required state approved employee training not available for some employees. To order approved program food safety material, call DBPR contracted provider: Florida Restaurant and Lodging Association (SafeStaff) 866-372-7233.
+One female staff member engaging in food handling has no proof of training.",NO,,6200003,2233783
+13459902,CHURCH'S CHICKEN #399,ST. PETERSBURG,07/16/2025,Complaint Full,23-24-4,Basic - Buildup of food debris/soil residue on equipment door handles. Door handle to walk-in cooler soiled.,NO,,6200009,3998470
+13459902,CHURCH'S CHICKEN #399,ST. PETERSBURG,07/16/2025,Complaint Full,36-34-5,"Basic - Ceiling/ceiling tiles/vents soiled with accumulated food debris, grease, dust, or mold-like substance. Ceiling tiles and vents in dining room soiled.",NO,,6200009,3998470
+13459902,CHURCH'S CHICKEN #399,ST. PETERSBURG,07/16/2025,Complaint Full,14-11-5,"Basic - Equipment in poor repair.
+
+Reach-in freezer, across from fryers on cook line, with a a broken door due to the hinge being disconnected. When seated properly, the door remains sealed and closed. Employees currently not using the side of the freezer with the broken door.
+
+Side door to the walk-in cooler with broken door handle.",NO,,6200009,3998470
+13459902,CHURCH'S CHICKEN #399,ST. PETERSBURG,07/16/2025,Complaint Full,36-22-4,Basic - Floor area(s) covered with standing water. Standing water in dry storage area.,NO,,6200009,3998470
+13459902,CHURCH'S CHICKEN #399,ST. PETERSBURG,07/16/2025,Complaint Full,36-73-4,"Basic - Floor soiled/has accumulation of debris.
+
+Underneath fryers at cook-line.
+
+Underneath front counter/cash register.
+
+Floor inside walk-in cooler",NO,,6200009,3998470
+13459902,CHURCH'S CHICKEN #399,ST. PETERSBURG,07/16/2025,Complaint Full,36-11-4,Basic - Floors not maintained smooth and durable. Cracked tile and exposed concrete in hallway past dry storage area.,NO,,6200009,3998470
+13459902,CHURCH'S CHICKEN #399,ST. PETERSBURG,07/16/2025,Complaint Full,10-13-5,Basic - In-use ice bucket for ice machine located outside not stored in a protected manner between uses. Buckets not stored inverted and on top of hot water heater. Employee relocated. **Corrected On-Site**,YES,ice machine,6200009,3998470
+13459902,CHURCH'S CHICKEN #399,ST. PETERSBURG,07/16/2025,Complaint Full,23-03-4,"Basic - Nonfood-contact surface soiled with grease, food debris, dirt, slime or dust. 
+
+Spray handle at three compartment sink with heavy accumulation of food debris at the handle. 
+
+Front of ovens across from fryers with build of debris.",NO,,6200009,3998470
+13459902,CHURCH'S CHICKEN #399,ST. PETERSBURG,07/16/2025,Complaint Full,36-64-5,"Basic - Objectionable odors in bathroom or other areas of the establishment. 
+
+Women's restroom smells from possible plumbing issues.",NO,,6200009,3998470
+13459902,CHURCH'S CHICKEN #399,ST. PETERSBURG,07/16/2025,Complaint Full,33-16-4,Basic - Open dumpster lid. Employee closed lid during inspection. **Corrected On-Site**,NO,,6200009,3998470
+13459902,CHURCH'S CHICKEN #399,ST. PETERSBURG,07/16/2025,Complaint Full,22-16-4,Basic - Reach-in cooler interior/shelves have accumulation of soil residues. Reach in cooler underneath ovens at cook-line soiled.,NO,,6200009,3998470
+13459902,CHURCH'S CHICKEN #399,ST. PETERSBURG,07/16/2025,Complaint Full,29-20-5,"Basic - Standing water or very slow draining water in handwash sink, three-compartment sink, or mop sink. Handwash sink inside women's restroom slow draining with standing water.",NO,,6200009,3998470
+13459902,CHURCH'S CHICKEN #399,ST. PETERSBURG,07/16/2025,Complaint Full,06-01-5,Basic - Time/temperature control for safety food thawed in an improper manner. Raw chicken commercially packaged observed thawing in three compartment sink in standing water. Discussed with employee who drained water and ran cool water over chicken. **Corrected On-Site**,NO,,6200009,3998470
+13459902,CHURCH'S CHICKEN #399,ST. PETERSBURG,07/16/2025,Complaint Full,42-01-4,Basic - Wet mop not stored in a manner to allow the mop to dry. Mops stored in dry storage area with mop heads down and resting on the floor.,NO,,6200009,3998470
+13459902,CHURCH'S CHICKEN #399,ST. PETERSBURG,07/16/2025,Complaint Full,50-17-3,High Priority - Operating with an expired Division of Hotels and Restaurants license. License expired 2/1/2025. **Admin Complaint**,NO,,6200009,3998470
+13459902,CHURCH'S CHICKEN #399,ST. PETERSBURG,07/16/2025,Complaint Full,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime. Interior of oven located across from fryers on cook-line soiled with old food debris.",NO,,6200009,3998470
+10962506,CHATTAWAY DRIVE INN,ST PETERSBURG,07/21/2025,Complaint Full,32-02-4,Basic - All three doors left open other than during cleaning or maintenance. **Warning**,NO,,6200047,2233839
+10962506,CHATTAWAY DRIVE INN,ST PETERSBURG,07/21/2025,Complaint Full,51-11-4,Basic - Carbon dioxide tanks in bar area not adequately secured. **Warning**,NO,,6200047,2233839
+10962506,CHATTAWAY DRIVE INN,ST PETERSBURG,07/21/2025,Complaint Full,32-12-6,Basic - Covered waste receptacle not provided in women's and unisex bathroom. **Warning**,NO,,6200047,2233839
+10962506,CHATTAWAY DRIVE INN,ST PETERSBURG,07/21/2025,Complaint Full,40-06-5,"Basic - Employee personal items stored in or above a food preparation area, food, clean equipment and utensils, or single-service items.
+Employee personal bag stored on plates on bottom shelf of prep table next to reach-in cooler on cooks line.
+Employee phone stored on meat slicer on prep table near three-compartment sink.
+Employee removed phone and bag. Discussed cleaning and sanitizing meat slicer and plates. **Warning**",NO,,6200047,2233839
+10962506,CHATTAWAY DRIVE INN,ST PETERSBURG,07/21/2025,Complaint Full,14-11-5,"Basic - Equipment in poor repair.
+
+Shelf storing pots and pans in warewashing area  is rusted.
+Torn gasket on left reach-in cooler door. **Repeat Violation** **Admin Complaint**",NO,,6200047,2233839
+10962506,CHATTAWAY DRIVE INN,ST PETERSBURG,07/21/2025,Complaint Full,36-17-5,Basic - Floor tiles missing and/or in disrepair throughout kitchen area. **Warning**,NO,,6200047,2233839
+10962506,CHATTAWAY DRIVE INN,ST PETERSBURG,07/21/2025,Complaint Full,36-11-4,Basic - Floors not maintained smooth and durable. **Warning**,NO,,6200047,2233839
+10962506,CHATTAWAY DRIVE INN,ST PETERSBURG,07/21/2025,Complaint Full,08B-38-4,"Basic - Food stored on floor.
+
+Five gallon container of pickles stored on floor in walk-in cooler.
+Box of onion rings and sweet potato fries stored on floor in walk-in freezer.
+Employee placed items on bottom shelf in walk-in cooler and walk-in freezer. **Corrected On-Site** **Warning**",NO,,6200047,2233839
+10962506,CHATTAWAY DRIVE INN,ST PETERSBURG,07/21/2025,Complaint Full,36-68-5,Basic - Hood ventilation system inadequate as evidenced by grease accumulation on walls/ceiling. **Warning**,NO,,6200047,2233839
+10962506,CHATTAWAY DRIVE INN,ST PETERSBURG,07/21/2025,Complaint Full,10-08-5,"Basic - Ice scoop handle in contact with ice in ice machine located at rear kitchen exit.
+Employee removed ice scoop from ice. **Corrected On-Site** **Warning**",YES,ice machine,6200047,2233839
+10962506,CHATTAWAY DRIVE INN,ST PETERSBURG,07/21/2025,Complaint Full,10-20-4,Basic - In-use tongs stored on equipment door handle between uses. **Warning**,NO,,6200047,2233839
+10962506,CHATTAWAY DRIVE INN,ST PETERSBURG,07/21/2025,Complaint Full,23-03-4,"Basic - Nonfood-contact surface soiled with grease, food debris, dirt, slime or dust.
+Mold-like substance on ceiling of walk-in cooler in bar area. **Repeat Violation** **Admin Complaint**",NO,,6200047,2233839
+10962506,CHATTAWAY DRIVE INN,ST PETERSBURG,07/21/2025,Complaint Full,35B-05-4,"Basic - Outer openings not protected during operation and vermin and/or environmental cross contamination present.
+
+No air curtains at bar outer opening.. Fly present in kitchen. **Warning**",NO,,6200047,2233839
+10962506,CHATTAWAY DRIVE INN,ST PETERSBURG,07/21/2025,Complaint Full,22-16-4,Basic - Reach-in cooler on cooks line across from gas stove interior have accumulation of soil residues. **Warning**,NO,,6200047,2233839
+10962506,CHATTAWAY DRIVE INN,ST PETERSBURG,07/21/2025,Complaint Full,36-22-4,Basic - Standing water covering corner floor on cooks line. **Warning**,NO,,6200047,2233839
+10962506,CHATTAWAY DRIVE INN,ST PETERSBURG,07/21/2025,Complaint Full,08B-12-5,"Basic - Stored food not covered.
+Cut lemons in bar area not covered.
+Operator covered item. **Corrected On-Site** **Warning**",NO,,6200047,2233839
+10962506,CHATTAWAY DRIVE INN,ST PETERSBURG,07/21/2025,Complaint Full,14-17-4,Basic - Walk-in cooler shelves with rust that has pitted the surface and walk-in cooler in bar area. **Repeat Violation** **Warning**,NO,,6200047,2233839
+10962506,CHATTAWAY DRIVE INN,ST PETERSBURG,07/21/2025,Complaint Full,14-06-4,"Basic - Wood food-contact surface not properly sealed.
+Wood used as a shelf to store pans of flour and wing sauce pans not sealed. Located at the end of cooks line. **Warning**",NO,,6200047,2233839
+10962506,CHATTAWAY DRIVE INN,ST PETERSBURG,07/21/2025,Complaint Full,12A-07-5,"High Priority - Employee failed to wash hands before putting on gloves to initiate a task working with food.
+Observed employee smoking outside of establishment enter kitchen, don gloves and begin touching fry baskets without first washing hands.
+Discussed with operator proper hand-hygiene techniques. **Warning**",NO,,6200047,2233839
+10962506,CHATTAWAY DRIVE INN,ST PETERSBURG,07/21/2025,Complaint Full,35A-02-7,"High Priority - Live, small flying insects found in kitchen. Fly did not land on food or food contact surfaces. **Warning**",NO,,6200047,2233839
+10962506,CHATTAWAY DRIVE INN,ST PETERSBURG,07/21/2025,Complaint Full,50-17-3,"High Priority - Operating with an expired Division of Hotels and Restaurants license.
+Establishment is open and operating. License expired 02/01/2025. **Admin Complaint**",NO,,6200047,2233839
+10962506,CHATTAWAY DRIVE INN,ST PETERSBURG,07/21/2025,Complaint Full,03A-02-5,"High Priority - Time/temperature control for safety food cold held at greater than 41 degrees Fahrenheit.
+
+From reach-in cooler on cooks line. Operator placed items in walk-in freezer. Rechecked items
+a. coleslaw  (48F - Cold Holding); 40f
+b. sliced tomatoes  (57F - Cold Holding); 45f
+c. cut lettuce (68F - Cold Holding); 49f
+d. raw beef patty (45F - Cold Holding) 34f **Corrective Action Taken** **Warning**",NO,,6200047,2233839
+10962506,CHATTAWAY DRIVE INN,ST PETERSBURG,07/21/2025,Complaint Full,29-34-4,"High Priority - Vacuum breaker missing at hose bibb or on fitting/splitter added to hose bibb.
+Water hose connected to water faucet at rear kitchen exit with a vacuum breaker. **Repeat Violation** **Admin Complaint**",NO,,6200047,2233839
+10962506,CHATTAWAY DRIVE INN,ST PETERSBURG,07/21/2025,Complaint Full,31B-02-4,"Intermediate - No paper towels or mechanical hand drying device provided at handwash sink near three-compartment sink.
+Employee provided paper towels. **Corrected On-Site** **Warning**",NO,,6200047,2233839
+10962506,CHATTAWAY DRIVE INN,ST PETERSBURG,07/21/2025,Complaint Full,53B-01-5,"Intermediate - No proof of required state approved employee training provided for any employees. To order approved program food safety material, call DBPR contracted provider: Florida Restaurant and Lodging Association (SafeStaff) 866-372-7233. **Warning**",NO,,6200047,2233839
+10962506,CHATTAWAY DRIVE INN,ST PETERSBURG,07/21/2025,Complaint Full,11-26-1,Intermediate - No proof provided that recently hired food employees are informed of their responsibility to report to the person in charge information about their health and activities related to foodborne illnesses. **Warning**,NO,,6200047,2233839
+10962506,CHATTAWAY DRIVE INN,ST PETERSBURG,07/21/2025,Complaint Full,41-17-4,"Intermediate - Squeeze bottles located in warewashing and bar areas containing blue substance not labeled.
+Employee labeled squeeze bottles soap. **Corrected On-Site** **Repeat Violation** **Admin Complaint**",NO,,6200047,2233839
+10962506,CHATTAWAY DRIVE INN,ST PETERSBURG,07/21/2025,Complaint Full,45-05-4,Portable fire extinguisher missing from its designated location. For reporting purposes only.,NO,,6200047,2233839
+13619078,CHATTAWAY DRIVE INN,ST PETERSBURG,02/11/2026,Complaint Full,51-11-4,"Basic - Carbon dioxide/helium tanks not adequately secured.
+CO2 tanks underneath outside bar counter.  **Repeat Violation**",NO,,6200047,2233839
+13619078,CHATTAWAY DRIVE INN,ST PETERSBURG,02/11/2026,Complaint Full,36-17-5,"Basic - Floor tiles missing and/or in disrepair.
+Throughout the kitchen area.  **Repeat Violation**",NO,,6200047,2233839
+13619078,CHATTAWAY DRIVE INN,ST PETERSBURG,02/11/2026,Complaint Full,08B-38-4,"Basic - Food stored on floor.
+Buckets of pickles stored in floor inside walk in cooler.",NO,,6200047,2233839
+13619078,CHATTAWAY DRIVE INN,ST PETERSBURG,02/11/2026,Complaint Full,14-69-4,"Basic - Ice buildup in reach-in freezer and/or walk-in freezer.
+Observed on walk in freezer door frame.",NO,,6200047,2233839
+13619078,CHATTAWAY DRIVE INN,ST PETERSBURG,02/11/2026,Complaint Full,35A-02-7,"High Priority - Live, small flying insects found
+Observed 4 live bees landing on drainboard shelving racks above three compartment sink in outside bar area. 
+
+6 live bees observed landing on lemonade, sweet tea, and unsweetened tea dispensers and flying into the nozzles stored outside at bar entrance area. Manager washed and sanitized the dispensers and nozzles. 
+
+Observed 4 live flies fling around beer taps nozzle at end of the outside bar. Flies not landing on food or food contact surfaces.
+ **Repeat Violation** **Warning**",NO,,6200047,2233839
+13619078,CHATTAWAY DRIVE INN,ST PETERSBURG,02/11/2026,Complaint Full,50-17-3,"High Priority - Operating with an expired Division of Hotels and Restaurants license.
+License expired on 2/1/2026. Discussed with person in charge.",NO,,6200047,2233839
+13619078,CHATTAWAY DRIVE INN,ST PETERSBURG,02/11/2026,Complaint Full,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+Food slicer soiled with dried food debris.",NO,,6200047,2233839
+13619078,CHATTAWAY DRIVE INN,ST PETERSBURG,02/11/2026,Complaint Full,16-37-1,"Intermediate - No chemical test kit provided when using sanitizer at three-compartment sink/warewashing machine or wiping cloths.
+No chlorine test kit observed.",NO,,6200047,2233839
+13630953,CHATTAWAY DRIVE INN,ST PETERSBURG,02/20/2026,Complaint Full,36-17-5,"Basic - - From initial inspection : Basic - Floor tiles missing and/or in disrepair.
+Throughout the kitchen area.  **Repeat Violation**     - From follow-up inspection 2026-02-20:  **Time Extended**",NO,,6200047,2233839
+13630953,CHATTAWAY DRIVE INN,ST PETERSBURG,02/20/2026,Complaint Full,08B-38-4,"Basic - - From initial inspection : Basic - Food stored on floor.
+Buckets of pickles stored in floor inside walk in cooler.     - From follow-up inspection 2026-02-20: Buckets of pickles stored in floor inside walk in cooler at the time of callback inspection.  **Time Extended**",NO,,6200047,2233839
+13630953,CHATTAWAY DRIVE INN,ST PETERSBURG,02/20/2026,Complaint Full,14-69-4,"Basic - - From initial inspection : Basic - Ice buildup in reach-in freezer and/or walk-in freezer.
+Observed on walk in freezer door frame.     - From follow-up inspection 2026-02-20:  **Time Extended**",NO,,6200047,2233839
+13630953,CHATTAWAY DRIVE INN,ST PETERSBURG,02/20/2026,Complaint Full,22-02-4,"Intermediate - - From initial inspection : Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+Food slicer soiled with dried food debris. 
+     - From follow-up inspection 2026-02-20:  **Time Extended**",NO,,6200047,2233839
+10936237,CABANAS COASTAL GRILL,CLEARWATER BEACH,08/11/2025,Routine - Food,10-20-4,Basic - In-use tongs stored on equipment door handle between uses. **Corrected On-Site**,NO,,6200070,7429884
+10936237,CABANAS COASTAL GRILL,CLEARWATER BEACH,08/11/2025,Routine - Food,08B-39-4,Basic - Raw fruits/vegetables not washed prior to preparation. Romaine lettuce heads. **Corrected On-Site**,NO,,6200070,7429884
+10936237,CABANAS COASTAL GRILL,CLEARWATER BEACH,08/11/2025,Routine - Food,22-41-4,High Priority - Dishmachine chlorine sanitizer not at proper minimum strength. Discontinue use of dishmachine for sanitizing and set up manual sanitization until dishmachine is repaired and sanitizing properly. 0 ppm.,NO,,6200070,7429884
+13489144,CABANAS COASTAL GRILL,CLEARWATER BEACH,04/02/2026,Routine - Food,22-20-5,Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Inside machine. **Corrected On-Site**,YES,ice machine,6200070,7429884
+13489144,CABANAS COASTAL GRILL,CLEARWATER BEACH,04/02/2026,Routine - Food,12B-12-5,Basic - Employee drinking from an unenclosed beverage container in a food preparation/clean dishware area and the container does not have a dispensing mechanism to prevent hand contact with lip contact area of drink container. Cooks line. **Corrective Action Taken**,NO,,6200070,7429884
+13489144,CABANAS COASTAL GRILL,CLEARWATER BEACH,04/02/2026,Routine - Food,08A-05-6,"High Priority - Raw animal food stored over/not properly separated from ready-to-eat food.
+Cooked shrimp under raw shrimp in walk in cooler. **Corrected On-Site**",NO,,6200070,7429884
+13489144,CABANAS COASTAL GRILL,CLEARWATER BEACH,04/02/2026,Routine - Food,03A-02-5,"High Priority - Time/temperature control for safety food cold held at greater than 41 degrees Fahrenheit. Butter 51f, item moved to walk in cooler. **Corrective Action Taken**",NO,,6200070,7429884
+10901635,BURGER KING #1963,ST. PETERSBURG,09/15/2025,Routine - Food,22-08-4,"Basic - Interior of oven/microwave has accumulation of black substance/grease/food debris.
+
+Oven to hold biscuits with old debris.",NO,,6200105,5423699
+10915035,GIGIS RESTAURANT,TREASURE ISLAND,12/08/2025,Routine - Food,22-20-5,Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,YES,ice machine,6200121,2233932
+10915035,GIGIS RESTAURANT,TREASURE ISLAND,12/08/2025,Routine - Food,14-01-5,Basic - Bowl or other container with no handle used to dispense food. Portioning cups in seasoning bins in dry storage,NO,,6200121,2233932
+10915035,GIGIS RESTAURANT,TREASURE ISLAND,12/08/2025,Routine - Food,08B-31-4,"Basic - Food stored in undrained ice.
+Raw squid in untrained ice water in glass cooler",NO,,6200121,2233932
+10915035,GIGIS RESTAURANT,TREASURE ISLAND,12/08/2025,Routine - Food,10-20-4,"Basic - In-use tongs stored on equipment door handle between uses.
+Oven door handle on cook line",NO,,6200121,2233932
+10915035,GIGIS RESTAURANT,TREASURE ISLAND,12/08/2025,Routine - Food,16-38-5,Basic - Inaccurate/damaged temperature and/or pressure gauge(s) on dishmachine.,NO,,6200121,2233932
+10915035,GIGIS RESTAURANT,TREASURE ISLAND,12/08/2025,Routine - Food,23-03-4,"Basic - Nonfood-contact surface soiled with grease, food debris, dirt, slime or dust.
+Deli cooler gaskets soiled on cook line",NO,,6200121,2233932
+10915035,GIGIS RESTAURANT,TREASURE ISLAND,12/08/2025,Routine - Food,14-17-4,Basic - Walk-in cooler/freezer shelves with rust that has pitted the surface.,NO,,6200121,2233932
+10915035,GIGIS RESTAURANT,TREASURE ISLAND,12/08/2025,Routine - Food,21-07-4,"Basic - Wiping cloth chlorine sanitizing solution not at proper minimum strength. Sanitizer bucket on cook line 200ppm, staff diluted 100ppm **Corrected On-Site**",NO,,6200121,2233932
+13555633,ATHENS RESTAURANT,SAFETY HARBOR,03/25/2026,Routine - Food,23-24-4,"Basic - Buildup of food debris/soil residue on equipment door handles.
+White refrigerator in kitchen, chest freezers **Repeat Violation**",NO,,6200165,8917203
+13555633,ATHENS RESTAURANT,SAFETY HARBOR,03/25/2026,Routine - Food,36-73-4,"Basic - Floor soiled/has accumulation of debris.
+Floors soiled cook line, prep areas, storage areas
+Walls soiled cook line, prep area and storage area. **Repeat Violation**",NO,,6200165,8917203
+13555633,ATHENS RESTAURANT,SAFETY HARBOR,03/25/2026,Routine - Food,23-03-4,"Basic - Nonfood-contact surface soiled with grease, food debris, dirt, slime or dust.
+Dry storage shelving
+Lower shelves of prep tables, exterior of bulk sugar bin.",NO,,6200165,8917203
+13555633,ATHENS RESTAURANT,SAFETY HARBOR,03/25/2026,Routine - Food,08B-12-5,"Basic - Stored food not covered.
+Bacon in reach in cooler removed from its box and stored without being covered or protected.",NO,,6200165,8917203
+13555633,ATHENS RESTAURANT,SAFETY HARBOR,03/25/2026,Routine - Food,02D-01-5,"Basic - Working containers of food removed from original container not identified by common name.
+Squeeze bottles on cook line containing foods removed from their original container original container not labeled with common name. Discussed the need to label all food removed from the original container. **Repeat Violation**",NO,,6200165,8917203
+13555633,ATHENS RESTAURANT,SAFETY HARBOR,03/25/2026,Routine - Food,50-17-3,High Priority - Operating with an expired Division of Hotels and Restaurants license.,NO,,6200165,8917203
+13555633,ATHENS RESTAURANT,SAFETY HARBOR,03/25/2026,Routine - Food,08A-04-5,"High Priority - Raw animal food stored over or with unwashed produce.
+Raw eggs stored over unwashed celery. Operator moved the raw eggs to gain compliance",NO,,6200165,8917203
+13555633,ATHENS RESTAURANT,SAFETY HARBOR,03/25/2026,Routine - Food,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+Can opener",NO,,6200165,8917203
+13555633,ATHENS RESTAURANT,SAFETY HARBOR,03/25/2026,Routine - Food,41-04-4,"Intermediate - Toxic substance/chemical on premise that is not required for the operation of establishment.
+Paint stored in storage room near rest rooms near soda, dishes",NO,,6200165,8917203
+10903720,TEDS LUNCHEONETTE,LARGO,08/26/2025,Routine - Food,14-69-4,Basic - Ice buildup in reach-in freezer. Chest freezer. **Repeat Violation**,NO,,6200182,2233978
+10903720,TEDS LUNCHEONETTE,LARGO,08/26/2025,Routine - Food,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+Can opener blade.",NO,,6200182,2233978
+10903720,TEDS LUNCHEONETTE,LARGO,08/26/2025,Routine - Food,02C-02-5,"Intermediate - Ready-to-eat, time/temperature control for safety food prepared onsite and held more than 24 hours not properly date marked.
+Cooked roast beef.",NO,,6200182,2233978
+13504809,TEDS LUNCHEONETTE,LARGO,02/10/2026,Routine - Food,12A-27-4,High Priority - Employee cracked raw shell eggs and then handled ready-to-eat food and/or clean equipment or utensils without washing hands.,NO,,6200182,2233978
+13504809,TEDS LUNCHEONETTE,LARGO,02/10/2026,Routine - Food,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+Slicer. **Repeat Violation**",NO,,6200182,2233978
+13620502,CRABBY'S BEACHSIDE PAVILION,CLEARWATER,04/07/2026,Routine - Food,29-08-4,Basic - Drain for coffee not secured in dump sink.,NO,,6200230,9859406
+13620502,CRABBY'S BEACHSIDE PAVILION,CLEARWATER,04/07/2026,Routine - Food,40-06-5,"Basic - Employee personal items stored in or above a food preparation area, food, clean equipment and utensils, or single-service items. 
+Backpacks stored on soda boxes. **Corrective Action Taken**",NO,,6200230,9859406
+13620502,CRABBY'S BEACHSIDE PAVILION,CLEARWATER,04/07/2026,Routine - Food,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+Soda gun nozzles at bar soiled. **Corrected On-Site**",NO,,6200230,9859406
+13620502,CRABBY'S BEACHSIDE PAVILION,CLEARWATER,04/07/2026,Routine - Food,16-62-1,Intermediate - No measuring device available for measuring utensil surface temperature when using hot water as sanitizer in a dishmachine.,NO,,6200230,9859406
+10897247,PALM PAVILION,CLEARWATER BCH,10/14/2025,Routine - Food,14-01-5,Basic - Bowl or other container with no handle used to dispense food. Bowl no handle in salsa used for portioning. **Corrected On-Site**,NO,,6200230,2233995
+10897247,PALM PAVILION,CLEARWATER BCH,10/14/2025,Routine - Food,36-34-5,"Basic - Ceiling/ceiling tiles/vents soiled with accumulated food debris, grease, dust, or mold-like substance.
+Kitchen area.",NO,,6200230,2233995
+10897247,PALM PAVILION,CLEARWATER BCH,10/14/2025,Routine - Food,14-69-4,Basic - Ice buildup in walk-in freezer. **Repeat Violation**,NO,,6200230,2233995
+10897247,PALM PAVILION,CLEARWATER BCH,10/14/2025,Routine - Food,10-17-4,"Basic - In-use knife/knives stored in cracks between pieces of equipment.
+Alley. **Corrected On-Site**",NO,,6200230,2233995
+10897247,PALM PAVILION,CLEARWATER BCH,10/14/2025,Routine - Food,31B-04-4,"Basic - No handwashing sign provided at a hand sink used by food employees.
+Service area.",NO,,6200230,2233995
+10897247,PALM PAVILION,CLEARWATER BCH,10/14/2025,Routine - Food,21-07-4,"Basic - Wiping cloth chlorine sanitizing solution not at proper minimum strength. 0 ppm, container not correct, correct chemical added to correct dispenser. **Corrected On-Site**",NO,,6200230,2233995
+10897247,PALM PAVILION,CLEARWATER BCH,10/14/2025,Routine - Food,03B-01-6,"High Priority - Time/temperature control for safety food, other than whole meat roast, hot held at less than 135 degrees Fahrenheit. , cooked chicken 101f, cooked rice 78f, found in warmer that is not working correctly.  Items moved back to steamer for quick reheat. **Corrective Action Taken**",NO,,6200230,2233995
+10897247,PALM PAVILION,CLEARWATER BCH,10/14/2025,Routine - Food,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+Can opener blade.
+Slicer.
+Soda nozzles.",NO,,6200230,2233995
+10897247,PALM PAVILION,CLEARWATER BCH,10/14/2025,Routine - Food,31B-02-4,"Intermediate - No paper towels or mechanical hand drying device provided at handwash sink.
+Both holders in back kitchen area. **Corrected On-Site**",NO,,6200230,2233995
+10907986,ROYAL PALM ROOM,ST.PETE BEACH,10/20/2025,Routine - Food,14-69-4,Basic - Ice buildup in walk-in freezer.,NO,,6200234,8635466
+10907986,ROYAL PALM ROOM,ST.PETE BEACH,10/20/2025,Routine - Food,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+Mixer and guard.",NO,,6200234,8635466
+10922376,ARBY'S #47,ST PETERSBURG,10/29/2025,Routine - Food,36-73-4,Basic - Floor soiled/has accumulation of debris underneath dry station. **Repeat Violation**,NO,,6200241,2234002
+10922376,ARBY'S #47,ST PETERSBURG,10/29/2025,Routine - Food,36-17-5,Basic - Floor tiles missing and/or in disrepair at mop sink,NO,,6200241,2234002
+10922376,ARBY'S #47,ST PETERSBURG,10/29/2025,Routine - Food,14-69-4,"Basic - Ice buildup in reach-in freezer and/or walk-in freezer.
+
+Ice buildup up in walk-in freezer",NO,,6200241,2234002
+10922376,ARBY'S #47,ST PETERSBURG,10/29/2025,Routine - Food,22-08-4,"Basic - Interior of oven/microwave has accumulation of black substance/grease/food debris.
+
+Interior of Cadco Bakerlux  oven soiled in rear prep area. **Repeat Violation**",NO,,6200241,2234002
+10922376,ARBY'S #47,ST PETERSBURG,10/29/2025,Routine - Food,23-03-4,"Basic - Nonfood-contact surface soiled with grease, food debris, dirt, slime or dust.
+
+Gaskets soiled on reach-in cooler on line **Repeat Violation**",NO,,6200241,2234002
+10922376,ARBY'S #47,ST PETERSBURG,10/29/2025,Routine - Food,29-34-4,High Priority - Vacuum breaker missing at hose bibb or on fitting/splitter added to hose bibb at mop sink.,NO,,6200241,2234002
+13541021,THEE LIBERTY GRILL,CLEARWATER,10/09/2025,Food-Licensing Inspection,36-24-5,"Basic - -Hole in or other damage to wall by hot water heater 
+-Ceiling tile missing.above walk in cooler",NO,,6200341,9755028
+13541021,THEE LIBERTY GRILL,CLEARWATER,10/09/2025,Food-Licensing Inspection,14-11-5,"Basic - Equipment in poor repair. Torn gaskets on reach in cooler, drawers at cook line and front expo area  . Reviewed with manager",NO,,6200341,9755028
+13541021,THEE LIBERTY GRILL,CLEARWATER,10/09/2025,Food-Licensing Inspection,14-69-4,Basic - Ice buildup in  walk-in freezer. Service scheduled per manager,NO,,6200341,9755028
+13541021,THEE LIBERTY GRILL,CLEARWATER,10/09/2025,Food-Licensing Inspection,21-04-4,Basic - In-use wet wiping cloth/towel used under cutting board. Reviewed with manager . Wet towel removed from under cutting board .  **Corrected On-Site**,NO,,6200341,9755028
+13541021,THEE LIBERTY GRILL,CLEARWATER,10/09/2025,Food-Licensing Inspection,23-03-4,"Basic - Nonfood-contact surface soiled with grease, food debris, dirt, slime or dust.
+- soiled gaskets on cooler at cook line opposite grill . Employee cleaned gaskets  **Corrected On-Site**",NO,,6200341,9755028
+13541021,THEE LIBERTY GRILL,CLEARWATER,10/09/2025,Food-Licensing Inspection,22-16-4,Basic - Reach-in cooler interior/shelves have accumulation of soil residues at cook line . Employee cleaned reach in cooler **Corrected On-Site**,NO,,6200341,9755028
+13541021,THEE LIBERTY GRILL,CLEARWATER,10/09/2025,Food-Licensing Inspection,22-41-4,High Priority - Dishmachine chlorine sanitizer not at proper minimum strength. Discontinue use of dishmachine for sanitizing and set up manual sanitization until dishmachine is repaired and sanitizing properly. Dish machine run three times 0 ppm . Manager set up the triple sink and scheduled for service this day,NO,,6200341,9755028
+13541021,THEE LIBERTY GRILL,CLEARWATER,10/09/2025,Food-Licensing Inspection,50-08-7,"High Priority - Establishment operating without a license from the Division of Hotels and Restaurants. Operator must obtain a public food service license from the Division of Hotels and Restaurants within 60 days. Submit a license application and payment to DBPR/Bureau of Central Intake Unit, 2601 Blair Stone Rd., Tallahassee, FL 32399-0783. To apply online or obtain an application for license visit https://www2.myfloridalicense.com/hotels-restaurants/",NO,,6200341,9755028
+13541021,THEE LIBERTY GRILL,CLEARWATER,10/09/2025,Food-Licensing Inspection,35A-05-4,"High Priority - Roach activity present as evidenced by live roaches found.
+-1 dead roach on underside on service window . Employee removed roach and cleaned area 
+- 1 dead roach on ceiling tile in office . Employee removed roach  **Corrective Action Taken**",NO,,6200341,9755028
+13541021,THEE LIBERTY GRILL,CLEARWATER,10/09/2025,Food-Licensing Inspection,35A-04-4,"High Priority - Rodent activity present as evidenced by rodent droppings found.
+- 1 rodent droppings on top of hot water heater in dry storage area 
+- 1 rodent dropping on wall wood near hot water heater 2 rodent droppings on shelf in dry storage area . 
+Employee removed rodent droppings and cleaned area  
+-1 rodent dropping on floor in the office . Employee removed rodent dropping and cleaned area **Corrective Action Taken**",NO,,6200341,9755028
+13541021,THEE LIBERTY GRILL,CLEARWATER,10/09/2025,Food-Licensing Inspection,02B-04-5,Intermediate - Menu contains an item made with a raw/undercooked animal food as an ingredient and description of item ( Eggs Benedict -poached eggs) does not inform consumer of raw/undercooked animal food ingredient. Manager added asterisk to food item and consumer advisory  **Corrected On-Site**,NO,,6200341,9755028
+13541021,THEE LIBERTY GRILL,CLEARWATER,10/09/2025,Food-Licensing Inspection,16-37-1,Intermediate - No chemical test kit provided when using sanitizer at three-compartment sink/warewashing machine or wiping cloths.,NO,,6200341,9755028
+10938298,BON APPETIT RESTAURANT,DUNEDIN,12/16/2025,Routine - Food,35A-06-4,"Basic - Accumulation of dead or trapped birds, insects, rodents, or other pests, in control devices.
+Hanging on wall near hand sink of kitchen entrance, multiple dead trapped insects in control device sticky liner. Chef removed item.  **Corrected On-Site**",NO,,6200358,8662794
+10938298,BON APPETIT RESTAURANT,DUNEDIN,12/16/2025,Routine - Food,50-09-4,"Basic - Current Hotel and Restaurant license not displayed.
+Person in charge provided current printed license to be observed.  **Corrected On-Site**",NO,,6200358,8662794
+10938298,BON APPETIT RESTAURANT,DUNEDIN,12/16/2025,Routine - Food,14-09-4,"Basic - Cutting board has cut marks and is no longer cleanable.
+Grooved cutting board on reach in deli coolers on cook line.",NO,,6200358,8662794
+10938298,BON APPETIT RESTAURANT,DUNEDIN,12/16/2025,Routine - Food,01B-01-4,"High Priority - Dented/rusted cans present. See stop sale.
+2- 6 Lb 6 oz dented can of roasted red peppers. 
+1- 8 Lb dented can of Concord Grape Jelly.",NO,,6200358,8662794
+10938298,BON APPETIT RESTAURANT,DUNEDIN,12/16/2025,Routine - Food,22-43-4,"High Priority - Quaternary ammonium sanitizer not at proper minimum strength for manual warewashing. Do not use equipment/utensils not properly sanitized.
+Three compartment sink quaternary sanitizer testing at 0 PPM. Quaternary chemical dispenser not dispensing chemical through the line. Air bubbles observed in line. Discussed with chef on duty. Employee manually set up chlorine sanitizer testing at 50 PPM at three compartment sink.   **Corrected On-Site** **Repeat Violation**",NO,,6200358,8662794
+10938298,BON APPETIT RESTAURANT,DUNEDIN,12/16/2025,Routine - Food,01C-03-4,"Intermediate - Clam/mussel/oyster tags not marked with last date served.
+Observed dates missing in some oyster tags. Discussed with chef on duty.",NO,,6200358,8662794
+10938298,BON APPETIT RESTAURANT,DUNEDIN,12/16/2025,Routine - Food,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+Stained cutting board on reach in deli coolers on cook line.",NO,,6200358,8662794
+10938298,BON APPETIT RESTAURANT,DUNEDIN,12/16/2025,Routine - Food,16-37-1,"Intermediate - No chemical test kit provided when using sanitizer at three-compartment sink/warewashing machine or wiping cloths.
+Quaternary test kit was previously wet and now dried and no longer usable.",NO,,6200358,8662794
+10938298,BON APPETIT RESTAURANT,DUNEDIN,12/16/2025,Routine - Food,16-62-1,Intermediate - No measuring device available for measuring utensil surface temperature when using hot water as sanitizer in a dishmachine.,NO,,6200358,8662794
+13641521,BON APPETIT RESTAURANT,DUNEDIN,02/26/2026,Complaint Full,24-05-4,"Basic - Observed: Clean glasses, cups, bowls, plates, pots and pans not stored inverted or in a protected manner.
+Ice buckets not inverted in kitchen
+Priority: Basic",NO,,6200358,8662794
+13641521,BON APPETIT RESTAURANT,DUNEDIN,02/26/2026,Complaint Full,06-09-1,"Basic - Observed: Commercially processed reduced oxygen packaged fish bearing a label indicating that it is to remain frozen until time of use
+no longer frozen and not removed from reduced oxygen package.
+30lbs of grouper thawed in bag under water. Bag states to not thaw in bag.
+Priority: Basic",NO,,6200358,8662794
+13641521,BON APPETIT RESTAURANT,DUNEDIN,02/26/2026,Complaint Full,14-09-4,"Basic - Observed: Cutting board has cut marks and is no longer cleanable.
+Cutting boards grooved in kitchen
+Priority: Basic",NO,,6200358,8662794
+13641521,BON APPETIT RESTAURANT,DUNEDIN,02/26/2026,Complaint Full,35A-03-4,"Basic - Observed: Dead roaches on premises.
+1 dead roach on shelf in dry storage near mustard container.
+1 dead roach sticking out from wall in dry storage.
+Operator removed roaches and cleaned and sanitized areas. **Corrected On-Site**
+Priority: Basic",NO,,6200358,8662794
+13641521,BON APPETIT RESTAURANT,DUNEDIN,02/26/2026,Complaint Full,12B-12-5,"Basic - Observed: Employee drinking from an unenclosed beverage container in a food preparation/clean dishware area and the container
+does not have a dispensing mechanism to prevent hand contact with lip contact area of drink container.
+Employee drinking from open cup of water in dishwasher station.
+Priority: Basic",NO,,6200358,8662794
+13641521,BON APPETIT RESTAURANT,DUNEDIN,02/26/2026,Complaint Full,13-07-4,"Basic - Observed: Employee wearing jewelry other than a plain ring on their hands/arms while preparing food.
+Employees wearing watches and bracelets on the cook line.
+Priority: Basic",NO,,6200358,8662794
+13641521,BON APPETIT RESTAURANT,DUNEDIN,02/26/2026,Complaint Full,24-08-4,"Basic - Observed: Equipment and utensils not properly air-dried - wet nesting.
+Wet nesting containers in ware washing area.
+Priority: Basic",NO,,6200358,8662794
+13641521,BON APPETIT RESTAURANT,DUNEDIN,02/26/2026,Complaint Full,08B-38-4,"Basic - Observed: Food stored on floor.
+Frozen sausages stored in floor under shelf in walk in freezer. Operator moved sausages to proper area. **Corrected On-Site**
+Priority: Basic",NO,,6200358,8662794
+13641521,BON APPETIT RESTAURANT,DUNEDIN,02/26/2026,Complaint Full,22-02-4,"Intermediate - Observed: Food-contact surface soiled with food debris, mold-like substance or slime.
+Can opener blade soiled with debris
+Priority: Intermediate",NO,,6200358,8662794
+13641521,BON APPETIT RESTAURANT,DUNEDIN,02/26/2026,Complaint Full,14-69-4,"Basic - Observed: Ice buildup in reach-in freezer and/or walk-in freezer.
+Ice buildup in walk in freezer.
+Priority: Basic",NO,,6200358,8662794
+13641521,BON APPETIT RESTAURANT,DUNEDIN,02/26/2026,Complaint Full,33-16-4,"Basic - Observed: Open dumpster lid.
+Lid open at dumpster operator closed dumpster lid. **Corrected On-Site**
+Priority: Basic",NO,,6200358,8662794
+13641521,BON APPETIT RESTAURANT,DUNEDIN,02/26/2026,Complaint Full,14-33-4,"Basic - Observed: Reach-in cooler shelves with rust that has pitted the surface.
+Shelves of reach in cooler in kitchen has rust pitted to the surface.
+Priority: Basic",NO,,6200358,8662794
+13641521,BON APPETIT RESTAURANT,DUNEDIN,02/26/2026,Complaint Full,35A-23-4,"High Priority - Observed: Roach excrement and/or droppings present.
+13 roach droppings in dry storage by mustard container.
+Operator removed roach droppings and cleaned and sanitized areas. **Corrected On-Site**
+Priority: High Priority",NO,,6200358,8662794
+13641521,BON APPETIT RESTAURANT,DUNEDIN,02/26/2026,Complaint Full,01B-03-5,"High Priority - Observed: Stop Sale issued due to adulteration of food product.
+30lbs of grouper thawed in bag under water. Bag states to not thaw in bag.
+Priority: High Priority",NO,,6200358,8662794
+13641521,BON APPETIT RESTAURANT,DUNEDIN,02/26/2026,Complaint Full,01B-02-5,"High Priority - Observed: Stop Sale issued on time/temperature control for safety food due to temperature abuse.
+the following foods were brought out of refrigerator at 11am and moved to reach in cooler on cook line. 2lbs of tomatoes (50F - Cold Holding);
+1lb of cut cooked potatoes (50F - Cold Holding); 3lbs of clams (51F - Cold holding) 1lb of shredded cheese (59F - Cold Holding)
+Priority: High Priority",NO,,6200358,8662794
+13641521,BON APPETIT RESTAURANT,DUNEDIN,02/26/2026,Complaint Full,03A-02-5,"High Priority - Observed: Time/temperature control for safety food cold held at greater than 41 degrees Fahrenheit.
+All foods moved to reach in cooler at 11am sliced tomatoes (50F - Cold Holding); cut cooked potatoes (50F - Cold Holding); butter (48F - Cold
+Holding); clams (51F - Cold Holding); longonsteen (47F - Cold Holding); shredded cheese (59F - Cold Holding); octopus (48F - Cold Holding)
+Priority: High Priority",NO,,6200358,8662794
+13641521,BON APPETIT RESTAURANT,DUNEDIN,02/26/2026,Complaint Full,02D-01-5,"Basic - Observed: Working containers of food removed from original container not identified by common name.
+Squeeze bottles of oil and sauces unlabeled on cook line. Bottles on cook line have been labeled, **Corrected On-Site**
+Priority: Basic",NO,,6200358,8662794
+13585571,SNAPPERS SEA GRILL,ST.PETE BEACH,03/31/2026,Routine - Food,22-20-5,Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Ice machine interior soiled with black mold like debris. Employee cleaned area during inspection.   **Corrected On-Site**,YES,ice machine,6200362,2234049
+13585571,SNAPPERS SEA GRILL,ST.PETE BEACH,03/31/2026,Routine - Food,14-09-4,Basic - Cutting board has cut marks and is no longer cleanable. Grooved cutting boards in prep room.,NO,,6200362,2234049
+13585571,SNAPPERS SEA GRILL,ST.PETE BEACH,03/31/2026,Routine - Food,40-06-5,"Basic - Employee personal items stored in or above a food preparation area, food, clean equipment and utensils, or single-service items. Employee keys on cutting board. Employee removed keys.  **Corrected On-Site**",NO,,6200362,2234049
+13585571,SNAPPERS SEA GRILL,ST.PETE BEACH,03/31/2026,Routine - Food,22-08-4,Basic - Interior of oven/microwave has accumulation of black substance/grease/food debris.interior of oven soiled with food debris.,NO,,6200362,2234049
+13585571,SNAPPERS SEA GRILL,ST.PETE BEACH,03/31/2026,Routine - Food,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.  Can opener soiled with food debris in prep room.",NO,,6200362,2234049
+13585571,SNAPPERS SEA GRILL,ST.PETE BEACH,03/31/2026,Routine - Food,31A-09-4,Intermediate - Handwash sink not accessible for employee use at all times. Bucket of water blocking hand sink in kitchen on cook line. Employee removed bucket.  **Corrected On-Site**,NO,,6200362,2234049
+10879014,EL CAP INC,ST PETERSBURG,01/23/2026,Routine - Food,36-73-4,"Basic - Floor soiled/has accumulation of debris.
+
+Floor soiled under fryers in main kitchen with accumulation of grease and debris.",NO,,6200367,7465977
+10879014,EL CAP INC,ST PETERSBURG,01/23/2026,Routine - Food,23-03-4,"Basic - Nonfood-contact surface soiled with grease, food debris, dirt, slime or dust.
+
+Sides of equipment at main kitchen fryer soiled with excessive grease. **Repeat Violation**",NO,,6200367,7465977
+10879014,EL CAP INC,ST PETERSBURG,01/23/2026,Routine - Food,01B-01-4,"High Priority - Dented/rusted cans present. See stop sale.
+
+(1) 10 can spaghetti sauce",NO,,6200367,7465977
+10879014,EL CAP INC,ST PETERSBURG,01/23/2026,Routine - Food,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+
+Table mounted can opener in rear prep kitchen soiled and requires cleaning or replacement. **Repeat Violation**",NO,,6200367,7465977
+10879014,EL CAP INC,ST PETERSBURG,01/23/2026,Routine - Food,41-17-4,"Intermediate - Spray bottle containing toxic substance not labeled.
+
+Unlabeled spray bottle at wait station with blue liquid. Employee labeled. **Corrected On-Site**",NO,,6200367,7465977
+13506975,EL CAP INC,ST PETERSBURG,09/02/2025,Complaint Full,23-24-4,"Basic - Buildup of food debris/soil residue on equipment door handles.
+
+Door handle to reach-in freezer in North kitchen soiled.",NO,,6200367,7465977
+13506975,EL CAP INC,ST PETERSBURG,09/02/2025,Complaint Full,40-06-5,"Basic - Employee personal items stored in or above a food preparation area, food, clean equipment and utensils, or single-service items.
+
+Employee cellphone stored above prep table in North Kitchen",NO,,6200367,7465977
+13506975,EL CAP INC,ST PETERSBURG,09/02/2025,Complaint Full,24-08-4,"Basic - Equipment and utensils not properly air-dried - wet nesting.
+
+Metal sheet pans above dish machine observed stored wet.",NO,,6200367,7465977
+13506975,EL CAP INC,ST PETERSBURG,09/02/2025,Complaint Full,08B-38-4,"Basic - Food stored on floor.
+
+Cooked chili and bag of onions stored on floor in walk-in cooler. Manager relocated items.",NO,,6200367,7465977
+13506975,EL CAP INC,ST PETERSBURG,09/02/2025,Complaint Full,23-03-4,"Basic - Nonfood-contact surface soiled with grease, food debris, dirt, slime or dust.
+
+Hood-filters at South kitchen cook-line with accumulating grease.",NO,,6200367,7465977
+13506975,EL CAP INC,ST PETERSBURG,09/02/2025,Complaint Full,22-16-4,"Basic - Reach-in cooler interior/shelves have accumulation of soil residues.
+
+Front bar reach-in cooler soiled.",NO,,6200367,7465977
+13506975,EL CAP INC,ST PETERSBURG,09/02/2025,Complaint Full,12A-07-5,"High Priority - Employee failed to wash hands before putting on gloves to initiate a task working with food.
+
+Observed employee enter the kitchen and put on gloves to begin work. Inspector stopped employee and discussed handwashing. Employee removed gloves and washed his hands before returning to work. **Corrective Action Taken**",NO,,6200367,7465977
+13506975,EL CAP INC,ST PETERSBURG,09/02/2025,Complaint Full,08A-05-6,"High Priority - Raw animal food stored over/not properly separated from ready-to-eat food.
+
+Raw shell eggs in reach-in cooler stored above coleslaw. Manager relocated eggs. **Corrected On-Site** **Repeat Violation**",NO,,6200367,7465977
+13506975,EL CAP INC,ST PETERSBURG,09/02/2025,Complaint Full,41-27-4,"High Priority - Wiping cloth sanitizer solution exceeds the maximum concentration allowed.
+
+Sanitizer bucket with quaternary too strong, tested at 500ppm. Manager diluted and tested to proper 200ppm.",NO,,6200367,7465977
+13506975,EL CAP INC,ST PETERSBURG,09/02/2025,Complaint Full,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+
+Can opener stored on shelf in North kitchen soiled.",NO,,6200367,7465977
+13506975,EL CAP INC,ST PETERSBURG,09/02/2025,Complaint Full,31A-11-4,"Intermediate - Handwash sink used for purposes other than handwashing.
+
+Bottle of stray disinfectant in handwashing sink located next to three compartment sink in North kitchen.",NO,,6200367,7465977
+13506975,EL CAP INC,ST PETERSBURG,09/02/2025,Complaint Full,16-37-1,"Intermediate - No chemical test kit provided when using sanitizer at three-compartment sink/warewashing machine or wiping cloths.
+
+No chemical test strips for quaternary sanitizer.",NO,,6200367,7465977
+13506975,EL CAP INC,ST PETERSBURG,09/02/2025,Complaint Full,11-26-1,"Intermediate - No proof provided that food employees are informed of their responsibility to report to the person in charge information about their health and activities related to foodborne illnesses.
+
+Establishment has multiple new employees who have yet to receive food handler training. Establishment has no proof, in form of employee health agreements, of reporting responsibilities.",NO,,6200367,7465977
+13506975,EL CAP INC,ST PETERSBURG,09/02/2025,Complaint Full,03F-10-5,"Intermediate - No written procedures available for use of time as a public health control to hold time/temperature control for safety food.
+
+Establishment uses time for lettuce and tomatoes on cookline. Items are dated and time stamped however establishment lacks written plan. Inspector provided DBPR form HR 5022-090 and HR 5022-100.",NO,,6200367,7465977
+13506975,EL CAP INC,ST PETERSBURG,09/02/2025,Complaint Full,05-06-4,"Intermediate - Probe thermometer not accurate within plus or minus 2 degrees Fahrenheit.
+
+Probe thermometer not calibrated prior to inspection. Manager calibrated with inspector during the inspection.  **Corrective Action Taken**",NO,,6200367,7465977
+13506975,EL CAP INC,ST PETERSBURG,09/02/2025,Complaint Full,02C-02-5,"Intermediate - Ready-to-eat, time/temperature control for safety food prepared onsite and held more than 24 hours not properly date marked.
+
+Coleslaw in walk-in cooler prepared the day on inspection not date marked. Manager corrected. **Corrected On-Site**",NO,,6200367,7465977
+10935666,CENTRAL COFFEE SHOP,ST. PETERSBURG,09/03/2025,Routine - Food,22-20-5,"Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin.
+Soiled with black and pink mold like substance.  **Warning**",YES,ice machine,6200375,8471849
+10935666,CENTRAL COFFEE SHOP,ST. PETERSBURG,09/03/2025,Routine - Food,50-09-4,"Basic - Current Hotel and Restaurant license not displayed.
+Expired on2/1/2025.  **Warning**",NO,,6200375,8471849
+10935666,CENTRAL COFFEE SHOP,ST. PETERSBURG,09/03/2025,Routine - Food,31B-04-4,"Basic - No handwashing sign provided at a hand sink used by food employees.
+Missing at hand sink in front counter area.  **Warning**",NO,,6200375,8471849
+10935666,CENTRAL COFFEE SHOP,ST. PETERSBURG,09/03/2025,Routine - Food,22-16-4,"Basic - Reach-in cooler interior/shelves have accumulation of soil residues.
+Interior soiled with dried up food debris inside single door stand alone cooler in prep area.  **Warning**",NO,,6200375,8471849
+10935666,CENTRAL COFFEE SHOP,ST. PETERSBURG,09/03/2025,Routine - Food,01B-01-4,"High Priority - Dented/rusted cans present. See stop sale.
+1- 3 lbs 14 oz dented can of Mushrooms.  **Repeat Violation** **Warning**",NO,,6200375,8471849
+10935666,CENTRAL COFFEE SHOP,ST. PETERSBURG,09/03/2025,Routine - Food,22-41-4,"High Priority - Dishmachine chlorine sanitizer not at proper minimum strength. Discontinue use of dishmachine for sanitizing and set up manual sanitization until dishmachine is repaired and sanitizing properly.
+Ran the dish machine in the front counter area a few times and the chlorine sanitizer tested at 0 PPM. The inspector observed the chemical line having air bubbles and was not dispensing chemical when sanitization cycle ran.  **Warning**",NO,,6200375,8471849
+10935666,CENTRAL COFFEE SHOP,ST. PETERSBURG,09/03/2025,Routine - Food,22-49-4,"High Priority - Dishmachine not sanitizing properly. Discontinue use of dishmachine for sanitizing and set up manual sanitization until dishmachine is repaired and sanitizing properly.
+Employee set up three compartment sink with quaternary sanitizer testing at 200 PPM in the front counter area.  **Warning**",NO,,6200375,8471849
+10935666,CENTRAL COFFEE SHOP,ST. PETERSBURG,09/03/2025,Routine - Food,03A-02-5,"High Priority - Time/temperature control for safety food cold held at greater than 41 degrees Fahrenheit.
+Near flat top grill: pulled eggs  (47F - Cold Holding) @ 9:24am  ; pulled eggs re-temped at 9:41am  (38F - Cold Holding) **Corrected On-Site** **Warning**",NO,,6200375,8471849
+10935666,CENTRAL COFFEE SHOP,ST. PETERSBURG,09/03/2025,Routine - Food,41-27-4,"High Priority - Wiping cloth sanitizer solution exceeds the maximum concentration allowed.
+Quaternary Sanitizer spray bottle testing at 500+ PPM.  **Warning**",NO,,6200375,8471849
+10935666,CENTRAL COFFEE SHOP,ST. PETERSBURG,09/03/2025,Routine - Food,11-27-4,"Intermediate - Establishment has no written procedures for employees to follow in response to a vomiting or diarrheal event where the vomit or diarrhea is discharged onto surfaces in the establishment.
+Emailed the person in charge the DBPR Clean-Up of Vomiting and Diarrheal Event form. **Corrective Action Taken** **Warning**",NO,,6200375,8471849
+10935666,CENTRAL COFFEE SHOP,ST. PETERSBURG,09/03/2025,Routine - Food,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+Soda machine ice chute soiled with black mold like substance in dinning room area. 
+Slicer soiled with food debris.  **Warning**",YES,black mold,6200375,8471849
+10935666,CENTRAL COFFEE SHOP,ST. PETERSBURG,09/03/2025,Routine - Food,31A-11-4,"Intermediate - Handwash sink used for purposes other than handwashing.
+Whisk inside hand sink in front counter area. Employee moved item.  **Corrected On-Site** **Warning**",NO,,6200375,8471849
+10935666,CENTRAL COFFEE SHOP,ST. PETERSBURG,09/03/2025,Routine - Food,53A-01-7,"Intermediate - Manager or person in charge lacking proof of food manager certification.
+No proof of certified food manager certificate could be provided. Operator sent the server a picture of her certified food manager certificate verified via text message.  **Corrected On-Site** **Warning**",NO,,6200375,8471849
+10935666,CENTRAL COFFEE SHOP,ST. PETERSBURG,09/03/2025,Routine - Food,16-37-1,"Intermediate - No chemical test kit provided when using sanitizer at three-compartment sink/warewashing machine or wiping cloths.
+No chlorine test kit observed.  **Warning**",NO,,6200375,8471849
+10935666,CENTRAL COFFEE SHOP,ST. PETERSBURG,09/03/2025,Routine - Food,53A-05-6,"Intermediate - No currently certified food service manager on duty with four or more employees engaged in food preparation/handling. A list of accredited food manager certification examination providers can be found at http://www.myfloridalicense.com/DBPR/hotels-restaurants/food-lodging/food-manager/
+Five employees present engaging and preparing food at the time of the inspection.  **Warning**",NO,,6200375,8471849
+10935666,CENTRAL COFFEE SHOP,ST. PETERSBURG,09/03/2025,Routine - Food,11-26-1,"Intermediate - No proof provided that food employees are informed of their responsibility to report to the person in charge information about their health and activities related to foodborne illnesses.
+Could not be provide for four employees preparing and engaging with food during the inspection. All were hired over 60 days ago, per server.  **Warning**",NO,,6200375,8471849
+10935666,CENTRAL COFFEE SHOP,ST. PETERSBURG,09/03/2025,Routine - Food,53B-13-5,"Intermediate - Proof of required state approved employee training not available for some employees. To order approved program food safety material, call DBPR contracted provider: Florida Restaurant and Lodging Association (SafeStaff) 866-372-7233.
+Observed employee training certificate for Alisha H. Dated for 8/12/25 through FLRA.  **Warning**",NO,,6200375,8471849
+13510568,CENTRAL COFFEE SHOP,ST. PETERSBURG,09/18/2025,Routine - Food,22-20-5,"Basic - - From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin.
+Soiled with black and pink mold like substance.  **Warning**     - From follow-up inspection 2025-09-18:   **Time Extended**",YES,ice machine,6200375,8471849
+13510568,CENTRAL COFFEE SHOP,ST. PETERSBURG,09/18/2025,Routine - Food,31B-04-4,"Basic - - From initial inspection : Basic - No handwashing sign provided at a hand sink used by food employees.
+Missing at hand sink in front counter area.  **Warning**     - From follow-up inspection 2025-09-18: Missing at handwashing sink in front counter area during callback inspection.  **Time Extended**",NO,,6200375,8471849
+13510568,CENTRAL COFFEE SHOP,ST. PETERSBURG,09/18/2025,Routine - Food,22-16-4,"Basic - - From initial inspection : Basic - Reach-in cooler interior/shelves have accumulation of soil residues.
+Interior soiled with dried up food debris inside single door stand alone cooler in prep area.  **Warning**     - From follow-up inspection 2025-09-18:  **Time Extended**",NO,,6200375,8471849
+13510568,CENTRAL COFFEE SHOP,ST. PETERSBURG,09/18/2025,Routine - Food,22-02-4,"Intermediate - - From initial inspection : Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+Soda machine ice chute soiled with black mold like substance in dinning room area. 
+Slicer soiled with food debris.  **Warning**     - From follow-up inspection 2025-09-18:  **Time Extended**",YES,black mold,6200375,8471849
+13510568,CENTRAL COFFEE SHOP,ST. PETERSBURG,09/18/2025,Routine - Food,16-37-1,"Intermediate - - From initial inspection : Intermediate - No chemical test kit provided when using sanitizer at three-compartment sink/warewashing machine or wiping cloths.
+No chlorine test kit observed.  **Warning**     - From follow-up inspection 2025-09-18: No chlorine test kit observed during callback inspection.  **Time Extended**",NO,,6200375,8471849
+13510568,CENTRAL COFFEE SHOP,ST. PETERSBURG,09/18/2025,Routine - Food,53A-05-6,"Intermediate - - From initial inspection : Intermediate - No currently certified food service manager on duty with four or more employees engaged in food preparation/handling. A list of accredited food manager certification examination providers can be found at http://www.myfloridalicense.com/DBPR/hotels-restaurants/food-lodging/food-manager/
+Five employees present engaging and preparing food at the time of the inspection.  **Warning**     - From follow-up inspection 2025-09-18: Five employees present engaging and preparing food at the time of the callback inspection.  **Time Extended**",NO,,6200375,8471849
+13511089,CENTRAL COFFEE SHOP,ST. PETERSBURG,02/20/2026,Routine - Food,22-20-5,"Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin.
+Interior soiled with black substance.  **Repeat Violation**",YES,ice machine,6200375,8471849
+13511089,CENTRAL COFFEE SHOP,ST. PETERSBURG,02/20/2026,Routine - Food,31B-04-4,"Basic - No handwashing sign provided at a hand sink used by food employees.
+Missing at handsink in front counter area. Inspector provided a sign and it was posted at the time of the inspection.  **Corrected On-Site**",NO,,6200375,8471849
+13511089,CENTRAL COFFEE SHOP,ST. PETERSBURG,02/20/2026,Routine - Food,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+White cutting board stained on reach in deli cooler on cook line.",NO,,6200375,8471849
+10876131,KFC (569059),DUNEDIN,12/19/2025,Routine - Food,36-73-4,"Basic - Floor soiled/has accumulation of debris.
+Cook line floors under fryers soiled with grease build up.",NO,,6200376,7938307
+10876131,KFC (569059),DUNEDIN,12/19/2025,Routine - Food,36-17-5,"Basic - Floor tiles missing and/or in disrepair.
+Cracked tiles throughout the kitchen.  **Repeat Violation**",NO,,6200376,7938307
+10876131,KFC (569059),DUNEDIN,12/19/2025,Routine - Food,36-24-5,"Basic - Hole in or other damage to wall.
+Dinning room wall cracked and in disrepair due to customer crashing into the outside wall through the parking lot, per manager.",NO,,6200376,7938307
+10876131,KFC (569059),DUNEDIN,12/19/2025,Routine - Food,22-08-4,"Basic - Interior of oven/microwave has accumulation of black substance/grease/food debris.
+Convectional oven interior soiled with burnt food debris.",NO,,6200376,7938307
+10876131,KFC (569059),DUNEDIN,12/19/2025,Routine - Food,29-49-6,"Basic - Standing water in bottom of reach-in-cooler.
+On floor on right side of walk in cooler.",NO,,6200376,7938307
+13642370,KFC (569059),DUNEDIN,03/16/2026,Complaint Full,13-07-4,"Basic - Employee wearing jewelry other than a plain ring on their hands/arms while preparing food.
+Employees wearing bracelets on cook line wearing ring with grooves. Operator had employee remove ring.",NO,,6200376,7938307
+13642370,KFC (569059),DUNEDIN,03/16/2026,Complaint Full,36-22-4,"Basic - Floor area(s) covered with standing water.
+Standing water on floor in kitchen and in drive through window.",NO,,6200376,7938307
+13642370,KFC (569059),DUNEDIN,03/16/2026,Complaint Full,36-73-4,"Basic - Floor soiled/has accumulation of debris.
+Floors throughout cook line soiled with debris. **Repeat Violation**",NO,,6200376,7938307
+13642370,KFC (569059),DUNEDIN,03/16/2026,Complaint Full,36-17-5,"Basic - Floor tiles missing and/or in disrepair.
+Floor tiles throughout kitchen and dry storage in disrepair",NO,,6200376,7938307
+13642370,KFC (569059),DUNEDIN,03/16/2026,Complaint Full,14-34-4,"Basic - Interior of ice machine/bin with rust that has pitted the surface
+Interior of ice machine has rust that is pitted to the surface.",YES,ice machine,6200376,7938307
+13642370,KFC (569059),DUNEDIN,03/16/2026,Complaint Full,22-08-4,"Basic - Interior of oven/microwave has accumulation of black substance/grease/food debris.
+Interior of hot holding units soiled with debris. **Repeat Violation**",NO,,6200376,7938307
+13642370,KFC (569059),DUNEDIN,03/16/2026,Complaint Full,14-33-4,"Basic - Reach-in cooler shelves with rust that has pitted the surface.
+Shelves of reach in cooler has rust pitting to surface.",NO,,6200376,7938307
+13642370,KFC (569059),DUNEDIN,03/16/2026,Complaint Full,11-27-4,"Intermediate - Establishment has no written procedures for employees to follow in response to a vomiting or diarrheal event where the vomit or diarrhea is discharged onto surfaces in the establishment.
+Emailed operator form HR 5030-104",NO,,6200376,7938307
+13642370,KFC (569059),DUNEDIN,03/16/2026,Complaint Full,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+Lid of metal container soiled with employee beverage. Operator cleaned beverage from lid. Interior of soda machine nozzles in dining room soiled with debris.",NO,,6200376,7938307
+10880666,GULF PIER GIFT SHOP,TIERRA VERDE,02/20/2026,Routine - Food,51-11-4,"Basic - Carbon dioxide/helium tanks not adequately secured.
+
+Unsecured at front counter",NO,,6200387,9473691
+10880666,GULF PIER GIFT SHOP,TIERRA VERDE,02/20/2026,Routine - Food,08B-38-4,"Basic - Food stored on floor.
+
+Cooking oil stored on floor. Items relocated for elevation. **Corrected On-Site**",NO,,6200387,9473691
+10880666,GULF PIER GIFT SHOP,TIERRA VERDE,02/20/2026,Routine - Food,08A-11-5,"High Priority - Raw animal food stored over canned/bottled drinks.
+
+Raw shell eggs stored above drinks in drink cooler. Discussed with employees to relocate items for proper storage. Eggs removed to separate cooler. **Corrected On-Site**",NO,,6200387,9473691
+10880666,GULF PIER GIFT SHOP,TIERRA VERDE,02/20/2026,Routine - Food,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+
+Accumulation of black/green mold-like substance on/around soda dispensing nozzles.",NO,,6200387,9473691
+10902894,CRAB SHACK,ST PETERSBURG,09/04/2025,Routine - Food,23-24-4,Basic - Buildup of food debris/soil residue on equipment door handles. All door handles in cook line area.,NO,,6200446,2234085
+10902894,CRAB SHACK,ST PETERSBURG,09/04/2025,Routine - Food,10-20-4,Basic - In-use tongs stored on equipment door handle between uses.,NO,,6200446,2234085
+10902894,CRAB SHACK,ST PETERSBURG,09/04/2025,Routine - Food,23-03-4,"Basic - Nonfood-contact surface soiled with grease, food debris, dirt, slime or dust. Gaskets all reach in coolers at cook line",NO,,6200446,2234085
+10902894,CRAB SHACK,ST PETERSBURG,09/04/2025,Routine - Food,22-16-4,Basic - Reach-in cooler interior/shelves have accumulation of soil residues. Deli cooler at cook line,NO,,6200446,2234085
+10902894,CRAB SHACK,ST PETERSBURG,09/04/2025,Routine - Food,14-17-4,Basic - Walk-in cooler shelves with rust that has pitted the surface.,NO,,6200446,2234085
+10908606,SUNSET GRILLE,ST. PETERSBURG,08/11/2025,Routine - Food,51-11-4,"Basic - Carbon dioxide/helium tanks not adequately secured.
+
+Tanks under rear bar counter not secured.",NO,,6200448,4012171
+10908606,SUNSET GRILLE,ST. PETERSBURG,08/11/2025,Routine - Food,40-06-5,"Basic - Employee personal items stored in or above a food preparation area, food, clean equipment and utensils, or single-service items.
+
+Employee milk container inside reach-in cooler in kitchen.",NO,,6200448,4012171
+10908606,SUNSET GRILLE,ST. PETERSBURG,08/11/2025,Routine - Food,14-11-5,"Basic - Equipment in poor repair.
+
+Walk-in cooler leaking from ceiling.",NO,,6200448,4012171
+10908606,SUNSET GRILLE,ST. PETERSBURG,08/11/2025,Routine - Food,36-22-4,"Basic - Floor area(s) covered with standing water.
+
+Standing water inside walk-in cooler.",NO,,6200448,4012171
+10908606,SUNSET GRILLE,ST. PETERSBURG,08/11/2025,Routine - Food,36-17-5,"Basic - Floor tiles missing and/or in disrepair.
+
+Floor tiles in walk-in cooler, in rear bar pass, and kitchen broken in poor repair. **Repeat Violation**",NO,,6200448,4012171
+10908606,SUNSET GRILLE,ST. PETERSBURG,08/11/2025,Routine - Food,36-11-4,"Basic - Floors not maintained smooth and durable.
+
+Exposed wood in kitchen floors and walls.",NO,,6200448,4012171
+10908606,SUNSET GRILLE,ST. PETERSBURG,08/11/2025,Routine - Food,08B-38-4,"Basic - Food stored on floor.
+
+Burger buns on the floor in the walk-in cooler. **Repeat Violation**",NO,,6200448,4012171
+10908606,SUNSET GRILLE,ST. PETERSBURG,08/11/2025,Routine - Food,21-04-4,"Basic - In-use wet wiping cloth/towel used under cutting board.
+
+Employee removed.  **Corrected On-Site**",NO,,6200448,4012171
+10908606,SUNSET GRILLE,ST. PETERSBURG,08/11/2025,Routine - Food,23-03-4,"Basic - Nonfood-contact surface soiled with grease, food debris, dirt, slime or dust.
+
+Front exterior of flat top grill soiled.
+Gaskets soiled on reach-in coolers in kitchen.
+Hood filters soiled above cook-line with accumulation of grease.",NO,,6200448,4012171
+10908606,SUNSET GRILLE,ST. PETERSBURG,08/11/2025,Routine - Food,22-16-4,"Basic - Reach-in cooler interior/shelves have accumulation of soil residues.
+
+Bottom of reach-in coolers soiled.",NO,,6200448,4012171
+10908606,SUNSET GRILLE,ST. PETERSBURG,08/11/2025,Routine - Food,01B-01-4,"High Priority - Dented/rusted cans present. See stop sale.
+
+1-10 can Pinto beans
+1-10 can Peppers",NO,,6200448,4012171
+10908606,SUNSET GRILLE,ST. PETERSBURG,08/11/2025,Routine - Food,01B-24-5,"High Priority - Ready-to-eat, time/temperature control for safety food not consumed/sold within 7 days after opening/preparation. See stop sale.
+
+Container of 1000 island dressing inside walk-in cooler dated for 7/19.",NO,,6200448,4012171
+10908606,SUNSET GRILLE,ST. PETERSBURG,08/11/2025,Routine - Food,01B-13-4,"High Priority - Stop Sale issued due to food not being in a wholesome, sound condition.
+
+3 portions of Mahi-Mahi thawed in reduced oxygen packaging with printed instructions to remove from packaging before thawing.",NO,,6200448,4012171
+10908606,SUNSET GRILLE,ST. PETERSBURG,08/11/2025,Routine - Food,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+
+Cutting board on reach-in cooler in kitchen soiled. 
+Can opener in kitchen soiled.
+Fryer baskets soiled with heavy accumulation of grease.",NO,,6200448,4012171
+10908606,SUNSET GRILLE,ST. PETERSBURG,08/11/2025,Routine - Food,03F-10-5,"Intermediate - No written procedures available for use of time as a public health control to hold time/temperature control for safety food.
+
+Employee in kitchen advised French fries are par blanched and held on time. No written plan observed. Inspector will provide time as a public health control application and guidelines.",NO,,6200448,4012171
+10908606,SUNSET GRILLE,ST. PETERSBURG,08/11/2025,Routine - Food,41-17-4,"Intermediate - Spray bottle containing toxic substance not labeled.
+
+Bottle of degreaser at three compartment sink unlabeled. Employee labeled. **Corrected On-Site**",NO,,6200448,4012171
+10899496,TARPON TURTLE GRILL & MARINA,TARPON SPRINGS,08/14/2025,Routine - Food,06-09-1,"Basic - Commercially processed reduced oxygen packaged fish bearing a label indicating that it is to remain frozen until time of use no longer frozen and not removed from reduced oxygen package. 
+Salmon, 22 8oz packages, completely thawed. See stop sale Operator adjusted",NO,,6200456,7429590
+10899496,TARPON TURTLE GRILL & MARINA,TARPON SPRINGS,08/14/2025,Routine - Food,06-01-5,"Basic - Time/temperature control for safety food thawed in an improper manner. Fish and soups in standing water in prep sink, operator turned water for haddock 51F, moved soups to walk in cooler  **Corrective Action Taken**",NO,,6200456,7429590
+10899496,TARPON TURTLE GRILL & MARINA,TARPON SPRINGS,08/14/2025,Routine - Food,21-07-4,"Basic - Wiping cloth chlorine sanitizing solution not at proper minimum strength. Bucket on cook line , 0 ppm, corrected to 50 ppm  **Corrected On-Site**",NO,,6200456,7429590
+10899496,TARPON TURTLE GRILL & MARINA,TARPON SPRINGS,08/14/2025,Routine - Food,35A-02-7,"High Priority - Live, small flying insects found
+ Approximately 5 small flies around floor drain under steam table  **Repeat Violation**",NO,,6200456,7429590
+10899496,TARPON TURTLE GRILL & MARINA,TARPON SPRINGS,08/14/2025,Routine - Food,01B-13-4,"High Priority - Stop Sale issued due to food not being in a wholesome, sound condition.
+Salmon, 22 8oz packages, completely thawed.",NO,,6200456,7429590
+10899496,TARPON TURTLE GRILL & MARINA,TARPON SPRINGS,08/14/2025,Routine - Food,03A-02-5,"High Priority - Time/temperature control for safety food cold held at greater than 41 degrees Fahrenheit.
+ In drop in cold hold unit on cook line -shredded cheese  (48F - Cold Holding); coleslaw  (46F - Cold Holding); , removed from refrigeration 1 hour ago, moved back to walk in cooler, discussed using time control. 
+Recheck shredded cheese 37F, pico 42F **Corrected On-Site**",NO,,6200456,7429590
+10899496,TARPON TURTLE GRILL & MARINA,TARPON SPRINGS,08/14/2025,Routine - Food,41-10-4,"High Priority - Toxic substance/chemical improperly stored. At wait station, cleaner spray bottle on prep table, over clean dishes, facing to go cups and lemons, operator removed. **Corrected On-Site**",NO,,6200456,7429590
+10899496,TARPON TURTLE GRILL & MARINA,TARPON SPRINGS,08/14/2025,Routine - Food,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+ Can opener blade",NO,,6200456,7429590
+10916556,SAFETY HARBOR RESORT& KITCHEN,SAFETY HARBOR,03/25/2026,Routine - Food,32-07-5,"Basic - Bathroom facility not clean.
+Soiled restroom in the back of the kitchen **Warning**",NO,,6200468,2994383
+10916556,SAFETY HARBOR RESORT& KITCHEN,SAFETY HARBOR,03/25/2026,Routine - Food,40-06-5,"Basic - Employee personal items stored in or above a food preparation area, food, clean equipment and utensils, or single-service items.
+Purse on prep table **Repeat Violation** **Warning**",NO,,6200468,2994383
+10916556,SAFETY HARBOR RESORT& KITCHEN,SAFETY HARBOR,03/25/2026,Routine - Food,29-19-4,"Basic - Standing water in floor drain/floor drain draining very slowly.
+Under dishwasher  **Warning**",NO,,6200468,2994383
+10916556,SAFETY HARBOR RESORT& KITCHEN,SAFETY HARBOR,03/25/2026,Routine - Food,02D-01-5,"Basic - Working containers of food removed from original container not identified by common name.
+Squeeze bottles and containers containing foods removed removed from its original container not labeled with common name. **Corrected On-Site** **Warning**",NO,,6200468,2994383
+10916556,SAFETY HARBOR RESORT& KITCHEN,SAFETY HARBOR,03/25/2026,Routine - Food,01B-02-5,"High Priority - Stop Sale issued on time/temperature control for safety food due to temperature abuse.
+tomato (53F - Cold Holding); cucumber (53F - Cold Holding); tuna (57F - Cold Holding); potato Salad (53F - Cold Holding); coleslaw (53F - Cold Holding); blue cheese (52F - Cold Holding); feta (53F - Cold Holding); sliced turkey (53F - Cold Holding); salmon (57F - Cold Holding) **Warning**",NO,,6200468,2994383
+10916556,SAFETY HARBOR RESORT& KITCHEN,SAFETY HARBOR,03/25/2026,Routine - Food,03A-02-5,"High Priority - Time/temperature control for safety food cold held at greater than 41 degrees Fahrenheit.
+tomato (53F - Cold Holding); cucumber (53F - Cold Holding); tuna (57F - Cold Holding); potato Salad (53F - Cold Holding); coleslaw (53F - Cold Holding); blue cheese (52F - Cold Holding); feta (53F - Cold Holding); sliced turkey (53F - Cold Holding); salmon (57F - Cold Holding) **Warning**",NO,,6200468,2994383
+10916556,SAFETY HARBOR RESORT& KITCHEN,SAFETY HARBOR,03/25/2026,Routine - Food,41-10-4,"High Priority - Toxic substance/chemical improperly stored.
+Spray bottle of chemical stored on prep tables next to clean dishes. Operator removed the chemical to gain compliance. **Corrected On-Site** **Warning**",NO,,6200468,2994383
+10916556,SAFETY HARBOR RESORT& KITCHEN,SAFETY HARBOR,03/25/2026,Routine - Food,31A-09-4,"Intermediate - Handwash sink not accessible for employee use at all times.
+Hand wash sink blocked by caddy's holding dishes. Discussed the need to keep the hand wash sink unblocked. **Corrected On-Site** **Repeat Violation** **Warning**",NO,,6200468,2994383
+10916556,SAFETY HARBOR RESORT& KITCHEN,SAFETY HARBOR,03/25/2026,Routine - Food,22-56-4,"Intermediate - Hot water sanitizing dishmachine final rinse not reaching proper temperature at manifold. Discontinue use of dishmachine for sanitizing and set up manual sanitization until dishmachine is repaired.
+Final rinse 119F staff to begin using 3 compartment sink until the dishwasher machine can be repaired **Warning**",NO,,6200468,2994383
+8996337,BRUNOS PIZZERIA,SAINT PETERSBURG,07/14/2025,Food-Licensing Inspection,14-05-4,Basic - Cardboard used to line food-contact shelves in reach in freezer near pizza oven.  **Warning**,NO,,6200483,9361280
+8996337,BRUNOS PIZZERIA,SAINT PETERSBURG,07/14/2025,Food-Licensing Inspection,14-11-5,Basic - Equipment in poor repair. Torn gasket in reach in cooler near ice machine and bathrooms. **Warning**,YES,ice machine,6200483,9361280
+8996337,BRUNOS PIZZERIA,SAINT PETERSBURG,07/14/2025,Food-Licensing Inspection,33-11-4,Basic - Missing drain plug at dumpster. **Warning**,NO,,6200483,9361280
+8996337,BRUNOS PIZZERIA,SAINT PETERSBURG,07/14/2025,Food-Licensing Inspection,29-14-4,"Basic - Nonself-sufficient mobile food dispensing vehicle disposing of wastewater at a commissary on municipal sewer that is not provided with a mop/service sink or other proper liquid waste disposal facilities. Mop sink outside not connected to any plumbing, no running water or drainage.  **Warning**",NO,,6200483,9361280
+8996337,BRUNOS PIZZERIA,SAINT PETERSBURG,07/14/2025,Food-Licensing Inspection,22-16-4,Basic - Reach-in cooler interior/shelves have accumulation of soil residues. Gasket in rear RIC by ice machine soiled. **Warning**,YES,ice machine,6200483,9361280
+8996337,BRUNOS PIZZERIA,SAINT PETERSBURG,07/14/2025,Food-Licensing Inspection,50-08-7,"High Priority - Establishment operating without a license from the Division of Hotels and Restaurants. Operator must obtain a public food service license from the Division of Hotels and Restaurants within 60 days. Submit a license application and payment to DBPR/Bureau of Central Intake Unit, 2601 Blair Stone Rd., Tallahassee, FL 32399-0783. To apply online or obtain an application for license visit https://www2.myfloridalicense.com/hotels-restaurants/ Establishment is open and operating without license, temp license not issued due to lack of mop sink.  **Warning**",NO,,6200483,9361280
+8996337,BRUNOS PIZZERIA,SAINT PETERSBURG,07/14/2025,Food-Licensing Inspection,27-11-4,Intermediate - No running water at mop sink. **Warning**,NO,,6200483,9361280
+13480042,HIGHLAND HOUSE,DUNEDIN,08/06/2025,Complaint Full,06-09-1,"Basic - Commercially processed reduced oxygen packaged fish bearing a label indicating that it is to remain frozen until time of use no longer frozen and not removed from reduced oxygen package
+Grouper completed thawed in package 22 four oz package. See stop sale",NO,,6200494,9317331
+13480042,HIGHLAND HOUSE,DUNEDIN,08/06/2025,Complaint Full,13-04-4,"Basic - Employee with no beard guard/restraint while engaging in food preparation.
+Cook has no beard guard",NO,,6200494,9317331
+13480042,HIGHLAND HOUSE,DUNEDIN,08/06/2025,Complaint Full,13-03-4,"Basic - Employee with no hair restraint while engaging in food preparation.
+Chief no hat on",NO,,6200494,9317331
+13480042,HIGHLAND HOUSE,DUNEDIN,08/06/2025,Complaint Full,10-07-4,"Basic - In-use utensil stored in standing water less than 135 degrees Fahrenheit.
+Ladles in water container Temperature 73F",NO,,6200494,9317331
+13480042,HIGHLAND HOUSE,DUNEDIN,08/06/2025,Complaint Full,31B-04-4,"Basic - No handwashing sign provided at a hand sink used by food employees.
+No hand wash sign for both of hand wash sink in bar area",NO,,6200494,9317331
+13480042,HIGHLAND HOUSE,DUNEDIN,08/06/2025,Complaint Full,35A-02-7,"High Priority - Live, small flying insects found
+Approximately 
+3 small flies in mop sink area
+4 flies in dish room",NO,,6200494,9317331
+13480042,HIGHLAND HOUSE,DUNEDIN,08/06/2025,Complaint Full,35A-04-4,"High Priority - Rodent activity present as evidenced by rodent droppings found.
+ Approximately -
+15 Rodent droppings on the floor under clean dish racks in kitchen 
+9 rodent droppings on the floor under chemical shelf in storage room 
+40 rodent droppings on floor under coffee station.
+8 rodent droppings on floor under dish wash sink 
+100 droppings on floor back of prep counter.
+8 rodent droppings on the floor in storage room
+10 rodent droppings on shelf in storage room 
+2 rodent droppings on the warmer shelf in storage 
+4 rodent droppingson floor by register screen in bar area.
+Possible leftover food with chew marks by water heater.
+10 rodent droppings on the floor by speed rack in food storage room
+5 rodent droppings on shelf by pastas in food storage room.
+30 rodent droppings on the floor under food storage shelves in food storage room",NO,,6200494,9317331
+13480042,HIGHLAND HOUSE,DUNEDIN,08/06/2025,Complaint Full,01B-13-4,"High Priority - Stop Sale issued due to food not being in a wholesome, sound condition.
+
+Grouper completed thawed in package 22 four oz package. See stop sale",NO,,6200494,9317331
+13480042,HIGHLAND HOUSE,DUNEDIN,08/06/2025,Complaint Full,03A-02-5,"High Priority - Time/temperature control for safety food cold held at greater than 41 degrees Fahrenheit.
+ rice ball (46F - Cold Holding) operator did not know how long rice was in cooler, operator discarded. Dated for previous day.",NO,,6200494,9317331
+13480042,HIGHLAND HOUSE,DUNEDIN,08/06/2025,Complaint Full,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+Can opener soiled",NO,,6200494,9317331
+13480042,HIGHLAND HOUSE,DUNEDIN,08/06/2025,Complaint Full,31A-09-4,"Intermediate - Handwash sink not accessible for employee use at all times.
+Stored utensils in hand wash sink in bar area.",NO,,6200494,9317331
+13486590,HIGHLAND HOUSE,DUNEDIN,10/06/2025,Routine - Food,14-01-5,"Basic - Bowl or other container with no handle used to dispense food.
+Bowls used for scooping food in dry storage. Operator removed. **Corrected On-Site**",NO,,6200494,9317331
+13486590,HIGHLAND HOUSE,DUNEDIN,10/06/2025,Routine - Food,36-34-5,"Basic - Ceiling/ceiling tiles/vents soiled with accumulated dust or mold-like substance.
+Above dish drying area and throughout kitchen.",NO,,6200494,9317331
+13486590,HIGHLAND HOUSE,DUNEDIN,10/06/2025,Routine - Food,14-09-4,"Basic - Cutting board has cut marks and is no longer cleanable.
+On line in kitchen.",NO,,6200494,9317331
+13486590,HIGHLAND HOUSE,DUNEDIN,10/06/2025,Routine - Food,40-06-5,"Basic - Employee personal items stored in or above a food preparation area, food, clean equipment and utensils, or single-service items.
+iPad in prep area **Corrected On-Site**",NO,,6200494,9317331
+13486590,HIGHLAND HOUSE,DUNEDIN,10/06/2025,Routine - Food,36-11-4,"Basic - Floors not maintained smooth and durable.
+Broken tile in event storage area.",NO,,6200494,9317331
+13486590,HIGHLAND HOUSE,DUNEDIN,10/06/2025,Routine - Food,14-38-4,"Basic - Food storage container/container lid cracked or broken.
+Several instances in dry storage.",NO,,6200494,9317331
+13486590,HIGHLAND HOUSE,DUNEDIN,10/06/2025,Routine - Food,36-24-5,"Basic - Hole in or other damage to wall.
+In event storage area.",NO,,6200494,9317331
+13486590,HIGHLAND HOUSE,DUNEDIN,10/06/2025,Routine - Food,10-20-4,"Basic - In-use tongs stored on equipment door handle between uses.
+On line in kitchen 2 sets on oven door. Operator removed. **Corrected On-Site**",NO,,6200494,9317331
+13486590,HIGHLAND HOUSE,DUNEDIN,10/06/2025,Routine - Food,03G-53-1,"Basic - Time/temperature control for safety food packaged using a reduced oxygen method without a HACCP plan not properly labeled with the production time and date.
+Pork chops date marked 9/25 in walk in cooler that have been ROP on location with no plan.",NO,,6200494,9317331
+13486590,HIGHLAND HOUSE,DUNEDIN,10/06/2025,Routine - Food,01B-01-4,"High Priority - Dented/rusted cans present. See stop sale.
+Can of ketchup 115oz operator removed.",NO,,6200494,9317331
+13486590,HIGHLAND HOUSE,DUNEDIN,10/06/2025,Routine - Food,35A-02-7,"High Priority - Live, small flying insects found
+2 under dish machine
+1 behind bar **Repeat Violation** **Admin Complaint**",NO,,6200494,9317331
+13486590,HIGHLAND HOUSE,DUNEDIN,10/06/2025,Routine - Food,35A-09-4,"High Priority - Presence of insects, rodents, or other pests.
+2 ants in dry storage",NO,,6200494,9317331
+13486590,HIGHLAND HOUSE,DUNEDIN,10/06/2025,Routine - Food,02C-01-5,"High Priority - Ready-to-eat, time/temperature control for safety food marked with a date that exceeds 7 days after opening/preparation.
+butter, garlic butter, garlic, ham, cocktail, trurky, frosting, pork chop",NO,,6200494,9317331
+13486590,HIGHLAND HOUSE,DUNEDIN,10/06/2025,Routine - Food,01B-13-4,"High Priority - Stop Sale issued due to food not being in a wholesome, sound condition.
+Food older than 7 days",NO,,6200494,9317331
+13486590,HIGHLAND HOUSE,DUNEDIN,10/06/2025,Routine - Food,03B-01-6,"High Priority - Time/temperature control for safety food, other than whole meat roast, hot held at less than 135 degrees Fahrenheit.
+tomato bisque (127F - Hot Holding 171); ajoux (126F - Hot Holding 183) **Corrected On-Site**",NO,,6200494,9317331
+13486590,HIGHLAND HOUSE,DUNEDIN,10/06/2025,Routine - Food,29-42-4,"High Priority - Vacuum breaker missing at mop sink faucet or on fitting/splitter added to mop sink faucet.
+Splitter installed on faucet no vacuum breaker for hose",NO,,6200494,9317331
+13486590,HIGHLAND HOUSE,DUNEDIN,10/06/2025,Routine - Food,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+Potato dicer. Multiple plates on clean dish shelves covered in unknown substances.",NO,,6200494,9317331
+13486590,HIGHLAND HOUSE,DUNEDIN,10/06/2025,Routine - Food,16-37-1,"Intermediate - No chemical test kit provided when using sanitizer at three-compartment sink/warewashing machine or wiping cloths.
+All expired",NO,,6200494,9317331
+13486590,HIGHLAND HOUSE,DUNEDIN,10/06/2025,Routine - Food,41-17-4,"Intermediate - Spray bottle containing toxic substance not labeled.
+Unlabeled spray bottle in bar. Operator removed. **Corrected On-Site**",NO,,6200494,9317331
+10910609,THE BURG DINER,ST. PETERSBURG,09/17/2025,Routine - Food,22-20-5,Basic - Accumulation of black mold-like substance and debris in the interior of the ice machine.,YES,ice machine,6200500,6053667
+10910609,THE BURG DINER,ST. PETERSBURG,09/17/2025,Routine - Food,14-09-4,"Basic - Cutting board has cut marks and is no longer cleanable.
+Cutting boards at deli coolers no longer cleanable, stained and grooved.",NO,,6200500,6053667
+10910609,THE BURG DINER,ST. PETERSBURG,09/17/2025,Routine - Food,12B-07-4,Basic - Employee beverage container on a food preparation table or over/next to clean equipment/utensils. On prep table in front of microwave. Operator moved beverage,NO,,6200500,6053667
+10910609,THE BURG DINER,ST. PETERSBURG,09/17/2025,Routine - Food,24-08-4,Basic - Equipment and utensils not properly air-dried - wet nesting. Cups at bar area.,NO,,6200500,6053667
+10910609,THE BURG DINER,ST. PETERSBURG,09/17/2025,Routine - Food,14-11-5,"Basic - Equipment in poor repair.
+Detached gasket in rear kitchen reach in cooler ""True""  brand cooler.",NO,,6200500,6053667
+10910609,THE BURG DINER,ST. PETERSBURG,09/17/2025,Routine - Food,36-73-4,Basic - Floor soiled/has accumulation of debris behind coolers and cook equipment. Operator moved equipment and cleaned.  **Corrected On-Site**,NO,,6200500,6053667
+10910609,THE BURG DINER,ST. PETERSBURG,09/17/2025,Routine - Food,08B-38-4,Basic - Food stored on floor. Containers of food in walk in freezer stored on the floor. Operator moved to a shelf.  **Corrected On-Site**,NO,,6200500,6053667
+10910609,THE BURG DINER,ST. PETERSBURG,09/17/2025,Routine - Food,10-17-4,Basic - In-use knife/knives stored in under hot holding unit,NO,,6200500,6053667
+10910609,THE BURG DINER,ST. PETERSBURG,09/17/2025,Routine - Food,10-06-5,"Basic - In-use utensil not stored with handle above the top of time/temperature control for safety food and rim of the container.
+Single serve portion cup being kept in feta cheese container as utensil.",NO,,6200500,6053667
+10910609,THE BURG DINER,ST. PETERSBURG,09/17/2025,Routine - Food,33-11-4,Basic - Missing drain plug at dumpster.,NO,,6200500,6053667
+10910609,THE BURG DINER,ST. PETERSBURG,09/17/2025,Routine - Food,23-03-4,"Basic - Nonfood-contact surface soiled with grease, food debris, dirt, slime or dust.
+Hood systems over cook equipment heavily soiled with buildup of grease. 
+Fans at bar heavily soiled with dust",NO,,6200500,6053667
+10910609,THE BURG DINER,ST. PETERSBURG,09/17/2025,Routine - Food,33-16-4,Basic - Open dumpster lid. Operator closed.  **Corrected On-Site**,NO,,6200500,6053667
+10910609,THE BURG DINER,ST. PETERSBURG,09/17/2025,Routine - Food,08B-17-4,Basic - Unwashed celery and peppers stored with ready-to-eat carrot sticks. Stored over ready to eat foods.,NO,,6200500,6053667
+10910609,THE BURG DINER,ST. PETERSBURG,09/17/2025,Routine - Food,36-27-5,"Basic - Wall soiled with accumulated grease, food debris, and/or dust. Wall behind prep table near warewashing area and dry storage, walls in kitchen next to deli cooler and flat top",NO,,6200500,6053667
+10910609,THE BURG DINER,ST. PETERSBURG,09/17/2025,Routine - Food,12A-07-5,"High Priority - Employee failed to wash hands before putting on gloves to initiate a task working with food.
+Cook failed to wash hands before grabbing change of gloves to work with food.
+He then washed hands and put new gloves on.  **Corrective Action Taken**",NO,,6200500,6053667
+10910609,THE BURG DINER,ST. PETERSBURG,09/17/2025,Routine - Food,12A-13-4,"High Priority - Employee handled soiled equipment or utensils and then engaged in food preparation, handled clean equipment or utensils, or touched unwrapped single-service items without washing hands.
+Dish washer failed to wash hands before grabbing change of gloves to handle clean dishes. 
+He then washed hands and put on new gloves.  **Corrective Action Taken**",NO,,6200500,6053667
+10910609,THE BURG DINER,ST. PETERSBURG,09/17/2025,Routine - Food,01B-14-4,"High Priority - Shell eggs in use or stored with cracks or broken shells. See stop sale.
+One egg with broken shell in reach in cooler in rear kitchen . Operator discarded.",NO,,6200500,6053667
+10910609,THE BURG DINER,ST. PETERSBURG,09/17/2025,Routine - Food,03A-02-5,"High Priority - Time/temperature control for safety food cold held at greater than 41 degrees Fahrenheit.
+Shredded cheddar (49F - Cold Holding; retemped at 42); feta cheese (49F - Cold Holding; retemped at 40F).
+Items in deli cooler out of temp due to keeping lid open. Operator put items in the freezer and kept cooler lid closed and got items back in temp quickly.  **Corrected On-Site** **Repeat Violation**",NO,,6200500,6053667
+10910609,THE BURG DINER,ST. PETERSBURG,09/17/2025,Routine - Food,03F-02-5,"High Priority - Time/temperature control for safety food identified in the written procedure as a food held using time as a public health control has no time marking and the time removed from temperature control cannot be determined. See stop sale.
+Operator prepared potatoes to rehydrate and failed to time stamp when finished. He time marked afterward with my instruction.  **Corrected On-Site**",NO,,6200500,6053667
+10910609,THE BURG DINER,ST. PETERSBURG,09/17/2025,Routine - Food,12A-03-4,"Intermediate - Employee washed hands in a sink other than an approved handwash sink.
+Dish washer washed hands in 3 compartment sink.",NO,,6200500,6053667
+10910609,THE BURG DINER,ST. PETERSBURG,09/17/2025,Routine - Food,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+Meat grinder with cutting board stained and soiled with debris; not used today.
+Stand mixer soiled with grease and debris; not used today.
+Interior of food processor cracking and stained red.  **Repeat Violation**",NO,,6200500,6053667
+10910609,THE BURG DINER,ST. PETERSBURG,09/17/2025,Routine - Food,31A-11-4,"Intermediate - Handwash sink used for purposes other than handwashing.
+Coffee machine parts and squirt bottle being stored on hand wash sink in kitchen. Operator removed and washed items.  **Corrected On-Site**",NO,,6200500,6053667
+10910609,THE BURG DINER,ST. PETERSBURG,09/17/2025,Routine - Food,05-08-4,Intermediate - No probe thermometer provided to measure temperature of food products.,NO,,6200500,6053667
+13523023,THE BURG DINER,ST. PETERSBURG,03/09/2026,Routine - Food,32-04-4,"Basic - Bathroom located inside establishment not completely enclosed with tight-fitting, self-closing doors.
+-men's restroom not enclosed with self-closing door **Warning**",NO,,6200500,6053667
+13523023,THE BURG DINER,ST. PETERSBURG,03/09/2026,Routine - Food,40-06-5,"Basic - Employee personal items stored in or above a food preparation area, food, clean equipment and utensils, or single-service items.
+-sunglasses on clean dish rack in dish wash area 
+Operator removed **Corrected On-Site** **Warning**",NO,,6200500,6053667
+13523023,THE BURG DINER,ST. PETERSBURG,03/09/2026,Routine - Food,14-11-5,"Basic - Equipment in poor repair.
+-dish machine is tripping electric outlet when it's ran causing it to turn off after being ran  **Repeat Violation** **Warning**",NO,,6200500,6053667
+13523023,THE BURG DINER,ST. PETERSBURG,03/09/2026,Routine - Food,10-20-4,"Basic - In-use tongs stored on oven door handle between uses.
+Operator removed. **Corrected On-Site** **Warning**",NO,,6200500,6053667
+13523023,THE BURG DINER,ST. PETERSBURG,03/09/2026,Routine - Food,36-27-5,"Basic - Wall soiled with accumulated grease, food debris, and/or dust.
+-wall at end of cook line  **Repeat Violation** **Warning**",NO,,6200500,6053667
+13523023,THE BURG DINER,ST. PETERSBURG,03/09/2026,Routine - Food,22-41-4,"High Priority - Dishmachine chlorine sanitizer not at proper minimum strength. Discontinue use of dishmachine for sanitizing and set up manual sanitization until dishmachine is repaired and sanitizing properly.
+
+Dishwasher (Chlorine 0ppm)
+Operator restocked dish machine with sanitizer and primed, but it is still testing at 0PPM. 
+Operator set up 3 compartment sink sanitize compartment and will sanitize that way until machine has been serviced and is testing properly.  **Corrective Action Taken** **Warning**",NO,,6200500,6053667
+13523023,THE BURG DINER,ST. PETERSBURG,03/09/2026,Routine - Food,22-43-4,"High Priority - Quaternary ammonium sanitizer not at proper minimum strength for manual warewashing. Do not use equipment/utensils not properly sanitized.
+Triple Sink (Quaternary 0ppm)
+Operator added more sanitizer tablets and retested at 200 PPM.  **Warning**",NO,,6200500,6053667
+13523023,THE BURG DINER,ST. PETERSBURG,03/09/2026,Routine - Food,02C-01-5,"High Priority - Ready-to-eat, time/temperature control for safety food marked with a date that exceeds 7 days after opening/preparation.
+Lemon chicken soup date marked 2/28
+Brown gravy from reconstituted mix containing milk date marked 2/27
+Broccoli soup date marked 2/23
+Cooked black beans date marked 2/18
+Cooked rice date marked 2/19
+ **Warning**",NO,,6200500,6053667
+13523023,THE BURG DINER,ST. PETERSBURG,03/09/2026,Routine - Food,01B-24-5,"High Priority - Ready-to-eat, time/temperature control for safety food not consumed/sold within 7 days after opening/preparation. See stop sale.
+Lemon chicken soup date marked 2/28
+Brown gravy from reconstituted mix containing milk date marked 2/27
+Broccoli soup date marked 2/23
+Cooked black beans date marked 2/18
+Cooked rice date marked 2/19
+ **Warning**",NO,,6200500,6053667
+13523023,THE BURG DINER,ST. PETERSBURG,03/09/2026,Routine - Food,01B-13-4,"High Priority - Stop Sale issued due to food not being in a wholesome, sound condition.
+Butter packets in reach in cooler on server line bearing a 7AM time mark, but operator said they no longer use time as a public health control for this item. Butter packets in time marked container temped at 56F, while those in original container next to it temped at 38F. 
+Stop Sale issued at 11AM due to these items being on Time as a Public Health Control written procedures, time marked, and out of temp. **Warning**",NO,,6200500,6053667
+13523023,THE BURG DINER,ST. PETERSBURG,03/09/2026,Routine - Food,03A-02-5,"High Priority - Time/temperature control for safety food cold held at greater than 41 degrees Fahrenheit.
+
+Sliced tomatoes  (53F - Cold Holding); sliced cheeses (55F - Cold Holding); mashed potatoes  (56F - Cold Holding)
+Tomatoes and cheese prepped yesterday stacked high and temping high, though items in bottom of container were cooler. Instructed operator to cool these items and return to reach in prep cooler with lid to keep hot air out. 
+Mashed potatoes cooked yesterday temped high in reach in cooler on cook line due to operator ""leaving them out for about an hour and a half"" because translation issue about rehydrating hashbrowns led him to believe he could leave potatoes out. I explained the difference between cold holding and preparation time involved in rehydrating their hash brown product. I instructed operator to put mashed potatoes in freezer to cool them.  **Repeat Violation** **Admin Complaint**",NO,,6200500,6053667
+13523023,THE BURG DINER,ST. PETERSBURG,03/09/2026,Routine - Food,03F-04-5,"High Priority - Time/temperature control for safety food held using time as a public health control not discarded at the end of the 4-hour period. See stop sale.
+Butter packets in reach in cooler on server line bearing a 7AM time mark, but operator said they no longer use time as a public health control for this item. Butter packets in time marked container temped at 56F, while those in original container next to it temped at 38F. 
+Stop Sale issued at 11AM due to these items being on Time as a Public Health Control written procedures, time marked, and out of temp. **Warning**",NO,,6200500,6053667
+13523023,THE BURG DINER,ST. PETERSBURG,03/09/2026,Routine - Food,03F-02-5,"High Priority - Time/temperature control for safety food identified in the written procedure as a food held using time as a public health control has no time marking and the time removed from temperature control cannot be determined.
+French fries cooked at 7AM on cook line with no time mark. Operator was unaware that this food item needed to be discarded after 4 hours. Informed him at 11AM that they must be discarded. 
+ **Repeat Violation** **Admin Complaint**",NO,,6200500,6053667
+13523023,THE BURG DINER,ST. PETERSBURG,03/09/2026,Routine - Food,03D-15-4,"Intermediate - Food being cooled by nonapproved method as evidenced by inadequate rate of cooling during time of inspection.
+Mashed potatoes  (56F - Cold Holding, retemped at 55F)
+-operator put in freezer to cool but only went down 1F due to being dense and stacked high. Operator transferred to shallow pan to finish cooling. **Warning**",NO,,6200500,6053667
+13523023,THE BURG DINER,ST. PETERSBURG,03/09/2026,Routine - Food,02C-02-5,"Intermediate - Ready-to-eat, time/temperature control for safety food prepared onsite and held more than 24 hours not properly date marked.
+Lamb giouvetsi in reach in cooler near walk in freezer prepared last Thursday had no date mark.
+Operator date marked.  **Corrected On-Site** **Warning**",NO,,6200500,6053667
+13527090,FRIENDLY TAVERN,REDINGTON SHORES,11/13/2025,Food-Licensing Inspection,31B-04-4,"Basic - No handwashing sign provided at a hand sink used by food employees.
+Some hand sinks missing hand wash sign.",NO,,6200528,9695860
+13527090,FRIENDLY TAVERN,REDINGTON SHORES,11/13/2025,Food-Licensing Inspection,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+Some equipment in kitchen with construction debris/dust.",NO,,6200528,9695860
+13527090,FRIENDLY TAVERN,REDINGTON SHORES,11/13/2025,Food-Licensing Inspection,16-37-1,Intermediate - No chemical test kit provided when using sanitizer at three-compartment sink/warewashing machine or wiping cloths.,NO,,6200528,9695860
+13575222,FRIENDLY TAVERN,REDINGTON SHORES,03/17/2026,Routine - Food,14-09-4,"Basic - Cutting board has cut marks and is no longer cleanable.
+Cook line",NO,,6200528,9695860
+13575222,FRIENDLY TAVERN,REDINGTON SHORES,03/17/2026,Routine - Food,36-73-4,"Basic - Floor soiled/has accumulation of debris.
+Accumulation of grease under cook line",NO,,6200528,9695860
+13575222,FRIENDLY TAVERN,REDINGTON SHORES,03/17/2026,Routine - Food,08B-38-4,"Basic - Food stored on floor.
+Boxes of food on floor in walk in freezer",NO,,6200528,9695860
+13575222,FRIENDLY TAVERN,REDINGTON SHORES,03/17/2026,Routine - Food,14-69-4,Basic - Ice buildup in reach-in freezer and/or walk-in freezer.,NO,,6200528,9695860
+13575222,FRIENDLY TAVERN,REDINGTON SHORES,03/17/2026,Routine - Food,10-13-5,"Basic - In-use ice scoop and bucket for ice machine located outside not stored in a protected manner between uses.
+Next to outside ice machine",YES,ice machine,6200528,9695860
+13575222,FRIENDLY TAVERN,REDINGTON SHORES,03/17/2026,Routine - Food,10-20-4,"Basic - In-use tongs stored on equipment door handle between uses.
+Oven door handle",NO,,6200528,9695860
+13575222,FRIENDLY TAVERN,REDINGTON SHORES,03/17/2026,Routine - Food,23-03-4,"Basic - Nonfood-contact surface soiled with grease, food debris, dirt, slime or dust.
+Hood filters soiled",NO,,6200528,9695860
+13575222,FRIENDLY TAVERN,REDINGTON SHORES,03/17/2026,Routine - Food,08B-63-4,"Basic - Unpackaged food in an unprotected holding unit in a customer/nonsecure area.
+Outdoor walk in freezer not secured when not in use",NO,,6200528,9695860
+13575222,FRIENDLY TAVERN,REDINGTON SHORES,03/17/2026,Routine - Food,22-41-4,"High Priority - Dishmachine chlorine sanitizer not at proper minimum strength. Discontinue use of dishmachine for sanitizing and set up manual sanitization until dishmachine is repaired and sanitizing properly. 0ppm, chlorine line had cracks causing leaks, staff corrected, 50ppm.
+
+If the dishmachine fails to function properly, this establishment has no 3-compartment sink in which
+to manually wash/rinse/sanitize. Such failure could result in administrative action and/or suspension
+of license. Installation of a 3-compartment sink is recommended. **Corrected On-Site**",NO,,6200528,9695860
+10918937,HEAVENLY DONUTS SWEETS & EATS,GULFPORT,10/31/2025,Routine - Food,32-02-4,Basic - Bathroom door left open other than during cleaning or maintenance.,NO,,6200531,9544266
+10918937,HEAVENLY DONUTS SWEETS & EATS,GULFPORT,10/31/2025,Routine - Food,32-04-4,"Basic - Bathroom located inside establishment not completely enclosed with tight-fitting, self-closing doors.",NO,,6200531,9544266
+10918937,HEAVENLY DONUTS SWEETS & EATS,GULFPORT,10/31/2025,Routine - Food,10-20-4,Basic - In-use tongs stored on equipment door handle between uses.,NO,,6200531,9544266
+10918937,HEAVENLY DONUTS SWEETS & EATS,GULFPORT,10/31/2025,Routine - Food,22-41-4,"High Priority - Dishmachine chlorine sanitizer not at proper minimum strength. Reading 0ppm. Discontinue use of dishmachine for sanitizing and set up manual sanitization until dishmachine is repaired and sanitizing properly.
+
+Operator replaced sanitizer bucket. Rechecked dishmachine chlorine sanitizer solution. Reading 50ppm. **Corrected On-Site**",NO,,6200531,9544266
+10918937,HEAVENLY DONUTS SWEETS & EATS,GULFPORT,10/31/2025,Routine - Food,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+
+Cutting board on reach-in cooler on cooks line is soiled with food debris between cracks",NO,,6200531,9544266
+10918937,HEAVENLY DONUTS SWEETS & EATS,GULFPORT,10/31/2025,Routine - Food,31A-11-4,"Intermediate - Handwash sinks on cooks line used to store measuring cup inside bowl.
+
+Operator removed cup. **Corrected On-Site**",NO,,6200531,9544266
+13565613,HEAVENLY DONUTS SWEETS & EATS,GULFPORT,03/13/2026,Routine - Food,22-20-5,Basic - Accumulation of pink mold-like substance in the interior of the ice machine. **Warning**,YES,ice machine,6200531,9544266
+13565613,HEAVENLY DONUTS SWEETS & EATS,GULFPORT,03/13/2026,Routine - Food,32-02-4,Basic - Bathroom door left open other than during cleaning or maintenance. **Repeat Violation** **Warning**,NO,,6200531,9544266
+13565613,HEAVENLY DONUTS SWEETS & EATS,GULFPORT,03/13/2026,Routine - Food,32-04-4,Basic - Bathrooms located inside establishment not enclosed with self-closing doors. **Repeat Violation** **Warning**,NO,,6200531,9544266
+13565613,HEAVENLY DONUTS SWEETS & EATS,GULFPORT,03/13/2026,Routine - Food,14-09-4,"Basic - Cutting board has cut marks and is no longer cleanable.
+-cutting boards on cook line and at wait station are grooved **Warning**",NO,,6200531,9544266
+13565613,HEAVENLY DONUTS SWEETS & EATS,GULFPORT,03/13/2026,Routine - Food,10-20-4,Basic - In-use tongs on cook line  stored on oven door handle between uses. Operator removed tongs.  **Corrected On-Site** **Repeat Violation** **Warning**,NO,,6200531,9544266
+13565613,HEAVENLY DONUTS SWEETS & EATS,GULFPORT,03/13/2026,Routine - Food,03D-02-5,"High Priority - Cooked/heated time/temperature control for safety food not cooled from 135 degrees Fahrenheit to 41 degrees Fahrenheit within 6 hours.
+Corn chowder (48F - Cooling) made yesterday around 1-3 PM. Stop Sale issued.
+Sausage gravy  (51F - Cooling) made yesterday around 5 PM. Stop Sale issued. **Warning**",NO,,6200531,9544266
+13565613,HEAVENLY DONUTS SWEETS & EATS,GULFPORT,03/13/2026,Routine - Food,22-41-4,"High Priority - Dishmachine chlorine sanitizer not at proper minimum strength. Discontinue use of dishmachine for sanitizing and set up manual sanitization until dishmachine is repaired and sanitizing properly.
+Dishwasher (Chlorine 0ppm, retested at 50PPM)
+Operator adjusted sanitizer bucket so that tube could reach product and primed. **Corrected On-Site** **Repeat Violation** **Admin Complaint**",NO,,6200531,9544266
+13565613,HEAVENLY DONUTS SWEETS & EATS,GULFPORT,03/13/2026,Routine - Food,01B-13-4,"High Priority - Stop Sale issued due to food not being in a wholesome, sound condition.
+
+Butter packets reserved to customers.  **Warning**",NO,,6200531,9544266
+13565613,HEAVENLY DONUTS SWEETS & EATS,GULFPORT,03/13/2026,Routine - Food,01B-02-5,"High Priority - Stop Sale issued on time/temperature control for safety food due to temperature abuse.
+
+Corn chowder (48F - Cooling) made yesterday around 1-3 PM.
+
+Sausage gravy  (51F - Cooling) made yesterday around 5 PM.  **Warning**",NO,,6200531,9544266
+13565613,HEAVENLY DONUTS SWEETS & EATS,GULFPORT,03/13/2026,Routine - Food,07-08-5,"High Priority - Time/temperature control for safety food re-served to customers.
+Observed butter packets on table and server seat new guests with butter packs kept on table.  **Admin Complaint**",NO,,6200531,9544266
+13565613,HEAVENLY DONUTS SWEETS & EATS,GULFPORT,03/13/2026,Routine - Food,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+-cutting boards on cook line and at wait station are stained **Repeat Violation** **Warning**",NO,,6200531,9544266
+13565613,HEAVENLY DONUTS SWEETS & EATS,GULFPORT,03/13/2026,Routine - Food,53B-01-5,"Intermediate - No proof of required state approved employee training provided for any employees. To order approved program food safety material, call DBPR contracted provider: Florida Restaurant and Lodging Association (SafeStaff) 866-372-7233. **Warning**",NO,,6200531,9544266
+13651192,HEAVENLY DONUTS SWEETS & EATS,GULFPORT,03/17/2026,Routine - Food,22-20-5,Basic - - From initial inspection : Basic - Accumulation of pink mold-like substance in the interior of the ice machine. **Warning**     - From follow-up inspection 2026-03-17:  **Time Extended**,YES,ice machine,6200531,9544266
+13651192,HEAVENLY DONUTS SWEETS & EATS,GULFPORT,03/17/2026,Routine - Food,14-09-4,"Basic - - From initial inspection : Basic - Cutting board has cut marks and is no longer cleanable.
+-cutting boards on cook line and at wait station are grooved **Warning**     - From follow-up inspection 2026-03-17:  **Time Extended**",NO,,6200531,9544266
+13651192,HEAVENLY DONUTS SWEETS & EATS,GULFPORT,03/17/2026,Routine - Food,22-02-4,"Intermediate - - From initial inspection : Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+-cutting boards on cook line and at wait station are stained **Repeat Violation** **Warning**     - From follow-up inspection 2026-03-17:  **Time Extended**",NO,,6200531,9544266
+10903996,HOOTERS ON 4TH STREET,ST. PETERSBURG,10/20/2025,Routine - Food,36-73-4,Basic - Floor soiled/has accumulation of debris in walk-in cooler.,NO,,6200562,4418602
+10903996,HOOTERS ON 4TH STREET,ST. PETERSBURG,10/20/2025,Routine - Food,02D-01-5,"Basic - Working containers of food removed from original container not identified by common name.
+
+Container containing fry seasoning not labeled on bottom shelf of prep table in kitchen.
+
+Operator labeled container. **Corrected On-Site**",NO,,6200562,4418602
+10903996,HOOTERS ON 4TH STREET,ST. PETERSBURG,10/20/2025,Routine - Food,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+Can opener on prep table in kitchen soiled with buildup.",NO,,6200562,4418602
+10875277,THE KITCHEN IN DUNEDIN,DUNEDIN,12/22/2025,Routine - Food,36-37-5,"Basic - Ceiling not smooth, nonabsorbent and easily cleanable in food preparation, food storage, or warewashing areas.
+Ceiling tiles in dry storage acoustic tiles. Not smooth and easily cleanable. **Warning**",NO,,6200634,8731877
+10875277,THE KITCHEN IN DUNEDIN,DUNEDIN,12/22/2025,Routine - Food,36-36-4,"Basic - Ceiling tile missing.
+Ceiling tiles throughout kitchen missing in dry storage. **Warning**",NO,,6200634,8731877
+10875277,THE KITCHEN IN DUNEDIN,DUNEDIN,12/22/2025,Routine - Food,14-09-4,"Basic - Cutting board has cut marks and is no longer cleanable.
+Cutting boards on cook line and storage grooved,  **Warning**",NO,,6200634,8731877
+10875277,THE KITCHEN IN DUNEDIN,DUNEDIN,12/22/2025,Routine - Food,12B-07-4,"Basic - Employee beverage container on a food preparation table or over/next to clean equipment/utensils.
+Employee beverage next to margarine in wait station. Operator moved drink. **Warning**",NO,,6200634,8731877
+10875277,THE KITCHEN IN DUNEDIN,DUNEDIN,12/22/2025,Routine - Food,24-08-4,"Basic - Equipment and utensils not properly air-dried - wet nesting.
+Cups wet nesting in wait station above coffee machine. **Warning**",NO,,6200634,8731877
+10875277,THE KITCHEN IN DUNEDIN,DUNEDIN,12/22/2025,Routine - Food,14-11-5,"Basic - Equipment in poor repair.
+Handle of reach in cooler damaged in disrepair. Insulation visible. **Warning**",NO,,6200634,8731877
+10875277,THE KITCHEN IN DUNEDIN,DUNEDIN,12/22/2025,Routine - Food,36-17-5,"Basic - Floor tiles missing and/or in disrepair.
+Floor tiles throughout kitchen missing and in disrepair. **Warning**",NO,,6200634,8731877
+10875277,THE KITCHEN IN DUNEDIN,DUNEDIN,12/22/2025,Routine - Food,22-08-4,"Basic - Interior of oven/microwave has accumulation of black substance/grease/food debris.
+Interior of microwave on cookline soiled with debris  **Warning**",NO,,6200634,8731877
+10875277,THE KITCHEN IN DUNEDIN,DUNEDIN,12/22/2025,Routine - Food,12B-13-4,"Basic - Opened employee beverage container in a cold holding unit with food to be served to customers.
+Employee beverage in cooler in wait station. Operator moved beverage. **Corrected On-Site** **Warning**",NO,,6200634,8731877
+10875277,THE KITCHEN IN DUNEDIN,DUNEDIN,12/22/2025,Routine - Food,14-33-4,"Basic - Reach-in cooler shelves with rust that has pitted the surface.
+Shelves of reach in coolers on cookline and in dry storage rusted. **Warning**",NO,,6200634,8731877
+10875277,THE KITCHEN IN DUNEDIN,DUNEDIN,12/22/2025,Routine - Food,14-12-4,"Basic - Utensils in poor condition.
+Rubber spatulas on prep table melted.  **Warning**",NO,,6200634,8731877
+10875277,THE KITCHEN IN DUNEDIN,DUNEDIN,12/22/2025,Routine - Food,21-09-4,"Basic - Wet wiping cloths used for occasional spills on equipment food- and nonfood-contact surfaces not clean.
+Soiled wet wiping cloths used on ware washing station. Operator removed dirty wiping cloths. **Corrected On-Site** **Warning**",NO,,6200634,8731877
+10875277,THE KITCHEN IN DUNEDIN,DUNEDIN,12/22/2025,Routine - Food,21-07-4,"Basic - Wiping cloth chlorine sanitizing solution not at proper minimum strength.
+Sanitizer bucket at waitstation measured at 0ppm. Operator corrected to 100ppm **Corrected On-Site** **Warning**",NO,,6200634,8731877
+10875277,THE KITCHEN IN DUNEDIN,DUNEDIN,12/22/2025,Routine - Food,02D-01-5,"Basic - Working containers of food removed from original container not identified by common name.
+Squeeze bottle of butter on cookline not labeled.  **Warning**",NO,,6200634,8731877
+10875277,THE KITCHEN IN DUNEDIN,DUNEDIN,12/22/2025,Routine - Food,12A-27-4,"High Priority - Employee cracked raw shell eggs and then handled ready-to-eat food and/or clean equipment or utensils without washing hands. 
+Employee cracked eggs and then touched clean plates to serve food with. No hand wash. **Warning**",NO,,6200634,8731877
+10875277,THE KITCHEN IN DUNEDIN,DUNEDIN,12/22/2025,Routine - Food,12A-07-5,"High Priority - Employee failed to wash hands before putting on gloves to initiate a task working with food.
+Employee did not wash hands when changing gloves after moving container of dirty towels from hand wash sink or after cracking eggs. Only one hand sink inside the establishment for employees to use, located in back of kitchen in ware washing areas. **Warning**",NO,,6200634,8731877
+10875277,THE KITCHEN IN DUNEDIN,DUNEDIN,12/22/2025,Routine - Food,12A-13-4,"High Priority - Employee handled soiled equipment or utensils and then engaged in food preparation, handled clean equipment or utensils, or touched unwrapped single-service items without washing hands.
+Employee moved dirty wash bucket from, hand wash sink. Did not wash hands before putting on new gloves and preparing food in deep fryer. **Warning**",NO,,6200634,8731877
+10875277,THE KITCHEN IN DUNEDIN,DUNEDIN,12/22/2025,Routine - Food,08A-05-6,"High Priority - Raw animal food stored over/not properly separated from ready-to-eat food.
+Raw beef and pork overreact to eat chicken and blue berries in reach in freezer in back of kitchen.
+Raw pork overreact cooked pork in reach in cooler in dry storage. **Warning**",NO,,6200634,8731877
+10875277,THE KITCHEN IN DUNEDIN,DUNEDIN,12/22/2025,Routine - Food,02C-01-5,"High Priority - Ready-to-eat, time/temperature control for safety food marked with a date that exceeds 7 days after opening/preparation.
+Blue cheese 2qts prepared October 4th 25
+1 qt Alfredo sauce prepared 12 14 25
+2 qts Hollandaise prepared 12 13 25 **Repeat Violation** **Admin Complaint**",NO,,6200634,8731877
+10875277,THE KITCHEN IN DUNEDIN,DUNEDIN,12/22/2025,Routine - Food,01B-24-5,"High Priority - Ready-to-eat, time/temperature control for safety food not consumed/sold within 7 days after opening/preparation. See stop sale.
+Blue cheese prepared October 4th 25
+Alfredo sauce prepared 12 14 25
+Hollandaise prepared 12 13 25 **Warning**",NO,,6200634,8731877
+10875277,THE KITCHEN IN DUNEDIN,DUNEDIN,12/22/2025,Routine - Food,41-10-4,"High Priority - Toxic substance/chemical improperly stored.
+Butane fuel stored in top of reach in cooler on cookline. Operator moved fuel from food contact surfaces. **Corrected On-Site** **Warning**",NO,,6200634,8731877
+10875277,THE KITCHEN IN DUNEDIN,DUNEDIN,12/22/2025,Routine - Food,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+Cutting boards on cookline soiled with debris, deli slicer soiled with food debris **Warning**",NO,,6200634,8731877
+10875277,THE KITCHEN IN DUNEDIN,DUNEDIN,12/22/2025,Routine - Food,31A-11-4,"Intermediate - Handwash sink used for purposes other than handwashing.
+Hand wash sink used to store bucket with dirty wiping cloths. Operator removed bucket from handwash sink. **Corrected On-Site** **Warning**",NO,,6200634,8731877
+10875277,THE KITCHEN IN DUNEDIN,DUNEDIN,12/22/2025,Routine - Food,22-31-4,"Intermediate - Non-pitting surface rust on food-contact equipment.
+Surface of can opener blade rusted. **Warning**",NO,,6200634,8731877
+10875277,THE KITCHEN IN DUNEDIN,DUNEDIN,12/22/2025,Routine - Food,02C-02-5,"Intermediate - Ready-to-eat, time/temperature control for safety food prepared onsite and held more than 24 hours not properly date marked.
+Cooked sausage not date marked in reach in cooler on cookline soiled line. Operator said was prepared yesterday. **Warning**",NO,,6200634,8731877
+13601797,THE KITCHEN IN DUNEDIN,DUNEDIN,12/23/2025,Routine - Food,36-37-5,"Basic - - From initial inspection : Basic - Ceiling not smooth, nonabsorbent and easily cleanable in food preparation, food storage, or warewashing areas.
+Ceiling tiles in dry storage acoustic tiles. Not smooth and easily cleanable. **Warning**     - From follow-up inspection 2025-12-23:  **Time Extended**",NO,,6200634,8731877
+13601797,THE KITCHEN IN DUNEDIN,DUNEDIN,12/23/2025,Routine - Food,36-36-4,"Basic - - From initial inspection : Basic - Ceiling tile missing.
+Ceiling tiles throughout kitchen missing in dry storage. **Warning**     - From follow-up inspection 2025-12-23:  **Time Extended**",NO,,6200634,8731877
+13601797,THE KITCHEN IN DUNEDIN,DUNEDIN,12/23/2025,Routine - Food,14-09-4,"Basic - - From initial inspection : Basic - Cutting board has cut marks and is no longer cleanable.
+Cutting boards on cook line and storage grooved,  **Warning**     - From follow-up inspection 2025-12-23:  **Time Extended**",NO,,6200634,8731877
+13601797,THE KITCHEN IN DUNEDIN,DUNEDIN,12/23/2025,Routine - Food,12B-07-4,"Basic - - From initial inspection : Basic - Employee beverage container on a food preparation table or over/next to clean equipment/utensils.
+Employee beverage next to margarine in wait station. Operator moved drink. **Warning**     - From follow-up inspection 2025-12-23:  **Time Extended**",NO,,6200634,8731877
+13601797,THE KITCHEN IN DUNEDIN,DUNEDIN,12/23/2025,Routine - Food,24-08-4,"Basic - - From initial inspection : Basic - Equipment and utensils not properly air-dried - wet nesting.
+Cups wet nesting in wait station above coffee machine. **Warning**     - From follow-up inspection 2025-12-23:  **Time Extended**",NO,,6200634,8731877
+13601797,THE KITCHEN IN DUNEDIN,DUNEDIN,12/23/2025,Routine - Food,14-11-5,"Basic - - From initial inspection : Basic - Equipment in poor repair.
+Handle of reach in cooler damaged in disrepair. Insulation visible. **Warning**     - From follow-up inspection 2025-12-23:  **Time Extended**",NO,,6200634,8731877
+13601797,THE KITCHEN IN DUNEDIN,DUNEDIN,12/23/2025,Routine - Food,36-17-5,"Basic - - From initial inspection : Basic - Floor tiles missing and/or in disrepair.
+Floor tiles throughout kitchen missing and in disrepair. **Warning**     - From follow-up inspection 2025-12-23:  **Time Extended**",NO,,6200634,8731877
+13601797,THE KITCHEN IN DUNEDIN,DUNEDIN,12/23/2025,Routine - Food,02D-01-5,"Basic - - From initial inspection : Basic - Working containers of food removed from original container not identified by common name.
+Squeeze bottle of butter on cookline not labeled.  **Warning**     - From follow-up inspection 2025-12-23:  **Time Extended**",NO,,6200634,8731877
+13601797,THE KITCHEN IN DUNEDIN,DUNEDIN,12/23/2025,Routine - Food,22-02-4,"Intermediate - - From initial inspection : Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+Cutting boards on cookline soiled with debris, deli slicer soiled with food debris **Warning**     - From follow-up inspection 2025-12-23:  **Time Extended**",NO,,6200634,8731877
+13601797,THE KITCHEN IN DUNEDIN,DUNEDIN,12/23/2025,Routine - Food,22-31-4,"Intermediate - - From initial inspection : Intermediate - Non-pitting surface rust on food-contact equipment.
+Surface of can opener blade rusted. **Warning**     - From follow-up inspection 2025-12-23:  **Time Extended**",NO,,6200634,8731877
+10914619,LARGO SUBMARINE & GYROS,LARGO,10/27/2025,Routine - Food,22-20-5,Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,YES,ice machine,6200645,2234167
+10914619,LARGO SUBMARINE & GYROS,LARGO,10/27/2025,Routine - Food,03D-02-5,"High Priority - Cooked/heated time/temperature control for safety food not cooled from 135 degrees Fahrenheit to 41 degrees Fahrenheit within 6 hours. Gyro cone 47f, discarded cone due to cooling heated cone at end of night. Found cone reheating. Sent gyro cone handout to operator.",NO,,6200645,2234167
+10914619,LARGO SUBMARINE & GYROS,LARGO,10/27/2025,Routine - Food,14-31-5,High Priority - Nonfood-grade bags used in direct contact with food. Sliced deli meats stored in non food grade bags in refrigerators in back area.,NO,,6200645,2234167
+10914619,LARGO SUBMARINE & GYROS,LARGO,10/27/2025,Routine - Food,01B-02-5,"High Priority - Stop Sale issued on time/temperature control for safety food due to temperature abuse. Gyro cone 47f, discarded cone due to cooling heated cone at end of night. Found cone reheating.Sent gyro cone handout to operator.",NO,,6200645,2234167
+10942857,CITY OF TARPON SPGS GOLF CRSE,TARPON SPGS,12/02/2025,Routine - Food,36-34-5,"Basic - Ceiling/ceiling tiles/vents soiled with accumulated food debris, grease, dust, or mold-like substance.
+Wooden beams on ceiling soiled with dust.",NO,,6200674,2234177
+10942857,CITY OF TARPON SPGS GOLF CRSE,TARPON SPGS,12/02/2025,Routine - Food,22-43-4,"High Priority - Quaternary ammonium sanitizer not at proper minimum strength for manual warewashing. Do not use equipment/utensils not properly sanitized.
+Measured at 100ppm. Remeasured at 200ppm **Corrected On-Site**",NO,,6200674,2234177
+10942857,CITY OF TARPON SPGS GOLF CRSE,TARPON SPGS,12/02/2025,Routine - Food,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.
+Cutting boards  in cooking  area.",NO,,6200674,2234177
+10942857,CITY OF TARPON SPGS GOLF CRSE,TARPON SPGS,12/02/2025,Routine - Food,31A-11-4,"Intermediate - Handwash sink used for purposes other than handwashing.
+Bottle of broken Pepsi, brush, dry wiping cloth, and scrubber stored in handwashing sink in dry storage.",NO,,6200674,2234177
+10942857,CITY OF TARPON SPGS GOLF CRSE,TARPON SPGS,12/02/2025,Routine - Food,53B-14-5,"Intermediate - Required employee training expired for some employees. To order approved program food safety material, call DBPR contracted provider: Florida Restaurant and Lodging Association (SafeStaff) 866-372-7233.
+Rhoda",NO,,6200674,2234177
+13579593,OKEEFES TAP ROOM & RES,CLEARWATER,03/20/2026,Routine - Food,08B-49-4,Basic - Employee personal food not properly identified and segregated from food to be served to the public. Employee bottled coffee drinks stored in reach in cooler on cook line not segregated. Operator removed drinks from cooler.  **Corrected On-Site**,NO,,6200708,2234187
+13579593,OKEEFES TAP ROOM & RES,CLEARWATER,03/20/2026,Routine - Food,14-17-4,Basic - Walk-in cooler/freezer shelves with rust that has pitted the surface. Bread cooler outside has one shelf that is pitted with rust.,NO,,6200708,2234187
+13579593,OKEEFES TAP ROOM & RES,CLEARWATER,03/20/2026,Routine - Food,22-02-4,"Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime. Ice machine plastic interior soiled with black substance.",YES,ice machine,6200708,2234187
