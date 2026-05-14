@@ -4312,7 +4312,8 @@ function setPreset(k){
   else if(k==='freshice') presetFilter=p=>p.confirmed&&!p.chronic;
   else if(k==='followups') presetFilter=p=>{
     const lc=getLC(p.id);
-    return lc&&lc.followup&&!isC(p.id);
+    const st=(customers[p.id]||{}).status||p.status;
+    return lc&&lc.followup&&st==='prospect';
   };
   else if(k==='golf') presetFilter=p=>p.venue_type==='golf';
   rA();
@@ -6671,7 +6672,8 @@ function renderBriefing(){
   const in14=localISO(new Date(now.getTime()+14*864e5));
 
   const allFollowups=P.filter(p=>{
-    if(isC(p.id))return false;
+    const st=(customers[p.id]||{}).status||p.status;
+    if(st&&st!=='prospect')return false;
     const lc=getLC(p.id);
     return lc&&lc.followup;
   }).sort((a,b)=>{
@@ -7188,7 +7190,11 @@ function exportSchedulePDF(id){
     +'<div style="margin-top:20px;font-size:10px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:12px">'
     +'Pinellas Ice Co &bull; (727) 855-6873 &bull; pinellasiceco.com &bull; '
     +'Service complies with FDA Food Code 3-502.12</div>'
-    +'<br><div style="display:flex;gap:8px;margin-top:8px">'+'<button onclick="window.print()" style="padding:10px 20px;background:#1e3a5f;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px">Print / Save PDF</button>'+'<button onclick="window.close()" style="padding:10px 20px;background:#fff;color:#1e3a5f;border:2px solid #1e3a5f;border-radius:6px;cursor:pointer;font-size:12px">&#x2190; Close</button>'+'</div>'
+    +'<br><div style="display:flex;gap:8px;margin-top:8px">'
+    +'<button onclick="window.print()" style="padding:10px 20px;background:#1e3a5f;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px">Print / Save PDF</button>'
+    +'<button id="email-sched-popup-btn" onclick="(function(btn){if(!window.opener||!window.opener.emailServiceSchedule){alert(\'Open from the app to email\');return;}btn.disabled=true;btn.textContent=\'Sending...\';window.opener.emailServiceSchedule('+id+').then(function(){btn.textContent=\'\\u2713 Sent\';btn.style.background=\'#059669\';btn.style.color=\'#fff\';},function(){btn.disabled=false;btn.textContent=\'&#x1F4E7; Email to Client\';});})(this)" style="padding:10px 20px;background:#eff6ff;color:#0a84ff;border:2px solid #0a84ff;border-radius:6px;cursor:pointer;font-size:12px">&#x1F4E7; Email to Client</button>'
+    +'<button onclick="window.close()" style="padding:10px 20px;background:#fff;color:#1e3a5f;border:2px solid #1e3a5f;border-radius:6px;cursor:pointer;font-size:12px">&#x2190; Close</button>'
+    +'</div>'
     +'</body></html>');
   win.document.close();
   setTimeout(()=>win.print(),500);
