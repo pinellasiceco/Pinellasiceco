@@ -1903,7 +1903,7 @@ header{background:var(--navy);
 ::-webkit-scrollbar-thumb{background:var(--brd);border-radius:2px}
 #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);
   background:var(--navy);border-radius:10px;
-  padding:9px 16px;font-size:11px;color:#fff;transition:transform .2s;z-index:200;white-space:nowrap;
+  padding:9px 16px;font-size:11px;color:#fff;transition:transform .2s;z-index:9999;white-space:nowrap;
   box-shadow:0 4px 16px rgba(45,62,80,.25);font-weight:500}
 .tsect-hdr{display:flex;flex-direction:column;gap:2px;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--brd2)}
 .tsect-hdr span:first-child{font-weight:700;font-size:14px;color:var(--navy)}
@@ -9142,7 +9142,11 @@ async function sbHealthCheck(){
 }
 async function sendEmailViaProxy(to,subject,htmlBody){
   var url=(localStorage.getItem('pic_email_fn_url')||'').trim();
-  if(!url){toast('Email Proxy URL not set — add it in Settings → Email Proxy');return false;}
+  if(!url){
+    var sbUrl=(_SUPABASE_URL||(localStorage.getItem('pic_supabase_url')||'')).trim();
+    if(sbUrl){var autoUrl=sbUrl.replace(/\/?$/,'')+'/functions/v1/send-email';localStorage.setItem('pic_email_fn_url',autoUrl);url=autoUrl;}
+    else{alert('Email not configured.\n\nGo to Settings → Email Proxy and enter your Supabase Edge Function URL:\nhttps://YOUR-PROJECT.supabase.co/functions/v1/send-email');return false;}
+  }
   var anonKey=_SUPABASE_ANON_KEY||(localStorage.getItem('pic_supabase_key')||'').trim();
   var headers={'Content-Type':'application/json'};
   if(anonKey)headers['Authorization']='Bearer '+anonKey;
