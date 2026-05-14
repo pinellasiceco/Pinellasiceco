@@ -7192,7 +7192,7 @@ function exportSchedulePDF(id){
     +'Service complies with FDA Food Code 3-502.12</div>'
     +'<br><div style="display:flex;gap:8px;margin-top:8px">'
     +'<button onclick="window.print()" style="padding:10px 20px;background:#1e3a5f;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px">Print / Save PDF</button>'
-    +'<button id="email-sched-popup-btn" onclick="(function(btn){if(!window.opener||!window.opener.emailServiceSchedule){alert(\'Open from the app to email\');return;}btn.disabled=true;btn.textContent=\'Sending...\';window.opener.emailServiceSchedule('+id+').then(function(){btn.textContent=\'\\u2713 Sent\';btn.style.background=\'#059669\';btn.style.color=\'#fff\';},function(){btn.disabled=false;btn.textContent=\'&#x1F4E7; Email to Client\';});})(this)" style="padding:10px 20px;background:#eff6ff;color:#0a84ff;border:2px solid #0a84ff;border-radius:6px;cursor:pointer;font-size:12px">&#x1F4E7; Email to Client</button>'
+    +'<button onclick="if(window.opener&&window.opener.emailServiceSchedule){window.opener.emailServiceSchedule('+id+');}else{alert(\'Open from the app to use this button\');}" style="padding:10px 20px;background:#eff6ff;color:#0a84ff;border:2px solid #0a84ff;border-radius:6px;cursor:pointer;font-size:12px">&#x1F4E7; Email to Client</button>'
     +'<button onclick="window.close()" style="padding:10px 20px;background:#fff;color:#1e3a5f;border:2px solid #1e3a5f;border-radius:6px;cursor:pointer;font-size:12px">&#x2190; Close</button>'
     +'</div>'
     +'</body></html>');
@@ -7226,43 +7226,71 @@ function generateICS(id){
   toast('📅 Calendar file downloaded');
 }
 
-async function emailServiceSchedule(id){
+function emailServiceSchedule(id){
   var p=P.find(function(x){return x.id===id;});
   var c=customers[id]||{};
   if(!p){toast('Client not found');return;}
   if(!c.annual_schedule||!c.annual_schedule.length){toast('No schedule — close a deal first');return;}
-  var to=(c.email||'').trim();
-  if(!to){toast('No email on file — add it in Link Records');return;}
-  var btn=document.getElementById('email-sched-btn-'+id);
-  if(btn){btn.disabled=true;btn.textContent='Sending...';}
-  var rows=c.annual_schedule.map(function(s,i){
-    return '<tr style="background:'+(i%2?'#f9f9f9':'#fff')+'">'
-      +'<td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;font-size:13px">'+s.date_display+'</td>'
-      +'<td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;font-size:13px">'+(s.type==='deep_clean'?'&#x1F9FC; Full Deep Clean':'&#x1F527; Maintenance Visit')+'</td>'
-      +'<td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;font-size:13px;color:'+(s.status==='completed'?'#059669':'#0ea5e9')+'">'+( s.status==='completed'?'&#x2713; Completed':'Scheduled')+'</td>'
-      +'</tr>';
-  }).join('');
-  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="font-family:system-ui,sans-serif;max-width:620px;margin:0 auto;padding:24px;background:#f8fafc;color:#1e293b">'
-    +'<div style="background:#1e3a5f;border-radius:10px 10px 0 0;padding:20px 24px">'
-      +'<div style="color:#fff;font-size:20px;font-weight:800">Pinellas Ice Co</div>'
-      +'<div style="color:#94a3b8;font-size:11px">Commercial Ice Machine Cleaning</div>'
+  var bg=document.createElement('div');
+  bg.style.cssText='position:fixed;inset:0;z-index:700;background:rgba(15,31,56,.82);display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box';
+  bg.innerHTML='<div style="background:#fff;border-radius:14px;padding:22px;width:100%;max-width:320px">'
+    +'<div style="font-size:14px;font-weight:800;color:#0f1f38;margin-bottom:4px">&#x1F4C5; Email Service Schedule</div>'
+    +'<div style="font-size:11px;color:#64748b;margin-bottom:14px">'+p.name+'</div>'
+    +'<input id="sched-email-inp" type="email" placeholder="client@example.com" value="'+(c.email||'')+'"'
+    +' style="width:100%;padding:11px;border:2px solid #e2e8f0;border-radius:9px;font-size:14px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:12px;color:#0f1f38">'
+    +'<div style="display:flex;gap:8px">'
+    +'<button id="sched-cancel" style="flex:1;padding:11px;border:1px solid #e2e8f0;border-radius:9px;background:#f8fafc;color:#64748b;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Cancel</button>'
+    +'<button id="sched-send" style="flex:2;padding:11px;border:none;border-radius:9px;background:#0a84ff;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">Send Schedule</button>'
     +'</div>'
-    +'<div style="background:#fff;border-radius:0 0 10px 10px;padding:24px;border:1px solid #e2e8f0;border-top:none">'
-      +'<h2 style="margin:0 0 6px;font-size:16px;color:#1e293b">Your Annual Service Schedule</h2>'
-      +'<p style="margin:0 0 18px;font-size:13px;color:#64748b">Hi '+p.name+', here is your upcoming ice machine service schedule for the year. We&#39;ll reach out before each visit to confirm timing.</p>'
-      +'<table style="width:100%;border-collapse:collapse;margin-bottom:18px">'
-        +'<thead><tr style="background:#1e3a5f"><th style="padding:10px 14px;text-align:left;color:#fff;font-size:11px;font-weight:700">Date</th><th style="padding:10px 14px;text-align:left;color:#fff;font-size:11px;font-weight:700">Service</th><th style="padding:10px 14px;text-align:left;color:#fff;font-size:11px;font-weight:700">Status</th></tr></thead>'
-        +'<tbody>'+rows+'</tbody>'
-      +'</table>'
-      +(p.address?'<div style="background:#f1f5f9;border-radius:7px;padding:12px;font-size:12px;color:#475569;margin-bottom:16px"><b>Service Address:</b> '+p.address+', '+p.city+', FL</div>':'')
-      +'<p style="font-size:11px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:14px;margin:0">Questions? Call us at (727) 855-6873 or reply to this email. &bull; Service complies with FDA Food Code 3-502.12</p>'
-    +'</div>'
-  +'</body></html>';
-  var ok=await sendEmailViaProxy(to,'Your Annual Ice Machine Service Schedule — '+p.name,html);
-  if(btn){
-    if(ok){btn.textContent='&#x2713; Sent';btn.style.background='#059669';btn.style.color='#fff';btn.style.borderColor='#059669';}
-    else{btn.disabled=false;btn.textContent='&#x1F4C5; Email Schedule';}
+  +'</div>';
+  document.body.appendChild(bg);
+  var inp=document.getElementById('sched-email-inp');
+  if(inp&&!c.email)setTimeout(function(){inp.focus();},120);
+  var _lt=0;
+  function _handle(e){
+    if(e.type==='click'&&Date.now()-_lt<350)return;
+    if(e.type==='touchend')_lt=Date.now();
+    if(e.target===bg){bg.remove();return;}
+    var btn=e.target.closest('#sched-cancel,#sched-send');
+    if(!btn)return;
+    if(e.type==='touchend')e.preventDefault();
+    if(btn.id==='sched-cancel'){bg.remove();return;}
+    var to=(inp?inp.value:'').trim();
+    if(!to){if(inp){inp.style.borderColor='#dc2626';inp.focus();}toast('Enter an email address');return;}
+    if(inp)inp.style.borderColor='#e2e8f0';
+    btn.disabled=true;btn.textContent='Sending...';
+    if(!customers[id])customers[id]={};
+    customers[id].email=to;custSave();
+    var rows=c.annual_schedule.map(function(s,i){
+      return '<tr style="background:'+(i%2?'#f9f9f9':'#fff')+'">'
+        +'<td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;font-size:13px">'+s.date_display+'</td>'
+        +'<td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;font-size:13px">'+(s.type==='deep_clean'?'&#x1F9FC; Full Deep Clean':'&#x1F527; Maintenance Visit')+'</td>'
+        +'<td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;font-size:13px;color:'+(s.status==='completed'?'#059669':'#0ea5e9')+'">'+(s.status==='completed'?'&#x2713; Completed':'Scheduled')+'</td>'
+        +'</tr>';
+    }).join('');
+    var html='<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="font-family:system-ui,sans-serif;max-width:620px;margin:0 auto;padding:24px;background:#f8fafc;color:#1e293b">'
+      +'<div style="background:#1e3a5f;border-radius:10px 10px 0 0;padding:20px 24px">'
+        +'<div style="color:#fff;font-size:20px;font-weight:800">Pinellas Ice Co</div>'
+        +'<div style="color:#94a3b8;font-size:11px">Commercial Ice Machine Cleaning</div>'
+      +'</div>'
+      +'<div style="background:#fff;border-radius:0 0 10px 10px;padding:24px;border:1px solid #e2e8f0;border-top:none">'
+        +'<h2 style="margin:0 0 6px;font-size:16px;color:#1e293b">Your Annual Service Schedule</h2>'
+        +'<p style="margin:0 0 18px;font-size:13px;color:#64748b">Hi '+p.name+', here is your upcoming ice machine service schedule for the year. We&#39;ll reach out before each visit to confirm timing.</p>'
+        +'<table style="width:100%;border-collapse:collapse;margin-bottom:18px">'
+          +'<thead><tr style="background:#1e3a5f"><th style="padding:10px 14px;text-align:left;color:#fff;font-size:11px;font-weight:700">Date</th><th style="padding:10px 14px;text-align:left;color:#fff;font-size:11px;font-weight:700">Service</th><th style="padding:10px 14px;text-align:left;color:#fff;font-size:11px;font-weight:700">Status</th></tr></thead>'
+          +'<tbody>'+rows+'</tbody>'
+        +'</table>'
+        +(p.address?'<div style="background:#f1f5f9;border-radius:7px;padding:12px;font-size:12px;color:#475569;margin-bottom:16px"><b>Service Address:</b> '+p.address+', '+p.city+', FL</div>':'')
+        +'<p style="font-size:11px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:14px;margin:0">Questions? Call us at (727) 855-6873 or reply to this email. &bull; Service complies with FDA Food Code 3-502.12</p>'
+      +'</div>'
+    +'</body></html>';
+    sendEmailViaProxy(to,'Your Annual Ice Machine Service Schedule &#x2014; '+p.name,html).then(function(ok){
+      if(ok){btn.textContent='&#x2713; Sent';btn.style.background='#059669';setTimeout(function(){bg.remove();},1800);}
+      else{btn.disabled=false;btn.textContent='Send Schedule';}
+    });
   }
+  bg.addEventListener('click',_handle);
+  bg.addEventListener('touchend',_handle);
 }
 
 function geoClusterSchedule(){
@@ -7518,7 +7546,7 @@ function renderServiceCal(){
         +'<button onclick="openServiceLog('+p.id+')" style="flex:2;padding:7px;border:none;border-radius:7px;background:#059669;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">&#x2713; Log Service Visit</button>'
         +'<button onclick="reschedule('+p.id+')" style="flex:1;padding:7px;border:1px solid var(--brd);border-radius:7px;background:var(--surf);color:var(--sub);font-size:10px;cursor:pointer;font-family:inherit">Reschedule</button>'
         +(c.annual_schedule?'<button onclick="exportSchedulePDF('+p.id+')" style="flex:1;padding:7px;border:1px solid var(--blu);border-radius:7px;background:#eff6ff;color:var(--blu);font-size:10px;cursor:pointer;font-family:inherit">&#x1F4C5; Schedule</button>':'')
-        +(c.annual_schedule&&c.annual_schedule.length&&c.email?'<button id="email-sched-btn-'+p.id+'" onclick="emailServiceSchedule('+p.id+')" style="flex:1;padding:7px;border:1px solid #7c3aed;border-radius:7px;background:#f5f3ff;color:#7c3aed;font-size:10px;cursor:pointer;font-family:inherit">&#x1F4C5; Email Schedule</button>':'')
+        +(c.annual_schedule&&c.annual_schedule.length?'<button onclick="emailServiceSchedule('+p.id+')" style="flex:1;padding:7px;border:1px solid #7c3aed;border-radius:7px;background:#f5f3ff;color:#7c3aed;font-size:10px;cursor:pointer;font-family:inherit">&#x1F4C5; Email Schedule</button>':'')
         +(p.phone?'<a href="tel:'+p.phone.replace(/\s/g,'')+'" style="flex:1;padding:7px;border:1px solid var(--blu);border-radius:7px;background:#eff6ff;color:var(--blu);font-size:10px;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;font-family:inherit">Call</a>':'')
       +'</div>'
 
