@@ -7192,7 +7192,7 @@ function exportSchedulePDF(id){
     +'Service complies with FDA Food Code 3-502.12</div>'
     +'<br><div style="display:flex;gap:8px;margin-top:8px">'
     +'<button onclick="window.print()" style="padding:10px 20px;background:#1e3a5f;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px">Print / Save PDF</button>'
-    +'<button onclick="if(window.opener&&window.opener.emailServiceSchedule){window.opener.emailServiceSchedule('+id+');}else{alert(\'Open from the app to use this button\');}" style="padding:10px 20px;background:#eff6ff;color:#0a84ff;border:2px solid #0a84ff;border-radius:6px;cursor:pointer;font-size:12px">&#x1F4E7; Email to Client</button>'
+    +'<button onclick="window.opener&&window.opener.emailServiceSchedule&&window.opener.emailServiceSchedule('+id+')" style="padding:10px 20px;background:#eff6ff;color:#0a84ff;border:2px solid #0a84ff;border-radius:6px;cursor:pointer;font-size:12px">&#x1F4E7; Email to Client</button>'
     +'<button onclick="window.close()" style="padding:10px 20px;background:#fff;color:#1e3a5f;border:2px solid #1e3a5f;border-radius:6px;cursor:pointer;font-size:12px">&#x2190; Close</button>'
     +'</div>'
     +'</body></html>');
