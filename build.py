@@ -2528,6 +2528,9 @@ header{background:var(--navy);
           style="width:100%;padding:8px;border:1px solid var(--brd);border-radius:7px;font-size:11px;font-family:inherit;background:var(--surf);color:var(--txt);outline:none;margin-bottom:8px">
           <option value="">Select a client...</option>
         </select>
+        <select id="svc-report-visit" onchange="loadReportClient()"
+          style="width:100%;padding:8px;border:1px solid var(--brd);border-radius:7px;font-size:11px;font-family:inherit;background:var(--surf);color:var(--txt);outline:none;margin-bottom:8px;display:none">
+        </select>
         <div id="svc-report-preview" style="overflow-y:auto;max-height:70vh;-webkit-overflow-scrolling:touch"></div>
       </div>
 
@@ -8304,35 +8307,49 @@ function renderReports(){
   sel.innerHTML='<option value="">Select a client...</option>'
     +recurring.map(p=>'<option value="'+p.id+'">'+p.name+' — '+p.city+'</option>').join('');
   document.getElementById('svc-report-preview').innerHTML='';
+  var vs=document.getElementById('svc-report-visit');if(vs){vs.style.display='none';vs.innerHTML='';}
 }
 
 function loadReportClient(){
   const id=parseInt(document.getElementById('svc-report-client').value);
-  if(!id){document.getElementById('svc-report-preview').innerHTML='';return;}
+  if(!id){document.getElementById('svc-report-preview').innerHTML='';var _vs=document.getElementById('svc-report-visit');if(_vs){_vs.style.display='none';_vs.innerHTML='';}return;}
   const p=P.find(x=>x.id===id);
   if(!p)return;
   const c=customers[id]||{};
 
-  // Pull ATP readings from last service log entry
-  const entries=log[id]||[];
-  const lastSvc=entries.filter(e=>e.outcome==='service_done').slice(-1)[0];
-  // Pull ATP from multiple sources: log entry, atp_history, or direct customer fields
-  const atpHistory=(c.atp_history||[]).slice(-1)[0];
-  const atpPre=lastSvc?.atp_pre||atpHistory?.pre||c.atp_pre_last||'—';
-  const atpPost=lastSvc?.atp||atpHistory?.post||c.atp_post_last||'—';
+  // Populate visit dropdown (most recent first)
+  const svcHistory=(c.service_history||[]).slice().reverse();
+  const visitSel=document.getElementById('svc-report-visit');
+  var visitIdx=0;
+  if(visitSel){
+    if(visitSel.dataset.clientId!==String(id)){visitSel.dataset.clientId=String(id);visitSel.value='0';}
+    visitIdx=parseInt(visitSel.value)||0;
+    if(svcHistory.length>1){
+      visitSel.style.display='block';
+      visitSel.innerHTML=svcHistory.map(function(v,i){
+        var lbl=(v.date||('Visit '+(svcHistory.length-i)))+(v.atp?' — '+v.atp+' RLU':'');
+        return '<option value="'+i+'"'+(i===visitIdx?' selected':'')+'>'+lbl+'</option>';
+      }).join('');
+    }else{visitSel.style.display='none';}
+  }
+
+  // Data from selected visit
+  const lastSvcEntry=svcHistory[visitIdx]||{};
+  const atpPre=lastSvcEntry.atp_pre||c.atp_pre_last||'—';
+  const atpPost=lastSvcEntry.atp||c.atp_post_last||'—';
   const hasATP=(atpPre!=='—'||atpPost!=='—');
 
   const today=new Date();
-  const dateStr=today.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  const visitDate=lastSvcEntry.date?new Date(lastSvcEntry.date.replace(/-/g,'/')):today;
+  const dateStr=visitDate.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
   // Use actual scheduled next_service if available, else today+60
   const nextSvcDate=c.next_service?new Date(c.next_service.replace(/-/g,'/')):new Date(today.getTime()+60*864e5);
   const nextSvc=nextSvcDate.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-  const reportNum='PIC-'+today.getFullYear()+String(today.getMonth()+1).padStart(2,'0')+String(today.getDate()).padStart(2,'0')+'-'+id;
+  const reportNum='PIC-'+visitDate.getFullYear()+String(visitDate.getMonth()+1).padStart(2,'0')+String(visitDate.getDate()).padStart(2,'0')+'-'+id;
 
   const machineBrand=c.machine_brand||'Commercial Ice Machine';
   const machineModel=c.machine_model||'';
   const machineSerial=c.machine_serial||'';
-  const lastSvcEntry=(c.service_history||[]).slice(-1)[0]||{};
   const filterReplaced=lastSvcEntry.filter_replaced||c.filter_replaced||false;
   const filterType=lastSvcEntry.filter_type||c.filter_type||'Everpure i2000(2) Insurice';
 
