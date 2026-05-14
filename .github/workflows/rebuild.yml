@@ -9,11 +9,20 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
   rebuild:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
 
     steps:
       - name: Checkout repo
@@ -47,6 +56,7 @@ jobs:
       - name: Commit and push
         run: |
           cp prospecting_tool.html index.html
+          touch .nojekyll
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git fetch origin main
@@ -54,6 +64,18 @@ jobs:
           git add -A
           git commit --allow-empty -m "Daily rebuild $(date +'%Y-%m-%d %H:%M')"
           git push origin HEAD:main
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4
 
       - name: Send daily briefing email
         env:
