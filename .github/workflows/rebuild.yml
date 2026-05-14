@@ -10,6 +10,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: rebuild
+  cancel-in-progress: true
+
 jobs:
   rebuild:
     if: github.actor != 'github-actions[bot]'
