@@ -80,26 +80,52 @@ def save_snapshot(data):
     snap.write_text(json.dumps(lite), encoding='utf-8')
 
 
-def get_contacted_ids():
-    """Fetch IDs of already-contacted prospects from Supabase. Fails open."""
+def load_contact_log():
+    """Fetch last-contact dates per prospect from pic_log. Returns {str(id): last_date_str}. Fails open."""
     if not SUPABASE_URL or not SUPABASE_KEY:
-        return set()
+        return {}
     try:
         import urllib.request
-        url = f"{SUPABASE_URL}/rest/v1/pic_briefing_export?limit=1&order=exported_at.desc"
+        url = f"{SUPABASE_URL}/rest/v1/pic_log?select=prospect_id,data&limit=10000"
         req = urllib.request.Request(url, headers={
             'apikey': SUPABASE_KEY,
             'Authorization': f'Bearer {SUPABASE_KEY}',
         })
-        resp = urllib.request.urlopen(req, timeout=10)
+        resp = urllib.request.urlopen(req, timeout=15)
         rows = json.loads(resp.read())
-        if rows:
-            ids = set(str(x) for x in rows[0].get('contacted_ids', []))
-            print(f'  Filtered {len(ids)} already-contacted prospects from cold sections')
-            return ids
+        last_contact = {}
+        for row in rows:
+            pid = str(row.get('prospect_id', ''))
+            entries = row.get('data') or []
+            if not isinstance(entries, list):
+                continue
+            real_entries = [e for e in entries if isinstance(e, dict) and e.get('notes') != 'Skipped' and e.get('date')]
+            if not real_entries:
+                continue
+            latest = max(e['date'] for e in real_entries)
+            if pid not in last_contact or latest > last_contact[pid]:
+                last_contact[pid] = latest
+        print(f'  Loaded contact log: {len(last_contact)} prospects with contact history')
+        return last_contact
     except Exception as e:
-        print(f'  Warning: could not fetch contacted IDs from Supabase ({e}) — showing all prospects')
-    return set()
+        print(f'  Warning: could not load contact log from Supabase ({e}) — skipping recency filter')
+        return {}
+
+
+def days_since_contact(contact_log, prospect_id):
+    """Return days since last real contact, or 9999 if never contacted."""
+    date_str = contact_log.get(str(prospect_id))
+    if not date_str:
+        return 9999
+    try:
+        d = datetime.strptime(date_str[:10], '%Y-%m-%d')
+        return max(0, (datetime.now() - d).days)
+    except Exception:
+        return 9999
+
+
+def is_pinellas(r):
+    return (r.get('county') or '').strip().lower() == 'pinellas'
 
 
 def compare(current, previous):
@@ -190,9 +216,13 @@ def load_partner_fees():
         return []
 
 
-def build_email(current, changes, stats, contacted_ids):
+def build_email(current, changes, stats, contact_log):
     today = datetime.now().strftime('%A, %B %-d, %Y')
     has_changes = any(len(v) > 0 for v in changes.values())
+
+    def _fresh(r, threshold_days):
+        """True if prospect was contacted within threshold_days (should be excluded)."""
+        return days_since_contact(contact_log, r.get('id', '')) < threshold_days
 
     sections = ''
 
@@ -248,8 +278,9 @@ def build_email(current, changes, stats, contacted_ids):
         'new_to_dataset':     'info',
     }
     _pri_rank = {'CALLBACK': 0, 'HOT': 1, 'WARM': 2, 'WATCH': 3, 'LATER': 4}
+    # NSY: Pinellas only (no contact recency filter — always show new businesses regardless of contact)
     all_new = sorted(
-        [r for r in current if r.get('new_reason')],
+        [r for r in current if r.get('new_reason') and is_pinellas(r)],
         key=lambda x: (_pri_rank.get(x.get('priority', ''), 4), -x.get('score', 0))
     )
     nsy_urgent  = [r for r in all_new if (r.get('change_severity') or _severity_map.get(r.get('new_reason',''),'info')) == 'urgent'][:6]
@@ -292,11 +323,14 @@ def build_email(current, changes, stats, contacted_ids):
         </div>"""
 
     if changes['emergency_closures']:
-        rows = ''.join(biz_row(r) for r in changes['emergency_closures'])
-        sections += f"""
+        # Emergency closures: Pinellas only + contacted within 7 days excluded
+        filtered = [r for r in changes['emergency_closures'] if is_pinellas(r) and not _fresh(r, 7)]
+        if filtered:
+            rows = ''.join(biz_row(r) for r in filtered)
+            sections += f"""
         <div style="margin-bottom:24px">
           <div style="font-size:13px;font-weight:800;color:#dc2626;margin-bottom:8px">
-            &#x1F6A8; Emergency Closures / Overdue Callbacks ({len(changes['emergency_closures'])})
+            &#x1F6A8; Emergency Closures / Overdue Callbacks ({len(filtered)})
           </div>
           <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden">
             <tr style="background:#fef2f2"><th style="padding:8px 12px;text-align:left;font-size:11px;color:#dc2626">Business</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#dc2626">City</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#dc2626">Phone</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#dc2626">Score</th></tr>
@@ -305,8 +339,8 @@ def build_email(current, changes, stats, contacted_ids):
         </div>"""
 
     if changes['new_callbacks']:
-        # Filter already-contacted prospects from cold sections
-        filtered = [r for r in changes['new_callbacks'] if str(r.get('id','')) not in contacted_ids]
+        # New callbacks: Pinellas only + contacted within 30 days excluded
+        filtered = [r for r in changes['new_callbacks'] if is_pinellas(r) and not _fresh(r, 30)]
         if filtered:
             rows = ''.join(biz_row(r) for r in filtered)
             sections += f"""
@@ -321,7 +355,8 @@ def build_email(current, changes, stats, contacted_ids):
         </div>"""
 
     if changes['new_ice_fresh']:
-        filtered = [r for r in changes['new_ice_fresh'] if str(r.get('id','')) not in contacted_ids]
+        # Ice fresh violations: Pinellas only + contacted within 30 days excluded
+        filtered = [r for r in changes['new_ice_fresh'] if is_pinellas(r) and not _fresh(r, 30)]
         if filtered:
             rows = ''.join(biz_row(r) for r in filtered)
             sections += f"""
@@ -336,8 +371,11 @@ def build_email(current, changes, stats, contacted_ids):
         </div>"""
 
     if changes['score_jumpers']:
-        rows = ''.join(biz_row(r, f"+{r.get('_jump',0)} pts") for r in changes['score_jumpers'])
-        sections += f"""
+        # Score jumpers: Pinellas only + contacted within 30 days excluded
+        filtered = [r for r in changes['score_jumpers'] if is_pinellas(r) and not _fresh(r, 30)]
+        if filtered:
+            rows = ''.join(biz_row(r, f"+{r.get('_jump',0)} pts") for r in filtered)
+            sections += f"""
         <div style="margin-bottom:24px">
           <div style="font-size:13px;font-weight:800;color:#d97706;margin-bottom:8px">
             &#x1F4C8; Biggest Score Jumps
@@ -454,13 +492,13 @@ def main():
     previous = load_previous()
     print(f'  Previous snapshot: {len(previous):,} records')
 
-    contacted_ids = get_contacted_ids()
+    contact_log = load_contact_log()
     changes = compare(current, previous)
     stats   = counts(current)
 
     print(f"  Changes: {len(changes['emergency_closures'])} closures, {len(changes['new_callbacks'])} new callbacks, {len(changes['new_ice_fresh'])} fresh ice viol.")
 
-    subject, html = build_email(current, changes, stats, contacted_ids)
+    subject, html = build_email(current, changes, stats, contact_log)
     print(f'  Subject: {subject}')
 
     ok = send_email(subject, html)
