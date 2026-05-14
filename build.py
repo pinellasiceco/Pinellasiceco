@@ -2531,7 +2531,7 @@ header{background:var(--navy);
         <select id="svc-report-visit" onchange="loadReportClient()"
           style="width:100%;padding:8px;border:1px solid var(--brd);border-radius:7px;font-size:11px;font-family:inherit;background:var(--surf);color:var(--txt);outline:none;margin-bottom:8px;display:none">
         </select>
-        <div id="svc-report-preview" style="overflow-y:auto;max-height:70vh;-webkit-overflow-scrolling:touch"></div>
+        <div id="svc-report-preview"></div>
       </div>
 
       <!-- Tutorials -->
@@ -8968,7 +8968,7 @@ function toggleReportEmailRow(){
   row.style.display=showing?'none':'block';
   if(!showing){var inp=document.getElementById('report-email-to');if(inp)inp.focus();}
 }
-function emailServiceReport(id){
+async function emailServiceReport(id){
   var p=P.find(function(x){return x.id===id;});
   var inp=document.getElementById('report-email-to');
   var c=customers[id]||{};
@@ -8981,13 +8981,17 @@ function emailServiceReport(id){
     toast('Enter the email address to send to');
     return;
   }
-  // Save email to customer record for next time
   if(to&&customers[id]){customers[id].email=to;custSave();}
   var content=document.getElementById('report-content');
   if(!content){toast('No report loaded — select a client first');return;}
+  var btn=document.querySelector('#report-email-row button');
+  if(btn){btn.disabled=true;btn.textContent='Sending...';}
   var subject='Ice Machine Service Report — '+(p?p.name:'');
-  toast('Sending report...');
-  sendEmailViaProxy(to,subject,'<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="font-family:system-ui,sans-serif;max-width:680px;margin:0 auto;padding:20px;background:#f8fafc">'+content.outerHTML+'</body></html>');
+  var ok=await sendEmailViaProxy(to,subject,'<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="font-family:system-ui,sans-serif;max-width:680px;margin:0 auto;padding:20px;background:#f8fafc">'+content.outerHTML+'</body></html>');
+  if(btn){
+    if(ok){btn.textContent='✓ Sent';btn.style.background='#059669';}
+    else{btn.disabled=false;btn.textContent='Send';}
+  }
 }
 function emailComplianceReport(id){
   var p=P.find(function(x){return x.id===id;});
