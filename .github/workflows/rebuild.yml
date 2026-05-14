@@ -34,6 +34,7 @@ jobs:
         run: |
           git fetch origin claude/fix-multiple-app-bugs-j1hpJ 2>/dev/null || true
           git checkout origin/claude/fix-multiple-app-bugs-j1hpJ -- build.py sw.js send_briefing.py 2>/dev/null || true
+          git checkout origin/claude/fix-multiple-app-bugs-j1hpJ -- docs/ 2>/dev/null || true
 
       - name: Build prospect tool
         env:
