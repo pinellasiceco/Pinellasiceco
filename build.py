@@ -2927,7 +2927,13 @@ const OI_COLOR={
 };
 // Normalize legacy outcomes to new system for filtering
 function normO(o){
-  // 'quoted' is a first-class outcome — do NOT normalize it to 'in_play'
+  if(!o)return '';
+  var s=o.toLowerCase().trim();
+  // Call/phone outcomes — always no_contact, never quoted
+  if(s==='call'||s==='called'||s==='phone_call'||s==='phone call')return 'no_contact';
+  // Quoted — exact match only
+  if(s==='quoted'||s==='quote_sent'||s==='quote sent')return 'quoted';
+  // Legacy map
   const map={customer_recurring:'signed',customer_once:'signed',customer_intro:'intro_set',
     follow_up:'in_play',interested:'in_play',scheduled:'intro_set',
     not_interested:'not_now',no_answer:'no_contact',churned:'dead'};
@@ -3989,6 +3995,13 @@ function isC(id){
   if(!entries.length)return false;
   // Do not count as contacted if ALL entries are skips
   return entries.some(e=>e.notes!=='Skipped');
+}
+function isPinellas(p){return (p.county||'').toLowerCase()==='pinellas';}
+function daysSinceContact(id){
+  var entries=(log[id]||[]).filter(function(e){return e.notes!=='Skipped';});
+  if(!entries.length)return 9999;
+  var last=new Date(entries[entries.length-1].date);
+  return isNaN(last)?9999:Math.floor((new Date()-last)/864e5);
 }
 
 function fp(opts){
@@ -5229,8 +5242,14 @@ function showCard(id){
     if(e.type==='click'&&Date.now()-_scLastTouch<350)return; // suppress ghost click after touchend
     if(e.type==='touchend')_scLastTouch=Date.now();
 
-    // Backdrop tap → close
-    if(e.target===bg){e.preventDefault();bg.remove();return;}
+    // Backdrop tap → close (but if date input is focused, just blur it — iOS date picker dismissal fires this)
+    if(e.target===bg){
+      e.preventDefault();
+      var _fupEl=document.getElementById('sc-followup');
+      if(_fupEl&&document.activeElement===_fupEl){_fupEl.blur();return;}
+      bg.remove();
+      return;
+    }
 
     var btn=e.target.closest(
       '[data-scout],[data-sctype],[data-fupdays],[data-scr],[data-ci],'
@@ -5931,9 +5950,10 @@ const STAGE_RANK={null:0,inplay:1,quoted:2,won:3,lost:-1};
 function getBlockedOutcomes(p){
   const stage=getProspectStage(p);
   const blocked=new Set();
-  // If already quoted or further, block backward moves to in-play outcomes
+  // If already quoted or further, block backward stage moves only
+  // no_contact and voicemail are call attempts — never block them
   if(stage==='quoted'||stage==='won'){
-    ['intro_set','in_play','no_contact','voicemail'].forEach(o=>blocked.add(o));
+    ['intro_set','in_play'].forEach(o=>blocked.add(o));
   }
   // If already won, block everything except lost (churn)
   if(stage==='won'){
@@ -6158,7 +6178,7 @@ function rCust(){
         +'</div>'
         +serviceDueH
         +'<div style="display:flex;gap:5px;margin-top:3px">'
-          +'<button onclick="event.stopPropagation();emailComplianceReport('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();emailComplianceReport('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:1px solid #0a84ff;border-radius:6px;background:#eff6ff;color:#0a84ff;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E7; Email Report</button>'
+          +'<button onclick="event.stopPropagation();emailComplianceReport('+p.id+',this)" ontouchend="event.stopPropagation();event.preventDefault();emailComplianceReport('+p.id+',this)" style="flex:1;font-size:9px;padding:5px;border:1px solid #0a84ff;border-radius:6px;background:#eff6ff;color:#0a84ff;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E7; Email Report</button>'
           +(c.annual_schedule&&c.annual_schedule.length?'<button onclick="event.stopPropagation();generateICS('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();generateICS('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:1px solid #059669;border-radius:6px;background:#ecfdf5;color:#059669;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4C5; Export Schedule</button>':'')
         +'</div>'
       +'</div>'
@@ -6449,6 +6469,8 @@ function buildTodaysPlan(){
   var s=loadSettings();
   var PRI={CALLBACK:4,HOT:3,WARM:2,COOL:1,WATCH:1};
   return P.filter(function(p){
+    if(!isPinellas(p))return false;
+    if(daysSinceContact(p.id)<7)return false;
     return !isC(p.id)&&(p.priority==='CALLBACK'||p.priority==='HOT'||p.priority==='WARM');
   }).map(function(p){
     var entries=log[p.id]||[];
@@ -6690,7 +6712,7 @@ function renderBriefing(){
   // ── NEW SINCE YESTERDAY — Urgent / Watch / Info tiers ────────────────
   const nsyEl=document.getElementById('new-since-yesterday');
   if(nsyEl){
-    const newBizs=P.filter(p=>p.new_reason&&!isC(p.id))
+    const newBizs=P.filter(p=>p.new_reason&&!isC(p.id)&&isPinellas(p))
       .sort((a,b)=>(PO[a.priority]??99)-(PO[b.priority]??99)||(b.score||0)-(a.score||0));
     if(newBizs.length){
       nsyEl.style.display='block';
@@ -6719,6 +6741,8 @@ function renderBriefing(){
 
   // ── STRIKE ZONE (CALLBACK + chronic + ≤60d inspection) ───────────────
   const strikeZone=P.filter(p=>{
+    if(!isPinellas(p))return false;
+    if(daysSinceContact(p.id)<30)return false;
     if(isC(p.id))return false;
     return p.priority==='CALLBACK'&&p.chronic&&p.days_until<=60;
   }).sort((a,b)=>a.days_until-b.days_until).slice(0,8);
@@ -6731,6 +6755,8 @@ function renderBriefing(){
 
   // ── BEST COLD TARGETS ─────────────────────────────────────────────────
   const coldTargets=P.filter(p=>{
+    if(!isPinellas(p))return false;
+    if(daysSinceContact(p.id)<30)return false;
     if(isC(p.id))return false;
     return p.priority==='CALLBACK'||p.priority==='HOT';
   }).sort((a,b)=>(PO[a.priority]??99)-(PO[b.priority]??99)||(b.score||0)-(a.score||0)).slice(0,5);
@@ -7194,6 +7220,45 @@ function generateICS(id){
   toast('📅 Calendar file downloaded');
 }
 
+async function emailServiceSchedule(id){
+  var p=P.find(function(x){return x.id===id;});
+  var c=customers[id]||{};
+  if(!p){toast('Client not found');return;}
+  if(!c.annual_schedule||!c.annual_schedule.length){toast('No schedule — close a deal first');return;}
+  var to=(c.email||'').trim();
+  if(!to){toast('No email on file — add it in Link Records');return;}
+  var btn=document.getElementById('email-sched-btn-'+id);
+  if(btn){btn.disabled=true;btn.textContent='Sending...';}
+  var rows=c.annual_schedule.map(function(s,i){
+    return '<tr style="background:'+(i%2?'#f9f9f9':'#fff')+'">'
+      +'<td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;font-size:13px">'+s.date_display+'</td>'
+      +'<td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;font-size:13px">'+(s.type==='deep_clean'?'&#x1F9FC; Full Deep Clean':'&#x1F527; Maintenance Visit')+'</td>'
+      +'<td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;font-size:13px;color:'+(s.status==='completed'?'#059669':'#0ea5e9')+'">'+( s.status==='completed'?'&#x2713; Completed':'Scheduled')+'</td>'
+      +'</tr>';
+  }).join('');
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="font-family:system-ui,sans-serif;max-width:620px;margin:0 auto;padding:24px;background:#f8fafc;color:#1e293b">'
+    +'<div style="background:#1e3a5f;border-radius:10px 10px 0 0;padding:20px 24px">'
+      +'<div style="color:#fff;font-size:20px;font-weight:800">Pinellas Ice Co</div>'
+      +'<div style="color:#94a3b8;font-size:11px">Commercial Ice Machine Cleaning</div>'
+    +'</div>'
+    +'<div style="background:#fff;border-radius:0 0 10px 10px;padding:24px;border:1px solid #e2e8f0;border-top:none">'
+      +'<h2 style="margin:0 0 6px;font-size:16px;color:#1e293b">Your Annual Service Schedule</h2>'
+      +'<p style="margin:0 0 18px;font-size:13px;color:#64748b">Hi '+p.name+', here is your upcoming ice machine service schedule for the year. We\'ll reach out before each visit to confirm timing.</p>'
+      +'<table style="width:100%;border-collapse:collapse;margin-bottom:18px">'
+        +'<thead><tr style="background:#1e3a5f"><th style="padding:10px 14px;text-align:left;color:#fff;font-size:11px;font-weight:700">Date</th><th style="padding:10px 14px;text-align:left;color:#fff;font-size:11px;font-weight:700">Service</th><th style="padding:10px 14px;text-align:left;color:#fff;font-size:11px;font-weight:700">Status</th></tr></thead>'
+        +'<tbody>'+rows+'</tbody>'
+      +'</table>'
+      +(p.address?'<div style="background:#f1f5f9;border-radius:7px;padding:12px;font-size:12px;color:#475569;margin-bottom:16px"><b>Service Address:</b> '+p.address+', '+p.city+', FL</div>':'')
+      +'<p style="font-size:11px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:14px;margin:0">Questions? Call us at (727) 855-6873 or reply to this email. &bull; Service complies with FDA Food Code 3-502.12</p>'
+    +'</div>'
+  +'</body></html>';
+  var ok=await sendEmailViaProxy(to,'Your Annual Ice Machine Service Schedule — '+p.name,html);
+  if(btn){
+    if(ok){btn.textContent='&#x2713; Sent';btn.style.background='#059669';btn.style.color='#fff';btn.style.borderColor='#059669';}
+    else{btn.disabled=false;btn.textContent='&#x1F4C5; Email Schedule';}
+  }
+}
+
 function geoClusterSchedule(){
   // Find clients whose next_service dates are within 5 days of each other
   // and are geographically close — suggest scheduling on the same day
@@ -7447,6 +7512,7 @@ function renderServiceCal(){
         +'<button onclick="openServiceLog('+p.id+')" style="flex:2;padding:7px;border:none;border-radius:7px;background:#059669;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">&#x2713; Log Service Visit</button>'
         +'<button onclick="reschedule('+p.id+')" style="flex:1;padding:7px;border:1px solid var(--brd);border-radius:7px;background:var(--surf);color:var(--sub);font-size:10px;cursor:pointer;font-family:inherit">Reschedule</button>'
         +(c.annual_schedule?'<button onclick="exportSchedulePDF('+p.id+')" style="flex:1;padding:7px;border:1px solid var(--blu);border-radius:7px;background:#eff6ff;color:var(--blu);font-size:10px;cursor:pointer;font-family:inherit">&#x1F4C5; Schedule</button>':'')
+        +(c.annual_schedule&&c.annual_schedule.length&&c.email?'<button id="email-sched-btn-'+p.id+'" onclick="emailServiceSchedule('+p.id+')" style="flex:1;padding:7px;border:1px solid #7c3aed;border-radius:7px;background:#f5f3ff;color:#7c3aed;font-size:10px;cursor:pointer;font-family:inherit">&#x1F4C5; Email Schedule</button>':'')
         +(p.phone?'<a href="tel:'+p.phone.replace(/\s/g,'')+'" style="flex:1;padding:7px;border:1px solid var(--blu);border-radius:7px;background:#eff6ff;color:var(--blu);font-size:10px;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;font-family:inherit">Call</a>':'')
       +'</div>'
 
@@ -8722,9 +8788,11 @@ function scStatusReport(p,prefill){
     }
     custSave();
     if(btn.id==='atp-email'){
-      atpBg.remove();
       if(!emailTo){toast('Enter an email address first');return;}
-      srSendEmail(p,val,emailTo,notes);
+      var _atpBtn=document.getElementById('atp-email');
+      sendWithConfirmation(_atpBtn,function(){return srSendEmail(p,val,emailTo,notes);}).then(function(){
+        setTimeout(function(){if(document.getElementById('atp-bg'))atpBg.remove();},1600);
+      });
       return;
     }
     if(btn.id==='atp-print'){
@@ -8862,6 +8930,20 @@ function srGenerate(p,atpVal,notes){
   setTimeout(function(){w.print();},600);
 }
 
+async function sendWithConfirmation(btn,sendFn){
+  if(!btn||btn.disabled)return;
+  var orig=btn.innerHTML;
+  var origBg=btn.style.background;
+  var origColor=btn.style.color;
+  btn.disabled=true;btn.textContent='Sending...';
+  var ok=await sendFn();
+  if(ok){
+    btn.textContent='&#x2713; Sent';btn.style.background='#059669';btn.style.color='#fff';btn.style.borderColor='#059669';
+    setTimeout(function(){btn.disabled=false;btn.innerHTML=orig;btn.style.background=origBg;btn.style.color=origColor;btn.style.borderColor='';},3000);
+  } else {
+    btn.disabled=false;btn.innerHTML=orig;
+  }
+}
 function srSendEmail(p,atpVal,emailTo,notes){
   var now=new Date();
   var dateStr=now.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
@@ -8959,7 +9041,7 @@ function srSendEmail(p,atpVal,emailTo,notes){
     +'FDA Food Code &sect;3-502.12 &nbsp;&middot;&nbsp; FL Administrative Code 64E-11 &nbsp;&middot;&nbsp; ATP testing per NSF/ANSI Standard 63'
     +'</div>'
     +'</div></body></html>';
-  sendEmailViaProxy(emailTo,'Ice Machine Status Report — '+p.name,html);
+  return sendEmailViaProxy(emailTo,'Ice Machine Status Report — '+p.name,html);
 }
 function toggleReportEmailRow(){
   var row=document.getElementById('report-email-row');
@@ -8993,7 +9075,7 @@ async function emailServiceReport(id){
     else{btn.disabled=false;btn.textContent='Send';}
   }
 }
-function emailComplianceReport(id){
+function emailComplianceReport(id,btn){
   var p=P.find(function(x){return x.id===id;});
   if(!p){toast('Prospect not found');return;}
   var c=customers[id]||{};
@@ -9003,11 +9085,11 @@ function emailComplianceReport(id){
   var lastAtp=atpH.slice(-1)[0]||{};
   var atpVal=parseInt(lastAtp.post)||0;
   var svcNote=c.last_service?('Last service: '+c.last_service+(c.next_service?' · Next: '+c.next_service:'')):'';
-  // Read technician notes from most recent service_history entry, fall back to atp_history
   var lastSvcEntry=(c.service_history||[]).slice(-1)[0]||{};
   var lastNotes=(lastSvcEntry.notes||lastAtp.notes||'').trim();
   if(lastNotes)svcNote=(svcNote?svcNote+'\\n\\n':'')+'Technician notes: '+lastNotes;
-  srSendEmail(p,atpVal,to,svcNote);
+  if(btn){sendWithConfirmation(btn,function(){return srSendEmail(p,atpVal,to,svcNote);});}
+  else{srSendEmail(p,atpVal,to,svcNote);}
 }
 
 // ── SETTINGS ─────────────────────────────────────────────────────────────────
