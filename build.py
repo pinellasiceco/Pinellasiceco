@@ -9145,7 +9145,7 @@ async function sendEmailViaProxy(to,subject,htmlBody){
   if(!url){
     var sbUrl=(_SUPABASE_URL||(localStorage.getItem('pic_supabase_url')||'')).trim();
     if(sbUrl){var autoUrl=sbUrl.replace(/\/?$/,'')+'/functions/v1/send-email';localStorage.setItem('pic_email_fn_url',autoUrl);url=autoUrl;}
-    else{alert('Email not configured.\n\nGo to Settings → Email Proxy and enter your Supabase Edge Function URL:\nhttps://YOUR-PROJECT.supabase.co/functions/v1/send-email');return false;}
+    else{alert('Email not configured. Go to Settings and enter your Supabase Edge Function URL.');return false;}
   }
   var anonKey=_SUPABASE_ANON_KEY||(localStorage.getItem('pic_supabase_key')||'').trim();
   var headers={'Content-Type':'application/json'};
