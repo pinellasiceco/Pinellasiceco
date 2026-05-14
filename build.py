@@ -7243,7 +7243,7 @@ async function emailServiceSchedule(id){
     +'</div>'
     +'<div style="background:#fff;border-radius:0 0 10px 10px;padding:24px;border:1px solid #e2e8f0;border-top:none">'
       +'<h2 style="margin:0 0 6px;font-size:16px;color:#1e293b">Your Annual Service Schedule</h2>'
-      +'<p style="margin:0 0 18px;font-size:13px;color:#64748b">Hi '+p.name+', here is your upcoming ice machine service schedule for the year. We\'ll reach out before each visit to confirm timing.</p>'
+      +'<p style="margin:0 0 18px;font-size:13px;color:#64748b">Hi '+p.name+', here is your upcoming ice machine service schedule for the year. We&#39;ll reach out before each visit to confirm timing.</p>'
       +'<table style="width:100%;border-collapse:collapse;margin-bottom:18px">'
         +'<thead><tr style="background:#1e3a5f"><th style="padding:10px 14px;text-align:left;color:#fff;font-size:11px;font-weight:700">Date</th><th style="padding:10px 14px;text-align:left;color:#fff;font-size:11px;font-weight:700">Service</th><th style="padding:10px 14px;text-align:left;color:#fff;font-size:11px;font-weight:700">Status</th></tr></thead>'
         +'<tbody>'+rows+'</tbody>'
