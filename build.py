@@ -9112,7 +9112,7 @@ async function showDiagnostics(){
   } else {
     lines.push('Supabase: not connected');
   }
-  alert(lines.join('\n'));
+  alert(lines.join('\\n'));
 }
 
 async function sbHealthCheck(){
