@@ -33,13 +33,26 @@ jobs:
 
       - name: Verify input CSV exists
         run: |
-          if [ ! -f data/pinellas_v22_to_scrape.csv ]; then
-            echo "::error::data/pinellas_v22_to_scrape.csv not found."
-            echo "Commit the input CSV to the repo's data/ folder first, then re-run."
+          # Accept the file wherever it was uploaded — spaces or underscores, root or data/
+          # Note: data/ is gitignored, so root-level files are preferred
+          CSV=""
+          for candidate in \
+            "pinellas v22 to scrape.csv" \
+            "pinellas_v22_to_scrape.csv" \
+            "data/pinellas_v22_to_scrape.csv" \
+            "data/pinellas v22 to scrape.csv"; do
+            if [ -f "$candidate" ]; then
+              CSV="$candidate"
+              break
+            fi
+          done
+          if [ -z "$CSV" ]; then
+            echo "::error::Input CSV not found."
+            echo "Upload 'pinellas v22 to scrape.csv' to the repo root, then re-run."
             exit 1
           fi
-          LINES=$(wc -l < data/pinellas_v22_to_scrape.csv)
-          echo "Input CSV found — $LINES lines (including header)"
+          LINES=$(wc -l < "$CSV")
+          echo "Input CSV found at: $CSV — $LINES lines (including header)"
 
       - name: Show resume state
         run: |
@@ -63,16 +76,16 @@ jobs:
         if: always()
         run: |
           echo "=== Output summary ==="
-          if [ -f data/pinellas_v22_narratives.csv ]; then
-            TOTAL=$(( $(wc -l < data/pinellas_v22_narratives.csv) - 1 ))
-            ICE=$(grep -c ',YES,' data/pinellas_v22_narratives.csv 2>/dev/null || echo 0)
+          if [ -f pinellas_v22_narratives.csv ]; then
+            TOTAL=$(( $(wc -l < pinellas_v22_narratives.csv) - 1 ))
+            ICE=$(grep -c ',YES,' pinellas_v22_narratives.csv 2>/dev/null || echo 0)
             echo "Total rows written : $TOTAL"
             echo "Ice machine mentions: $ICE"
           else
-            echo "No output file found"
+            echo "No output file found yet"
           fi
-          if [ -f data/scraper_progress.txt ]; then
-            echo "Progress entries   : $(wc -l < data/scraper_progress.txt)"
+          if [ -f scraper_progress.txt ]; then
+            echo "Progress entries   : $(wc -l < scraper_progress.txt)"
           fi
 
       - name: Commit results back to main
@@ -82,13 +95,13 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           # Stage only the scraper output files — never touch index.html or app files
-          git add data/pinellas_v22_narratives.csv data/scraper_progress.txt 2>/dev/null || true
+          git add pinellas_v22_narratives.csv scraper_progress.txt 2>/dev/null || true
 
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            ROWS=$(wc -l < data/pinellas_v22_narratives.csv 2>/dev/null || echo '?')
-            ICE=$(grep -c ',YES,' data/pinellas_v22_narratives.csv 2>/dev/null || echo '?')
+            ROWS=$(wc -l < pinellas_v22_narratives.csv 2>/dev/null || echo '?')
+            ICE=$(grep -c ',YES,' pinellas_v22_narratives.csv 2>/dev/null || echo '?')
             git commit -m "DBPR scrape — ${ROWS} rows, ${ICE} ice mentions ($(date +'%Y-%m-%d %H:%M UTC'))"
             git push origin HEAD:main
           fi
