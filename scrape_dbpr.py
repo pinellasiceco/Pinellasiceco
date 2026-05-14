@@ -19,9 +19,18 @@ from html.parser import HTMLParser
 # ── Config ────────────────────────────────────────────────────────────────
 BASE_URL = "https://www.myfloridalicense.com/inspectionDetail.asp?InspVisitID={vid}"
 TERMS_URL = "https://www.myfloridalicense.com/insptermsofuse.asp"
-INPUT_CSV  = "data/pinellas_v22_to_scrape.csv"
-OUTPUT_CSV = "data/pinellas_v22_narratives.csv"
-PROGRESS_FILE = "data/scraper_progress.txt"
+# Output at repo root — data/ is gitignored so results would never be committed
+OUTPUT_CSV    = "pinellas_v22_narratives.csv"
+PROGRESS_FILE = "scraper_progress.txt"
+
+# Accept the CSV wherever the user dropped it — spaces or underscores, root or data/
+_CANDIDATE_INPUTS = [
+    "pinellas v22 to scrape.csv",
+    "pinellas_v22_to_scrape.csv",
+    "data/pinellas_v22_to_scrape.csv",
+    "data/pinellas v22 to scrape.csv",
+]
+INPUT_CSV = next((p for p in _CANDIDATE_INPUTS if os.path.exists(p)), _CANDIDATE_INPUTS[0])
 
 # Delay between requests — be respectful to the server
 MIN_DELAY = 2.5
