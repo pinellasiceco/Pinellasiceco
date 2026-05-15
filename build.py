@@ -529,6 +529,36 @@ def clean_observation(text):
     return cut + '…'
 
 
+_ICE_KEYWORDS = re.compile(
+    r'\b(ice\s+machine|ice\s+maker|ice\s+bin|ice\s+scoop|evaporator|condenser|'
+    r'mold|slime|biofilm|pink|black|green|sanitize|sanitizer|soiled|dirty|'
+    r'buildup|scale|residue|deposit|film|growth|discoloration)\b',
+    re.IGNORECASE,
+)
+
+
+def extract_ice_snippet(text, max_chars=300):
+    """Return the most relevant ice-related sentence(s) from an inspection observation.
+
+    Strips DBPR formatting, splits into sentences, returns ice-keyword sentences
+    first; falls back to the full text if none match.
+    """
+    if not text:
+        return ''
+    text = re.sub(r'\*\*[^*]+\*\*', '', str(text))
+    text = re.sub(r'^\s*(Basic|Intermediate|High Priority)\s*[-–]\s*', '', text, flags=re.I | re.M)
+    text = re.sub(r'\s+', ' ', text).strip()
+    if not text:
+        return ''
+    sentences = re.split(r'(?<=[.!?])\s+', text)
+    ice_sents = [s for s in sentences if _ICE_KEYWORDS.search(s)]
+    snippet = ' '.join(ice_sents) if ice_sents else text
+    if len(snippet) <= max_chars:
+        return snippet
+    cut = snippet[:max_chars].rsplit(' ', 1)[0]
+    return cut + '…'
+
+
 def load_ice_citations(csv_path='ice_citation_by_business.csv'):
     """Load aggregated ice citation data keyed by license_id (matches prospect record id)."""
     import csv as _csv
@@ -548,7 +578,7 @@ def load_ice_citations(csv_path='ice_citation_by_business.csv'):
                     'latest_date':       row.get('latest_date', '').strip(),
                     'earliest_date':     row.get('earliest_date', '').strip(),
                     'days_since':        int(row.get('days_since_citation', 9999) or 9999),
-                    'best_observation':  clean_observation(row.get('best_observation', '')),
+                    'best_observation':  extract_ice_snippet(row.get('best_observation', '')),
                     'codes':             [c.strip() for c in (row.get('codes', '') or '').split('|') if c.strip()],
                     'repeat_violations': int(row.get('repeat_violations', 0) or 0),
                     'warnings_issued':   int(row.get('warnings_issued', 0) or 0),
@@ -2302,6 +2332,8 @@ header{background:var(--navy);
       <button class="preset-btn"    onclick="setPreset('notyet')"   id="pre-notyet">Not Contacted</button>
       <button class="preset-btn"    onclick="setPreset('inplay')"   id="pre-inplay">&#x1F7E1; In Play</button>
       <button class="preset-btn"    onclick="setPreset('freshice')" id="pre-freshice">&#x1F525; Ice Viol.</button>
+      <button class="preset-btn" onclick="setPreset('dbpr_cited')" id="pre-dbpr_cited">&#x1F575;&#xFE0F; DBPR <span id="cnt-dbpr"></span></button>
+      <button class="preset-btn" onclick="setPreset('dbpr_repeat')" id="pre-dbpr_repeat">&#x1F501; Repeat <span id="cnt-repeat"></span></button>
       <button class="preset-btn" onclick="setPreset('followups')" id="pre-followups">&#x1F4C5; Follow-Ups</button>
       <button class="preset-btn" onclick="setPreset('golf')" id="pre-golf">&#x26F3; Golf</button>
     </div>
@@ -4364,12 +4396,18 @@ function rA(){
     return true;
   });
 
-  // Sort: follow-ups by date, others by callback/score
+  // Sort: follow-ups by date, DBPR by citation count+recency, others by callback/score
   if(presetFilter&&document.getElementById('pre-followups')?.classList.contains('on')){
     list.sort((a,b)=>{
       const fa=getLC(a.id)?.followup||'9999';
       const fb=getLC(b.id)?.followup||'9999';
       return fa.localeCompare(fb);
+    });
+  } else if(presetFilter&&(document.getElementById('pre-dbpr_cited')?.classList.contains('on')||document.getElementById('pre-dbpr_repeat')?.classList.contains('on'))){
+    list.sort((a,b)=>{
+      const da=(a.cit_ice_count||0), db=(b.cit_ice_count||0);
+      if(da!==db)return db-da;
+      return (a.cit_days_since||9999)-(b.cit_days_since||9999);
     });
   } else {
     list.sort((a,b)=>{
@@ -4379,6 +4417,7 @@ function rA(){
     });
   }
 
+  updateDbprChipCounts();
   document.getElementById('acnt').textContent=list.length+' prospects';
   const g=document.getElementById('agrid');
   const empty=document.getElementById('a-empty');
@@ -4417,7 +4456,16 @@ function setPreset(k){
     return lc&&lc.followup&&st==='prospect';
   };
   else if(k==='golf') presetFilter=p=>p.venue_type==='golf';
+  else if(k==='dbpr_cited') presetFilter=p=>!!p.ice_confirmed_dbpr;
+  else if(k==='dbpr_repeat') presetFilter=p=>(p.cit_repeat||0)>=1||(p.cit_ice_count||0)>=2;
   rA();
+}
+
+function updateDbprChipCounts(){
+  var nd=P.filter(function(p){return !!p.ice_confirmed_dbpr;}).length;
+  var nr=P.filter(function(p){return (p.cit_repeat||0)>=1||(p.cit_ice_count||0)>=2;}).length;
+  var ce=document.getElementById('cnt-dbpr');if(ce)ce.textContent=nd?'('+nd+')':'';
+  var re=document.getElementById('cnt-repeat');if(re)re.textContent=nr?'('+nr+')':'';
 }
 
 function clearFilters(){
