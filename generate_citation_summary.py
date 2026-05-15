@@ -3,7 +3,7 @@
 Generate ice_citation_by_business.csv from pinellas_v22_narratives.csv.
 
 Reads the scraper output (one row per violation per inspection visit) and
-aggregates to one row per license number — total citation count, ice-machine
+aggregates to one row per license_id — total citation count, ice-machine
 citation count, date range, best observation excerpt, and violation codes.
 
 Run automatically by the rebuild CI before build.py, or manually:
@@ -39,24 +39,27 @@ def main():
         print(f'No {INPUT_CSV} found — nothing to aggregate')
         return
 
-    # Group rows by license_number
+    # Group rows by license_id (numeric string) — matches prospect record id field
     by_license = defaultdict(list)
     with open(INPUT_CSV, newline='', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
-            lic = (row.get('license_number') or '').strip()
-            if not lic:
+            lid = (row.get('license_id') or '').strip()
+            if not lid:
+                # fall back to license_number if license_id column is absent
+                lid = (row.get('license_number') or '').strip()
+            if not lid:
                 continue
-            by_license[lic].append(row)
+            by_license[lid].append(row)
 
     if not by_license:
-        print('No license numbers found in scraper output')
+        print('No license IDs found in scraper output')
         return
 
     print(f'Aggregating {sum(len(v) for v in by_license.values())} rows across {len(by_license)} licenses...')
 
     fieldnames = [
-        'license_number', 'business_name', 'city',
+        'license_id', 'license_number', 'business_name', 'city',
         'citation_count', 'ice_count',
         'latest_date', 'earliest_date',
         'best_observation', 'codes',
@@ -69,14 +72,15 @@ def main():
         writer = csv.DictWriter(out, fieldnames=fieldnames)
         writer.writeheader()
 
-        for lic, rows in sorted(by_license.items()):
+        for lid, rows in sorted(by_license.items()):
             # Collect all ice-positive rows
             ice_rows = [r for r in rows if r.get('ice_machine_mention') == 'YES']
 
             # Best observation = longest ice observation, falling back to any observation
             obs_candidates = [r.get('observation', '') for r in ice_rows if r.get('observation')]
             if not obs_candidates:
-                obs_candidates = [r.get('observation', '') for r in rows if r.get('observation') and r.get('observation') != 'NO VIOLATIONS PARSED']
+                obs_candidates = [r.get('observation', '') for r in rows
+                                  if r.get('observation') and r.get('observation') != 'NO VIOLATIONS PARSED']
             best_obs = clean_observation(max(obs_candidates, key=len, default=''))
 
             # Dates
@@ -89,7 +93,8 @@ def main():
             first = rows[0]
 
             writer.writerow({
-                'license_number':  lic,
+                'license_id':      lid,
+                'license_number':  first.get('license_number', ''),
                 'business_name':   first.get('business_name', ''),
                 'city':            first.get('city', ''),
                 'citation_count':  len(rows),
