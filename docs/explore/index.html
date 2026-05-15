@@ -395,7 +395,7 @@
     ═══════════════════════════════════════════════════════ */
     #act6 {
       background: var(--navy);
-      padding: 72px 24px calc(40px + env(safe-area-inset-bottom, 0px));
+      padding: 72px 24px calc(96px + env(safe-area-inset-bottom, 0px));
     }
     .act6-inner {
       max-width: 380px;
@@ -481,6 +481,55 @@
     .explore-footer a {
       color: var(--gray);
       text-decoration: none;
+    }
+
+    /* ── STICKY BOTTOM BAR ───────────────────────────────── */
+    #sticky-bar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%) translateY(100%);
+      width: 100%;
+      max-width: 480px;
+      z-index: 100;
+      background: rgba(10, 22, 40, 0.82);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(201, 151, 58, 0.4);
+      padding: 10px 20px max(14px, env(safe-area-inset-bottom, 14px));
+      opacity: 0;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      pointer-events: none;
+    }
+    #sticky-bar.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      pointer-events: all;
+    }
+    .phone-icon-wrap {
+      position: relative;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .signal-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1.5px solid rgba(201, 151, 58, 0.5);
+      animation: signal-pulse 2.5s ease-out infinite;
+    }
+    .ring-1 { width: 28px; height: 28px; animation-delay: 0ms; }
+    .ring-2 { width: 40px; height: 40px; animation-delay: 600ms; }
+    @keyframes signal-pulse {
+      0%   { transform: scale(0.8); opacity: 0.8; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+    .book-btn:active {
+      transform: scale(0.97) !important;
+      box-shadow: 0 0 30px rgba(201,151,58,0.5), 0 0 80px rgba(201,151,58,0.2) !important;
     }
   </style>
 </head>
@@ -635,6 +684,34 @@
   </div>
 </section>
 
+<!-- STICKY BOTTOM BAR -->
+<div id="sticky-bar">
+  <div style="display:flex;align-items:center;gap:12px">
+    <a href="tel:+17278556873"
+       style="display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;touch-action:manipulation;-webkit-tap-highlight-color:transparent">
+      <div class="phone-icon-wrap">
+        <div class="signal-ring ring-1"></div>
+        <div class="signal-ring ring-2"></div>
+        <span style="font-size:18px;position:relative;z-index:1">📞</span>
+      </div>
+      <div>
+        <div style="color:rgba(255,255,255,0.5);font-size:9px;letter-spacing:0.12em;font-family:'DM Sans',sans-serif;text-transform:uppercase">Call Now</div>
+        <div style="color:#f8fafc;font-size:14px;font-weight:600;font-family:'DM Sans',sans-serif;letter-spacing:0.02em">(727) 855-6873</div>
+      </div>
+    </a>
+    <div style="width:1px;height:32px;background:rgba(201,151,58,0.3);flex-shrink:0"></div>
+    <a href="https://meetings-na2.hubspot.com/stripe/ice-machine-on-site?uuid=9a40fc22-dce2-4258-8e4f-28aa75c892da"
+       class="book-btn"
+       style="flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#c9973a,#e8b84b);border-radius:10px;padding:10px 16px;text-decoration:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent;box-shadow:0 0 20px rgba(201,151,58,0.35),0 0 60px rgba(201,151,58,0.15);transition:box-shadow 0.2s ease,transform 0.15s ease">
+      <span style="font-size:16px">📅</span>
+      <div>
+        <div style="color:#0a1628;font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif;line-height:1.2">Book Free ATP Test</div>
+        <div style="color:rgba(10,22,40,0.6);font-size:10px;font-family:'DM Sans',sans-serif">2 min &middot; Free &middot; No obligation</div>
+      </div>
+    </a>
+  </div>
+</div>
+
 <script>
   // ── COUNT-UP ─────────────────────────────────────────────
   function countUp(el, target, isDecimal) {
@@ -672,8 +749,15 @@
     observer.observe(el);
   });
 
-  // The contrast-footer "22x" line fades in after numbers — handled by
-  // its own .reveal class and IntersectionObserver above.
+  // ── STICKY BAR ───────────────────────────────────────────
+  var stickyShown = false;
+  var stickyBar = document.getElementById("sticky-bar");
+  window.addEventListener("scroll", function() {
+    if (window.scrollY > 300 && !stickyShown) {
+      stickyBar.classList.add("visible");
+      stickyShown = true;
+    }
+  }, { passive: true });
 </script>
 </body>
 </html>
