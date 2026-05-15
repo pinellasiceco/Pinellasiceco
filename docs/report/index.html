@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>The Pinellas Ice Machine Problem — Pinellas Ice Co.</title>
-  <meta name="description" content="Five numbers that show why ice machine compliance is a real problem in Pinellas County. Free ATP test available.">
+  <title>The Pinellas Ice Machine Problem — Pinellas Ice Co</title>
+  <meta name="description" content="Key data on ice machine compliance in Pinellas County. Free ATP test available.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧊</text></svg>">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -18,21 +18,22 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
       background: var(--navy);
       color: #fff;
-      min-height: 100vh;
       overflow-x: hidden;
       padding-bottom: env(safe-area-inset-bottom, 0px);
     }
 
     /* ── HEADER ──────────────────────────────────────────── */
     .page-header {
-      padding: 40px 20px 32px;
+      padding: 40px 20px 30px;
       text-align: center;
-      border-bottom: 1px solid rgba(201,151,58,0.18);
+      max-width: 480px;
+      margin: 0 auto;
+      border-bottom: 1px solid rgba(201,151,58,0.2);
     }
-    .header-label {
+    .header-eyebrow {
       font-size: 10px;
       font-weight: 700;
-      letter-spacing: 0.22em;
+      letter-spacing: 0.24em;
       text-transform: uppercase;
       color: var(--gold);
       margin-bottom: 16px;
@@ -45,47 +46,53 @@
     }
     .header-byline {
       font-size: 15px;
-      color: rgba(255,255,255,0.45);
+      color: rgba(255,255,255,0.4);
       font-weight: 500;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.05em;
     }
 
     /* ── STAT CARDS ──────────────────────────────────────── */
     .stats-wrap {
-      max-width: 560px;
+      max-width: 480px;
       margin: 0 auto;
-      padding: 0 16px;
     }
     .stat-card {
       border-left: 4px solid var(--gold);
-      padding: 24px 20px 20px;
-      margin: 0;
+      padding: 26px 20px 22px;
       border-bottom: 1px solid rgba(255,255,255,0.07);
     }
     .stat-number {
-      font-size: clamp(48px, 13vw, 64px);
+      font-size: clamp(52px, 14vw, 64px);
       font-weight: 800;
       color: var(--gold);
       line-height: 1;
       margin-bottom: 10px;
-      letter-spacing: -0.01em;
+      letter-spacing: -0.02em;
     }
     .stat-text {
       font-size: 15px;
       font-weight: 500;
       color: #fff;
       line-height: 1.5;
-      margin-bottom: 8px;
+      margin-bottom: 7px;
+    }
+    /* toilet seat comparison line — inside card 1 */
+    .stat-comparison {
+      font-size: 13px;
+      font-weight: 700;
+      color: #f87171;
+      margin-bottom: 7px;
+      line-height: 1.4;
     }
     .stat-source {
       font-size: 11px;
-      color: rgba(255,255,255,0.35);
-      line-height: 1.4;
+      color: rgba(255,255,255,0.32);
+      line-height: 1.55;
     }
 
     /* ── GOLD DIVIDER ────────────────────────────────────── */
     .gold-divider {
-      max-width: 560px;
+      max-width: 480px;
       margin: 0 auto;
       height: 2px;
       background: linear-gradient(to right, transparent, var(--gold), transparent);
@@ -93,25 +100,22 @@
 
     /* ── SHORT COPY ──────────────────────────────────────── */
     .copy-wrap {
-      max-width: 560px;
+      max-width: 480px;
       margin: 0 auto;
-      padding: 28px 20px 24px;
+      padding: 28px 20px 22px;
     }
     .copy-wrap p {
       font-size: 14px;
-      color: rgba(255,255,255,0.62);
-      line-height: 1.75;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.8;
     }
-    .copy-wrap strong {
-      color: #fff;
-      font-weight: 600;
-    }
+    .copy-wrap strong { color: #fff; font-weight: 600; }
 
     /* ── CTA ─────────────────────────────────────────────── */
     .cta-wrap {
-      max-width: 560px;
+      max-width: 480px;
       margin: 0 auto;
-      padding: 4px 16px 36px;
+      padding: 6px 20px 10px;
     }
     .cta-btn {
       display: block;
@@ -121,52 +125,56 @@
       font-size: 18px;
       font-weight: 800;
       text-align: center;
-      padding: 18px 24px 14px;
+      padding: 20px 24px 16px;
       border-radius: 12px;
       text-decoration: none;
-      min-height: 64px;
+      min-height: 68px;
       -webkit-tap-highlight-color: transparent;
       transition: background 0.15s, transform 0.1s;
+      line-height: 1.2;
     }
     .cta-btn:active { background: #b8862e; transform: scale(0.98); }
     .cta-sub-text {
       font-size: 12px;
       font-weight: 500;
-      color: rgba(15,31,56,0.65);
+      color: rgba(15,31,56,0.6);
       display: block;
-      margin-top: 4px;
-      letter-spacing: 0.02em;
+      margin-top: 5px;
     }
 
     /* ── FOOTER ──────────────────────────────────────────── */
     .page-footer {
+      max-width: 480px;
+      margin: 0 auto;
       border-top: 1px solid rgba(255,255,255,0.07);
-      padding: 20px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+      padding: 22px 20px calc(22px + env(safe-area-inset-bottom, 0px));
       text-align: center;
     }
     .footer-text {
       font-size: 11px;
-      color: rgba(255,255,255,0.25);
-      line-height: 1.75;
+      color: rgba(255,255,255,0.22);
+      line-height: 1.8;
     }
   </style>
 </head>
 <body>
 
-<!-- ── HEADER ─────────────────────────────────────────────── -->
+<!-- HEADER -->
 <header class="page-header">
-  <div class="header-label">Pinellas Ice Co</div>
+  <div class="header-eyebrow">Pinellas Ice Co</div>
   <h1>The Pinellas Ice Machine Problem</h1>
   <p class="header-byline">By the Numbers</p>
 </header>
 
-<!-- ── FIVE STAT CARDS ────────────────────────────────────── -->
+<!-- FIVE STAT CARDS -->
 <div class="stats-wrap">
 
   <div class="stat-card">
     <div class="stat-number">457</div>
-    <div class="stat-text">RLU &mdash; average ATP reading on an unserviced Pinellas ice machine</div>
-    <div class="stat-source">FDA standard: 10 &middot; Field data, Pinellas County</div>
+    <div class="stat-text">RLU &mdash; average contamination reading on an unserviced Pinellas ice machine</div>
+    <div class="stat-comparison">22&times; higher than an office toilet seat (21 RLU)</div>
+    <div class="stat-source">FDA standard: 10 RLU &middot; Field data, Pinellas County<br>
+    ATP measures organic contamination broadly &mdash; not a direct bacterial count</div>
   </div>
 
   <div class="stat-card">
@@ -177,7 +185,7 @@
 
   <div class="stat-card">
     <div class="stat-number">46.8%</div>
-    <div class="stat-text">of restaurants warned for ice machine violations get cited again &mdash; the problem doesn&#39;t self-correct</div>
+    <div class="stat-text">of restaurants warned for ice machine violations get cited again &mdash; warnings alone don&#39;t fix it</div>
     <div class="stat-source">FL DBPR inspection records 2025&ndash;2026</div>
   </div>
 
@@ -195,26 +203,27 @@
 
 </div>
 
-<!-- ── GOLD DIVIDER ───────────────────────────────────────── -->
+<!-- GOLD DIVIDER -->
 <div class="gold-divider"></div>
 
-<!-- ── SHORT COPY ─────────────────────────────────────────── -->
+<!-- SHORT COPY -->
 <div class="copy-wrap">
-  <p>We analyzed Florida DBPR inspection records for Pinellas County going back to 2018. The data shows food contact surface violations &mdash; the category that includes ice machines &mdash; are cited <strong>at the same rate today as they were 7 years ago</strong>. The problem doesn&#39;t self-correct. We fix it.</p>
+  <p>We analyzed Florida DBPR inspection records for Pinellas County going back to 2018. Food contact surface violations &mdash; the category that includes ice machines &mdash; are cited <strong>at the same rate today as they were 7 years ago</strong>. The problem doesn&#39;t self-correct. We fix it.</p>
 </div>
 
-<!-- ── CTA ────────────────────────────────────────────────── -->
+<!-- CTA -->
 <div class="cta-wrap">
   <a class="cta-btn" href="https://meetings-na2.hubspot.com/stripe/ice-machine-on-site?uuid=9a40fc22-dce2-4258-8e4f-28aa75c892da">
     &#x1F4C5; Book Your Free ATP Test
-    <span class="cta-sub-text">Two minutes &middot; Free &middot; At your location</span>
+    <span class="cta-sub-text">Two minutes &middot; Free &middot; At your location<br>No obligation &mdash; if your machine is clean, we&#39;ll tell you.</span>
   </a>
 </div>
 
-<!-- ── FOOTER ──────────────────────────────────────────────── -->
+<!-- FOOTER -->
 <footer class="page-footer">
   <p class="footer-text">Pinellas Ice Co &middot; (727) 855-6873 &middot; pinellasiceco.com<br>
-  Data: Florida DBPR public inspection records, 2018&ndash;2026</p>
+  Data: Florida DBPR public inspection records 2018&ndash;2026.<br>
+  ATP research: published Hygiena monitoring system studies.</p>
 </footer>
 
 </body>
