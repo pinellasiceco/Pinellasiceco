@@ -285,6 +285,8 @@ See the SQL in the prompt — creates `pic_prospects`, `pic_partners`, adds `use
 | `supabase/functions/send-email/index.ts` | Supabase Edge Function — CORS-safe Resend proxy for in-app email |
 | `download_data.py` | Downloads FL DBPR inspection CSV files |
 | `APP_STATUS.md` | This file — update at end of every session |
+| `docs/data/index.html` | Compliance data page — `https://pinellasiceco.github.io/Pinellasiceco/docs/data/` — research-style page: bar chart, toilet seat comparison, 2×2 stat grid, ATP scale bar, methodology; also embedded in HubSpot at `pinellasiceco.com/ice-machine-data` |
+| `docs/report/index.html` | Prospect leave-behind — `https://pinellasiceco.github.io/Pinellasiceco/docs/report/` — 5 stat cards (457/71/46.8%/2.1×/7yrs) with 22× toilet seat comparison on card 1; emailed/texted after walk-in or phone call |
 | `atp/index.html` | ATP landing page — `https://pinellasiceco.github.io/Pinellasiceco/atp/` — single self-contained HTML file, no external images, inline SVG logo |
 | `customers.json` | Seed customer data (used at build time) |
 | `manifest.json` | PWA manifest |
