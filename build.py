@@ -7076,7 +7076,20 @@ async function loadCloudData(){
     // Prospects — prefer Supabase row, fall back to embedded P[]
     var r1=await _sb.from('pic_prospects').select('data').eq('user_id',_userId).single();
     if(r1.data&&r1.data.data&&Array.isArray(r1.data.data)&&r1.data.data.length&&r1.data.data[0]&&r1.data.data[0].name){
+      // Snapshot citation fields from baked P[] before overwriting — Supabase may have an
+      // older snapshot that pre-dates the DBPR citation enrichment.
+      var _citFields=['ice_confirmed_dbpr','cit_count','cit_ice_count','cit_latest','cit_earliest','cit_observation','cit_codes','ice_risk_prob','ice_risk_level','ice_risk_reason'];
+      var _citMap={};
+      P.forEach(function(p){
+        var saved={};
+        _citFields.forEach(function(f){if(p[f]!==undefined)saved[f]=p[f];});
+        if(Object.keys(saved).length)_citMap[p.id]=saved;
+      });
       P.length=0;r1.data.data.forEach(function(x){P.push(x);});
+      // Re-apply citation fields so they survive the Supabase reload
+      if(Object.keys(_citMap).length){
+        P.forEach(function(p){var c=_citMap[p.id];if(c)Object.assign(p,c);});
+      }
       console.log('Loaded '+P.length+' prospects from Supabase');
     } else {
       console.log('Using embedded prospect data ('+P.length+' records)');
