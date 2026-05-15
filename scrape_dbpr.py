@@ -22,15 +22,99 @@ TERMS_URL = "https://www.myfloridalicense.com/insptermsofuse.asp"
 # Output at repo root — data/ is gitignored so results would never be committed
 OUTPUT_CSV    = "pinellas_v22_narratives.csv"
 PROGRESS_FILE = "scraper_progress.txt"
+GENERATED_INPUT = "pinellas_v22_to_scrape.csv"  # auto-generated from fresh DBPR data
 
-# Accept the CSV wherever the user dropped it — spaces or underscores, root or data/
+# Fallback: accept user-uploaded CSV wherever it was dropped
 _CANDIDATE_INPUTS = [
+    GENERATED_INPUT,
     "pinellas v22 to scrape.csv",
     "pinellas_v22_to_scrape.csv",
     "data/pinellas_v22_to_scrape.csv",
     "data/pinellas v22 to scrape.csv",
 ]
-INPUT_CSV = next((p for p in _CANDIDATE_INPUTS if os.path.exists(p)), _CANDIDATE_INPUTS[0])
+
+# Column order in the District 3 DBPR CSV (positional fallback if header absent)
+_DBPR_COLS = (
+    ['District', 'County Number', 'County Name', 'License Type Code',
+     'License Number', 'Business Name', 'Address', 'City', 'Zip',
+     'Inspection Number', 'Visit Number', 'Inspection Class',
+     'Inspection Type', 'Inspection Disposition', 'Inspection Date',
+     'Num Critical', 'Num Noncritical', 'Num Total', 'Num High Priority',
+     'Num Intermediate', 'Num Basic', 'PDA Status']
+    + [f'V{i:02d}' for i in range(1, 59)]
+    + ['License ID', 'Visit ID']
+)
+
+
+def refresh_v22_list(data_dir='data/'):
+    """
+    Regenerate pinellas_v22_to_scrape.csv from the latest District 3
+    inspection data. Only includes Visit IDs not already in PROGRESS_FILE.
+    Returns number of new records written (0 = nothing to scrape today).
+    """
+    input_file = os.path.join(data_dir, '3fdinspi_current.csv')
+    if not os.path.exists(input_file):
+        print(f"  refresh_v22_list: {input_file} not found — skipping regeneration")
+        return 0
+
+    done = set()
+    if os.path.exists(PROGRESS_FILE):
+        with open(PROGRESS_FILE) as f:
+            done = {line.strip() for line in f if line.strip()}
+
+    new_records = []
+    try:
+        with open(input_file, newline='', encoding='utf-8', errors='replace') as f:
+            reader = csv.reader(f)
+            raw_header = next(reader, None)
+            # Use actual CSV header if present, else fall back to positional columns
+            header = raw_header if raw_header and len(raw_header) > 20 else _DBPR_COLS
+
+            for row in reader:
+                if len(row) < 10:
+                    continue
+                rec = dict(zip(header, row))
+
+                if rec.get('County Name', '').strip().lower() != 'pinellas':
+                    continue
+
+                v22 = rec.get('V22', '0').strip()
+                try:
+                    if float(v22 or 0) <= 0:
+                        continue
+                except (ValueError, TypeError):
+                    continue
+
+                vid = str(rec.get('Visit ID', '')).strip()
+                if not vid or vid in done:
+                    continue
+
+                new_records.append({
+                    'Business Name':          rec.get('Business Name', ''),
+                    'Address':                rec.get('Address', ''),
+                    'City':                   rec.get('City', ''),
+                    'Zip':                    rec.get('Zip', ''),
+                    'License Number':         rec.get('License Number', ''),
+                    'Inspection Type':        rec.get('Inspection Type', ''),
+                    'Inspection Disposition': rec.get('Inspection Disposition', ''),
+                    'Inspection Date':        rec.get('Inspection Date', ''),
+                    'License ID':             rec.get('License ID', ''),
+                    'Visit ID':               vid,
+                })
+    except Exception as e:
+        print(f"  refresh_v22_list error: {e}")
+        return 0
+
+    if new_records:
+        with open(GENERATED_INPUT, 'w', newline='', encoding='utf-8') as f:
+            writer = csv.DictWriter(f, fieldnames=list(new_records[0].keys()))
+            writer.writeheader()
+            writer.writerows(new_records)
+        print(f"  Found {len(new_records)} new V22 records to scrape")
+    else:
+        print("  No new V22 records to scrape today")
+
+    return len(new_records)
 
 # Delay between requests — be respectful to the server
 MIN_DELAY = 2.5
@@ -241,18 +325,29 @@ def main():
     print(f"=== DBPR Ice Machine Citation Scraper ===")
     print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
-    # Load input
-    if not os.path.exists(INPUT_CSV):
-        print(f"ERROR: {INPUT_CSV} not found")
+    # Regenerate input list from fresh DBPR data (skips already-scraped Visit IDs)
+    new_count = refresh_v22_list('data/')
+    if new_count == 0:
+        # Fall back to any existing user-uploaded input file
+        existing = next((p for p in _CANDIDATE_INPUTS if os.path.exists(p)), None)
+        if not existing:
+            print("No new V22 records and no input CSV found — nothing to scrape")
+            sys.exit(0)
+        print(f"  Using existing input: {existing}")
+
+    # Resolve input file (generated file takes priority)
+    input_csv = next((p for p in _CANDIDATE_INPUTS if os.path.exists(p)), None)
+    if not input_csv:
+        print(f"ERROR: No input CSV found")
         sys.exit(1)
 
     records = []
-    with open(INPUT_CSV, newline='', encoding='utf-8') as f:
+    with open(input_csv, newline='', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
             records.append(row)
 
-    print(f"Loaded {len(records)} V22 inspection records to scrape")
+    print(f"Loaded {len(records)} V22 inspection records from {input_csv}")
 
     # Check progress
     done = load_progress()
