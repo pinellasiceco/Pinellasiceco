@@ -44,6 +44,12 @@ jobs:
           git checkout origin/claude/fix-multiple-app-bugs-j1hpJ -- .github/workflows/scrape_dbpr.yml 2>/dev/null || true
           git checkout origin/claude/fix-multiple-app-bugs-j1hpJ -- generate_citation_summary.py 2>/dev/null || true
 
+      - name: Restore scraper output from main
+        run: |
+          git fetch origin main 2>/dev/null || true
+          git checkout origin/main -- pinellas_v22_narratives.csv 2>/dev/null || true
+          git checkout origin/main -- scraper_progress.txt 2>/dev/null || true
+
       - name: Aggregate citation data (if scraper output exists)
         run: python generate_citation_summary.py 2>/dev/null || echo "No citation data yet — skipping"
 
