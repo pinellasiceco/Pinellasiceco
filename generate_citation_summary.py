@@ -37,6 +37,36 @@ def clean_observation(text, max_len=200):
     return cut + '…'
 
 
+_ICE_KEYWORDS = re.compile(
+    r'\b(ice\s+machine|ice\s+maker|ice\s+bin|ice\s+scoop|evaporator|condenser|'
+    r'mold|slime|biofilm|pink|black|green|sanitize|sanitizer|soiled|dirty|'
+    r'buildup|scale|residue|deposit|film|growth|discoloration)\b',
+    re.IGNORECASE,
+)
+
+
+def extract_ice_snippet(text, max_chars=300):
+    """Return the most relevant ice-related sentence(s) from an observation.
+
+    Strips DBPR formatting, finds sentences containing ice keywords,
+    returns those first; falls back to the full text if none match.
+    """
+    if not text or text == 'NO VIOLATIONS PARSED':
+        return ''
+    text = re.sub(r'\*\*[^*]+\*\*', '', str(text))
+    text = re.sub(r'^\s*(Basic|Intermediate|High Priority)\s*[-–]\s*', '', text, flags=re.I | re.M)
+    text = re.sub(r'\s+', ' ', text).strip()
+    if not text:
+        return ''
+    sentences = re.split(r'(?<=[.!?])\s+', text)
+    ice_sents = [s for s in sentences if _ICE_KEYWORDS.search(s)]
+    snippet = ' '.join(ice_sents) if ice_sents else text
+    if len(snippet) <= max_chars:
+        return snippet
+    cut = snippet[:max_chars].rsplit(' ', 1)[0]
+    return cut + '…'
+
+
 def main():
     if not os.path.exists(INPUT_CSV):
         print(f'No {INPUT_CSV} found — nothing to aggregate')
@@ -128,7 +158,7 @@ def main():
             if 'bin' in obs_lower:
                 b['bin_soiled'] += 1
 
-            obs_clean = clean_observation(obs)
+            obs_clean = extract_ice_snippet(obs)
             if len(obs_clean) > len(b['best_observation']):
                 b['best_observation'] = obs_clean
 
