@@ -2707,119 +2707,270 @@ header{background:var(--navy);
     </div>
     <div id="partner-kpi-bar" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px"></div>
 
-    <!-- Partner Talk Track — collapsible -->
-    <details style="margin-bottom:10px;border:1px solid #c4b5fd;border-radius:10px;overflow:hidden">
-      <summary style="padding:11px 14px;cursor:pointer;user-select:none;background:#faf5ff;font-size:12px;font-weight:700;color:#6d28d9;display:flex;align-items:center;justify-content:space-between;list-style:none">
-        <span>&#x1F91D; Partner Talk Track</span>
-        <span style="font-size:10px;color:#a78bfa;font-weight:500">tap to expand &#x25BE;</span>
+    <!-- Sales Playbook — collapsible -->
+    <details style="margin-bottom:10px;border:1px solid #bfdbfe;border-radius:10px;overflow:hidden">
+      <summary style="padding:11px 14px;cursor:pointer;user-select:none;background:#eff6ff;font-size:12px;font-weight:700;color:#1d4ed8;display:flex;align-items:center;justify-content:space-between;list-style:none">
+        <span>&#x1F4CB; Sales Playbook</span>
+        <span style="font-size:10px;color:#93c5fd;font-weight:500">tap to expand &#x25BE;</span>
       </summary>
-      <div style="padding:12px 14px;background:#fff;font-size:12px;line-height:1.55;color:#1e293b">
+      <div style="padding:10px 12px;background:#fff">
 
-        <div style="background:#faf5ff;border-radius:8px;padding:10px 12px;margin-bottom:10px;border-left:3px solid #7c3aed">
-          <div style="font-size:9px;font-weight:800;color:#6d28d9;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Program Overview</div>
-          <div>You pay <strong>$99</strong> per closed annual plan client that a partner refers. Payment made after the client&#39;s first service visit is completed.</div>
-          <div style="margin-top:4px;color:#475569;font-size:11px">Target: hood cleaning, pest control, refrigeration (repair only), beverage equipment, commercial HVAC.</div>
-        </div>
+        <!-- 1. Core Philosophy -->
+        <details open style="margin-bottom:6px;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
+          <summary style="padding:8px 12px;cursor:pointer;user-select:none;background:#f8fafc;font-size:11px;font-weight:700;color:var(--navy);list-style:none">1 &mdash; Core Philosophy</summary>
+          <div style="padding:10px 12px;font-size:11px;line-height:1.7;color:#1e293b;background:#fafafa">
+            <div style="margin-bottom:8px">You are not selling cleaning. You are delivering <strong>compliance intelligence</strong> the owner doesn&#39;t have and can&#39;t get anywhere else.</div>
+            <div style="margin-bottom:8px"><strong>Speed is everything.</strong> Walk in, qualify, book the ATP test, leave. Total time: 4&ndash;6 minutes. The goal of every first contact is one thing: <strong>book the free ATP test.</strong> The test closes itself.</div>
+            <div style="background:#fef9c3;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #ca8a04">
+              <div style="font-size:9px;font-weight:800;color:#92400e;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">The only number that matters in June</div>
+              ATP tests completed. You need <strong>17</strong> to hit 10 clients by July 1. Track nothing else until that number is hit.
+            </div>
+            <div>Daily target: <strong>10 first contacts</strong> (walk-in + phone combined). Two walk-in blocks of 4&ndash;5 businesses each.<br><br>Before every walk-in block: open the DBPR filter in the app. Know each stop&#39;s citation history before you walk in the door.</div>
+          </div>
+        </details>
 
-        <details style="margin-bottom:7px;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
-          <summary style="padding:8px 12px;cursor:pointer;user-select:none;background:#f8fafc;font-size:11px;font-weight:700;color:var(--navy);list-style:none">&#x1F4DE; Cold Phone Call &mdash; 3&ndash;4 min</summary>
-          <div style="padding:10px 12px;font-size:11px;line-height:1.65;color:#1e293b">
-            <div style="margin-bottom:7px">
-              <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">Opening</div>
-              &ldquo;Hey [name], this is [your name] with Pinellas Ice Co &mdash; we do commercial ice machine sanitation for restaurants in Pinellas County. Do you have two minutes?&rdquo;
+        <!-- 2. VM + Walk-In Sequence -->
+        <details style="margin-bottom:6px;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
+          <summary style="padding:8px 12px;cursor:pointer;user-select:none;background:#f8fafc;font-size:11px;font-weight:700;color:var(--navy);list-style:none">2 &mdash; VM + Walk-In Sequence</summary>
+          <div style="padding:10px 12px;font-size:11px;line-height:1.7;color:#1e293b">
+            <div style="background:#f1f5f9;border-radius:6px;padding:7px 10px;margin-bottom:8px;font-size:10px;color:#475569">
+              <strong>USE WHEN:</strong> DBPR cited prospect, business line number available.<br>
+              <strong>TIMING:</strong> Leave VM 8&ndash;8:30am. Walk in at open (10&ndash;10:30am).<br>
+              <strong>RESULT:</strong> Walk-in is a follow-up, not a cold approach.
             </div>
-            <div style="margin-bottom:7px">
-              <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">Qualify</div>
-              &ldquo;Do you work with restaurants or bars in Pinellas?&rdquo;
+            <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">The 8am voicemail &mdash; 20 seconds max</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;Hey &mdash; this is [name] with Pinellas Ice Co, leaving you a quick message. I work with restaurants in Pinellas on ice machine compliance and I noticed in public inspection records that you&#39;ve had a citation come up. I&#39;m going to be in [city] this morning and wanted to stop by and introduce myself &mdash; no pitch, just wanted to show you your ATP reading. I&#39;ll swing by around [10 / 10:30]. Talk soon.&rdquo;</b>
             </div>
-            <div style="margin-bottom:7px">
-              <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">If Yes</div>
-              &ldquo;We work with a lot of the same accounts. When I&#39;m in a restaurant I sometimes see things outside my scope &mdash; refrigeration, HVAC, whatever &mdash; and I&#39;d rather refer that to someone I trust.&rdquo;
+            <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Why this works</div>
+            <div style="font-style:italic;color:#475569;margin-bottom:8px">They hear your name before you walk in &bull; &ldquo;I noticed in public records&rdquo; signals you know something specific &bull; &ldquo;No pitch&rdquo; lowers their guard &bull; Specific arrival time makes it feel like an appointment</div>
+            <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">The walk-in 2 hours later</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;Hey &mdash; I left you a voicemail earlier, [name] from Pinellas Ice Co. I know you&#39;re just opening up &mdash; I&#39;ll keep it to two minutes.&rdquo;</b>
             </div>
-            <div style="margin-bottom:7px">
-              <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">The Offer</div>
-              &ldquo;If you ever run across a restaurant where the ice machine is an obvious problem and you send them my way &mdash; if they become a client, I pay you $99. No paperwork, no portal. Just a text when you have someone.&rdquo;
+            <div style="font-style:italic;color:#64748b">You are now a follow-up, not a stranger. Go straight to Track A or Track B from there.</div>
+          </div>
+        </details>
+
+        <!-- 3. Track A — DBPR Cited -->
+        <details style="margin-bottom:6px;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
+          <summary style="padding:8px 12px;cursor:pointer;user-select:none;background:#f8fafc;font-size:11px;font-weight:700;color:var(--navy);list-style:none">3 &mdash; Track A &mdash; DBPR Cited (Walk-In)</summary>
+          <div style="padding:10px 12px;font-size:11px;line-height:1.7;color:#1e293b">
+            <div style="background:#faf5ff;border-radius:6px;padding:7px 10px;margin-bottom:8px;font-size:10px;color:#475569;border-left:3px solid #7c3aed">
+              <strong>USE WHEN:</strong> Purple DBPR badge in app.<br>
+              <strong>PREP:</strong> Know citation count, date, observation snippet before entering.
             </div>
-            <div style="margin-bottom:7px">
-              <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">The Ask</div>
-              &ldquo;I&#39;d love to send you an example of what the client actually receives after a service visit. Can I grab your email? Takes 30 seconds to look at and gives you a sense of what you&#39;d be referring your clients to.&rdquo;
+            <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">To whoever greets you</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;Hey &mdash; is the owner or manager around? Two minutes.&rdquo;</b>
             </div>
-            <div>
-              <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">Close</div>
-              &ldquo;Appreciate your time [name]. I&#39;ll send that over today.&rdquo;
+            <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">To the decision maker</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;Hey &mdash; [name] with Pinellas Ice Co. I do ice machine compliance for restaurants in Pinellas. I was going through inspection records this morning and saw you had an ice machine citation back in [month]. Wanted to stop by and introduce myself.&rdquo;</b>
+            </div>
+            <div style="font-style:italic;color:#64748b;margin-bottom:8px">&mdash; Pause. Let them react. &mdash;</div>
+            <div style="font-size:9px;font-weight:800;color:#059669;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">If open / curious &rarr; go straight to the ask</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;What I do is test your machine with the same ATP luminometer health inspectors use and show you the reading before I touch anything. Free, two minutes. If it&#39;s clean I&#39;ll tell you honestly.&rdquo;</b><br><br>
+              <b>&ldquo;I&#39;ve got time this week &mdash; morning or afternoon work better?&rdquo;</b>
+            </div>
+            <div style="font-style:italic;color:#64748b;margin-bottom:8px">Pull out your phone. Open the calendar.</div>
+            <div style="font-size:9px;font-weight:800;color:#d97706;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">If defensive (&ldquo;that&#39;s been handled&rdquo;)</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;Totally &mdash; figured you addressed it. Reason I still stopped by is most owners cited once get cited again &mdash; the contamination rebuilds inside faster than people expect. ATP test just gives you a baseline before the next inspector comes back. Two minutes, no cost. Worth having the number on file?&rdquo;</b>
+            </div>
+            <div style="font-size:9px;font-weight:800;color:#d97706;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">If skeptical (&ldquo;how do you know about that?&rdquo;)</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;Public record &mdash; DBPR posts all inspection reports for Florida. I pull the Pinellas data every morning as part of how I find restaurants to work with. I can see exactly where the compliance gaps are across the county.&rdquo;</b>
+            </div>
+            <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">If they hesitate on booking</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;border-left:3px solid #0284c7">
+              <b>&ldquo;Two minutes, no obligation. Worst case you find out your machine is clean and you never hear from me again.&rdquo;</b>
             </div>
           </div>
         </details>
 
-        <details style="margin-bottom:7px;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
-          <summary style="padding:8px 12px;cursor:pointer;user-select:none;background:#f8fafc;font-size:11px;font-weight:700;color:var(--navy);list-style:none">&#x1F91C; In-Person Encounter &mdash; 60&ndash;90 sec</summary>
-          <div style="padding:10px 12px;font-size:11px;line-height:1.65;color:#1e293b">
-            <div style="font-size:10px;color:#64748b;font-style:italic;margin-bottom:8px">Scenario: You&#39;re at a restaurant and a service tech from another company is there or finishing up.</div>
-            <div style="background:#f1f5f9;border-radius:6px;padding:8px 10px;margin-bottom:8px">
-              &ldquo;Hey &mdash; [your name], Pinellas Ice Co. Ice machine sanitation. You with [company]?&rdquo;<br><br>
-              &ldquo;Nice. We&#39;re probably in a lot of the same kitchens. I&#39;ve been trying to connect with good local service companies I can refer to when I see things outside my scope.&rdquo;
+        <!-- 4. Track B — No Citation -->
+        <details style="margin-bottom:6px;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
+          <summary style="padding:8px 12px;cursor:pointer;user-select:none;background:#f8fafc;font-size:11px;font-weight:700;color:var(--navy);list-style:none">4 &mdash; Track B &mdash; No Citation (Walk-In)</summary>
+          <div style="padding:10px 12px;font-size:11px;line-height:1.7;color:#1e293b">
+            <div style="background:#f1f5f9;border-radius:6px;padding:7px 10px;margin-bottom:8px;font-size:10px;color:#475569">
+              <strong>USE WHEN:</strong> No DBPR badge &mdash; no confirmed citation on file.<br>
+              <strong>HOOK:</strong> Energy cost first, compliance pivot second.
             </div>
-            <div style="margin-bottom:8px">
-              <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">If Open</div>
-              &ldquo;We have a referral arrangement &mdash; if you ever send a restaurant my way and they sign up, I pay you $99. Just a text.&rdquo;<br><br>
-              &ldquo;You got a card? I&#39;ll text you so you have my number and send you an example of what we give clients.&rdquo;
+            <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">To the decision maker</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;Hey &mdash; [name], Pinellas Ice Co. Quick question &mdash; when was the last time someone tested your ice machine for contamination?&rdquo;</b>
             </div>
-            <div style="background:#f0fdf4;border-radius:6px;padding:8px 10px;border-left:3px solid #16a34a">
-              <div style="font-size:9px;font-weight:800;color:#15803d;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Follow-Up Text (send immediately)</div>
-              &ldquo;Hey [name] &mdash; [your name] from Pinellas Ice Co. Good meeting you at [restaurant]. Sending you that example compliance report now.&rdquo;
+            <div style="font-style:italic;color:#64748b;margin-bottom:8px">&mdash; Pause. Almost nobody has an answer. &mdash;</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;That&#39;s usually what I hear. A poorly maintained ice machine runs up to 30% less efficiently &mdash; you&#39;re paying more on your electric bill every month for the same amount of ice. And the contamination side is a health inspection issue most owners don&#39;t find out about until an inspector finds it first.&rdquo;</b><br><br>
+              <b>&ldquo;I do free ATP contamination tests &mdash; same device inspectors use. Two minutes, I show you the reading before I do anything. Last machine I tested in Pinellas read 457. FDA standard is 10.&rdquo;</b>
+            </div>
+            <div style="font-style:italic;color:#64748b;margin-bottom:8px">&mdash; Let that land. &mdash;</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;Worth two minutes to see what yours reads?&rdquo;</b>
+            </div>
+            <div style="font-style:italic;color:#64748b">BOOK IT: same as Track A.</div>
+          </div>
+        </details>
+
+        <!-- 5. Cold Phone Call -->
+        <details style="margin-bottom:6px;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
+          <summary style="padding:8px 12px;cursor:pointer;user-select:none;background:#f8fafc;font-size:11px;font-weight:700;color:var(--navy);list-style:none">5 &mdash; Cold Phone Call</summary>
+          <div style="padding:10px 12px;font-size:11px;line-height:1.7;color:#1e293b">
+            <div style="background:#f1f5f9;border-radius:6px;padding:7px 10px;margin-bottom:8px;font-size:10px;color:#475569">
+              <strong>USE WHEN:</strong> Can&#39;t walk in, or supplementing walk-in days.<br>
+              <strong>GOAL:</strong> Get to decision maker, book ATP test. Under 3 minutes.<br>
+              If you can&#39;t get to DM &mdash; leave VM, walk in later if possible.
+            </div>
+            <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Getting past the front</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;Hey &mdash; is the owner or manager available? I have a quick compliance question for them.&rdquo;</b>
+            </div>
+            <div style="font-style:italic;color:#64748b;margin-bottom:8px">&ldquo;Compliance question&rdquo; gets you further than &ldquo;I&#39;m calling about...&rdquo;</div>
+            <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">When you reach the decision maker</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;Hey [name] &mdash; this is [name] with Pinellas Ice Co. I&#39;ll be quick. I do ice machine compliance work for restaurants in Pinellas and I was going through inspection records this morning &mdash;&rdquo;</b>
+            </div>
+            <div style="font-size:9px;font-weight:800;color:#7c3aed;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">For DBPR cited (softer than walk-in)</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;&mdash; I noticed you&#39;ve had an ice machine citation come up in the past year. I&#39;m not calling to pitch you anything &mdash; I just do free ATP tests for restaurants in your area and wanted to see if it would be worth two minutes to show you where your machine stands right now.&rdquo;</b>
+            </div>
+            <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">For non-cited</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;&mdash; I do free ATP contamination tests for restaurants here. The test takes two minutes and shows you exactly what&#39;s in your ice machine &mdash; same reading health inspectors use. Last machine I tested in Pinellas read 457. FDA standard is 10. Worth two minutes to see what yours reads?&rdquo;</b>
+            </div>
+            <div style="font-size:9px;font-weight:800;color:#059669;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">The book</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;I&#39;m going to be in [city] [day] &mdash; does morning or afternoon work better?&rdquo;</b>
+            </div>
+            <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">If they want more info</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;I can send you an example of what a client receives after the test &mdash; takes 30 seconds to look at. What&#39;s the best email?&rdquo;</b>
+            </div>
+            <div style="font-style:italic;color:#64748b;margin-bottom:8px">Send the ATP demo report within the hour.</div>
+            <div style="font-size:9px;font-weight:800;color:#d97706;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">If they&#39;re busy / call back</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;Of course &mdash; what&#39;s a better time today or tomorrow?&rdquo;</b>
+            </div>
+            <div style="font-style:italic;color:#64748b">Do not let them hang up without a specific callback time.</div>
+          </div>
+        </details>
+
+        <!-- 6. The Brush-Off -->
+        <details style="margin-bottom:6px;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
+          <summary style="padding:8px 12px;cursor:pointer;user-select:none;background:#f8fafc;font-size:11px;font-weight:700;color:var(--navy);list-style:none">6 &mdash; The Brush-Off</summary>
+          <div style="padding:10px 12px;font-size:11px;line-height:1.7;color:#1e293b">
+            <div style="background:#fef2f2;border-radius:6px;padding:7px 10px;margin-bottom:8px;border-left:3px solid #dc2626">
+              <strong style="color:#dc2626">THE HARDEST OBJECTION. Happens most often.</strong><br>
+              <span style="font-style:italic;color:#475569">This is a bandwidth problem, not an information problem. Do not overcome it. Survive it and get permission to return.</span>
+            </div>
+            <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">Brush-off sounds like</div>
+            <div style="font-style:italic;color:#475569;margin-bottom:8px">
+              &ldquo;We&#39;re good thanks&rdquo; &bull; &ldquo;Not interested&rdquo; &bull; &ldquo;We already have someone&rdquo; &bull; &ldquo;Send me some info&rdquo; &bull; &ldquo;My boss isn&#39;t here&rdquo;
+            </div>
+            <div style="font-size:9px;font-weight:800;color:#1d4ed8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Your response &mdash; short, no pressure, one more line</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;Totally understand. Last thing I&#39;ll say &mdash; the ATP test is free and takes two minutes. If your machine is clean, great. If it&#39;s not, you&#39;ll want to know before an inspector finds it.&rdquo;</b>
+            </div>
+            <div style="font-style:italic;color:#64748b;margin-bottom:8px">Hand the card. Then:</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;Do you mind if I check back in a month or so?&rdquo;</b>
+            </div>
+            <div style="font-style:italic;color:#64748b;margin-bottom:8px">Almost nobody says no to that. You just got permission to return.</div>
+            <div style="background:#fef9c3;border-radius:6px;padding:7px 10px;margin-bottom:8px;border-left:3px solid #ca8a04">
+              <div style="font-size:9px;font-weight:800;color:#92400e;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">What you do not do</div>
+              Do not explain more. Do not pitch harder. Do not ask another question. More words make it worse.
+            </div>
+            <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Same-day or next-morning follow-up text</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;Hey &mdash; [name], Pinellas Ice Co. Stopped by [restaurant] earlier. I know you were busy &mdash; wanted to see if a free ATP test this week makes sense. Two minutes at your location.&rdquo;</b>
+            </div>
+            <div style="font-style:italic;color:#64748b;margin-bottom:8px">One shot. If brushed off again &mdash; set 30-day reminder and move on.</div>
+            <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">On the phone brush-off</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;No problem at all &mdash; mind if I try back in a few weeks?&rdquo;</b>
+            </div>
+            <div style="font-style:italic;color:#64748b">Log it. Set the reminder. Next call.</div>
+          </div>
+        </details>
+
+        <!-- 7. The ATP Test Visit -->
+        <details style="margin-bottom:6px;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
+          <summary style="padding:8px 12px;cursor:pointer;user-select:none;background:#f8fafc;font-size:11px;font-weight:700;color:var(--navy);list-style:none">7 &mdash; The ATP Test Visit</summary>
+          <div style="padding:10px 12px;font-size:11px;line-height:1.7;color:#1e293b">
+            <div style="font-style:italic;color:#64748b;margin-bottom:8px">You booked it. Execute cleanly. This is where you close.</div>
+            <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">When you arrive</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;Hey [name] &mdash; [your name] from Pinellas Ice Co. Ready to take a look?&rdquo;</b>
+            </div>
+            <div style="font-style:italic;color:#64748b;margin-bottom:8px">Run the test before saying anything about the machine&#39;s condition. Show them the device. Let them watch.</div>
+            <div style="font-size:9px;font-weight:800;color:#dc2626;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Reading: fail (over 100 RLU)</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;So this is reading [X]. FDA standard for food contact surfaces is 10. Anything over 100 is what inspectors classify as a fail.&rdquo;</b>
+            </div>
+            <div style="font-style:italic;color:#64748b;margin-bottom:8px">Show them the number. Let them hold the device if they want.</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;What I&#39;d recommend is a deep clean today &mdash; that&#39;s the $99 intro visit &mdash; and then a maintenance plan so this doesn&#39;t come back. The plan is $149 a month, 6 visits a year, and you get a dated compliance report after every visit that stays on file for inspections.&rdquo;</b>
+            </div>
+            <div style="font-size:9px;font-weight:800;color:#059669;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Reading: pass (10 or under)</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;Your machine is clean &mdash; reading is [X], well under the FDA standard. I&#39;d leave it alone. Happy to come back in 6 months and test again at no charge.&rdquo;</b>
+            </div>
+            <div style="font-style:italic;color:#64748b;margin-bottom:8px">Honesty here gets you a referral. Don&#39;t manufacture urgency.</div>
+            <div style="font-size:9px;font-weight:800;color:#d97706;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Reading: marginal (11&ndash;100 RLU)</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;You&#39;re not failing yet but trending toward it. The contamination is building &mdash; at this rate you&#39;ll be in fail territory within a few months. A maintenance clean now prevents the citation before it happens.&rdquo;</b>
+            </div>
+            <div style="font-size:9px;font-weight:800;color:#059669;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">The close</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;Want to do the deep clean today while I&#39;m here?&rdquo;</b>
+            </div>
+            <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">If not today</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;When works? I&#39;d rather get in before your next inspection.&rdquo;</b>
+            </div>
+            <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">If they want to think about it</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;margin-bottom:8px;border-left:3px solid #0284c7">
+              <b>&ldquo;Totally. One thing worth knowing &mdash; if you get cited within 30 days of our service, I refund the visit. No risk.&rdquo;</b>
+            </div>
+            <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">If price is the hesitation</div>
+            <div style="background:#f0f9ff;border-radius:6px;padding:8px 10px;border-left:3px solid #0284c7">
+              <b>&ldquo;The $99 covers the full deep clean today. The $149 a month after that works out to about $25 a visit &mdash; and that includes your compliance documentation on file. Most clients think of it as inspection insurance.&rdquo;</b>
             </div>
           </div>
         </details>
 
-        <details style="margin-bottom:7px;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
-          <summary style="padding:8px 12px;cursor:pointer;user-select:none;background:#f8fafc;font-size:11px;font-weight:700;color:var(--navy);list-style:none">&#x1F4E7; Follow-Up Email</summary>
-          <div style="padding:10px 12px;font-size:11px;line-height:1.65;color:#1e293b">
-            <div style="font-size:10px;color:#64748b;margin-bottom:7px"><strong>Subject:</strong> Example compliance report &mdash; Pinellas Ice Co</div>
-            <div style="background:#f1f5f9;border-radius:6px;padding:9px 11px;font-style:italic">
-              &ldquo;[Name] &mdash; good talking earlier. Attached is an example of what a client receives after every visit &mdash; a dated ATP compliance report with contamination levels before and after the cleaning.<br><br>
-              The before/after readings are what makes this useful for restaurant owners &mdash; same documentation format health inspectors reference.<br><br>
-              If you ever come across a restaurant where the ice machine is clearly a problem, send them my way. If they sign up I&#39;ll send you $99 after their first visit.<br><br>
-              [Your name] &middot; Pinellas Ice Co &middot; (727) 855-6873&rdquo;
-            </div>
-          </div>
-        </details>
-
-        <details style="margin-bottom:7px;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
-          <summary style="padding:8px 12px;cursor:pointer;user-select:none;background:#f8fafc;font-size:11px;font-weight:700;color:var(--navy);list-style:none">&#x1F6E1;&#xFE0F; Handling Common Responses</summary>
-          <div style="padding:10px 12px;font-size:11px;line-height:1.65;color:#1e293b">
-            <div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #f1f5f9">
-              <div style="font-style:italic;color:#475569;margin-bottom:3px">&ldquo;We&#39;re busy, I&#39;ll keep it in mind&rdquo;</div>
-              <div style="color:#059669">&#x2192; &ldquo;Totally. If something obvious comes up, just text me the business name. That&#39;s the whole thing.&rdquo;</div>
-            </div>
-            <div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #f1f5f9">
-              <div style="font-style:italic;color:#475569;margin-bottom:3px">&ldquo;What if the restaurant is already my client?&rdquo;</div>
-              <div style="color:#059669">&#x2192; &ldquo;Doesn&#39;t matter &mdash; I&#39;m in and out for the ice machine, you keep the rest of the account. We&#39;re complementary, not competing.&rdquo;</div>
-            </div>
-            <div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #f1f5f9">
-              <div style="font-style:italic;color:#475569;margin-bottom:3px">&ldquo;How do I know if it&#39;s a problem?&rdquo;</div>
-              <div style="color:#059669">&#x2192; &ldquo;If you can see pink or black slime in the ice bin &mdash; that&#39;s your signal. Or if an owner mentions they got flagged on their last inspection. Text me either of those.&rdquo;</div>
-            </div>
-            <div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #f1f5f9">
-              <div style="font-style:italic;color:#475569;margin-bottom:3px">&ldquo;Do you pay per lead or per close?&rdquo;</div>
-              <div style="color:#059669">&#x2192; &ldquo;Per close only. $99 after their first service visit is completed. You lose nothing if they don&#39;t sign up.&rdquo;</div>
-            </div>
-            <div>
-              <div style="font-style:italic;color:#475569;margin-bottom:3px">&ldquo;What if I refer someone and they don&#39;t sign up?&rdquo;</div>
-              <div style="color:#059669">&#x2192; &ldquo;No worries. I&#39;ll do a free ATP test, and if they&#39;re not ready that&#39;s fine. Your name stays clean either way.&rdquo;</div>
-            </div>
-          </div>
-        </details>
-
+        <!-- 8. Objection Handling -->
         <details style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
-          <summary style="padding:8px 12px;cursor:pointer;user-select:none;background:#f8fafc;font-size:11px;font-weight:700;color:var(--navy);list-style:none">&#x1F3C5; Referral Tiers</summary>
-          <div style="padding:10px 12px;font-size:11px;line-height:1.65;color:#1e293b">
-            <div style="display:grid;grid-template-columns:auto 1fr;gap:5px 12px;align-items:center">
-              <div style="background:#cd7f32;color:#fff;border-radius:12px;padding:2px 9px;font-size:10px;font-weight:700;white-space:nowrap;text-align:center">Bronze</div>
-              <div>1&ndash;2 closes &mdash; <strong>$99</strong> per referral</div>
-              <div style="background:#94a3b8;color:#fff;border-radius:12px;padding:2px 9px;font-size:10px;font-weight:700;white-space:nowrap;text-align:center">Silver</div>
-              <div>3&ndash;5 closes &mdash; <strong>$125</strong> per referral</div>
-              <div style="background:#d97706;color:#fff;border-radius:12px;padding:2px 9px;font-size:10px;font-weight:700;white-space:nowrap;text-align:center">Gold</div>
-              <div>6+ closes &mdash; <strong>$150</strong> per referral + quarterly dinner</div>
+          <summary style="padding:8px 12px;cursor:pointer;user-select:none;background:#f8fafc;font-size:11px;font-weight:700;color:var(--navy);list-style:none">8 &mdash; Objection Handling</summary>
+          <div style="padding:10px 12px;font-size:11px;line-height:1.7;color:#1e293b">
+            <div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #f1f5f9">
+              <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">&ldquo;We already have someone who cleans it.&rdquo;</div>
+              <div style="color:#059669">&#x2192; <b>&ldquo;Good to know &mdash; when did they last do it, and did they give you an ATP reading? A lot of services wipe down the exterior but don&#39;t do the full disassembly inside where the contamination actually builds. The ATP test would tell you if what you&#39;re getting is working.&rdquo;</b></div>
+            </div>
+            <div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #f1f5f9">
+              <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">&ldquo;How much does it cost?&rdquo;</div>
+              <div style="color:#059669">&#x2192; <b>&ldquo;The deep clean is $99 to start. Ongoing maintenance is $149 a month &mdash; 6 visits a year, compliance documentation after every visit. Works out to $25 a visit.&rdquo;</b></div>
+            </div>
+            <div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #f1f5f9">
+              <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">&ldquo;I&#39;ll have to talk to my manager / owner / corporate.&rdquo;</div>
+              <div style="color:#059669">&#x2192; <b>&ldquo;Of course. Would it help if I sent a one-page summary showing what the machine tested at and what the service includes? You could forward it directly. What&#39;s the best email?&rdquo;</b></div>
+              <div style="font-style:italic;color:#64748b;margin-top:3px">Get the email. Send the ATP demo report same day.</div>
+            </div>
+            <div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #f1f5f9">
+              <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">&ldquo;We just got inspected and passed.&rdquo;</div>
+              <div style="color:#059669">&#x2192; <b>&ldquo;That&#39;s great timing &mdash; inspectors typically return every 6 months. If we get in now you&#39;ve got documentation on file showing the machine was clean and maintained when they come back. That&#39;s the difference between a conversation and a violation.&rdquo;</b></div>
+            </div>
+            <div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #f1f5f9">
+              <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">&ldquo;I don&#39;t have time right now.&rdquo;</div>
+              <div style="color:#059669">&#x2192; <b>&ldquo;Completely understand. The test itself is two minutes &mdash; I can do it while you&#39;re doing whatever you&#39;re doing. But if now&#39;s not good, when works this week?&rdquo;</b></div>
+            </div>
+            <div>
+              <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">&ldquo;Send me some information.&rdquo;</div>
+              <div style="color:#059669">&#x2192; <b>&ldquo;Absolutely &mdash; what&#39;s your email?&rdquo;</b></div>
+              <div style="font-style:italic;color:#64748b;margin-top:4px">Get it. Send the ATP demo report within the hour.<br>Subject: &ldquo;What your clients receive &mdash; Pinellas Ice Co&rdquo;<br>One line: &ldquo;Here&#39;s what every client gets after a visit. Let me know if [day] works for the test.&rdquo;</div>
             </div>
           </div>
         </details>
