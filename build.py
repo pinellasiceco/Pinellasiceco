@@ -530,17 +530,19 @@ def clean_observation(text):
 
 
 def load_ice_citations(csv_path='ice_citation_by_business.csv'):
-    """Load aggregated ice citation data keyed by license number."""
+    """Load aggregated ice citation data keyed by license_id (matches prospect record id)."""
     import csv as _csv
     citations = {}
     try:
         with open(csv_path, newline='', encoding='utf-8') as f:
             reader = _csv.DictReader(f)
             for row in reader:
-                lic = (row.get('license_number') or '').strip()
-                if not lic:
+                lid = (row.get('license_id') or '').strip()
+                if not lid:
+                    lid = (row.get('license_number') or '').strip()
+                if not lid:
                     continue
-                citations[lic] = {
+                citations[lid] = {
                     'citation_count':   int(row.get('citation_count', 0) or 0),
                     'ice_count':        int(row.get('ice_count', 0) or 0),
                     'latest_date':      row.get('latest_date', '').strip(),
@@ -562,10 +564,11 @@ def enrich_with_citations(records, citations):
         return
     enriched = 0
     for rec in records:
-        lic = (rec.get('license_number') or '').strip()
-        if not lic or lic not in citations:
+        # Match on string version of the prospect id (== license_id in scraper output)
+        lid = str(rec.get('id', '')).strip()
+        if not lid or lid not in citations:
             continue
-        c = citations[lic]
+        c = citations[lid]
         rec['cit_count']          = c['citation_count']
         rec['cit_ice_count']      = c['ice_count']
         rec['cit_latest']         = c['latest_date']
