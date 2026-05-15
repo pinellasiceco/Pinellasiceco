@@ -2706,6 +2706,127 @@ header{background:var(--navy);
       </div>
     </div>
     <div id="partner-kpi-bar" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px"></div>
+
+    <!-- Partner Talk Track — collapsible -->
+    <details style="margin-bottom:10px;border:1px solid #c4b5fd;border-radius:10px;overflow:hidden">
+      <summary style="padding:11px 14px;cursor:pointer;user-select:none;background:#faf5ff;font-size:12px;font-weight:700;color:#6d28d9;display:flex;align-items:center;justify-content:space-between;list-style:none">
+        <span>&#x1F91D; Partner Talk Track</span>
+        <span style="font-size:10px;color:#a78bfa;font-weight:500">tap to expand &#x25BE;</span>
+      </summary>
+      <div style="padding:12px 14px;background:#fff;font-size:12px;line-height:1.55;color:#1e293b">
+
+        <div style="background:#faf5ff;border-radius:8px;padding:10px 12px;margin-bottom:10px;border-left:3px solid #7c3aed">
+          <div style="font-size:9px;font-weight:800;color:#6d28d9;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Program Overview</div>
+          <div>You pay <strong>$99</strong> per closed annual plan client that a partner refers. Payment made after the client&#39;s first service visit is completed.</div>
+          <div style="margin-top:4px;color:#475569;font-size:11px">Target: hood cleaning, pest control, refrigeration (repair only), beverage equipment, commercial HVAC.</div>
+        </div>
+
+        <details style="margin-bottom:7px;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
+          <summary style="padding:8px 12px;cursor:pointer;user-select:none;background:#f8fafc;font-size:11px;font-weight:700;color:var(--navy);list-style:none">&#x1F4DE; Cold Phone Call &mdash; 3&ndash;4 min</summary>
+          <div style="padding:10px 12px;font-size:11px;line-height:1.65;color:#1e293b">
+            <div style="margin-bottom:7px">
+              <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">Opening</div>
+              &ldquo;Hey [name], this is [your name] with Pinellas Ice Co &mdash; we do commercial ice machine sanitation for restaurants in Pinellas County. Do you have two minutes?&rdquo;
+            </div>
+            <div style="margin-bottom:7px">
+              <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">Qualify</div>
+              &ldquo;Do you work with restaurants or bars in Pinellas?&rdquo;
+            </div>
+            <div style="margin-bottom:7px">
+              <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">If Yes</div>
+              &ldquo;We work with a lot of the same accounts. When I&#39;m in a restaurant I sometimes see things outside my scope &mdash; refrigeration, HVAC, whatever &mdash; and I&#39;d rather refer that to someone I trust.&rdquo;
+            </div>
+            <div style="margin-bottom:7px">
+              <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">The Offer</div>
+              &ldquo;If you ever run across a restaurant where the ice machine is an obvious problem and you send them my way &mdash; if they become a client, I pay you $99. No paperwork, no portal. Just a text when you have someone.&rdquo;
+            </div>
+            <div style="margin-bottom:7px">
+              <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">The Ask</div>
+              &ldquo;I&#39;d love to send you an example of what the client actually receives after a service visit. Can I grab your email? Takes 30 seconds to look at and gives you a sense of what you&#39;d be referring your clients to.&rdquo;
+            </div>
+            <div>
+              <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">Close</div>
+              &ldquo;Appreciate your time [name]. I&#39;ll send that over today.&rdquo;
+            </div>
+          </div>
+        </details>
+
+        <details style="margin-bottom:7px;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
+          <summary style="padding:8px 12px;cursor:pointer;user-select:none;background:#f8fafc;font-size:11px;font-weight:700;color:var(--navy);list-style:none">&#x1F91C; In-Person Encounter &mdash; 60&ndash;90 sec</summary>
+          <div style="padding:10px 12px;font-size:11px;line-height:1.65;color:#1e293b">
+            <div style="font-size:10px;color:#64748b;font-style:italic;margin-bottom:8px">Scenario: You&#39;re at a restaurant and a service tech from another company is there or finishing up.</div>
+            <div style="background:#f1f5f9;border-radius:6px;padding:8px 10px;margin-bottom:8px">
+              &ldquo;Hey &mdash; [your name], Pinellas Ice Co. Ice machine sanitation. You with [company]?&rdquo;<br><br>
+              &ldquo;Nice. We&#39;re probably in a lot of the same kitchens. I&#39;ve been trying to connect with good local service companies I can refer to when I see things outside my scope.&rdquo;
+            </div>
+            <div style="margin-bottom:8px">
+              <div style="font-size:9px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">If Open</div>
+              &ldquo;We have a referral arrangement &mdash; if you ever send a restaurant my way and they sign up, I pay you $99. Just a text.&rdquo;<br><br>
+              &ldquo;You got a card? I&#39;ll text you so you have my number and send you an example of what we give clients.&rdquo;
+            </div>
+            <div style="background:#f0fdf4;border-radius:6px;padding:8px 10px;border-left:3px solid #16a34a">
+              <div style="font-size:9px;font-weight:800;color:#15803d;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Follow-Up Text (send immediately)</div>
+              &ldquo;Hey [name] &mdash; [your name] from Pinellas Ice Co. Good meeting you at [restaurant]. Sending you that example compliance report now.&rdquo;
+            </div>
+          </div>
+        </details>
+
+        <details style="margin-bottom:7px;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
+          <summary style="padding:8px 12px;cursor:pointer;user-select:none;background:#f8fafc;font-size:11px;font-weight:700;color:var(--navy);list-style:none">&#x1F4E7; Follow-Up Email</summary>
+          <div style="padding:10px 12px;font-size:11px;line-height:1.65;color:#1e293b">
+            <div style="font-size:10px;color:#64748b;margin-bottom:7px"><strong>Subject:</strong> Example compliance report &mdash; Pinellas Ice Co</div>
+            <div style="background:#f1f5f9;border-radius:6px;padding:9px 11px;font-style:italic">
+              &ldquo;[Name] &mdash; good talking earlier. Attached is an example of what a client receives after every visit &mdash; a dated ATP compliance report with contamination levels before and after the cleaning.<br><br>
+              The before/after readings are what makes this useful for restaurant owners &mdash; same documentation format health inspectors reference.<br><br>
+              If you ever come across a restaurant where the ice machine is clearly a problem, send them my way. If they sign up I&#39;ll send you $99 after their first visit.<br><br>
+              [Your name] &middot; Pinellas Ice Co &middot; (727) 855-6873&rdquo;
+            </div>
+          </div>
+        </details>
+
+        <details style="margin-bottom:7px;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
+          <summary style="padding:8px 12px;cursor:pointer;user-select:none;background:#f8fafc;font-size:11px;font-weight:700;color:var(--navy);list-style:none">&#x1F6E1;&#xFE0F; Handling Common Responses</summary>
+          <div style="padding:10px 12px;font-size:11px;line-height:1.65;color:#1e293b">
+            <div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #f1f5f9">
+              <div style="font-style:italic;color:#475569;margin-bottom:3px">&ldquo;We&#39;re busy, I&#39;ll keep it in mind&rdquo;</div>
+              <div style="color:#059669">&#x2192; &ldquo;Totally. If something obvious comes up, just text me the business name. That&#39;s the whole thing.&rdquo;</div>
+            </div>
+            <div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #f1f5f9">
+              <div style="font-style:italic;color:#475569;margin-bottom:3px">&ldquo;What if the restaurant is already my client?&rdquo;</div>
+              <div style="color:#059669">&#x2192; &ldquo;Doesn&#39;t matter &mdash; I&#39;m in and out for the ice machine, you keep the rest of the account. We&#39;re complementary, not competing.&rdquo;</div>
+            </div>
+            <div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #f1f5f9">
+              <div style="font-style:italic;color:#475569;margin-bottom:3px">&ldquo;How do I know if it&#39;s a problem?&rdquo;</div>
+              <div style="color:#059669">&#x2192; &ldquo;If you can see pink or black slime in the ice bin &mdash; that&#39;s your signal. Or if an owner mentions they got flagged on their last inspection. Text me either of those.&rdquo;</div>
+            </div>
+            <div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #f1f5f9">
+              <div style="font-style:italic;color:#475569;margin-bottom:3px">&ldquo;Do you pay per lead or per close?&rdquo;</div>
+              <div style="color:#059669">&#x2192; &ldquo;Per close only. $99 after their first service visit is completed. You lose nothing if they don&#39;t sign up.&rdquo;</div>
+            </div>
+            <div>
+              <div style="font-style:italic;color:#475569;margin-bottom:3px">&ldquo;What if I refer someone and they don&#39;t sign up?&rdquo;</div>
+              <div style="color:#059669">&#x2192; &ldquo;No worries. I&#39;ll do a free ATP test, and if they&#39;re not ready that&#39;s fine. Your name stays clean either way.&rdquo;</div>
+            </div>
+          </div>
+        </details>
+
+        <details style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
+          <summary style="padding:8px 12px;cursor:pointer;user-select:none;background:#f8fafc;font-size:11px;font-weight:700;color:var(--navy);list-style:none">&#x1F3C5; Referral Tiers</summary>
+          <div style="padding:10px 12px;font-size:11px;line-height:1.65;color:#1e293b">
+            <div style="display:grid;grid-template-columns:auto 1fr;gap:5px 12px;align-items:center">
+              <div style="background:#cd7f32;color:#fff;border-radius:12px;padding:2px 9px;font-size:10px;font-weight:700;white-space:nowrap;text-align:center">Bronze</div>
+              <div>1&ndash;2 closes &mdash; <strong>$99</strong> per referral</div>
+              <div style="background:#94a3b8;color:#fff;border-radius:12px;padding:2px 9px;font-size:10px;font-weight:700;white-space:nowrap;text-align:center">Silver</div>
+              <div>3&ndash;5 closes &mdash; <strong>$125</strong> per referral</div>
+              <div style="background:#d97706;color:#fff;border-radius:12px;padding:2px 9px;font-size:10px;font-weight:700;white-space:nowrap;text-align:center">Gold</div>
+              <div>6+ closes &mdash; <strong>$150</strong> per referral + quarterly dinner</div>
+            </div>
+          </div>
+        </details>
+
+      </div>
+    </details>
+
     <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px" id="partner-type-filters">
       <button class="ptype-chip on" data-ptype="all"              onclick="setPartnerFilter('all')"              ontouchend="event.preventDefault();setPartnerFilter('all')"              style="font-size:9px;padding:4px 9px;border-radius:12px;border:1px solid var(--navy);background:var(--navy);color:#fff;cursor:pointer;font-family:inherit;touch-action:manipulation">All</button>
       <button class="ptype-chip"    data-ptype="hood_cleaning"    onclick="setPartnerFilter('hood_cleaning')"    ontouchend="event.preventDefault();setPartnerFilter('hood_cleaning')"    style="font-size:9px;padding:4px 9px;border-radius:12px;border:1px solid #e2e8f0;background:#f8fafc;color:#475569;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F525; Hood</button>
