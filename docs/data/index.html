@@ -14,12 +14,18 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --navy:  #0f1f38;
-      --gold:  #c9973a;
-      --green: #059669;
-      --red:   #dc2626;
-      --amber: #d97706;
-      --bg:    #f5f7fa;
+      --navy:       #0f1f38;
+      --gold:       #c9973a;
+      --gold-muted: rgba(201,151,58,0.8);
+      --gold-dim:   rgba(201,151,58,0.5);
+      --gold-active:#b8862e;
+      --green:      #059669;
+      --red:        #dc2626;
+      --red-deep:   #7f1d1d;
+      --amber:      #d97706;
+      --bg:         #f5f7fa;
+      --text:       #374151;
+      --text-muted: #6b7280;
     }
 
     body {
@@ -115,12 +121,17 @@
       line-height: 1.4;
     }
 
+    /* ── WHITE BACKGROUND SECTION ───────────────────────── */
+    .white-bg { background: #fff; }
+
+    /* ── DARK BACKGROUND SECTIONS ───────────────────────── */
+    .dark-bg .section-label { color: var(--gold-muted); }
+    .dark-bg .section-title { color: #fff; }
+
     /* ── SECTION 2: BAR CHART ────────────────────────────── */
     .chart-bg {
       background: var(--navy);
     }
-    .chart-bg .section-label { color: rgba(201,151,58,0.8); }
-    .chart-bg .section-title { color: #fff; }
 
     .bar-chart { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
     .bar-row   { display: flex; align-items: center; gap: 10px; }
@@ -256,8 +267,6 @@
 
     /* ── SECTION 5: 2×2 STAT GRID ───────────────────────── */
     .stat-bg { background: var(--navy); }
-    .stat-bg .section-label { color: rgba(201,151,58,0.8); }
-    .stat-bg .section-title { color: #fff; }
     .stat-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -270,8 +279,9 @@
       padding: 20px 14px 16px;
       text-align: center;
     }
-    .s-num  { font-size: clamp(26px, 7vw, 36px); font-weight: 800; color: var(--gold); line-height: 1; margin-bottom: 10px; }
-    .s-desc { font-size: 11px; color: rgba(255,255,255,0.68); line-height: 1.55; }
+    .s-num      { font-size: clamp(26px, 7vw, 36px); font-weight: 800; color: var(--gold); line-height: 1; margin-bottom: 10px; }
+    .s-num-unit { font-size: 16px; font-weight: 600; color: var(--gold-dim); }
+    .s-desc     { font-size: 11px; color: rgba(255,255,255,0.68); line-height: 1.55; }
 
     /* ── SECTION 6: ATP SCALE BAR ────────────────────────── */
     .atp-scale-outer {
@@ -299,8 +309,9 @@
       background: rgba(255,255,255,0.7);
       transform: translateX(-50%);
     }
-    .atp-tick.t10  { left: 2%;  }
-    .atp-tick.t100 { left: 20%; }
+    .atp-tick.t10  { left: 2%;   }
+    .atp-tick.t100 { left: 20%;  }
+    .atp-tick.t457 { left: 91.4%; }
 
     /* label pins below the bar */
     .atp-labels {
@@ -315,15 +326,17 @@
       font-size: 10px;
       line-height: 1.35;
     }
-    .atp-lbl.l0   { left: 0%;   transform: none; text-align: left; }
-    .atp-lbl.l10  { left: 2%;   }
-    .atp-lbl.l100 { left: 20%;  }
-    .atp-lbl.l457 { left: 91.4%; transform: translateX(-50%); }
-    .atp-lbl .lval { font-weight: 800; font-size: 12px; }
+    /* l0 and l10 anchor left so they don't clip off-screen */
+    .atp-lbl.l0   { left: 0%;  transform: none; text-align: left; }
+    .atp-lbl.l10  { left: 2%;  transform: none; text-align: left; }
+    .atp-lbl.l100 { left: 20%; }
+    .atp-lbl.l457 { left: 91.4%; }
+    .atp-lbl .lval { font-weight: 800; font-size: 12px; color: var(--text); }
+    .atp-lbl.l0   .lval { color: var(--text); }
     .atp-lbl.l10  .lval { color: var(--green); }
     .atp-lbl.l100 .lval { color: var(--amber); }
     .atp-lbl.l457 .lval { color: var(--red);   }
-    .atp-lbl .lname { color: #64748b; }
+    .atp-lbl .lname { color: var(--text-muted); }
 
     /* "457" callout pin above the bar */
     .atp-pin {
@@ -336,7 +349,7 @@
     }
     .atp-pin-label {
       display: inline-block;
-      background: #7f1d1d;
+      background: var(--red-deep);
       color: #fff;
       font-size: 11px;
       font-weight: 700;
@@ -347,17 +360,8 @@
       width: 0; height: 0;
       border-left: 6px solid transparent;
       border-right: 6px solid transparent;
-      border-top: 7px solid #7f1d1d;
+      border-top: 7px solid var(--red-deep);
       margin: 0 auto;
-    }
-    .atp-tick-pin {
-      position: absolute;
-      left: 91.4%;
-      top: 0;
-      width: 2px;
-      height: 16px;
-      background: #fff;
-      transform: translateX(-50%);
     }
     .atp-caption {
       font-size: 11px;
@@ -394,7 +398,7 @@
       -webkit-tap-highlight-color: transparent;
       transition: background 0.15s, transform 0.1s;
     }
-    .cta-btn:active { background: #b8862e; transform: scale(0.97); }
+    .cta-btn:active { background: var(--gold-active); transform: scale(0.97); }
 
     /* ── FOOTER ──────────────────────────────────────────── */
     .page-footer { background: #070e1c; padding: 24px 20px; text-align: center; }
@@ -434,7 +438,7 @@
 </div>
 
 <!-- SECTION 2: YEAR-OVER-YEAR BAR CHART -->
-<div class="chart-bg">
+<div class="chart-bg dark-bg">
   <div class="wrap">
     <div class="section-label">Year-Over-Year</div>
     <div class="section-title">V22 Citation Rate &mdash; Pinellas County Routine Inspections</div>
@@ -487,7 +491,7 @@
 </div>
 
 <!-- SECTION 4: INSPECTION FREQUENCY -->
-<div style="background:#fff">
+<div class="white-bg">
   <div class="wrap">
     <div class="section-label">What This Means</div>
     <div class="section-title">What a Citation Means for Inspection Frequency</div>
@@ -532,7 +536,7 @@
 </div>
 
 <!-- SECTION 5: 2×2 ICE MACHINE STAT GRID -->
-<div class="stat-bg">
+<div class="stat-bg dark-bg">
   <div class="wrap">
     <div class="section-label">Inside the Numbers</div>
     <div class="section-title">Inside the Ice Machine Citation Data</div>
@@ -542,7 +546,7 @@
         <div class="s-desc">of food contact violations specifically cited ice machines in inspector observation text</div>
       </div>
       <div class="s-card">
-        <div class="s-num">71<span style="font-size:16px;font-weight:600;color:rgba(201,151,58,0.5)">/mo</span></div>
+        <div class="s-num">71<span class="s-num-unit">/mo</span></div>
         <div class="s-desc">Pinellas restaurants receive a new ice machine citation on average every month</div>
       </div>
       <div class="s-card">
@@ -567,11 +571,10 @@
       <div class="atp-pin-label">457 RLU &mdash; avg unserviced Pinellas</div>
       <div class="atp-pin-arrow"></div>
     </div>
-    <!-- tick at 457 -->
-    <div class="atp-tick-pin"></div>
-    <!-- tick marks at 10 and 100 -->
+    <!-- tick marks at 10, 100, 457 -->
     <div class="atp-tick t10"></div>
     <div class="atp-tick t100"></div>
+    <div class="atp-tick t457"></div>
     <!-- the bar -->
     <div class="atp-bar">
       <div class="seg-clean"></div>
@@ -581,7 +584,7 @@
     <!-- labels below bar -->
     <div class="atp-labels">
       <div class="atp-lbl l0">
-        <div class="lval" style="color:#374151">0</div>
+        <div class="lval">0</div>
         <div class="lname">Clean</div>
       </div>
       <div class="atp-lbl l10">

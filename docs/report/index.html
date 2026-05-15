@@ -10,8 +10,9 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --navy: #0f1f38;
-      --gold: #c9973a;
+      --navy:        #0f1f38;
+      --gold:        #c9973a;
+      --gold-active: #b8862e;
     }
 
     body {
@@ -19,7 +20,7 @@
       background: var(--navy);
       color: #fff;
       overflow-x: hidden;
-      padding-bottom: env(safe-area-inset-bottom, 0px);
+      /* safe-area padding handled by .page-footer — do not double-apply here */
     }
 
     /* ── HEADER ──────────────────────────────────────────── */
@@ -133,7 +134,7 @@
       transition: background 0.15s, transform 0.1s;
       line-height: 1.2;
     }
-    .cta-btn:active { background: #b8862e; transform: scale(0.98); }
+    .cta-btn:active { background: var(--gold-active); transform: scale(0.98); }
     .cta-sub-text {
       font-size: 12px;
       font-weight: 500;
