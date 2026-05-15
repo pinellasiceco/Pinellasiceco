@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Pinellas Ice Co — Ice Machine Compliance</title>
+  <meta name="description" content="The data behind ice machine compliance in Pinellas County. 7 years of Florida DBPR inspection records. Free ATP test available.">
+  <meta property="og:title" content="Pinellas Ice Co">
+  <meta property="og:description" content="Most Pinellas restaurants don&#39;t know what&#39;s in their ice machine. We do.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧊</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:      #0a1628;
+      --navy-2:    #0f1f38;
+      --gold:      #c9973a;
+      --gold-light:#e8b84b;
+      --red:       #ef4444;
+      --red-dim:   #7f1d1d;
+      --green:     #10b981;
+      --green-dim: #064e3b;
+      --white:     #f8fafc;
+      --gray:      #94a3b8;
+      --gray-dim:  #334155;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE ───────────────────────────────────── */
+    .dark-section {
+      position: relative;
+    }
+    .dark-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+    .dark-section > * { position: relative; z-index: 1; }
+
+    /* ── REVEAL ANIMATIONS ───────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-child { transition-delay: 0ms; }
+    .reveal-child:nth-child(1) { transition-delay: 0ms; }
+    .reveal-child:nth-child(2) { transition-delay: 150ms; }
+    .reveal-child:nth-child(3) { transition-delay: 300ms; }
+
+    @keyframes pulse-opacity {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+    .scroll-hint { animation: pulse-opacity 2s ease infinite; }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+
+    /* ── EYEBROW LABEL ───────────────────────────────────── */
+    .eyebrow {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       ACT 1: HERO
+    ═══════════════════════════════════════════════════════ */
+    #act1 {
+      min-height: 100svh;
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+    }
+    .hero-inner {
+      max-width: 380px;
+      margin: 0 auto;
+      padding-top: 28vh;
+      padding-bottom: 48px;
+      width: 100%;
+    }
+    .hero-eyebrow {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 36px;
+    }
+    .hero-headline {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      font-size: clamp(34px, 9vw, 46px);
+      font-weight: 300;
+      line-height: 1.15;
+      color: var(--white);
+      margin-bottom: 0;
+    }
+    .hero-headline-bold {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      font-size: clamp(34px, 9vw, 46px);
+      font-weight: 600;
+      font-style: italic;
+      line-height: 1.15;
+      color: var(--gold);
+      margin-top: 4px;
+      margin-bottom: 60px;
+    }
+    .hero-scroll {
+      font-size: 12px;
+      font-weight: 300;
+      color: var(--gray);
+      letter-spacing: 0.04em;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       ACT 2: THE CONTRAST MOMENT
+    ═══════════════════════════════════════════════════════ */
+    #act2 {
+      min-height: 100svh;
+      background: var(--navy);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 16px;
+    }
+    .contrast-numbers {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-width: 420px;
+      gap: 0;
+      margin-bottom: 40px;
+    }
+    .contrast-half {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 0 12px;
+    }
+    .contrast-divider {
+      width: 1px;
+      height: 120px;
+      background: var(--gold);
+      opacity: 0.5;
+      flex-shrink: 0;
+    }
+    .number-bad {
+      font-family: 'Bebas Neue', system-ui, sans-serif;
+      font-size: clamp(96px, 24vw, 130px);
+      line-height: 1;
+      color: var(--red);
+      text-shadow: 0 0 60px rgba(239, 68, 68, 0.3);
+    }
+    .number-good {
+      font-family: 'Bebas Neue', system-ui, sans-serif;
+      font-size: clamp(96px, 24vw, 130px);
+      line-height: 1;
+      color: var(--green);
+      text-shadow: 0 0 60px rgba(16, 185, 129, 0.2);
+    }
+    .contrast-label {
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--gray);
+      line-height: 1.5;
+      margin-top: 10px;
+      max-width: 130px;
+    }
+    .contrast-unit {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gray);
+      margin-bottom: 4px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .contrast-footer {
+      text-align: center;
+      max-width: 340px;
+    }
+    .contrast-22x {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--white);
+      margin-bottom: 10px;
+      line-height: 1.45;
+    }
+    .contrast-caveat {
+      font-size: 10px;
+      font-weight: 300;
+      color: var(--gray);
+      line-height: 1.6;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       ACT 3: THE DATA
+    ═══════════════════════════════════════════════════════ */
+    #act3 {
+      background: var(--white);
+      padding: 72px 24px 64px;
+    }
+    .act3-inner {
+      max-width: 380px;
+      margin: 0 auto;
+    }
+    .data-header {
+      margin-bottom: 40px;
+    }
+    .data-eyebrow {
+      color: var(--gold);
+      margin-bottom: 18px;
+    }
+    .data-headline {
+      font-size: clamp(22px, 5.5vw, 30px);
+      font-weight: 300;
+      color: var(--navy-2);
+      line-height: 1.3;
+      margin-bottom: 2px;
+    }
+    .data-headline-bold {
+      font-size: clamp(22px, 5.5vw, 30px);
+      font-weight: 600;
+      color: var(--navy-2);
+      line-height: 1.3;
+    }
+    /* Stat cards */
+    .stat-cards { display: flex; flex-direction: column; gap: 0; }
+    .stat-card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-left: 3px solid var(--gold);
+      border-radius: 16px;
+      padding: 24px 22px;
+      margin-bottom: 14px;
+    }
+    .stat-card-num {
+      font-family: 'Bebas Neue', system-ui, sans-serif;
+      font-size: 72px;
+      line-height: 1;
+      color: var(--navy-2);
+      margin-bottom: 6px;
+    }
+    .stat-card-desc {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--gray);
+      line-height: 1.55;
+      margin-bottom: 6px;
+    }
+    .stat-card-source {
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--gray-dim);
+      letter-spacing: 0.02em;
+    }
+    .data-link {
+      margin-top: 6px;
+      display: inline-block;
+    }
+    .data-link a {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gold);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(201,151,58,0.4);
+      padding-bottom: 1px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       ACT 4: THE GUARANTEE
+    ═══════════════════════════════════════════════════════ */
+    #act4 {
+      background: var(--navy-2);
+      padding: 80px 24px;
+    }
+    .guarantee-inner {
+      max-width: 340px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .guarantee-icon {
+      font-size: 48px;
+      line-height: 1;
+      margin-bottom: 24px;
+      display: block;
+    }
+    .guarantee-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+    .guarantee-body {
+      font-size: 20px;
+      font-weight: 300;
+      line-height: 1.5;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+    .guarantee-punch {
+      font-size: 16px;
+      font-weight: 500;
+      font-style: italic;
+      color: var(--gold);
+      margin-bottom: 32px;
+    }
+    .guarantee-fine {
+      font-size: 11px;
+      font-weight: 300;
+      color: var(--gray);
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       ACT 5: WHAT CLIENTS RECEIVE
+    ═══════════════════════════════════════════════════════ */
+    #act5 {
+      background: var(--white);
+      padding: 72px 24px 64px;
+    }
+    .act5-inner {
+      max-width: 380px;
+      margin: 0 auto;
+    }
+    .receive-header {
+      margin-bottom: 36px;
+    }
+    .receive-title {
+      font-size: clamp(20px, 5vw, 26px);
+      font-weight: 300;
+      color: var(--navy-2);
+      line-height: 1.35;
+      margin-top: 14px;
+    }
+    .feature-rows { display: flex; flex-direction: column; }
+    .feature-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 22px 0;
+      border-top: 1px solid #e2e8f0;
+    }
+    .feature-row:last-child { border-bottom: 1px solid #e2e8f0; }
+    .feature-icon {
+      font-size: 24px;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .feature-text {}
+    .feature-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--navy-2);
+      margin-bottom: 4px;
+    }
+    .feature-desc {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--gray);
+      line-height: 1.55;
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       ACT 6: THREE PATHS
+    ═══════════════════════════════════════════════════════ */
+    #act6 {
+      background: var(--navy);
+      padding: 72px 24px calc(40px + env(safe-area-inset-bottom, 0px));
+    }
+    .act6-inner {
+      max-width: 380px;
+      margin: 0 auto;
+    }
+    .paths-eyebrow {
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .path-cards { display: flex; flex-direction: column; gap: 12px; margin-bottom: 48px; }
+
+    /* Primary CTA */
+    .path-primary {
+      display: block;
+      background: var(--gold);
+      color: var(--navy);
+      border-radius: 14px;
+      padding: 22px 20px;
+      text-decoration: none;
+      min-height: 72px;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      box-shadow: 0 0 30px rgba(201, 151, 58, 0.3);
+      transition: box-shadow 0.3s ease, transform 0.1s ease;
+    }
+    .path-primary:active {
+      box-shadow: 0 0 50px rgba(201, 151, 58, 0.5);
+      transform: scale(0.99);
+    }
+    .path-primary-title {
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 5px;
+    }
+    .path-primary-sub {
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(10,22,40,0.65);
+      line-height: 1.4;
+    }
+
+    /* Secondary CTA cards */
+    .path-secondary {
+      display: block;
+      background: transparent;
+      border: 1px solid rgba(201,151,58,0.4);
+      border-radius: 14px;
+      padding: 20px 20px;
+      text-decoration: none;
+      min-height: 72px;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      transition: border-color 0.2s ease, transform 0.1s ease;
+    }
+    .path-secondary:active {
+      border-color: var(--gold);
+      transform: scale(0.99);
+    }
+    .path-secondary-title {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--white);
+      line-height: 1.2;
+      margin-bottom: 5px;
+    }
+    .path-secondary-sub {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--gray);
+      line-height: 1.4;
+    }
+
+    /* Footer */
+    .explore-footer {
+      text-align: center;
+      font-size: 11px;
+      font-weight: 300;
+      color: var(--gray-dim);
+      line-height: 1.8;
+    }
+    .explore-footer a {
+      color: var(--gray);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════
+     ACT 1: HERO
+═══════════════════════════════════════════════════════ -->
+<section id="act1" class="dark-section">
+  <div class="hero-inner">
+    <p class="hero-eyebrow reveal">Pinellas County &middot; Ice Machine Compliance</p>
+    <p class="hero-headline reveal">Most Pinellas restaurants<br>don&#39;t know what&#39;s in<br>their ice machine.</p>
+    <p class="hero-headline-bold reveal">We do.</p>
+    <p class="hero-scroll scroll-hint">&#x2193;&nbsp; scroll to see the data</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     ACT 2: THE CONTRAST MOMENT
+═══════════════════════════════════════════════════════ -->
+<section id="act2" class="dark-section">
+  <div class="contrast-numbers reveal">
+    <div class="contrast-half">
+      <div class="contrast-unit">RLU</div>
+      <div class="number-bad" data-count="457" data-color="bad">0</div>
+      <div class="contrast-label">avg unserviced<br>Pinellas machine</div>
+    </div>
+    <div class="contrast-divider"></div>
+    <div class="contrast-half">
+      <div class="contrast-unit">RLU</div>
+      <div class="number-good" data-count="10" data-color="good">0</div>
+      <div class="contrast-label">FDA food contact<br>standard</div>
+    </div>
+  </div>
+  <div class="contrast-footer reveal">
+    <p class="contrast-22x">22&times; higher contamination than a toilet seat</p>
+    <p class="contrast-caveat">ATP measures organic contamination &middot; not direct bacterial count</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     ACT 3: THE DATA
+═══════════════════════════════════════════════════════ -->
+<section id="act3">
+  <div class="act3-inner">
+    <div class="data-header reveal">
+      <p class="eyebrow data-eyebrow">The Research</p>
+      <p class="data-headline">We analyzed 13,691 Pinellas County<br>health inspections going back to 2018.</p>
+      <p class="data-headline-bold">The violation rate hasn&#39;t moved in 7 years.</p>
+    </div>
+    <div class="stat-cards">
+      <div class="stat-card reveal reveal-child">
+        <div class="stat-card-num" data-count="71" data-color="navy">0</div>
+        <div class="stat-card-desc">new ice machine citations in Pinellas County every month on average</div>
+        <div class="stat-card-source">FL DBPR &middot; 2025&ndash;2026</div>
+      </div>
+      <div class="stat-card reveal reveal-child">
+        <div class="stat-card-num" data-count-decimal="46.8" data-color="navy">0</div>
+        <div class="stat-card-desc">of warned restaurants get cited again &mdash; the problem doesn&#39;t self-correct</div>
+        <div class="stat-card-source">FL DBPR &middot; 2025&ndash;2026</div>
+      </div>
+      <div class="stat-card reveal reveal-child">
+        <div class="stat-card-num" data-count-decimal="2.1" data-color="navy">0</div>
+        <div class="stat-card-desc">more customer complaint inspections at restaurants with violations vs clean ones</div>
+        <div class="stat-card-source">FL DBPR &middot; 2018&ndash;2026</div>
+      </div>
+    </div>
+    <div class="data-link reveal">
+      <a href="../data/">&#x2192; See the full 7-year analysis</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     ACT 4: THE GUARANTEE
+═══════════════════════════════════════════════════════ -->
+<section id="act4" class="dark-section">
+  <div class="guarantee-inner reveal">
+    <span class="guarantee-icon">&#x1F6E1;&#xFE0F;</span>
+    <p class="guarantee-title">Inspection Protection Guarantee</p>
+    <p class="guarantee-body">If your machine is cited within 30 days of our service, we refund the visit.</p>
+    <p class="guarantee-punch">No runaround. Just show us the report.</p>
+    <p class="guarantee-fine">Full terms apply &middot; covers the serviced machine only</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     ACT 5: WHAT CLIENTS RECEIVE
+═══════════════════════════════════════════════════════ -->
+<section id="act5">
+  <div class="act5-inner">
+    <div class="receive-header reveal">
+      <p class="eyebrow">What You Get</p>
+      <p class="receive-title">After every service visit, you receive:</p>
+    </div>
+    <div class="feature-rows">
+      <div class="feature-row reveal">
+        <div class="feature-icon">&#x1F4CB;</div>
+        <div class="feature-text">
+          <p class="feature-title">Dated ATP Compliance Report</p>
+          <p class="feature-desc">Before and after readings, signed and dated. The same documentation format health inspectors reference.</p>
+        </div>
+      </div>
+      <div class="feature-row reveal">
+        <div class="feature-icon">&#x1F4C5;</div>
+        <div class="feature-text">
+          <p class="feature-title">Documented Service Schedule</p>
+          <p class="feature-desc">Your annual service calendar with every visit date. Sent to your email immediately after close.</p>
+        </div>
+      </div>
+      <div class="feature-row reveal">
+        <div class="feature-icon">&#x1F9CA;</div>
+        <div class="feature-text">
+          <p class="feature-title">Inspection Protection</p>
+          <p class="feature-desc">Cited within 30 days? Full refund. No questions, no runaround.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     ACT 6: THREE PATHS
+═══════════════════════════════════════════════════════ -->
+<section id="act6" class="dark-section">
+  <div class="act6-inner">
+    <p class="eyebrow paths-eyebrow reveal">Where Do You Want to Start?</p>
+    <div class="path-cards">
+      <a class="path-primary reveal"
+         href="https://meetings-na2.hubspot.com/stripe/ice-machine-on-site?uuid=9a40fc22-dce2-4258-8e4f-28aa75c892da"
+         touch-action="manipulation">
+        <div class="path-primary-title">&#x1F4C5; Book Your Free ATP Test</div>
+        <div class="path-primary-sub">Two minutes &middot; Free &middot; At your location &middot; No obligation</div>
+      </a>
+      <a class="path-secondary reveal" href="../data/" touch-action="manipulation">
+        <div class="path-secondary-title">&#x1F4CA; See the 7-Year Data</div>
+        <div class="path-secondary-sub">Full analysis of Pinellas County inspection records 2018&ndash;2026</div>
+      </a>
+      <a class="path-secondary reveal" href="../report/" touch-action="manipulation">
+        <div class="path-secondary-title">&#x1F4CB; View a Sample Report</div>
+        <div class="path-secondary-sub">See exactly what clients receive after every service visit</div>
+      </a>
+    </div>
+    <footer class="explore-footer">
+      Pinellas Ice Co<br>
+      <a href="tel:+17278556873">(727) 855-6873</a> &middot; <a href="https://pinellasiceco.com">pinellasiceco.com</a><br>
+      Serving Pinellas County, FL<br><br>
+      Data: FL DBPR public inspection records 2018&ndash;2026.<br>
+      ATP comparison: published Hygiena monitoring system research.<br>
+      ATP measures organic contamination broadly, not bacterial count.
+    </footer>
+  </div>
+</section>
+
+<script>
+  // ── COUNT-UP ─────────────────────────────────────────────
+  function countUp(el, target, isDecimal) {
+    var duration = target > 100 ? 1500 : 800;
+    var start = performance.now();
+    function update(now) {
+      var elapsed = now - start;
+      var progress = Math.min(elapsed / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var current = eased * target;
+      el.textContent = isDecimal ? current.toFixed(1) : Math.round(current).toLocaleString();
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      } else {
+        el.textContent = isDecimal ? target.toFixed(1) : target.toLocaleString();
+      }
+    }
+    requestAnimationFrame(update);
+  }
+
+  // ── INTERSECTION OBSERVER ────────────────────────────────
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add("visible");
+      var intTarget = entry.target.dataset.count;
+      var decTarget = entry.target.dataset.countDecimal;
+      if (intTarget) countUp(entry.target, parseInt(intTarget, 10), false);
+      if (decTarget) countUp(entry.target, parseFloat(decTarget), true);
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: 0.2 });
+
+  document.querySelectorAll(".reveal, [data-count], [data-count-decimal]").forEach(function(el) {
+    observer.observe(el);
+  });
+
+  // The contrast-footer "22x" line fades in after numbers — handled by
+  // its own .reveal class and IntersectionObserver above.
+</script>
+</body>
+</html>
