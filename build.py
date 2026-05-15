@@ -543,12 +543,20 @@ def load_ice_citations(csv_path='ice_citation_by_business.csv'):
                 if not lid:
                     continue
                 citations[lid] = {
-                    'citation_count':   int(row.get('citation_count', 0) or 0),
-                    'ice_count':        int(row.get('ice_count', 0) or 0),
-                    'latest_date':      row.get('latest_date', '').strip(),
-                    'earliest_date':    row.get('earliest_date', '').strip(),
-                    'best_observation': clean_observation(row.get('best_observation', '')),
-                    'codes':            [c.strip() for c in (row.get('codes', '') or '').split('|') if c.strip()],
+                    'citation_count':    int(row.get('citation_count', 0) or 0),
+                    'ice_count':         int(row.get('ice_count', 0) or 0),
+                    'latest_date':       row.get('latest_date', '').strip(),
+                    'earliest_date':     row.get('earliest_date', '').strip(),
+                    'days_since':        int(row.get('days_since_citation', 9999) or 9999),
+                    'best_observation':  clean_observation(row.get('best_observation', '')),
+                    'codes':             [c.strip() for c in (row.get('codes', '') or '').split('|') if c.strip()],
+                    'repeat_violations': int(row.get('repeat_violations', 0) or 0),
+                    'warnings_issued':   int(row.get('warnings_issued', 0) or 0),
+                    'corrected_onsite':  int(row.get('corrected_onsite', 0) or 0),
+                    'mold_black':        int(row.get('mold_black', 0) or 0),
+                    'mold_pink':         int(row.get('mold_pink', 0) or 0),
+                    'scoop_issue':       int(row.get('scoop_issue', 0) or 0),
+                    'bin_soiled':        int(row.get('bin_soiled', 0) or 0),
                 }
         print(f'  Loaded ice citations for {len(citations)} licenses')
     except FileNotFoundError:
@@ -573,8 +581,13 @@ def enrich_with_citations(records, citations):
         rec['cit_ice_count']      = c['ice_count']
         rec['cit_latest']         = c['latest_date']
         rec['cit_earliest']       = c['earliest_date']
+        rec['cit_days_since']     = c['days_since']
         rec['cit_observation']    = c['best_observation']
         rec['cit_codes']          = c['codes']
+        rec['cit_repeat']         = c['repeat_violations']
+        rec['cit_mold_black']     = c['mold_black']
+        rec['cit_mold_pink']      = c['mold_pink']
+        rec['cit_scoop']          = c['scoop_issue']
         rec['ice_confirmed_dbpr'] = c['ice_count'] > 0
         if c['ice_count'] > 0:
             risk = calc_ice_risk(rec)

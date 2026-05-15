@@ -201,6 +201,64 @@ def biz_row(r, extra=''):
     </tr>"""
 
 
+def get_eos_alerts(data_dir=None):
+    """
+    Read this week's District 3 emergency closures from the EOS weekly Excel file.
+    Returns list of dicts with name, city, reason, date, license.
+    Fails open (returns []) if file unavailable or columns differ.
+    """
+    if data_dir is None:
+        data_dir = DATA_DIR
+    try:
+        import glob
+        import pandas as pd
+        files = sorted(glob.glob(str(data_dir / 'EOS_Weekly_Extract_*.xlsx')))
+        if not files:
+            return []
+        df = pd.read_excel(files[-1])
+        # Normalize column names for robustness
+        df.columns = [str(c).strip() for c in df.columns]
+        cols = {c.lower(): c for c in df.columns}
+
+        def get_col(df, *candidates):
+            for c in candidates:
+                if c.lower() in cols:
+                    return df[cols[c.lower()]]
+            return None
+
+        district_col = get_col(df, 'District', 'DIST', 'District Number')
+        if district_col is None:
+            return []
+        mask = district_col.astype(str).str.strip() == '3'
+        d3 = df[mask].copy()
+        if len(d3) == 0:
+            return []
+
+        alerts = []
+        for _, row in d3.iterrows():
+            def v(row, *keys):
+                for k in keys:
+                    if k.lower() in cols:
+                        val = row.get(cols[k.lower()], '')
+                        if val and str(val).strip() not in ('nan', ''):
+                            return str(val).strip()
+                return ''
+            alerts.append({
+                'name':    v(row, 'Business Name', 'Name', 'Licensee Name'),
+                'city':    v(row, 'Business City', 'City', 'Business Location City'),
+                'reason':  v(row, 'Conditions for Closure', 'Closure Reason', 'Reason'),
+                'date':    v(row, 'Date', 'Closure Date', 'Inspection Date')[:10],
+                'license': v(row, 'License Number', 'License No', 'Lic Num'),
+            })
+        print(f'  EOS alerts: {len(alerts)} District 3 closures from {Path(files[-1]).name}')
+        return alerts
+    except ImportError:
+        return []
+    except Exception as e:
+        print(f'  EOS alert error: {e}')
+        return []
+
+
 def load_partner_fees():
     """Read partner referral fees owed from index.html PARTNERS data (baked at build time)."""
     try:
@@ -225,6 +283,35 @@ def build_email(current, changes, stats, contact_log):
         return days_since_contact(contact_log, r.get('id', '')) < threshold_days
 
     sections = ''
+
+    # EOS emergency closures — District 3 (Pinellas / Hillsborough / Pasco / Polk / Hernando)
+    eos_alerts = get_eos_alerts()
+    if eos_alerts:
+        eos_rows = ''.join(
+            f'<tr style="border-bottom:1px solid #fecaca">'
+            f'<td style="padding:8px 12px;font-weight:700;color:#1e293b;font-size:12px">{a["name"][:40]}</td>'
+            f'<td style="padding:8px 12px;color:#64748b;font-size:11px">{a["city"]}</td>'
+            f'<td style="padding:8px 12px;color:#dc2626;font-size:11px">{a["reason"][:60]}</td>'
+            f'<td style="padding:8px 12px;color:#94a3b8;font-size:11px">{a["date"]}</td>'
+            f'</tr>'
+            for a in eos_alerts
+        )
+        sections += f"""
+        <div style="margin-bottom:24px">
+          <div style="font-size:13px;font-weight:800;color:#dc2626;margin-bottom:4px">
+            &#x1F6A8; District 3 Emergency Closures This Week ({len(eos_alerts)})
+          </div>
+          <div style="font-size:11px;color:#64748b;margin-bottom:8px">Inspector always returns — prime callback opportunities</div>
+          <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden">
+            <tr style="background:#fef2f2">
+              <th style="padding:8px 12px;text-align:left;font-size:11px;color:#dc2626">Business</th>
+              <th style="padding:8px 12px;text-align:left;font-size:11px;color:#dc2626">City</th>
+              <th style="padding:8px 12px;text-align:left;font-size:11px;color:#dc2626">Closure Reason</th>
+              <th style="padding:8px 12px;text-align:left;font-size:11px;color:#dc2626">Date</th>
+            </tr>
+            {eos_rows}
+          </table>
+        </div>"""
 
     # Partner outreach — top 3 uncontacted by fit score
     partners = load_partner_fees()

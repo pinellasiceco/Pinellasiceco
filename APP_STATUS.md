@@ -1,9 +1,9 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-05-14 (session 20 — follow-up filter, email schedule modal, Pinellas/recency filters, send confirmation UX, CI race fix, ATP landing page) by Claude Code*
+*Last updated: 2026-05-15 (session 21 — fresh DBPR URL, automated daily scraper, rich citation fields, EOS alerts in email) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
-- Last deployed: 2026-05-14 (session 20 — follow-up filter, email schedule modal, send confirmation UX)
+- Last deployed: 2026-05-15 (session 21 — data pipeline refresh)
 - Build script: `build.py` (repo root) → outputs `index.html` directly
 - `index.html` regenerated from `build.py` using existing P[] data — fully in sync
 

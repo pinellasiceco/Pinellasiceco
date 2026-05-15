@@ -2,11 +2,11 @@
 """
 Generate ice_citation_by_business.csv from pinellas_v22_narratives.csv.
 
-Reads the scraper output (one row per violation per inspection visit) and
-aggregates to one row per license_id — total citation count, ice-machine
-citation count, date range, best observation excerpt, and violation codes.
+Aggregates scraper output to one row per license_id with rich citation signals:
+citation count, ice count, date range, repeat violations, mold/scoop flags,
+and best observation excerpt.
 
-Run automatically by the rebuild CI before build.py, or manually:
+Run automatically by rebuild CI before build.py, or manually:
     python generate_citation_summary.py
 """
 
@@ -14,20 +14,23 @@ import csv
 import os
 import re
 from collections import defaultdict
+from datetime import date, datetime
 
 _INPUT_CANDIDATES = [
-    'pinellas_v22_narratives.csv',
-    'data/pinellas_v22_narratives.csv',
+    'pinellas_v22_narratives.csv',        # repo root (scraper default)
+    'data/pinellas_v22_narratives.csv',   # data folder fallback
 ]
 INPUT_CSV  = next((p for p in _INPUT_CANDIDATES if os.path.exists(p)), _INPUT_CANDIDATES[0])
 OUTPUT_CSV = 'ice_citation_by_business.csv'
 
 
 def clean_observation(text, max_len=200):
-    """Return a clean excerpt of an observation string."""
+    """Strip DBPR formatting markers and return a clean excerpt."""
     if not text or text == 'NO VIOLATIONS PARSED':
         return ''
-    text = re.sub(r'\s+', ' ', str(text)).strip()
+    text = re.sub(r'\*\*[^*]+\*\*', '', str(text))  # remove **bold** markers
+    text = re.sub(r'^\s*(Basic|Intermediate|High Priority)\s*[-–]\s*', '', text, flags=re.I)
+    text = re.sub(r'\s+', ' ', text).strip()
     if len(text) <= max_len:
         return text
     cut = text[:max_len].rsplit(' ', 1)[0]
@@ -39,78 +42,147 @@ def main():
         print(f'No {INPUT_CSV} found — nothing to aggregate')
         return
 
-    # Group rows by license_id (numeric string) — matches prospect record id field
-    by_license = defaultdict(list)
-    with open(INPUT_CSV, newline='', encoding='utf-8') as f:
+    today = date.today()
+
+    # Keyed by license_id (numeric string) to match rec['id'] in build.py
+    by_license = defaultdict(lambda: {
+        'license_number':   '',
+        'business_name':    '',
+        'city':             '',
+        'citation_count':   0,
+        'ice_count':        0,
+        'latest_date':      None,
+        'earliest_date':    None,
+        'best_observation': '',
+        'codes':            set(),
+        'visit_ids':        set(),
+        'repeat_violations': 0,
+        'warnings_issued':  0,
+        'corrected_onsite': 0,
+        'mold_black':       0,
+        'mold_pink':        0,
+        'scoop_issue':      0,
+        'bin_soiled':       0,
+    })
+
+    total_rows = 0
+    ice_rows   = 0
+
+    with open(INPUT_CSV, newline='', encoding='utf-8', errors='replace') as f:
         reader = csv.DictReader(f)
         for row in reader:
+            total_rows += 1
+
             lid = (row.get('license_id') or '').strip()
             if not lid:
-                # fall back to license_number if license_id column is absent
                 lid = (row.get('license_number') or '').strip()
             if not lid:
                 continue
-            by_license[lid].append(row)
 
-    if not by_license:
-        print('No license IDs found in scraper output')
-        return
+            b = by_license[lid]
+            b['license_number'] = b['license_number'] or (row.get('license_number') or '').strip()
+            b['business_name']  = b['business_name']  or (row.get('business_name') or '').strip()
+            b['city']           = b['city']           or (row.get('city') or '').strip()
+            b['citation_count'] += 1
 
-    print(f'Aggregating {sum(len(v) for v in by_license.values())} rows across {len(by_license)} licenses...')
+            # Dates
+            date_str = (row.get('inspection_date') or '')[:10]
+            if date_str:
+                try:
+                    d = datetime.strptime(date_str, '%Y-%m-%d').date()
+                    if b['earliest_date'] is None or d < b['earliest_date']:
+                        b['earliest_date'] = d
+                    if b['latest_date'] is None or d > b['latest_date']:
+                        b['latest_date'] = d
+                except ValueError:
+                    pass
+
+            if row.get('ice_machine_mention') != 'YES':
+                continue
+
+            ice_rows += 1
+            vid = (row.get('visit_id') or '').strip()
+            if vid and vid not in b['visit_ids']:
+                b['visit_ids'].add(vid)
+                b['ice_count'] += 1
+
+            obs = row.get('observation', '') or ''
+            obs_lower = obs.lower()
+
+            vc = (row.get('violation_code') or '').strip()
+            if vc:
+                b['codes'].add(vc)
+
+            if 'repeat violation' in obs_lower:
+                b['repeat_violations'] += 1
+            if 'warning' in obs_lower:
+                b['warnings_issued'] += 1
+            if 'corrected on-site' in obs_lower or 'corrected on site' in obs_lower:
+                b['corrected_onsite'] += 1
+            if 'black' in obs_lower or 'green mold' in obs_lower:
+                b['mold_black'] += 1
+            if 'pink' in obs_lower:
+                b['mold_pink'] += 1
+            if 'scoop' in obs_lower:
+                b['scoop_issue'] += 1
+            if 'bin' in obs_lower:
+                b['bin_soiled'] += 1
+
+            obs_clean = clean_observation(obs)
+            if len(obs_clean) > len(b['best_observation']):
+                b['best_observation'] = obs_clean
+
+    print(f'Processed {total_rows:,} rows, {ice_rows:,} ice citation rows')
+    print(f'Unique licenses with any V22 record: {len(by_license):,}')
 
     fieldnames = [
         'license_id', 'license_number', 'business_name', 'city',
         'citation_count', 'ice_count',
-        'latest_date', 'earliest_date',
+        'latest_date', 'earliest_date', 'days_since_citation',
         'best_observation', 'codes',
+        'repeat_violations', 'warnings_issued', 'corrected_onsite',
+        'mold_black', 'mold_pink', 'scoop_issue', 'bin_soiled',
     ]
 
-    rows_written = 0
     ice_licenses = 0
+    rows_written = 0
 
     with open(OUTPUT_CSV, 'w', newline='', encoding='utf-8') as out:
         writer = csv.DictWriter(out, fieldnames=fieldnames)
         writer.writeheader()
 
-        for lid, rows in sorted(by_license.items()):
-            # Collect all ice-positive rows
-            ice_rows = [r for r in rows if r.get('ice_machine_mention') == 'YES']
-
-            # Best observation = longest ice observation, falling back to any observation
-            obs_candidates = [r.get('observation', '') for r in ice_rows if r.get('observation')]
-            if not obs_candidates:
-                obs_candidates = [r.get('observation', '') for r in rows
-                                  if r.get('observation') and r.get('observation') != 'NO VIOLATIONS PARSED']
-            best_obs = clean_observation(max(obs_candidates, key=len, default=''))
-
-            # Dates
-            dates = sorted(r.get('inspection_date', '') for r in rows if r.get('inspection_date'))
-
-            # Violation codes from ice rows
-            codes = sorted({r.get('violation_code', '') for r in ice_rows if r.get('violation_code')})
-
-            # Business info from first row
-            first = rows[0]
+        for lid, b in sorted(by_license.items(),
+                              key=lambda x: -(x[1]['ice_count'])):
+            last = b['latest_date']
+            days_since = (today - last).days if last else 9999
 
             writer.writerow({
-                'license_id':      lid,
-                'license_number':  first.get('license_number', ''),
-                'business_name':   first.get('business_name', ''),
-                'city':            first.get('city', ''),
-                'citation_count':  len(rows),
-                'ice_count':       len(ice_rows),
-                'latest_date':     dates[-1] if dates else '',
-                'earliest_date':   dates[0] if dates else '',
-                'best_observation': best_obs,
-                'codes':           '|'.join(codes),
+                'license_id':        lid,
+                'license_number':    b['license_number'],
+                'business_name':     b['business_name'],
+                'city':              b['city'],
+                'citation_count':    b['citation_count'],
+                'ice_count':         b['ice_count'],
+                'latest_date':       last.isoformat() if last else '',
+                'earliest_date':     b['earliest_date'].isoformat() if b['earliest_date'] else '',
+                'days_since_citation': days_since,
+                'best_observation':  b['best_observation'],
+                'codes':             '|'.join(sorted(b['codes'])),
+                'repeat_violations': b['repeat_violations'],
+                'warnings_issued':   b['warnings_issued'],
+                'corrected_onsite':  b['corrected_onsite'],
+                'mold_black':        b['mold_black'],
+                'mold_pink':         b['mold_pink'],
+                'scoop_issue':       b['scoop_issue'],
+                'bin_soiled':        b['bin_soiled'],
             })
             rows_written += 1
-            if ice_rows:
+            if b['ice_count'] > 0:
                 ice_licenses += 1
 
-    print(f'Written {rows_written} license rows to {OUTPUT_CSV}')
-    print(f'  Licenses with ice citations: {ice_licenses}')
-    print(f'  Licenses with no ice citations: {rows_written - ice_licenses}')
+    print(f'Written {rows_written} rows to {OUTPUT_CSV}')
+    print(f'  With ice citations: {ice_licenses}')
+    print(f'  No ice citations:   {rows_written - ice_licenses}')
 
 
 if __name__ == '__main__':
