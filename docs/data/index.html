@@ -311,7 +311,7 @@
     }
     .atp-tick.t10  { left: 2%;   }
     .atp-tick.t100 { left: 20%;  }
-    .atp-tick.t457 { left: 91.4%; }
+    .atp-tick.t215 { left: 43%; }
 
     /* label pins below the bar */
     .atp-labels {
@@ -330,18 +330,18 @@
     .atp-lbl.l0   { left: 0%;  transform: none; text-align: left; }
     .atp-lbl.l10  { left: 2%;  transform: none; text-align: left; }
     .atp-lbl.l100 { left: 20%; }
-    .atp-lbl.l457 { left: 91.4%; }
+    .atp-lbl.l215 { left: 43%; }
     .atp-lbl .lval { font-weight: 800; font-size: 12px; color: var(--text); }
     .atp-lbl.l0   .lval { color: var(--text); }
     .atp-lbl.l10  .lval { color: var(--green); }
     .atp-lbl.l100 .lval { color: var(--amber); }
-    .atp-lbl.l457 .lval { color: var(--red);   }
+    .atp-lbl.l215 .lval { color: var(--red);   }
     .atp-lbl .lname { color: var(--text-muted); }
 
-    /* "457" callout pin above the bar */
+    /* "215" callout pin above the bar */
     .atp-pin {
       position: absolute;
-      left: 91.4%;
+      left: 43%;
       bottom: calc(100% + 5px);
       transform: translateX(-50%);
       text-align: center;
@@ -467,7 +467,7 @@
 <!-- SECTION 3: TOILET SEAT COMPARISON -->
 <div class="wrap">
   <div class="section-label">Contamination In Context</div>
-  <div class="section-title">What 457 RLU Actually Means</div>
+  <div class="section-title">What 215 RLU Actually Means</div>
   <p class="ts-intro">To put the average ATP reading on an unserviced Pinellas ice machine in context:</p>
   <div class="ts-cards">
     <div class="ts-card green">
@@ -482,11 +482,11 @@
     </div>
     <div class="ts-card red">
       <div class="ts-label">Avg Unserviced Ice Machine</div>
-      <div class="ts-num">457</div>
+      <div class="ts-num">215</div>
       <div class="ts-sub">RLU<br>Pinellas County field data</div>
     </div>
   </div>
-  <div class="ts-statement">The average unserviced Pinellas ice machine has a contamination reading <span>22 times higher than a toilet seat.</span></div>
+  <div class="ts-statement">The average unserviced Pinellas ice machine has a contamination reading <span>10 times higher than a toilet seat.</span></div>
   <p class="ts-caveat">ATP measures organic contamination broadly and does not directly indicate bacterial count. Source: Published research using Hygiena ATP monitoring systems.</p>
 </div>
 
@@ -566,15 +566,15 @@
   <div class="section-label">Contamination Scale</div>
   <div class="section-title">ATP Contamination Scale</div>
   <div class="atp-scale-outer">
-    <!-- callout pin above bar at 457 position -->
+    <!-- callout pin above bar at 215 position -->
     <div class="atp-pin">
-      <div class="atp-pin-label">457 RLU &mdash; avg unserviced Pinellas</div>
+      <div class="atp-pin-label">215 RLU &mdash; avg unserviced Pinellas</div>
       <div class="atp-pin-arrow"></div>
     </div>
-    <!-- tick marks at 10, 100, 457 -->
+    <!-- tick marks at 10, 100, 215 -->
     <div class="atp-tick t10"></div>
     <div class="atp-tick t100"></div>
-    <div class="atp-tick t457"></div>
+    <div class="atp-tick t215"></div>
     <!-- the bar -->
     <div class="atp-bar">
       <div class="seg-clean"></div>
@@ -595,8 +595,8 @@
         <div class="lval">100</div>
         <div class="lname">Inspector<br>Threshold</div>
       </div>
-      <div class="atp-lbl l457">
-        <div class="lval">457+</div>
+      <div class="atp-lbl l215">
+        <div class="lval">215+</div>
         <div class="lname">Avg Unserviced<br>Pinellas Machine</div>
       </div>
     </div>
