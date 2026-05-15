@@ -472,7 +472,7 @@ def est_onetime(machines):
 
 
 def calc_ice_risk(record):
-    """Rule-based ice compliance risk score (0-100)."""
+    """Rule-based ice compliance risk score (0-100). Uses DBPR confirmed citations when available."""
     score = 0
     ice_6mo  = 1 if record.get('ice_fresh') else 0
     ice_all  = min(record.get('ice_count', 0) or 0, 5)
@@ -489,15 +489,96 @@ def calc_ice_risk(record):
     name_l = (record.get('name', '') or '').lower()
     if any(kw in name_l for kw in ['bar','grill','pub','sport','seafood','fish','shrimp','oyster','crab','beach']):
         score += 6
+    # DBPR confirmed ice citations are the strongest signal — boost significantly
+    cit_ice = record.get('cit_ice_count', 0) or 0
+    if record.get('ice_confirmed_dbpr'):
+        score += 30 + min(cit_ice - 1, 3) * 5
     score = min(100, int(score))
     level = 'High' if score >= 65 else 'Medium' if score >= 35 else 'Low'
     reasons = []
-    if ice_6mo: reasons.append('ice violation <6mo')
+    if record.get('ice_confirmed_dbpr'):
+        reasons.append(f'DBPR confirmed ({cit_ice} ice cit.)')
+    elif ice_6mo:
+        reasons.append('ice violation <6mo')
     if record.get('n_callbacks', 0): reasons.append(f"{record['n_callbacks']}x callback")
     if record.get('chronic'): reasons.append('chronic flagged')
     elif ice_all > 1: reasons.append(f'{ice_all} ice violations')
     if ds > 365: reasons.append(f'{ds}d since last insp')
     return {'ice_risk_prob': score, 'ice_risk_level': level, 'ice_risk_reason': ' + '.join(reasons[:2])}
+
+def safe_js_string(s):
+    """Escape text for embedding directly inside a JS single-quoted string literal."""
+    if not s:
+        return ''
+    return (str(s)
+            .replace('\\', '\\\\')
+            .replace("'", '&#39;')
+            .replace('"', '&quot;')
+            .replace('\n', ' ')
+            .replace('\r', ''))
+
+
+def clean_observation(text):
+    """Trim inspection observation to a readable excerpt (<=120 chars)."""
+    if not text:
+        return ''
+    text = re.sub(r'\s+', ' ', str(text)).strip()
+    if len(text) <= 120:
+        return text
+    cut = text[:120].rsplit(' ', 1)[0]
+    return cut + '…'
+
+
+def load_ice_citations(csv_path='ice_citation_by_business.csv'):
+    """Load aggregated ice citation data keyed by license number."""
+    import csv as _csv
+    citations = {}
+    try:
+        with open(csv_path, newline='', encoding='utf-8') as f:
+            reader = _csv.DictReader(f)
+            for row in reader:
+                lic = (row.get('license_number') or '').strip()
+                if not lic:
+                    continue
+                citations[lic] = {
+                    'citation_count':   int(row.get('citation_count', 0) or 0),
+                    'ice_count':        int(row.get('ice_count', 0) or 0),
+                    'latest_date':      row.get('latest_date', '').strip(),
+                    'earliest_date':    row.get('earliest_date', '').strip(),
+                    'best_observation': clean_observation(row.get('best_observation', '')),
+                    'codes':            [c.strip() for c in (row.get('codes', '') or '').split('|') if c.strip()],
+                }
+        print(f'  Loaded ice citations for {len(citations)} licenses')
+    except FileNotFoundError:
+        print(f'  No ice citations file ({csv_path}) — skipping citation enrichment')
+    except Exception as e:
+        print(f'  Citation load error: {e}')
+    return citations
+
+
+def enrich_with_citations(records, citations):
+    """Merge DBPR citation data into prospect records and recompute ice risk."""
+    if not citations:
+        return
+    enriched = 0
+    for rec in records:
+        lic = (rec.get('license_number') or '').strip()
+        if not lic or lic not in citations:
+            continue
+        c = citations[lic]
+        rec['cit_count']          = c['citation_count']
+        rec['cit_ice_count']      = c['ice_count']
+        rec['cit_latest']         = c['latest_date']
+        rec['cit_earliest']       = c['earliest_date']
+        rec['cit_observation']    = c['best_observation']
+        rec['cit_codes']          = c['codes']
+        rec['ice_confirmed_dbpr'] = c['ice_count'] > 0
+        if c['ice_count'] > 0:
+            risk = calc_ice_risk(rec)
+            rec.update(risk)
+        enriched += 1
+    print(f'  Enriched {enriched} records with DBPR citation data')
+
 
 def account_tier(seats, rank_code, machines, chronic, confirmed):
     """Account quality tier."""
@@ -2087,6 +2168,9 @@ header{background:var(--navy);
 
     <!-- ── TODAY'S PLAN ────────────────────────────── -->
     <div id="todays-plan" style="margin-bottom:12px"></div>
+
+    <!-- ── INSPECTOR CONFIRMED ───────────────────────── -->
+    <div id="inspector-confirmed" style="margin-bottom:12px"></div>
 
     <!-- ── KPI ROW ─────────────────────────────────── -->
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:12px" id="kpi-row">
@@ -4043,7 +4127,7 @@ function sw(t){
   const panelId=t==='clients'?'p-customers':'p-'+t;
   const panel=document.getElementById(panelId);
   if(panel)panel.classList.add('on');
-  if(t==='today'){renderBriefing();renderTodaysPlan();}
+  if(t==='today'){renderBriefing();renderTodaysPlan();renderInspectorConfirmed();}
   else if(t==='all'){const ag=document.getElementById('agrid');if(ag)delete ag._glAttached;showDebugIfNeeded();populateCityFilter();var _pan=document.getElementById('p-all');if(_pan)void _pan.offsetHeight;rA();}
   else if(t==='pipeline'){renderPipeline();}
   else if(t==='route'){rRoute();}
@@ -4087,6 +4171,7 @@ function cardHTML(p){
   const iceH=p.chronic
     ?('<div class="icebadge chronic">&#x1F9CA; CHRONIC  -  '+p.ice_count+'x ice violations'+(p.ice_fresh?' &bull; <b>recent</b>':'')+'</div>')
     :p.confirmed?'<div class="icebadge confirmed">&#x2713; Ice violation on record'+(p.ice_fresh?' (within 6mo)':p.ice_recent?' (within 1yr)':'')+'</div>':'';
+  const dbprH=p.ice_confirmed_dbpr?('<div class="icebadge" style="background:#faf5ff;color:#6d28d9;border:1px solid #c4b5fd;border-radius:5px;font-size:9px;font-weight:700;padding:3px 8px;margin-bottom:4px">&#x1F575;&#xFE0F; DBPR Confirmed &mdash; '+(p.cit_ice_count||0)+'x ice citation'+(p.cit_ice_count!==1?'s':'')+'</div>'):'';
   const codesH=(p.codes||[]).length?('<div style="font-size:9px;color:#2a4860;margin-bottom:4px">Codes: '+(p.codes||[]).join(', ')+'</div>'):'';
   const insH=''?('<div class="insight">'+''+'</div>'):'';
   const cbH=(p.n_callbacks>0||p.disp_risk>=4)
@@ -4133,7 +4218,7 @@ function cardHTML(p){
   return '<div class="card '+p.priority+(isC(p.id)?' done':'')+'" data-id="'+p.id+'">'
     +'<div class="ctop"><div class="cname">'+p.name+tierH+emergH+newBadge+routeBadge+refBadge+'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px"><span class="pbadge '+p.priority+'">'+p.priority+'</span>'+confH+'</div></div>'
     +'<div class="cloc">'+p.city+', '+p.county+' '+franchH+'</div>'
-    +custStatusH+revenueH+phH+ratH+callH+hrH+golfH+iceH+cbH+codesH+insH
+    +custStatusH+revenueH+phH+ratH+callH+hrH+golfH+iceH+dbprH+cbH+codesH+insH
     +'<div class="cmeta">'
       +'<div class="mi"><div class="ml">Days Until</div><div class="mv '+dC(p.days_until,p.priority)+'">'+dL(p.days_until)+'</div></div>'
       +'<div class="mi"><div class="ml">H/T Viol</div><div class="mv '+(p.high_viol>=4?'u':p.high_viol>=2?'h':'')+'">'+p.high_viol+'/'+p.total_viol+'</div></div>'
@@ -4963,6 +5048,13 @@ function buildIntelSummary(p){
   var lines=[];
   var ref=getProspectPartnerRef(p.id);
   if(ref)lines.push('&#x1F4E8; Referred by '+ref.partnerName+(ref.referral.note?' — '+ref.referral.note:''));
+  if(p.ice_confirmed_dbpr){
+    var citN=p.cit_ice_count||0;
+    var citLine='&#x1F575;&#xFE0F; DBPR Inspector Confirmed — '+citN+' ice citation'+(citN!==1?'s':'');
+    if(p.cit_latest)citLine+=' (latest: '+p.cit_latest+')';
+    lines.push(citLine);
+    if(p.cit_observation)lines.push('&#x00A0;&#x00A0;&#x201C;'+p.cit_observation+'&#x201D;');
+  }
   if(p.n_callbacks>0)lines.push('&#x1F6A8; '+p.n_callbacks+'x callback — inspector returned');
   if(p.chronic)lines.push('&#x1F9CA; Chronic ice — '+p.ice_count+' inspections flagged');
   if(p.ice_fresh)lines.push('&#x26A1; Ice violation within last 6 months');
@@ -6480,7 +6572,7 @@ function buildTodaysPlan(){
     var rev=(p.machines||1)*149;
     var urgency=PRI[p.priority]||1;
     var recency=daysSince>30?1.5:daysSince>14?1.2:1.0;
-    var iceBoost=p.ice_risk_level==='High'?1.4:p.ice_risk_level==='Medium'?1.2:1.0;
+    var iceBoost=p.ice_confirmed_dbpr?1.6:p.ice_risk_level==='High'?1.4:p.ice_risk_level==='Medium'?1.2:1.0;
     return Object.assign({},p,{_actionScore:urgency*rev*recency*iceBoost,_daysSince:daysSince});
   }).sort(function(a,b){return b._actionScore-a._actionScore;}).slice(0,8);
 }
@@ -6492,7 +6584,7 @@ function renderTodaysPlan(){
   var PRI_COL={CALLBACK:'#dc2626',HOT:'#d97706',WARM:'#2563eb'};
   var rows=plan.map(function(p,i){
     var col=PRI_COL[p.priority]||'#64748b';
-    var riskH=p.ice_risk_level==='High'?'<span style="font-size:9px;color:#dc2626"> &#x1F9CA; H</span>':p.ice_risk_level==='Medium'?'<span style="font-size:9px;color:#d97706"> &#x1F9CA; M</span>':'';
+    var riskH=p.ice_confirmed_dbpr?'<span style="font-size:9px;color:#6d28d9"> &#x1F575;&#xFE0F; CONF</span>':p.ice_risk_level==='High'?'<span style="font-size:9px;color:#dc2626"> &#x1F9CA; H</span>':p.ice_risk_level==='Medium'?'<span style="font-size:9px;color:#d97706"> &#x1F9CA; M</span>':'';
     var daysH=p._daysSince<999?'<span style="font-size:9px;color:#94a3b8"> &#x2022; '+p._daysSince+'d ago</span>':'';
     return '<div onclick="showCard('+p.id+')" ontouchend="event.preventDefault();showCard('+p.id+')" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid #e2e8f0;cursor:pointer;touch-action:manipulation">'
       +'<div style="font-size:11px;font-weight:800;color:#94a3b8;width:16px;flex-shrink:0">'+(i+1)+'.</div>'
@@ -6511,6 +6603,32 @@ function renderTodaysPlan(){
     +rows
     +'</div>';
 }
+function renderInspectorConfirmed(){
+  var el=document.getElementById('inspector-confirmed');
+  if(!el)return;
+  var confirmed=P.filter(function(p){return p.ice_confirmed_dbpr&&isPinellas(p)&&!isC(p.id);})
+    .sort(function(a,b){return (b.cit_ice_count||0)-(a.cit_ice_count||0);}).slice(0,5);
+  if(!confirmed.length){el.innerHTML='';return;}
+  var rows=confirmed.map(function(p){
+    var obs=p.cit_observation?('<div style="font-size:9px;color:#6d28d9;margin-top:2px;font-style:italic">&#x201C;'+p.cit_observation.slice(0,90)+(p.cit_observation.length>90?'&#x2026;':'')+'&#x201D;</div>'):'';
+    return '<div onclick="showCard('+p.id+')" ontouchend="event.preventDefault();showCard('+p.id+')" style="display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-bottom:1px solid #ede9fe;cursor:pointer;touch-action:manipulation">'
+      +'<div style="font-size:15px;flex-shrink:0">&#x1F575;&#xFE0F;</div>'
+      +'<div style="flex:1;min-width:0">'
+        +'<div style="font-size:11px;font-weight:700;color:#0f1f38;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+p.name+'</div>'
+        +'<div style="font-size:9px;color:#6d28d9;font-weight:600">'+(p.cit_ice_count||0)+'x citation'+(p.cit_ice_count!==1?'s':'')+' confirmed'+(p.cit_latest?' &bull; '+p.cit_latest:'')+'</div>'
+        +obs
+      +'</div>'
+      +'<div style="font-size:10px;font-weight:700;color:#059669;flex-shrink:0">$'+((p.machines||1)*149)+'/mo</div>'
+    +'</div>';
+  }).join('');
+  el.innerHTML='<div style="background:#fff;border:1px solid #ede9fe;border-radius:10px;overflow:hidden">'
+    +'<div style="padding:10px 12px;background:#6d28d9">'
+      +'<div style="font-size:12px;font-weight:800;color:#fff;letter-spacing:.04em">&#x1F575;&#xFE0F; INSPECTOR CONFIRMED ICE CITATIONS</div>'
+    +'</div>'
+    +rows
+    +'</div>';
+}
+
 function addPlanToRoute(){
   var plan=buildTodaysPlan();
   var added=0;
@@ -7045,7 +7163,7 @@ function subscribeRealtime(){
         var row=payload.new||payload.old;if(!row)return;
         if(row.data)log[row.prospect_id]=row.data;
         try{localStorage.setItem('pic_v4',JSON.stringify(log));}catch(e){}
-        if(tab==='home'){renderBriefing();renderTodaysPlan();}
+        if(tab==='today'||tab==='home'){renderBriefing();renderTodaysPlan();renderInspectorConfirmed();}
         else if(tab==='prospects')rA();
         else if(tab==='pipeline')renderPipeline(pipeStage);
         flashSyncDot();
@@ -9427,7 +9545,7 @@ function _renderApp(){
   updateSyncDot();
   const si=document.getElementById('si');if(si)si.blur();
   setTimeout(function(){
-    renderBriefing();renderTodaysPlan();
+    renderBriefing();renderTodaysPlan();renderInspectorConfirmed();
     if(tab==='all')rA();
     else if(tab==='clients'){if(clientTab==='service')rService();else rCust();}
     else if(tab==='pipeline')renderPipeline();
@@ -9703,6 +9821,12 @@ def main():
         print()
 
     records = run(list(map(str, csv_paths)))
+
+    # Enrich with DBPR inspector-confirmed ice citation data if available
+    citations = load_ice_citations()
+    if citations:
+        enrich_with_citations(records, citations)
+
     print(f"\nBuilding partner records...")
     osm_cache = load_osm_cache(Path('data'))
     web_cache = load_partner_web_cache()

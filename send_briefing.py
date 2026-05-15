@@ -262,6 +262,40 @@ def build_email(current, changes, stats, contact_log):
           </table>
         </div>"""
 
+    # Inspector-confirmed DBPR ice citations — top uncontacted Pinellas prospects
+    dbpr_confirmed = sorted(
+        [r for r in current
+         if r.get('ice_confirmed_dbpr') and is_pinellas(r) and not _fresh(r, 14)],
+        key=lambda x: (-(x.get('cit_ice_count') or 0), -(x.get('score') or 0))
+    )[:8]
+    if dbpr_confirmed:
+        def cit_row(r):
+            phone = r.get('phone', '')
+            phone_html = f'<a href="tel:{phone}" style="color:#0a84ff">{phone}</a>' if phone else '<span style="color:#94a3b8">No phone</span>'
+            obs = (r.get('cit_observation') or '')[:80]
+            if len(r.get('cit_observation') or '') > 80:
+                obs += '…'
+            return f"""
+            <tr style="border-bottom:1px solid #f1f5f9">
+              <td style="padding:8px 12px;font-weight:600;color:#1e293b">{r.get('name','')[:35]}</td>
+              <td style="padding:8px 12px;color:#64748b;font-size:11px">{r.get('city','')}</td>
+              <td style="padding:8px 12px">{phone_html}</td>
+              <td style="padding:8px 12px;font-weight:700;color:#6d28d9;font-size:12px">{r.get('cit_ice_count',0)}x</td>
+              <td style="padding:8px 12px;font-size:10px;color:#6d28d9;font-style:italic">{obs}</td>
+            </tr>"""
+        cit_rows = ''.join(cit_row(r) for r in dbpr_confirmed)
+        sections += f"""
+        <div style="margin-bottom:24px">
+          <div style="font-size:13px;font-weight:800;color:#6d28d9;margin-bottom:4px">
+            &#x1F575;&#xFE0F; Inspector-Confirmed Ice Citations ({len(dbpr_confirmed)})
+          </div>
+          <div style="font-size:11px;color:#64748b;margin-bottom:8px">DBPR inspection records confirm active ice machine violations — highest-confidence leads</div>
+          <table style="width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden">
+            <tr style="background:#faf5ff"><th style="padding:8px 12px;text-align:left;font-size:11px;color:#6d28d9">Business</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#6d28d9">City</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#6d28d9">Phone</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#6d28d9">Citations</th><th style="padding:8px 12px;text-align:left;font-size:11px;color:#6d28d9">Inspector Note</th></tr>
+            {cit_rows}
+          </table>
+        </div>"""
+
     # New Since Yesterday — split into Urgent / Watch / Info tiers
     _nsy_labels = {
         'new_callback':       '🚨 New CALLBACK',
