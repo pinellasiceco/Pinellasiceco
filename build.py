@@ -5116,14 +5116,29 @@ function showCard(id){
 
   // Ice history
   var iceH='';
-  if(p.confirmed||p.chronic){
+  if(p.confirmed||p.chronic||p.ice_confirmed_dbpr){
     var codes=(p.codes||[]).map(function(c){return ICN[c]||c;}).join(', ');
-    iceH='<div style="background:#ecfdf5;border:1px solid #6ee7b7;border-radius:8px;padding:10px;margin-bottom:10px">'
-      +'<div style="font-size:8px;color:#013a18;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">🧊 ICE MACHINE HISTORY</div>'
-      +(p.chronic?'<div style="font-size:12px;font-weight:700;color:#059669;margin-bottom:2px">CHRONIC — flagged in '+p.ice_count+' inspections</div>':'')
-      +(!p.chronic&&p.confirmed?'<div style="font-size:11px;color:#059669;margin-bottom:2px">Confirmed ice machine violation on record</div>':'')
-      +(codes?'<div style="font-size:9px;color:#2a5a38">Codes: '+codes+'</div>':'')
-      +'</div>';
+    var dbprSect=p.ice_confirmed_dbpr
+      ?('<div style="background:#faf5ff;border:1px solid #c4b5fd;border-radius:8px;padding:10px;margin-bottom:6px">'
+        +'<div style="font-size:8px;color:#4c1d95;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px">&#x1F575;&#xFE0F; DBPR Inspector Confirmed</div>'
+        +'<div style="font-size:11px;font-weight:700;color:#6d28d9;margin-bottom:'+(p.cit_observation?'6':'0')+'px">'
+          +(p.cit_ice_count||0)+'x ice citation'+(p.cit_ice_count!==1?'s':'')+' on record'
+          +(p.cit_latest?' &bull; latest: '+p.cit_latest:'')
+        +'</div>'
+        +(p.cit_observation
+          ?('<div style="font-size:10px;color:#4c1d95;font-style:italic;line-height:1.45;padding:6px 8px;background:#ede9fe;border-radius:5px">&#x201C;'+p.cit_observation+'&#x201D;</div>')
+          :'')
+        +'</div>')
+      :'';
+    var greenSect=(p.confirmed||p.chronic)
+      ?('<div style="background:#ecfdf5;border:1px solid #6ee7b7;border-radius:8px;padding:10px">'
+        +'<div style="font-size:8px;color:#013a18;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">&#x1F9CA; Ice Machine History</div>'
+        +(p.chronic?'<div style="font-size:12px;font-weight:700;color:#059669;margin-bottom:2px">CHRONIC — flagged in '+p.ice_count+' inspections</div>':'')
+        +(!p.chronic&&p.confirmed?'<div style="font-size:11px;color:#059669;margin-bottom:2px">Confirmed ice machine violation on record</div>':'')
+        +(codes?'<div style="font-size:9px;color:#2a5a38">Codes: '+codes+'</div>':'')
+        +'</div>')
+      :'';
+    iceH='<div style="margin-bottom:10px">'+dbprSect+greenSect+'</div>';
   }
 
 
@@ -5137,6 +5152,7 @@ function showCard(id){
     ['Last Inspected',p.last_insp||'—','#1e293b'],
     ['Inspections on File',p.n_insp,'#1e293b'],
     ['Ice Violations',p.ice_count>0?p.ice_count+'x flagged':'None',p.ice_count>0?'#dc2626':'#059669'],
+    p.ice_confirmed_dbpr?['DBPR Citations',(p.cit_ice_count||0)+'x confirmed'+(p.cit_latest?' ('+p.cit_latest+')':''),'#6d28d9']:null,
     ['Last Ice Violation',iceFresh,p.ice_fresh?'#dc2626':p.ice_recent?'#d97706':'#1e293b'],
     ['Callback Inspections',p.n_callbacks>0?p.n_callbacks+'x (inspector returning)':'None',p.n_callbacks>=2?'#dc2626':p.n_callbacks===1?'#d97706':'#1e293b'],
     ['Disposition Trend',esc,escCol],
@@ -5159,7 +5175,7 @@ function showCard(id){
 
   var intelH='<div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Intelligence</div>'
     +'<div style="background:#f8fafc;border-radius:8px;overflow:hidden;border:1px solid #e2e8f0">'
-    +factRows.map(function(r,i){
+    +factRows.filter(Boolean).map(function(r,i){
       return '<div style="display:flex;justify-content:space-between;padding:5px 10px;background:'+(i%2===0?'#f8fafc':'#fff')+'">'
         +'<div style="font-size:10px;color:#64748b">'+r[0]+'</div>'
         +'<div style="font-size:10px;font-weight:600;color:'+r[2]+'">'+r[1]+'</div>'
@@ -7076,7 +7092,20 @@ async function loadCloudData(){
     // Prospects — prefer Supabase row, fall back to embedded P[]
     var r1=await _sb.from('pic_prospects').select('data').eq('user_id',_userId).single();
     if(r1.data&&r1.data.data&&Array.isArray(r1.data.data)&&r1.data.data.length&&r1.data.data[0]&&r1.data.data[0].name){
+      // Snapshot citation fields from baked P[] before overwriting — Supabase may have an
+      // older snapshot that pre-dates the DBPR citation enrichment.
+      var _citFields=['ice_confirmed_dbpr','cit_count','cit_ice_count','cit_latest','cit_earliest','cit_observation','cit_codes','ice_risk_prob','ice_risk_level','ice_risk_reason'];
+      var _citMap={};
+      P.forEach(function(p){
+        var saved={};
+        _citFields.forEach(function(f){if(p[f]!==undefined)saved[f]=p[f];});
+        if(Object.keys(saved).length)_citMap[p.id]=saved;
+      });
       P.length=0;r1.data.data.forEach(function(x){P.push(x);});
+      // Re-apply citation fields so they survive the Supabase reload
+      if(Object.keys(_citMap).length){
+        P.forEach(function(p){var c=_citMap[p.id];if(c)Object.assign(p,c);});
+      }
       console.log('Loaded '+P.length+' prospects from Supabase');
     } else {
       console.log('Using embedded prospect data ('+P.length+' records)');
