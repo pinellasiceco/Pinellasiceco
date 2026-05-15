@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Pinellas County Ice Machine Violation Data — Pinellas Ice Co.</title>
+  <meta name="description" content="Analysis of Florida DBPR inspection records, Pinellas County 2018&#x2013;2026. Ice machine violation rates, inspection frequency, and ATP contamination data.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧊</text></svg>">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:  #0f1f38;
+      --gold:  #c9973a;
+      --green: #059669;
+      --red:   #dc2626;
+      --amber: #d97706;
+      --bg:    #f5f7fa;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--navy);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── PAGE HEADER ─────────────────────────────────────── */
+    .page-header {
+      background: var(--navy);
+      color: #fff;
+      padding: 40px 20px 44px;
+      text-align: center;
+    }
+    .header-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .page-header h1 {
+      font-size: clamp(22px, 5.5vw, 34px);
+      font-weight: 700;
+      line-height: 1.2;
+      max-width: 480px;
+      margin: 0 auto 14px;
+    }
+    .header-sub {
+      font-size: 14px;
+      color: rgba(255,255,255,0.58);
+      max-width: 420px;
+      margin: 0 auto;
+      line-height: 1.65;
+    }
+
+    /* ── GENERIC SECTION WRAPPER ─────────────────────────── */
+    .wrap {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 36px 20px;
+    }
+    .section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-size: clamp(18px, 4.5vw, 24px);
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.25;
+      margin-bottom: 22px;
+    }
+
+    /* ── SECTION 1: HEADLINE CARDS ───────────────────────── */
+    .hl-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .hl-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 22px 16px 18px;
+      text-align: center;
+    }
+    .hl-card.red-border   { border: 2px solid #fca5a5; }
+    .hl-card.amber-border { border: 2px solid #fcd34d; }
+    .hl-number {
+      font-size: clamp(30px, 8vw, 42px);
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .hl-card.red-border   .hl-number { color: var(--red); }
+    .hl-card.amber-border .hl-number { color: var(--amber); }
+    .hl-label {
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.5;
+      color: #374151;
+    }
+    .hl-sublabel {
+      font-size: 10px;
+      color: #9ca3af;
+      margin-top: 7px;
+      line-height: 1.4;
+    }
+
+    /* ── SECTION 2: BAR CHART ────────────────────────────── */
+    .chart-bg {
+      background: var(--navy);
+    }
+    .chart-bg .section-label { color: rgba(201,151,58,0.8); }
+    .chart-bg .section-title { color: #fff; margin-bottom: 24px; }
+
+    .bar-chart { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+    .bar-row   { display: flex; align-items: center; gap: 10px; }
+    .bar-year  {
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.6);
+      width: 34px;
+      flex-shrink: 0;
+      text-align: right;
+    }
+    .bar-track {
+      flex: 1;
+      background: rgba(255,255,255,0.08);
+      border-radius: 5px;
+      height: 30px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      background: var(--gold);
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 9px;
+    }
+    .bar-value {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--navy);
+      white-space: nowrap;
+    }
+    .chart-note {
+      font-size: 10px;
+      color: rgba(255,255,255,0.35);
+      line-height: 1.6;
+    }
+
+    /* ── SECTION 3: COMPARISON TABLE ────────────────────── */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .compare-card {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(15,31,56,0.07);
+    }
+    .compare-head {
+      padding: 10px 14px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .compare-head.red   { background: #fef2f2; color: var(--red); }
+    .compare-head.green { background: #f0fdf4; color: var(--green); }
+    .compare-body { padding: 14px 14px 10px; }
+    .compare-stat {
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .compare-stat:last-child { padding-bottom: 0; margin-bottom: 0; border-bottom: none; }
+    .c-num {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--navy);
+      line-height: 1;
+    }
+    .c-desc {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 3px;
+      line-height: 1.4;
+    }
+    .compare-note {
+      font-size: 12px;
+      color: #374151;
+      line-height: 1.65;
+      background: #fff;
+      border-radius: 8px;
+      padding: 12px 16px;
+      border-left: 3px solid var(--amber);
+      box-shadow: 0 1px 3px rgba(15,31,56,0.07);
+    }
+
+    /* ── SECTION 4: 2×2 STAT GRID ───────────────────────── */
+    .stat-bg {
+      background: var(--navy);
+    }
+    .stat-bg .section-label { color: rgba(201,151,58,0.8); }
+    .stat-bg .section-title { color: #fff; }
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .s-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(201,151,58,0.22);
+      border-radius: 12px;
+      padding: 20px 14px 16px;
+      text-align: center;
+    }
+    .s-num {
+      font-size: clamp(28px, 7vw, 38px);
+      font-weight: 800;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .s-desc {
+      font-size: 11px;
+      color: rgba(255,255,255,0.68);
+      line-height: 1.55;
+    }
+
+    /* ── SECTION 5: ATP SCALE BAR ────────────────────────── */
+    .scale-wrap {
+      margin-top: 22px;
+    }
+    /* pin sits above the bar — outer div needs overflow:visible */
+    .scale-outer {
+      position: relative;
+      margin-top: 38px;
+      margin-bottom: 10px;
+    }
+    .scale-bar {
+      display: flex;
+      height: 18px;
+      border-radius: 9px;
+      overflow: hidden;
+    }
+    .seg-clean { width: 2%;  min-width: 8px;  background: #22c55e; }
+    .seg-mod   { width: 18%; background: #f59e0b; }
+    .seg-high  { flex: 1;    background: #ef4444; }
+
+    /* tick line at 91.4% to mark 457 */
+    .scale-tick {
+      position: absolute;
+      left: 91.4%;
+      top: 0;
+      height: 18px;
+      width: 2px;
+      background: #fff;
+      transform: translateX(-50%);
+    }
+    /* pin label above the bar */
+    .scale-pin {
+      position: absolute;
+      left: 91.4%;
+      bottom: calc(100% + 6px);
+      transform: translateX(-50%);
+      text-align: center;
+      white-space: nowrap;
+    }
+    .scale-pin-label {
+      display: inline-block;
+      background: #7f1d1d;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 9px;
+      border-radius: 5px;
+    }
+    .scale-pin-arrow {
+      width: 0; height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 7px solid #7f1d1d;
+      margin: 0 auto;
+    }
+
+    .scale-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 18px;
+      margin-top: 14px;
+    }
+    .leg-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #374151;
+    }
+    .leg-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .scale-caption {
+      font-size: 11px;
+      color: #6b7280;
+      line-height: 1.65;
+      margin-top: 14px;
+    }
+
+    /* ── SECTION 6: METHODOLOGY ──────────────────────────── */
+    .method-bg {
+      background: #e5e9ef;
+    }
+    .method-bg .section-label { color: #6b7280; }
+    .method-text {
+      font-size: 12px;
+      color: #374151;
+      line-height: 1.85;
+    }
+
+    /* ── CTA ─────────────────────────────────────────────── */
+    .cta-bg {
+      background: var(--navy);
+      text-align: center;
+      padding: 52px 20px calc(52px + env(safe-area-inset-bottom,0px));
+    }
+    .cta-headline {
+      font-size: clamp(22px, 5vw, 30px);
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    .cta-sub {
+      font-size: 14px;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+    .cta-btn {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--navy);
+      font-size: 16px;
+      font-weight: 700;
+      padding: 16px 32px;
+      border-radius: 10px;
+      text-decoration: none;
+      min-height: 52px;
+      line-height: 1.25;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .cta-btn:active { background: #b8862e; transform: scale(0.97); }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    .page-footer {
+      background: #070e1c;
+      padding: 24px 20px;
+      text-align: center;
+    }
+    .footer-text {
+      font-size: 11px;
+      color: rgba(255,255,255,0.28);
+      line-height: 1.75;
+    }
+
+    /* ── RESPONSIVE ──────────────────────────────────────── */
+    @media (max-width: 360px) {
+      .hl-number { font-size: 26px; }
+      .s-num { font-size: 24px; }
+      .compare-grid, .stat-grid { gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HEADER ───────────────────────────────────────────── -->
+<header class="page-header">
+  <div class="header-label">Pinellas Ice Co &middot; Compliance Data</div>
+  <h1>Pinellas County Ice Machine Violation Data</h1>
+  <p class="header-sub">Analysis of Florida DBPR inspection records, 2018 through 2026. All data sourced from public records.</p>
+</header>
+
+<!-- ── SECTION 1: HEADLINE FINDING ─────────────────────── -->
+<div class="wrap">
+  <div class="section-label">The Headline Finding</div>
+  <div class="hl-grid">
+    <div class="hl-card red-border">
+      <div class="hl-number">64&ndash;69%</div>
+      <div class="hl-label">of Pinellas restaurants cited for food contact surface violations every year</div>
+      <div class="hl-sublabel">Routine inspections &middot; 2018&ndash;2026</div>
+    </div>
+    <div class="hl-card amber-border">
+      <div class="hl-number">7 yrs</div>
+      <div class="hl-label">the citation rate has been flat</div>
+      <div class="hl-sublabel">Not seasonal. Not improving. Structural.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SECTION 2: BAR CHART ─────────────────────────────── -->
+<div class="chart-bg">
+  <div class="wrap">
+    <div class="section-label">Year-Over-Year</div>
+    <div class="section-title">V22 Citation Rate &mdash; Pinellas County Routine Inspections</div>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <div class="bar-year">2018</div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:67.7%"><span class="bar-value">67.7%</span></div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-year">2019</div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:64.0%"><span class="bar-value">64.0%</span></div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-year">2025</div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:68.8%"><span class="bar-value">68.8%</span></div>
+        </div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-year">2026</div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:63.9%"><span class="bar-value">63.9%</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="chart-note">Source: Florida DBPR 3FDInspi extract, Pinellas County, routine food service inspections only.</div>
+  </div>
+</div>
+
+<!-- ── SECTION 3: COMPARISON TABLE ──────────────────────── -->
+<div class="wrap">
+  <div class="section-label">What This Means</div>
+  <div class="section-title">What Violation History Means for Your Restaurant</div>
+  <div class="compare-grid">
+    <div class="compare-card">
+      <div class="compare-head red">With violations</div>
+      <div class="compare-body">
+        <div class="compare-stat">
+          <span class="c-num">3.84&times;</span>
+          <span class="c-desc">inspections per year</span>
+        </div>
+        <div class="compare-stat">
+          <span class="c-num">2.1&times;</span>
+          <span class="c-desc">more customer complaint inspections</span>
+        </div>
+        <div class="compare-stat">
+          <span class="c-num">10.31</span>
+          <span class="c-desc">avg total violations per inspection</span>
+        </div>
+      </div>
+    </div>
+    <div class="compare-card">
+      <div class="compare-head green">Clean restaurants</div>
+      <div class="compare-body">
+        <div class="compare-stat">
+          <span class="c-num">1.95&times;</span>
+          <span class="c-desc">inspections per year</span>
+        </div>
+        <div class="compare-stat">
+          <span class="c-num">1.0&times;</span>
+          <span class="c-desc">baseline complaint inspection rate</span>
+        </div>
+        <div class="compare-stat">
+          <span class="c-num">3.82</span>
+          <span class="c-desc">avg total violations per inspection</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="compare-note">Nearly double the inspector scrutiny &mdash; indefinitely, until the underlying problem is resolved.</div>
+</div>
+
+<!-- ── SECTION 4: ICE MACHINE 2×2 GRID ──────────────────── -->
+<div class="stat-bg">
+  <div class="wrap">
+    <div class="section-label">Inside the Numbers</div>
+    <div class="section-title" style="color:#fff">Inside the Ice Machine Citation Data</div>
+    <div class="stat-grid">
+      <div class="s-card">
+        <div class="s-num">35.6%</div>
+        <div class="s-desc">of food contact violations specifically cited ice machines in the inspector observation text</div>
+      </div>
+      <div class="s-card">
+        <div class="s-num">71<span style="font-size:18px;font-weight:600;color:rgba(201,151,58,0.55)">/mo</span></div>
+        <div class="s-desc">Pinellas restaurants receive a new ice machine citation on average every month</div>
+      </div>
+      <div class="s-card">
+        <div class="s-num">46.8%</div>
+        <div class="s-desc">of restaurants warned for ice machine violations are cited again &mdash; warnings don&#39;t fix the problem</div>
+      </div>
+      <div class="s-card">
+        <div class="s-num">83.2%</div>
+        <div class="s-desc">of ice machine citations were not corrected on-site during the inspection</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SECTION 5: ATP SCALE BAR ──────────────────────────── -->
+<div class="wrap">
+  <div class="section-label">Contamination Data</div>
+  <div class="section-title">What&#39;s Actually in an Unserviced Ice Machine</div>
+  <div class="scale-wrap">
+    <div class="scale-outer">
+      <!-- pin label above the bar -->
+      <div class="scale-pin">
+        <div class="scale-pin-label">457 RLU &mdash; avg unserviced</div>
+        <div class="scale-pin-arrow"></div>
+      </div>
+      <!-- tick mark -->
+      <div class="scale-tick"></div>
+      <!-- bar -->
+      <div class="scale-bar">
+        <div class="seg-clean"></div>
+        <div class="seg-mod"></div>
+        <div class="seg-high"></div>
+      </div>
+    </div>
+    <div class="scale-legend">
+      <div class="leg-item"><span class="leg-dot" style="background:#22c55e"></span>FDA Standard (&le;10 RLU)</div>
+      <div class="leg-item"><span class="leg-dot" style="background:#f59e0b"></span>Marginal (11&ndash;100 RLU)</div>
+      <div class="leg-item"><span class="leg-dot" style="background:#ef4444"></span>High (&gt;100 RLU)</div>
+      <div class="leg-item"><span class="leg-dot" style="background:#7f1d1d"></span>Avg unserviced Pinellas machine</div>
+    </div>
+    <p class="scale-caption">ATP luminometer reading in Relative Light Units (RLU). Lower is cleaner. FDA standard for food contact surfaces: 10 RLU. Scale 0&ndash;500 RLU.</p>
+  </div>
+</div>
+
+<!-- ── SECTION 6: METHODOLOGY ────────────────────────────── -->
+<div class="method-bg">
+  <div class="wrap">
+    <div class="section-label">Methodology</div>
+    <p class="method-text">Data source: Florida Department of Business and Professional Regulation (DBPR) 3FDInspi inspection extract, Pinellas County. Years analyzed: 2018, 2019, 2025, 2026. Analysis includes routine food service inspections only. V22 violations (food contact surfaces: cleaned and sanitized) used as the primary indicator. Ice machine citations identified through inspector observation text analysis of individual DBPR inspection reports. Sample size: 13,691 Pinellas County routine food service inspections. All data sourced from Florida public records.</p>
+  </div>
+</div>
+
+<!-- ── CTA ───────────────────────────────────────────────── -->
+<div class="cta-bg">
+  <div class="cta-headline">See where your machine stands.</div>
+  <p class="cta-sub">Free ATP test. Two minutes. At your location.</p>
+  <a class="cta-btn" href="https://meetings-na2.hubspot.com/stripe/ice-machine-on-site?uuid=9a40fc22-dce2-4258-8e4f-28aa75c892da">&#x1F4C5; Book Free ATP Test</a>
+</div>
+
+<!-- ── FOOTER ─────────────────────────────────────────────── -->
+<footer class="page-footer">
+  <p class="footer-text">Pinellas Ice Co &middot; (727) 855-6873 &middot; pinellasiceco.com<br>
+  This data is sourced from Florida public records and provided for informational purposes. Pinellas Ice Co is not affiliated with the Florida DBPR.</p>
+</footer>
+
+</body>
+</html>

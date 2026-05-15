@@ -1,5 +1,6 @@
 # Data files -- large, downloaded fresh each build, don't commit
-data/
+# Leading slash scopes this to the repo root only (does not affect docs/data/)
+/data/
 
 # Node / Playwright
 node_modules/
