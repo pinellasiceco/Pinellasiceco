@@ -15,7 +15,11 @@ import os
 import re
 from collections import defaultdict
 
-INPUT_CSV  = 'pinellas_v22_narratives.csv'
+_INPUT_CANDIDATES = [
+    'pinellas_v22_narratives.csv',
+    'data/pinellas_v22_narratives.csv',
+]
+INPUT_CSV  = next((p for p in _INPUT_CANDIDATES if os.path.exists(p)), _INPUT_CANDIDATES[0])
 OUTPUT_CSV = 'ice_citation_by_business.csv'
 
 
