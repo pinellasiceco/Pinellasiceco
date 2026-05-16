@@ -9241,10 +9241,16 @@ function srGenerate(p,atpVal,notes){
     +'<title>Ice Machine Status Report</title>'
     +'<style>'
     +'*{box-sizing:border-box}body{margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;background:#fff;color:#0f172a}'
-    +'@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}button{display:none}.page{zoom:0.92;padding:0}}'
+    +'@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}button{display:none}.page{zoom:0.92;padding:0}.rpt-bar{display:none}}'
     +'@page{size:letter portrait;margin:0.3in}'
     +'.page{max-width:680px;margin:0 auto;padding:16px}'
-    +'</style></head><body><div class="page">'
+    +'.rpt-bar{position:sticky;top:0;z-index:99;background:#0f1f38;display:flex;gap:8px;align-items:center;padding:10px 16px}'
+    +'</style></head><body>'
+    +'<div class="rpt-bar">'
+    +'<button onclick="if(window.opener)window.opener.focus();window.close()" style="flex:1;padding:10px;background:#1e3a5f;color:#e2e8f0;border:1px solid #334155;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">&#x2190; Back to App</button>'
+    +'<button onclick="window.print()" style="flex:1;padding:10px;background:#059669;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">&#x1F5A8; Print</button>'
+    +'</div>'
+    +'<div class="page">'
     +'<table style="width:100%;border-collapse:collapse;margin-bottom:20px"><tr>'
     +'<td style="vertical-align:middle"><img src="logo_for_pdf.png" onerror="this.remove()" style="height:42px;display:block"></td>'
     +'<td style="text-align:right;vertical-align:middle">'
@@ -9323,7 +9329,7 @@ function srGenerate(p,atpVal,notes){
   if(!w){toast('Pop-up blocked — allow pop-ups and try again');return;}
   w.document.write(html);
   w.document.close();
-  setTimeout(function(){w.print();},600);
+  if(!p._report_date_override){setTimeout(function(){w.print();},600);}
 }
 
 async function sendWithConfirmation(btn,sendFn){
