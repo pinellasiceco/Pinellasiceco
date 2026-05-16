@@ -8029,6 +8029,8 @@ let _svcType='maintenance_60';
 var _svcPhotos=[];
 function closeSvcLog(){const el=document.getElementById('svc-log-bg');if(el)el.remove();}
 
+function closeEscBg(){var e=document.getElementById('esc-bg');if(e)e.remove();}
+
 function openEscalation(pid){
   var p=P.find(function(x){return x.id===pid;});
   if(!p)return;
@@ -8038,12 +8040,12 @@ function openEscalation(pid){
   bg.innerHTML='<div style="background:var(--surf);border-radius:16px 16px 0 0;padding:16px;width:100%;max-width:480px;max-height:88vh;overflow-y:auto">'
     +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">'
     +'<div style="font-weight:800;font-size:14px;color:var(--navy)">&#x26A0; Escalate Issue</div>'
-    +'<button onclick="document.getElementById(\'esc-bg\').remove()" ontouchend="event.preventDefault();document.getElementById(\'esc-bg\').remove()" style="border:none;background:none;font-size:18px;color:var(--sub);cursor:pointer;padding:4px;touch-action:manipulation">&#x2715;</button>'
+    +'<button onclick="closeEscBg()" ontouchend="event.preventDefault();closeEscBg()" style="border:none;background:none;font-size:18px;color:var(--sub);cursor:pointer;padding:4px;touch-action:manipulation">&#x2715;</button>'
     +'</div>'
     +'<div style="font-size:11px;color:var(--sub);margin-bottom:12px">'+p.name+' &bull; Select the issue type:</div>'
     +'<div id="esc-steps">'
     +ESCALATION_TREE.map(function(node){
-      return '<button onclick="selectEscalation('+pid+',\''+node.id+'\')" ontouchend="event.preventDefault();selectEscalation('+pid+',\''+node.id+'\')"'
+      return '<button onclick="selectEscalation('+pid+',\\''+node.id+'\\');" ontouchend="event.preventDefault();selectEscalation('+pid+',\\''+node.id+'\\')"'
         +' style="display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;margin-bottom:6px;border:1px solid var(--brd);border-radius:9px;background:var(--surf);text-align:left;cursor:pointer;font-family:inherit;touch-action:manipulation">'
         +'<span style="font-size:20px">'+node.icon+'</span>'
         +'<span style="font-size:12px;font-weight:600;color:var(--navy)">'+node.label+'</span>'
@@ -8081,8 +8083,8 @@ function selectEscalation(pid,issueId){
     +'<textarea id="esc-notes" rows="3" placeholder="Describe the issue..."'
       +' style="width:100%;padding:8px;border:1px solid var(--brd);border-radius:7px;font-size:11px;font-family:inherit;background:var(--surf);color:var(--txt);outline:none;resize:none;margin-bottom:10px;box-sizing:border-box"></textarea>'
     +'<div style="display:flex;gap:6px">'
-    +'<button onclick="logEscalation('+pid+',\''+issueId+'\')" ontouchend="event.preventDefault();logEscalation('+pid+',\''+issueId+'\')" style="flex:2;padding:10px;border:none;border-radius:8px;background:#d97706;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Log Escalation</button>'
-    +'<button onclick="document.getElementById(\'esc-bg\').remove()" ontouchend="event.preventDefault();document.getElementById(\'esc-bg\').remove()" style="flex:1;padding:10px;border:1px solid var(--brd);border-radius:8px;background:var(--surf);color:var(--sub);font-size:11px;cursor:pointer;font-family:inherit">Cancel</button>'
+    +'<button onclick="logEscalation('+pid+',\\''+issueId+'\\')" ontouchend="event.preventDefault();logEscalation('+pid+',\\''+issueId+'\\')" style="flex:2;padding:10px;border:none;border-radius:8px;background:#d97706;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Log Escalation</button>'
+    +'<button onclick="closeEscBg()" ontouchend="event.preventDefault();closeEscBg()" style="flex:1;padding:10px;border:1px solid var(--brd);border-radius:8px;background:var(--surf);color:var(--sub);font-size:11px;cursor:pointer;font-family:inherit">Cancel</button>'
     +'</div>';
 }
 
