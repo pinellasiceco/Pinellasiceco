@@ -444,14 +444,12 @@ def est_monthly_plan(machines, plan='monthly'):
     if plan == 'quarterly':
         return 129 + max(0, machines - 1) * 49
     else:
-        if machines == 1: return 149
-        if machines == 2: return 238
-        return 238 + (machines - 2) * 69
+        return 149 + max(0, machines - 1) * 69
 
 def est_deep_clean(machines):
-    """Standalone one-time deep clean (no plan) — $395 first + $149 each additional."""
+    """Standalone one-time deep clean (no plan) — $395 first + $150 each additional."""
     machines = max(1, int(machines or 1))
-    return 395 + max(0, machines - 1) * 149
+    return 395 + max(0, machines - 1) * 150
 
 def est_intro(machines):
     """Entry deep clean with annual plan — $99 first machine + $49 each additional."""
@@ -3633,12 +3631,10 @@ var _scCardP=null,_scCardBg=null,_closeState={plan:'monthly',machines:1,entryPri
 function calcMonthly(plan,machines){
   machines=Math.max(1,machines||1);
   if(plan==='quarterly')return 129+Math.max(0,machines-1)*49;
-  if(machines===1)return 149;
-  if(machines===2)return 238;
-  return 238+(machines-2)*69;
+  return 149+Math.max(0,machines-1)*69;
 }
 function calcOnetime(machines){
-  return 395+Math.max(0,(machines||1)-1)*149;
+  return 395+Math.max(0,(machines||1)-1)*150;
 }
 function calcYear1(plan,machines){
   return (99+Math.max(0,(machines||1)-1)*49)+calcMonthly(plan,machines)*12;
