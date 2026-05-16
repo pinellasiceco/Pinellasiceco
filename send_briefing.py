@@ -352,7 +352,7 @@ def build_email(current, changes, stats, contact_log):
     # Inspector-confirmed DBPR ice citations — top uncontacted Pinellas prospects
     dbpr_confirmed = sorted(
         [r for r in current
-         if r.get('ice_confirmed_dbpr') and is_pinellas(r) and not _fresh(r, 14)],
+         if r.get('ice_confirmed_dbpr') and is_pinellas(r) and not _fresh(r, 7)],
         key=lambda x: (-(x.get('cit_ice_count') or 0), -(x.get('score') or 0))
     )[:8]
     if dbpr_confirmed:
