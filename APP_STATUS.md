@@ -1,5 +1,5 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-05-16 (session 26 — ice history timeline) by Claude Code*
+*Last updated: 2026-05-16 (session 27 — service tab enhancements) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
@@ -72,6 +72,14 @@
 - `churnClient(id)` marks prospect churned with confirm dialog; red Churn button on non-churned cards
 - Service sub-tab: log service visits, track next service date, machine info
 - Save Service Visit button: iOS-safe (`onclick` + `ontouchend`)
+- **Recent Visits inline** (`buildRecentServiceHistory(p,c)`): last 3 visits shown on each service card — date, type (60-Day / Deep Clean), pre→post ATP with green/amber/red color coding, filter badge, photo count badge, 120-char notes preview
+- **Last RLU chip** in card header — green badge pulled from most recent `service_history[].atp`
+- **Escalation flow** — "⚠ Escalate" button on each service card opens `openEscalation(pid)` bottom-sheet modal:
+  - 8 issue types: No Ice, Water Leak, Electrical, Refrigerant, Replace, Pest, Hood, Other
+  - `ESCALATION_TREE` constant maps each issue to a partner type + recommended action string
+  - `selectEscalation(pid, issueId)` drills in: shows action callout box + matching PARTNERS[] entries with tap-to-call phone links + escalation notes textarea
+  - `logEscalation(pid, issueId)` saves timestamped record to `customers[pid].escalation_notes[]` via `custSave()`
+  - `closeEscBg()` helper avoids quoting `getElementById` inside inline onclick strings
 
 ### ATP Status Report
 - `scStatusReport(p)` opens ATP input overlay from showCard; persists entered ATP value + notes to `atp_history` before generating PDF/email
@@ -118,6 +126,7 @@
 
 - **iPad copy-paste**: copying code blocks from chat on iPad adds angle brackets around URLs. Never paste code directly into Supabase editor — use the GitHub Actions deploy workflow instead.
 - **`\n` in build.py strings**: never use `\n` inside Python triple-quoted strings for JS string literals — the literal newline breaks JS parsing and silently disables all buttons. Always use `\\n`.
+- **`\'` in Python triple-quoted strings**: `\'` in a Python `"""..."""` string produces a bare `'` in the output — it does NOT produce `\'` in the JS source. To get an escaped single quote in JS, write `\\'` in Python (`\\` → `\`, then `'` → `'` = `\'` in output). Trap: onclick handlers that include `document.getElementById('...')` or any quoted string arg inside a JS single-quoted string literal — use a named helper function (e.g. `closeEscBg()`) to avoid the quoting chain entirely.
 - **Apostrophes/single quotes in JS strings**: any `'` character inside a single-quoted JS string literal in the HTML template breaks parsing — one broken string kills ALL buttons app-wide (silent failure). Common traps:
   - Contractions: `We'll`, `can't`, `don't`, `it's`, `you'll` — use `&#39;` or reword
   - Possessives: `client's`, `today's` — use `&#39;`
@@ -148,6 +157,7 @@ To force a fresh PWA load after a push: open the URL directly in Safari (not the
 - `build_date` in P[] records will appear after next CI rebuild; existing records have no `build_date` so freshness indicator shows nothing until rebuilt
 
 ## Recent Changes
+- **2026-05-16 (s27 — service tab enhancements):** Two enhancements to `build.py` only — no new files, no Supabase schema changes. (1) **Recent visit history inline on service cards**: `buildRecentServiceHistory(p,c)` renders last 3 service visits inside each card with date, type label, pre→post ATP (green ≤10 / amber ≤100 / red >100), filter-replaced badge, photo count badge, and 120-char truncated notes; "Last: X RLU" green chip added to card header. (2) **Escalation referral flow**: `ESCALATION_TREE` constant (8 nodes: no ice, water leak, electrical, refrigerant, replace, pest, hood, other — each with `ptype` + recommended action text); `openEscalation(pid)` opens bottom-sheet modal listing all issue types; `selectEscalation(pid, issueId)` shows action callout + matching `PARTNERS[]` entries (by `ptype`) with tap-to-call phone links + notes textarea; `logEscalation(pid, issueId)` saves to `customers[pid].escalation_notes[]` via `custSave()`; "⚠ Escalate" button added to every service card. Bug fix in same push: `\'` in Python `"""..."""` outputs bare `'` (breaks JS string) — corrected to `\\'` throughout escalation code; `closeEscBg()` helper extracts `getElementById(\'esc-bg\')` out of inline onclick strings.
 - **2026-05-16 (s26 — ice history timeline):** New `docs/history/index.html` — 1,072-line interactive timeline page. 9 milestones from 10,000 BC to today, each with an inline SVG illustration (navy bg, gold/ice-blue line art). Fixed gold progress bar at top (3px, glow). Sticky frosted-glass nav with milestone counter (updates via IntersectionObserver). Gold vertical timeline line with dot markers that expand + glow when milestone enters viewport. Cards slide in from right on scroll. Special amber treatment for Milestone 3 (Gorrie, Florida connection) with &#x22;⭐ Florida Connection&#x22; badge. Gold/warm treatment for Milestone 9 (Today — Pinellas County map with citation dots + ATP technician figure). Closing section with two CTAs (back to explore / book ATP test). `noindex` meta tag keeps it as a true Easter egg. Easter egg link added to `docs/explore/index.html` (gold-bordered card above footer). `docs/history/` added to `rebuild.yml` copy step + git add.
 - **2026-05-15 (s25e — explore sticky bar):** Added persistent frosted-glass sticky bottom bar to `docs/explore/index.html`. Appears after 300px scroll via `translateY` transition. Left side: phone tap-to-call `(727) 855-6873` with pulsing gold signal rings. Right side: gold gradient `Book Free ATP Test` button with dual-layer glow. `backdrop-filter: blur(20px)` frosted glass over scrolling content. Safe-area aware padding. ACT 6 padding-bottom increased to 96px + safe-area to prevent content hiding behind bar.
 - **2026-05-15 (s25d — 215 RLU + playbook rework):** Updated ATP number from 457 → 215 RLU (10× toilet seat, not 22×) across all three static pages: `docs/data/index.html` (toilet seat comparison section, ATP scale bar tick + pin at 43% instead of 91.4%, bold statement), `docs/report/index.html` (card 1 stat number + comparison line), `docs/explore/index.html` (ACT 2 count-up target, "10× higher" line). Sales playbook (`sales_playbook_v2.html`) sections 12&#x2013;16 replaced with 8 field-ready sections (12: Core Philosophy, 13: VM + Walk-In Sequence, 14: Track A &#x2013; DBPR Cited Walk-In, 15: Track B &#x2013; No Citation Walk-In, 16: Cold Phone Call, 17: The Brush-Off, 18: ATP Test Visit, 19: Objection Handling). Nav pills updated to match. All spoken lines use `&#39;` for apostrophes throughout.
