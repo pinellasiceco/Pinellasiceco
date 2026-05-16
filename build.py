@@ -5652,7 +5652,7 @@ function showCard(id){
     var btn=e.target.closest(
       '[data-scout],[data-sctype],[data-fupdays],[data-scr],[data-ci],'
       +'#sc-close,#sc-route-btn,#sc-report-btn,#sc-save-btn,#sc-phone-save,'
-      +'#sc-save-vendor,#sc-add-contact,#sc-close-deal,#sc-goto-clients,'
+      +'#sc-save-dm,#sc-save-vendor,#sc-add-contact,#sc-close-deal,#sc-goto-clients,'
       +'#sc-lost-btn,#sc-ct-save,#sc-ct-cancel'
     );
     if(!btn)return;
