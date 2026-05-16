@@ -43,16 +43,17 @@ jobs:
 
       - name: Copy static pages
         run: |
-          git checkout origin/main -- atp/          2>/dev/null || true
-          git checkout origin/main -- docs/data/    2>/dev/null || true
-          git checkout origin/main -- docs/report/  2>/dev/null || true
-          git checkout origin/main -- docs/explore/ 2>/dev/null || true
+          git checkout origin/main -- atp/           2>/dev/null || true
+          git checkout origin/main -- docs/data/     2>/dev/null || true
+          git checkout origin/main -- docs/report/   2>/dev/null || true
+          git checkout origin/main -- docs/explore/  2>/dev/null || true
+          git checkout origin/main -- docs/history/  2>/dev/null || true
 
       - name: Commit and push
         run: |
           cp prospecting_tool.html index.html
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add index.html sw.js data/snapshot_prev.json docs/data/ docs/report/ docs/explore/ atp/ || true
+          git add index.html sw.js data/snapshot_prev.json docs/data/ docs/report/ docs/explore/ docs/history/ atp/ || true
           git commit --allow-empty -m "Weekly rebuild $(date +'%Y-%m-%d')"
           git push
