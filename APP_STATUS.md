@@ -155,6 +155,15 @@ If something appears broken, first try force-closing the PWA and reopening — t
 
 To force a fresh PWA load after a push: open the URL directly in Safari (not the home screen icon), wait for page to load fully, then the home screen icon will serve the updated version.
 
+### Technician Field Manual
+- **URL**: `https://pinellasiceco.github.io/Pinellasiceco/docs/fieldmanual/` — **COMPLETE and deployed**
+- **Access**: Settings tab → "Open Technician Field Manual ↗" button
+- **Coverage**: Hoshizaki, Manitowoc, Ice-O-Matic, Scotsman, Follett, Cornelius — 6 brands, ~4,800 lines total
+- **Per-brand pages**: 60-day maintenance checklist, deep clean steps, brand-specific failure modes (spray bar blockage, ice thickness sensor, drain timing, auger sounds), error codes (Scotsman Prodigy E1/E2), chemical concentrations (Nu-Calgon 4oz/gal cleaner, 1oz/gal sanitizer)
+- **Reference page**: ATP scale (PASS ≤10 / MARGINAL 11–100 / FAIL >100), chemical mixing guide, tool checklist
+- **Hub page**: brand cards sorted by market share with search, machine types, where found
+- **Deployed via CI**: `rebuild.yml` picks up entire `docs/` directory from feature branch on each rebuild
+
 ### Channel Partners Tab (session 11)
 - 6th tab: &#x1F91D; Partners — channel partner prospect management
 - **Python pipeline** (`build.py`): `classify_partner()`, `build_partner_records()` — keyword detection on FL DBPR contractor license CSV (if downloaded) + fallback seed list; bakes `PARTNERS[]` into HTML at CI rebuild time
@@ -325,6 +334,7 @@ See the SQL in the prompt — creates `pic_prospects`, `pic_partners`, adds `use
 | `docs/report/index.html` | Prospect leave-behind — `https://pinellasiceco.github.io/Pinellasiceco/docs/report/` — 5 stat cards (457/71/46.8%/2.1×/7yrs) with 22× toilet seat comparison on card 1; emailed/texted after walk-in or phone call |
 | `docs/explore/index.html` | QR code hub page — `https://pinellasiceco.github.io/Pinellasiceco/docs/explore/` — 6-act scrolling page (hero, 215 vs 10 count-up, 3 stat cards, guarantee, features, 3-path CTA); printed on physical business cards |
 | `docs/history/index.html` | Easter egg timeline — `https://pinellasiceco.github.io/Pinellasiceco/docs/history/` — 9-milestone ice history (10,000 BC → today), inline SVG illustrations, progress bar, sticky nav with counter; noindex, linked from explore page |
+| `docs/fieldmanual/` | **Technician Field Manual** — `https://pinellasiceco.github.io/Pinellasiceco/docs/fieldmanual/` — **COMPLETE**. 4,835 lines across 8 pages. `index.html`: brand hub with search, links to per-brand pages by market share. Per-brand pages: `hoshizaki.html` (955 lines), `manitowoc.html` (737), `iceomatic.html` (940), `scotsman.html` (709), `follett.html` (841), `reference.html` (354 — chemicals, ATP scale, checklists). Linked from Settings tab → "Open Technician Field Manual ↗". Deployed via CI: `git checkout origin/claude/... -- docs/` in `rebuild.yml`. |
 | `atp/index.html` | ATP landing page — `https://pinellasiceco.github.io/Pinellasiceco/atp/` — single self-contained HTML file, no external images, inline SVG logo |
 | `customers.json` | Seed customer data (used at build time) |
 | `manifest.json` | PWA manifest |
