@@ -5276,14 +5276,18 @@ function showCard(id){
   var svcHistH='';
   var svcHistory=(customers[p.id]||{}).service_history||[];
   if(svcHistory.length){
+    var _svHist=[...svcHistory].sort(function(a,b){return new Date(b.date||0)-new Date(a.date||0);});
     svcHistH='<div style="margin-bottom:10px"><div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Service History</div>'
-      +[...svcHistory].reverse().slice(0,4).map(function(sv){
-        var atpStr=sv.atp?(' · ATP: '+sv.atp+' RLU'):'';  
-        var photoCount=(sv.photo_urls&&sv.photo_urls.length)||0;
-        var photoLink=photoCount?'<span data-photos="'+JSON.stringify(sv.photo_urls||[]).replace(/"/g,'&quot;')+'" style="font-size:10px;color:#2563eb;cursor:pointer;margin-left:6px" onclick="viewServicePhotos(this.dataset.photos)" ontouchend="event.preventDefault();viewServicePhotos(this.dataset.photos)">&#x1F4F7; '+photoCount+'</span>':'';
-        return '<div style="padding:5px 0;border-bottom:1px solid #f1f5f9">'
-          +'<div style="font-size:10px;font-weight:700;color:#0f1f38">'+sv.date_display+(sv.type==='deep_clean'?' · 🧼 Deep Clean':' · 🔧 60-Day Maint.')+atpStr+photoLink+'</div>'
+      +_svHist.slice(0,5).map(function(sv,i){
+        var atpStr=sv.atp?(' · ATP: '+sv.atp+' RLU'):'';
+        return '<div data-svcpid="'+p.id+'" data-svcvisit="'+i+'"'
+          +' ontouchend="event.preventDefault();event.stopPropagation();openVisitReport(this.dataset.svcpid,parseInt(this.dataset.svcvisit))"'
+          +' onclick="event.stopPropagation();openVisitReport(this.dataset.svcpid,parseInt(this.dataset.svcvisit))"'
+          +' style="padding:5px 0;border-bottom:1px solid #f1f5f9;cursor:pointer;display:flex;align-items:flex-start;justify-content:space-between">'
+          +'<div style="flex:1"><div style="font-size:10px;font-weight:700;color:#0f1f38">'+(sv.date_display||sv.date||'')+(sv.type==='deep_clean'?' · 🧼 Deep Clean':' · 🔧 60-Day Maint.')+atpStr+'</div>'
           +(sv.notes?'<div style="font-size:9px;color:#475569;font-style:italic">'+sv.notes+'</div>':'')
+          +'</div>'
+          +'<div style="color:#cbd5e1;font-size:18px;line-height:1;flex-shrink:0;align-self:center;padding-left:6px">&#x203A;</div>'
           +'</div>';
       }).join('')
     +'</div>';
