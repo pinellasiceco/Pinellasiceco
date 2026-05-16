@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Complete History of Ice | Pinellas Ice Co</title>
+  <meta name="description" content="From ancient Persian ice pits to the Florida doctor who invented mechanical refrigeration &mdash; the 12,000-year history of ice.">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧊</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Bebas+Neue&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0a1628;
+      --navy-2: #0f1f38;
+      --gold: #c9973a;
+      --gold-dim: rgba(201,151,58,0.15);
+      --gold-line: rgba(201,151,58,0.3);
+      --white: #f0f4f8;
+      --gray: #94a3b8;
+      --gray-dim: #334155;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--navy);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ─── PROGRESS BAR ─── */
+    #progress-bar-track {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: rgba(201,151,58,0.15);
+      z-index: 1001;
+    }
+    #progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--gold);
+      box-shadow: 0 0 8px rgba(201,151,58,0.7), 0 0 16px rgba(201,151,58,0.4);
+      transition: width 0.1s linear;
+    }
+
+    /* ─── STICKY NAV ─── */
+    #timeline-nav {
+      position: fixed;
+      top: 3px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(10,22,40,0.9);
+      border-bottom: 1px solid rgba(201,151,58,0.2);
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    #timeline-nav.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .nav-back {
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 400;
+      transition: opacity 0.2s;
+    }
+    .nav-back:hover { opacity: 0.75; }
+    .nav-title {
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 400;
+    }
+    #milestone-counter {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--gray);
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: var(--navy);
+      padding: 40px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 50% 40%, rgba(201,151,58,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-ice {
+      font-size: 56px;
+      display: block;
+      margin-bottom: 24px;
+      will-change: transform;
+      filter: drop-shadow(0 0 20px rgba(180,220,255,0.3));
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: clamp(32px, 8vw, 52px);
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 20px;
+      letter-spacing: -0.01em;
+    }
+    .hero-subtitle {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      font-size: 15px;
+      color: var(--gray);
+      max-width: 400px;
+      margin: 0 auto 28px;
+      line-height: 1.65;
+    }
+    .hero-rule {
+      width: 60px;
+      height: 2px;
+      background: var(--gold);
+      margin: 0 auto 20px;
+      border: none;
+    }
+    .hero-meta {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+      font-weight: 400;
+    }
+
+    /* ─── TIMELINE WRAP ─── */
+    .timeline-wrap {
+      max-width: 560px;
+      margin: 0 auto;
+      position: relative;
+      padding: 60px 0;
+    }
+    .timeline-line {
+      position: absolute;
+      left: 16px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, transparent, var(--gold) 8%, var(--gold) 92%, transparent);
+      opacity: 0.4;
+    }
+
+    /* ─── MILESTONE ─── */
+    .milestone {
+      position: relative;
+      padding: 0 0 64px 52px;
+    }
+    .milestone:last-child { padding-bottom: 20px; }
+    .milestone-dot {
+      position: absolute;
+      left: 11px;
+      top: 6px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: 2px solid var(--navy);
+      transition: width 0.3s ease, height 0.3s ease, left 0.3s ease, top 0.3s ease, box-shadow 0.3s ease;
+    }
+    .milestone-dot.active {
+      width: 14px;
+      height: 14px;
+      left: 9px;
+      top: 4px;
+      box-shadow: 0 0 0 4px rgba(201,151,58,0.2), 0 0 0 8px rgba(201,151,58,0.08);
+    }
+    .milestone-year {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 64px;
+      color: var(--gold);
+      opacity: 0.6;
+      line-height: 1;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .milestone-card {
+      background: rgba(15,31,56,0.6);
+      border: 1px solid rgba(201,151,58,0.15);
+      border-radius: 16px;
+      padding: 24px;
+      opacity: 0;
+      transform: translateX(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .milestone-card.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .milestone-svg {
+      display: block;
+      max-width: 280px;
+      width: 100%;
+      margin: 0 auto 20px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .milestone-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 22px;
+      color: var(--white);
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+    .milestone-body {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      font-size: 14px;
+      color: rgba(240,244,248,0.8);
+      line-height: 1.75;
+      margin-bottom: 14px;
+    }
+    .milestone-source {
+      font-size: 10px;
+      color: var(--gray-dim);
+      font-style: italic;
+    }
+
+    /* ─── GORRIE SPECIAL ─── */
+    .milestone-gorrie .milestone-year { color: #f59e0b; opacity: 0.85; }
+    .milestone-gorrie .milestone-card { border-color: rgba(245,158,11,0.3); background: rgba(20,35,65,0.7); }
+    .milestone-gorrie .milestone-title { color: #fde68a; }
+
+    .florida-badge {
+      background: rgba(245,158,11,0.15);
+      border: 1px solid rgba(245,158,11,0.4);
+      border-radius: 6px;
+      padding: 3px 10px;
+      font-size: 10px;
+      color: #f59e0b;
+      letter-spacing: 0.08em;
+      display: inline-block;
+      margin-bottom: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+    }
+
+    /* ─── TODAY SPECIAL ─── */
+    .milestone-today .milestone-year { color: var(--gold); opacity: 1; }
+    .milestone-today .milestone-card { border-color: rgba(201,151,58,0.4); background: rgba(15,31,56,0.85); box-shadow: 0 0 40px rgba(201,151,58,0.1); }
+    .milestone-today .milestone-title { color: #fde68a; }
+
+    .today-badge {
+      background: rgba(201,151,58,0.15);
+      border: 1px solid rgba(201,151,58,0.5);
+      border-radius: 6px;
+      padding: 3px 10px;
+      font-size: 10px;
+      color: #c9973a;
+      display: inline-block;
+      margin-bottom: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+    }
+
+    /* ─── CLOSING ─── */
+    .closing {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 64px 24px;
+      text-align: center;
+    }
+    .closing-rule {
+      width: 80px;
+      height: 2px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+      border: none;
+      margin: 0 auto 32px;
+    }
+    .closing-quote {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 20px;
+      color: var(--white);
+      line-height: 1.6;
+      margin-bottom: 20px;
+      quotes: none;
+    }
+    .closing-sub {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: var(--gray);
+      margin-bottom: 36px;
+    }
+    .closing-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+    }
+    .btn-back {
+      display: inline-block;
+      padding: 12px 28px;
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      background: transparent;
+      transition: background 0.2s, color 0.2s;
+      width: 100%;
+      max-width: 340px;
+      text-align: center;
+    }
+    .btn-back:hover { background: rgba(201,151,58,0.1); }
+    .btn-book {
+      display: inline-block;
+      padding: 13px 28px;
+      background: var(--gold);
+      border-radius: 8px;
+      color: var(--navy);
+      text-decoration: none;
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      transition: opacity 0.2s;
+      width: 100%;
+      max-width: 340px;
+      text-align: center;
+    }
+    .btn-book:hover { opacity: 0.88; }
+
+    /* ─── FOOTER ─── */
+    .page-footer {
+      background: #070e1c;
+      padding: 24px 24px calc(24px + env(safe-area-inset-bottom));
+      text-align: center;
+      font-size: 11px;
+      color: var(--gray-dim);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+    }
+  </style>
+</head>
+<body>
+
+<!-- PROGRESS BAR -->
+<div id="progress-bar-track"><div id="progress-bar"></div></div>
+
+<!-- STICKY NAV -->
+<nav id="timeline-nav">
+  <a href="../explore/" class="nav-back">&#8592; Back</a>
+  <span class="nav-title">🧊 Ice History</span>
+  <span id="milestone-counter">1 / 9</span>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <span id="hero-ice" class="hero-ice">🧊</span>
+  <h1 class="hero-title">The Complete History<br>of Ice</h1>
+  <p class="hero-subtitle">From 10,000 BC to your restaurant&#39;s ice machine &mdash; a 12,000-year story.</p>
+  <hr class="hero-rule">
+  <p class="hero-meta">9 milestones &middot; Scroll to explore</p>
+</section>
+
+<!-- TIMELINE -->
+<div class="timeline-wrap">
+  <div class="timeline-line"></div>
+
+  <!-- MILESTONE 1 -->
+  <div class="milestone" id="m1">
+    <div class="milestone-dot"></div>
+    <span class="milestone-year">10,000 BC</span>
+    <div class="milestone-card">
+      <svg class="milestone-svg" viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ancient underground ice storage pit">
+        <rect width="280" height="200" fill="#0a1628"/>
+        <!-- Stars -->
+        <circle cx="22" cy="12" r="1.2" fill="#c9973a" opacity="0.8"/>
+        <circle cx="55" cy="8" r="1" fill="#c9973a" opacity="0.7"/>
+        <circle cx="90" cy="18" r="1.3" fill="#c9973a" opacity="0.6"/>
+        <circle cx="130" cy="6" r="1" fill="#c9973a" opacity="0.9"/>
+        <circle cx="170" cy="14" r="1.2" fill="#c9973a" opacity="0.7"/>
+        <circle cx="210" cy="5" r="1" fill="#c9973a" opacity="0.8"/>
+        <circle cx="245" cy="20" r="1.1" fill="#c9973a" opacity="0.6"/>
+        <circle cx="35" cy="32" r="0.9" fill="#c9973a" opacity="0.5"/>
+        <circle cx="112" cy="38" r="1" fill="#c9973a" opacity="0.6"/>
+        <circle cx="260" cy="38" r="1.2" fill="#c9973a" opacity="0.7"/>
+        <!-- Ground surface -->
+        <line x1="0" y1="75" x2="118" y2="75" stroke="#c9973a" stroke-width="1.5" opacity="0.6"/>
+        <line x1="162" y1="75" x2="280" y2="75" stroke="#c9973a" stroke-width="1.5" opacity="0.6"/>
+        <!-- Earth fill -->
+        <rect x="0" y="75" width="280" height="125" fill="#12100a" opacity="0.85"/>
+        <!-- Underground chamber -->
+        <path d="M 70,75 L 70,155 Q 70,178 95,180 L 185,180 Q 210,178 210,155 L 210,75 Z" fill="#0a1628" stroke="rgba(201,151,58,0.35)" stroke-width="1.5"/>
+        <!-- Ice blocks row 1 -->
+        <rect x="85" y="100" width="26" height="16" rx="2" fill="rgba(180,220,240,0.12)" stroke="rgba(180,220,240,0.55)" stroke-width="1"/>
+        <rect x="117" y="100" width="26" height="16" rx="2" fill="rgba(180,220,240,0.12)" stroke="rgba(180,220,240,0.55)" stroke-width="1"/>
+        <rect x="149" y="100" width="26" height="16" rx="2" fill="rgba(180,220,240,0.12)" stroke="rgba(180,220,240,0.55)" stroke-width="1"/>
+        <line x1="85" y1="103" x2="111" y2="103" stroke="rgba(220,240,255,0.4)" stroke-width="0.8"/>
+        <line x1="117" y1="103" x2="143" y2="103" stroke="rgba(220,240,255,0.4)" stroke-width="0.8"/>
+        <line x1="149" y1="103" x2="175" y2="103" stroke="rgba(220,240,255,0.4)" stroke-width="0.8"/>
+        <!-- Ice blocks row 2 -->
+        <rect x="85" y="122" width="26" height="16" rx="2" fill="rgba(180,220,240,0.12)" stroke="rgba(180,220,240,0.55)" stroke-width="1"/>
+        <rect x="117" y="122" width="26" height="16" rx="2" fill="rgba(180,220,240,0.12)" stroke="rgba(180,220,240,0.55)" stroke-width="1"/>
+        <rect x="149" y="122" width="26" height="16" rx="2" fill="rgba(180,220,240,0.12)" stroke="rgba(180,220,240,0.55)" stroke-width="1"/>
+        <line x1="85" y1="125" x2="111" y2="125" stroke="rgba(220,240,255,0.4)" stroke-width="0.8"/>
+        <line x1="117" y1="125" x2="143" y2="125" stroke="rgba(220,240,255,0.4)" stroke-width="0.8"/>
+        <line x1="149" y1="125" x2="175" y2="125" stroke="rgba(220,240,255,0.4)" stroke-width="0.8"/>
+        <!-- Ice blocks row 3 -->
+        <rect x="85" y="144" width="26" height="16" rx="2" fill="rgba(180,220,240,0.12)" stroke="rgba(180,220,240,0.55)" stroke-width="1"/>
+        <rect x="117" y="144" width="26" height="16" rx="2" fill="rgba(180,220,240,0.12)" stroke="rgba(180,220,240,0.55)" stroke-width="1"/>
+        <rect x="149" y="144" width="26" height="16" rx="2" fill="rgba(180,220,240,0.12)" stroke="rgba(180,220,240,0.55)" stroke-width="1"/>
+        <line x1="85" y1="147" x2="111" y2="147" stroke="rgba(220,240,255,0.4)" stroke-width="0.8"/>
+        <line x1="117" y1="147" x2="143" y2="147" stroke="rgba(220,240,255,0.4)" stroke-width="0.8"/>
+        <line x1="149" y1="147" x2="175" y2="147" stroke="rgba(220,240,255,0.4)" stroke-width="0.8"/>
+        <!-- Rope (dashed vertical) -->
+        <line x1="140" y1="75" x2="140" y2="100" stroke="rgba(201,151,58,0.55)" stroke-width="1.2" stroke-dasharray="3,2"/>
+        <!-- Block being lowered -->
+        <rect x="128" y="82" width="24" height="14" rx="2" fill="rgba(180,220,240,0.18)" stroke="rgba(180,220,240,0.7)" stroke-width="1"/>
+        <!-- Figure at surface: head -->
+        <circle cx="185" cy="56" r="6" fill="none" stroke="rgba(201,151,58,0.7)" stroke-width="1.2"/>
+        <!-- Body line -->
+        <line x1="185" y1="62" x2="185" y2="73" stroke="rgba(201,151,58,0.7)" stroke-width="1.2"/>
+        <!-- Left arm toward rope -->
+        <line x1="185" y1="66" x2="168" y2="72" stroke="rgba(201,151,58,0.7)" stroke-width="1.2"/>
+        <!-- Right arm -->
+        <line x1="185" y1="66" x2="196" y2="68" stroke="rgba(201,151,58,0.7)" stroke-width="1.2"/>
+        <!-- Legs -->
+        <line x1="185" y1="73" x2="179" y2="78" stroke="rgba(201,151,58,0.7)" stroke-width="1.2"/>
+        <line x1="185" y1="73" x2="191" y2="78" stroke="rgba(201,151,58,0.7)" stroke-width="1.2"/>
+      </svg>
+      <h2 class="milestone-title">The First Cold Storage</h2>
+      <p class="milestone-body">Long before refrigeration, humans discovered that ice and snow preserved food and cooled drinks. Ancient civilizations across Mesopotamia, China, and Persia dug deep pits called yakhch&#257;ls &mdash; insulated underground chambers that kept ice frozen through summer months. The oldest known ice storage dates to roughly 10,000 BC. Keeping cool was not a luxury &mdash; it was survival.</p>
+      <p class="milestone-source">Archaeological record, multiple sites, Mesopotamia and Persia</p>
+    </div>
+  </div>
+
+  <!-- MILESTONE 2 -->
+  <div class="milestone" id="m2">
+    <div class="milestone-dot"></div>
+    <span class="milestone-year">1806</span>
+    <div class="milestone-card">
+      <svg class="milestone-svg" viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Tudor's ice trade ship sailing to the tropics">
+        <rect width="280" height="200" fill="#0a1628"/>
+        <!-- Sea -->
+        <rect x="0" y="128" width="280" height="72" fill="rgba(10,30,60,0.7)"/>
+        <!-- Wavy water lines -->
+        <path d="M 0,134 Q 35,130 70,134 Q 105,138 140,134 Q 175,130 210,134 Q 245,138 280,134" fill="none" stroke="rgba(180,220,240,0.25)" stroke-width="1"/>
+        <path d="M 0,144 Q 40,140 80,144 Q 120,148 160,144 Q 200,140 240,144 Q 260,148 280,146" fill="none" stroke="rgba(180,220,240,0.18)" stroke-width="0.8"/>
+        <path d="M 0,155 Q 30,151 60,155 Q 90,159 120,155 Q 150,151 180,155 Q 210,159 240,155 Q 265,151 280,154" fill="none" stroke="rgba(180,220,240,0.12)" stroke-width="0.7"/>
+        <!-- Ship hull -->
+        <path d="M 25,128 L 25,100 Q 25,96 30,95 L 250,95 Q 256,95 255,100 L 255,128 Q 240,145 140,148 Q 55,145 25,128 Z" fill="rgba(10,22,40,0.95)" stroke="#c9973a" stroke-width="1.5"/>
+        <!-- Hold cutaway interior -->
+        <rect x="50" y="108" width="185" height="20" rx="2" fill="rgba(8,18,34,0.9)" stroke="rgba(201,151,58,0.25)" stroke-width="0.8"/>
+        <!-- Ice blocks in hold row 1 -->
+        <rect x="56" y="111" width="18" height="7" fill="rgba(180,220,240,0.15)" stroke="rgba(180,220,240,0.5)" stroke-width="0.8"/>
+        <rect x="77" y="111" width="18" height="7" fill="rgba(180,220,240,0.15)" stroke="rgba(180,220,240,0.5)" stroke-width="0.8"/>
+        <rect x="98" y="111" width="18" height="7" fill="rgba(180,220,240,0.15)" stroke="rgba(180,220,240,0.5)" stroke-width="0.8"/>
+        <rect x="119" y="111" width="18" height="7" fill="rgba(180,220,240,0.15)" stroke="rgba(180,220,240,0.5)" stroke-width="0.8"/>
+        <rect x="140" y="111" width="18" height="7" fill="rgba(180,220,240,0.15)" stroke="rgba(180,220,240,0.5)" stroke-width="0.8"/>
+        <rect x="161" y="111" width="18" height="7" fill="rgba(180,220,240,0.15)" stroke="rgba(180,220,240,0.5)" stroke-width="0.8"/>
+        <!-- Ice blocks in hold row 2 -->
+        <rect x="56" y="120" width="18" height="7" fill="rgba(180,220,240,0.12)" stroke="rgba(180,220,240,0.45)" stroke-width="0.8"/>
+        <rect x="77" y="120" width="18" height="7" fill="rgba(180,220,240,0.12)" stroke="rgba(180,220,240,0.45)" stroke-width="0.8"/>
+        <rect x="98" y="120" width="18" height="7" fill="rgba(180,220,240,0.12)" stroke="rgba(180,220,240,0.45)" stroke-width="0.8"/>
+        <rect x="119" y="120" width="18" height="7" fill="rgba(180,220,240,0.12)" stroke="rgba(180,220,240,0.45)" stroke-width="0.8"/>
+        <rect x="140" y="120" width="18" height="7" fill="rgba(180,220,240,0.12)" stroke="rgba(180,220,240,0.45)" stroke-width="0.8"/>
+        <rect x="161" y="120" width="18" height="7" fill="rgba(180,220,240,0.12)" stroke="rgba(180,220,240,0.45)" stroke-width="0.8"/>
+        <!-- Sawdust lines -->
+        <line x1="56" y1="119" x2="73" y2="119" stroke="rgba(180,140,80,0.3)" stroke-width="0.5" stroke-dasharray="2,1"/>
+        <line x1="77" y1="119" x2="94" y2="119" stroke="rgba(180,140,80,0.3)" stroke-width="0.5" stroke-dasharray="2,1"/>
+        <line x1="98" y1="119" x2="115" y2="119" stroke="rgba(180,140,80,0.3)" stroke-width="0.5" stroke-dasharray="2,1"/>
+        <!-- Center mast -->
+        <line x1="140" y1="15" x2="140" y2="100" stroke="#c9973a" stroke-width="2"/>
+        <!-- Cross boom -->
+        <line x1="78" y1="42" x2="202" y2="42" stroke="#c9973a" stroke-width="1.5"/>
+        <!-- Main sail -->
+        <polygon points="78,42 202,42 140,95" fill="rgba(201,151,58,0.12)" stroke="#c9973a" stroke-width="1"/>
+        <!-- Top sail -->
+        <polygon points="108,15 172,15 140,42" fill="rgba(201,151,58,0.08)" stroke="rgba(201,151,58,0.5)" stroke-width="0.8"/>
+        <!-- Bowsprit -->
+        <line x1="25" y1="100" x2="8" y2="86" stroke="#c9973a" stroke-width="1.5"/>
+        <!-- Palm trees on horizon right -->
+        <line x1="242" y1="95" x2="242" y2="73" stroke="rgba(201,151,58,0.45)" stroke-width="1.5"/>
+        <path d="M 242,73 Q 235,65 228,67" fill="none" stroke="rgba(201,151,58,0.45)" stroke-width="1.2"/>
+        <path d="M 242,73 Q 249,65 256,68" fill="none" stroke="rgba(201,151,58,0.45)" stroke-width="1.2"/>
+        <path d="M 242,73 Q 242,63 245,60" fill="none" stroke="rgba(201,151,58,0.45)" stroke-width="1.2"/>
+        <line x1="258" y1="93" x2="258" y2="76" stroke="rgba(201,151,58,0.35)" stroke-width="1.3"/>
+        <path d="M 258,76 Q 251,68 245,70" fill="none" stroke="rgba(201,151,58,0.35)" stroke-width="1"/>
+        <path d="M 258,76 Q 265,68 271,71" fill="none" stroke="rgba(201,151,58,0.35)" stroke-width="1"/>
+        <!-- Bow figure -->
+        <circle cx="32" cy="88" r="4" fill="none" stroke="rgba(201,151,58,0.6)" stroke-width="1"/>
+        <line x1="32" y1="92" x2="32" y2="98" stroke="rgba(201,151,58,0.6)" stroke-width="1"/>
+      </svg>
+      <h2 class="milestone-title">The Ice King Sets Sail</h2>
+      <p class="milestone-body">Frederic Tudor was 22 years old when he had the idea that would make him a fortune and earn him the title &#39;Ice King.&#39; He would ship blocks of ice cut from frozen Massachusetts ponds to the tropical ports of the Caribbean &mdash; a place where ice had never existed. His first voyage to Martinique was a near-disaster. There was nowhere to store the ice. It melted on the docks. Tudor lost everything. He came back. By 1833 he was shipping ice to Calcutta, India &mdash; 12,500 kilometers away &mdash; packed in sawdust inside ship holds. An entire global industry built on the audacious idea that cold was worth shipping across an ocean.</p>
+      <p class="milestone-source">&#34;The Frozen Water Trade&#34; &mdash; Gavin Weightman, 2003</p>
+    </div>
+  </div>
+
+  <!-- MILESTONE 3 -->
+  <div class="milestone milestone-gorrie" id="m3">
+    <div class="milestone-dot" style="background:#f59e0b;"></div>
+    <span class="milestone-year">1844</span>
+    <div class="milestone-card">
+      <svg class="milestone-svg" viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Dr. John Gorrie's ice machine and hospital room in Apalachicola, Florida">
+        <rect width="280" height="200" fill="#0a1628"/>
+        <!-- Hospital bed frame -->
+        <rect x="20" y="130" width="115" height="10" rx="2" fill="rgba(245,158,11,0.05)" stroke="#f59e0b" stroke-width="1"/>
+        <!-- Bed legs -->
+        <line x1="25" y1="140" x2="25" y2="155" stroke="#f59e0b" stroke-width="1" opacity="0.6"/>
+        <line x1="130" y1="140" x2="130" y2="155" stroke="#f59e0b" stroke-width="1" opacity="0.6"/>
+        <!-- Pillow -->
+        <rect x="22" y="123" width="28" height="9" rx="3" fill="rgba(245,158,11,0.08)" stroke="#f59e0b" stroke-width="0.8" opacity="0.7"/>
+        <!-- Patient figure (horizontal) -->
+        <ellipse cx="38" cy="128" rx="6" ry="5" fill="none" stroke="rgba(201,151,58,0.5)" stroke-width="1"/>
+        <line x1="44" y1="128" x2="128" y2="130" stroke="rgba(201,151,58,0.4)" stroke-width="1.5"/>
+        <!-- Hanging basin/bucket -->
+        <line x1="75" y1="20" x2="75" y2="45" stroke="rgba(201,151,58,0.5)" stroke-width="1"/>
+        <circle cx="75" cy="55" r="12" fill="rgba(180,220,240,0.08)" stroke="rgba(180,220,240,0.7)" stroke-width="1.2"/>
+        <!-- Ice inside basin -->
+        <rect x="69" y="51" width="8" height="5" rx="1" fill="rgba(180,220,240,0.25)" stroke="rgba(180,220,240,0.6)" stroke-width="0.7"/>
+        <!-- Cool air drip lines from basin to patient -->
+        <path d="M 68,67 Q 62,80 55,95 Q 52,110 48,125" fill="none" stroke="rgba(180,220,240,0.4)" stroke-width="1" stroke-dasharray="3,2"/>
+        <path d="M 75,67 Q 74,82 72,97 Q 70,112 68,127" fill="none" stroke="rgba(180,220,240,0.35)" stroke-width="1" stroke-dasharray="3,2"/>
+        <path d="M 82,67 Q 86,82 88,97 Q 86,112 82,128" fill="none" stroke="rgba(180,220,240,0.3)" stroke-width="1" stroke-dasharray="3,2"/>
+        <!-- Gorrie's machine right side -->
+        <!-- Main cylinder -->
+        <rect x="173" y="80" width="40" height="60" rx="4" fill="rgba(20,35,65,0.8)" stroke="#f59e0b" stroke-width="1.5"/>
+        <!-- Secondary cylinder -->
+        <rect x="220" y="95" width="24" height="40" rx="4" fill="rgba(20,35,65,0.8)" stroke="#f59e0b" stroke-width="1.2"/>
+        <!-- Coil lines connecting cylinders -->
+        <path d="M 173,100 Q 158,100 158,108 Q 158,116 173,116" fill="none" stroke="#f59e0b" stroke-width="1.2"/>
+        <path d="M 173,110 Q 155,110 155,120 Q 155,128 173,128" fill="none" stroke="#f59e0b" stroke-width="1" opacity="0.7"/>
+        <!-- Connection pipe between cylinders -->
+        <line x1="213" y1="108" x2="220" y2="108" stroke="#f59e0b" stroke-width="1.2"/>
+        <!-- Pressure gauge -->
+        <circle cx="193" cy="75" r="8" fill="rgba(20,35,65,0.9)" stroke="#f59e0b" stroke-width="1"/>
+        <line x1="193" y1="75" x2="196" y2="70" stroke="#f59e0b" stroke-width="0.8"/>
+        <!-- Machine base -->
+        <rect x="165" y="140" width="88" height="6" rx="2" fill="rgba(245,158,11,0.1)" stroke="#f59e0b" stroke-width="0.8"/>
+        <!-- Doctor figure: head -->
+        <circle cx="150" cy="92" r="7" fill="none" stroke="#f59e0b" stroke-width="1.2" opacity="0.75"/>
+        <!-- Body -->
+        <line x1="150" y1="99" x2="150" y2="125" stroke="#f59e0b" stroke-width="1.2" opacity="0.75"/>
+        <!-- Arms -->
+        <line x1="150" y1="108" x2="165" y2="112" stroke="#f59e0b" stroke-width="1.2" opacity="0.75"/>
+        <line x1="150" y1="108" x2="135" y2="115" stroke="#f59e0b" stroke-width="1.2" opacity="0.75"/>
+        <!-- Legs -->
+        <line x1="150" y1="125" x2="143" y2="140" stroke="#f59e0b" stroke-width="1.2" opacity="0.75"/>
+        <line x1="150" y1="125" x2="157" y2="140" stroke="#f59e0b" stroke-width="1.2" opacity="0.75"/>
+        <!-- Window upper right -->
+        <rect x="200" y="20" width="40" height="45" rx="2" fill="rgba(245,158,11,0.03)" stroke="rgba(245,158,11,0.35)" stroke-width="1"/>
+        <!-- Window panes -->
+        <line x1="220" y1="20" x2="220" y2="65" stroke="rgba(245,158,11,0.25)" stroke-width="0.5"/>
+        <line x1="200" y1="42" x2="240" y2="42" stroke="rgba(245,158,11,0.25)" stroke-width="0.5"/>
+        <!-- Sun through window -->
+        <circle cx="213" cy="30" r="7" fill="rgba(245,158,11,0.2)" stroke="rgba(245,158,11,0.5)" stroke-width="0.8"/>
+        <line x1="213" y1="20" x2="213" y2="17" stroke="rgba(245,158,11,0.4)" stroke-width="0.8"/>
+        <line x1="221" y1="23" x2="223" y2="21" stroke="rgba(245,158,11,0.4)" stroke-width="0.8"/>
+        <line x1="205" y1="23" x2="203" y2="21" stroke="rgba(245,158,11,0.4)" stroke-width="0.8"/>
+        <!-- Palm tree in window -->
+        <line x1="228" y1="65" x2="228" y2="48" stroke="rgba(201,151,58,0.45)" stroke-width="1"/>
+        <path d="M 228,48 Q 222,43 218,45" fill="none" stroke="rgba(201,151,58,0.45)" stroke-width="1"/>
+        <path d="M 228,48 Q 234,43 237,46" fill="none" stroke="rgba(201,151,58,0.45)" stroke-width="1"/>
+      </svg>
+      <span class="florida-badge">&#11088; Florida Connection</span>
+      <h2 class="milestone-title">A Florida Doctor Changes Everything</h2>
+      <p class="milestone-body">Dr. John Gorrie was watching yellow fever patients die in Apalachicola, Florida when he had an idea: what if he could cool the air in their sickrooms? Ice cost $5 a pound when ships could bring it at all. So Gorrie built a machine that made ice from scratch &mdash; compressing air, running it through cooling coils, letting it expand until water froze. The world&#39;s first mechanical ice machine. The ice industry called him a crank. One northern editor wrote: &#34;A crank in Apalachicola, Florida claims he can make ice as good as Almighty God.&#34; In 1851, Gorrie received US Patent No. 8080. He died broke in 1855, never knowing his idea would change the world. His statue stands in the US Capitol today.</p>
+      <p class="milestone-source">US Patent No. 8080, 1851 &middot; Florida State Museum</p>
+    </div>
+  </div>
+
+  <!-- MILESTONE 4 -->
+  <div class="milestone" id="m4">
+    <div class="milestone-dot"></div>
+    <span class="milestone-year">1880s</span>
+    <div class="milestone-card">
+      <svg class="milestone-svg" viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Workers harvesting ice from a frozen lake in the 1880s">
+        <rect width="280" height="160" fill="#0a1628"/>
+        <!-- Distant treeline suggestion -->
+        <rect x="0" y="24" width="280" height="18" fill="rgba(15,25,45,0.7)"/>
+        <path d="M 0,28 Q 15,20 30,28 Q 45,20 60,28 Q 75,20 90,28 Q 105,20 120,28 Q 135,20 150,28 Q 165,20 180,28 Q 195,20 210,28 Q 225,20 240,28 Q 255,20 270,28 Q 278,20 280,28" fill="rgba(12,20,35,0.9)" stroke="rgba(201,151,58,0.15)" stroke-width="0.8"/>
+        <!-- Icehouse in background -->
+        <rect x="210" y="30" width="62" height="32" rx="2" fill="rgba(15,25,45,0.6)" stroke="rgba(201,151,58,0.4)" stroke-width="1"/>
+        <polygon points="207,30 275,30 241,14" fill="rgba(10,18,32,0.8)" stroke="rgba(201,151,58,0.4)" stroke-width="1"/>
+        <rect x="225" y="40" width="8" height="10" fill="rgba(201,151,58,0.08)" stroke="rgba(201,151,58,0.3)" stroke-width="0.7"/>
+        <rect x="247" y="40" width="8" height="10" fill="rgba(201,151,58,0.08)" stroke="rgba(201,151,58,0.3)" stroke-width="0.7"/>
+        <rect x="236" y="44" width="6" height="18" rx="1" fill="rgba(201,151,58,0.06)" stroke="rgba(201,151,58,0.25)" stroke-width="0.7"/>
+        <!-- Ice surface / frozen lake -->
+        <rect x="0" y="72" width="280" height="68" rx="0" fill="rgba(180,220,240,0.06)" stroke="rgba(180,220,240,0.2)" stroke-width="1"/>
+        <!-- Grid cut pattern on ice -->
+        <line x1="48" y1="72" x2="48" y2="140" stroke="rgba(180,220,240,0.25)" stroke-width="0.8" stroke-dasharray="4,3"/>
+        <line x1="96" y1="72" x2="96" y2="140" stroke="rgba(180,220,240,0.25)" stroke-width="0.8" stroke-dasharray="4,3"/>
+        <line x1="144" y1="72" x2="144" y2="140" stroke="rgba(180,220,240,0.25)" stroke-width="0.8" stroke-dasharray="4,3"/>
+        <line x1="192" y1="72" x2="192" y2="140" stroke="rgba(180,220,240,0.25)" stroke-width="0.8" stroke-dasharray="4,3"/>
+        <line x1="0" y1="89" x2="200" y2="89" stroke="rgba(180,220,240,0.2)" stroke-width="0.8" stroke-dasharray="4,3"/>
+        <line x1="0" y1="106" x2="200" y2="106" stroke="rgba(180,220,240,0.2)" stroke-width="0.8" stroke-dasharray="4,3"/>
+        <line x1="0" y1="123" x2="200" y2="123" stroke="rgba(180,220,240,0.2)" stroke-width="0.8" stroke-dasharray="4,3"/>
+        <!-- Worker 1 (sawing, left) -->
+        <circle cx="60" cy="60" r="5" fill="none" stroke="rgba(201,151,58,0.75)" stroke-width="1.2"/>
+        <line x1="60" y1="65" x2="60" y2="75" stroke="rgba(201,151,58,0.75)" stroke-width="1.2"/>
+        <line x1="60" y1="68" x2="48" y2="65" stroke="rgba(201,151,58,0.75)" stroke-width="1.2"/>
+        <line x1="60" y1="68" x2="68" y2="72" stroke="rgba(201,151,58,0.75)" stroke-width="1.2"/>
+        <!-- Saw line going into ice -->
+        <line x1="68" y1="72" x2="80" y2="76" stroke="rgba(201,151,58,0.6)" stroke-width="1.2"/>
+        <path d="M 68,72 L 82,76" stroke="rgba(180,220,240,0.4)" stroke-width="0.6" stroke-dasharray="1,1"/>
+        <line x1="60" y1="75" x2="55" y2="84" stroke="rgba(201,151,58,0.75)" stroke-width="1.2"/>
+        <line x1="60" y1="75" x2="65" y2="84" stroke="rgba(201,151,58,0.75)" stroke-width="1.2"/>
+        <!-- Worker 2 (center, using tongs) -->
+        <circle cx="130" cy="57" r="5" fill="none" stroke="rgba(201,151,58,0.75)" stroke-width="1.2"/>
+        <line x1="130" y1="62" x2="130" y2="74" stroke="rgba(201,151,58,0.75)" stroke-width="1.2"/>
+        <line x1="130" y1="66" x2="122" y2="72" stroke="rgba(201,151,58,0.75)" stroke-width="1.2"/>
+        <line x1="130" y1="66" x2="138" y2="72" stroke="rgba(201,151,58,0.75)" stroke-width="1.2"/>
+        <!-- Tong lines into ice block -->
+        <line x1="122" y1="72" x2="118" y2="80" stroke="rgba(201,151,58,0.6)" stroke-width="1"/>
+        <line x1="138" y1="72" x2="142" y2="80" stroke="rgba(201,151,58,0.6)" stroke-width="1"/>
+        <line x1="130" y1="74" x2="124" y2="84" stroke="rgba(201,151,58,0.75)" stroke-width="1.2"/>
+        <line x1="130" y1="74" x2="136" y2="84" stroke="rgba(201,151,58,0.75)" stroke-width="1.2"/>
+        <!-- Horse body -->
+        <rect x="183" y="56" width="38" height="18" rx="4" fill="rgba(10,22,40,0.7)" stroke="rgba(201,151,58,0.6)" stroke-width="1.2"/>
+        <!-- Horse head -->
+        <path d="M 221,56 Q 234,52 238,58 Q 240,62 235,65" fill="rgba(10,22,40,0.7)" stroke="rgba(201,151,58,0.6)" stroke-width="1.2"/>
+        <!-- Horse legs -->
+        <line x1="190" y1="74" x2="188" y2="84" stroke="rgba(201,151,58,0.6)" stroke-width="1.2"/>
+        <line x1="198" y1="74" x2="196" y2="84" stroke="rgba(201,151,58,0.6)" stroke-width="1.2"/>
+        <line x1="208" y1="74" x2="206" y2="84" stroke="rgba(201,151,58,0.6)" stroke-width="1.2"/>
+        <line x1="216" y1="74" x2="218" y2="84" stroke="rgba(201,151,58,0.6)" stroke-width="1.2"/>
+        <!-- Horse tail -->
+        <path d="M 183,62 Q 175,58 174,66" fill="none" stroke="rgba(201,151,58,0.5)" stroke-width="1"/>
+        <!-- Plow behind horse -->
+        <path d="M 175,72 Q 165,75 160,80 L 168,82 Q 172,76 180,74 Z" fill="rgba(201,151,58,0.1)" stroke="rgba(201,151,58,0.5)" stroke-width="1"/>
+        <!-- Handler figure beside horse -->
+        <circle cx="175" cy="54" r="4" fill="none" stroke="rgba(201,151,58,0.65)" stroke-width="1"/>
+        <line x1="175" y1="58" x2="175" y2="70" stroke="rgba(201,151,58,0.65)" stroke-width="1"/>
+        <line x1="175" y1="63" x2="183" y2="62" stroke="rgba(201,151,58,0.65)" stroke-width="1"/>
+        <line x1="175" y1="70" x2="170" y2="78" stroke="rgba(201,151,58,0.65)" stroke-width="1"/>
+        <line x1="175" y1="70" x2="180" y2="78" stroke="rgba(201,151,58,0.65)" stroke-width="1"/>
+      </svg>
+      <h2 class="milestone-title">Peak Ice</h2>
+      <p class="milestone-body">By the 1880s, ice harvesting was one of America&#39;s largest industries. Twenty-five million tons of natural ice were harvested every year from frozen lakes and rivers across the northern states. Armies of workers &mdash; tens of thousands of men &mdash; cut perfect rectangles from frozen ponds using horse-drawn plows and hand saws. The blocks were stored in massive icehouses packed with sawdust, then shipped by rail across the country. Ice was delivered door-to-door by icemen in every American city. It had transformed from a luxury into something closer to a utility &mdash; and it was still natural, still seasonal, still dependent entirely on whether winter was cold enough.</p>
+      <p class="milestone-source">American Ice Trade records, 1880s</p>
+    </div>
+  </div>
+
+  <!-- MILESTONE 5 -->
+  <div class="milestone" id="m5">
+    <div class="milestone-dot"></div>
+    <span class="milestone-year">1930s</span>
+    <div class="milestone-card">
+      <svg class="milestone-svg" viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The electric refrigerator replacing the iceman in the 1930s">
+        <rect width="280" height="200" fill="#0a1628"/>
+        <!-- Bold diagonal dividing line (past vs future) -->
+        <line x1="15" y1="0" x2="265" y2="200" stroke="#c9973a" stroke-width="2.5" opacity="0.8"/>
+        <!-- Year labels -->
+        <text x="22" y="175" font-size="9" fill="rgba(201,151,58,0.35)" font-family="'DM Sans', sans-serif">1908</text>
+        <text x="215" y="35" font-size="9" fill="rgba(201,151,58,0.5)" font-family="'DM Sans', sans-serif">1930</text>
+        <!-- LEFT SIDE: ICEMAN (past, dimmer) -->
+        <!-- Iceman head -->
+        <circle cx="65" cy="55" r="8" fill="none" stroke="rgba(201,151,58,0.5)" stroke-width="1.2" opacity="0.5"/>
+        <!-- Iceman body -->
+        <line x1="65" y1="63" x2="65" y2="100" stroke="rgba(201,151,58,0.5)" stroke-width="1.2" opacity="0.5"/>
+        <!-- Iceman arm with tongs -->
+        <line x1="65" y1="78" x2="50" y2="85" stroke="rgba(201,151,58,0.5)" stroke-width="1.2" opacity="0.5"/>
+        <!-- Tong lines -->
+        <line x1="50" y1="85" x2="44" y2="95" stroke="rgba(201,151,58,0.45)" stroke-width="1" opacity="0.5"/>
+        <line x1="50" y1="85" x2="56" y2="95" stroke="rgba(201,151,58,0.45)" stroke-width="1" opacity="0.5"/>
+        <!-- Other arm holding ice block -->
+        <line x1="65" y1="78" x2="80" y2="82" stroke="rgba(201,151,58,0.5)" stroke-width="1.2" opacity="0.5"/>
+        <!-- Ice block -->
+        <rect x="80" y="78" width="22" height="18" rx="2" fill="rgba(180,220,240,0.08)" stroke="rgba(180,220,240,0.4)" stroke-width="1" opacity="0.5"/>
+        <!-- Drip drops -->
+        <circle cx="86" cy="98" r="1.5" fill="rgba(180,220,240,0.4)" opacity="0.5"/>
+        <circle cx="92" cy="101" r="1.2" fill="rgba(180,220,240,0.4)" opacity="0.5"/>
+        <circle cx="98" cy="99" r="1" fill="rgba(180,220,240,0.4)" opacity="0.5"/>
+        <!-- Drip lines from ice -->
+        <line x1="85" y1="96" x2="86" y2="100" stroke="rgba(180,220,240,0.3)" stroke-width="0.8" opacity="0.5"/>
+        <line x1="91" y1="96" x2="92" y2="103" stroke="rgba(180,220,240,0.3)" stroke-width="0.8" opacity="0.5"/>
+        <line x1="97" y1="96" x2="97" y2="101" stroke="rgba(180,220,240,0.3)" stroke-width="0.8" opacity="0.5"/>
+        <!-- Iceman legs -->
+        <line x1="65" y1="100" x2="58" y2="120" stroke="rgba(201,151,58,0.5)" stroke-width="1.2" opacity="0.5"/>
+        <line x1="65" y1="100" x2="72" y2="120" stroke="rgba(201,151,58,0.5)" stroke-width="1.2" opacity="0.5"/>
+        <!-- RIGHT SIDE: ART DECO REFRIGERATOR (future, brighter) -->
+        <!-- Main refrigerator body -->
+        <rect x="170" y="55" width="64" height="120" rx="6" fill="rgba(201,151,58,0.08)" stroke="#c9973a" stroke-width="1.5"/>
+        <!-- Rounded top cap -->
+        <rect x="170" y="47" width="64" height="12" rx="6" fill="rgba(201,151,58,0.1)" stroke="#c9973a" stroke-width="1.2"/>
+        <!-- Door handle (vertical) -->
+        <rect x="172" y="90" width="4" height="30" rx="2" fill="rgba(201,151,58,0.15)" stroke="#c9973a" stroke-width="1"/>
+        <!-- Chrome trim lines (horizontal decorative) -->
+        <line x1="174" y1="68" x2="230" y2="68" stroke="rgba(201,151,58,0.4)" stroke-width="0.8"/>
+        <line x1="174" y1="72" x2="230" y2="72" stroke="rgba(201,151,58,0.3)" stroke-width="0.5"/>
+        <line x1="174" y1="160" x2="230" y2="160" stroke="rgba(201,151,58,0.35)" stroke-width="0.8"/>
+        <line x1="174" y1="164" x2="230" y2="164" stroke="rgba(201,151,58,0.25)" stroke-width="0.5"/>
+        <!-- Door ajar effect - thin rect beside main body -->
+        <rect x="234" y="62" width="6" height="108" rx="2" fill="rgba(201,151,58,0.06)" stroke="rgba(201,151,58,0.3)" stroke-width="0.8"/>
+        <!-- Brand name area (blank rect on door) -->
+        <rect x="186" y="78" width="38" height="12" rx="2" fill="rgba(201,151,58,0.06)" stroke="rgba(201,151,58,0.2)" stroke-width="0.7"/>
+        <!-- Interior shelves (visible through door) -->
+        <line x1="178" y1="130" x2="228" y2="130" stroke="rgba(201,151,58,0.25)" stroke-width="0.8"/>
+        <line x1="178" y1="148" x2="228" y2="148" stroke="rgba(201,151,58,0.25)" stroke-width="0.8"/>
+        <!-- Small indicator light -->
+        <circle cx="224" cy="82" r="2.5" fill="rgba(180,240,200,0.4)" stroke="rgba(180,240,200,0.5)" stroke-width="0.5"/>
+      </svg>
+      <h2 class="milestone-title">The Iceman Cometh No More</h2>
+      <p class="milestone-body">The home refrigerator killed the ice trade in a decade. By 1930, electric refrigerators were becoming affordable for middle-class American households. By 1940, the ice delivery man &mdash; a fixture of American life for over a century &mdash; had largely disappeared. The vast natural ice harvesting industry, which had employed hundreds of thousands and built an entire logistics network across the country, vanished within a generation. But the commercial demand for ice didn&#39;t go away. Restaurants, hotels, and bars still needed ice in quantities that home refrigerators couldn&#39;t produce. That gap was about to be filled by something new.</p>
+      <p class="milestone-source">US Census Bureau, appliance adoption records 1930&ndash;1940</p>
+    </div>
+  </div>
+
+  <!-- MILESTONE 6 -->
+  <div class="milestone" id="m6">
+    <div class="milestone-dot"></div>
+    <span class="milestone-year">1950</span>
+    <div class="milestone-card">
+      <svg class="milestone-svg" viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The first self-contained commercial ice machine under a bar counter, 1950">
+        <rect width="280" height="200" fill="#0a1628"/>
+        <!-- Overhead light fixture -->
+        <line x1="20" y1="40" x2="200" y2="40" stroke="rgba(201,151,58,0.3)" stroke-width="1"/>
+        <line x1="110" y1="40" x2="110" y2="52" stroke="rgba(201,151,58,0.3)" stroke-width="1"/>
+        <circle cx="110" cy="56" r="4" fill="rgba(201,151,58,0.3)" stroke="rgba(201,151,58,0.5)" stroke-width="0.8"/>
+        <!-- Light cone -->
+        <polygon points="90,60 130,60 160,100 60,100" fill="rgba(201,151,58,0.04)" stroke="rgba(201,151,58,0.2)" stroke-width="0.5"/>
+        <!-- Kitchen counter surface -->
+        <line x1="10" y1="100" x2="220" y2="100" stroke="#c9973a" stroke-width="2"/>
+        <!-- Counter front face -->
+        <rect x="10" y="100" width="210" height="10" rx="1" fill="rgba(201,151,58,0.08)" stroke="rgba(201,151,58,0.3)" stroke-width="0.8"/>
+        <!-- Under-counter ice machine body -->
+        <rect x="30" y="110" width="80" height="70" rx="3" fill="rgba(15,31,56,0.8)" stroke="#c9973a" stroke-width="1.5"/>
+        <!-- Vent lines on machine face -->
+        <line x1="38" y1="120" x2="100" y2="120" stroke="rgba(201,151,58,0.35)" stroke-width="0.8"/>
+        <line x1="38" y1="127" x2="100" y2="127" stroke="rgba(201,151,58,0.35)" stroke-width="0.8"/>
+        <line x1="38" y1="134" x2="100" y2="134" stroke="rgba(201,151,58,0.35)" stroke-width="0.8"/>
+        <line x1="38" y1="141" x2="100" y2="141" stroke="rgba(201,151,58,0.35)" stroke-width="0.8"/>
+        <line x1="38" y1="148" x2="100" y2="148" stroke="rgba(201,151,58,0.35)" stroke-width="0.8"/>
+        <line x1="38" y1="155" x2="100" y2="155" stroke="rgba(201,151,58,0.3)" stroke-width="0.8"/>
+        <!-- Indicator light -->
+        <circle cx="93" cy="163" r="3" fill="rgba(100,220,140,0.5)" stroke="rgba(100,220,140,0.6)" stroke-width="0.7"/>
+        <!-- Brand label area -->
+        <rect x="44" y="161" width="40" height="12" rx="2" fill="rgba(201,151,58,0.05)" stroke="rgba(201,151,58,0.2)" stroke-width="0.7"/>
+        <!-- Electrical cord -->
+        <path d="M 100,178 Q 115,182 118,190" fill="none" stroke="rgba(201,151,58,0.4)" stroke-width="1.2"/>
+        <!-- Ice bin above counter (on the counter) -->
+        <rect x="30" y="70" width="80" height="30" rx="3" fill="rgba(180,220,240,0.06)" stroke="rgba(180,220,240,0.4)" stroke-width="1.2"/>
+        <!-- Ice cubes in bin -->
+        <rect x="38" y="76" width="9" height="9" rx="1" transform="rotate(15 42 80)" fill="rgba(180,220,240,0.15)" stroke="rgba(180,220,240,0.6)" stroke-width="0.8"/>
+        <rect x="52" y="74" width="9" height="9" rx="1" transform="rotate(-10 56 78)" fill="rgba(180,220,240,0.15)" stroke="rgba(180,220,240,0.6)" stroke-width="0.8"/>
+        <rect x="66" y="77" width="9" height="9" rx="1" transform="rotate(8 70 81)" fill="rgba(180,220,240,0.15)" stroke="rgba(180,220,240,0.6)" stroke-width="0.8"/>
+        <rect x="79" y="75" width="9" height="9" rx="1" transform="rotate(-12 83 79)" fill="rgba(180,220,240,0.15)" stroke="rgba(180,220,240,0.6)" stroke-width="0.8"/>
+        <rect x="93" y="76" width="8" height="8" rx="1" transform="rotate(5 97 80)" fill="rgba(180,220,240,0.15)" stroke="rgba(180,220,240,0.6)" stroke-width="0.8"/>
+        <rect x="43" y="84" width="8" height="8" rx="1" transform="rotate(-8 47 88)" fill="rgba(180,220,240,0.1)" stroke="rgba(180,220,240,0.5)" stroke-width="0.8"/>
+        <rect x="58" y="83" width="9" height="9" rx="1" transform="rotate(12 62 87)" fill="rgba(180,220,240,0.1)" stroke="rgba(180,220,240,0.5)" stroke-width="0.8"/>
+        <rect x="72" y="84" width="8" height="8" rx="1" transform="rotate(-6 76 88)" fill="rgba(180,220,240,0.1)" stroke="rgba(180,220,240,0.5)" stroke-width="0.8"/>
+        <!-- Bartender figure (right side) -->
+        <!-- Head -->
+        <circle cx="165" cy="60" r="8" fill="none" stroke="#c9973a" stroke-width="1.2"/>
+        <!-- Body -->
+        <line x1="165" y1="68" x2="165" y2="100" stroke="#c9973a" stroke-width="1.3"/>
+        <!-- Arm reaching to bin -->
+        <line x1="165" y1="80" x2="115" y2="88" stroke="#c9973a" stroke-width="1.3"/>
+        <!-- Other arm holding glass -->
+        <line x1="165" y1="80" x2="185" y2="88" stroke="#c9973a" stroke-width="1.3"/>
+        <!-- Glass circle at hand -->
+        <circle cx="188" cy="90" r="6" fill="rgba(180,220,240,0.06)" stroke="rgba(180,220,240,0.5)" stroke-width="1"/>
+        <!-- Legs -->
+        <line x1="165" y1="100" x2="158" y2="125" stroke="#c9973a" stroke-width="1.3"/>
+        <line x1="165" y1="100" x2="172" y2="125" stroke="#c9973a" stroke-width="1.3"/>
+      </svg>
+      <h2 class="milestone-title">The Machine That Changed Restaurants</h2>
+      <p class="milestone-body">Scotsman Ice Systems introduced the first self-contained commercial ice machine in 1950 &mdash; a device that made ice automatically, on demand, without any human labor beyond plugging it in. Restaurants and hotels no longer needed ice deliveries, ice rooms, or ice management. The machine sat under a counter, made ice through the night, and filled a bin ready for service. Within a decade, commercial ice machines were standard equipment in every bar and restaurant in America. By 2000, over one million Scotsman machines were operating in more than 100 countries. Ice had gone from a seasonal commodity harvested by armies of workers to a utility produced silently by a box under a counter.</p>
+      <p class="milestone-source">Scotsman Ice Systems corporate history, 1950</p>
+    </div>
+  </div>
+
+  <!-- MILESTONE 7 -->
+  <div class="milestone" id="m7">
+    <div class="milestone-dot"></div>
+    <span class="milestone-year">1981</span>
+    <div class="milestone-card">
+      <svg class="milestone-svg" viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sonic Drive-In nugget ice in a fountain drink at a car window">
+        <rect width="280" height="200" fill="#0a1628"/>
+        <!-- 1980s retro warm tint -->
+        <rect x="0" y="0" width="280" height="200" fill="rgba(255,160,50,0.04)"/>
+        <!-- Car window area (right) -->
+        <rect x="200" y="30" width="80" height="170" rx="0" fill="rgba(8,16,30,0.9)"/>
+        <!-- Car window frame vertical lines -->
+        <line x1="200" y1="30" x2="200" y2="200" stroke="#c9973a" stroke-width="1.5"/>
+        <rect x="210" y="45" width="52" height="80" rx="4" fill="rgba(20,40,70,0.7)" stroke="#c9973a" stroke-width="1"/>
+        <!-- Car door details -->
+        <line x1="208" y1="138" x2="272" y2="138" stroke="rgba(201,151,58,0.3)" stroke-width="0.8"/>
+        <rect x="218" y="142" width="20" height="5" rx="2" fill="rgba(201,151,58,0.15)" stroke="rgba(201,151,58,0.4)" stroke-width="0.7"/>
+        <!-- Drive-in tray arm -->
+        <line x1="60" y1="128" x2="200" y2="120" stroke="#c9973a" stroke-width="2"/>
+        <!-- Mounting bracket at car -->
+        <rect x="196" y="116" width="8" height="8" rx="1" fill="rgba(201,151,58,0.2)" stroke="#c9973a" stroke-width="1"/>
+        <!-- Fountain drink cup on tray -->
+        <!-- Cup body -->
+        <path d="M 78,130 L 82,78 L 148,78 L 152,130 Z" fill="rgba(180,220,240,0.06)" stroke="rgba(180,220,240,0.5)" stroke-width="1.2"/>
+        <!-- Dome lid (semicircle) -->
+        <path d="M 78,78 Q 115,58 152,78" fill="rgba(180,220,240,0.08)" stroke="rgba(180,220,240,0.5)" stroke-width="1.2"/>
+        <!-- Straw -->
+        <line x1="126" y1="50" x2="120" y2="78" stroke="rgba(180,220,240,0.6)" stroke-width="1.5"/>
+        <!-- Nugget ice inside cup -->
+        <rect x="88" y="90" width="14" height="10" rx="3" fill="rgba(180,220,240,0.15)" stroke="rgba(180,220,240,0.55)" stroke-width="0.8"/>
+        <rect x="106" y="88" width="13" height="10" rx="3" fill="rgba(180,220,240,0.18)" stroke="rgba(180,220,240,0.6)" stroke-width="0.8"/>
+        <rect x="122" y="92" width="12" height="9" rx="3" fill="rgba(180,220,240,0.15)" stroke="rgba(180,220,240,0.55)" stroke-width="0.8"/>
+        <rect x="93" y="102" width="14" height="10" rx="3" fill="rgba(180,220,240,0.12)" stroke="rgba(180,220,240,0.5)" stroke-width="0.8"/>
+        <rect x="111" y="100" width="13" height="11" rx="3" fill="rgba(180,220,240,0.15)" stroke="rgba(180,220,240,0.55)" stroke-width="0.8"/>
+        <rect x="84" y="112" width="12" height="9" rx="3" fill="rgba(180,220,240,0.1)" stroke="rgba(180,220,240,0.45)" stroke-width="0.8"/>
+        <rect x="100" y="113" width="14" height="9" rx="3" fill="rgba(180,220,240,0.12)" stroke="rgba(180,220,240,0.5)" stroke-width="0.8"/>
+        <rect x="118" y="110" width="14" height="10" rx="3" fill="rgba(180,220,240,0.1)" stroke="rgba(180,220,240,0.45)" stroke-width="0.8"/>
+        <!-- Ice peeking above cup rim -->
+        <rect x="86" y="72" width="11" height="9" rx="3" fill="rgba(180,220,240,0.2)" stroke="rgba(180,220,240,0.65)" stroke-width="0.8"/>
+        <rect x="102" y="68" width="12" height="10" rx="3" fill="rgba(180,220,240,0.22)" stroke="rgba(180,220,240,0.7)" stroke-width="0.8"/>
+        <rect x="118" y="71" width="11" height="9" rx="3" fill="rgba(180,220,240,0.18)" stroke="rgba(180,220,240,0.6)" stroke-width="0.8"/>
+        <!-- Loose nuggets on tray -->
+        <rect x="58" y="122" width="11" height="8" rx="3" fill="rgba(180,220,240,0.15)" stroke="rgba(180,220,240,0.5)" stroke-width="0.8"/>
+        <rect x="155" y="118" width="10" height="8" rx="3" fill="rgba(180,220,240,0.12)" stroke="rgba(180,220,240,0.45)" stroke-width="0.8"/>
+        <rect x="168" y="120" width="10" height="7" rx="3" fill="rgba(180,220,240,0.1)" stroke="rgba(180,220,240,0.4)" stroke-width="0.8"/>
+        <!-- Carhop silhouette suggestion at car window -->
+        <circle cx="232" cy="60" r="6" fill="rgba(201,151,58,0.15)" stroke="rgba(201,151,58,0.4)" stroke-width="1"/>
+        <line x1="232" y1="66" x2="232" y2="85" stroke="rgba(201,151,58,0.4)" stroke-width="1.2"/>
+        <line x1="232" y1="74" x2="220" y2="80" stroke="rgba(201,151,58,0.4)" stroke-width="1.2"/>
+        <!-- "SONIC" retro lettering suggestion -->
+        <text x="30" y="170" font-size="9" fill="rgba(255,160,50,0.35)" font-family="'Bebas Neue', sans-serif" letter-spacing="2">SONIC</text>
+      </svg>
+      <h2 class="milestone-title">The Ice That Started a Cult</h2>
+      <p class="milestone-body">Scotsman engineer Robert Utter didn&#39;t set out to create a phenomenon. He was designing a safer, more moldable ice for hospital patients &mdash; soft enough to chew, easy to form into compresses. The machine compressed ice flakes through a small opening, like a sausage stuffer, creating a semi-soft cylindrical nugget. Sonic Drive-In adopted it in the mid-1980s and something unexpected happened: customers started coming to Sonic specifically for the ice. Today 26% of consumers rank Sonic as having the best fast food drinks &mdash; largely because of the ice. Nugget ice has a name now. Some people call it Sonic Ice. Some call it hospital ice. Nearly everyone has an opinion about it.</p>
+      <p class="milestone-source">Scotsman Ice Systems; Technomic consumer research 2023</p>
+    </div>
+  </div>
+
+  <!-- MILESTONE 8 -->
+  <div class="milestone" id="m8">
+    <div class="milestone-dot"></div>
+    <span class="milestone-year">2000s</span>
+    <div class="milestone-card">
+      <svg class="milestone-svg" viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ATP luminometer showing 215 RLU reading from an ice machine swab test">
+        <defs>
+          <filter id="redGlow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <rect width="280" height="200" fill="#0a1628"/>
+        <!-- Ice machine cross-section (left side) -->
+        <rect x="15" y="55" width="100" height="90" rx="4" fill="rgba(10,22,40,0.8)" stroke="rgba(201,151,58,0.35)" stroke-width="1.2"/>
+        <!-- Machine vent lines -->
+        <line x1="23" y1="64" x2="107" y2="64" stroke="rgba(201,151,58,0.2)" stroke-width="0.7"/>
+        <line x1="23" y1="70" x2="107" y2="70" stroke="rgba(201,151,58,0.2)" stroke-width="0.7"/>
+        <!-- Evaporator coils (wavy lines inside machine) -->
+        <path d="M 25,82 Q 35,76 45,82 Q 55,88 65,82 Q 75,76 85,82 Q 95,88 105,82" fill="none" stroke="rgba(180,220,240,0.4)" stroke-width="1"/>
+        <path d="M 25,92 Q 35,86 45,92 Q 55,98 65,92 Q 75,86 85,92 Q 95,98 105,92" fill="none" stroke="rgba(180,220,240,0.35)" stroke-width="1"/>
+        <path d="M 25,102 Q 35,96 45,102 Q 55,108 65,102 Q 75,96 85,102 Q 95,108 105,102" fill="none" stroke="rgba(180,220,240,0.3)" stroke-width="0.8"/>
+        <!-- Ice bin at bottom of machine -->
+        <rect x="22" y="112" width="91" height="26" rx="2" fill="rgba(180,220,240,0.05)" stroke="rgba(180,220,240,0.3)" stroke-width="0.8"/>
+        <!-- Ice diamonds in bin -->
+        <rect x="30" y="118" width="8" height="8" rx="1" transform="rotate(45 34 122)" fill="rgba(180,220,240,0.12)" stroke="rgba(180,220,240,0.5)" stroke-width="0.7"/>
+        <rect x="44" y="118" width="8" height="8" rx="1" transform="rotate(45 48 122)" fill="rgba(180,220,240,0.12)" stroke="rgba(180,220,240,0.5)" stroke-width="0.7"/>
+        <rect x="58" y="118" width="8" height="8" rx="1" transform="rotate(45 62 122)" fill="rgba(180,220,240,0.12)" stroke="rgba(180,220,240,0.5)" stroke-width="0.7"/>
+        <rect x="72" y="118" width="8" height="8" rx="1" transform="rotate(45 76 122)" fill="rgba(180,220,240,0.12)" stroke="rgba(180,220,240,0.5)" stroke-width="0.7"/>
+        <rect x="86" y="118" width="8" height="8" rx="1" transform="rotate(45 90 122)" fill="rgba(180,220,240,0.12)" stroke="rgba(180,220,240,0.5)" stroke-width="0.7"/>
+        <!-- Machine label -->
+        <text x="40" y="152" font-size="8" fill="rgba(201,151,58,0.3)" font-family="'DM Sans', sans-serif">ICE MACHINE</text>
+        <!-- Swab stick (angled from machine to device) -->
+        <line x1="115" y1="85" x2="140" y2="85" stroke="rgba(201,151,58,0.6)" stroke-width="2"/>
+        <rect x="107" y="83" width="10" height="5" rx="2" fill="rgba(201,151,58,0.2)" stroke="rgba(201,151,58,0.6)" stroke-width="1"/>
+        <!-- ATP Luminometer device (center-right) -->
+        <rect x="140" y="55" width="95" height="100" rx="12" fill="rgba(15,31,56,0.9)" stroke="#c9973a" stroke-width="1.5"/>
+        <!-- Device screen -->
+        <rect x="152" y="70" width="71" height="38" rx="4" fill="rgba(180,0,0,0.15)" stroke="rgba(239,68,68,0.6)" stroke-width="1.2"/>
+        <!-- 215 reading with glow -->
+        <text x="167" y="100" font-size="26" fill="#ef4444" font-family="'Bebas Neue', sans-serif" filter="url(#redGlow)">215</text>
+        <!-- RLU label -->
+        <text x="192" y="108" font-size="9" fill="rgba(239,68,68,0.7)" font-family="'DM Sans', sans-serif">RLU</text>
+        <!-- Device buttons -->
+        <circle cx="164" cy="124" r="5" fill="none" stroke="rgba(201,151,58,0.4)" stroke-width="1"/>
+        <circle cx="188" cy="124" r="5" fill="none" stroke="rgba(201,151,58,0.4)" stroke-width="1"/>
+        <circle cx="212" cy="124" r="5" fill="none" stroke="rgba(201,151,58,0.4)" stroke-width="1"/>
+        <!-- Device grip bottom -->
+        <rect x="152" y="136" width="71" height="12" rx="3" fill="rgba(201,151,58,0.06)" stroke="rgba(201,151,58,0.2)" stroke-width="0.7"/>
+        <!-- Measurement scale bar -->
+        <!-- Green: 0-10 RLU, x=20 to x=25 -->
+        <rect x="20" y="170" width="5" height="10" fill="#10b981" rx="0"/>
+        <!-- Amber: 10-100 RLU, x=25 to x=68 -->
+        <rect x="25" y="170" width="43" height="10" fill="#d97706" rx="0"/>
+        <!-- Red: 100-500+ RLU, x=68 to x=260 -->
+        <rect x="68" y="170" width="192" height="10" fill="#ef4444" rx="0"/>
+        <!-- Scale border -->
+        <rect x="20" y="170" width="240" height="10" fill="none" stroke="rgba(201,151,58,0.3)" stroke-width="0.8" rx="1"/>
+        <!-- Tick at 10 (x=25) -->
+        <line x1="25" y1="168" x2="25" y2="170" stroke="#f0f4f8" stroke-width="1"/>
+        <text x="22" y="166" font-size="7" fill="rgba(240,244,248,0.6)" font-family="'DM Mono', monospace">10</text>
+        <!-- Tick at 100 (x=68) -->
+        <line x1="68" y1="168" x2="68" y2="170" stroke="#f0f4f8" stroke-width="1"/>
+        <text x="64" y="166" font-size="7" fill="rgba(240,244,248,0.6)" font-family="'DM Mono', monospace">100</text>
+        <!-- 215 RLU marker (x = 20 + (215/500)*240 = 20+103 = 123) -->
+        <line x1="123" y1="164" x2="123" y2="182" stroke="#ef4444" stroke-width="1.5"/>
+        <text x="112" y="162" font-size="7" fill="#ef4444" font-family="'DM Mono', monospace">215</text>
+        <!-- RLU scale labels -->
+        <text x="18" y="192" font-size="7" fill="rgba(201,151,58,0.4)" font-family="'DM Sans', sans-serif">0</text>
+        <text x="252" y="192" font-size="7" fill="rgba(201,151,58,0.4)" font-family="'DM Sans', sans-serif">500</text>
+        <text x="88" y="192" font-size="7" fill="rgba(240,244,248,0.3)" font-family="'DM Sans', sans-serif">RLU scale</text>
+      </svg>
+      <h2 class="milestone-title">Measuring What Was Always There</h2>
+      <p class="milestone-body">The FDA had always required food contact surfaces to be clean and sanitized. Ice was always classified as food. But quantifying exactly how clean required a standard measurement. ATP bioluminescence testing &mdash; developed originally for pharmaceutical manufacturing &mdash; became the food safety standard for measuring organic contamination on surfaces. An ATP luminometer could test a swab from an ice machine interior and return a result in seconds: the amount of adenosine triphosphate present, measured in Relative Light Units. Below 10 RLU: clean. Above 100 RLU: fail. The machines had always been contaminated. Now there was a number for it.</p>
+      <p class="milestone-source">FDA Food Code; Hygiena ATP monitoring systems documentation</p>
+    </div>
+  </div>
+
+  <!-- MILESTONE 9 -->
+  <div class="milestone milestone-today" id="m9">
+    <div class="milestone-dot" style="background:var(--gold); box-shadow: 0 0 0 3px rgba(201,151,58,0.25);"></div>
+    <span class="milestone-year">TODAY</span>
+    <div class="milestone-card">
+      <svg class="milestone-svg" viewBox="0 0 280 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pinellas County map with ice machine inspection data points and technician with ATP luminometer">
+        <defs>
+          <radialGradient id="warmGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="rgba(201,151,58,0.08)"/>
+            <stop offset="100%" stop-color="rgba(201,151,58,0)"/>
+          </radialGradient>
+          <filter id="goldGlow" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <rect width="280" height="200" fill="#0a1628"/>
+        <!-- Warm ambient glow behind county -->
+        <ellipse cx="143" cy="100" rx="70" ry="90" fill="url(#warmGlow)"/>
+        <!-- Pinellas County map outline (simplified peninsula) -->
+        <path d="M 88,22 Q 145,16 198,30 Q 206,58 200,98 Q 192,128 178,152 Q 162,170 140,178 Q 128,173 118,162 Q 104,145 96,118 Q 80,92 80,62 Q 82,38 88,22 Z" fill="rgba(201,151,58,0.05)" stroke="#c9973a" stroke-width="1.5"/>
+        <!-- Tampa Bay label -->
+        <text x="212" y="100" font-size="8" fill="rgba(201,151,58,0.35)" font-family="'DM Sans', sans-serif">Tampa</text>
+        <text x="214" y="110" font-size="8" fill="rgba(201,151,58,0.35)" font-family="'DM Sans', sans-serif">Bay</text>
+        <!-- Water texture suggestion right of county -->
+        <path d="M 205,80 Q 220,78 230,82" fill="none" stroke="rgba(180,220,240,0.1)" stroke-width="0.8"/>
+        <path d="M 208,90 Q 222,88 232,92" fill="none" stroke="rgba(180,220,240,0.1)" stroke-width="0.8"/>
+        <!-- Red dots (failing machines) -->
+        <!-- Glow rings for red dots -->
+        <circle cx="130" cy="45" r="10" fill="none" stroke="rgba(239,68,68,0.2)" stroke-width="1"/>
+        <circle cx="160" cy="100" r="10" fill="none" stroke="rgba(239,68,68,0.2)" stroke-width="1"/>
+        <circle cx="145" cy="140" r="10" fill="none" stroke="rgba(239,68,68,0.2)" stroke-width="1"/>
+        <!-- Red dots fill -->
+        <circle cx="130" cy="45" r="4" fill="#ef4444" opacity="0.8"/>
+        <circle cx="160" cy="100" r="4" fill="#ef4444" opacity="0.8"/>
+        <circle cx="145" cy="140" r="4" fill="#ef4444" opacity="0.8"/>
+        <!-- Amber dots -->
+        <circle cx="110" cy="80" r="3.5" fill="#f59e0b" opacity="0.7"/>
+        <circle cx="150" cy="65" r="3.5" fill="#f59e0b" opacity="0.7"/>
+        <circle cx="125" cy="120" r="3.5" fill="#f59e0b" opacity="0.7"/>
+        <!-- Gold dots -->
+        <circle cx="100" cy="50" r="3" fill="#c9973a" opacity="0.6"/>
+        <circle cx="165" cy="130" r="3" fill="#c9973a" opacity="0.6"/>
+        <!-- Technician figure from behind (right side) -->
+        <!-- Head -->
+        <circle cx="210" cy="135" r="7" fill="rgba(201,151,58,0.15)" stroke="rgba(201,151,58,0.8)" stroke-width="1.2"/>
+        <!-- Torso (trapezoid: wider at shoulders) -->
+        <path d="M 200,142 L 196,168 L 224,168 L 220,142 Z" fill="rgba(201,151,58,0.08)" stroke="rgba(201,151,58,0.8)" stroke-width="1.2"/>
+        <!-- Left arm (extended toward map with luminometer) -->
+        <line x1="200" y1="148" x2="178" y2="145" stroke="rgba(201,151,58,0.8)" stroke-width="1.5"/>
+        <!-- Luminometer device at end of arm -->
+        <rect x="162" y="140" width="18" height="10" rx="3" fill="rgba(201,151,58,0.15)" stroke="rgba(201,151,58,0.9)" stroke-width="1.2"/>
+        <!-- Luminometer glow -->
+        <circle cx="162" cy="145" r="12" fill="rgba(201,151,58,0.15)" stroke="none"/>
+        <!-- Glow ray from luminometer toward map -->
+        <line x1="162" y1="145" x2="148" y2="138" stroke="rgba(201,151,58,0.2)" stroke-width="3" stroke-linecap="round"/>
+        <!-- Right arm (down) -->
+        <line x1="220" y1="148" x2="226" y2="162" stroke="rgba(201,151,58,0.8)" stroke-width="1.5"/>
+        <!-- Legs -->
+        <line x1="205" y1="168" x2="202" y2="185" stroke="rgba(201,151,58,0.8)" stroke-width="1.5"/>
+        <line x1="219" y1="168" x2="222" y2="185" stroke="rgba(201,151,58,0.8)" stroke-width="1.5"/>
+        <!-- Stat label -->
+        <text x="15" y="188" font-size="7.5" fill="rgba(239,68,68,0.6)" font-family="'DM Mono', monospace">35.6% violation rate</text>
+        <text x="15" y="197" font-size="7" fill="rgba(201,151,58,0.4)" font-family="'DM Sans', sans-serif">Pinellas County ice machines 2018&ndash;2026</text>
+      </svg>
+      <span class="today-badge">&#9733; Pinellas County &middot; Today</span>
+      <h2 class="milestone-title">Pinellas County, Florida</h2>
+      <p class="milestone-body">Ice has traveled 12,000 years &mdash; from underground pits in ancient Persia to frozen Massachusetts ponds to a Florida doctor&#39;s desperate attempt to save yellow fever patients to a machine under every restaurant counter in America. And yet 35.6% of food contact surface violations in Pinellas County still specifically cite ice machines. The problem that has always been there &mdash; contamination growing in the cool, wet interior of a machine that puts its product directly into your customers&#39; drinks &mdash; has never been consistently solved. We show up with an ATP luminometer, the same device health inspectors use, and show you the number before we touch anything. The number tells the story. It always has.</p>
+      <p class="milestone-source">Florida DBPR inspection records 2018&ndash;2026, Pinellas County</p>
+    </div>
+  </div>
+
+</div><!-- .timeline-wrap -->
+
+<!-- CLOSING SECTION -->
+<section class="closing">
+  <hr class="closing-rule">
+  <blockquote class="closing-quote">&#8220;Ice has always been about one thing: keeping things clean, cold, and safe.&#8221;</blockquote>
+  <p class="closing-sub">The history continues every day in Pinellas County.</p>
+  <div class="closing-buttons">
+    <a href="../explore/" class="btn-back">&#8592; Back to Pinellas Ice Co</a>
+    <a href="https://meetings-na2.hubspot.com/stripe/ice-machine-on-site?uuid=9a40fc22-dce2-4258-8e4f-28aa75c892da" class="btn-book">&#128197; Book Your Free ATP Test</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="page-footer">
+  Pinellas Ice Co &middot; (727) 855-6873 &middot; pinellasiceco.com &middot; noindex &mdash; Easter egg page
+</footer>
+
+<script>
+  // Progress bar + parallax
+  window.addEventListener("scroll", function() {
+    var scrolled = window.scrollY;
+    var total = document.body.scrollHeight - window.innerHeight;
+    document.getElementById("progress-bar").style.width = (scrolled / total * 100) + "%";
+    var heroIce = document.getElementById("hero-ice");
+    if (heroIce && scrolled < window.innerHeight) {
+      heroIce.style.transform = "translateY(" + (scrolled * 0.3) + "px)";
+    }
+  }, { passive: true });
+
+  // Nav visibility (hides when hero is visible, shows after)
+  var nav = document.getElementById("timeline-nav");
+  var hero = document.querySelector(".hero");
+  var heroObs = new IntersectionObserver(function(entries) {
+    nav.classList.toggle("visible", !entries[0].isIntersecting);
+  }, { threshold: 0.1 });
+  heroObs.observe(hero);
+
+  // Milestone observer: activate dots, reveal cards, update counter
+  var milestones = document.querySelectorAll(".milestone");
+  var counter = document.getElementById("milestone-counter");
+  var mTotal = milestones.length;
+
+  var mObs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (!entry.isIntersecting) return;
+      // Reveal card
+      var card = entry.target.querySelector(".milestone-card");
+      if (card) card.classList.add("visible");
+      // Activate dot
+      document.querySelectorAll(".milestone-dot").forEach(function(d) { d.classList.remove("active"); });
+      var dot = entry.target.querySelector(".milestone-dot");
+      if (dot) dot.classList.add("active");
+      // Update counter
+      var idx = Array.from(milestones).indexOf(entry.target);
+      if (counter) counter.textContent = (idx + 1) + " / " + mTotal;
+    });
+  }, { threshold: 0.3 });
+
+  milestones.forEach(function(m) { mObs.observe(m); });
+</script>
+
+</body>
+</html>
