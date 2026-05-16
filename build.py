@@ -8060,7 +8060,8 @@ function openEscalation(pid){
 function selectEscalation(pid,issueId){
   var node=ESCALATION_TREE.find(function(n){return n.id===issueId;});
   if(!node)return;
-  var matched=node.ptype?PARTNERS.filter(function(pt){return pt.ptype===node.ptype;}).slice(0,3):[];
+  var _partnerData=loadPartnerData();
+  var matched=node.ptype?PARTNERS.map(function(pt){return Object.assign({},pt,_partnerData[pt.id]||{});}).filter(function(pt){var s=pt.status||'not_contacted';return pt.partner_type===node.ptype&&s!=='churned'&&s!=='dead';}).slice(0,4):[];
   var stepsEl=document.getElementById('esc-steps');
   var detailEl=document.getElementById('esc-detail');
   if(stepsEl)stepsEl.style.display='none';
