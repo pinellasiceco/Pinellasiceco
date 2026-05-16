@@ -3015,6 +3015,16 @@ header{background:var(--navy);
 <script>
 const P=%%DATA%%;
 const PARTNERS=%%PARTNERS%%;
+const ESCALATION_TREE=[
+  {id:'no_ice',     label:'No Ice / Low Output',            icon:'&#x1F9CA;',ptype:'refrigeration',     action:'Compressor or refrigerant issue. Do not attempt repair. Call refrigeration tech.'},
+  {id:'water_leak', label:'Water Leak / Flooding',          icon:'&#x1F4A7;',ptype:null,                action:'Shut off supply valve at wall. Licensed plumber needed for line or drain repair.'},
+  {id:'electrical', label:'Won&#39;t Power On / Electrical',icon:'&#x26A1;', ptype:'hvac',              action:'Do NOT operate machine. Licensed electrician required.'},
+  {id:'refrigerant',label:'Refrigerant Smell / Leak',      icon:'&#x26A0;', ptype:'refrigeration',     action:'URGENT: Shut off machine. Evacuate area. Call refrigeration tech immediately.'},
+  {id:'replace',    label:'Machine Needs Replacement',     icon:'&#x1F504;',ptype:'beverage_equipment', action:'Unit beyond repair. Refer client to equipment dealer for replacement quote.'},
+  {id:'pest',       label:'Pest / Contamination',          icon:'&#x1F41E;',ptype:'pest_control',       action:'Machine out of service. Pest control required before client resumes ice use.'},
+  {id:'hood',       label:'Hood / Grease Issue',           icon:'&#x1F525;',ptype:'hood_cleaning',      action:'Grease backup may affect machine. Hood cleaning referral needed.'},
+  {id:'other',      label:'Other / Unknown Issue',         icon:'&#x2753;', ptype:null,                 action:'Document the issue and contact supervisor or manufacturer support.'},
+];
 const PHONES=%%PHONES%%;
 const ZIPS=%%ZIPS%%;
 
@@ -7602,6 +7612,32 @@ function setSvcTab(t){
   else if(t==='refs')renderReferrals();
 }
 
+function buildRecentServiceHistory(p,c){
+  var hist=(c.service_history||[]).slice().reverse().slice(0,3);
+  if(!hist.length)return '';
+  function atpCol(v){var n=parseInt(v,10);if(isNaN(n))return 'var(--sub)';return n<=10?'#059669':n<=100?'#d97706':'#dc2626';}
+  return '<div style="margin-top:6px;border-top:1px solid var(--brd);padding-top:5px">'
+    +'<div style="font-size:8px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">&#x1F4CB; Recent Visits</div>'
+    +hist.map(function(s){
+      var pre=s.atp_pre?'<span style="color:'+atpCol(s.atp_pre)+';font-weight:700">'+s.atp_pre+'</span> RLU':'';
+      var post=s.atp?' &#x2192; <span style="color:'+atpCol(s.atp)+';font-weight:700">'+s.atp+'</span>':'';
+      var fBadge=s.filter_replaced?'<span style="background:#eff6ff;color:var(--blu);font-size:8px;padding:1px 4px;border-radius:3px;font-weight:600;margin-left:3px">Filter &#x2713;</span>':'';
+      var pBadge=(s.photo_urls&&s.photo_urls.length)?'<span style="background:#f5f3ff;color:#7c3aed;font-size:8px;padding:1px 4px;border-radius:3px;font-weight:600;margin-left:3px">'+s.photo_urls.length+' &#x1F4F7;</span>':'';
+      var typeLabel=s.type==='deep_clean'?'Deep Clean':'60-Day';
+      var noteTxt=(s.notes||'').slice(0,120);
+      var noteEl=noteTxt?'<div style="font-size:9px;color:var(--sub);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+noteTxt+'</div>':'';
+      return '<div style="padding:4px 0;border-top:1px solid rgba(0,0,0,0.05)">'
+        +'<div style="display:flex;justify-content:space-between;align-items:center">'
+        +'<div style="font-size:10px;font-weight:600;color:var(--navy)">'+(s.date_display||s.date)
+        +'<span style="font-size:8px;color:var(--sub);font-weight:400;margin-left:4px">'+typeLabel+'</span>'+fBadge+pBadge+'</div>'
+        +'<div style="font-size:10px">'+pre+post+'</div>'
+        +'</div>'
+        +noteEl
+        +'</div>';
+    }).join('')
+    +'</div>';
+}
+
 function rService(){
   renderForecast();
   renderAtRisk();
@@ -7746,6 +7782,7 @@ function renderServiceCal(){
         +'<div style="text-align:right;flex-shrink:0;margin-left:10px">'
           +'<div style="font-size:12px;font-weight:800;color:'+duCol+'">'+duLabel+'</div>'
           +'<div style="font-size:10px;font-weight:700;color:#059669">$'+(c.monthly||p.monthly||149)+'/mo</div>'
+          +(function(){var _ls=(c.service_history||[]).slice(-1)[0];var _la=_ls&&_ls.atp?_ls.atp:'';return _la?'<span style="background:#f0fdf4;color:#059669;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;display:inline-block;margin-top:2px">Last: '+_la+' RLU</span>':'';}())
         +'</div>'
       +'</div>'
       // Service history
@@ -7754,13 +7791,15 @@ function renderServiceCal(){
         +'<span>Next: '+(c.next_service||'Not set')+'</span>'
       +'</div>'
       // Actions
-      +'<div style="display:flex;gap:5px">'
-        +'<button onclick="openServiceLog('+p.id+')" style="flex:2;padding:7px;border:none;border-radius:7px;background:#059669;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">&#x2713; Log Service Visit</button>'
+      +'<div style="display:flex;gap:5px;flex-wrap:wrap">'
+        +'<button onclick="openServiceLog('+p.id+')" ontouchend="event.preventDefault();openServiceLog('+p.id+')" style="flex:2;min-width:120px;padding:7px;border:none;border-radius:7px;background:#059669;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Log Service Visit</button>'
+        +'<button onclick="openEscalation('+p.id+')" ontouchend="event.preventDefault();openEscalation('+p.id+')" style="flex:1;min-width:80px;padding:7px;border:1px solid #d97706;border-radius:7px;background:#fffbeb;color:#d97706;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x26A0; Escalate</button>'
         +'<button onclick="reschedule('+p.id+')" style="flex:1;padding:7px;border:1px solid var(--brd);border-radius:7px;background:var(--surf);color:var(--sub);font-size:10px;cursor:pointer;font-family:inherit">Reschedule</button>'
         +(c.annual_schedule?'<button onclick="exportSchedulePDF('+p.id+')" style="flex:1;padding:7px;border:1px solid var(--blu);border-radius:7px;background:#eff6ff;color:var(--blu);font-size:10px;cursor:pointer;font-family:inherit">&#x1F4C5; Schedule</button>':'')
         +(c.annual_schedule&&c.annual_schedule.length?'<button onclick="emailServiceSchedule('+p.id+')" style="flex:1;padding:7px;border:1px solid #7c3aed;border-radius:7px;background:#f5f3ff;color:#7c3aed;font-size:10px;cursor:pointer;font-family:inherit">&#x1F4C5; Email Schedule</button>':'')
         +(p.phone?'<a href="tel:'+p.phone.replace(/\s/g,'')+'" style="flex:1;padding:7px;border:1px solid var(--blu);border-radius:7px;background:#eff6ff;color:var(--blu);font-size:10px;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;font-family:inherit">Call</a>':'')
       +'</div>'
+      +buildRecentServiceHistory(p,c)
 
       // Machine profile + contract
       +'<div style="display:flex;flex-direction:column;gap:5px;padding:8px;background:#f5f8fa;border-radius:7px;margin-top:6px">'
@@ -7989,6 +8028,82 @@ function openServiceLog(id){
 let _svcType='maintenance_60';
 var _svcPhotos=[];
 function closeSvcLog(){const el=document.getElementById('svc-log-bg');if(el)el.remove();}
+
+function openEscalation(pid){
+  var p=P.find(function(x){return x.id===pid;});
+  if(!p)return;
+  var bg=document.createElement('div');
+  bg.id='esc-bg';
+  bg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:210;display:flex;align-items:flex-end;justify-content:center';
+  bg.innerHTML='<div style="background:var(--surf);border-radius:16px 16px 0 0;padding:16px;width:100%;max-width:480px;max-height:88vh;overflow-y:auto">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">'
+    +'<div style="font-weight:800;font-size:14px;color:var(--navy)">&#x26A0; Escalate Issue</div>'
+    +'<button onclick="document.getElementById(\'esc-bg\').remove()" ontouchend="event.preventDefault();document.getElementById(\'esc-bg\').remove()" style="border:none;background:none;font-size:18px;color:var(--sub);cursor:pointer;padding:4px;touch-action:manipulation">&#x2715;</button>'
+    +'</div>'
+    +'<div style="font-size:11px;color:var(--sub);margin-bottom:12px">'+p.name+' &bull; Select the issue type:</div>'
+    +'<div id="esc-steps">'
+    +ESCALATION_TREE.map(function(node){
+      return '<button onclick="selectEscalation('+pid+',\''+node.id+'\')" ontouchend="event.preventDefault();selectEscalation('+pid+',\''+node.id+'\')"'
+        +' style="display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;margin-bottom:6px;border:1px solid var(--brd);border-radius:9px;background:var(--surf);text-align:left;cursor:pointer;font-family:inherit;touch-action:manipulation">'
+        +'<span style="font-size:20px">'+node.icon+'</span>'
+        +'<span style="font-size:12px;font-weight:600;color:var(--navy)">'+node.label+'</span>'
+        +'</button>';
+    }).join('')
+    +'</div>'
+    +'<div id="esc-detail" style="display:none"></div>'
+    +'</div>';
+  document.body.appendChild(bg);
+}
+
+function selectEscalation(pid,issueId){
+  var node=ESCALATION_TREE.find(function(n){return n.id===issueId;});
+  if(!node)return;
+  var matched=node.ptype?PARTNERS.filter(function(pt){return pt.ptype===node.ptype;}).slice(0,3):[];
+  var stepsEl=document.getElementById('esc-steps');
+  var detailEl=document.getElementById('esc-detail');
+  if(stepsEl)stepsEl.style.display='none';
+  if(!detailEl)return;
+  detailEl.style.display='block';
+  detailEl.innerHTML=
+    '<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:9px;padding:10px;margin-bottom:12px">'
+    +'<div style="font-size:11px;font-weight:700;color:#92400e;margin-bottom:4px">&#x26A0; Recommended Action</div>'
+    +'<div style="font-size:11px;color:#78350f">'+node.action+'</div>'
+    +'</div>'
+    +(matched.length?'<div style="font-size:9px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Referral Partners</div>'
+      +matched.map(function(pt){
+        return '<div style="border:1px solid var(--brd);border-radius:8px;padding:8px 10px;margin-bottom:6px;background:#fff">'
+          +'<div style="font-weight:700;font-size:11px;color:var(--navy)">'+pt.name+'</div>'
+          +'<div style="font-size:10px;color:var(--sub)">'+pt.city+(pt.phone?' &bull; <a href="tel:'+pt.phone.replace(/\s/g,'')+'" style="color:var(--blu);text-decoration:none">'+pt.phone+'</a>':'')+'</div>'
+          +'</div>';
+      }).join('')
+    :'<div style="font-size:10px;color:var(--sub);margin-bottom:12px">No partner on file for this issue type. Contact manufacturer support or a licensed local trade.</div>')
+    +'<div style="font-size:9px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;margin-top:8px">Escalation Notes (optional)</div>'
+    +'<textarea id="esc-notes" rows="3" placeholder="Describe the issue..."'
+      +' style="width:100%;padding:8px;border:1px solid var(--brd);border-radius:7px;font-size:11px;font-family:inherit;background:var(--surf);color:var(--txt);outline:none;resize:none;margin-bottom:10px;box-sizing:border-box"></textarea>'
+    +'<div style="display:flex;gap:6px">'
+    +'<button onclick="logEscalation('+pid+',\''+issueId+'\')" ontouchend="event.preventDefault();logEscalation('+pid+',\''+issueId+'\')" style="flex:2;padding:10px;border:none;border-radius:8px;background:#d97706;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Log Escalation</button>'
+    +'<button onclick="document.getElementById(\'esc-bg\').remove()" ontouchend="event.preventDefault();document.getElementById(\'esc-bg\').remove()" style="flex:1;padding:10px;border:1px solid var(--brd);border-radius:8px;background:var(--surf);color:var(--sub);font-size:11px;cursor:pointer;font-family:inherit">Cancel</button>'
+    +'</div>';
+}
+
+function logEscalation(pid,issueId){
+  var node=ESCALATION_TREE.find(function(n){return n.id===issueId;});
+  var notesEl=document.getElementById('esc-notes');
+  var notes=notesEl?notesEl.value.trim():'';
+  if(!customers[pid])customers[pid]={};
+  if(!customers[pid].escalation_notes)customers[pid].escalation_notes=[];
+  customers[pid].escalation_notes.push({
+    date:localISO(new Date()),
+    issue_id:issueId,
+    label:node?node.label:'Unknown',
+    action:node?node.action:'',
+    notes:notes,
+  });
+  custSave();
+  var bg=document.getElementById('esc-bg');
+  if(bg)bg.remove();
+  toast('Escalation logged'+(node?' — '+node.label:'')+(notes?' with notes':'')+' ✓');
+}
 function toggleStep(el){const next=el.nextElementSibling;if(next)next.style.display=next.style.display==='none'?'block':'none';}
 
 function _handlePhotoSelection(files,photoBtn){
