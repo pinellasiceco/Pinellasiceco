@@ -3686,16 +3686,36 @@ function scOpenClose(p,bg){
     +getActivePartnersForClose()
     +'</select>'
     +'</div>'
-    +'<div style="padding:10px;background:#f0fdf4;border:1px solid #6ee7b7;border-radius:8px;margin-bottom:12px;text-align:center">'
+    +'<div style="padding:10px;background:#f0fdf4;border:1px solid #6ee7b7;border-radius:8px;margin-bottom:10px;text-align:center">'
     +'<div style="font-size:9px;color:#059669;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Year 1 Total Value</div>'
     +'<div id="co-year1-val" style="font-size:22px;font-weight:900;color:#059669">$'+year1.toLocaleString('en-US')+'</div>'
-    +'<div id="co-year1-detail" style="font-size:9px;color:#064e3b">$'+entryDefault+' entry + $'+monthly+'/mo × 12</div>'
+    +'<div id="co-year1-detail" style="font-size:9px;color:#064e3b">$'+entryDefault+' entry + $'+monthly+'/mo \xd7 12</div>'
     +'</div>'
-    +'<button id="co-confirm" onclick="scMarkWon()" ontouchend="event.preventDefault();scMarkWon()" style="width:100%;padding:12px;border:none;border-radius:10px;background:#059669;color:#fff;font-weight:800;font-size:13px;cursor:pointer;font-family:inherit;touch-action:manipulation;margin-bottom:6px">✅ Confirm Close</button>'
+    +'<div style="margin-bottom:12px;padding:10px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px">'
+    +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Discounts (optional)</div>'
+    +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'
+    +'<label style="font-size:12px;color:#475569;flex:1">Entry fee discount</label>'
+    +'<div style="display:flex;align-items:center;gap:3px">'
+    +'<span style="color:#94a3b8;font-size:13px">$</span>'
+    +'<input type="number" id="co-entry-disc" min="0" max="99" value="0" oninput="updateCloseDisplay()" onchange="updateCloseDisplay()" style="width:56px;padding:5px 6px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;text-align:right;font-family:inherit;outline:none">'
+    +'</div></div>'
+    +'<div style="display:flex;align-items:center;gap:8px">'
+    +'<label id="co-disc-label" style="font-size:12px;color:#475569;flex:1">Monthly discount</label>'
+    +'<div style="display:flex;align-items:center;gap:3px">'
+    +'<span style="color:#94a3b8;font-size:13px">$</span>'
+    +'<input type="number" id="co-plan-disc" min="0" max="500" value="0" oninput="updateCloseDisplay()" onchange="updateCloseDisplay()" style="width:56px;padding:5px 6px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;text-align:right;font-family:inherit;outline:none">'
+    +'</div></div>'
+    +'</div>'
+    +'<div style="display:flex;gap:8px;margin-bottom:6px">'
+    +'<button id="co-send-btn" ontouchend="event.preventDefault();coSendToClient()" onclick="coSendToClient()" style="flex:1;padding:13px 8px;background:#0f1f38;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;touch-action:manipulation">&#x1F4F1; Send to Client</button>'
+    +'<button id="co-charge-btn" ontouchend="event.preventDefault();coChargeNow()" onclick="coChargeNow()" style="flex:1;padding:13px 8px;background:linear-gradient(135deg,#c9973a,#e8b84b);color:#0f1f38;border:none;border-radius:10px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;touch-action:manipulation">&#x1F4B3; Charge Now</button>'
+    +'</div>'
+    +'<div id="co-loading" style="display:none;text-align:center;margin-bottom:6px;font-size:12px;color:#94a3b8">Generating payment link&#x2026;</div>'
+    +'<button id="co-confirm" onclick="scMarkWon()" ontouchend="event.preventDefault();scMarkWon()" style="width:100%;padding:9px;border:1px solid #e2e8f0;border-radius:8px;background:#f8fafc;color:#64748b;font-weight:600;font-size:11px;cursor:pointer;font-family:inherit;touch-action:manipulation;margin-bottom:4px">&#x2705; Mark Won (no Stripe)</button>'
     +'<div style="text-align:center;margin-bottom:4px">'
     +'<button onclick="coUseOnetime()" ontouchend="event.preventDefault();coUseOnetime()" style="border:none;background:transparent;font-size:10px;color:#94a3b8;cursor:pointer;font-family:inherit;text-decoration:underline;touch-action:manipulation">Use $'+onetimePrice+' one-time deep clean instead</button>'
     +'</div>'
-    +'<button id="co-cancel" onclick="document.getElementById(\\'close-overlay\\').remove()" ontouchend="event.preventDefault();document.getElementById(\\'close-overlay\\').remove()" style="width:100%;padding:8px;border:none;border-radius:8px;background:transparent;color:#94a3b8;font-size:11px;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
+    +'<button id="co-cancel" onclick="closeOverlayById(\\'close-overlay\\')" ontouchend="event.preventDefault();closeOverlayById(\\'close-overlay\\')" style="width:100%;padding:8px;border:none;border-radius:8px;background:transparent;color:#94a3b8;font-size:11px;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
     +'</div>';
   document.body.appendChild(el);
   // Auto-populate partner if this prospect was referred via an inbound referral
@@ -3740,11 +3760,16 @@ function coUseOnetime(){
 function updateCloseDisplay(plan){
   if(plan)_closeState.plan=plan;
   var m=_closeState.machines||1;
-  var entry=typeof _closeState.entryPrice==='number'?_closeState.entryPrice:(99+Math.max(0,m-1)*49);
+  var standardEntry=99+Math.max(0,m-1)*49;
+  var rawEntry=typeof _closeState.entryPrice==='number'?_closeState.entryPrice:standardEntry;
+  var entryDisc=Math.max(0,parseFloat((document.getElementById('co-entry-disc')||{}).value)||0);
+  var planDisc=Math.max(0,parseFloat((document.getElementById('co-plan-disc')||{}).value)||0);
+  var entry=Math.max(0,rawEntry-entryDisc);
   var mBtn=document.getElementById('co-monthly');
   var qBtn=document.getElementById('co-quarterly');
   var y1El=document.getElementById('co-year1-val');
   var y1Det=document.getElementById('co-year1-detail');
+  var discLabel=document.getElementById('co-disc-label');
   if(!mBtn||!qBtn)return;
   var isMo=_closeState.plan==='monthly';
   mBtn.style.border=isMo?'2px solid #1e3a5f':'2px solid #e2e8f0';
@@ -3753,10 +3778,11 @@ function updateCloseDisplay(plan){
   qBtn.style.border=!isMo?'2px solid #7c3aed':'2px solid #e2e8f0';
   qBtn.style.background=!isMo?'#f5f3ff':'#f8fafc';
   qBtn.style.color=!isMo?'#7c3aed':'#64748b';
-  var monthlyPrice=calcMonthly(_closeState.plan,m);
+  var monthlyPrice=Math.max(0,calcMonthly(_closeState.plan,m)-planDisc);
   var year1=entry+monthlyPrice*12;
   if(y1El)y1El.textContent='$'+year1.toLocaleString('en-US');
-  if(y1Det)y1Det.textContent='$'+entry+' entry + $'+monthlyPrice+'/mo × 12';
+  if(y1Det)y1Det.textContent='$'+entry+' entry + $'+monthlyPrice+'/mo \xd7 12';
+  if(discLabel)discLabel.textContent='Monthly discount';
 }
 
 function scMarkWon(onetime){
@@ -3803,6 +3829,107 @@ function scMarkWon(onetime){
   toast(onetime?'✅ One-time booked · $'+onetimePrice:
         '🎉 Won! '+(cs.plan==='quarterly'?'Quarterly':'Monthly')+' · $'+monthlyPrice+'/mo · $'+entry+' entry');
   sw('customers');
+}
+
+function closeOverlayById(id){var el=document.getElementById(id);if(el)el.remove();}
+
+async function generateStripeCheckout(){
+  var plan=_closeState.plan||'monthly';
+  var m=_closeState.machines||1;
+  var pid=_scCardP?_scCardP.id:null;
+  var p=pid?P.find(function(x){return x.id==pid;}):null;
+  var entryDisc=Math.max(0,parseFloat((document.getElementById('co-entry-disc')||{}).value)||0);
+  var planDisc=Math.max(0,parseFloat((document.getElementById('co-plan-disc')||{}).value)||0);
+  var loadingEl=document.getElementById('co-loading');
+  var sendBtn=document.getElementById('co-send-btn');
+  var chargeBtn=document.getElementById('co-charge-btn');
+  if(loadingEl)loadingEl.style.display='block';
+  if(sendBtn)sendBtn.disabled=true;
+  if(chargeBtn)chargeBtn.disabled=true;
+  try{
+    var supabaseUrl=_SUPABASE_URL||localStorage.getItem('pic_supabase_url')||'';
+    var anonKey=_SUPABASE_ANON_KEY||localStorage.getItem('pic_supabase_key')||'';
+    if(!supabaseUrl||!anonKey){throw new Error('Supabase not configured — check Settings');}
+    var fnUrl=supabaseUrl+'/functions/v1/stripe-checkout';
+    var resp=await fetch(fnUrl,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+anonKey},
+      body:JSON.stringify({
+        plan:plan,machines:m,
+        entry_discount:entryDisc,monthly_discount:planDisc,
+        client_name:p?p.name:'',
+        client_email:(customers[pid]||{}).email||'',
+        prospect_id:pid||'',
+      }),
+    });
+    var data=await resp.json();
+    if(data.error)throw new Error(data.error);
+    if(!data.url)throw new Error('No checkout URL returned');
+    if(pid&&customers[pid])customers[pid]._pending_plan=plan;
+    return data.url;
+  }catch(err){
+    console.error('Stripe checkout error:',err);
+    toast('Payment link failed — '+err.message);
+    return null;
+  }finally{
+    if(loadingEl)loadingEl.style.display='none';
+    if(sendBtn)sendBtn.disabled=false;
+    if(chargeBtn)chargeBtn.disabled=false;
+  }
+}
+
+async function coSendToClient(){
+  var url=await generateStripeCheckout();
+  if(!url)return;
+  var pid=_scCardP?_scCardP.id:null;
+  var p=pid?P.find(function(x){return x.id==pid;}):null;
+  var dmPhone=((customers[pid]||{}).dm_phone||'').replace(/\\D/g,'');
+  var bizPhone=(p&&p.phone?p.phone:'').replace(/\\D/g,'');
+  var phone=dmPhone||bizPhone;
+  var msgBody='Hi — here is your Pinellas Ice Co payment link. Tap to complete your plan setup: '+url;
+  if(phone){
+    window.location.href='sms:+1'+phone+'?body='+encodeURIComponent(msgBody);
+  }else if(navigator.clipboard){
+    navigator.clipboard.writeText(url).then(function(){toast('Link copied — paste it to send to client');});
+  }else{
+    toast('Payment link ready — copy: '+url);
+  }
+  if(pid&&log[pid]&&log[pid].length>0){
+    log[pid][log[pid].length-1].payment_link_sent=new Date().toISOString();
+    lSave();
+  }
+}
+
+async function coChargeNow(){
+  var url=await generateStripeCheckout();
+  if(!url)return;
+  var win=window.open(url,'_blank');
+  if(!win){window.location.href=url;}
+}
+
+function checkStripeReturn(){
+  var params=new URLSearchParams(window.location.search);
+  var stripeStatus=params.get('stripe');
+  var pid=params.get('pid');
+  if(stripeStatus==='success'&&pid){
+    history.replaceState({},'',window.location.pathname);
+    var p=P.find(function(x){return String(x.id)===String(pid);});
+    var alreadyWon=p&&(p.status==='customer_recurring'||p.status==='customer_quarterly'||p.status==='customer_once');
+    if(p&&!alreadyWon){
+      var pendingPlan=(customers[pid]||{})._pending_plan||'monthly';
+      _scCardP=p;_scCardBg=null;
+      _closeState={plan:pendingPlan,machines:p.machines||1,entryPrice:99+Math.max(0,(p.machines||1)-1)*49};
+      scMarkWon(pendingPlan==='onetime');
+      toast('Payment confirmed — '+(p.name||'client')+' moved to Won');
+    }else if(p&&alreadyWon){
+      toast('Payment confirmed — '+(p.name||'client')+' is already a client');
+      setTimeout(function(){sw('customers');},800);
+    }
+  }
+  if(stripeStatus==='cancel'){
+    history.replaceState({},'',window.location.pathname);
+    toast('Payment cancelled — deal not closed');
+  }
 }
 
 // ── CHANNEL PARTNER ───────────────────────────────────────────────────────────
@@ -10065,6 +10192,7 @@ async function init(){
 
   if(!_sb){
     console.warn('Running without Supabase — local mode');
+    checkStripeReturn();
     return;
   }
 
@@ -10095,6 +10223,7 @@ async function init(){
         updateDataFreshness();checkDataStaleness();
         subscribeRealtime();
         sbHealthCheck();
+        checkStripeReturn();
       }
     });
     return;
@@ -10107,6 +10236,7 @@ async function init(){
   updateDataFreshness();checkDataStaleness();
   subscribeRealtime();
   sbHealthCheck();
+  checkStripeReturn();
 }
 if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{setTimeout(init,50);}
 
