@@ -2215,6 +2215,9 @@ header{background:var(--navy);
     <!-- ── TODAY'S PLAN ────────────────────────────── -->
     <div id="todays-plan" style="margin-bottom:12px"></div>
 
+    <!-- ── FOLLOW-UP NUDGES ──────────────────────────── -->
+    <div id="nudge-section" style="margin-bottom:12px"></div>
+
     <!-- ── INSPECTOR CONFIRMED ───────────────────────── -->
     <div id="inspector-confirmed" style="margin-bottom:12px"></div>
 
@@ -2843,6 +2846,12 @@ header{background:var(--navy);
         <div style="font-size:10px;color:var(--sub);margin-bottom:6px">Home Base ZIP &mdash; auto-fills your route start</div>
         <input class="phinput" id="home-zip" type="text" placeholder="34689" value="34689" maxlength="5" oninput="saveSettings()">
       </div>
+      <div style="margin-top:10px">
+        <div style="font-size:10px;color:var(--sub);margin-bottom:6px">&#x1F4F1; Your name for text templates &mdash; replaces {your name} in follow-up nudges</div>
+        <input class="phinput" id="sms-name-input" type="text" placeholder="e.g. Chris"
+          oninput="localStorage.setItem(&#39;pic_sms_name&#39;,this.value.trim())"
+          onchange="localStorage.setItem(&#39;pic_sms_name&#39;,this.value.trim())">
+      </div>
       <button onclick="saveSettings();toast('\u2713 Settings saved')" ontouchend="event.preventDefault();saveSettings();toast('\u2713 Settings saved')" style="width:100%;margin-top:10px;padding:9px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Save Settings</button>
     </div>
 
@@ -3025,6 +3034,65 @@ const ESCALATION_TREE=[
   {id:'hood',       label:'Hood / Grease Issue',           icon:'&#x1F525;',ptype:'hood_cleaning',      action:'Grease backup may affect machine. Hood cleaning referral needed.'},
   {id:'other',      label:'Other / Unknown Issue',         icon:'&#x2753;', ptype:null,                 action:'Document the issue and contact supervisor or manufacturer support.'},
 ];
+const NUDGE_TEMPLATES={
+  interested_no_book:{
+    label:'Interested — No ATP Booked',
+    days_after:3,
+    build:function(p,cust){
+      var name=(cust.dm_name||'').trim();
+      var greeting=name?'Hey '+name:'Hey';
+      var citMonth='';
+      if(p.ice_confirmed_dbpr&&p.cit_latest){
+        try{var _d=new Date(p.cit_latest+'T12:00:00');citMonth=_d.toLocaleDateString('en-US',{month:'long',year:'numeric'});}catch(e){}
+      }
+      var sender=localStorage.getItem('pic_sms_name')||'{your name}';
+      if(citMonth){
+        return greeting+' — this is '+sender+' from Pinellas Ice Co. Stopped by '+p.name+' recently. Still happy to do that free ATP test whenever works — 2 min while you are open. Machine was cited in '+citMonth+' so worth having the number before the inspector returns. This week work?';
+      }
+      return greeting+' — this is '+sender+' from Pinellas Ice Co. Stopped by '+p.name+' recently. Still happy to run that free ATP test — 2 minutes, no cost. This week work?';
+    }
+  },
+  noshow:{
+    label:'ATP Test No-Show',
+    days_after:1,
+    build:function(p,cust){
+      var name=(cust.dm_name||'').trim();
+      var greeting=name?'Hey '+name:'Hey';
+      var sender=localStorage.getItem('pic_sms_name')||'{your name}';
+      return greeting+' — this is '+sender+', Pinellas Ice Co. Missed you at '+p.name+' — no worries. Still happy to come by whenever. 2 minutes. Good time this week?';
+    }
+  },
+  voicemail_only:{
+    label:'Voicemail — No Response',
+    days_after:4,
+    build:function(p,cust){
+      var name=(cust.dm_name||'').trim();
+      var greeting=name?'Hey '+name:'Hey';
+      var sender=localStorage.getItem('pic_sms_name')||'{your name}';
+      return greeting+' — this is '+sender+' with Pinellas Ice Co. Left a voicemail about '+p.name+'. Free ATP test — 2 minutes at your location. Worth a quick chat?';
+    }
+  },
+  call_back_later:{
+    label:'Call Back Later',
+    days_after:21,
+    build:function(p,cust){
+      var name=(cust.dm_name||'').trim();
+      var greeting=name?'Hey '+name:'Hey';
+      var sender=localStorage.getItem('pic_sms_name')||'{your name}';
+      return greeting+' — this is '+sender+', Pinellas Ice Co. You mentioned checking back in — wanted to follow up on the free ATP test for '+p.name+'. Still available whenever works for you.';
+    }
+  },
+  sent_info:{
+    label:'Info Sent — No Response',
+    days_after:3,
+    build:function(p,cust){
+      var name=(cust.dm_name||'').trim();
+      var greeting=name?'Hey '+name:'Hey';
+      var sender=localStorage.getItem('pic_sms_name')||'{your name}';
+      return greeting+' — this is '+sender+', Pinellas Ice Co. Sent over that sample report for '+p.name+' last week. Any questions? Still happy to come by and show the live reading on the machine.';
+    }
+  }
+};
 const PHONES=%%PHONES%%;
 const ZIPS=%%ZIPS%%;
 
@@ -4147,6 +4215,132 @@ function daysSinceContact(id){
   return isNaN(last)?9999:Math.floor((new Date()-last)/864e5);
 }
 
+function getNudgeTemplate(pid){
+  var entries=(log[pid]||[]).filter(function(e){return e.notes!=='Skipped';});
+  if(!entries.length)return null;
+  var last=entries[entries.length-1];
+  var outcome=(last.outcome||'').toLowerCase();
+  var notes=(last.notes||'').toLowerCase();
+  if(outcome==='intro_set')return 'noshow';
+  if(notes.indexOf('call back')>=0||notes.indexOf('few weeks')>=0||notes.indexOf('next month')>=0)return 'call_back_later';
+  if(outcome==='send_info'||notes.indexOf('sent info')>=0||notes.indexOf('sent report')>=0)return 'sent_info';
+  if(outcome==='voicemail')return 'voicemail_only';
+  if(outcome==='in_play'||outcome==='no_contact')return 'interested_no_book';
+  return null;
+}
+
+function nudgePriority(p,templateId){
+  var score=0;
+  if(p.ice_confirmed_dbpr&&(p.cit_ice_count||0)>=2)score+=40;
+  else if(p.ice_confirmed_dbpr)score+=25;
+  if(templateId==='noshow')score+=30;
+  score+=Math.min(((customers[p.id]||{}).monthly||p.monthly||0)/10,15);
+  if(daysSinceContact(p.id)<=7)score+=10;
+  return score;
+}
+
+function buildNudgeCard(nudge){
+  var p=nudge.p;
+  var cust=customers[p.id]||{};
+  var template=NUDGE_TEMPLATES[nudge.templateId];
+  var msgText=template.build(p,cust);
+  var bizName=(p.name||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  var daysAgo=daysSinceContact(p.id);
+  var daysLabel=daysAgo===1?'1 day ago':daysAgo<30?daysAgo+' days ago':Math.round(daysAgo/30)+' mo ago';
+  var citBadge=p.ice_confirmed_dbpr?'<span style="font-size:9px;padding:1px 5px;border-radius:4px;background:#ede9fe;color:#7c3aed;font-weight:700;margin-left:4px">&#x1F575;&#xFE0F; DBPR</span>':'';
+  var phoneWarn=!nudge.hasDmPhone?'<div style="font-size:10px;color:#f59e0b;margin-top:3px">&#x26A0;&#xFE0F; Business line — add cell for better results</div>':'';
+  var preview=(msgText||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  if(preview.length>160)preview=preview.slice(0,160)+'&#x2026;';
+  return '<div style="background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px;margin-bottom:10px">'
+    +'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">'
+    +'<div style="flex:1;min-width:0">'
+    +'<div style="font-size:14px;font-weight:700;color:#1e293b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+bizName+citBadge+'</div>'
+    +'<div style="font-size:11px;color:#94a3b8;margin-top:2px">'+template.label+' &middot; '+daysLabel+'</div>'
+    +phoneWarn
+    +'</div>'
+    +'<button data-nudgepid="'+p.id+'"'
+    +' ontouchend="event.preventDefault();event.stopPropagation();dismissNudge(this.dataset.nudgepid)"'
+    +' onclick="event.stopPropagation();dismissNudge(this.dataset.nudgepid)"'
+    +' style="font-size:16px;background:none;border:none;color:#cbd5e1;padding:4px;cursor:pointer;touch-action:manipulation;flex-shrink:0;margin-left:8px">&#x2715;</button>'
+    +'</div>'
+    +'<div style="font-size:12px;color:#64748b;line-height:1.5;background:#f8fafc;border-radius:8px;padding:10px;margin-bottom:10px;font-style:italic">'+preview+'</div>'
+    +'<div style="display:flex;gap:8px">'
+    +'<button data-nudgepid="'+p.id+'" data-nudgetpl="'+nudge.templateId+'"'
+    +' ontouchend="event.preventDefault();sendNudgeText(this.dataset.nudgepid,this.dataset.nudgetpl)"'
+    +' onclick="sendNudgeText(this.dataset.nudgepid,this.dataset.nudgetpl)"'
+    +' style="flex:1;padding:10px;background:#0f1f38;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;touch-action:manipulation">&#x1F4F1; Send Text</button>'
+    +(!nudge.hasDmPhone
+      ?'<button data-nudgepid="'+p.id+'"'
+        +' ontouchend="event.preventDefault();showCard(parseInt(this.dataset.nudgepid))"'
+        +' onclick="showCard(parseInt(this.dataset.nudgepid))"'
+        +' style="padding:10px 14px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;font-size:12px;color:#475569;font-family:inherit;cursor:pointer;touch-action:manipulation">+ Cell</button>'
+      :'')
+    +'</div>'
+    +'</div>';
+}
+
+function renderNudgeSection(){
+  var el=document.getElementById('nudge-section');
+  if(!el)return;
+  var nudges=[];
+  P.forEach(function(p){
+    if(!isPinellas(p))return;
+    var cust=customers[p.id]||{};
+    var st=cust.status||p.status||'prospect';
+    if(st&&st!=='prospect')return;
+    var templateId=getNudgeTemplate(p.id);
+    if(!templateId)return;
+    var template=NUDGE_TEMPLATES[templateId];
+    if(!template)return;
+    var daysAgo=daysSinceContact(p.id);
+    if(daysAgo<template.days_after)return;
+    if(cust.nudge_dismissed)return;
+    if(cust.last_nudge_date){
+      var nudgeDays=Math.floor((new Date()-new Date(cust.last_nudge_date))/864e5);
+      if(nudgeDays<7)return;
+    }
+    var phone=(cust.dm_phone||p.phone||'').replace(/\D/g,'');
+    if(!phone)return;
+    nudges.push({p:p,templateId:templateId,priority:nudgePriority(p,templateId),phone:phone,hasDmPhone:!!cust.dm_phone});
+  });
+  if(!nudges.length){el.innerHTML='';return;}
+  nudges.sort(function(a,b){return b.priority-a.priority;});
+  nudges=nudges.slice(0,5);
+  var html='<div style="margin-bottom:18px">'
+    +'<div class="tsect-hdr"><span>&#x1F4F1; Follow-Up Nudges <span style="font-size:11px;font-weight:600;color:#94a3b8;margin-left:4px">'+nudges.length+'</span></span>'
+    +'<span class="tsect-sub">Prospects due for a follow-up text based on last contact.</span></div>';
+  nudges.forEach(function(n){html+=buildNudgeCard(n);});
+  html+='</div>';
+  el.innerHTML=html;
+}
+
+function sendNudgeText(pid,templateId){
+  pid=parseInt(pid)||pid;
+  var p=P.find(function(x){return x.id==pid;});
+  if(!p)return;
+  var template=NUDGE_TEMPLATES[templateId];
+  if(!template)return;
+  var cust=customers[pid]||{};
+  var rawPhone=(cust.dm_phone||p.phone||'').replace(/\D/g,'');
+  if(!rawPhone){toast('No phone number — tap + Cell to add one');return;}
+  var msgText=template.build(p,cust);
+  window.location.href='sms:+1'+rawPhone+'?body='+encodeURIComponent(msgText);
+  if(!customers[pid])customers[pid]={};
+  customers[pid].last_nudge_date=localISO(new Date());
+  customers[pid].nudge_dismissed=false;
+  custSave();
+  setTimeout(function(){toast('Messages opened — review and send');},800);
+}
+
+function dismissNudge(pid){
+  pid=parseInt(pid)||pid;
+  if(!customers[pid])customers[pid]={};
+  customers[pid].nudge_dismissed=true;
+  custSave();
+  renderNudgeSection();
+  toast('Nudge dismissed');
+}
+
 function fp(opts){
   return P.filter(p=>{
     if(Q&&!p.name.toLowerCase().includes(Q)&&!p.city.toLowerCase().includes(Q))return false;
@@ -4267,6 +4461,9 @@ function cardHTML(p){
   const routeBadge=routeSet.has(p.id)?('<span style="font-size:9px;padding:2px 6px;border-radius:4px;background:#ecfdf5;color:#059669;font-weight:700;margin-left:4px">&#x1F4CD; ON ROUTE</span>'):'';
   const _pref=getProspectPartnerRef(p.id);
   const refBadge=_pref?('<span style="font-size:8px;font-weight:700;padding:2px 6px;border-radius:20px;background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd;margin-left:4px">&#x1F4E8; '+_pref.partnerName+'</span>'):'';
+  const _hasLog=(log[p.id]||[]).filter(function(e){return e.notes!=='Skipped';}).length>0;
+  const _hasPhone=!!(_ph||(customers[p.id]||{}).dm_phone);
+  const noPhoneBadge=(_hasLog&&!_hasPhone)?('<span style="font-size:9px;padding:1px 5px;border-radius:4px;background:#fef3c7;color:#92400e;font-weight:700;margin-left:4px">&#x1F4F5; No #</span>'):'';
 
   const confCol=p.confidence>=75?'#059669':p.confidence>=50?'#d97706':'#9ca3af';
   const confH='<span style="font-size:8px;font-weight:600;color:'+confCol+'" title="Prediction confidence">'+p.confidence+'% conf</span>';
@@ -4275,7 +4472,7 @@ function cardHTML(p){
     ?('<div style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;display:inline-block;margin-bottom:4px;background:'+(p.status==='customer_recurring'?'#ecfdf5':p.status==='customer_once'?'#eff6ff':'#fff7f5')+';color:'+(p.status==='customer_recurring'?'#059669':p.status==='customer_once'?'var(--blu)':'var(--ora)')+'">'+({'customer_recurring':'Recurring Customer','customer_once':'One-Time Customer','quoted':'Quote Sent','churned':'Churned'}[p.status]||p.status)+'</div>')
     :'';
   return '<div class="card '+p.priority+(isC(p.id)?' done':'')+'" data-id="'+p.id+'">'
-    +'<div class="ctop"><div class="cname">'+p.name+tierH+emergH+newBadge+routeBadge+refBadge+'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px"><span class="pbadge '+p.priority+'">'+p.priority+'</span>'+confH+'</div></div>'
+    +'<div class="ctop"><div class="cname">'+p.name+tierH+emergH+newBadge+routeBadge+refBadge+noPhoneBadge+'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px"><span class="pbadge '+p.priority+'">'+p.priority+'</span>'+confH+'</div></div>'
     +'<div class="cloc">'+p.city+', '+p.county+' '+franchH+'</div>'
     +custStatusH+revenueH+phH+ratH+callH+hrH+golfH+iceH+dbprH+cbH+codesH+insH
     +'<div class="cmeta">'
@@ -5360,6 +5557,19 @@ function showCard(id){
   // Contacts & Intel section
   var contactsH='<div style="margin-bottom:12px">'
     +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Contacts & Intel</div>'
+    // Decision maker fields
+    +'<div style="margin-bottom:10px;padding:8px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:7px">'
+    +'<div style="font-size:9px;font-weight:700;color:#0369a1;margin-bottom:6px">&#x1F4F1; Decision Maker &mdash; for text follow-ups</div>'
+    +'<div style="display:flex;gap:5px;margin-bottom:5px">'
+    +'<input id="sc-dm-name" type="text" value="'+(c.dm_name||'')+'" placeholder="First name (optional)" '
+    +'style="flex:1;padding:7px;border:1px solid #bae6fd;border-radius:6px;font-size:12px;font-family:inherit;background:#fff;color:#1e293b;outline:none">'
+    +'</div>'
+    +'<div style="display:flex;gap:5px">'
+    +'<input id="sc-dm-phone" type="tel" value="'+(c.dm_phone||'')+'" placeholder="Cell / direct line" '
+    +'style="flex:1;padding:7px;border:1px solid #bae6fd;border-radius:6px;font-size:12px;font-family:inherit;background:#fff;color:#1e293b;outline:none">'
+    +'<button id="sc-save-dm" style="padding:7px 12px;border:none;border-radius:6px;background:#0369a1;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Save</button>'
+    +'</div>'
+    +'</div>'
     // Current vendor
     +'<div style="margin-bottom:8px;padding:8px;background:#fef9ee;border:1px solid #fde68a;border-radius:7px">'
     +'<div style="font-size:9px;font-weight:700;color:#92400e;margin-bottom:4px">🕵️ Current Ice Vendor</div>'
@@ -5569,6 +5779,21 @@ function showCard(id){
       if(!log[p.id])log[p.id]=[];
       log[p.id].push({outcome:'churned',date:lostNow,notes:'Marked lost/churned'});
       lSave();bg.remove();toast('Marked lost/churned');renderKPIs();return;
+    }
+
+    // DM save
+    if(bid==='sc-save-dm'){
+      var dmName=(document.getElementById('sc-dm-name')||{}).value||'';
+      var dmPhone=((document.getElementById('sc-dm-phone')||{}).value||'').replace(/\D/g,'');
+      if(!customers[p.id])customers[p.id]={name:p.name,address:p.address,city:p.city,phone:ph,machines:p.machines,status:'prospect'};
+      customers[p.id].dm_name=dmName;
+      customers[p.id].dm_phone=dmPhone;
+      customers[p.id].nudge_dismissed=false;
+      custSave();
+      var origTxt=btn.textContent;btn.textContent='&#x2713;';btn.style.background='#059669';
+      setTimeout(function(){btn.textContent=origTxt;btn.style.background='#0369a1';},1500);
+      toast('&#x2713; Decision maker saved');
+      return;
     }
 
     // Vendor save
@@ -6878,6 +7103,7 @@ function renderBriefing(){
   if(tab!=='today')return; // KPI-only update handled by renderKPIs
   // Defer heavy card rendering to next animation frame
   requestAnimationFrame(()=>{
+  renderNudgeSection();
   const today2=localISO(now);
   // All prospects with a follow-up date set (any outcome), not yet clients
   const today_iso=localISO(now);
@@ -9525,6 +9751,8 @@ function initSettings(){
   if(sbUrlEl)sbUrlEl.value=localStorage.getItem('pic_supabase_url')||'';
   var sbKeyEl=document.getElementById('sb-supabase-key');
   if(sbKeyEl)sbKeyEl.value=localStorage.getItem('pic_supabase_key')||'';
+  var smsNameEl=document.getElementById('sms-name-input');
+  if(smsNameEl)smsNameEl.value=localStorage.getItem('pic_sms_name')||'';
   // Show sign-out button and auth status if logged in
   var authRow=document.getElementById('auth-status-row');
   var soBtn=document.getElementById('signout-btn');
