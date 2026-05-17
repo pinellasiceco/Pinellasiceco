@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Before &amp; After — Pinellas Ice Co ATP Results</title>
+  <meta name="description" content="Real ATP test results from commercial ice machines in Pinellas County. Every machine we test fails before service. Every machine passes after.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧊</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #080b0f;
+      --surface:  #0f1318;
+      --surface2: #161b22;
+      --ice:      #00c8f0;
+      --ice-dim:  #0099bb;
+      --danger:   #ff3c3c;
+      --clean:    #00e5a0;
+      --text:     #e8edf2;
+      --text-dim: #7a8696;
+      --border:   rgba(0,200,240,0.15);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      padding-bottom: calc(80px + env(safe-area-inset-bottom));
+    }
+
+    /* ── HERO ────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 24px 120px;
+      overflow: hidden;
+      clip-path: polygon(0 0, 100% 0, 100% 92%, 60% 100%, 0 92%);
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 30%, rgba(0,200,240,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 40% at 20% 80%, rgba(0,229,160,0.04) 0%, transparent 60%),
+        var(--bg);
+      z-index: 0;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      opacity: 0.4;
+      animation: grain 0.5s steps(1) infinite;
+      z-index: 1;
+    }
+
+    @keyframes grain {
+      0%,100% { transform: translate(0,0); }
+      25%      { transform: translate(-2px,1px); }
+      50%      { transform: translate(1px,-2px); }
+      75%      { transform: translate(2px,1px); }
+    }
+
+    .hero-inner { position: relative; z-index: 2; text-align: center; max-width: 800px; }
+
+    .hero-eyebrow {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(12px,2vw,15px);
+      letter-spacing: 0.4em;
+      color: var(--ice);
+      margin-bottom: 20px;
+    }
+
+    .hero-headline {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(56px,10vw,120px);
+      line-height: 0.92;
+      letter-spacing: 0.03em;
+      color: var(--text);
+      margin-bottom: 28px;
+    }
+
+    .hero-headline span { color: var(--ice); }
+
+    .hero-sub {
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: clamp(14px,2.2vw,18px);
+      color: var(--text-dim);
+      line-height: 1.6;
+      max-width: 520px;
+      margin: 0 auto 52px;
+    }
+
+    /* ── HERO COUNTERS ───────────────────────────────────── */
+    .hero-stats {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .hero-stat {
+      flex: 1;
+      min-width: 100px;
+      max-width: 200px;
+      padding: 0 20px;
+      text-align: center;
+    }
+
+    .hero-stat + .hero-stat {
+      border-left: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .stat-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: clamp(38px,7vw,72px);
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-num.danger { color: var(--danger); text-shadow: 0 0 40px rgba(255,60,60,0.35); }
+    .stat-num.clean  { color: var(--clean);  text-shadow: 0 0 40px rgba(0,229,160,0.3); }
+    .stat-num.ice    { color: var(--ice);    text-shadow: 0 0 40px rgba(0,200,240,0.3); }
+
+    .stat-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: clamp(8px,1.2vw,10px);
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      line-height: 1.4;
+    }
+
+    .hero-disclaimer {
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: 11px;
+      color: rgba(122,134,150,0.7);
+      margin-bottom: 48px;
+      line-height: 1.5;
+    }
+
+    .hero-scroll {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: var(--text-dim);
+      animation: bob 2s ease-in-out infinite;
+    }
+
+    @keyframes bob {
+      0%,100% { transform: translateY(0); opacity: 0.5; }
+      50%      { transform: translateY(6px); opacity: 1; }
+    }
+
+    /* ── SECTION LABEL ───────────────────────────────────── */
+    .section-label {
+      text-align: center;
+      padding: 80px 24px 56px;
+      background: var(--bg);
+    }
+
+    .section-eyebrow {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(20px,4vw,36px);
+      letter-spacing: 0.3em;
+      color: var(--ice);
+      margin-bottom: 16px;
+    }
+
+    .section-rule {
+      width: 80px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--ice), transparent);
+      margin: 0 auto 20px;
+    }
+
+    .section-desc {
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: clamp(13px,2vw,16px);
+      color: var(--text-dim);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ── CARD GRID ───────────────────────────────────────── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2px;
+      background: var(--surface2);
+      padding: 0;
+    }
+
+    @media (min-width: 900px) {
+      .card-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    /* ── CARD ────────────────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s ease;
+      cursor: default;
+      overflow: hidden;
+    }
+
+    .card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .card:hover, .card:focus-within {
+      box-shadow: 0 0 0 1px var(--ice), 0 0 30px rgba(0,200,240,0.12);
+      z-index: 2;
+      position: relative;
+    }
+
+    .card:hover .card-img,
+    .card:focus-within .card-img {
+      transform: scale(1.03);
+      filter: brightness(1.1) saturate(1.2) hue-rotate(190deg);
+    }
+
+    /* ── CARD IMAGE ──────────────────────────────────────── */
+    .card-img-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+      background: var(--surface2);
+    }
+
+    .card-img-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 50%, rgba(8,11,15,0.7) 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease, filter 0.4s ease;
+    }
+
+    /* Placeholder when image missing */
+    .card-img-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--surface2) 0%, #0d1520 100%);
+      color: var(--text-dim);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── CARD BODY ───────────────────────────────────────── */
+    .card-body { padding: 16px; }
+
+    .card-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: clamp(10px,1.5vw,12px);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ice);
+      margin-bottom: 14px;
+    }
+
+    .card-badges {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .badge {
+      flex: 1;
+      padding: 8px 10px;
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    .badge-before {
+      background: rgba(255,60,60,0.08);
+      border: 1px solid rgba(255,60,60,0.35);
+    }
+
+    .badge-after {
+      background: rgba(0,229,160,0.08);
+      border: 1px solid rgba(0,229,160,0.35);
+    }
+
+    .badge-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .badge-before .badge-tag { color: rgba(255,60,60,0.7); }
+    .badge-after  .badge-tag { color: rgba(0,229,160,0.7); }
+
+    .badge-rlu {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: clamp(18px,3.5vw,26px);
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+
+    .badge-before .badge-rlu { color: var(--danger); }
+    .badge-after  .badge-rlu { color: var(--clean); }
+
+    .badge-unit {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
+    }
+
+    .badge-fda {
+      font-family: 'Inter', sans-serif;
+      font-size: 8px;
+      font-weight: 300;
+      color: rgba(0,229,160,0.65);
+      margin-top: 3px;
+      line-height: 1.3;
+    }
+
+    /* ── PROGRESS BAR ────────────────────────────────────── */
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 4px;
+      background: var(--surface2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--danger), var(--clean));
+      transition: width 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .progress-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--clean);
+      white-space: nowrap;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── SUMMARY BAR ─────────────────────────────────────── */
+    .summary-bar {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 56px 24px;
+      text-align: center;
+      margin-top: 2px;
+    }
+
+    .summary-headline {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(36px,7vw,72px);
+      letter-spacing: 0.05em;
+      color: var(--text);
+      margin-bottom: 32px;
+    }
+
+    .summary-headline span { color: var(--clean); }
+
+    .summary-pills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .pill {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: clamp(10px,1.5vw,12px);
+      font-weight: 500;
+      color: var(--ice);
+      background: rgba(0,200,240,0.06);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 8px 18px;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+
+    .summary-sub {
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    .page-footer {
+      background: var(--bg);
+      border-top: 1px solid rgba(255,255,255,0.04);
+      padding: 32px 24px;
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 300;
+      color: var(--text-dim);
+      line-height: 1.8;
+    }
+
+    .page-footer a { color: var(--ice); text-decoration: none; }
+
+    /* ── STICKY CTA BAR ──────────────────────────────────── */
+    .cta-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(8,11,15,0.93);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border);
+      padding: 14px 20px;
+      padding-bottom: calc(14px + env(safe-area-inset-bottom));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      z-index: 1000;
+    }
+
+    .cta-left { flex: 1; min-width: 0; }
+
+    .cta-pre {
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      font-size: 10px;
+      color: var(--text-dim);
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cta-main {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: clamp(12px,2.5vw,14px);
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .btn-call {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: clamp(10px,1.8vw,12px);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--ice);
+      background: transparent;
+      border: 1px solid var(--ice);
+      border-radius: 6px;
+      padding: 10px 14px;
+      text-decoration: none;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      min-height: 44px;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-book {
+      font-family: 'Bebas Neue', cursive;
+      font-size: clamp(14px,2.5vw,18px);
+      letter-spacing: 0.1em;
+      color: #080b0f;
+      background: var(--ice);
+      border: none;
+      border-radius: 6px;
+      padding: 10px 16px;
+      text-decoration: none;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      min-height: 44px;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.2s ease;
+    }
+
+    .btn-book:hover { background: #20d4f8; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; }
+      .card { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-inner">
+    <p class="hero-eyebrow">ATP-VERIFIED RESULTS</p>
+    <h1 class="hero-headline">WHAT&#x27;S LIVING<br><span>IN YOUR ICE?</span></h1>
+    <p class="hero-sub">Every machine we test fails FDA standards before service. Every machine we clean passes after.</p>
+
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="stat-num danger" data-target="523" id="c0">0</div>
+        <div class="stat-label">HIGHEST BEFORE<br>RLU READING</div>
+      </div>
+      <div class="hero-stat">
+        <div class="stat-num clean" data-target="4" id="c1">0</div>
+        <div class="stat-label">LOWEST AFTER<br>RLU READING</div>
+      </div>
+      <div class="hero-stat">
+        <div class="stat-num ice" data-target="10" id="c2">0</div>
+        <div class="stat-label">FDA FOOD-SAFE<br>THRESHOLD</div>
+      </div>
+    </div>
+
+    <p class="hero-disclaimer">RLU = Relative Light Units. FDA food-safe threshold: &le;10. Toilet seat avg: 21 RLU. Uncleaned ice machine avg: 215 RLU.</p>
+    <p class="hero-scroll">&#x2193;&nbsp;&nbsp;THE EVIDENCE</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION LABEL
+═══════════════════════════════════════════════════════ -->
+<div class="section-label">
+  <p class="section-eyebrow">THE EVIDENCE</p>
+  <div class="section-rule"></div>
+  <p class="section-desc">10 machines. 10 ATP tests. Before and after every service.<br>These are real results from real commercial kitchens.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     CARD GRID
+═══════════════════════════════════════════════════════ -->
+<div class="card-grid">
+
+  <div class="card" data-delay="0">
+    <div class="card-img-wrap">
+      <img class="card-img" src="img/distributor.jpg" alt="Water Distributor after service" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="card-img-placeholder" style="display:none">WATER DISTRIBUTOR</div>
+    </div>
+    <div class="card-body">
+      <p class="card-label">Water Distributor</p>
+      <div class="card-badges">
+        <div class="badge badge-before">
+          <div class="badge-tag">Before</div>
+          <div class="badge-rlu" data-target="312">0</div>
+          <div class="badge-unit">RLU</div>
+        </div>
+        <div class="badge badge-after">
+          <div class="badge-tag">After</div>
+          <div class="badge-rlu" data-target="4">0</div>
+          <div class="badge-unit">RLU</div>
+          <div class="badge-fda">FDA LIMIT: &le;10 RLU &#x2713;</div>
+        </div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" data-pct="98.7"></div></div>
+        <span class="progress-label">98.7%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-delay="80">
+    <div class="card-img-wrap">
+      <img class="card-img" src="img/evaporator-plates.jpg" alt="Evaporator Plates after service" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="card-img-placeholder" style="display:none">EVAPORATOR PLATES</div>
+    </div>
+    <div class="card-body">
+      <p class="card-label">Evaporator Plates</p>
+      <div class="card-badges">
+        <div class="badge badge-before">
+          <div class="badge-tag">Before</div>
+          <div class="badge-rlu" data-target="487">0</div>
+          <div class="badge-unit">RLU</div>
+        </div>
+        <div class="badge badge-after">
+          <div class="badge-tag">After</div>
+          <div class="badge-rlu" data-target="7">0</div>
+          <div class="badge-unit">RLU</div>
+          <div class="badge-fda">FDA LIMIT: &le;10 RLU &#x2713;</div>
+        </div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" data-pct="98.6"></div></div>
+        <span class="progress-label">98.6%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-delay="160">
+    <div class="card-img-wrap">
+      <img class="card-img" src="img/machine-frame.jpg" alt="Machine Frame after service" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="card-img-placeholder" style="display:none">MACHINE FRAME</div>
+    </div>
+    <div class="card-body">
+      <p class="card-label">Machine Frame</p>
+      <div class="card-badges">
+        <div class="badge badge-before">
+          <div class="badge-tag">Before</div>
+          <div class="badge-rlu" data-target="218">0</div>
+          <div class="badge-unit">RLU</div>
+        </div>
+        <div class="badge badge-after">
+          <div class="badge-tag">After</div>
+          <div class="badge-rlu" data-target="3">0</div>
+          <div class="badge-unit">RLU</div>
+          <div class="badge-fda">FDA LIMIT: &le;10 RLU &#x2713;</div>
+        </div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" data-pct="98.6"></div></div>
+        <span class="progress-label">98.6%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-delay="0">
+    <div class="card-img-wrap">
+      <img class="card-img" src="img/compressor.jpg" alt="Compressor Compartment after service" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="card-img-placeholder" style="display:none">COMPRESSOR</div>
+    </div>
+    <div class="card-body">
+      <p class="card-label">Compressor Compartment</p>
+      <div class="card-badges">
+        <div class="badge badge-before">
+          <div class="badge-tag">Before</div>
+          <div class="badge-rlu" data-target="445">0</div>
+          <div class="badge-unit">RLU</div>
+        </div>
+        <div class="badge badge-after">
+          <div class="badge-tag">After</div>
+          <div class="badge-rlu" data-target="6">0</div>
+          <div class="badge-unit">RLU</div>
+          <div class="badge-fda">FDA LIMIT: &le;10 RLU &#x2713;</div>
+        </div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" data-pct="98.7"></div></div>
+        <span class="progress-label">98.7%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-delay="80">
+    <div class="card-img-wrap">
+      <img class="card-img" src="img/condenser.png" alt="Condenser Coil after service" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="card-img-placeholder" style="display:none">CONDENSER COIL</div>
+    </div>
+    <div class="card-body">
+      <p class="card-label">Condenser Coil</p>
+      <div class="card-badges">
+        <div class="badge badge-before">
+          <div class="badge-tag">Before</div>
+          <div class="badge-rlu" data-target="391">0</div>
+          <div class="badge-unit">RLU</div>
+        </div>
+        <div class="badge badge-after">
+          <div class="badge-tag">After</div>
+          <div class="badge-rlu" data-target="8">0</div>
+          <div class="badge-unit">RLU</div>
+          <div class="badge-fda">FDA LIMIT: &le;10 RLU &#x2713;</div>
+        </div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" data-pct="98.0"></div></div>
+        <span class="progress-label">98.0%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-delay="160">
+    <div class="card-img-wrap">
+      <img class="card-img" src="img/water-valve.webp" alt="Water Valve after service" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="card-img-placeholder" style="display:none">WATER VALVE</div>
+    </div>
+    <div class="card-body">
+      <p class="card-label">Water Valve</p>
+      <div class="card-badges">
+        <div class="badge badge-before">
+          <div class="badge-tag">Before</div>
+          <div class="badge-rlu" data-target="523">0</div>
+          <div class="badge-unit">RLU</div>
+        </div>
+        <div class="badge badge-after">
+          <div class="badge-tag">After</div>
+          <div class="badge-rlu" data-target="5">0</div>
+          <div class="badge-unit">RLU</div>
+          <div class="badge-fda">FDA LIMIT: &le;10 RLU &#x2713;</div>
+        </div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" data-pct="99.0"></div></div>
+        <span class="progress-label">99.0%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-delay="0">
+    <div class="card-img-wrap">
+      <img class="card-img" src="img/ice-grid.webp" alt="Ice Grid and Evaporator after service" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="card-img-placeholder" style="display:none">ICE GRID</div>
+    </div>
+    <div class="card-body">
+      <p class="card-label">Ice Grid &amp; Evaporator</p>
+      <div class="card-badges">
+        <div class="badge badge-before">
+          <div class="badge-tag">Before</div>
+          <div class="badge-rlu" data-target="276">0</div>
+          <div class="badge-unit">RLU</div>
+        </div>
+        <div class="badge badge-after">
+          <div class="badge-tag">After</div>
+          <div class="badge-rlu" data-target="9">0</div>
+          <div class="badge-unit">RLU</div>
+          <div class="badge-fda">FDA LIMIT: &le;10 RLU &#x2713;</div>
+        </div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" data-pct="96.7"></div></div>
+        <span class="progress-label">96.7%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-delay="80">
+    <div class="card-img-wrap">
+      <img class="card-img" src="img/pipes.jpg" alt="Supply Lines after service" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="card-img-placeholder" style="display:none">SUPPLY LINES</div>
+    </div>
+    <div class="card-body">
+      <p class="card-label">Supply Lines</p>
+      <div class="card-badges">
+        <div class="badge badge-before">
+          <div class="badge-tag">Before</div>
+          <div class="badge-rlu" data-target="184">0</div>
+          <div class="badge-unit">RLU</div>
+        </div>
+        <div class="badge badge-after">
+          <div class="badge-tag">After</div>
+          <div class="badge-rlu" data-target="4">0</div>
+          <div class="badge-unit">RLU</div>
+          <div class="badge-fda">FDA LIMIT: &le;10 RLU &#x2713;</div>
+        </div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" data-pct="97.8"></div></div>
+        <span class="progress-label">97.8%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-delay="160">
+    <div class="card-img-wrap">
+      <img class="card-img" src="img/evaporator.jpg" alt="Evaporator Head after service" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="card-img-placeholder" style="display:none">EVAPORATOR HEAD</div>
+    </div>
+    <div class="card-body">
+      <p class="card-label">Evaporator Head</p>
+      <div class="card-badges">
+        <div class="badge badge-before">
+          <div class="badge-tag">Before</div>
+          <div class="badge-rlu" data-target="438">0</div>
+          <div class="badge-unit">RLU</div>
+        </div>
+        <div class="badge badge-after">
+          <div class="badge-tag">After</div>
+          <div class="badge-rlu" data-target="7">0</div>
+          <div class="badge-unit">RLU</div>
+          <div class="badge-fda">FDA LIMIT: &le;10 RLU &#x2713;</div>
+        </div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" data-pct="98.4"></div></div>
+        <span class="progress-label">98.4%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-delay="80">
+    <div class="card-img-wrap">
+      <img class="card-img" src="img/pump.webp" alt="Water Pump after service" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="card-img-placeholder" style="display:none">WATER PUMP</div>
+    </div>
+    <div class="card-body">
+      <p class="card-label">Water Pump</p>
+      <div class="card-badges">
+        <div class="badge badge-before">
+          <div class="badge-tag">Before</div>
+          <div class="badge-rlu" data-target="341">0</div>
+          <div class="badge-unit">RLU</div>
+        </div>
+        <div class="badge badge-after">
+          <div class="badge-tag">After</div>
+          <div class="badge-rlu" data-target="6">0</div>
+          <div class="badge-unit">RLU</div>
+          <div class="badge-fda">FDA LIMIT: &le;10 RLU &#x2713;</div>
+        </div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" data-pct="98.2"></div></div>
+        <span class="progress-label">98.2%</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SUMMARY BAR
+═══════════════════════════════════════════════════════ -->
+<div class="summary-bar">
+  <p class="summary-headline">AVERAGE REDUCTION: <span>98.5%</span></p>
+  <div class="summary-pills">
+    <span class="pill">10 machines tested</span>
+    <span class="pill">10 ATP tests</span>
+    <span class="pill">avg before: 362 RLU</span>
+    <span class="pill">avg after: 5.9 RLU</span>
+  </div>
+  <p class="summary-sub">All results ATP-verified. Compliance report provided after every service.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════════ -->
+<footer class="page-footer">
+  &copy; 2026 Pinellas Ice Co &nbsp;&middot;&nbsp; <a href="https://pinellasiceco.com">pinellasiceco.com</a> &nbsp;&middot;&nbsp; <a href="tel:+17278556873">(727) 855-6873</a><br>
+  ATP testing performed with calibrated luminometer per NSF/ANSI 12 guidelines.
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════
+     STICKY CTA BAR
+═══════════════════════════════════════════════════════ -->
+<div class="cta-bar">
+  <div class="cta-left">
+    <div class="cta-pre">Ready to see your number?</div>
+    <div class="cta-main">Free ATP test. No commitment.</div>
+  </div>
+  <div class="cta-buttons">
+    <a class="btn-call" href="tel:+17278556873" ontouchend="this.click()">CALL (727) 855-6873</a>
+    <a class="btn-book" href="https://meetings-na2.hubspot.com/stripe/ice-machine-on-site?uuid=1610f832-4d5c-4c3d-8cc1-5f24cdcf5502" ontouchend="this.click()">BOOK FREE TEST &#x2192;</a>
+  </div>
+</div>
+
+<script>
+(function() {
+  // ── HERO COUNTER ANIMATION ─────────────────────────────
+  function animateCounter(el, target, duration, delay) {
+    setTimeout(function() {
+      var start = null;
+      function step(ts) {
+        if (!start) start = ts;
+        var progress = Math.min((ts - start) / duration, 1);
+        var ease = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.round(ease * target);
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }, delay);
+  }
+
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      animateCounter(document.getElementById('c0'), 523, 1800, 0);
+      animateCounter(document.getElementById('c1'), 4,   1000, 300);
+      animateCounter(document.getElementById('c2'), 10,  1000, 600);
+    }, 500);
+  });
+
+  // ── CARD SCROLL ANIMATIONS ─────────────────────────────
+  var animated = new Set();
+
+  function animateRLU(el, target, duration) {
+    var start = null;
+    function step(ts) {
+      if (!start) start = ts;
+      var progress = Math.min((ts - start) / duration, 1);
+      var ease = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(ease * target);
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  function revealCard(card) {
+    if (animated.has(card)) return;
+    animated.add(card);
+
+    var delay = parseInt(card.getAttribute('data-delay') || '0', 10);
+    setTimeout(function() {
+      card.classList.add('visible');
+
+      // Animate progress bar
+      var fill = card.querySelector('.progress-fill');
+      if (fill) {
+        var pct = parseFloat(fill.getAttribute('data-pct') || '0');
+        setTimeout(function() { fill.style.width = pct + '%'; }, 50);
+      }
+
+      // Animate RLU numbers
+      var rluEls = card.querySelectorAll('.badge-rlu');
+      rluEls.forEach(function(el) {
+        var target = parseInt(el.getAttribute('data-target') || '0', 10);
+        animateRLU(el, target, 800);
+      });
+    }, delay);
+  }
+
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        revealCard(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.card').forEach(function(card) {
+    observer.observe(card);
+  });
+})();
+</script>
+</body>
+</html>
