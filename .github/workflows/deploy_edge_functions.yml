@@ -18,11 +18,11 @@ jobs:
           version: latest
 
       - name: Deploy send-email function
-        run: supabase functions deploy send-email --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
+        run: supabase functions deploy send-email --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} --use-api
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
       - name: Deploy stripe-checkout function
-        run: supabase functions deploy stripe-checkout --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
+        run: supabase functions deploy stripe-checkout --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} --use-api
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
