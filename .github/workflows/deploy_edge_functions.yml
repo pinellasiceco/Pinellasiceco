@@ -2,7 +2,7 @@ name: Deploy Edge Functions
 
 on:
   push:
-    branches: ["main", "claude/fix-multiple-app-bugs-j1hpJ", "claude/stripe-checkout-edge-function-BiUpp"]
+    branches: ["main", "claude/fix-multiple-app-bugs-j1hpJ"]
     paths:
       - 'supabase/functions/**'
   workflow_dispatch:
@@ -18,11 +18,11 @@ jobs:
           version: latest
 
       - name: Deploy send-email function
-        run: supabase functions deploy send-email --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} --use-api
+        run: supabase functions deploy send-email --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
       - name: Deploy stripe-checkout function
-        run: supabase functions deploy stripe-checkout --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} --use-api
+        run: supabase functions deploy stripe-checkout --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}

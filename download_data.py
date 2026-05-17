@@ -49,18 +49,6 @@ print(f'\nDownloading FL DBPR data -- {date.today()}\n')
 # Always refresh current fiscal year
 download(CURRENT_URL, DATA_DIR / '3fdinspi_current.csv', 'District 3 current FY')
 
-try:
-    import pandas as pd
-    _df = pd.read_csv(DATA_DIR / '3fdinspi_current.csv', header=None, low_memory=False)
-    _df[14] = pd.to_datetime(_df[14], errors='coerce')
-    _max_date = _df[14].max()
-    if pd.notna(_max_date):
-        _lag = (date.today() - _max_date.date()).days
-        print(f"  Most recent inspection date: {_max_date.strftime('%Y-%m-%d')} (data lag: {_lag} days)")
-    del _df
-except Exception as e:
-    print(f"  Could not read inspection date: {e}")
-
 # Always refresh license extract (phones + seats change as businesses update)
 download(LICENSE_URL, DATA_DIR / 'hrfood3_licenses.csv', 'District 3 license extract')
 
