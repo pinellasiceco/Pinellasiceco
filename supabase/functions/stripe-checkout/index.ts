@@ -1,3 +1,23 @@
+/*
+ * STRIPE PRICE IDs — Must be updated before live use
+ *
+ * To find price IDs:
+ * Stripe Dashboard → Product catalog → click each product
+ * → Pricing section → copy the price ID (starts with price_)
+ *
+ * Products to map:
+ * - Initial Setup Fee ($99) → entry_fee
+ * - 60-Day Clean Ice Plan ($149/mo) → monthly_base
+ * - 90-Day Clean Ice Plan ($129/mo) → quarterly_base
+ * - Additional Machine 60-Day ($69/mo) → monthly_additional
+ * - Additional Machine 90-Day ($49/mo) → quarterly_additional
+ * - One-Time Deep Clean ($395) → onetime_base
+ * - Additional Machine One-Time ($150) → onetime_additional
+ *
+ * User must fill these in from their Stripe Dashboard
+ * before the Edge Function will work correctly.
+ */
+
 import Stripe from 'https://esm.sh/stripe@14.21.0?target=deno';
 
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') ?? '', {
@@ -11,15 +31,15 @@ const corsHeaders = {
     'authorization, x-client-info, apikey, content-type',
 };
 
-// Reference price IDs — checkout uses dynamic price_data (computed per request)
+// Price IDs from Stripe Dashboard — replace price_xxx with real IDs
 const STRIPE_PRICES = {
-  entry_fee:             'price_1TXrHM1DW5dOU2aay60IOPnW',   // $99 one-time
-  monthly_base:          'price_1TXrIG1DW5dOU2aaqhWTDpHG',   // $149/mo
-  quarterly_base:        'price_1TXrIu1DW5dOU2aacIeDByPC',   // $129/mo
-  monthly_additional:    'price_1TXrZg1DW5dOU2aalDMRdtD1',   // $69/mo per extra machine
-  quarterly_additional:  'price_1TXra61DW5dOU2aaOUH8FbBa',   // $49/mo per extra machine
-  onetime_base:          'price_1TXrJQ1DW5dOU2aa4jQguT8b',   // $395 one-time
-  onetime_additional:    'price_1TXral1DW5dOU2aaXB5myZ8O',   // $150 per extra machine
+  entry_fee:             'price_xxx',
+  monthly_base:          'price_xxx',
+  quarterly_base:        'price_xxx',
+  monthly_additional:    'price_xxx',
+  quarterly_additional:  'price_xxx',
+  onetime_base:          'price_xxx',
+  onetime_additional:    'price_xxx',
 };
 
 const TERMS_URL = 'https://www.pinellasiceco.com/terms';
