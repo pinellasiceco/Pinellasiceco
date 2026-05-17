@@ -40,6 +40,7 @@ Deno.serve(async (req) => {
       client_name,       // business name for Stripe metadata
       client_email,      // optional — pre-fills checkout email field
       prospect_id,       // for metadata/tracking and return URL
+      flex,              // boolean — month-to-month terms if true
     } = await req.json();
 
     if (!plan || !machines || Number(machines) < 1) {
@@ -117,6 +118,16 @@ Deno.serve(async (req) => {
     const successUrl = SUCCESS_BASE
       + '?stripe=success&pid=' + encodeURIComponent(String(prospect_id || ''));
 
+    const termsLabel = flex
+      ? 'I agree to the Pinellas Ice Co Terms & Conditions '
+        + '(pinellasiceco.com/terms). This is a month-to-month '
+        + 'plan with no long-term commitment. Cancel anytime '
+        + 'with 30 days written notice.'
+      : 'I agree to the 12-month service term and '
+        + 'Terms & Conditions (pinellasiceco.com/terms). '
+        + 'Early cancellation requires written notice and '
+        + 'a fee equal to two months of service.';
+
     const sessionParams: Stripe.Checkout.SessionCreateParams = {
       mode: plan === 'onetime' ? 'payment' : 'subscription',
       line_items: lineItems,
@@ -128,10 +139,7 @@ Deno.serve(async (req) => {
           key: 'terms_agreement',
           label: {
             type: 'custom',
-            custom:
-              'I agree to the 12-month service term and Terms & Conditions '
-              + '(pinellasiceco.com/terms). Early cancellation requires '
-              + 'written notice and a fee equal to two months of service.',
+            custom: termsLabel,
           },
           type: 'dropdown',
           dropdown: {
@@ -152,6 +160,7 @@ Deno.serve(async (req) => {
         plan,
         machines: String(m),
         client_name: String(client_name || ''),
+        flex: flex ? 'true' : 'false',
       },
       payment_method_types: ['card'],
       phone_number_collection: { enabled: true },
@@ -168,6 +177,7 @@ Deno.serve(async (req) => {
           plan,
           machines: String(m),
           client_name: String(client_name || ''),
+          flex: flex ? 'true' : 'false',
         },
       };
     }

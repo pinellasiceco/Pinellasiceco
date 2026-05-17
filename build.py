@@ -3691,6 +3691,13 @@ function scOpenClose(p,bg){
     +'<div id="co-year1-val" style="font-size:22px;font-weight:900;color:#059669">$'+year1.toLocaleString('en-US')+'</div>'
     +'<div id="co-year1-detail" style="font-size:9px;color:#064e3b">$'+entryDefault+' entry + $'+monthly+'/mo \xd7 12</div>'
     +'</div>'
+    +'<div style="margin:12px 0;padding:10px 12px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;display:flex;align-items:center;gap:10px">'
+    +'<input type="checkbox" id="co-flex-toggle" style="width:16px;height:16px;cursor:pointer;accent-color:#0f1f38">'
+    +'<div>'
+    +'<div style="font-size:13px;font-weight:600;color:#1e293b">Flex Plan</div>'
+    +'<div style="font-size:11px;color:#94a3b8;margin-top:1px">Month-to-month &#x2022; No commitment &#x2022; Cancel anytime</div>'
+    +'</div>'
+    +'</div>'
     +'<div style="margin-bottom:12px;padding:10px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px">'
     +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Discounts (optional)</div>'
     +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'
@@ -3718,6 +3725,8 @@ function scOpenClose(p,bg){
     +'<button id="co-cancel" onclick="closeOverlayById(\\'close-overlay\\')" ontouchend="event.preventDefault();closeOverlayById(\\'close-overlay\\')" style="width:100%;padding:8px;border:none;border-radius:8px;background:transparent;color:#94a3b8;font-size:11px;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
     +'</div>';
   document.body.appendChild(el);
+  var flexEl=document.getElementById('co-flex-toggle');
+  if(flexEl)flexEl.checked=false;
   // Auto-populate partner if this prospect was referred via an inbound referral
   var ref=getProspectPartnerRef(p.id);
   if(ref&&ref.partnerId){
@@ -3851,6 +3860,7 @@ async function generateStripeCheckout(){
   var p=pid?P.find(function(x){return x.id==pid;}):null;
   var entryDisc=Math.max(0,parseFloat((document.getElementById('co-entry-disc')||{}).value)||0);
   var planDisc=Math.max(0,parseFloat((document.getElementById('co-plan-disc')||{}).value)||0);
+  var flex=!!(document.getElementById('co-flex-toggle')||{}).checked;
   var loadingEl=document.getElementById('co-loading');
   var sendBtn=document.getElementById('co-send-btn');
   var chargeBtn=document.getElementById('co-charge-btn');
@@ -3871,6 +3881,7 @@ async function generateStripeCheckout(){
         client_name:p?p.name:'',
         client_email:(customers[pid]||{}).email||'',
         prospect_id:pid||'',
+        flex:flex,
       }),
     });
     var data=await resp.json();
