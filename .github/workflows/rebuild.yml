@@ -44,7 +44,6 @@ jobs:
           git checkout origin/claude/fix-multiple-app-bugs-j1hpJ -- scrape_dbpr.py 2>/dev/null || true
           git checkout origin/claude/fix-multiple-app-bugs-j1hpJ -- .github/workflows/scrape_dbpr.yml 2>/dev/null || true
           git checkout origin/claude/fix-multiple-app-bugs-j1hpJ -- generate_citation_summary.py 2>/dev/null || true
-          git checkout origin/claude/fix-multiple-app-bugs-j1hpJ -- supabase/functions/ 2>/dev/null || true
 
       - name: Restore scraper output from main
         run: |
