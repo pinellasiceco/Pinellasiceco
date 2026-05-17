@@ -2216,6 +2216,9 @@ header{background:var(--navy);
     <!-- ── FOLLOW-UP NUDGES ──────────────────────────── -->
     <div id="nudge-section" style="margin-bottom:12px"></div>
 
+    <!-- ── RE-TEST REMINDERS ─────────────────────────── -->
+    <div id="retest-section-wrapper" style="margin-bottom:12px"></div>
+
     <!-- ── INSPECTOR CONFIRMED ───────────────────────── -->
     <div id="inspector-confirmed" style="margin-bottom:12px"></div>
 
@@ -4484,6 +4487,222 @@ function dismissNudge(pid){
   custSave();
   renderNudgeSection();
   toast('Nudge dismissed');
+}
+
+// ── RE-TEST REMINDER SYSTEM ───────────────────────────────────────────────────
+function renderRetestSection(){
+  var today=new Date();
+  today.setHours(12,0,0,0);
+  var due=[];
+  P.forEach(function(p){
+    var c=customers[p.id]||{};
+    if(!c.retest_scheduled)return;
+    if(c.retest_done)return;
+    if(p.status==='customer_recurring'||p.status==='customer_quarterly')return;
+    var retestDate=new Date(c.retest_scheduled+'T12:00:00');
+    var daysUntil=Math.floor((retestDate-today)/864e5);
+    if(daysUntil>=-7&&daysUntil<=7){
+      due.push({p:p,c:c,daysUntil:daysUntil});
+    }
+  });
+  if(!due.length)return'';
+  due.sort(function(a,b){return a.daysUntil-b.daysUntil;});
+  var html='<div class="home-section" id="retest-section">'
+    +'<div class="section-header">'
+    +'&#x1F52C; Re-Tests Due'
+    +'<span style="font-size:11px;color:#94a3b8;margin-left:6px">'+due.length+'</span>'
+    +'</div>';
+  due.forEach(function(item){
+    html+=buildRetestCard(item.p,item.c,item.daysUntil);
+  });
+  html+='</div>';
+  return html;
+}
+
+function buildRetestCard(p,c,daysUntil){
+  var bizName=String(p.name||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  var daysLabel=daysUntil<0
+    ?Math.abs(daysUntil)+' days overdue'
+    :daysUntil===0?'Due today'
+    :'Due in '+daysUntil+' days';
+  var daysColor=daysUntil<0?'#ef4444':daysUntil<=2?'#f59e0b':'#64748b';
+  var hist=(c.service_history||[]).slice().sort(function(a,b){
+    return new Date(a.date)-new Date(b.date);
+  });
+  var firstVisit=hist[0]||{};
+  var firstAtp=firstVisit.atp_post||firstVisit.atp||firstVisit.atp_pre||null;
+  var firstAtpLabel=firstAtp!==null?'First visit ATP: '+firstAtp+' RLU':'';
+  return '<div style="background:#fff;border:1px solid #e2e8f0;'
+    +'border-radius:12px;padding:14px;margin-bottom:10px">'
+    +'<div style="display:flex;justify-content:space-between;'
+    +'align-items:flex-start;margin-bottom:10px">'
+    +'<div>'
+    +'<div style="font-size:14px;font-weight:600;color:#1e293b">'+bizName+'</div>'
+    +'<div style="font-size:11px;font-weight:600;color:'+daysColor+';margin-top:2px">'+daysLabel+'</div>'
+    +(firstAtpLabel?'<div style="font-size:11px;color:#94a3b8;margin-top:2px">'+firstAtpLabel+'</div>':'')
+    +'</div></div>'
+    +'<div style="font-size:12px;color:#64748b;margin-bottom:10px">'
+    +'Free 2-min ATP check. Show them how fast contamination rebuilds to convert to a plan.</div>'
+    +'<div style="display:flex;gap:8px">'
+    +'<button data-retestpid="'+p.id+'" '
+    +'ontouchend="event.preventDefault();openRetestLog(this.dataset.retestpid)" '
+    +'onclick="openRetestLog(this.dataset.retestpid)" '
+    +'style="flex:1;padding:10px;background:#0f1f38;color:#fff;border:none;'
+    +'border-radius:8px;font-size:13px;font-weight:600;font-family:inherit;'
+    +'cursor:pointer;touch-action:manipulation">&#x1F52C; Log Re-Test</button>'
+    +'<button data-dismisspid="'+p.id+'" '
+    +'ontouchend="event.preventDefault();dismissRetest(this.dataset.dismisspid)" '
+    +'onclick="dismissRetest(this.dataset.dismisspid)" '
+    +'style="padding:10px 14px;background:#fff;border:1px solid #e2e8f0;'
+    +'border-radius:8px;font-size:12px;color:#475569;font-family:inherit;'
+    +'cursor:pointer;touch-action:manipulation">Dismiss</button>'
+    +'</div></div>';
+}
+
+function openRetestLog(pid){
+  var p=P.find(function(x){return x.id==pid;});
+  if(!p)return;
+  var c=customers[pid]||{};
+  var hist=(c.service_history||[]).slice().sort(function(a,b){
+    return new Date(a.date)-new Date(b.date);
+  });
+  var firstVisit=hist[0]||{};
+  var firstAtp=firstVisit.atp_post||firstVisit.atp||firstVisit.atp_pre||null;
+  var firstDate=firstVisit.date||'';
+  var bizName=String(p.name||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  var bg=document.createElement('div');
+  bg.id='retest-bg';
+  bg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:3000;'
+    +'display:flex;align-items:flex-end;justify-content:center';
+  bg.innerHTML='<div style="background:#fff;border-radius:20px 20px 0 0;padding:24px;'
+    +'width:100%;max-width:480px;max-height:90vh;overflow-y:auto">'
+    +'<div style="font-size:16px;font-weight:700;color:#1e293b;margin-bottom:4px">'
+    +'&#x1F52C; Log Re-Test &#x2014; '+bizName+'</div>'
+    +'<div style="font-size:12px;color:#94a3b8;margin-bottom:20px">Free ATP check &#x2014; no charge to client</div>'
+    +(firstAtp!==null
+      ?'<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;'
+        +'padding:12px;margin-bottom:16px">'
+        +'<div style="font-size:11px;font-weight:700;color:#166534;'
+        +'text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">First Visit Result</div>'
+        +'<div style="font-size:13px;color:#166534">ATP after cleaning: <strong>'
+        +firstAtp+' RLU</strong>'+(firstDate?' ('+firstDate+')':'')+'</div></div>'
+      :'')
+    +'<div style="margin-bottom:16px">'
+    +'<label style="font-size:12px;font-weight:700;color:#475569;text-transform:uppercase;'
+    +'letter-spacing:.06em;display:block;margin-bottom:6px">Current ATP Reading (RLU)</label>'
+    +'<input type="number" id="retest-atp-input" placeholder="e.g. 89" min="0" '
+    +'style="width:100%;padding:12px;border:2px solid #e2e8f0;border-radius:8px;'
+    +'font-size:20px;font-weight:700;text-align:center;font-family:inherit;box-sizing:border-box">'
+    +'</div>'
+    +'<div style="margin-bottom:20px">'
+    +'<label style="font-size:12px;font-weight:700;color:#475569;text-transform:uppercase;'
+    +'letter-spacing:.06em;display:block;margin-bottom:6px">Notes (optional)</label>'
+    +'<textarea id="retest-notes-input" rows="2" placeholder="What did you observe?" '
+    +'style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;'
+    +'font-size:14px;font-family:inherit;box-sizing:border-box;resize:none"></textarea>'
+    +'</div>'
+    +'<div style="display:flex;gap:10px">'
+    +'<button id="retest-cancel-btn" '
+    +'ontouchend="event.preventDefault();closeRetestLog()" onclick="closeRetestLog()" '
+    +'style="flex:1;padding:14px;background:#f1f5f9;color:#475569;border:none;'
+    +'border-radius:10px;font-size:15px;font-family:inherit;cursor:pointer;'
+    +'touch-action:manipulation">Cancel</button>'
+    +'<button id="retest-save-btn" data-retestpid="'+pid+'" '
+    +'ontouchend="event.preventDefault();saveRetestLog(this.dataset.retestpid)" '
+    +'onclick="saveRetestLog(this.dataset.retestpid)" '
+    +'style="flex:2;padding:14px;background:#0f1f38;color:#fff;border:none;'
+    +'border-radius:10px;font-size:15px;font-weight:600;font-family:inherit;'
+    +'cursor:pointer;touch-action:manipulation">Save Re-Test</button>'
+    +'</div></div>';
+  document.body.appendChild(bg);
+  bg.addEventListener('touchend',function(e){if(e.target===bg)closeRetestLog();});
+  bg.addEventListener('click',function(e){if(e.target===bg)closeRetestLog();});
+}
+
+function closeRetestLog(){
+  var bg=document.getElementById('retest-bg');
+  if(bg)bg.remove();
+}
+
+function saveRetestLog(pid){
+  var atpVal=parseInt((document.getElementById('retest-atp-input')||{}).value||0);
+  var notes=((document.getElementById('retest-notes-input')||{}).value||'').trim();
+  if(!atpVal||atpVal<0){toast('Enter the ATP reading to continue');return;}
+  if(!customers[pid])customers[pid]={};
+  customers[pid].retest_done=true;
+  customers[pid].retest_atp=atpVal;
+  customers[pid].retest_date=localISO(new Date());
+  custSave();
+  closeRetestLog();
+  var atpColor=atpVal<=10?'#16a34a':atpVal<=100?'#d97706':'#dc2626';
+  var atpLabel=atpVal<=10?'PASS':atpVal<=100?'MARGINAL':'FAIL';
+  var c=customers[pid]||{};
+  var hist=(c.service_history||[]).slice().sort(function(a,b){
+    return new Date(a.date)-new Date(b.date);
+  });
+  var firstVisit=hist[0]||{};
+  var firstAtp=firstVisit.atp_post||firstVisit.atp||firstVisit.atp_pre||null;
+  var p=P.find(function(x){return x.id==pid;});
+  var bizName=p?String(p.name||'').replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';
+  var bg=document.createElement('div');
+  bg.id='retest-result-bg';
+  bg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:3000;'
+    +'display:flex;align-items:flex-end;justify-content:center';
+  bg.innerHTML='<div style="background:#fff;border-radius:20px 20px 0 0;padding:24px;'
+    +'width:100%;max-width:480px">'
+    +'<div style="text-align:center;margin-bottom:20px">'
+    +'<div style="font-size:48px;font-weight:800;color:'+atpColor+';line-height:1">'+atpVal+'</div>'
+    +'<div style="font-size:14px;font-weight:700;color:'+atpColor+';margin-top:4px">'
+    +atpLabel+' &#x2014; RLU at 60 days</div></div>'
+    +(firstAtp!==null
+      ?'<div style="display:flex;gap:10px;margin-bottom:20px">'
+        +'<div style="flex:1;background:#f0fdf4;border-radius:8px;padding:12px;text-align:center">'
+        +'<div style="font-size:10px;font-weight:700;color:#166534;text-transform:uppercase;'
+        +'letter-spacing:.06em">After Clean</div>'
+        +'<div style="font-size:28px;font-weight:800;color:#166534">'+firstAtp+'</div>'
+        +'<div style="font-size:10px;color:#166534">RLU</div></div>'
+        +'<div style="flex:1;background:#fef3c7;border-radius:8px;padding:12px;text-align:center">'
+        +'<div style="font-size:10px;font-weight:700;color:#92400e;text-transform:uppercase;'
+        +'letter-spacing:.06em">60 Days Later</div>'
+        +'<div style="font-size:28px;font-weight:800;color:'+atpColor+'">'+atpVal+'</div>'
+        +'<div style="font-size:10px;color:'+atpColor+'">RLU</div></div></div>'
+      :'')
+    +'<div style="font-size:13px;color:#475569;margin-bottom:20px;line-height:1.5">'
+    +'This is what happens without regular cleaning in a Florida kitchen. '
+    +'Ready to set up a plan?</div>'
+    +'<div style="display:flex;gap:10px">'
+    +'<button ontouchend="event.preventDefault();closeRetestResult()" '
+    +'onclick="closeRetestResult()" '
+    +'style="flex:1;padding:14px;background:#f1f5f9;color:#475569;border:none;'
+    +'border-radius:10px;font-size:14px;font-family:inherit;cursor:pointer;'
+    +'touch-action:manipulation">Not Now</button>'
+    +'<button data-closepid="'+pid+'" '
+    +'ontouchend="event.preventDefault();closeRetestResult();scOpenClose(this.dataset.closepid)" '
+    +'onclick="closeRetestResult();scOpenClose(this.dataset.closepid)" '
+    +'style="flex:2;padding:14px;background:linear-gradient(135deg,#c9973a,#e8b84b);'
+    +'color:#0f1f38;border:none;border-radius:10px;font-size:14px;font-weight:700;'
+    +'font-family:inherit;cursor:pointer;touch-action:manipulation">'
+    +'&#x1F4B3; Convert to Plan</button>'
+    +'</div></div>';
+  document.body.appendChild(bg);
+  bg.addEventListener('touchend',function(e){if(e.target===bg)closeRetestResult();});
+  bg.addEventListener('click',function(e){if(e.target===bg)closeRetestResult();});
+  rH();
+}
+
+function closeRetestResult(){
+  var bg=document.getElementById('retest-result-bg');
+  if(bg)bg.remove();
+}
+
+function dismissRetest(pid){
+  pid=parseInt(pid)||pid;
+  if(!customers[pid])customers[pid]={};
+  customers[pid].retest_done=true;
+  custSave();
+  var wrap=document.getElementById('retest-section-wrapper');
+  if(wrap)wrap.innerHTML=renderRetestSection();
+  toast('Re-test dismissed');
 }
 
 function fp(opts){
@@ -7249,6 +7468,8 @@ function renderBriefing(){
   // Defer heavy card rendering to next animation frame
   requestAnimationFrame(()=>{
   renderNudgeSection();
+  var _rtWrap=document.getElementById('retest-section-wrapper');
+  if(_rtWrap)_rtWrap.innerHTML=renderRetestSection();
   const today2=localISO(now);
   // All prospects with a follow-up date set (any outcome), not yet clients
   const today_iso=localISO(now);
@@ -8303,6 +8524,21 @@ function logServiceFromCal(id,opts){
   c.next_deep_clean_in=Math.max(0,nextDeepDays);
 
   custSave();
+
+  // Auto-schedule 60-day re-test for first-visit non-subscribers
+  var _rtHist=(c.service_history||[]);
+  var _rtP=P.find(function(x){return String(x.id)===String(id);});
+  var _rtSubscriber=_rtP&&(_rtP.status==='customer_recurring'||_rtP.status==='customer_quarterly');
+  if(_rtHist.length===1&&!_rtSubscriber&&!c.retest_scheduled){
+    var _rtD=new Date();
+    _rtD.setDate(_rtD.getDate()+60);
+    c.retest_scheduled=localISO(_rtD);
+    c.retest_done=false;
+    custSave();
+    setTimeout(function(){toast('60-day re-test scheduled for '
+      +_rtD.toLocaleDateString('en-US',{month:'short',day:'numeric'}));},1200);
+  }
+
   renderAtRisk();
   renderServiceCal();
   renderForecast();
@@ -9813,6 +10049,12 @@ function srSendEmail(p,atpVal,emailTo,notes){
     +'Pinellas Ice Co &nbsp;&middot;&nbsp; pinellasiceco.com &nbsp;&middot;&nbsp; (727) 855-6873<br>'
     +'FDA Food Code &sect;3-502.12 &nbsp;&middot;&nbsp; FL Administrative Code 64E-11 &nbsp;&middot;&nbsp; ATP testing per NSF/ANSI Standard 63'
     +'</div>'
+    +'<div style="margin-top:32px;padding-top:16px;border-top:1px solid #e2e8f0;'
+    +'text-align:center;font-size:11px;color:#94a3b8">'
+    +'Know a restaurant owner who could use this? '
+    +'Forward this report &#x2014; we&#x27;ll take care of them. '
+    +'<a href="tel:7278556873" style="color:#0f1f38;font-weight:600;text-decoration:none">'
+    +'(727) 855-6873</a></div>'
     +'</div></body></html>';
   return sendEmailViaProxy(emailTo,'Ice Machine Status Report — '+p.name,html);
 }
