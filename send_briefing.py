@@ -215,7 +215,7 @@ def get_eos_alerts(data_dir=None):
         files = sorted(glob.glob(str(data_dir / 'EOS_Weekly_Extract_*.xlsx')))
         if not files:
             return []
-        df = pd.read_excel(files[-1], engine='openpyxl')
+        df = pd.read_excel(files[-1])
         # Normalize column names for robustness
         df.columns = [str(c).strip() for c in df.columns]
         cols = {c.lower(): c for c in df.columns}
