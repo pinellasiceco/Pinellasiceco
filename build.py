@@ -3713,7 +3713,7 @@ function scOpenClose(p,bg){
     +'<div id="co-loading" style="display:none;text-align:center;margin-bottom:6px;font-size:12px;color:#94a3b8">Generating payment link&#x2026;</div>'
     +'<button id="co-confirm" onclick="scMarkWon()" ontouchend="event.preventDefault();scMarkWon()" style="width:100%;padding:9px;border:1px solid #e2e8f0;border-radius:8px;background:#f8fafc;color:#64748b;font-weight:600;font-size:11px;cursor:pointer;font-family:inherit;touch-action:manipulation;margin-bottom:4px">&#x2705; Mark Won (no Stripe)</button>'
     +'<div style="text-align:center;margin-bottom:4px">'
-    +'<button onclick="coUseOnetime()" ontouchend="event.preventDefault();coUseOnetime()" style="border:none;background:transparent;font-size:10px;color:#94a3b8;cursor:pointer;font-family:inherit;text-decoration:underline;touch-action:manipulation">Use $'+onetimePrice+' one-time deep clean instead</button>'
+    +'<button id="co-onetime-link" onclick="coUseOnetime()" ontouchend="event.preventDefault();coUseOnetime()" style="border:none;background:transparent;font-size:10px;color:#94a3b8;cursor:pointer;font-family:inherit;text-decoration:underline;touch-action:manipulation">Use $'+onetimePrice+' one-time deep clean instead</button>'
     +'</div>'
     +'<button id="co-cancel" onclick="closeOverlayById(\\'close-overlay\\')" ontouchend="event.preventDefault();closeOverlayById(\\'close-overlay\\')" style="width:100%;padding:8px;border:none;border-radius:8px;background:transparent;color:#94a3b8;font-size:11px;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
     +'</div>';
@@ -3750,11 +3750,8 @@ function coUpdateEntry(){
 }
 
 function coUseOnetime(){
-  var m=_closeState.machines||1;
-  var price=calcOnetime(m);
-  if(confirm('Book $'+price+' one-time deep clean for '+m+' machine'+(m>1?'s':'')+' (no ongoing plan)?')){
-    scMarkWon(true);
-  }
+  _closeState.plan=(_closeState.plan==='onetime')?'monthly':'onetime';
+  updateCloseDisplay();
 }
 
 function updateCloseDisplay(plan){
@@ -3770,25 +3767,39 @@ function updateCloseDisplay(plan){
   var y1El=document.getElementById('co-year1-val');
   var y1Det=document.getElementById('co-year1-detail');
   var discLabel=document.getElementById('co-disc-label');
+  var onetimeLink=document.getElementById('co-onetime-link');
   if(!mBtn||!qBtn)return;
+  var isOnetime=_closeState.plan==='onetime';
   var isMo=_closeState.plan==='monthly';
   mBtn.style.border=isMo?'2px solid #1e3a5f':'2px solid #e2e8f0';
   mBtn.style.background=isMo?'#eff6ff':'#f8fafc';
   mBtn.style.color=isMo?'#1e3a5f':'#64748b';
-  qBtn.style.border=!isMo?'2px solid #7c3aed':'2px solid #e2e8f0';
-  qBtn.style.background=!isMo?'#f5f3ff':'#f8fafc';
-  qBtn.style.color=!isMo?'#7c3aed':'#64748b';
-  var monthlyPrice=Math.max(0,calcMonthly(_closeState.plan,m)-planDisc);
-  var year1=entry+monthlyPrice*12;
+  var isQ=_closeState.plan==='quarterly';
+  qBtn.style.border=isQ?'2px solid #7c3aed':'2px solid #e2e8f0';
+  qBtn.style.background=isQ?'#f5f3ff':'#f8fafc';
+  qBtn.style.color=isQ?'#7c3aed':'#64748b';
+  if(discLabel)discLabel.textContent=isOnetime?'Price discount':'Monthly discount';
+  var onetimeBase=calcOnetime(m);
+  if(onetimeLink)onetimeLink.textContent=isOnetime?'Switch to monthly plan instead':'Use $'+onetimeBase+' one-time deep clean instead';
+  var year1,detail;
+  if(isOnetime){
+    var onetimePrice=Math.max(0,onetimeBase-planDisc);
+    year1=entry+onetimePrice;
+    detail='$'+entry+' entry + $'+onetimePrice+' one-time';
+  }else{
+    var monthlyPrice=Math.max(0,calcMonthly(_closeState.plan,m)-planDisc);
+    year1=entry+monthlyPrice*12;
+    detail='$'+entry+' entry + $'+monthlyPrice+'/mo \xd7 12';
+  }
   if(y1El)y1El.textContent='$'+year1.toLocaleString('en-US');
-  if(y1Det)y1Det.textContent='$'+entry+' entry + $'+monthlyPrice+'/mo \xd7 12';
-  if(discLabel)discLabel.textContent='Monthly discount';
+  if(y1Det)y1Det.textContent=detail;
 }
 
 function scMarkWon(onetime){
   var p=_scCardP,bg=_scCardBg;
   if(!p)return;
   var cs=_closeState,m=cs.machines||p.machines||1;
+  if(onetime===undefined)onetime=(cs.plan==='onetime');
   var epEl=document.getElementById('co-entry-price');
   var entry=epEl?parseInt(epEl.value)||0:cs.entryPrice;
   var noteEl=document.getElementById('co-note');

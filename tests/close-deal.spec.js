@@ -92,4 +92,22 @@ test.describe('Close Deal overlay', () => {
     await page.locator('#co-confirm').click();
     await expect(page.locator('#close-overlay')).not.toBeVisible({ timeout: 3000 });
   });
+
+  test('one-time toggle switches plan and updates display', async ({ page }) => {
+    await openCloseDeal(page);
+    const link = page.locator('#co-onetime-link');
+    await expect(link).toContainText('one-time');
+    // Toggle to one-time
+    await link.click();
+    await expect(link).toContainText('Switch to monthly');
+    // Year 1 detail should say "one-time" not "/mo × 12"
+    await expect(page.locator('#co-year1-detail')).toContainText('one-time');
+    // Discount label should say "Price discount"
+    await expect(page.locator('#co-disc-label')).toHaveText('Price discount');
+    // Toggle back to monthly
+    await link.click();
+    await expect(link).toContainText('one-time');
+    await expect(page.locator('#co-year1-detail')).toContainText('/mo');
+    await expect(page.locator('#co-disc-label')).toHaveText('Monthly discount');
+  });
 });
