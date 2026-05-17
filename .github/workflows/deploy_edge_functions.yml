@@ -2,7 +2,7 @@ name: Deploy Edge Functions
 
 on:
   push:
-    branches: ["main", "claude/fix-multiple-app-bugs-j1hpJ"]
+    branches: ["main", "claude/fix-multiple-app-bugs-j1hpJ", "claude/stripe-checkout-edge-function-BiUpp"]
     paths:
       - 'supabase/functions/**'
   workflow_dispatch:
