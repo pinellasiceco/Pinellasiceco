@@ -10852,6 +10852,10 @@ def main():
     OUTPUT_FILE.write_text(html, encoding='utf-8')
     size_kb = OUTPUT_FILE.stat().st_size // 1024
     print(f"  Written: {OUTPUT_FILE.name} ({size_kb}KB)")
+    # Keep index.html in sync (CI does cp prospecting_tool.html index.html; mirror locally)
+    index_path = OUTPUT_FILE.parent / 'index.html'
+    index_path.write_text(html, encoding='utf-8')
+    print(f"  Written: index.html")
     # Write sw.js for PWA offline support
     sw_path = OUTPUT_FILE.parent / 'sw.js'
     from datetime import datetime as _dt
