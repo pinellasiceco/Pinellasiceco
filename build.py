@@ -3857,7 +3857,8 @@ async function generateStripeCheckout(){
     var data=await resp.json();
     if(data.error)throw new Error(data.error);
     if(!data.url)throw new Error('No checkout URL returned');
-    if(pid&&customers[pid]){
+    if(pid){
+      if(!customers[pid])customers[pid]={};
       customers[pid]._pending_plan=plan;
       customers[pid]._pending_machines=m;
       customers[pid]._pending_plan_disc=planDisc;
