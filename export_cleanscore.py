@@ -323,6 +323,8 @@ def build_partners_export(partner_rows):
                 data = json.loads(data)
             except Exception:
                 data = {}
+        if not isinstance(data, dict):
+            data = {}
 
         ptype = str(data.get('type', '') or row.get('type', '')).lower()
         name = str(data.get('name', '') or row.get('name', ''))
@@ -356,10 +358,10 @@ def main():
     partner_rows = load_partners()
 
     violations = build_violations_export(records)
-    partners = build_partners_export(partner_rows)
-
     if violations:
         upload_to_storage('cleanscore_violations.json', violations)
+
+    partners = build_partners_export(partner_rows)
     if partners:
         upload_to_storage('cleanscore_partners.json', partners)
 
