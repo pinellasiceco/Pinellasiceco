@@ -2218,17 +2218,23 @@ header{background:var(--navy);
   <!-- TODAY -->
   <div class="panel on" id="p-today">
 
+    <!-- ── FRESH CITATIONS ──────────────────────────── -->
+    <div id="fresh-citations-wrapper" style="margin-bottom:12px"></div>
+
     <!-- ── TODAY'S PLAN ────────────────────────────── -->
     <div id="todays-plan" style="margin-bottom:12px"></div>
+
+    <!-- ── UNCLAIMED CITATIONS ──────────────────────── -->
+    <div id="unclaimed-citations-wrapper" style="margin-bottom:12px"></div>
+
+    <!-- ── IN PLAY ──────────────────────────────────── -->
+    <div id="nurture-section" style="margin-bottom:12px"></div>
 
     <!-- ── FOLLOW-UP NUDGES ──────────────────────────── -->
     <div id="nudge-section" style="margin-bottom:12px"></div>
 
     <!-- ── RE-TEST REMINDERS ─────────────────────────── -->
     <div id="retest-section-wrapper" style="margin-bottom:12px"></div>
-
-    <!-- ── INSPECTOR CONFIRMED ───────────────────────── -->
-    <div id="inspector-confirmed" style="margin-bottom:12px"></div>
 
     <!-- ── KPI ROW ─────────────────────────────────── -->
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:12px" id="kpi-row">
@@ -2277,57 +2283,6 @@ header{background:var(--navy);
       <div style="font-weight:700;font-size:12px;color:var(--navy);margin-bottom:8px">&#x274C; Why You're Losing</div>
       <div id="loss-breakdown" style="display:flex;flex-direction:column;gap:4px"></div>
       <div id="loss-empty" style="font-size:11px;color:var(--sub);display:none">Log some walk-ins to see loss patterns.</div>
-    </div>
-
-    <!-- ── ACTIVE NURTURE (In Play due) ─────────────── -->
-    <div style="margin-bottom:18px" id="nurture-section">
-      <div class="tsect-hdr">
-        <span>&#x1F7E1; In Play — Follow Up Due</span>
-        <span class="tsect-sub">All prospects with a follow-up date set, sorted by urgency.</span>
-      </div>
-      <div class="grid" id="nurture-grid"></div>
-      <div class="tempty" id="nurture-empty" style="display:none">No follow-ups due. &#x2713;</div>
-    </div>
-
-    <!-- ── NEW SINCE YESTERDAY ──────────────────────────────── -->
-    <div id="new-since-yesterday" style="margin-bottom:18px;display:none">
-      <div class="tsect-hdr">
-        <span>&#x1F195; New Since Yesterday</span>
-        <span class="tsect-sub">Escalated to CALLBACK/HOT, new ice violation, or big score jump since last rebuild.</span>
-      </div>
-      <div id="nsy-urgent-wrap" style="display:none">
-        <div style="font-size:9px;font-weight:700;color:#dc2626;text-transform:uppercase;letter-spacing:.06em;padding:4px 0 4px;display:flex;align-items:center;gap:5px">&#x1F6A8; Urgent</div>
-        <div class="grid" id="nsy-urgent-grid"></div>
-      </div>
-      <div id="nsy-warning-wrap" style="display:none">
-        <div style="font-size:9px;font-weight:700;color:#d97706;text-transform:uppercase;letter-spacing:.06em;padding:4px 0 4px;display:flex;align-items:center;gap:5px">&#x26A0;&#xFE0F; Watch</div>
-        <div class="grid" id="nsy-warning-grid"></div>
-      </div>
-      <div id="nsy-info-wrap" style="display:none">
-        <div style="font-size:9px;font-weight:700;color:#0891b2;text-transform:uppercase;letter-spacing:.06em;padding:4px 0 4px;display:flex;align-items:center;gap:5px">&#x2139;&#xFE0F; Info</div>
-        <div class="grid" id="nsy-info-grid"></div>
-      </div>
-      <div class="grid" id="nsy-grid" style="display:none"></div>
-    </div>
-
-    <!-- ── STRIKE ZONE ──────────────────────────────────── -->
-    <div id="strike-zone-section" style="margin-bottom:18px">
-      <div class="tsect-hdr">
-        <span>&#x1F3AF; Strike Zone</span>
-        <span class="tsect-sub">CALLBACK + chronic ice violations + inspection &le;60 days out.</span>
-      </div>
-      <div class="grid" id="strike-zone-grid"></div>
-      <div class="tempty" id="strike-zone-empty" style="display:none">No strike zone targets right now. &#x2713;</div>
-    </div>
-
-    <!-- ── BEST MOVE (cold targets) ─────────────────── -->
-    <div id="t-actnow">
-      <div class="tsect-hdr">
-        <span>&#x1F534; Best Cold Targets Today</span>
-        <span class="tsect-sub">Top 5 uncontacted. High score + callback priority.</span>
-      </div>
-      <div class="grid" id="tgrid-actnow"></div>
-      <div class="tempty" id="empty-actnow" style="display:none">No urgent prospects.</div>
     </div>
 
   </div>
@@ -4761,7 +4716,7 @@ function sw(t){
   const panelId=t==='clients'?'p-customers':'p-'+t;
   const panel=document.getElementById(panelId);
   if(panel)panel.classList.add('on');
-  if(t==='today'){renderBriefing();renderTodaysPlan();renderInspectorConfirmed();}
+  if(t==='today'){renderBriefing();renderTodaysPlan();renderFreshCitations();renderUnclaimedCitations();}
   else if(t==='all'){const ag=document.getElementById('agrid');if(ag)delete ag._glAttached;showDebugIfNeeded();populateCityFilter();var _pan=document.getElementById('p-all');if(_pan)void _pan.offsetHeight;rA();}
   else if(t==='pipeline'){renderPipeline();}
   else if(t==='route'){rRoute();}
@@ -5006,6 +4961,54 @@ function rA(){
     });
   }
 
+  // Apply Home tab temp filter (overrides preset)
+  if(_activeFilter){
+    var _c72,_c30,_tiso;
+    if(_activeFilter==='fresh_citations'){
+      _c72=new Date();_c72.setDate(_c72.getDate()-3);_c72.setHours(12,0,0,0);
+      list=list.filter(function(p){
+        if(!p.ice_confirmed_dbpr||!p.cit_latest)return false;
+        var st=p.status||'';if(st.indexOf('customer')===0)return false;
+        try{return new Date(p.cit_latest+'T12:00:00')>=_c72;}catch(e){return false;}
+      });
+      list.sort(function(a,b){return new Date(b.cit_latest)-new Date(a.cit_latest);});
+    }else if(_activeFilter==='unclaimed_citations'){
+      _c72=new Date();_c72.setDate(_c72.getDate()-3);_c72.setHours(12,0,0,0);
+      _c30=new Date();_c30.setDate(_c30.getDate()-30);_c30.setHours(12,0,0,0);
+      list=list.filter(function(p){
+        if(!p.ice_confirmed_dbpr||!p.cit_latest)return false;
+        var st=p.status||'';if(st.indexOf('customer')===0)return false;
+        var ld=log[p.id]||[];if(ld.length>0)return false;
+        try{var d=new Date(p.cit_latest+'T12:00:00');return d<_c72&&d>=_c30;}catch(e){return false;}
+      });
+      list.sort(function(a,b){return new Date(b.cit_latest)-new Date(a.cit_latest);});
+    }else if(_activeFilter==='today_plan'){
+      list=list.filter(function(p){
+        return !isHandledElsewhere(p)&&!isC(p.id)&&(p.priority==='CALLBACK'||p.priority==='HOT'||p.priority==='WARM');
+      });
+      list.sort(function(a,b){
+        var PRI2={CALLBACK:4,HOT:3,WARM:2};
+        return (PRI2[b.priority]||1)*((b.machines||1)*149)-(PRI2[a.priority]||1)*((a.machines||1)*149);
+      });
+    }else if(_activeFilter==='in_play_overdue'){
+      _tiso=localISO(new Date());
+      list=list.filter(function(p){
+        var lc=getLC(p.id);
+        return lc&&lc.followup&&lc.followup<_tiso;
+      });
+      list.sort(function(a,b){
+        var af=(getLC(a.id)||{}).followup||'';
+        var bf=(getLC(b.id)||{}).followup||'';
+        return af.localeCompare(bf);
+      });
+    }else if(_activeFilter==='nudge_eligible'){
+      list=list.filter(function(p){
+        return getNudgeTemplate(p.id)!==null&&!(customers[p.id]||{}).nudge_dismissed
+          &&(!!(customers[p.id]||{}).dm_phone||!!p.phone);
+      });
+    }
+  }
+
   updateDbprChipCounts();
   document.getElementById('acnt').textContent=list.length+' prospects';
   const g=document.getElementById('agrid');
@@ -5021,7 +5024,44 @@ function rA(){
 }
 
 let presetFilter=null;
+var _activeFilter=null;
+
+function viewAllFilter(filterKey){
+  _activeFilter=filterKey;
+  sw('all');
+  setTimeout(function(){applyTempFilter(filterKey);},150);
+}
+
+function applyTempFilter(filterKey){
+  var existing=document.getElementById('temp-filter-banner');
+  if(existing)existing.remove();
+  var labels={
+    'fresh_citations':'Fresh Citations (last 72 hours)',
+    'unclaimed_citations':'Unclaimed DBPR Citations (3–30 days)',
+    ‘today_plan’:’Today&#x27;s Plan — Top Scored’,
+    'in_play_overdue':'In Play — Overdue Follow-Ups',
+    'nudge_eligible':'Nudge-Eligible Prospects'
+  };
+  var label=labels[filterKey]||filterKey;
+  var banner=document.createElement('div');
+  banner.id='temp-filter-banner';
+  banner.style.cssText='background:#dbeafe;border:1px solid #93c5fd;border-radius:8px;padding:8px 12px;margin:0 0 10px 0;display:flex;align-items:center;justify-content:space-between;font-size:12px;color:#1d4ed8;font-weight:600';
+  banner.innerHTML='&#x1F50D; Filtered: '+label
+    +'<button ontouchend="event.preventDefault();clearTempFilter()" onclick="clearTempFilter()" style="background:none;border:none;color:#1d4ed8;font-size:16px;cursor:pointer;padding:0 0 0 8px;touch-action:manipulation">&#x2715;</button>';
+  var panel=document.getElementById('p-all');
+  if(panel)panel.insertBefore(banner,panel.firstChild);
+  rA();
+}
+
+function clearTempFilter(){
+  _activeFilter=null;
+  var banner=document.getElementById('temp-filter-banner');
+  if(banner)banner.remove();
+  rA();
+}
+
 function setPreset(k){
+  _activeFilter=null;
   document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('on'));
   document.getElementById('pre-'+k)?.classList.add('on');
   // Reset city/county/status filters
@@ -7265,6 +7305,18 @@ function buildTodaysPlan(){
   return P.filter(function(p){
     if(!isPinellas(p))return false;
     if(daysSinceContact(p.id)<7)return false;
+    // Exclude handled by Fresh/Unclaimed sections
+    if(p.ice_confirmed_dbpr){
+      if(p.cit_latest){
+        try{
+          var _cdate=new Date(p.cit_latest+'T12:00:00');
+          var _cut=new Date();_cut.setDate(_cut.getDate()-3);_cut.setHours(12,0,0,0);
+          if(_cdate>=_cut)return false; // In Fresh Citations
+        }catch(e){}
+      }
+      var _ldata=log[p.id]||[];
+      if(!_ldata.length)return false; // In Unclaimed Citations
+    }
     return !isC(p.id)&&(p.priority==='CALLBACK'||p.priority==='HOT'||p.priority==='WARM');
   }).map(function(p){
     var entries=log[p.id]||[];
@@ -7298,35 +7350,154 @@ function renderTodaysPlan(){
   }).join('');
   el.innerHTML='<div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden">'
     +'<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#0f1f38">'
-      +'<div style="font-size:12px;font-weight:800;color:#fff;letter-spacing:.04em">&#x1F4CB; TODAY&#x27;S PLAN</div>'
-      +'<button onclick="addPlanToRoute()" ontouchend="event.preventDefault();addPlanToRoute()" style="font-size:9px;padding:4px 8px;background:#ea580c;color:#fff;border:none;border-radius:5px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Add All to Route &#x2192;</button>'
+      +'<div style="font-size:12px;font-weight:800;color:#fff;letter-spacing:.04em">&#x1F4CB; TODAY&#x27;S PLAN <span style="font-size:10px;font-weight:600;color:rgba(255,255,255,.7);margin-left:4px">('+plan.length+')</span></div>'
+      +'<button ontouchend="event.preventDefault();addPlanToRoute()" onclick="addPlanToRoute()" style="font-size:9px;padding:4px 8px;background:#ea580c;color:#fff;border:none;border-radius:5px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Add All to Route &#x2192;</button>'
     +'</div>'
     +rows
+    +'<div style="text-align:center;padding:8px 0">'
+    +'<button data-vaf="today_plan" ontouchend="event.preventDefault();viewAllFilter(this.dataset.vaf)" onclick="viewAllFilter(this.dataset.vaf)" style="font-size:12px;color:#94a3b8;font-weight:600;background:none;border:none;cursor:pointer;font-family:inherit;touch-action:manipulation">View All in Prospects &#x2192;</button>'
+    +'</div>'
     +'</div>';
 }
-function renderInspectorConfirmed(){
-  var el=document.getElementById('inspector-confirmed');
+function isHandledElsewhere(p){
+  if(p.ice_confirmed_dbpr&&p.cit_latest){
+    try{
+      var _cd=new Date(p.cit_latest+'T12:00:00');
+      var _cut=new Date();_cut.setDate(_cut.getDate()-3);_cut.setHours(12,0,0,0);
+      if(_cd>=_cut)return true;
+    }catch(e){}
+  }
+  if(p.ice_confirmed_dbpr&&!(log[p.id]||[]).length)return true;
+  return false;
+}
+
+function renderFreshCitations(){
+  var el=document.getElementById('fresh-citations-wrapper');
   if(!el)return;
-  var confirmed=P.filter(function(p){return p.ice_confirmed_dbpr&&isPinellas(p)&&!isC(p.id);})
-    .sort(function(a,b){return (b.cit_ice_count||0)-(a.cit_ice_count||0);}).slice(0,5);
-  if(!confirmed.length){el.innerHTML='';return;}
-  var rows=confirmed.map(function(p){
-    var obs=p.cit_observation?('<div style="font-size:9px;color:#6d28d9;margin-top:2px;font-style:italic">&#x201C;'+p.cit_observation.slice(0,90)+(p.cit_observation.length>90?'&#x2026;':'')+'&#x201D;</div>'):'';
-    return '<div onclick="showCard('+p.id+')" ontouchend="event.preventDefault();showCard('+p.id+')" style="display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-bottom:1px solid #ede9fe;cursor:pointer;touch-action:manipulation">'
-      +'<div style="font-size:15px;flex-shrink:0">&#x1F575;&#xFE0F;</div>'
-      +'<div style="flex:1;min-width:0">'
-        +'<div style="font-size:11px;font-weight:700;color:#0f1f38;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+p.name+'</div>'
-        +'<div style="font-size:9px;color:#6d28d9;font-weight:600">'+(p.cit_ice_count||0)+'x citation'+(p.cit_ice_count!==1?'s':'')+' confirmed'+(p.cit_latest?' &bull; '+p.cit_latest:'')+'</div>'
-        +obs
-      +'</div>'
-      +'<div style="font-size:10px;font-weight:700;color:#059669;flex-shrink:0">$'+((p.machines||1)*149)+'/mo</div>'
+  var now=new Date();now.setHours(12,0,0,0);
+  var cutoff=new Date(now);cutoff.setDate(cutoff.getDate()-3);
+  var fresh=[];
+  P.forEach(function(p){
+    if(!isPinellas(p))return;
+    if(!p.ice_confirmed_dbpr)return;
+    if(!p.cit_latest)return;
+    var st=p.status||'';
+    if(st.indexOf('customer')===0)return;
+    if(st==='won')return;
+    try{
+      var cd=new Date(p.cit_latest+'T12:00:00');
+      if(cd<cutoff)return;
+    }catch(e){return;}
+    fresh.push(p);
+  });
+  if(!fresh.length){el.innerHTML='';return;}
+  fresh.sort(function(a,b){return new Date(b.cit_latest)-new Date(a.cit_latest);});
+  var total=fresh.length;
+  var preview=fresh.slice(0,3);
+  var html='<div class="home-section" id="fresh-citations-section">'
+    +'<div style="background:#fef2f2;border-radius:8px;padding:8px 12px;margin-bottom:10px;border-left:3px solid #ef4444;display:flex;align-items:center;justify-content:space-between">'
+    +'<span style="color:#dc2626;font-weight:700;font-size:12px">&#x1F6A8; Fresh Citations</span>'
+    +'<span style="font-size:11px;color:#dc2626;font-weight:700">'+total+' new</span>'
     +'</div>';
-  }).join('');
-  el.innerHTML='<div style="background:#fff;border:1px solid #ede9fe;border-radius:10px;overflow:hidden">'
-    +'<div style="padding:10px 12px;background:#6d28d9">'
-      +'<div style="font-size:12px;font-weight:800;color:#fff;letter-spacing:.04em">&#x1F575;&#xFE0F; INSPECTOR CONFIRMED ICE CITATIONS</div>'
-    +'</div>'
-    +rows
+  preview.forEach(function(p){html+=buildFreshCitationCard(p);});
+  if(total>3){
+    html+='<div style="text-align:center;padding:8px 0">'
+      +'<button data-vaf="fresh_citations" ontouchend="event.preventDefault();viewAllFilter(this.dataset.vaf)" onclick="viewAllFilter(this.dataset.vaf)" style="font-size:13px;color:#dc2626;font-weight:600;background:none;border:none;cursor:pointer;font-family:inherit;touch-action:manipulation">'
+      +'View All '+total+' Fresh Citations in Prospects &#x2192;'
+      +'</button></div>';
+  }
+  html+='</div>';
+  el.innerHTML=html;
+}
+
+function buildFreshCitationCard(p){
+  var bizName=String(p.name||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  var citLabel='';
+  try{
+    var d=new Date(p.cit_latest+'T12:00:00');
+    var today=new Date();today.setHours(12,0,0,0);
+    var daysAgo=Math.floor((today-d)/864e5);
+    citLabel=daysAgo===0?'Cited today':daysAgo===1?'Cited yesterday':'Cited '+daysAgo+' days ago';
+  }catch(e){citLabel=p.cit_latest||'';}
+  var obs=String(p.cit_observation||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  if(obs.length>120)obs=obs.slice(0,120)+'&#x2026;';
+  var city=String(p.city||'').replace(/</g,'&lt;');
+  var logData=log[p.id]||[];
+  var prevBadge=logData.length?'<span style="font-size:9px;padding:1px 5px;border-radius:4px;background:#fef3c7;color:#92400e;font-weight:700;margin-left:4px">prev contact</span>':'';
+  return '<div style="background:#fff;border:1px solid #fecaca;border-radius:12px;padding:14px;margin-bottom:10px;border-left:3px solid #ef4444">'
+    +'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">'
+    +'<div style="flex:1">'
+    +'<div style="font-size:14px;font-weight:700;color:#1e293b">'+bizName+prevBadge+'</div>'
+    +'<div style="font-size:11px;color:#dc2626;font-weight:600;margin-top:2px">'+citLabel+(city?' &middot; '+city:'')+'</div>'
+    +'</div></div>'
+    +(obs?'<div style="font-size:12px;color:#64748b;line-height:1.4;font-style:italic;margin-bottom:10px">&#x201C;'+obs+'&#x201D;</div>':'')
+    +'<button data-freshpid="'+p.id+'" ontouchend="event.preventDefault();showCard(this.dataset.freshpid)" onclick="showCard(this.dataset.freshpid)" style="width:100%;padding:10px;background:#0f1f38;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;touch-action:manipulation">&#x1F4CB; View &amp; Log Contact</button>'
+    +'</div>';
+}
+
+function renderUnclaimedCitations(){
+  var el=document.getElementById('unclaimed-citations-wrapper');
+  if(!el)return;
+  var now=new Date();now.setHours(12,0,0,0);
+  var cutoff72h=new Date(now);cutoff72h.setDate(cutoff72h.getDate()-3);
+  var cutoff30d=new Date(now);cutoff30d.setDate(cutoff30d.getDate()-30);
+  var unclaimed=[];
+  P.forEach(function(p){
+    if(!isPinellas(p))return;
+    if(!p.ice_confirmed_dbpr)return;
+    if(!p.cit_latest)return;
+    var st=p.status||'';
+    if(st.indexOf('customer')===0)return;
+    if(st==='won')return;
+    var logData=log[p.id]||[];
+    if(logData.length>0)return;
+    try{
+      var citDate=new Date(p.cit_latest+'T12:00:00');
+      if(citDate>=cutoff72h)return;
+      if(citDate<cutoff30d)return;
+    }catch(e){return;}
+    unclaimed.push(p);
+  });
+  if(!unclaimed.length){el.innerHTML='';return;}
+  unclaimed.sort(function(a,b){return new Date(b.cit_latest)-new Date(a.cit_latest);});
+  var total=unclaimed.length;
+  var preview=unclaimed.slice(0,3);
+  var html='<div class="home-section" id="unclaimed-citations-section">'
+    +'<div style="background:#fffbeb;border-radius:8px;padding:8px 12px;margin-bottom:10px;border-left:3px solid #d97706;display:flex;align-items:center;justify-content:space-between">'
+    +'<span style="color:#92400e;font-weight:700;font-size:12px">&#x1F4CB; Unclaimed Citations</span>'
+    +'<span style="font-size:11px;color:#d97706;font-weight:700">'+total+' never contacted</span>'
+    +'</div>';
+  preview.forEach(function(p){html+=buildUnclaimedCard(p);});
+  if(total>3){
+    html+='<div style="text-align:center;padding:8px 0">'
+      +'<button data-vaf="unclaimed_citations" ontouchend="event.preventDefault();viewAllFilter(this.dataset.vaf)" onclick="viewAllFilter(this.dataset.vaf)" style="font-size:13px;color:#d97706;font-weight:600;background:none;border:none;cursor:pointer;font-family:inherit;touch-action:manipulation">'
+      +'View All '+total+' in Prospects &#x2192;'
+      +'</button></div>';
+  }
+  html+='</div>';
+  el.innerHTML=html;
+}
+
+function buildUnclaimedCard(p){
+  var bizName=String(p.name||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  var citLabel='';
+  try{
+    var d=new Date(p.cit_latest+'T12:00:00');
+    var today=new Date();today.setHours(12,0,0,0);
+    var daysAgo=Math.floor((today-d)/864e5);
+    citLabel=daysAgo<=1?'Cited recently':'Cited '+daysAgo+' days ago';
+  }catch(e){citLabel=p.cit_latest||'';}
+  var obs=String(p.cit_observation||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  if(obs.length>100)obs=obs.slice(0,100)+'&#x2026;';
+  var city=String(p.city||'').replace(/</g,'&lt;');
+  return '<div style="background:#fff;border:1px solid #fde68a;border-radius:12px;padding:14px;margin-bottom:10px;border-left:3px solid #d97706">'
+    +'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">'
+    +'<div style="flex:1">'
+    +'<div style="font-size:14px;font-weight:700;color:#1e293b">'+bizName+'</div>'
+    +'<div style="font-size:11px;color:#d97706;font-weight:600;margin-top:2px">'+citLabel+(city?' &middot; '+city:'')+'</div>'
+    +'</div></div>'
+    +(obs?'<div style="font-size:12px;color:#64748b;line-height:1.4;font-style:italic;margin-bottom:10px">&#x201C;'+obs+'&#x201D;</div>':'')
+    +'<button data-ucpid="'+p.id+'" ontouchend="event.preventDefault();showCard(this.dataset.ucpid)" onclick="showCard(this.dataset.ucpid)" style="width:100%;padding:10px;background:#d97706;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;touch-action:manipulation">&#x1F4CB; Log First Contact</button>'
     +'</div>';
 }
 
@@ -7485,6 +7656,8 @@ function renderBriefing(){
   // Defer heavy card rendering to next animation frame
   requestAnimationFrame(()=>{
   renderNudgeSection();
+  renderFreshCitations();
+  renderUnclaimedCitations();
   var _rtWrap=document.getElementById('retest-section-wrapper');
   if(_rtWrap)_rtWrap.innerHTML=renderRetestSection();
   const today2=localISO(now);
@@ -7510,88 +7683,43 @@ function renderBriefing(){
   const fuSoon    =allFollowups.filter(p=>{const d=getLC(p.id)?.followup||'';return d>today_iso&&d<=in7;});
   const fuUpcoming=allFollowups.filter(p=>{const d=getLC(p.id)?.followup||'';return d>in7&&d<=in14;});
 
-  // Legacy: nurturePros for backward compat
-  const nurturePros=allFollowups.slice(0,6);
-
-  const nGrid=document.getElementById('nurture-grid');
-  const nEmpty=document.getElementById('nurture-empty');
-  if(nGrid){
-    if(!allFollowups.length){nGrid.innerHTML='';if(nEmpty)nEmpty.style.display='block';}
-        else{
-      if(nEmpty)nEmpty.style.display='none';
-      function fuSection(label,color,items){
-        if(!items.length)return '';
-        return '<div style="font-size:9px;font-weight:700;color:'+color+';text-transform:uppercase;letter-spacing:.06em;padding:6px 0 4px">'+label+' ('+items.length+')</div>'
-          +items.map(p=>cardHTML(p)).join('');
+  // ── IN PLAY — Overdue + Today only ──────────────────────────────────
+  var nSect=document.getElementById('nurture-section');
+  if(nSect){
+    if(!fuOverdue.length&&!fuToday.length){
+      nSect.innerHTML='';
+    }else{
+      var inplayHtml='<div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;margin-bottom:4px">'
+        +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#1e293b">'
+        +'<span style="font-size:12px;font-weight:800;color:#fff;letter-spacing:.04em">&#x1F7E1; In Play</span>'
+        +'</div>';
+      if(fuOverdue.length){
+        var mostOv=0;
+        fuOverdue.forEach(function(p){
+          var lc=getLC(p.id);
+          if(lc&&lc.followup){try{var dd=Math.floor((new Date()-new Date(lc.followup+'T12:00:00'))/864e5);if(dd>mostOv)mostOv=dd;}catch(e){}}
+        });
+        var ovColor=mostOv>=7?'#dc2626':mostOv>=3?'#d97706':'#64748b';
+        inplayHtml+='<div style="display:flex;align-items:center;justify-content:space-between;font-size:9px;font-weight:700;color:'+ovColor+';text-transform:uppercase;letter-spacing:.06em;padding:6px 12px 2px">'
+          +'<span>&#x26A0;&#xFE0F; Overdue ('+fuOverdue.length+')</span>'
+          +'<button data-vaf="in_play_overdue" ontouchend="event.preventDefault();viewAllFilter(this.dataset.vaf)" onclick="viewAllFilter(this.dataset.vaf)" style="font-size:10px;color:'+ovColor+';font-weight:600;background:none;border:none;cursor:pointer;font-family:inherit;touch-action:manipulation">View All &#x2192;</button>'
+          +'</div>';
+        fuOverdue.forEach(function(p){
+          var lc=getLC(p.id);var dOv=0;
+          if(lc&&lc.followup){try{dOv=Math.floor((new Date()-new Date(lc.followup+'T12:00:00'))/864e5);}catch(e){}}
+          var oc=dOv>=7?'#dc2626':dOv>=3?'#d97706':'#64748b';
+          var ovLbl='<div style="font-size:9px;font-weight:700;color:'+oc+';padding:4px 12px 0">'+dOv+(dOv>=7?' days overdue &#x26A0;&#xFE0F;':' days overdue')+'</div>';
+          inplayHtml+=ovLbl+cardHTML(p);
+        });
       }
-      nGrid.innerHTML=
-        fuSection('⚠️ Overdue','#dc2626',fuOverdue)
-        +fuSection('📅 Today','#059669',fuToday)
-        +fuSection('📆 This Week','#d97706',fuSoon)
-        +fuSection('🔭 Upcoming','#2563eb',fuUpcoming);
-      attachGridListeners(nGrid);
-    }
-  }
-
-  // ── NEW SINCE YESTERDAY — Urgent / Watch / Info tiers ────────────────
-  const nsyEl=document.getElementById('new-since-yesterday');
-  if(nsyEl){
-    const newBizs=P.filter(p=>p.new_reason&&!isC(p.id)&&isPinellas(p))
-      .sort((a,b)=>(PO[a.priority]??99)-(PO[b.priority]??99)||(b.score||0)-(a.score||0));
-    if(newBizs.length){
-      nsyEl.style.display='block';
-      const nsyUrgent  =newBizs.filter(p=>p.change_severity==='urgent').slice(0,4);
-      const nsyWarning =newBizs.filter(p=>p.change_severity==='warning').slice(0,3);
-      const nsyInfo    =newBizs.filter(p=>p.change_severity==='info'||!p.change_severity).slice(0,3);
-      function _nsySection(wrapId,gridId,items){
-        const wrap=document.getElementById(wrapId);
-        const grid=document.getElementById(gridId);
-        if(!wrap||!grid)return;
-        if(items.length){
-          wrap.style.display='block';
-          grid.innerHTML=items.map(p=>cardHTML(p)).join('');
-          attachGridListeners(grid);
-        } else {
-          wrap.style.display='none';
-        }
+      if(fuToday.length){
+        inplayHtml+='<div style="font-size:9px;font-weight:700;color:#059669;text-transform:uppercase;letter-spacing:.06em;padding:6px 12px 2px">&#x1F4C5; Today ('+fuToday.length+')</div>';
+        fuToday.forEach(function(p){inplayHtml+=cardHTML(p);});
       }
-      _nsySection('nsy-urgent-wrap','nsy-urgent-grid',nsyUrgent);
-      _nsySection('nsy-warning-wrap','nsy-warning-grid',nsyWarning);
-      _nsySection('nsy-info-wrap','nsy-info-grid',nsyInfo);
-    } else {
-      nsyEl.style.display='none';
+      inplayHtml+='</div>';
+      nSect.innerHTML=inplayHtml;
+      attachGridListeners(nSect);
     }
-  }
-
-  // ── STRIKE ZONE (CALLBACK + chronic + ≤60d inspection) ───────────────
-  const strikeZone=P.filter(p=>{
-    if(!isPinellas(p))return false;
-    if(daysSinceContact(p.id)<30)return false;
-    if(isC(p.id))return false;
-    return p.priority==='CALLBACK'&&p.chronic&&p.days_until<=60;
-  }).sort((a,b)=>a.days_until-b.days_until).slice(0,8);
-  const szGrid=document.getElementById('strike-zone-grid');
-  const szEmpty=document.getElementById('strike-zone-empty');
-  if(szGrid){
-    if(!strikeZone.length){szGrid.innerHTML='';if(szEmpty)szEmpty.style.display='block';}
-    else{if(szEmpty)szEmpty.style.display='none';szGrid.innerHTML=strikeZone.map(p=>cardHTML(p)).join('');attachGridListeners(szGrid);}
-  }
-
-  // ── BEST COLD TARGETS ─────────────────────────────────────────────────
-  const coldTargets=P.filter(p=>{
-    if(!isPinellas(p))return false;
-    if(daysSinceContact(p.id)<30)return false;
-    if(isC(p.id))return false;
-    return p.priority==='CALLBACK'||p.priority==='HOT';
-  }).sort((a,b)=>(PO[a.priority]??99)-(PO[b.priority]??99)||(b.score||0)-(a.score||0)).slice(0,5);
-
-  const aGrid=document.getElementById('tgrid-actnow');
-  const aEmpty=document.getElementById('empty-actnow');
-  if(aGrid){
-    if(!coldTargets.length){aGrid.innerHTML='';if(aEmpty)aEmpty.style.display='block';}
-    else{if(aEmpty)aEmpty.style.display='none';aGrid.innerHTML=coldTargets.map(p=>cardHTML(p)).join('');
-    attachGridListeners(aGrid);}
-
   }
   }); // end requestAnimationFrame
 }
@@ -7880,7 +8008,7 @@ function subscribeRealtime(){
         var row=payload.new||payload.old;if(!row)return;
         if(row.data)log[row.prospect_id]=row.data;
         try{localStorage.setItem('pic_v4',JSON.stringify(log));}catch(e){}
-        if(tab==='today'||tab==='home'){renderBriefing();renderTodaysPlan();renderInspectorConfirmed();}
+        if(tab==='today'||tab==='home'){renderBriefing();renderTodaysPlan();renderFreshCitations();renderUnclaimedCitations();}
         else if(tab==='prospects')rA();
         else if(tab==='pipeline')renderPipeline(pipeStage);
         flashSyncDot();
@@ -10427,7 +10555,7 @@ function _renderApp(){
   updateSyncDot();
   const si=document.getElementById('si');if(si)si.blur();
   setTimeout(function(){
-    renderBriefing();renderTodaysPlan();renderInspectorConfirmed();
+    renderBriefing();renderTodaysPlan();renderFreshCitations();renderUnclaimedCitations();
     if(tab==='all')rA();
     else if(tab==='clients'){if(clientTab==='service')rService();else rCust();}
     else if(tab==='pipeline')renderPipeline();
