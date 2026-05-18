@@ -5038,7 +5038,7 @@ function applyTempFilter(filterKey){
   var labels={
     'fresh_citations':'Fresh Citations (last 72 hours)',
     'unclaimed_citations':'Unclaimed DBPR Citations (3–30 days)',
-    ‘today_plan’:’Today&#x27;s Plan — Top Scored’,
+    'today_plan':"Today's Plan — Top Scored",
     'in_play_overdue':'In Play — Overdue Follow-Ups',
     'nudge_eligible':'Nudge-Eligible Prospects'
   };
