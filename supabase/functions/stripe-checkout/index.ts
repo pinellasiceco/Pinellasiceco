@@ -136,7 +136,7 @@ Deno.serve(async (req) => {
       line_items: lineItems,
       success_url: successUrl,
       cancel_url: CANCEL_URL,
-      customer_creation: 'always',
+      ...(plan === 'onetime' ? { customer_creation: 'always' as const } : {}),
       custom_fields: [
         {
           key: 'terms_agreement',
