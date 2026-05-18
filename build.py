@@ -1289,6 +1289,10 @@ def run(csv_paths):
         rf = None
         print("No training data — model skipped.\n")
 
+    if len(routine) == 0:
+        print("No routine inspection data — returning empty records.")
+        return []
+
     # Per-establishment history
     ice_hist = routine.groupby('license_id').agg(
         avg_interval  =('interval','mean'),
@@ -1325,7 +1329,7 @@ def run(csv_paths):
         late  = g.iloc[mid:]['dr'].mean()
         return max(0, late - early)  # positive = getting worse
     esc = routine.groupby('license_id').apply(escalation_score)
-    esc_df = esc.reset_index()
+    esc_df = esc.reset_index()[['license_id', 0]].rename(columns={0: 'escalation'}) if len(routine) else pd.DataFrame(columns=['license_id','escalation'])
     esc_df.columns = ['license_id','escalation']
     ice_hist = ice_hist.merge(esc_df, on='license_id', how='left')
     ice_hist['escalation'] = ice_hist['escalation'].fillna(0)
@@ -3725,6 +3729,7 @@ function scOpenClose(p,bg){
     +'<button id="co-charge-btn" ontouchend="event.preventDefault();coChargeNow()" onclick="coChargeNow()" style="flex:1;padding:13px 8px;background:linear-gradient(135deg,#c9973a,#e8b84b);color:#0f1f38;border:none;border-radius:10px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;touch-action:manipulation">&#x1F4B3; Charge Now</button>'
     +'</div>'
     +'<div id="co-loading" style="display:none;text-align:center;margin-bottom:6px;font-size:12px;color:#94a3b8">Generating payment link&#x2026;</div>'
+    +'<div id="co-error" style="display:none;text-align:center;margin-bottom:6px;font-size:13px;color:#dc2626;font-weight:600;padding:10px;background:#fef2f2;border-radius:8px;word-break:break-word"></div>'
     +'<button id="co-confirm" onclick="scMarkWon()" ontouchend="event.preventDefault();scMarkWon()" style="width:100%;padding:9px;border:1px solid #e2e8f0;border-radius:8px;background:#f8fafc;color:#64748b;font-weight:600;font-size:11px;cursor:pointer;font-family:inherit;touch-action:manipulation;margin-bottom:4px">&#x2705; Mark Won (no Stripe)</button>'
     +'<div style="text-align:center;margin-bottom:4px">'
     +'<button id="co-onetime-link" onclick="coUseOnetime()" ontouchend="event.preventDefault();coUseOnetime()" style="border:none;background:transparent;font-size:10px;color:#94a3b8;cursor:pointer;font-family:inherit;text-decoration:underline;touch-action:manipulation">Use $'+onetimePrice+' one-time deep clean instead</button>'
@@ -3898,7 +3903,8 @@ async function generateStripeCheckout(){
     return data.url;
   }catch(err){
     console.error('Stripe checkout error:',err);
-    toast('Payment link failed — '+err.message);
+    var errEl=document.getElementById('co-error');
+    if(errEl){errEl.textContent='Error: '+err.message;errEl.style.display='block';}
     return null;
   }finally{
     if(loadingEl)loadingEl.style.display='none';
