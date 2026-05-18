@@ -50,134 +50,95 @@ def make_front() -> str:
     overflow: hidden;
     background: #0f1f38;
     font-family: 'Barlow', sans-serif;
-    display: flex;
-    flex-direction: column;
   }}
 
-  /* TOP BAR — tall enough for a real logo */
+  /* TOP BAR */
   .top-bar {{
-    width: 1800px; height: 196px;
+    width: 1800px; height: 72px;
     background: #162844;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 72px;
+    padding: 0 60px;
     flex-shrink: 0;
-    border-bottom: 3px solid #c9973a;
   }}
   .top-bar img {{
-    height: 148px;
-    max-width: 700px;
-    object-fit: contain;
-    object-position: left center;
+    height: 44px;
     filter: brightness(0) invert(1);
     display: block;
-  }}
-  .top-bar-right {{
-    text-align: right;
-    flex-shrink: 0;
   }}
   .top-bar-url {{
     font-family: 'Barlow', sans-serif;
     font-weight: 500;
-    font-size: 22px;
+    font-size: 18px;
     color: #c9973a;
-    letter-spacing: 0.04em;
-    display: block;
-  }}
-  .top-bar-sub {{
-    font-family: 'Barlow', sans-serif;
-    font-weight: 400;
-    font-size: 15px;
-    color: rgba(255,255,255,0.45);
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    margin-top: 6px;
-    display: block;
+    letter-spacing: 0.03em;
   }}
 
-  /* HERO — fills the space between bars */
+  /* HERO */
   .hero {{
     flex: 1;
-    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 28px 100px 20px;
+    padding: 0 80px;
     text-align: center;
-    overflow: hidden;
-  }}
-  /* Faint watermark logo fills background */
-  .hero-watermark {{
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 860px;
-    opacity: 0.04;
-    filter: brightness(0) invert(1);
-    pointer-events: none;
   }}
   .headline-number {{
     font-family: 'Playfair Display', serif;
     font-weight: 900;
-    font-size: 268px;
+    font-size: 164px;
     color: #c9973a;
-    line-height: 0.9;
-    letter-spacing: -0.03em;
-    position: relative;
+    line-height: 1;
+    letter-spacing: -0.02em;
   }}
   .headline-desc {{
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 800;
-    font-size: 106px;
+    font-size: 76px;
     color: #ffffff;
-    letter-spacing: 6px;
+    letter-spacing: 5px;
     line-height: 1;
     margin-top: 4px;
     text-transform: uppercase;
-    position: relative;
   }}
   .headline-guarantee {{
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 700;
-    font-size: 76px;
+    font-size: 54px;
     color: #c9973a;
-    letter-spacing: 14px;
+    letter-spacing: 10px;
     line-height: 1;
-    margin-top: 10px;
+    margin-top: 8px;
     text-transform: uppercase;
-    position: relative;
   }}
   .gold-rule {{
-    width: 560px;
+    width: 520px;
     height: 3px;
     background: #c9973a;
-    margin: 26px auto;
+    margin: 32px auto;
     border-radius: 2px;
-    position: relative;
   }}
   .promise-line1 {{
     font-family: 'Barlow', sans-serif;
     font-weight: 400;
-    font-size: 28px;
-    color: rgba(255,255,255,0.88);
-    line-height: 1.5;
-    position: relative;
+    font-size: 26px;
+    color: #ffffff;
+    line-height: 1.55;
   }}
   .promise-line2 {{
     font-family: 'Barlow', sans-serif;
     font-weight: 700;
-    font-size: 34px;
+    font-size: 30px;
     color: #ffffff;
-    line-height: 1.4;
-    margin-top: 6px;
-    position: relative;
+    line-height: 1.5;
+    margin-top: 4px;
   }}
 
   /* FOOTER */
   .footer-bar {{
-    width: 1800px; height: 86px;
+    width: 1800px; height: 72px;
     background: #c9973a;
     display: flex;
     align-items: center;
@@ -188,41 +149,44 @@ def make_front() -> str:
   .footer-phone {{
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 800;
-    font-size: 40px;
+    font-size: 34px;
     color: #0f1f38;
-    padding: 0 64px 0 72px;
-    letter-spacing: 0.03em;
+    padding: 0 56px 0 60px;
+    letter-spacing: 0.02em;
   }}
   .footer-rule {{
-    width: 2px; height: 44px;
-    background: rgba(15,31,56,0.35);
+    width: 2px;
+    height: 40px;
+    background: #0f1f38;
+    opacity: 0.4;
     flex-shrink: 0;
   }}
   .footer-tagline {{
     font-family: 'Barlow', sans-serif;
-    font-weight: 600;
-    font-size: 20px;
+    font-weight: 500;
+    font-size: 18px;
     color: #0f1f38;
-    padding: 0 72px 0 64px;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
+    padding: 0 60px 0 56px;
+    letter-spacing: 0.04em;
+  }}
+
+  /* layout */
+  body {{
+    display: flex;
+    flex-direction: column;
   }}
 </style>
 </head>
 <body>
 
-  <!-- TOP BAR — large logo -->
+  <!-- TOP BAR -->
   <div class="top-bar">
     <img src="{LOGO}" alt="Pinellas Ice Co">
-    <div class="top-bar-right">
-      <span class="top-bar-url">PinellasIceCo.com</span>
-      <span class="top-bar-sub">Licensed &nbsp;&middot;&nbsp; Insured &nbsp;&middot;&nbsp; ATP Certified</span>
-    </div>
+    <span class="top-bar-url">PinellasIceCo.com</span>
   </div>
 
   <!-- HERO -->
   <div class="hero">
-    <img class="hero-watermark" src="{LOGO}" alt="">
     <div class="headline-number">30-DAY</div>
     <div class="headline-desc">INSPECTION PROTECTION</div>
     <div class="headline-guarantee">GUARANTEE</div>
