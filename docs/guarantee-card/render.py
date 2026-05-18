@@ -274,43 +274,33 @@ def make_back() -> str:
     flex-shrink: 0;
   }}
   .col-left-icon {{
-    width: 88px; height: 88px;
+    width: 100%;
+    height: auto;
     filter: brightness(0) invert(1);
     display: block;
     object-fit: contain;
   }}
-  .col-left-name {{
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 800;
-    font-size: 28px;
-    color: #ffffff;
-    text-align: center;
-    line-height: 1.15;
-    margin-top: 20px;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }}
   .col-left-rule {{
     width: 60px; height: 2px;
     background: #c9973a;
-    margin: 20px auto;
+    margin: 26px auto;
   }}
   .col-left-why-label {{
     font-family: 'Barlow', sans-serif;
     font-weight: 700;
-    font-size: 11px;
+    font-size: 13px;
     color: #c9973a;
     letter-spacing: 3px;
     text-transform: uppercase;
     text-align: center;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
   }}
   .col-left-body {{
     font-family: 'Barlow', sans-serif;
     font-weight: 400;
-    font-size: 14px;
+    font-size: 17px;
     color: #ffffff;
-    line-height: 1.75;
+    line-height: 1.8;
     text-align: center;
   }}
   .col-left-spacer {{ flex: 1; }}
@@ -318,20 +308,20 @@ def make_back() -> str:
     width: 100%;
     height: 1px;
     background: rgba(255,255,255,0.15);
-    margin-bottom: 20px;
+    margin-bottom: 22px;
   }}
   .col-left-phone {{
     font-family: 'Barlow', sans-serif;
     font-weight: 700;
-    font-size: 20px;
+    font-size: 24px;
     color: #c9973a;
     text-align: center;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
   }}
   .col-left-web {{
     font-family: 'Barlow', sans-serif;
     font-weight: 400;
-    font-size: 14px;
+    font-size: 16px;
     color: rgba(255,255,255,0.7);
     text-align: center;
   }}
@@ -349,75 +339,76 @@ def make_back() -> str:
   .cc-label {{
     font-family: 'Barlow', sans-serif;
     font-weight: 700;
-    font-size: 11px;
+    font-size: 13px;
     color: #0f1f38;
     letter-spacing: 3px;
     text-transform: uppercase;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }}
   .cc-headline {{
     font-family: 'Playfair Display', serif;
     font-weight: 700;
-    font-size: 34px;
+    font-size: 46px;
     color: #0f1f38;
-    line-height: 1.15;
-    margin-bottom: 6px;
+    line-height: 1.1;
+    margin-bottom: 10px;
   }}
   .cc-subline {{
     font-family: 'Barlow', sans-serif;
     font-weight: 400;
     font-style: italic;
-    font-size: 15px;
+    font-size: 19px;
     color: #5a6e87;
   }}
   .cc-divider {{
     height: 1px;
     background: #e0e0e0;
-    margin: 20px 0;
+    margin: 28px 0;
   }}
   .cc-section-label {{
     font-family: 'Barlow', sans-serif;
     font-weight: 700;
-    font-size: 11px;
+    font-size: 14px;
     letter-spacing: 2px;
     text-transform: uppercase;
-    margin-bottom: 10px;
+    margin-bottom: 14px;
   }}
   .cc-section-label.green {{ color: #0a6b3c; }}
   .cc-section-label.red   {{ color: #b22a2a; }}
   .cc-item {{
     display: flex;
     align-items: flex-start;
-    gap: 10px;
+    gap: 12px;
     font-family: 'Barlow', sans-serif;
-    font-size: 14px;
-    line-height: 1.8;
+    font-size: 18px;
+    line-height: 2;
   }}
   .cc-item.good {{ font-weight: 500; color: #2d3e57; }}
-  .cc-item.bad  {{ font-weight: 400; color: #5a6e87; font-size: 13px; }}
-  .dot-green {{ color: #0a6b3c; font-weight: 700; flex-shrink: 0; margin-top: 1px; }}
-  .dot-red   {{ color: #b22a2a; font-weight: 700; flex-shrink: 0; margin-top: 1px; }}
+  .cc-item.bad  {{ font-weight: 400; color: #5a6e87; font-size: 17px; }}
+  .dot-green {{ color: #0a6b3c; font-weight: 700; flex-shrink: 0; margin-top: 2px; }}
+  .dot-red   {{ color: #b22a2a; font-weight: 700; flex-shrink: 0; margin-top: 2px; }}
   .claim-box {{
     background: #f7f2ea;
-    border-radius: 8px;
-    padding: 20px 20px;
-    border-left: 4px solid #c9973a;
+    border-radius: 10px;
+    padding: 26px 26px;
+    border-left: 5px solid #c9973a;
+    margin-top: 4px;
   }}
   .claim-label {{
     font-family: 'Barlow', sans-serif;
     font-weight: 700;
-    font-size: 11px;
+    font-size: 13px;
     color: #0f1f38;
     letter-spacing: 2px;
     text-transform: uppercase;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }}
   .claim-body {{
     font-family: 'Barlow', sans-serif;
     font-weight: 400;
-    font-size: 13px;
+    font-size: 17px;
     color: #2d3e57;
-    line-height: 1.7;
+    line-height: 1.8;
   }}
 
   /* RIGHT COLUMN */
@@ -469,10 +460,11 @@ def make_back() -> str:
     flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
   }}
   .sticker {{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     width: 100%;
     border-radius: 16px;
     overflow: hidden;
@@ -480,76 +472,67 @@ def make_back() -> str:
     box-shadow: 0 6px 24px rgba(0,0,0,0.16);
     background: #ffffff;
   }}
-  .stk-mountains {{
+  .stk-logo-sect {{
     background: #ffffff;
     display: flex;
     justify-content: center;
-    align-items: flex-end;
-    padding: 18px 16px 0;
+    align-items: center;
+    padding: 24px 20px 18px;
   }}
-  .stk-mountains img {{
-    height: 140px;
+  .stk-logo-img {{
+    width: 100%;
+    height: auto;
     object-fit: contain;
-  }}
-  .stk-header {{
-    background: #1456b0;
-    padding: 12px 16px 16px;
-    text-align: center;
-  }}
-  .stk-name {{
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 800;
-    font-size: 46px;
-    color: #ffffff;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    line-height: 1;
   }}
   .stk-dark {{
     background: #2c2c2c;
-    padding: 11px 14px;
+    padding: 14px 16px;
     text-align: center;
   }}
   .stk-dark-text {{
     font-family: 'Barlow', sans-serif;
     font-weight: 600;
-    font-size: 18px;
+    font-size: 22px;
     color: #ffffff;
     letter-spacing: 0.01em;
   }}
   .stk-body {{
+    flex: 1;
     background: #ffffff;
-    padding: 18px 22px 14px;
+    padding: 22px 24px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }}
   .stk-field {{
     display: flex;
     align-items: baseline;
     gap: 8px;
-    margin-bottom: 13px;
+    margin-bottom: 16px;
   }}
   .stk-field-lbl {{
     font-family: 'Barlow', sans-serif;
     font-weight: 600;
-    font-size: 17px;
+    font-size: 20px;
     color: #1a1a1a;
     white-space: nowrap;
   }}
   .stk-field-line {{
     flex: 1;
     border-bottom: 1.5px solid #444;
-    height: 20px;
+    height: 24px;
   }}
   .stk-atp-lbl {{
     font-family: 'Barlow', sans-serif;
     font-weight: 600;
-    font-size: 16px;
+    font-size: 19px;
     color: #1a1a1a;
-    margin-bottom: 9px;
+    margin-bottom: 12px;
   }}
   .stk-ratings {{
     display: flex;
     gap: 0;
-    border-radius: 6px;
+    border-radius: 8px;
     overflow: hidden;
   }}
   .stk-rating {{
@@ -558,8 +541,8 @@ def make_back() -> str:
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 13px 6px 11px;
-    gap: 6px;
+    padding: 18px 6px 16px;
+    gap: 8px;
     text-align: center;
   }}
   .stk-rating.clean    {{ background: #1a7a3c; }}
@@ -568,14 +551,14 @@ def make_back() -> str:
   .stk-rtitle {{
     font-family: 'Barlow', sans-serif;
     font-weight: 800;
-    font-size: 13px;
+    font-size: 16px;
     text-transform: uppercase;
     line-height: 1.2;
   }}
   .stk-rrange {{
     font-family: 'Barlow', sans-serif;
     font-weight: 500;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1;
   }}
   .stk-rating.clean .stk-rtitle,
@@ -584,25 +567,25 @@ def make_back() -> str:
   .stk-rating.high  .stk-rrange  {{ color: #ffffff; }}
   .stk-rating.moderate .stk-rtitle,
   .stk-rating.moderate .stk-rrange {{ color: #1a1a1a; }}
-  .stk-checkbox {{ font-size: 18px; line-height: 1; }}
+  .stk-checkbox {{ font-size: 22px; line-height: 1; }}
   .stk-rating.clean .stk-checkbox,
   .stk-rating.high  .stk-checkbox {{ color: #ffffff; }}
   .stk-rating.moderate .stk-checkbox {{ color: #1a1a1a; }}
   .stk-call {{
     background: #f5f5f5;
     border-top: 1px solid #ddd;
-    padding: 13px 16px;
+    padding: 16px 16px;
     text-align: center;
   }}
   .stk-phone {{
     font-family: 'Barlow', sans-serif;
     font-weight: 700;
-    font-size: 26px;
+    font-size: 30px;
     color: #111111;
   }}
   .stk-footer {{
     border-top: 1px solid #e8e8e8;
-    padding: 10px 16px;
+    padding: 13px 16px;
     text-align: center;
     background: #ffffff;
   }}
@@ -610,23 +593,18 @@ def make_back() -> str:
     font-family: 'Barlow', sans-serif;
     font-weight: 400;
     font-style: italic;
-    font-size: 15px;
+    font-size: 17px;
     color: #1456b0;
   }}
-  /* QR book CTA */
-  .cr-book-cta {{
-    display: block;
-    margin-top: 14px;
-    background: #0f1f38;
-    color: #ffffff;
+  /* QR label */
+  .cr-qr-label {{
     font-family: 'Barlow', sans-serif;
-    font-weight: 700;
+    font-weight: 500;
     font-size: 13px;
-    padding: 10px 18px;
-    border-radius: 6px;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
+    color: #5a6e87;
     text-align: center;
+    margin-top: 12px;
+    letter-spacing: 0.03em;
   }}
 </style>
 </head>
@@ -634,8 +612,7 @@ def make_back() -> str:
 
   <!-- LEFT COLUMN -->
   <div class="col-left">
-    <img class="col-left-icon" src="{ICON}" alt="Pinellas Ice Co icon">
-    <div class="col-left-name">PINELLAS<br>ICE CO.</div>
+    <img class="col-left-icon" src="{LOGO}" alt="Pinellas Ice Co">
     <div class="col-left-rule"></div>
     <div class="col-left-why-label">WHY WE CAN OFFER THIS</div>
     <div class="col-left-body">
@@ -706,18 +683,15 @@ def make_back() -> str:
   <div class="col-right">
     <div class="cr-scan-label">SCAN TO VERIFY</div>
     <img class="cr-qr" src="{QR}" alt="QR code">
-    <div class="cr-book-cta">Book Your Next Service</div>
+    <div class="cr-qr-label">PinellasIceCo.com/verify</div>
 
     <div class="cr-divider"></div>
 
     <!-- SERVICE STICKER MOCKUP -->
     <div class="sticker-wrap">
       <div class="sticker">
-        <div class="stk-mountains">
-          <img src="{ICON}" alt="">
-        </div>
-        <div class="stk-header">
-          <div class="stk-name">PINELLAS ICE CO</div>
+        <div class="stk-logo-sect">
+          <img class="stk-logo-img" src="{LOGO}" alt="Pinellas Ice Co">
         </div>
         <div class="stk-dark">
           <div class="stk-dark-text">Ice Machine Serviced &amp; Sanitized</div>
