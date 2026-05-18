@@ -118,15 +118,18 @@ Deno.serve(async (req) => {
     const successUrl = SUCCESS_BASE
       + '?stripe=success&pid=' + encodeURIComponent(String(prospect_id || ''));
 
+    // Stripe label.custom max 50 chars; full disclosure goes in submitMsg
     const termsLabel = flex
-      ? 'I agree to the Pinellas Ice Co Terms & Conditions '
-        + '(pinellasiceco.com/terms). This is a month-to-month '
-        + 'plan with no long-term commitment. Cancel anytime '
-        + 'with 30 days written notice.'
-      : 'I agree to the 12-month service term and '
-        + 'Terms & Conditions (pinellasiceco.com/terms). '
-        + 'Early cancellation requires written notice and '
-        + 'a fee equal to two months of service.';
+      ? 'I agree to month-to-month terms'
+      : 'I agree to the 12-month service terms';
+
+    const submitMsg = flex
+      ? 'Month-to-month plan, no long-term commitment. '
+        + 'Cancel anytime with 30 days written notice. '
+        + 'Full terms & conditions: ' + TERMS_URL
+      : '12-month service commitment. Early cancellation '
+        + 'requires written notice plus a fee equal to '
+        + 'two months of service. Full terms: ' + TERMS_URL;
 
     const sessionParams: Stripe.Checkout.SessionCreateParams = {
       mode: plan === 'onetime' ? 'payment' : 'subscription',
@@ -149,11 +152,7 @@ Deno.serve(async (req) => {
         },
       ],
       custom_text: {
-        submit: {
-          message:
-            'By completing payment you agree to the Pinellas Ice Co '
-            + `Terms & Conditions at ${TERMS_URL}`,
-        },
+        submit: { message: submitMsg },
       },
       metadata: {
         prospect_id: String(prospect_id || ''),
