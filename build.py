@@ -3785,7 +3785,8 @@ function scMarkWon(onetime){
   var partnerObj=partnerId?PARTNERS.find(function(x){return x.id===partnerId;}):null;
   var wonNow=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
   var wonStatus=onetime?'customer_once':cs.plan==='quarterly'?'customer_quarterly':'customer_recurring';
-  var monthlyPrice=onetime?0:calcMonthly(cs.plan,m);
+  var planDisc=cs.planDisc!=null?cs.planDisc:Math.max(0,parseFloat((document.getElementById('co-plan-disc')||{}).value)||0);
+  var monthlyPrice=onetime?0:Math.max(0,calcMonthly(cs.plan,m)-planDisc);
   var onetimePrice=onetime?calcOnetime(m):0;
   var standardEntry=99+Math.max(0,m-1)*49;
   customers[p.id]={
@@ -3856,7 +3857,11 @@ async function generateStripeCheckout(){
     var data=await resp.json();
     if(data.error)throw new Error(data.error);
     if(!data.url)throw new Error('No checkout URL returned');
-    if(pid&&customers[pid])customers[pid]._pending_plan=plan;
+    if(pid&&customers[pid]){
+      customers[pid]._pending_plan=plan;
+      customers[pid]._pending_machines=m;
+      customers[pid]._pending_plan_disc=planDisc;
+    }
     return data.url;
   }catch(err){
     console.error('Stripe checkout error:',err);
@@ -3917,7 +3922,9 @@ function checkStripeReturn(){
     if(p&&!alreadyWon){
       var pendingPlan=(customers[pid]||{})._pending_plan||'monthly';
       _scCardP=p;_scCardBg=null;
-      _closeState={plan:pendingPlan,machines:p.machines||1,entryPrice:99+Math.max(0,(p.machines||1)-1)*49};
+      var _pm=parseInt((customers[pid]||{})._pending_machines)||p.machines||1;
+      var _pd=parseFloat((customers[pid]||{})._pending_plan_disc)||0;
+      _closeState={plan:pendingPlan,machines:_pm,entryPrice:99+Math.max(0,(_pm)-1)*49,planDisc:_pd};
       scMarkWon(pendingPlan==='onetime');
       toast('Payment confirmed — '+(p.name||'client')+' moved to Won');
     }else if(p&&alreadyWon){
