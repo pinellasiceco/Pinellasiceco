@@ -10,10 +10,7 @@ import os
 import json
 import re
 from datetime import date, timedelta, datetime
-from zoneinfo import ZoneInfo
 import requests
-
-ET = ZoneInfo('America/New_York')
 
 # ── Config ──────────────────────────────────────────────
 RESEND_API_KEY = os.environ.get('RESEND_API_KEY', '')
@@ -259,20 +256,19 @@ def count_retests_due(cust_rows, records):
 def build_email(insp_date, lag, n_prospects, n_fresh,
                 n_unclaimed, n_overdue, n_nudges, n_retests):
 
-    now_et    = datetime.now(ET)
-    today_str = now_et.strftime('%a %b %d, %Y')
-    time_str  = now_et.strftime('%I:%M %p ET')
+    today_str = date.today().strftime('%a %b %d, %Y')
+    time_str  = datetime.now().strftime('%I:%M %p ET')
 
     # Subject
     if lag is not None and lag > 5:
-        subject = (f'⚠️ PIC Daily — {now_et.strftime("%a %b %d")}'
+        subject = (f'⚠️ PIC Daily — {date.today().strftime("%a %b %d")}'
                    f' · DATA STALE ({lag} days)')
     elif insp_date:
-        subject = (f'PIC Daily — {now_et.strftime("%a %b %d")}'
+        subject = (f'PIC Daily — {date.today().strftime("%a %b %d")}'
                    f' · Data: {insp_date}'
                    + (f' ({lag}d)' if lag is not None else ''))
     else:
-        subject = f'PIC Daily — {now_et.strftime("%a %b %d")}'
+        subject = f'PIC Daily — {date.today().strftime("%a %b %d")}'
 
     # Stale data banner
     stale_warning = ''
