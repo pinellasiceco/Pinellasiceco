@@ -3924,10 +3924,16 @@ async function coSendToClient(){
   var msgBody='Hi — here is your Pinellas Ice Co payment link. Tap to complete your plan setup: '+url;
   if(phone){
     window.location.href='sms:+1'+phone+'?body='+encodeURIComponent(msgBody);
-  }else if(navigator.clipboard){
-    navigator.clipboard.writeText(url).then(function(){toast('Link copied — paste it to send to client');});
   }else{
-    toast('Payment link ready — copy: '+url);
+    var errEl=document.getElementById('co-error');
+    if(errEl){
+      errEl.style.color='#0f1f38';
+      errEl.style.background='#f0f9ff';
+      errEl.style.border='1px solid #bae6fd';
+      errEl.innerHTML='Payment link (tap to open, long-press to copy):<br><a href="'+url+'" target="_blank" style="word-break:break-all;font-size:11px;color:#0a84ff">'+url+'</a>';
+      errEl.style.display='block';
+    }
+    if(navigator.clipboard){navigator.clipboard.writeText(url).catch(function(){});}
   }
   if(pid&&log[pid]&&log[pid].length>0){
     log[pid][log[pid].length-1].payment_link_sent=new Date().toISOString();
