@@ -20,9 +20,10 @@ def b64(rel_path: str, mime: str) -> str:
     with open(p, 'rb') as f:
         return f"data:{mime};base64,{base64.b64encode(f.read()).decode()}"
 
-LOGO = b64('IMG_0110.png',  'image/png')    # Full wordmark logo
-ICON = b64('IMG_0037.jpeg', 'image/jpeg')   # Ice cube icon only
-QR   = b64('IMG_0738.jpeg', 'image/jpeg')   # QR code → explore page
+LOGO    = b64('IMG_0110.png',  'image/png')    # Full wordmark logo
+ICON    = b64('IMG_0037.jpeg', 'image/jpeg')   # Ice cube icon only
+QR      = b64('IMG_0738.jpeg', 'image/jpeg')   # QR code → explore page
+STICKER = b64('3B82805F-8BA4-42EA-98C1-92FC16CE7F84.png', 'image/png')  # Service sticker
 
 # ── Fonts ─────────────────────────────────────────────────────────────────────
 GFONTS = (
@@ -54,9 +55,9 @@ def make_front() -> str:
     flex-direction: column;
   }}
 
-  /* TOP BAR — tall enough for a real logo */
+  /* TOP BAR */
   .top-bar {{
-    width: 1800px; height: 230px;
+    width: 1800px; height: 270px;
     background: #162844;
     display: flex;
     align-items: center;
@@ -65,17 +66,30 @@ def make_front() -> str:
     flex-shrink: 0;
     border-bottom: 3px solid #c9973a;
   }}
-  .top-bar img {{
-    height: 184px;
-    max-width: 780px;
+  .top-bar-logo {{
+    height: 224px;
     object-fit: contain;
     object-position: left center;
     filter: brightness(0) invert(1);
     display: block;
   }}
   .top-bar-right {{
-    text-align: right;
+    display: flex;
+    align-items: center;
+    gap: 24px;
     flex-shrink: 0;
+  }}
+  .top-bar-qr {{
+    width: 180px; height: 180px;
+    background: #ffffff;
+    padding: 8px;
+    border-radius: 6px;
+    display: block;
+    object-fit: contain;
+    flex-shrink: 0;
+  }}
+  .top-bar-right-text {{
+    text-align: right;
   }}
   .top-bar-url {{
     font-family: 'Barlow', sans-serif;
@@ -211,12 +225,15 @@ def make_front() -> str:
 </head>
 <body>
 
-  <!-- TOP BAR — large logo -->
+  <!-- TOP BAR -->
   <div class="top-bar">
-    <img src="{LOGO}" alt="Pinellas Ice Co">
+    <img class="top-bar-logo" src="{LOGO}" alt="Pinellas Ice Co">
     <div class="top-bar-right">
-      <span class="top-bar-url">PinellasIceCo.com</span>
-      <span class="top-bar-sub">Licensed &nbsp;&middot;&nbsp; Insured &nbsp;&middot;&nbsp; ATP Certified</span>
+      <img class="top-bar-qr" src="{QR}" alt="QR code">
+      <div class="top-bar-right-text">
+        <span class="top-bar-url">PinellasIceCo.com</span>
+        <span class="top-bar-sub">Licensed &nbsp;&middot;&nbsp; Insured &nbsp;&middot;&nbsp; ATP Certified</span>
+      </div>
     </div>
   </div>
 
@@ -596,15 +613,27 @@ def make_back() -> str:
     font-size: 17px;
     color: #1456b0;
   }}
-  /* QR label */
-  .cr-qr-label {{
+  /* Sticker image */
+  .cr-sticker-img {{
+    width: 100%;
+    flex: 1;
+    object-fit: contain;
+    object-position: center top;
+    display: block;
+    min-height: 0;
+  }}
+  /* Trust statement */
+  .cc-trust {{
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid #e0e0e0;
     font-family: 'Barlow', sans-serif;
     font-weight: 500;
-    font-size: 13px;
+    font-style: italic;
+    font-size: 18px;
     color: #5a6e87;
     text-align: center;
-    margin-top: 12px;
-    letter-spacing: 0.03em;
+    line-height: 1.65;
   }}
 </style>
 </head>
@@ -677,58 +706,19 @@ def make_back() -> str:
         immediately. No questions asked.
       </div>
     </div>
+    <div class="cc-trust">
+      Serving Restaurants, Bars &amp; Golf Courses<br>throughout Pinellas County.
+    </div>
   </div>
 
   <!-- RIGHT COLUMN -->
   <div class="col-right">
-    <div class="cr-scan-label">SCAN TO VERIFY</div>
+    <div class="cr-scan-label">SCAN TO LEARN MORE</div>
     <img class="cr-qr" src="{QR}" alt="QR code">
-    <div class="cr-qr-label">PinellasIceCo.com/verify</div>
 
     <div class="cr-divider"></div>
 
-    <!-- SERVICE STICKER MOCKUP -->
-    <div class="sticker-wrap">
-      <div class="sticker">
-        <div class="stk-logo-sect">
-          <img class="stk-logo-img" src="{LOGO}" alt="Pinellas Ice Co">
-        </div>
-        <div class="stk-dark">
-          <div class="stk-dark-text">Ice Machine Serviced &amp; Sanitized</div>
-        </div>
-        <div class="stk-body">
-          <div class="stk-field">
-            <span class="stk-field-lbl">Last Service:</span>
-            <div class="stk-field-line"></div>
-          </div>
-          <div class="stk-field">
-            <span class="stk-field-lbl">Next Service:</span>
-            <div class="stk-field-line"></div>
-          </div>
-          <div class="stk-atp-lbl">ATP Cleanliness Rating:</div>
-          <div class="stk-ratings">
-            <div class="stk-rating clean">
-              <div class="stk-rtitle">CLEAN<br>(&lt;100)</div>
-              <div class="stk-checkbox">&#x2611;</div>
-            </div>
-            <div class="stk-rating moderate">
-              <div class="stk-rtitle">MODERATE</div>
-              <div class="stk-rrange">(100&ndash;300)</div>
-            </div>
-            <div class="stk-rating high">
-              <div class="stk-rtitle">HIGH<br>(&gt;300)</div>
-              <div class="stk-checkbox">&#x2611;</div>
-            </div>
-          </div>
-        </div>
-        <div class="stk-call">
-          <div class="stk-phone">Call: (727) 855-6873</div>
-        </div>
-        <div class="stk-footer">
-          <div class="stk-footer-text">ATP Tested for Sanitation</div>
-        </div>
-      </div>
-    </div>
+    <img class="cr-sticker-img" src="{STICKER}" alt="Pinellas Ice Co Service Sticker">
   </div>
 
 </body>
