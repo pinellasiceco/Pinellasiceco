@@ -574,13 +574,11 @@ def make_back() -> str:
     font-size: 17px;
     color: #1456b0;
   }}
-  /* Sticker image — fill the tall column space */
+  /* Sticker image — natural square proportions */
   .cr-sticker-img {{
     width: 100%;
-    flex: 1;
-    object-fit: fill;
+    height: auto;
     display: block;
-    min-height: 0;
     border-radius: 8px;
   }}
   /* Trust statement */
