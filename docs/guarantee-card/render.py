@@ -56,7 +56,7 @@ def make_front() -> str:
 
   /* TOP BAR — tall enough for a real logo */
   .top-bar {{
-    width: 1800px; height: 196px;
+    width: 1800px; height: 230px;
     background: #162844;
     display: flex;
     align-items: center;
@@ -66,8 +66,8 @@ def make_front() -> str:
     border-bottom: 3px solid #c9973a;
   }}
   .top-bar img {{
-    height: 148px;
-    max-width: 700px;
+    height: 184px;
+    max-width: 780px;
     object-fit: contain;
     object-position: left center;
     filter: brightness(0) invert(1);
@@ -474,127 +474,159 @@ def make_back() -> str:
   }}
   .sticker {{
     width: 100%;
-    border-radius: 14px;
+    border-radius: 16px;
     overflow: hidden;
-    border: 2.5px solid #b8c4d8;
-    box-shadow: 0 8px 28px rgba(0,0,0,0.18);
-  }}
-  .sticker-header {{
-    background: #1e3a6e;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 22px 26px;
-  }}
-  .sticker-icon {{
-    width: 96px; height: 96px;
-    object-fit: contain;
-    filter: brightness(0) invert(1);
-    flex-shrink: 0;
-  }}
-  .sticker-company {{
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 800;
-    font-size: 40px;
-    color: #ffffff;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    line-height: 1.05;
-  }}
-  .sticker-subheader {{
-    background: #2d3748;
-    color: #ffffff;
-    font-family: 'Barlow', sans-serif;
-    font-weight: 600;
-    font-size: 19px;
-    text-align: center;
-    padding: 14px 16px;
-    letter-spacing: 0.03em;
-  }}
-  .sticker-body {{
+    border: 2px solid #c0cad8;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.16);
     background: #ffffff;
-    padding: 24px 26px 20px;
   }}
-  .sticker-field {{
-    font-family: 'Barlow', sans-serif;
-    font-weight: 400;
-    font-size: 17px;
-    color: #2d3e57;
-    border-bottom: 1.5px solid #b0b8c8;
-    padding-bottom: 7px;
-    margin-bottom: 16px;
-  }}
-  .sticker-field strong {{
-    font-weight: 700;
-  }}
-  .sticker-atp-label {{
-    font-family: 'Barlow', sans-serif;
-    font-weight: 700;
-    font-size: 14px;
-    color: #0f1f38;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-  }}
-  .sticker-ratings {{
+  .stk-mountains {{
+    background: #ffffff;
     display: flex;
-    gap: 8px;
-    margin-bottom: 22px;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 18px 16px 0;
   }}
-  .sticker-rating {{
-    flex: 1;
-    border-radius: 6px;
-    padding: 12px 4px;
+  .stk-mountains img {{
+    height: 140px;
+    object-fit: contain;
+  }}
+  .stk-header {{
+    background: #1456b0;
+    padding: 12px 16px 16px;
     text-align: center;
   }}
-  .sticker-rating.clean    {{ background: #d4edda; border: 2px solid #28a745; }}
-  .sticker-rating.moderate {{ background: #fff3cd; border: 2px solid #ffc107; }}
-  .sticker-rating.high     {{ background: #f8d7da; border: 2px solid #dc3545; }}
-  .sticker-rating-name {{
-    font-family: 'Barlow', sans-serif;
-    font-weight: 700;
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-  }}
-  .clean    .sticker-rating-name {{ color: #155724; }}
-  .moderate .sticker-rating-name {{ color: #856404; }}
-  .high     .sticker-rating-name {{ color: #721c24; }}
-  .sticker-rating-range {{
-    font-family: 'Barlow', sans-serif;
-    font-weight: 400;
-    font-size: 13px;
-    margin-top: 3px;
-  }}
-  .clean    .sticker-rating-range {{ color: #155724; }}
-  .moderate .sticker-rating-range {{ color: #856404; }}
-  .high     .sticker-rating-range {{ color: #721c24; }}
-  .sticker-phone {{
+  .stk-name {{
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 800;
-    font-size: 30px;
-    color: #0f1f38;
-    text-align: center;
-    letter-spacing: 0.04em;
-  }}
-  .sticker-phone-pre {{
-    font-family: 'Barlow', sans-serif;
-    font-weight: 700;
-    font-size: 16px;
-    color: #0f1f38;
-    text-align: center;
-    margin-bottom: 3px;
-  }}
-  .sticker-footer {{
-    background: #1e3a6e;
+    font-size: 46px;
     color: #ffffff;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    line-height: 1;
+  }}
+  .stk-dark {{
+    background: #2c2c2c;
+    padding: 11px 14px;
+    text-align: center;
+  }}
+  .stk-dark-text {{
     font-family: 'Barlow', sans-serif;
     font-weight: 600;
-    font-size: 15px;
+    font-size: 18px;
+    color: #ffffff;
+    letter-spacing: 0.01em;
+  }}
+  .stk-body {{
+    background: #ffffff;
+    padding: 18px 22px 14px;
+  }}
+  .stk-field {{
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 13px;
+  }}
+  .stk-field-lbl {{
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    font-size: 17px;
+    color: #1a1a1a;
+    white-space: nowrap;
+  }}
+  .stk-field-line {{
+    flex: 1;
+    border-bottom: 1.5px solid #444;
+    height: 20px;
+  }}
+  .stk-atp-lbl {{
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: #1a1a1a;
+    margin-bottom: 9px;
+  }}
+  .stk-ratings {{
+    display: flex;
+    gap: 0;
+    border-radius: 6px;
+    overflow: hidden;
+  }}
+  .stk-rating {{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 13px 6px 11px;
+    gap: 6px;
     text-align: center;
-    padding: 13px 10px;
-    letter-spacing: 1.5px;
+  }}
+  .stk-rating.clean    {{ background: #1a7a3c; }}
+  .stk-rating.moderate {{ background: #cc9900; }}
+  .stk-rating.high     {{ background: #c0311a; }}
+  .stk-rtitle {{
+    font-family: 'Barlow', sans-serif;
+    font-weight: 800;
+    font-size: 13px;
     text-transform: uppercase;
+    line-height: 1.2;
+  }}
+  .stk-rrange {{
+    font-family: 'Barlow', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 1;
+  }}
+  .stk-rating.clean .stk-rtitle,
+  .stk-rating.clean .stk-rrange,
+  .stk-rating.high  .stk-rtitle,
+  .stk-rating.high  .stk-rrange  {{ color: #ffffff; }}
+  .stk-rating.moderate .stk-rtitle,
+  .stk-rating.moderate .stk-rrange {{ color: #1a1a1a; }}
+  .stk-checkbox {{ font-size: 18px; line-height: 1; }}
+  .stk-rating.clean .stk-checkbox,
+  .stk-rating.high  .stk-checkbox {{ color: #ffffff; }}
+  .stk-rating.moderate .stk-checkbox {{ color: #1a1a1a; }}
+  .stk-call {{
+    background: #f5f5f5;
+    border-top: 1px solid #ddd;
+    padding: 13px 16px;
+    text-align: center;
+  }}
+  .stk-phone {{
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    font-size: 26px;
+    color: #111111;
+  }}
+  .stk-footer {{
+    border-top: 1px solid #e8e8e8;
+    padding: 10px 16px;
+    text-align: center;
+    background: #ffffff;
+  }}
+  .stk-footer-text {{
+    font-family: 'Barlow', sans-serif;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 15px;
+    color: #1456b0;
+  }}
+  /* QR book CTA */
+  .cr-book-cta {{
+    display: block;
+    margin-top: 14px;
+    background: #0f1f38;
+    color: #ffffff;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 10px 18px;
+    border-radius: 6px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    text-align: center;
   }}
 </style>
 </head>
@@ -674,40 +706,53 @@ def make_back() -> str:
   <div class="col-right">
     <div class="cr-scan-label">SCAN TO VERIFY</div>
     <img class="cr-qr" src="{QR}" alt="QR code">
-    <div class="cr-qr-sub">This location&rsquo;s certification</div>
+    <div class="cr-book-cta">Book Your Next Service</div>
 
     <div class="cr-divider"></div>
 
     <!-- SERVICE STICKER MOCKUP -->
     <div class="sticker-wrap">
       <div class="sticker">
-        <div class="sticker-header">
-          <img class="sticker-icon" src="{ICON}" alt="">
-          <div class="sticker-company">PINELLAS<br>ICE CO.</div>
+        <div class="stk-mountains">
+          <img src="{ICON}" alt="">
         </div>
-        <div class="sticker-subheader">Ice Machine Serviced &amp; Sanitized</div>
-        <div class="sticker-body">
-          <div class="sticker-field"><strong>Last Service:</strong> _______________</div>
-          <div class="sticker-field"><strong>Next Service:</strong> _______________</div>
-          <div class="sticker-atp-label">ATP Cleanliness Rating:</div>
-          <div class="sticker-ratings">
-            <div class="sticker-rating clean">
-              <div class="sticker-rating-name">&#x2713; CLEAN</div>
-              <div class="sticker-rating-range">&lt;100</div>
+        <div class="stk-header">
+          <div class="stk-name">PINELLAS ICE CO</div>
+        </div>
+        <div class="stk-dark">
+          <div class="stk-dark-text">Ice Machine Serviced &amp; Sanitized</div>
+        </div>
+        <div class="stk-body">
+          <div class="stk-field">
+            <span class="stk-field-lbl">Last Service:</span>
+            <div class="stk-field-line"></div>
+          </div>
+          <div class="stk-field">
+            <span class="stk-field-lbl">Next Service:</span>
+            <div class="stk-field-line"></div>
+          </div>
+          <div class="stk-atp-lbl">ATP Cleanliness Rating:</div>
+          <div class="stk-ratings">
+            <div class="stk-rating clean">
+              <div class="stk-rtitle">CLEAN<br>(&lt;100)</div>
+              <div class="stk-checkbox">&#x2611;</div>
             </div>
-            <div class="sticker-rating moderate">
-              <div class="sticker-rating-name">MODERATE</div>
-              <div class="sticker-rating-range">100&ndash;300</div>
+            <div class="stk-rating moderate">
+              <div class="stk-rtitle">MODERATE</div>
+              <div class="stk-rrange">(100&ndash;300)</div>
             </div>
-            <div class="sticker-rating high">
-              <div class="sticker-rating-name">HIGH</div>
-              <div class="sticker-rating-range">&gt;300</div>
+            <div class="stk-rating high">
+              <div class="stk-rtitle">HIGH<br>(&gt;300)</div>
+              <div class="stk-checkbox">&#x2611;</div>
             </div>
           </div>
-          <div class="sticker-phone-pre">Call:</div>
-          <div class="sticker-phone">(727) 855-6873</div>
         </div>
-        <div class="sticker-footer">ATP Tested for Sanitation</div>
+        <div class="stk-call">
+          <div class="stk-phone">Call: (727) 855-6873</div>
+        </div>
+        <div class="stk-footer">
+          <div class="stk-footer-text">ATP Tested for Sanitation</div>
+        </div>
       </div>
     </div>
   </div>
