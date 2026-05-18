@@ -49,7 +49,7 @@ def make_front() -> str:
   html, body {{
     width: 1800px; height: 1200px;
     overflow: hidden;
-    background: #0f1f38;
+    background: radial-gradient(ellipse at 50% 48%, #162844 0%, #0e1d35 55%, #0a1628 100%);
     font-family: 'Barlow', sans-serif;
     display: flex;
     flex-direction: column;
@@ -74,22 +74,8 @@ def make_front() -> str:
     display: block;
   }}
   .top-bar-right {{
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    flex-shrink: 0;
-  }}
-  .top-bar-qr {{
-    width: 180px; height: 180px;
-    background: #ffffff;
-    padding: 8px;
-    border-radius: 6px;
-    display: block;
-    object-fit: contain;
-    flex-shrink: 0;
-  }}
-  .top-bar-right-text {{
     text-align: right;
+    flex-shrink: 0;
   }}
   .top-bar-url {{
     font-family: 'Barlow', sans-serif;
@@ -99,18 +85,8 @@ def make_front() -> str:
     letter-spacing: 0.04em;
     display: block;
   }}
-  .top-bar-sub {{
-    font-family: 'Barlow', sans-serif;
-    font-weight: 400;
-    font-size: 15px;
-    color: rgba(255,255,255,0.45);
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    margin-top: 6px;
-    display: block;
-  }}
 
-  /* HERO — fills the space between bars */
+  /* HERO */
   .hero {{
     flex: 1;
     position: relative;
@@ -121,16 +97,6 @@ def make_front() -> str:
     padding: 28px 100px 20px;
     text-align: center;
     overflow: hidden;
-  }}
-  /* Faint watermark logo fills background */
-  .hero-watermark {{
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 860px;
-    opacity: 0.04;
-    filter: brightness(0) invert(1);
-    pointer-events: none;
   }}
   .headline-number {{
     font-family: 'Playfair Display', serif;
@@ -164,8 +130,8 @@ def make_front() -> str:
     position: relative;
   }}
   .gold-rule {{
-    width: 560px;
-    height: 3px;
+    width: 600px;
+    height: 4px;
     background: #c9973a;
     margin: 26px auto;
     border-radius: 2px;
@@ -229,17 +195,12 @@ def make_front() -> str:
   <div class="top-bar">
     <img class="top-bar-logo" src="{LOGO}" alt="Pinellas Ice Co">
     <div class="top-bar-right">
-      <img class="top-bar-qr" src="{QR}" alt="QR code">
-      <div class="top-bar-right-text">
-        <span class="top-bar-url">PinellasIceCo.com</span>
-        <span class="top-bar-sub">Licensed &nbsp;&middot;&nbsp; Insured &nbsp;&middot;&nbsp; ATP Certified</span>
-      </div>
+      <span class="top-bar-url">PinellasIceCo.com</span>
     </div>
   </div>
 
   <!-- HERO -->
   <div class="hero">
-    <img class="hero-watermark" src="{LOGO}" alt="">
     <div class="headline-number">30-DAY</div>
     <div class="headline-desc">INSPECTION PROTECTION</div>
     <div class="headline-guarantee">GUARANTEE</div>
@@ -254,7 +215,7 @@ def make_front() -> str:
   <div class="footer-bar">
     <span class="footer-phone">(727) 855-6873</span>
     <div class="footer-rule"></div>
-    <span class="footer-tagline">Local &nbsp;&middot;&nbsp; Insured &nbsp;&middot;&nbsp; Professional</span>
+    <span class="footer-tagline">Licensed &nbsp;&middot;&nbsp; Insured &nbsp;&middot;&nbsp; ATP Certified</span>
   </div>
 
 </body>
@@ -386,12 +347,12 @@ def make_back() -> str:
     font-family: 'Barlow', sans-serif;
     font-weight: 700;
     font-size: 14px;
-    letter-spacing: 2px;
+    letter-spacing: 3px;
     text-transform: uppercase;
     margin-bottom: 14px;
   }}
-  .cc-section-label.green {{ color: #0a6b3c; }}
-  .cc-section-label.red   {{ color: #b22a2a; }}
+  .cc-section-label.green {{ color: #0a7a40; }}
+  .cc-section-label.red   {{ color: #c41e1e; }}
   .cc-item {{
     display: flex;
     align-items: flex-start;
@@ -402,8 +363,8 @@ def make_back() -> str:
   }}
   .cc-item.good {{ font-weight: 500; color: #2d3e57; }}
   .cc-item.bad  {{ font-weight: 400; color: #5a6e87; font-size: 17px; }}
-  .dot-green {{ color: #0a6b3c; font-weight: 700; flex-shrink: 0; margin-top: 2px; }}
-  .dot-red   {{ color: #b22a2a; font-weight: 700; flex-shrink: 0; margin-top: 2px; }}
+  .dot-green {{ color: #0a7a40; font-weight: 700; flex-shrink: 0; margin-top: 2px; }}
+  .dot-red   {{ color: #c41e1e; font-weight: 700; flex-shrink: 0; margin-top: 2px; }}
   .claim-box {{
     background: #f7f2ea;
     border-radius: 10px;
@@ -432,7 +393,7 @@ def make_back() -> str:
   .col-right {{
     width: 480px;
     height: 1200px;
-    background: #f7f2ea;
+    background: #f5f0e8;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -613,27 +574,41 @@ def make_back() -> str:
     font-size: 17px;
     color: #1456b0;
   }}
-  /* Sticker image */
+  /* Sticker image — fill the tall column space */
   .cr-sticker-img {{
     width: 100%;
     flex: 1;
-    object-fit: contain;
-    object-position: center top;
+    object-fit: fill;
     display: block;
     min-height: 0;
+    border-radius: 8px;
   }}
   /* Trust statement */
   .cc-trust {{
-    margin-top: 28px;
-    padding-top: 24px;
-    border-top: 1px solid #e0e0e0;
+    margin-top: 16px;
     font-family: 'Barlow', sans-serif;
     font-weight: 500;
     font-style: italic;
-    font-size: 18px;
+    font-size: 17px;
     color: #5a6e87;
     text-align: center;
     line-height: 1.65;
+  }}
+  /* Left col ATP anchor */
+  .col-left-atp-rule {{
+    width: 80px; height: 1px;
+    background: #c9973a;
+    margin: 0 auto 14px;
+  }}
+  .col-left-atp-label {{
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    color: rgba(201,151,58,0.85);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 20px;
   }}
 </style>
 </head>
@@ -653,6 +628,8 @@ def make_back() -> str:
       We stand behind that number.
     </div>
     <div class="col-left-spacer"></div>
+    <div class="col-left-atp-rule"></div>
+    <div class="col-left-atp-label">ATP Tested Before &amp; After Every Visit</div>
     <div class="col-left-divider"></div>
     <div class="col-left-phone">(727) 855-6873</div>
     <div class="col-left-web">PinellasIceCo.com</div>
