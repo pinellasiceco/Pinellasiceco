@@ -37,8 +37,10 @@ Deno.serve(async (req) => {
       machines,          // number, minimum 1
       entry_discount,    // dollar amount off entry fee (0 if none)
       monthly_discount,  // dollar amount off plan price (0 if none)
-      client_name,       // business name for Stripe metadata
+      client_name,       // business name
       client_email,      // optional — pre-fills checkout email field
+      client_address,    // street address from P[] record
+      client_city,       // city from P[] record
       prospect_id,       // for metadata/tracking and return URL
       flex,              // boolean — month-to-month terms if true
     } = await req.json();
@@ -52,9 +54,34 @@ Deno.serve(async (req) => {
     const entryDisc = Math.max(0, Math.min(Number(entry_discount) || 0, 99));
     const planDisc  = Math.max(0, Number(monthly_discount) || 0);
 
+    // --- CREATE NAMED CUSTOMER ---
+    const addressParts = [
+      String(client_address || '').trim(),
+      String(client_city || '').trim(),
+      'FL',
+    ].filter(Boolean);
+    const customerDescription = addressParts.join(', ');
+
+    const customerParams: Stripe.CustomerCreateParams = {
+      name: String(client_name || '').trim() || 'Unknown',
+      description: customerDescription,
+      metadata: {
+        prospect_id: String(prospect_id || ''),
+        address: String(client_address || ''),
+        city: String(client_city || ''),
+        plan: String(plan || ''),
+        machines: String(machines || 1),
+      },
+    };
+    if (client_email) {
+      customerParams.email = String(client_email);
+    }
+    const customer = await stripe.customers.create(customerParams);
+
+    // --- LINE ITEMS ---
     const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
 
-    // --- ENTRY FEE ---
+    // ENTRY FEE
     const standardEntry = 99 + extraMachines * 49;
     const entryPrice = Math.max(0, standardEntry - entryDisc);
 
@@ -72,10 +99,10 @@ Deno.serve(async (req) => {
       });
     }
 
-    // --- PLAN PRICING ---
+    // PLAN PRICING
     if (plan === 'onetime') {
-      const basePrice   = 395 + extraMachines * 150;
-      const finalPrice  = Math.max(0, basePrice - planDisc);
+      const basePrice  = 395 + extraMachines * 150;
+      const finalPrice = Math.max(0, basePrice - planDisc);
       const machineLabel = m > 1 ? ` (${m} machines)` : '';
 
       lineItems.push({
@@ -91,13 +118,13 @@ Deno.serve(async (req) => {
       });
 
     } else {
-      const baseMonthly     = plan === 'monthly' ? 149 : 129;
-      const additionalRate  = plan === 'monthly' ? 69  : 49;
-      const totalMonthly    = baseMonthly + extraMachines * additionalRate;
-      const finalMonthly    = Math.max(0, totalMonthly - planDisc);
+      const baseMonthly    = plan === 'monthly' ? 149 : 129;
+      const additionalRate = plan === 'monthly' ? 69  : 49;
+      const totalMonthly   = baseMonthly + extraMachines * additionalRate;
+      const finalMonthly   = Math.max(0, totalMonthly - planDisc);
 
-      const planLabel   = plan === 'monthly' ? '60-Day Clean Ice Plan' : '90-Day Clean Ice Plan';
-      const visitsLabel = plan === 'monthly' ? '6 visits/year' : '4 visits/year';
+      const planLabel    = plan === 'monthly' ? '60-Day Clean Ice Plan' : '90-Day Clean Ice Plan';
+      const visitsLabel  = plan === 'monthly' ? '6 visits/year' : '4 visits/year';
       const machineLabel = m > 1 ? ` (${m} machines)` : '';
 
       lineItems.push({
@@ -133,10 +160,10 @@ Deno.serve(async (req) => {
 
     const sessionParams: Stripe.Checkout.SessionCreateParams = {
       mode: plan === 'onetime' ? 'payment' : 'subscription',
+      customer: customer.id,
       line_items: lineItems,
       success_url: successUrl,
       cancel_url: CANCEL_URL,
-      ...(plan === 'onetime' ? { customer_creation: 'always' as const } : {}),
       custom_fields: [
         {
           key: 'terms_agreement',
@@ -164,10 +191,6 @@ Deno.serve(async (req) => {
       payment_method_types: ['card'],
       phone_number_collection: { enabled: true },
     };
-
-    if (client_email) {
-      sessionParams.customer_email = String(client_email);
-    }
 
     if (plan !== 'onetime') {
       sessionParams.subscription_data = {

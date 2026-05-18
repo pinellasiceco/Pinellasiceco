@@ -3847,6 +3847,8 @@ async function generateStripeCheckout(){
         entry_discount:entryDisc,monthly_discount:planDisc,
         client_name:p?p.name:'',
         client_email:(customers[pid]||{}).email||'',
+        client_address:p?(p.address||''):'',
+        client_city:p?(p.city||''):'',
         prospect_id:pid||'',
         flex:flex,
       }),
