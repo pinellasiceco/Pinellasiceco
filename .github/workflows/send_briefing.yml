@@ -2,7 +2,7 @@ name: Send Daily Briefing Email
 
 on:
   schedule:
-    - cron: '0 13 * * *'   # Fallback: 13:00 UTC (9am ET) — fires only if rebuild failed
+    - cron: '0 13 * * *'   # 9am ET fallback only — fires if rebuild failed
   workflow_dispatch:         # Manual trigger
 
 jobs:
@@ -18,10 +18,13 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Install dependencies
+        run: pip install requests pandas openpyxl
+
       - name: Send briefing email
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           BRIEFING_EMAIL: ${{ secrets.BRIEFING_EMAIL }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: python send_briefing.py
