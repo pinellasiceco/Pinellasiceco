@@ -3862,6 +3862,7 @@ async function generateStripeCheckout(){
       customers[pid]._pending_plan=plan;
       customers[pid]._pending_machines=m;
       customers[pid]._pending_plan_disc=planDisc;
+      custSave();
     }
     return data.url;
   }catch(err){
