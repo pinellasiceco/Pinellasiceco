@@ -474,20 +474,20 @@ def make_back() -> str:
   }}
   .sticker {{
     width: 100%;
-    border-radius: 12px;
+    border-radius: 14px;
     overflow: hidden;
-    border: 2px solid #b8c4d8;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.14);
+    border: 2.5px solid #b8c4d8;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.18);
   }}
   .sticker-header {{
     background: #1e3a6e;
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 18px 22px;
+    gap: 20px;
+    padding: 22px 26px;
   }}
   .sticker-icon {{
-    width: 60px; height: 60px;
+    width: 96px; height: 96px;
     object-fit: contain;
     filter: brightness(0) invert(1);
     flex-shrink: 0;
@@ -495,34 +495,34 @@ def make_back() -> str:
   .sticker-company {{
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 800;
-    font-size: 28px;
+    font-size: 40px;
     color: #ffffff;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    line-height: 1.1;
+    line-height: 1.05;
   }}
   .sticker-subheader {{
     background: #2d3748;
     color: #ffffff;
     font-family: 'Barlow', sans-serif;
     font-weight: 600;
-    font-size: 15px;
+    font-size: 19px;
     text-align: center;
-    padding: 11px 12px;
+    padding: 14px 16px;
     letter-spacing: 0.03em;
   }}
   .sticker-body {{
     background: #ffffff;
-    padding: 20px 22px 16px;
+    padding: 24px 26px 20px;
   }}
   .sticker-field {{
     font-family: 'Barlow', sans-serif;
     font-weight: 400;
-    font-size: 13px;
+    font-size: 17px;
     color: #2d3e57;
     border-bottom: 1.5px solid #b0b8c8;
-    padding-bottom: 5px;
-    margin-bottom: 13px;
+    padding-bottom: 7px;
+    margin-bottom: 16px;
   }}
   .sticker-field strong {{
     font-weight: 700;
@@ -530,32 +530,32 @@ def make_back() -> str:
   .sticker-atp-label {{
     font-family: 'Barlow', sans-serif;
     font-weight: 700;
-    font-size: 11px;
+    font-size: 14px;
     color: #0f1f38;
-    letter-spacing: 1.5px;
+    letter-spacing: 1px;
     text-transform: uppercase;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }}
   .sticker-ratings {{
     display: flex;
-    gap: 6px;
-    margin-bottom: 18px;
+    gap: 8px;
+    margin-bottom: 22px;
   }}
   .sticker-rating {{
     flex: 1;
-    border-radius: 5px;
-    padding: 9px 4px;
+    border-radius: 6px;
+    padding: 12px 4px;
     text-align: center;
   }}
-  .sticker-rating.clean    {{ background: #d4edda; border: 1.5px solid #28a745; }}
-  .sticker-rating.moderate {{ background: #fff3cd; border: 1.5px solid #ffc107; }}
-  .sticker-rating.high     {{ background: #f8d7da; border: 1.5px solid #dc3545; }}
+  .sticker-rating.clean    {{ background: #d4edda; border: 2px solid #28a745; }}
+  .sticker-rating.moderate {{ background: #fff3cd; border: 2px solid #ffc107; }}
+  .sticker-rating.high     {{ background: #f8d7da; border: 2px solid #dc3545; }}
   .sticker-rating-name {{
     font-family: 'Barlow', sans-serif;
     font-weight: 700;
-    font-size: 11px;
+    font-size: 14px;
     text-transform: uppercase;
-    letter-spacing: 0.4px;
+    letter-spacing: 0.3px;
   }}
   .clean    .sticker-rating-name {{ color: #155724; }}
   .moderate .sticker-rating-name {{ color: #856404; }}
@@ -563,8 +563,8 @@ def make_back() -> str:
   .sticker-rating-range {{
     font-family: 'Barlow', sans-serif;
     font-weight: 400;
-    font-size: 10px;
-    margin-top: 2px;
+    font-size: 13px;
+    margin-top: 3px;
   }}
   .clean    .sticker-rating-range {{ color: #155724; }}
   .moderate .sticker-rating-range {{ color: #856404; }}
@@ -572,7 +572,7 @@ def make_back() -> str:
   .sticker-phone {{
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 800;
-    font-size: 21px;
+    font-size: 30px;
     color: #0f1f38;
     text-align: center;
     letter-spacing: 0.04em;
@@ -580,19 +580,19 @@ def make_back() -> str:
   .sticker-phone-pre {{
     font-family: 'Barlow', sans-serif;
     font-weight: 700;
-    font-size: 13px;
+    font-size: 16px;
     color: #0f1f38;
     text-align: center;
-    margin-bottom: 2px;
+    margin-bottom: 3px;
   }}
   .sticker-footer {{
     background: #1e3a6e;
     color: #ffffff;
     font-family: 'Barlow', sans-serif;
     font-weight: 600;
-    font-size: 12px;
+    font-size: 15px;
     text-align: center;
-    padding: 9px 8px;
+    padding: 13px 10px;
     letter-spacing: 1.5px;
     text-transform: uppercase;
   }}
