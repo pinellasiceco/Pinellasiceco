@@ -1282,8 +1282,12 @@ def run(csv_paths):
     rv['month'] = rv['inspection_date'].dt.month
     FEATS = ['hv','iv','bv','tv','dr','vn','month','county_enc','prev']
     rf = RandomForestRegressor(n_estimators=120, max_depth=8, random_state=42, n_jobs=-1)
-    rf.fit(rv[FEATS].fillna(0), rv['interval'])
-    print("Prediction model trained.\n")
+    if len(rv) > 0:
+        rf.fit(rv[FEATS].fillna(0), rv['interval'])
+        print("Prediction model trained.\n")
+    else:
+        rf = None
+        print("No training data — model skipped.\n")
 
     # Per-establishment history
     ice_hist = routine.groupby('license_id').agg(
@@ -1399,7 +1403,7 @@ def run(csv_paths):
     latest['prev']  = latest['avg_interval'].fillna(MED)
     latest['month'] = latest['inspection_date'].dt.month
     Xp = pd.DataFrame({f: latest.get(f, 0) for f in FEATS}).fillna(0)
-    latest['pred_days']  = np.clip(rf.predict(Xp).round().astype(int), 7, 730)
+    latest['pred_days']  = np.clip(rf.predict(Xp).round().astype(int), 7, 730) if rf is not None else MED
     latest['pred_next']  = latest['inspection_date'] + pd.to_timedelta(latest['pred_days'], unit='d')
     latest['days_until'] = (latest['pred_next'] - pd.Timestamp(TODAY)).dt.days.fillna(999).astype(int)
 
@@ -3926,10 +3930,11 @@ async function coSendToClient(){
 }
 
 async function coChargeNow(){
+  var win=window.open('','_blank');
   var url=await generateStripeCheckout();
-  if(!url)return;
-  var win=window.open(url,'_blank');
-  if(!win){window.location.href=url;}
+  if(!url){if(win)win.close();return;}
+  if(win&&!win.closed){win.location.href=url;}
+  else{window.location.href=url;}
 }
 
 function checkStripeReturn(){

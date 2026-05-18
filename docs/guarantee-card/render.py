@@ -20,9 +20,10 @@ def b64(rel_path: str, mime: str) -> str:
     with open(p, 'rb') as f:
         return f"data:{mime};base64,{base64.b64encode(f.read()).decode()}"
 
-LOGO = b64('IMG_0110.png',  'image/png')    # Full wordmark logo
-ICON = b64('IMG_0037.jpeg', 'image/jpeg')   # Ice cube icon only
-QR   = b64('IMG_0738.jpeg', 'image/jpeg')   # QR code → explore page
+LOGO    = b64('IMG_0110.png',  'image/png')    # Full wordmark logo
+ICON    = b64('IMG_0037.jpeg', 'image/jpeg')   # Ice cube icon only
+QR      = b64('IMG_0738.jpeg', 'image/jpeg')   # QR code → explore page
+STICKER = b64('3B82805F-8BA4-42EA-98C1-92FC16CE7F84.png', 'image/png')  # Service sticker
 
 # ── Fonts ─────────────────────────────────────────────────────────────────────
 GFONTS = (
@@ -48,15 +49,15 @@ def make_front() -> str:
   html, body {{
     width: 1800px; height: 1200px;
     overflow: hidden;
-    background: #0f1f38;
+    background: radial-gradient(ellipse at 50% 48%, #162844 0%, #0e1d35 55%, #0a1628 100%);
     font-family: 'Barlow', sans-serif;
     display: flex;
     flex-direction: column;
   }}
 
-  /* TOP BAR — tall enough for a real logo */
+  /* TOP BAR */
   .top-bar {{
-    width: 1800px; height: 196px;
+    width: 1800px; height: 270px;
     background: #162844;
     display: flex;
     align-items: center;
@@ -65,9 +66,8 @@ def make_front() -> str:
     flex-shrink: 0;
     border-bottom: 3px solid #c9973a;
   }}
-  .top-bar img {{
-    height: 148px;
-    max-width: 700px;
+  .top-bar-logo {{
+    height: 224px;
     object-fit: contain;
     object-position: left center;
     filter: brightness(0) invert(1);
@@ -85,18 +85,8 @@ def make_front() -> str:
     letter-spacing: 0.04em;
     display: block;
   }}
-  .top-bar-sub {{
-    font-family: 'Barlow', sans-serif;
-    font-weight: 400;
-    font-size: 15px;
-    color: rgba(255,255,255,0.45);
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    margin-top: 6px;
-    display: block;
-  }}
 
-  /* HERO — fills the space between bars */
+  /* HERO */
   .hero {{
     flex: 1;
     position: relative;
@@ -107,16 +97,6 @@ def make_front() -> str:
     padding: 28px 100px 20px;
     text-align: center;
     overflow: hidden;
-  }}
-  /* Faint watermark logo fills background */
-  .hero-watermark {{
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 860px;
-    opacity: 0.04;
-    filter: brightness(0) invert(1);
-    pointer-events: none;
   }}
   .headline-number {{
     font-family: 'Playfair Display', serif;
@@ -150,8 +130,8 @@ def make_front() -> str:
     position: relative;
   }}
   .gold-rule {{
-    width: 560px;
-    height: 3px;
+    width: 600px;
+    height: 4px;
     background: #c9973a;
     margin: 26px auto;
     border-radius: 2px;
@@ -211,18 +191,16 @@ def make_front() -> str:
 </head>
 <body>
 
-  <!-- TOP BAR — large logo -->
+  <!-- TOP BAR -->
   <div class="top-bar">
-    <img src="{LOGO}" alt="Pinellas Ice Co">
+    <img class="top-bar-logo" src="{LOGO}" alt="Pinellas Ice Co">
     <div class="top-bar-right">
       <span class="top-bar-url">PinellasIceCo.com</span>
-      <span class="top-bar-sub">Licensed &nbsp;&middot;&nbsp; Insured &nbsp;&middot;&nbsp; ATP Certified</span>
     </div>
   </div>
 
   <!-- HERO -->
   <div class="hero">
-    <img class="hero-watermark" src="{LOGO}" alt="">
     <div class="headline-number">30-DAY</div>
     <div class="headline-desc">INSPECTION PROTECTION</div>
     <div class="headline-guarantee">GUARANTEE</div>
@@ -237,7 +215,7 @@ def make_front() -> str:
   <div class="footer-bar">
     <span class="footer-phone">(727) 855-6873</span>
     <div class="footer-rule"></div>
-    <span class="footer-tagline">Local &nbsp;&middot;&nbsp; Insured &nbsp;&middot;&nbsp; Professional</span>
+    <span class="footer-tagline">Licensed &nbsp;&middot;&nbsp; Insured &nbsp;&middot;&nbsp; ATP Certified</span>
   </div>
 
 </body>
@@ -274,43 +252,33 @@ def make_back() -> str:
     flex-shrink: 0;
   }}
   .col-left-icon {{
-    width: 88px; height: 88px;
+    width: 100%;
+    height: auto;
     filter: brightness(0) invert(1);
     display: block;
     object-fit: contain;
   }}
-  .col-left-name {{
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 800;
-    font-size: 28px;
-    color: #ffffff;
-    text-align: center;
-    line-height: 1.15;
-    margin-top: 20px;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }}
   .col-left-rule {{
     width: 60px; height: 2px;
     background: #c9973a;
-    margin: 20px auto;
+    margin: 26px auto;
   }}
   .col-left-why-label {{
     font-family: 'Barlow', sans-serif;
     font-weight: 700;
-    font-size: 11px;
+    font-size: 13px;
     color: #c9973a;
     letter-spacing: 3px;
     text-transform: uppercase;
     text-align: center;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
   }}
   .col-left-body {{
     font-family: 'Barlow', sans-serif;
     font-weight: 400;
-    font-size: 14px;
+    font-size: 17px;
     color: #ffffff;
-    line-height: 1.75;
+    line-height: 1.8;
     text-align: center;
   }}
   .col-left-spacer {{ flex: 1; }}
@@ -318,20 +286,20 @@ def make_back() -> str:
     width: 100%;
     height: 1px;
     background: rgba(255,255,255,0.15);
-    margin-bottom: 20px;
+    margin-bottom: 22px;
   }}
   .col-left-phone {{
     font-family: 'Barlow', sans-serif;
     font-weight: 700;
-    font-size: 20px;
+    font-size: 24px;
     color: #c9973a;
     text-align: center;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
   }}
   .col-left-web {{
     font-family: 'Barlow', sans-serif;
     font-weight: 400;
-    font-size: 14px;
+    font-size: 16px;
     color: rgba(255,255,255,0.7);
     text-align: center;
   }}
@@ -349,82 +317,83 @@ def make_back() -> str:
   .cc-label {{
     font-family: 'Barlow', sans-serif;
     font-weight: 700;
-    font-size: 11px;
+    font-size: 13px;
     color: #0f1f38;
     letter-spacing: 3px;
     text-transform: uppercase;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }}
   .cc-headline {{
     font-family: 'Playfair Display', serif;
     font-weight: 700;
-    font-size: 34px;
+    font-size: 46px;
     color: #0f1f38;
-    line-height: 1.15;
-    margin-bottom: 6px;
+    line-height: 1.1;
+    margin-bottom: 10px;
   }}
   .cc-subline {{
     font-family: 'Barlow', sans-serif;
     font-weight: 400;
     font-style: italic;
-    font-size: 15px;
+    font-size: 19px;
     color: #5a6e87;
   }}
   .cc-divider {{
     height: 1px;
     background: #e0e0e0;
-    margin: 20px 0;
+    margin: 28px 0;
   }}
   .cc-section-label {{
     font-family: 'Barlow', sans-serif;
     font-weight: 700;
-    font-size: 11px;
-    letter-spacing: 2px;
+    font-size: 14px;
+    letter-spacing: 3px;
     text-transform: uppercase;
-    margin-bottom: 10px;
+    margin-bottom: 14px;
   }}
-  .cc-section-label.green {{ color: #0a6b3c; }}
-  .cc-section-label.red   {{ color: #b22a2a; }}
+  .cc-section-label.green {{ color: #0a7a40; }}
+  .cc-section-label.red   {{ color: #c41e1e; }}
   .cc-item {{
     display: flex;
     align-items: flex-start;
-    gap: 10px;
+    gap: 12px;
     font-family: 'Barlow', sans-serif;
-    font-size: 14px;
-    line-height: 1.8;
+    font-size: 18px;
+    line-height: 2;
   }}
   .cc-item.good {{ font-weight: 500; color: #2d3e57; }}
-  .cc-item.bad  {{ font-weight: 400; color: #5a6e87; font-size: 13px; }}
-  .dot-green {{ color: #0a6b3c; font-weight: 700; flex-shrink: 0; margin-top: 1px; }}
-  .dot-red   {{ color: #b22a2a; font-weight: 700; flex-shrink: 0; margin-top: 1px; }}
+  .cc-item.bad  {{ font-weight: 400; color: #5a6e87; font-size: 17px; }}
+  .dot-green {{ color: #0a7a40; font-weight: 700; flex-shrink: 0; margin-top: 2px; }}
+  .dot-red   {{ color: #c41e1e; font-weight: 700; flex-shrink: 0; margin-top: 2px; }}
   .claim-box {{
     background: #f7f2ea;
-    border-radius: 8px;
-    padding: 20px 20px;
-    border-left: 4px solid #c9973a;
+    border-radius: 10px;
+    padding: 26px 26px;
+    border-left: 5px solid #c9973a;
+    margin-top: 4px;
   }}
   .claim-label {{
     font-family: 'Barlow', sans-serif;
     font-weight: 700;
-    font-size: 11px;
+    font-size: 13px;
     color: #0f1f38;
     letter-spacing: 2px;
     text-transform: uppercase;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }}
   .claim-body {{
     font-family: 'Barlow', sans-serif;
     font-weight: 400;
-    font-size: 13px;
+    font-size: 17px;
     color: #2d3e57;
-    line-height: 1.7;
+    line-height: 1.8;
   }}
 
   /* RIGHT COLUMN */
   .col-right {{
     width: 480px;
     height: 1200px;
-    background: #f7f2ea;
+    background: #f5f0e8;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -463,46 +432,181 @@ def make_back() -> str:
     background: #d0d0d0;
     margin: 28px 0;
   }}
-  .cr-after-label {{
-    font-family: 'Barlow', sans-serif;
-    font-weight: 700;
-    font-size: 10px;
-    color: #0f1f38;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    text-align: center;
-    margin-bottom: 16px;
-  }}
-  .cr-item {{
-    background: #ffffff;
-    border-left: 3px solid #c9973a;
-    border-radius: 6px;
-    padding: 12px 16px;
-    margin-bottom: 10px;
+  /* SERVICE STICKER MOCKUP */
+  .sticker-wrap {{
     width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
   }}
-  .cr-item-title {{
+  .sticker {{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 2px solid #c0cad8;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.16);
+    background: #ffffff;
+  }}
+  .stk-logo-sect {{
+    background: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px 20px 18px;
+  }}
+  .stk-logo-img {{
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }}
+  .stk-dark {{
+    background: #2c2c2c;
+    padding: 14px 16px;
+    text-align: center;
+  }}
+  .stk-dark-text {{
     font-family: 'Barlow', sans-serif;
     font-weight: 600;
-    font-size: 14px;
-    color: #0f1f38;
-    margin-bottom: 2px;
+    font-size: 22px;
+    color: #ffffff;
+    letter-spacing: 0.01em;
   }}
-  .cr-item-sub {{
+  .stk-body {{
+    flex: 1;
+    background: #ffffff;
+    padding: 22px 24px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }}
+  .stk-field {{
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 16px;
+  }}
+  .stk-field-lbl {{
     font-family: 'Barlow', sans-serif;
-    font-weight: 400;
-    font-size: 12px;
-    color: #5a6e87;
+    font-weight: 600;
+    font-size: 20px;
+    color: #1a1a1a;
+    white-space: nowrap;
   }}
-  .cr-spacer {{ flex: 1; min-height: 8px; }}
-  .cr-bottom-label {{
+  .stk-field-line {{
+    flex: 1;
+    border-bottom: 1.5px solid #444;
+    height: 24px;
+  }}
+  .stk-atp-lbl {{
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    font-size: 19px;
+    color: #1a1a1a;
+    margin-bottom: 12px;
+  }}
+  .stk-ratings {{
+    display: flex;
+    gap: 0;
+    border-radius: 8px;
+    overflow: hidden;
+  }}
+  .stk-rating {{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 18px 6px 16px;
+    gap: 8px;
+    text-align: center;
+  }}
+  .stk-rating.clean    {{ background: #1a7a3c; }}
+  .stk-rating.moderate {{ background: #cc9900; }}
+  .stk-rating.high     {{ background: #c0311a; }}
+  .stk-rtitle {{
+    font-family: 'Barlow', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    text-transform: uppercase;
+    line-height: 1.2;
+  }}
+  .stk-rrange {{
     font-family: 'Barlow', sans-serif;
     font-weight: 500;
-    font-size: 11px;
-    color: #5a6e87;
-    letter-spacing: 1px;
+    font-size: 14px;
+    line-height: 1;
+  }}
+  .stk-rating.clean .stk-rtitle,
+  .stk-rating.clean .stk-rrange,
+  .stk-rating.high  .stk-rtitle,
+  .stk-rating.high  .stk-rrange  {{ color: #ffffff; }}
+  .stk-rating.moderate .stk-rtitle,
+  .stk-rating.moderate .stk-rrange {{ color: #1a1a1a; }}
+  .stk-checkbox {{ font-size: 22px; line-height: 1; }}
+  .stk-rating.clean .stk-checkbox,
+  .stk-rating.high  .stk-checkbox {{ color: #ffffff; }}
+  .stk-rating.moderate .stk-checkbox {{ color: #1a1a1a; }}
+  .stk-call {{
+    background: #f5f5f5;
+    border-top: 1px solid #ddd;
+    padding: 16px 16px;
     text-align: center;
+  }}
+  .stk-phone {{
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    font-size: 30px;
+    color: #111111;
+  }}
+  .stk-footer {{
+    border-top: 1px solid #e8e8e8;
+    padding: 13px 16px;
+    text-align: center;
+    background: #ffffff;
+  }}
+  .stk-footer-text {{
+    font-family: 'Barlow', sans-serif;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 17px;
+    color: #1456b0;
+  }}
+  /* Sticker image — natural square proportions */
+  .cr-sticker-img {{
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+  }}
+  /* Trust statement */
+  .cc-trust {{
+    margin-top: 16px;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 500;
+    font-style: italic;
+    font-size: 17px;
+    color: #5a6e87;
+    text-align: center;
+    line-height: 1.65;
+  }}
+  /* Left col ATP anchor */
+  .col-left-atp-rule {{
+    width: 80px; height: 1px;
+    background: #c9973a;
+    margin: 0 auto 14px;
+  }}
+  .col-left-atp-label {{
+    font-family: 'Barlow', sans-serif;
+    font-weight: 600;
+    font-size: 11px;
+    color: rgba(201,151,58,0.85);
+    letter-spacing: 2.5px;
     text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 20px;
   }}
 </style>
 </head>
@@ -510,8 +614,7 @@ def make_back() -> str:
 
   <!-- LEFT COLUMN -->
   <div class="col-left">
-    <img class="col-left-icon" src="{ICON}" alt="Pinellas Ice Co icon">
-    <div class="col-left-name">PINELLAS<br>ICE CO.</div>
+    <img class="col-left-icon" src="{LOGO}" alt="Pinellas Ice Co">
     <div class="col-left-rule"></div>
     <div class="col-left-why-label">WHY WE CAN OFFER THIS</div>
     <div class="col-left-body">
@@ -523,6 +626,8 @@ def make_back() -> str:
       We stand behind that number.
     </div>
     <div class="col-left-spacer"></div>
+    <div class="col-left-atp-rule"></div>
+    <div class="col-left-atp-label">ATP Tested Before &amp; After Every Visit</div>
     <div class="col-left-divider"></div>
     <div class="col-left-phone">(727) 855-6873</div>
     <div class="col-left-web">PinellasIceCo.com</div>
@@ -576,33 +681,19 @@ def make_back() -> str:
         immediately. No questions asked.
       </div>
     </div>
+    <div class="cc-trust">
+      Serving Restaurants, Bars &amp; Golf Courses<br>throughout Pinellas County.
+    </div>
   </div>
 
   <!-- RIGHT COLUMN -->
   <div class="col-right">
-    <div class="cr-scan-label">SCAN TO VERIFY</div>
+    <div class="cr-scan-label">SCAN TO LEARN MORE</div>
     <img class="cr-qr" src="{QR}" alt="QR code">
-    <div class="cr-qr-sub">This location&rsquo;s certification</div>
 
     <div class="cr-divider"></div>
 
-    <div class="cr-after-label">AFTER EVERY VISIT YOU RECEIVE:</div>
-
-    <div class="cr-item">
-      <div class="cr-item-title">&#x1F4CB; Compliance Report</div>
-      <div class="cr-item-sub">ATP before &amp; after readings</div>
-    </div>
-    <div class="cr-item">
-      <div class="cr-item-title">&#x1F52C; ATP Certificate</div>
-      <div class="cr-item-sub">Timestamped test results</div>
-    </div>
-    <div class="cr-item">
-      <div class="cr-item-title">&#x1F3F7;&#xFE0F; Service Label</div>
-      <div class="cr-item-sub">Machine date + rating label applied</div>
-    </div>
-
-    <div class="cr-spacer"></div>
-    <div class="cr-bottom-label">ATP Tested &nbsp;&middot;&nbsp; Certified Clean &nbsp;&middot;&nbsp; Documented</div>
+    <img class="cr-sticker-img" src="{STICKER}" alt="Pinellas Ice Co Service Sticker">
   </div>
 
 </body>
