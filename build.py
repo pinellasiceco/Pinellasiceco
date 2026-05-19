@@ -2380,9 +2380,9 @@ header{background:var(--navy);
   <!-- QUEUE MODE OVERLAY -->
   <div id="queue-bg" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:90;flex-direction:column">
     <div style="background:var(--navy);padding:12px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0">
-      <button onclick="exitQueueMode()" style="border:none;background:rgba(255,255,255,.15);color:#fff;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">&#x2715; Exit</button>
+      <button onclick="exitQueueMode()" ontouchend="event.preventDefault();exitQueueMode()" style="border:none;background:rgba(255,255,255,.15);color:#fff;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">&#x2715; Exit</button>
       <div style="flex:1;text-align:center;font-size:11px;font-weight:700;color:rgba(255,255,255,.8)" id="queue-progress"></div>
-      <button onclick="queueNext()" style="border:none;background:var(--ora);color:#fff;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Skip &#x2192;</button>
+      <button onclick="queueNext()" ontouchend="event.preventDefault();queueNext()" style="border:none;background:var(--ora);color:#fff;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">Skip &#x2192;</button>
     </div>
     <div style="flex:1;overflow-y:auto;padding:14px 16px;min-height:0;-webkit-overflow-scrolling:touch">
       <div id="queue-card-wrap"></div>
@@ -5176,7 +5176,7 @@ function setPreset(k){
   }else{
     _dbprSort='count';
     if(sortRow)sortRow.style.display='none';
-    if(sortBtn){sortBtn.textContent='&#x1F4CA; Most Cited';sortBtn.style.background='#7C3AED';sortBtn.style.color='#fff';}
+    if(sortBtn){sortBtn.innerHTML='&#x1F4CA; Most Cited';sortBtn.style.background='#7C3AED';sortBtn.style.color='#fff';}
   }
   rA();
 }
@@ -5239,7 +5239,8 @@ function enterQueueMode(){
 
 function exitQueueMode(){
   document.getElementById('queue-bg').classList.remove('on');
-  rA();renderBriefing();
+  clearFilters();
+  renderBriefing();
 }
 
 function renderQueueCard(){
