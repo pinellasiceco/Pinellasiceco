@@ -2360,8 +2360,8 @@ header{background:var(--navy);
         <option value="signed">Signed</option>
         <option value="dead">Dead</option>
       </select>
-      <button onclick="enterQueueMode()" style="font-size:10px;padding:5px 10px;border:1px solid var(--blu);border-radius:6px;background:#0a84ff22;color:var(--blu);cursor:pointer;font-family:inherit;font-weight:700;flex-shrink:0">&#x25B6; Queue</button>
-      <button onclick="clearFilters()" style="font-size:10px;padding:5px 8px;border:1px solid var(--brd);border-radius:6px;background:transparent;color:var(--sub);cursor:pointer;font-family:inherit;flex-shrink:0">Clear</button>
+      <button onclick="enterQueueMode()" ontouchend="event.preventDefault();enterQueueMode()" style="font-size:10px;padding:5px 10px;border:1px solid var(--blu);border-radius:6px;background:#0a84ff22;color:var(--blu);cursor:pointer;font-family:inherit;font-weight:700;flex-shrink:0">&#x25B6; Queue</button>
+      <button onclick="clearFilters()" ontouchend="event.preventDefault();clearFilters()" style="font-size:10px;padding:5px 8px;border:1px solid var(--brd);border-radius:6px;background:transparent;color:var(--sub);cursor:pointer;font-family:inherit;flex-shrink:0">Clear</button>
       <button id="btn-show-dead" onclick="toggleShowDead()" style="font-size:10px;padding:5px 8px;border:1px solid #94a3b8;border-radius:6px;background:transparent;color:#94a3b8;cursor:pointer;font-family:inherit;flex-shrink:0">&#x26AB; Show Lost</button>
       <span class="fcnt" id="acnt"></span>
     </div>
