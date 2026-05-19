@@ -206,7 +206,7 @@ def main():
     if narratives_path:
         try:
             nar = pd.read_csv(narratives_path, low_memory=False, dtype=str)
-            key_col = next((c for c in ['license_number', 'license_id']
+            key_col = next((c for c in ['license_id', 'license_number']
                             if c in nar.columns), nar.columns[0])
             nar['_key'] = nar[key_col].astype(str).str.strip()
             obs_col = next((c for c in ['observation', 'best_observation']
