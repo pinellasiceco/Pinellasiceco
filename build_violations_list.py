@@ -9,7 +9,7 @@ Runs in CI before scrape_dbpr.py to feed the full violations scraper.
 
 import csv
 import os
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 
 _DBPR_COLS = (
     ['District', 'County Number', 'County Name', 'License Type Code',
@@ -39,16 +39,21 @@ def main():
     try:
         with open(input_file, newline='', encoding='utf-8', errors='replace') as f:
             reader = csv.reader(f)
-            raw_header = next(reader, None)
-            header = raw_header if raw_header and len(raw_header) > 20 else _DBPR_COLS
+            header = _DBPR_COLS  # CSV has no header row — first row is data
+            print(f'  Reading {input_file}...')
+            print(f'  Using column headers: {", ".join(header[:5])}...')
 
+            pinellas_count = 0
             for row in reader:
                 if len(row) < 10:
                     continue
                 rec = dict(zip(header, row))
 
-                if rec.get('County Name', '').strip().lower() != 'pinellas':
+                county_name = rec.get('County Name', '').strip().lower()
+                county_num = rec.get('County Number', '').strip()
+                if county_name != 'pinellas' and county_num != '62':
                     continue
+                pinellas_count += 1
 
                 try:
                     num_total = int(rec.get('Num Total', '0').strip() or '0')
@@ -61,7 +66,10 @@ def main():
                 try:
                     insp_date = date.fromisoformat(insp_date_str[:10])
                 except (ValueError, TypeError):
-                    continue
+                    try:
+                        insp_date = datetime.strptime(insp_date_str.strip(), '%m/%d/%Y').date()
+                    except (ValueError, TypeError):
+                        continue
                 if insp_date < cutoff:
                     continue
 
@@ -89,6 +97,9 @@ def main():
     except Exception as e:
         print(f'  build_violations_list error: {e}')
         return
+
+    print(f'  Pinellas rows found: {pinellas_count}')
+    print(f'  Unique licenses with violations: {len(by_license)}')
 
     if not by_license:
         print('  No Pinellas violation records found within cutoff')
