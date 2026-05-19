@@ -163,7 +163,7 @@ def main():
         print(f'  V22 sample values: {pinellas["V22"].dropna().unique()[:10]}')
         return
 
-    v22_rows['license_str'] = v22_rows['License ID'].astype(str).str.strip()
+    v22_rows['license_str'] = v22_rows['License Number'].astype(str).str.strip()
 
     # Per-license aggregation — one row per business
     summary = v22_rows.groupby('license_str').agg(
@@ -188,7 +188,7 @@ def main():
     summary['cit_repeat'] = summary['cit_ice_count'] > 1
 
     # Corrected on site
-    lic_col = v22_rows['License ID'].astype(str).str.strip()
+    lic_col = v22_rows['License Number'].astype(str).str.strip()
     corrected = (
         v22_rows.groupby(lic_col)
         .apply(lambda x: x['Inspection Disposition'].astype(str)
@@ -206,7 +206,7 @@ def main():
     if narratives_path:
         try:
             nar = pd.read_csv(narratives_path, low_memory=False, dtype=str)
-            key_col = next((c for c in ['license_id', 'license_number']
+            key_col = next((c for c in ['license_number', 'license_id']
                             if c in nar.columns), nar.columns[0])
             nar['_key'] = nar[key_col].astype(str).str.strip()
             obs_col = next((c for c in ['observation', 'best_observation']
@@ -222,15 +222,9 @@ def main():
                 summary['best_observation'] = (
                     summary['license'].map(obs_map).fillna('')
                 )
-                n_matched = int((summary['best_observation'] != '').sum())
-                n_narratives = int(nar['_key'].nunique())
-                print(f'  Narratives: {n_narratives} unique licenses in file'
-                      f', {n_matched}/{len(summary)} businesses matched'
-                      f' (key col: {key_col})')
+                print(f'  Merged observation text from {narratives_path}')
             else:
                 summary['best_observation'] = ''
-                print(f'  Narratives: no observation column found in {narratives_path}'
-                      f' (cols: {list(nar.columns[:8])})')
         except Exception as e:
             print(f'  Narratives merge skipped: {e}')
             summary['best_observation'] = ''
