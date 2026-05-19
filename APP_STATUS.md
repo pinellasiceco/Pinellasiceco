@@ -1,5 +1,5 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-05-19 (session 44 — citation pipeline fix, workflow revert loop fix, iOS button fixes) by Claude Code*
+*Last updated: 2026-05-18 (session 43b — fix custSave missing after pending Stripe state) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
@@ -10,11 +10,8 @@
 ## What's Working ✅
 
 ### Deployment
-- Daily cron: `0 14 * * *` (10am ET) in `rebuild.yml` — runs ~3h after DBPR publishes (~6:48am ET confirmed via Last-Modified header)
-- MAX_RECORDS=500 per daily scrape run (~14 min at 1.5s delay)
-- Scraper delay: MIN_DELAY=1.5s, MAX_DELAY=3.0s (~40% faster than previous 2.5/4.5s)
+- Daily cron: `0 11 * * *` (7am ET) in `rebuild.yml`
 - Commit uses `--allow-empty` — always pushes even if no data changes
-- **Workflow revert loop permanently fixed**: CI commit step now does `git add -A` then `git restore --staged .github/` — Actions bot can never stage or push workflow files; prevents the daily rebuild from reverting workflow changes
 - `pages.yml` deploys to GitHub Pages on every push to main
 - `send_briefing.py` runs as **final step in rebuild.yml** — always sends after fresh data is built
 - Daily briefing fallback: `send_briefing.yml` cron at 13:00 UTC (9am ET) if rebuild fails
@@ -187,17 +184,6 @@ To force a fresh PWA load after a push: open the URL directly in Safari (not the
 - `build_date` in P[] records will appear after next CI rebuild; existing records have no `build_date` so freshness indicator shows nothing until rebuilt
 
 ## Recent Changes
-- **2026-05-19 (s44 — citation pipeline fix + workflow revert loop fix + iOS button fixes):**
-  - **Citation matching root cause fixed**: `generate_citation_summary.py` was grouping by `License Number` (human-readable string) instead of `License ID` (numeric DB key used by prospect records). Result: citation CSV keys never matched prospect `id` fields → only 3 accidental matches. Fixed both groupby calls to use `License ID`. Narratives key priority also fixed (`license_id` checked before `license_number`). CI log now shows match count: `Narratives: N unique licenses, X/2614 businesses matched (key: license_id)`.
-  - **DBPR publish time confirmed**: `download_data.py` now logs server `Last-Modified` header. Confirmed DBPR publishes `3fdinspi_current.csv` at ~6:48am ET daily. Cron set to 10am ET for now; will tighten once timing is confirmed consistent over several days.
-  - **Workflow revert loop permanently fixed**: The Actions bot lacked `workflows` permission but `git add -A` was staging `.github/workflows/rebuild.yml` on every run, causing push failures and reverting all workflow changes. Fixed by adding `git restore --staged .github/ 2>/dev/null || true` after `git add -A` in the commit step. Workflow file changes must be pushed via GitHub API (MCP `push_files`) or directly from Claude Code session — never committed by the bot.
-  - **iOS button fixes**: Added `ontouchend` handlers to Clear, Queue, Exit (queue overlay), and Skip (queue overlay) buttons — previously only had `onclick` which caused 300ms delay / missed taps on iOS PWA.
-  - **Queue exit clears filter**: `exitQueueMode()` now calls `clearFilters()` so tapping Exit returns to the full unfiltered prospect list, not the DBPR-3 filtered state that started the queue.
-  - **Sort button emoji**: `setPreset()` was using `textContent` to reset the sort button label, rendering `&#x1F4CA;` as literal text. Changed to `innerHTML`.
-  - **MRR/ARR consistency**: All three views (Home briefing, Clients KPI bar, Forecast) now use the same filter: `customer_recurring || customer_quarterly` only. `customer_once` and `customer_intro` excluded from recurring revenue.
-  - **DBPR sort button**: Purple sort row added below filter bar, visible only when DBPR chip is active. Toggles between 📊 Most Cited (desc citation count) and 📅 Most Recent (desc `cit_latest` date). Date badge shown on cards in Most Recent mode.
-  - **Citation stats in briefing email**: `get_citation_stats()` function reads `ice_citation_by_business.csv`; Data Status card in daily email shows total citations, delta vs yesterday, last-7-days count, and 24h alert badge.
-
 - **2026-05-18 (s43 — fix Stripe return monthly price bug):** Three bugs in the post-Stripe-payment close flow. (1) `checkStripeReturn()` rebuilt `_closeState` using `p.machines` (DBPR raw estimate) instead of what the user configured — if DBPR showed 2 machines but user sold 1, MRR stored was 2-machine rate ($218 instead of $139). (2) `scMarkWon()` never applied the plan discount — called `calcMonthly()` raw. (3) **Root cause** (s43b): pending values (`_pending_machines`, `_pending_plan_disc`) were written to the in-memory `customers` object but `custSave()` was never called — so Stripe's page navigation wiped them before the app could read them on return. Fix: `generateStripeCheckout()` initializes `customers[pid]={}` if missing, saves all three pending fields, then calls `custSave()` to persist to localStorage before Stripe redirect. `checkStripeReturn()` restores from localStorage. `scMarkWon()` reads `cs.planDisc` or `co-plan-disc` input and subtracts discount.
 - **2026-05-18 (s42 — Stripe named customers):** `generateStripeCheckout()` now passes `client_address` and `client_city` from P[] record in the JSON payload. Edge Function creates a named Stripe customer before the checkout session: name = restaurant name, description = "address, city, FL", metadata includes prospect_id/address/city/plan/machines. `customer: customer.id` passed to session params; `customer_creation: 'always'` and separate `customer_email` assignment removed (email set on the customer object directly). Every Stripe payment now links to a fully identified named customer searchable by restaurant name or city.
 - **2026-05-18 (s41 — briefing email revamp):** `send_briefing.py` complete rewrite — simple status email: subject shows date + inspection date + lag (⚠️ prefix if >5 days stale); body has two sections: Data Status (last inspection date, lag, prospect count) and Today (fresh citations, unclaimed citations, overdue follow-ups, nudges due, re-tests due — zero-count items hidden, "all clear" shown when everything is zero). Prospects loaded via bracket-walking P[] parser from index.html (handles large arrays). Supabase data loaded via REST API (service role key). `send_briefing.yml`: removed `SUPABASE_KEY` env var, added `SUPABASE_SERVICE_KEY`; added `pip install requests pandas openpyxl` step. Push trigger was already absent — cron (9am ET) + workflow_dispatch remain.
