@@ -558,35 +558,76 @@ def extract_ice_snippet(text, max_chars=300):
 
 
 def load_ice_citations(csv_path='ice_citation_by_business.csv'):
-    """Load aggregated ice citation data keyed by license_id (matches prospect record id)."""
+    """Load aggregated ice citation data keyed by license number.
+
+    Handles two formats:
+      new: columns license, cit_latest_date, cit_ice_count, cit_repeat (bool), cit_corrected_on_site
+      old: columns license_id, latest_date, ice_count, repeat_violations (int)
+    """
     import csv as _csv
+    from datetime import date as _date
     citations = {}
     try:
         with open(csv_path, newline='', encoding='utf-8') as f:
             reader = _csv.DictReader(f)
+            fieldnames = reader.fieldnames or []
+            new_fmt = 'cit_latest_date' in fieldnames
+            today = _date.today()
             for row in reader:
-                lid = (row.get('license_id') or '').strip()
-                if not lid:
-                    lid = (row.get('license_number') or '').strip()
+                if new_fmt:
+                    lid = (row.get('license') or '').strip()
+                else:
+                    lid = (row.get('license_id') or row.get('license_number') or '').strip()
                 if not lid:
                     continue
-                citations[lid] = {
-                    'citation_count':    int(row.get('citation_count', 0) or 0),
-                    'ice_count':         int(row.get('ice_count', 0) or 0),
-                    'latest_date':       row.get('latest_date', '').strip(),
-                    'earliest_date':     row.get('earliest_date', '').strip(),
-                    'days_since':        int(row.get('days_since_citation', 9999) or 9999),
-                    'best_observation':  extract_ice_snippet(row.get('best_observation', '')),
-                    'codes':             [c.strip() for c in (row.get('codes', '') or '').split('|') if c.strip()],
-                    'repeat_violations': int(row.get('repeat_violations', 0) or 0),
-                    'warnings_issued':   int(row.get('warnings_issued', 0) or 0),
-                    'corrected_onsite':  int(row.get('corrected_onsite', 0) or 0),
-                    'mold_black':        int(row.get('mold_black', 0) or 0),
-                    'mold_pink':         int(row.get('mold_pink', 0) or 0),
-                    'scoop_issue':       int(row.get('scoop_issue', 0) or 0),
-                    'bin_soiled':        int(row.get('bin_soiled', 0) or 0),
-                }
-        print(f'  Loaded ice citations for {len(citations)} licenses')
+
+                if new_fmt:
+                    latest_date = row.get('cit_latest_date', '').strip()
+                    ice_count   = int(row.get('cit_ice_count', 0) or 0)
+                    repeat_val  = str(row.get('cit_repeat', 'False')).strip().lower()
+                    repeat_int  = 1 if repeat_val in ('true', '1', 'yes') else 0
+                    days_since  = 9999
+                    if latest_date:
+                        try:
+                            from datetime import date as _d2
+                            days_since = (_date.today() - _d2.fromisoformat(latest_date[:10])).days
+                        except Exception:
+                            pass
+                    citations[lid] = {
+                        'citation_count':    ice_count,
+                        'ice_count':         ice_count,
+                        'latest_date':       latest_date,
+                        'earliest_date':     '',
+                        'days_since':        days_since,
+                        'best_observation':  extract_ice_snippet(row.get('best_observation', '')),
+                        'codes':             [],
+                        'repeat_violations': repeat_int,
+                        'warnings_issued':   0,
+                        'corrected_onsite':  1 if str(row.get('cit_corrected_on_site','')).lower() in ('true','1','yes') else 0,
+                        'mold_black':        0,
+                        'mold_pink':         0,
+                        'scoop_issue':       0,
+                        'bin_soiled':        0,
+                    }
+                else:
+                    citations[lid] = {
+                        'citation_count':    int(row.get('citation_count', 0) or 0),
+                        'ice_count':         int(row.get('ice_count', 0) or 0),
+                        'latest_date':       row.get('latest_date', '').strip(),
+                        'earliest_date':     row.get('earliest_date', '').strip(),
+                        'days_since':        int(row.get('days_since_citation', 9999) or 9999),
+                        'best_observation':  extract_ice_snippet(row.get('best_observation', '')),
+                        'codes':             [c.strip() for c in (row.get('codes', '') or '').split('|') if c.strip()],
+                        'repeat_violations': int(row.get('repeat_violations', 0) or 0),
+                        'warnings_issued':   int(row.get('warnings_issued', 0) or 0),
+                        'corrected_onsite':  int(row.get('corrected_onsite', 0) or 0),
+                        'mold_black':        int(row.get('mold_black', 0) or 0),
+                        'mold_pink':         int(row.get('mold_pink', 0) or 0),
+                        'scoop_issue':       int(row.get('scoop_issue', 0) or 0),
+                        'bin_soiled':        int(row.get('bin_soiled', 0) or 0),
+                    }
+        print(f'  Loaded ice citations for {len(citations)} licenses'
+              f' ({"new" if new_fmt else "old"} format)')
     except FileNotFoundError:
         print(f'  No ice citations file ({csv_path}) — skipping citation enrichment')
     except Exception as e:
@@ -2300,6 +2341,7 @@ header{background:var(--navy);
       <button class="preset-btn"    onclick="setPreset('inplay')"   id="pre-inplay">&#x1F7E1; In Play</button>
       <button class="preset-btn"    onclick="setPreset('freshice')" id="pre-freshice">&#x1F525; Ice Viol.</button>
       <button class="preset-btn" onclick="setPreset('dbpr_cited')" id="pre-dbpr_cited">&#x1F575;&#xFE0F; DBPR <span id="cnt-dbpr"></span></button>
+      <button id="dbpr-sort-btn" ontouchend="event.preventDefault();toggleDbprSort()" onclick="toggleDbprSort()" style="display:none;padding:6px 10px;border-radius:20px;border:1px solid #7C3AED;background:#fff;color:#7C3AED;font-size:11px;font-weight:700;font-family:inherit;cursor:pointer;touch-action:manipulation;white-space:nowrap">&#x1F4CA; Most Cited</button>
       <button class="preset-btn" onclick="setPreset('dbpr_repeat')" id="pre-dbpr_repeat">&#x1F501; Repeat <span id="cnt-repeat"></span></button>
       <button class="preset-btn" onclick="setPreset('followups')" id="pre-followups">&#x1F4C5; Follow-Ups</button>
       <button class="preset-btn" onclick="setPreset('golf')" id="pre-golf">&#x26F3; Golf</button>
@@ -4771,7 +4813,14 @@ function cardHTML(p){
   const iceH=p.chronic
     ?('<div class="icebadge chronic">&#x1F9CA; CHRONIC  -  '+p.ice_count+'x ice violations'+(p.ice_fresh?' &bull; <b>recent</b>':'')+'</div>')
     :p.confirmed?'<div class="icebadge confirmed">&#x2713; Ice violation on record'+(p.ice_fresh?' (within 6mo)':p.ice_recent?' (within 1yr)':'')+'</div>':'';
-  const dbprH=p.ice_confirmed_dbpr?('<div class="icebadge" style="background:#faf5ff;color:#6d28d9;border:1px solid #c4b5fd;border-radius:5px;font-size:9px;font-weight:700;padding:3px 8px;margin-bottom:4px">&#x1F575;&#xFE0F; DBPR Confirmed &mdash; '+(p.cit_ice_count||0)+'x ice citation'+(p.cit_ice_count!==1?'s':'')+'</div>'):'';
+  var _citDateBadge='';
+  if(_dbprSort==='recent'&&p.cit_latest){
+    var _dAgo=Math.floor((new Date()-new Date(p.cit_latest+'T12:00:00'))/864e5);
+    var _dLabel=_dAgo===0?'Today':_dAgo===1?'Yesterday':_dAgo+' days ago';
+    var _dColor=_dAgo<=3?'#C0392B':_dAgo<=7?'#E67E22':'#6C757D';
+    _citDateBadge='<span style="font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px;background:#FFF5F5;color:'+_dColor+';margin-left:4px">Cited '+_dLabel+'</span>';
+  }
+  const dbprH=p.ice_confirmed_dbpr?('<div class="icebadge" style="background:#faf5ff;color:#6d28d9;border:1px solid #c4b5fd;border-radius:5px;font-size:9px;font-weight:700;padding:3px 8px;margin-bottom:4px">&#x1F575;&#xFE0F; DBPR Confirmed &mdash; '+(p.cit_ice_count||0)+'x ice citation'+(p.cit_ice_count!==1?'s':'')+_citDateBadge+'</div>'):'';
   const codesH=(p.codes||[]).length?('<div style="font-size:9px;color:#2a4860;margin-bottom:4px">Codes: '+(p.codes||[]).join(', ')+'</div>'):'';
   const insH=''?('<div class="insight">'+''+'</div>'):'';
   const cbH=(p.n_callbacks>0||p.disp_risk>=4)
@@ -4959,11 +5008,19 @@ function rA(){
       return fa.localeCompare(fb);
     });
   } else if(presetFilter&&(document.getElementById('pre-dbpr_cited')?.classList.contains('on')||document.getElementById('pre-dbpr_repeat')?.classList.contains('on'))){
-    list.sort((a,b)=>{
-      const da=(a.cit_ice_count||0), db=(b.cit_ice_count||0);
-      if(da!==db)return db-da;
-      return (a.cit_days_since||9999)-(b.cit_days_since||9999);
-    });
+    if(_dbprSort==='recent'){
+      list.sort(function(a,b){
+        var aDate=a.cit_latest||'1970-01-01';
+        var bDate=b.cit_latest||'1970-01-01';
+        return bDate.localeCompare(aDate);
+      });
+    }else{
+      list.sort((a,b)=>{
+        const da=(a.cit_ice_count||0), db=(b.cit_ice_count||0);
+        if(da!==db)return db-da;
+        return (a.cit_days_since||9999)-(b.cit_days_since||9999);
+      });
+    }
   } else {
     list.sort((a,b)=>{
       const pa=PO[a.priority]??99, pb=PO[b.priority]??99;
@@ -5036,6 +5093,18 @@ function rA(){
 
 let presetFilter=null;
 var _activeFilter=null;
+var _dbprSort='count'; // 'count' or 'recent'
+
+function toggleDbprSort(){
+  _dbprSort=_dbprSort==='count'?'recent':'count';
+  var btn=document.getElementById('dbpr-sort-btn');
+  if(btn){
+    btn.textContent=_dbprSort==='recent'?'&#x1F4C5; Most Recent':'&#x1F4CA; Most Cited';
+    btn.style.background=_dbprSort==='recent'?'#7C3AED':'#fff';
+    btn.style.color=_dbprSort==='recent'?'#fff':'#7C3AED';
+  }
+  rA();
+}
 
 function viewAllFilter(filterKey){
   _activeFilter=filterKey;
@@ -5098,6 +5167,13 @@ function setPreset(k){
   else if(k==='golf') presetFilter=p=>p.venue_type==='golf';
   else if(k==='dbpr_cited') presetFilter=p=>!!p.ice_confirmed_dbpr;
   else if(k==='dbpr_repeat') presetFilter=p=>(p.cit_repeat||0)>=1||(p.cit_ice_count||0)>=2;
+  var sortBtn=document.getElementById('dbpr-sort-btn');
+  if(k==='dbpr_cited'){
+    if(sortBtn)sortBtn.style.display='inline-block';
+  }else{
+    _dbprSort='count';
+    if(sortBtn){sortBtn.style.display='none';sortBtn.textContent='&#x1F4CA; Most Cited';sortBtn.style.background='#fff';sortBtn.style.color='#7C3AED';}
+  }
   rA();
 }
 

@@ -1,41 +1,48 @@
 #!/usr/bin/env python3
 """
-Generate ice_citation_by_business.csv from pinellas_v22_narratives.csv.
+generate_citation_summary.py
+Reads ALL DBPR CSV/xlsx files, finds every Pinellas business with a
+V22 ice machine violation, and calculates the most recent citation date
+directly from the live CSV data.
 
-Aggregates scraper output to one row per license_id with rich citation signals:
-citation count, ice count, date range, repeat violations, mold/scoop flags,
-and best observation excerpt.
+cit_latest_date comes from the CSV — NEVER from scraper cache.
+This ensures Fresh Citations on the Home tab reflects current data.
 
-Run automatically by rebuild CI before build.py, or manually:
-    python generate_citation_summary.py
+Output: ice_citation_by_business.csv (repo root, read by build.py)
 """
 
-import csv
 import os
 import re
-from collections import defaultdict
-from datetime import date, datetime
+import warnings
+from datetime import date, timedelta
 
-_INPUT_CANDIDATES = [
-    'pinellas_v22_narratives.csv',        # repo root (scraper default)
-    'data/pinellas_v22_narratives.csv',   # data folder fallback
+import pandas as pd
+
+DATA_DIR = 'data'
+OUTPUT   = 'ice_citation_by_business.csv'
+
+_DBPR_COLS = (
+    ['District', 'County Number', 'County Name',
+     'License Type Code', 'License Number',
+     'Business Name', 'Address', 'City', 'Zip',
+     'Inspection Number', 'Visit Number',
+     'Inspection Class', 'Inspection Type',
+     'Inspection Disposition', 'Inspection Date',
+     'Num Critical', 'Num Noncritical', 'Num Total',
+     'Num High Priority', 'Num Intermediate',
+     'Num Basic', 'PDA Status']
+    + [f'V{i:02d}' for i in range(1, 59)]
+    + ['License ID', 'Visit ID']
+)
+
+CSV_FILES = [
+    ('data/3fdinspi_current.csv', 'csv'),
+    ('data/3fdinspi_2021.csv',    'csv'),
+    ('data/fdinspi_2122.xlsx',    'xlsx'),
+    ('data/fdinspi_2223.xlsx',    'xlsx'),
+    ('data/fdinspi_2324.xlsx',    'xlsx'),
+    ('data/fdinspi_2425.xlsx',    'xlsx'),
 ]
-INPUT_CSV  = next((p for p in _INPUT_CANDIDATES if os.path.exists(p)), _INPUT_CANDIDATES[0])
-OUTPUT_CSV = 'ice_citation_by_business.csv'
-
-
-def clean_observation(text, max_len=200):
-    """Strip DBPR formatting markers and return a clean excerpt."""
-    if not text or text == 'NO VIOLATIONS PARSED':
-        return ''
-    text = re.sub(r'\*\*[^*]+\*\*', '', str(text))  # remove **bold** markers
-    text = re.sub(r'^\s*(Basic|Intermediate|High Priority)\s*[-–]\s*', '', text, flags=re.I)
-    text = re.sub(r'\s+', ' ', text).strip()
-    if len(text) <= max_len:
-        return text
-    cut = text[:max_len].rsplit(' ', 1)[0]
-    return cut + '…'
-
 
 _ICE_KEYWORDS = re.compile(
     r'\b(ice\s+machine|ice\s+maker|ice\s+bin|ice\s+scoop|evaporator|condenser|'
@@ -46,173 +53,180 @@ _ICE_KEYWORDS = re.compile(
 
 
 def extract_ice_snippet(text, max_chars=300):
-    """Return the most relevant ice-related sentence(s) from an observation.
-
-    Strips DBPR formatting, finds sentences containing ice keywords,
-    returns those first; falls back to the full text if none match.
-    """
-    if not text or text == 'NO VIOLATIONS PARSED':
+    if not text or str(text).strip() in ('', 'nan', 'NO VIOLATIONS PARSED'):
         return ''
     text = re.sub(r'\*\*[^*]+\*\*', '', str(text))
-    text = re.sub(r'^\s*(Basic|Intermediate|High Priority)\s*[-–]\s*', '', text, flags=re.I | re.M)
+    text = re.sub(r'^\s*(Basic|Intermediate|High Priority)\s*[-–]\s*', '', text,
+                  flags=re.I | re.M)
     text = re.sub(r'\s+', ' ', text).strip()
-    if not text:
-        return ''
     sentences = re.split(r'(?<=[.!?])\s+', text)
     ice_sents = [s for s in sentences if _ICE_KEYWORDS.search(s)]
     snippet = ' '.join(ice_sents) if ice_sents else text
     if len(snippet) <= max_chars:
         return snippet
-    cut = snippet[:max_chars].rsplit(' ', 1)[0]
-    return cut + '…'
+    return snippet[:max_chars].rsplit(' ', 1)[0] + '…'
+
+
+def load_file(path, fmt):
+    try:
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore')
+            if fmt == 'csv':
+                df = pd.read_csv(
+                    path, header=None, names=_DBPR_COLS,
+                    low_memory=False, encoding='utf-8', errors='replace',
+                )
+            else:
+                raw = pd.read_excel(path, header=None, engine='openpyxl')
+                ncols = raw.shape[1]
+                raw.columns = _DBPR_COLS[:ncols]
+                df = raw
+        print(f'  Loaded {path}: {len(df):,} rows')
+        return df
+    except Exception as e:
+        print(f'  Skip {path}: {e}')
+        return None
+
+
+def load_all_data():
+    dfs = []
+    for path, fmt in CSV_FILES:
+        if not os.path.exists(path):
+            print(f'  Skip (not found): {path}')
+            continue
+        df = load_file(path, fmt)
+        if df is not None:
+            dfs.append(df)
+    if not dfs:
+        return pd.DataFrame()
+    combined = pd.concat(dfs, ignore_index=True)
+    print(f'  Total rows combined: {len(combined):,}')
+    return combined
 
 
 def main():
-    if not os.path.exists(INPUT_CSV):
-        print(f'No {INPUT_CSV} found — nothing to aggregate')
+    print('Generating ice citation summary from live CSV data...')
+
+    df = load_all_data()
+    if df.empty:
+        print('  No data loaded — aborting')
         return
 
-    today = date.today()
+    # Filter to Pinellas County
+    county      = df['County Number'].astype(str).str.strip()
+    county_name = df['County Name'].astype(str).str.lower().str.strip()
+    pinellas = df[(county == '62') | (county_name == 'pinellas')].copy()
+    print(f'  Pinellas rows: {len(pinellas):,}')
 
-    # Keyed by license_id (numeric string) to match rec['id'] in build.py
-    by_license = defaultdict(lambda: {
-        'license_number':   '',
-        'business_name':    '',
-        'city':             '',
-        'citation_count':   0,
-        'ice_count':        0,
-        'latest_date':      None,
-        'earliest_date':    None,
-        'best_observation': '',
-        'codes':            set(),
-        'visit_ids':        set(),
-        'repeat_violations': 0,
-        'warnings_issued':  0,
-        'corrected_onsite': 0,
-        'mold_black':       0,
-        'mold_pink':        0,
-        'scoop_issue':      0,
-        'bin_soiled':       0,
-    })
+    if pinellas.empty:
+        print('  No Pinellas rows found — check county column')
+        return
 
-    total_rows = 0
-    ice_rows   = 0
+    # Parse inspection dates from live CSV — THIS IS THE KEY FIX
+    # cit_latest_date is always derived from CSV data, never from scraper cache
+    pinellas['insp_date'] = pd.to_datetime(
+        pinellas['Inspection Date'], errors='coerce', dayfirst=False,
+    )
 
-    with open(INPUT_CSV, newline='', encoding='utf-8', errors='replace') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            total_rows += 1
+    # V22 flag: non-empty, non-zero, non-null value means ice machine violation
+    if 'V22' not in pinellas.columns:
+        print('  WARNING: V22 column not found — check _DBPR_COLS mapping')
+        return
 
-            lid = (row.get('license_id') or '').strip()
-            if not lid:
-                lid = (row.get('license_number') or '').strip()
-            if not lid:
-                continue
+    v22_str = pinellas['V22'].astype(str).str.strip()
+    pinellas['v22_flag'] = (
+        v22_str.ne('') & v22_str.ne('0') &
+        v22_str.ne('nan') & v22_str.ne('NaN') & v22_str.ne('None')
+    )
 
-            b = by_license[lid]
-            b['license_number'] = b['license_number'] or (row.get('license_number') or '').strip()
-            b['business_name']  = b['business_name']  or (row.get('business_name') or '').strip()
-            b['city']           = b['city']           or (row.get('city') or '').strip()
-            b['citation_count'] += 1
+    v22_rows = pinellas[pinellas['v22_flag']].copy()
+    print(f'  V22 violation rows: {len(v22_rows):,}')
 
-            # Dates
-            date_str = (row.get('inspection_date') or '')[:10]
-            if date_str:
-                try:
-                    d = datetime.strptime(date_str, '%Y-%m-%d').date()
-                    if b['earliest_date'] is None or d < b['earliest_date']:
-                        b['earliest_date'] = d
-                    if b['latest_date'] is None or d > b['latest_date']:
-                        b['latest_date'] = d
-                except ValueError:
-                    pass
+    if v22_rows.empty:
+        print('  No V22 violations found — check column mapping')
+        print(f'  V22 sample values: {pinellas["V22"].dropna().unique()[:10]}')
+        return
 
-            if row.get('ice_machine_mention') != 'YES':
-                continue
+    v22_rows['license_str'] = v22_rows['License Number'].astype(str).str.strip()
 
-            ice_rows += 1
-            vid = (row.get('visit_id') or '').strip()
-            if vid and vid not in b['visit_ids']:
-                b['visit_ids'].add(vid)
-                b['ice_count'] += 1
+    # Per-license aggregation — one row per business
+    summary = v22_rows.groupby('license_str').agg(
+        business_name=('Business Name',
+                       lambda x: x.mode().iloc[0] if len(x) else ''),
+        address=('Address',
+                 lambda x: x.mode().iloc[0] if len(x) else ''),
+        city=('City',
+              lambda x: x.mode().iloc[0] if len(x) else ''),
+        cit_latest_date=('insp_date', 'max'),   # most recent V22 date from live CSV
+        cit_ice_count=('insp_date', 'count'),    # total V22 inspection rows
+        last_disposition=('Inspection Disposition',
+                          lambda x: x.dropna().iloc[-1] if len(x.dropna()) else ''),
+    ).reset_index()
 
-            obs = row.get('observation', '') or ''
-            obs_lower = obs.lower()
+    summary.rename(columns={'license_str': 'license'}, inplace=True)
 
-            vc = (row.get('violation_code') or '').strip()
-            if vc:
-                b['codes'].add(vc)
+    # ISO date string
+    summary['cit_latest_date'] = summary['cit_latest_date'].dt.strftime('%Y-%m-%d')
 
-            if 'repeat violation' in obs_lower:
-                b['repeat_violations'] += 1
-            if 'warning' in obs_lower:
-                b['warnings_issued'] += 1
-            if 'corrected on-site' in obs_lower or 'corrected on site' in obs_lower:
-                b['corrected_onsite'] += 1
-            if 'black' in obs_lower or 'green mold' in obs_lower:
-                b['mold_black'] += 1
-            if 'pink' in obs_lower:
-                b['mold_pink'] += 1
-            if 'scoop' in obs_lower:
-                b['scoop_issue'] += 1
-            if 'bin' in obs_lower:
-                b['bin_soiled'] += 1
+    # Repeat: cited more than once
+    summary['cit_repeat'] = summary['cit_ice_count'] > 1
 
-            obs_clean = extract_ice_snippet(obs)
-            if len(obs_clean) > len(b['best_observation']):
-                b['best_observation'] = obs_clean
+    # Corrected on site
+    lic_col = v22_rows['License Number'].astype(str).str.strip()
+    corrected = (
+        v22_rows.groupby(lic_col)
+        .apply(lambda x: x['Inspection Disposition'].astype(str)
+               .str.lower().str.contains('corrected on site', na=False).any())
+        .reset_index()
+    )
+    corrected.columns = ['license', 'cit_corrected_on_site']
+    summary = summary.merge(corrected, on='license', how='left')
 
-    print(f'Processed {total_rows:,} rows, {ice_rows:,} ice citation rows')
-    print(f'Unique licenses with any V22 record: {len(by_license):,}')
+    # Best-effort: merge observation text from scraper narratives if available
+    narratives_path = next(
+        (p for p in ['pinellas_v22_narratives.csv', 'data/pinellas_v22_narratives.csv']
+         if os.path.exists(p)), None,
+    )
+    if narratives_path:
+        try:
+            nar = pd.read_csv(narratives_path, low_memory=False, dtype=str)
+            key_col = next((c for c in ['license_number', 'license_id']
+                            if c in nar.columns), nar.columns[0])
+            nar['_key'] = nar[key_col].astype(str).str.strip()
+            obs_col = next((c for c in ['observation', 'best_observation']
+                            if c in nar.columns), None)
+            if obs_col:
+                obs_map = (
+                    nar.groupby('_key')[obs_col]
+                    .apply(lambda x: max(
+                        (extract_ice_snippet(v) for v in x),
+                        key=len, default='',
+                    ))
+                )
+                summary['best_observation'] = (
+                    summary['license'].map(obs_map).fillna('')
+                )
+                print(f'  Merged observation text from {narratives_path}')
+            else:
+                summary['best_observation'] = ''
+        except Exception as e:
+            print(f'  Narratives merge skipped: {e}')
+            summary['best_observation'] = ''
+    else:
+        summary['best_observation'] = ''
 
-    fieldnames = [
-        'license_id', 'license_number', 'business_name', 'city',
-        'citation_count', 'ice_count',
-        'latest_date', 'earliest_date', 'days_since_citation',
-        'best_observation', 'codes',
-        'repeat_violations', 'warnings_issued', 'corrected_onsite',
-        'mold_black', 'mold_pink', 'scoop_issue', 'bin_soiled',
-    ]
+    today     = date.today()
+    week_ago  = str(today - timedelta(days=7))
+    month_ago = str(today - timedelta(days=30))
+    print(f'  Unique licenses with V22: {len(summary):,}')
+    print(f'  Most recent citation date in data: {summary["cit_latest_date"].max()}')
+    print(f'  Citations in last 7 days:  '
+          f'{(summary["cit_latest_date"] >= week_ago).sum()}')
+    print(f'  Citations in last 30 days: '
+          f'{(summary["cit_latest_date"] >= month_ago).sum()}')
 
-    ice_licenses = 0
-    rows_written = 0
-
-    with open(OUTPUT_CSV, 'w', newline='', encoding='utf-8') as out:
-        writer = csv.DictWriter(out, fieldnames=fieldnames)
-        writer.writeheader()
-
-        for lid, b in sorted(by_license.items(),
-                              key=lambda x: -(x[1]['ice_count'])):
-            last = b['latest_date']
-            days_since = (today - last).days if last else 9999
-
-            writer.writerow({
-                'license_id':        lid,
-                'license_number':    b['license_number'],
-                'business_name':     b['business_name'],
-                'city':              b['city'],
-                'citation_count':    b['citation_count'],
-                'ice_count':         b['ice_count'],
-                'latest_date':       last.isoformat() if last else '',
-                'earliest_date':     b['earliest_date'].isoformat() if b['earliest_date'] else '',
-                'days_since_citation': days_since,
-                'best_observation':  b['best_observation'],
-                'codes':             '|'.join(sorted(b['codes'])),
-                'repeat_violations': b['repeat_violations'],
-                'warnings_issued':   b['warnings_issued'],
-                'corrected_onsite':  b['corrected_onsite'],
-                'mold_black':        b['mold_black'],
-                'mold_pink':         b['mold_pink'],
-                'scoop_issue':       b['scoop_issue'],
-                'bin_soiled':        b['bin_soiled'],
-            })
-            rows_written += 1
-            if b['ice_count'] > 0:
-                ice_licenses += 1
-
-    print(f'Written {rows_written} rows to {OUTPUT_CSV}')
-    print(f'  With ice citations: {ice_licenses}')
-    print(f'  No ice citations:   {rows_written - ice_licenses}')
+    summary.to_csv(OUTPUT, index=False)
+    print(f'  Written: {OUTPUT} ({len(summary)} records)')
 
 
 if __name__ == '__main__':

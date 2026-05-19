@@ -254,10 +254,64 @@ def count_retests_due(cust_rows, records):
     return count
 
 
+# ── Citation stats ───────────────────────────────────────
+
+def get_citation_stats():
+    """Return citation counts from ice_citation_by_business.csv with day-over-day delta."""
+    csv_path   = 'ice_citation_by_business.csv'
+    cache_path = 'data/briefing_cache.json'
+    if not os.path.exists(csv_path):
+        return None
+    try:
+        import pandas as pd
+        import warnings
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore')
+            df = pd.read_csv(csv_path, low_memory=False, dtype=str)
+        # Handle both old ('latest_date') and new ('cit_latest_date') column names
+        date_col = 'cit_latest_date' if 'cit_latest_date' in df.columns else 'latest_date'
+        df['cit_date'] = pd.to_datetime(df[date_col], errors='coerce').dt.strftime('%Y-%m-%d')
+        today     = date.today().isoformat()
+        week_ago  = (date.today() - timedelta(days=7)).isoformat()
+        yesterday = (date.today() - timedelta(days=1)).isoformat()
+        total    = int(df['cit_date'].notna().sum())
+        fresh_7d = int((df['cit_date'] >= week_ago).sum())
+        fresh_24h = int((df['cit_date'] >= yesterday).sum())
+
+        # Load previous snapshot for delta
+        prev_total   = total
+        prev_fresh_7d = fresh_7d
+        if os.path.exists(cache_path):
+            try:
+                cache = json.loads(open(cache_path).read())
+                if cache.get('date') != today:
+                    prev_total    = cache.get('total', total)
+                    prev_fresh_7d = cache.get('fresh_7d', fresh_7d)
+            except Exception:
+                pass
+
+        # Save today's stats
+        os.makedirs('data', exist_ok=True)
+        json.dump({'date': today, 'total': total, 'fresh_7d': fresh_7d},
+                  open(cache_path, 'w'))
+
+        return {
+            'total':       total,
+            'fresh_7d':    fresh_7d,
+            'fresh_24h':   fresh_24h,
+            'delta_total': total - prev_total,
+            'delta_7d':    fresh_7d - prev_fresh_7d,
+        }
+    except Exception as e:
+        print(f'  Citation stats error: {e}')
+        return None
+
+
 # ── Email builder ─────────────────────────────────────────
 
 def build_email(insp_date, lag, n_prospects, n_fresh,
-                n_unclaimed, n_overdue, n_nudges, n_retests):
+                n_unclaimed, n_overdue, n_nudges, n_retests,
+                citation_stats=None):
 
     now_et    = datetime.now(ET)
     today_str = now_et.strftime('%a %b %d, %Y')
@@ -343,6 +397,36 @@ def build_email(insp_date, lag, n_prospects, n_fresh,
 
     lag_label = f'({lag} days ago)' if lag is not None else ''
 
+    # Citation stats block for Data Status card
+    citation_html = ''
+    if citation_stats:
+        total     = citation_stats['total']
+        fresh_7d  = citation_stats['fresh_7d']
+        fresh_24h = citation_stats['fresh_24h']
+        delta     = citation_stats['delta_total']
+        if delta > 0:
+            delta_str = (f'<span style="color:#27AE60;font-weight:700">'
+                         f'&#x2191; +{delta} new</span>')
+        elif delta < 0:
+            delta_str = (f'<span style="color:#C0392B;font-weight:700">'
+                         f'&#x2193; {delta}</span>')
+        else:
+            delta_str = '<span style="color:#9E9E9E">&#x2194; unchanged</span>'
+        fresh_24h_html = ''
+        if fresh_24h > 0:
+            fresh_24h_html = (
+                f'<span style="color:#C0392B;font-weight:700"> &middot; '
+                f'{fresh_24h} in last 24h &#x1F6A8;</span>'
+            )
+        citation_html = (
+            f'<div style="font-size:13px;color:#475569;margin-top:4px">'
+            f'Ice citations: '
+            f'<strong style="color:#1e293b">{total:,}</strong> {delta_str}'
+            f'<br><span style="font-size:12px;color:#6C757D">'
+            f'Last 7 days: {fresh_7d}</span>'
+            f'{fresh_24h_html}</div>'
+        )
+
     html = f'''<!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"></head>
@@ -378,6 +462,7 @@ font-family:-apple-system,BlinkMacSystemFont,sans-serif">
       Prospects loaded:
       <strong style="color:#1e293b">{n_prospects:,}</strong>
     </div>
+    {citation_html}
   </div>
 
   <div style="background:#fff;border:1px solid #e2e8f0;
@@ -467,9 +552,17 @@ def main():
     print(f'  Fresh={n_fresh} Unclaimed={n_unclaimed} '
           f'Overdue={n_overdue} Nudges={n_nudges} Retests={n_retests}')
 
+    citation_stats = get_citation_stats()
+    if citation_stats:
+        print(f'  Citations total={citation_stats["total"]} '
+              f'7d={citation_stats["fresh_7d"]} '
+              f'24h={citation_stats["fresh_24h"]} '
+              f'delta={citation_stats["delta_total"]}')
+
     subject, html = build_email(
         insp_date, lag, len(records),
         n_fresh, n_unclaimed, n_overdue, n_nudges, n_retests,
+        citation_stats=citation_stats,
     )
     print(f'  Subject: {subject}')
     send_email(subject, html)
