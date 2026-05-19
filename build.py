@@ -7613,7 +7613,7 @@ function renderBriefing(){
 
   // ── KPI ROW ───────────────────────────────────────────────────────────
   const recurring=P.filter(p=>
-    p.status==='customer_recurring'||p.status==='customer_quarterly'
+    ['customer_recurring','customer_quarterly','customer_once','customer_intro'].includes(p.status)
   );
   const mrr=recurring.reduce((s,p)=>s+((customers[p.id]||{}).monthly||p.monthly||149),0);
   const clientCount=recurring.length;
@@ -7816,7 +7816,7 @@ function renderKPIs(){
   // Fast-path: just update the 4 KPI numbers without re-rendering cards
   const now=new Date();
   const weekAgo=new Date(now-7*864e5);
-  const recurring=P.filter(p=>p.status==='customer_recurring'||p.status==='customer_quarterly');
+  const recurring=P.filter(p=>['customer_recurring','customer_quarterly','customer_once','customer_intro'].includes(p.status));
   const mrr=recurring.reduce((s,p)=>s+((customers[p.id]||{}).monthly||p.monthly||149),0);
   const pipeCount=Object.keys(log).filter(id=>{const lc=getLC(parseInt(id));return lc&&['in_play','intro_set','follow_up','interested','scheduled','quoted'].includes(lc.outcome);}).length;
   const weekEntries=[];
@@ -8506,7 +8506,7 @@ function renderForecast(){
   const el=document.getElementById('svc-forecast');
   if(!el)return;
 
-  const recurring=P.filter(p=>p.status==='customer_recurring'||p.status==='customer_quarterly');
+  const recurring=P.filter(p=>p.status==='customer_recurring');
   const mrr=recurring.reduce((s,p)=>s+(customers[p.id]?.monthly||p.monthly||149),0);
   const arr=mrr*12;
 
