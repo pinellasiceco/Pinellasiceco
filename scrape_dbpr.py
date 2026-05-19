@@ -6,6 +6,7 @@ and extracts observation text to identify ice machine citations.
 """
 
 import csv
+import json
 import time
 import random
 import os
@@ -23,6 +24,11 @@ TERMS_URL = "https://www.myfloridalicense.com/insptermsofuse.asp"
 OUTPUT_CSV    = "pinellas_v22_narratives.csv"
 PROGRESS_FILE = "scraper_progress.txt"
 GENERATED_INPUT = "pinellas_v22_to_scrape.csv"  # auto-generated from fresh DBPR data
+
+# Full violations mode (all Pinellas violations, not just V22)
+ALL_VIOLATIONS_INPUT = "data/pinellas_all_violations_to_scrape.csv"
+FULL_NARRATIVES_CACHE = "full_inspection_narratives.json"
+FULL_PROGRESS_FILE = "full_scraper_progress.txt"
 
 # Fallback: accept user-uploaded CSV wherever it was dropped
 _CANDIDATE_INPUTS = [
@@ -320,11 +326,131 @@ def save_progress(visit_id):
         f.write(f"{visit_id}\n")
 
 
+# ── Full violations mode helpers ──────────────────────────────────────────
+
+def load_full_narratives_cache():
+    if os.path.exists(FULL_NARRATIVES_CACHE):
+        try:
+            with open(FULL_NARRATIVES_CACHE, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {}
+
+
+def save_full_narratives_cache(cache):
+    with open(FULL_NARRATIVES_CACHE, 'w', encoding='utf-8') as f:
+        json.dump(cache, f, ensure_ascii=False)
+
+
+def load_full_progress():
+    done = set()
+    if os.path.exists(FULL_PROGRESS_FILE):
+        with open(FULL_PROGRESS_FILE) as f:
+            done = {line.strip() for line in f if line.strip()}
+    return done
+
+
+def save_full_progress(lic):
+    with open(FULL_PROGRESS_FILE, 'a') as f:
+        f.write(f"{lic}\n")
+
+
+def run_full_violations_scrape():
+    """Scrape full inspection narratives for all Pinellas violations."""
+    print("=== DBPR Full Violations Scraper ===")
+    print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+
+    records = []
+    with open(ALL_VIOLATIONS_INPUT, newline='', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            records.append(row)
+    print(f"Loaded {len(records)} records from {ALL_VIOLATIONS_INPUT}")
+
+    done = load_full_progress()
+    remaining = [r for r in records if r['License Number'] not in done]
+    print(f"Already scraped: {len(done)} | Remaining: {len(remaining)}")
+
+    max_records = int(os.environ.get('MAX_RECORDS', '0') or 0)
+    if max_records > 0:
+        remaining = remaining[:max_records]
+        print(f"Capped to {max_records} records (MAX_RECORDS env var)")
+
+    if not remaining:
+        print("All records already scraped!")
+        return
+
+    cache = load_full_narratives_cache()
+    session_cookie = init_session()
+
+    success_count = 0
+    fail_count = 0
+
+    for i, record in enumerate(remaining):
+        vid = record['Visit ID'].strip()
+        biz = record['Business Name'].strip()
+        lic = record['License Number'].strip()
+
+        if i % 25 == 0:
+            print(f"\n[{i+1}/{len(remaining)}] Progress — "
+                  f"Success: {success_count} | Failed: {fail_count}")
+
+        print(f"  [{i+1}] {biz[:40]} | Lic {lic}", end='', flush=True)
+
+        url = BASE_URL.format(vid=vid)
+        html, new_cookie = fetch_page(url, session_cookie)
+        if new_cookie:
+            session_cookie = new_cookie
+
+        if not html:
+            print(" → FAILED")
+            fail_count += 1
+            save_full_progress(lic)
+            time.sleep(MIN_DELAY)
+            continue
+
+        if not is_valid_inspection(html, vid):
+            print(" → REDIRECT")
+            fail_count += 1
+            if fail_count % 10 == 0:
+                session_cookie = init_session()
+            save_full_progress(lic)
+            time.sleep(MIN_DELAY)
+            continue
+
+        violations = parse_inspection(html, vid, biz)
+        print(f" → {len(violations)} violations")
+
+        if violations:
+            cache[lic] = [
+                {'code': v['violation_code'], 'observation': v['observation']}
+                for v in violations
+            ]
+            success_count += 1
+
+        save_full_narratives_cache(cache)
+        save_full_progress(lic)
+
+        time.sleep(random.uniform(MIN_DELAY, MAX_DELAY))
+
+    print(f"\n=== FULL VIOLATIONS SCRAPE COMPLETE ===")
+    print(f"Finished: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"Successfully scraped: {success_count} | Failed: {fail_count}")
+    print(f"Cache size: {len(cache)} licenses")
+
+
 # ── Main ──────────────────────────────────────────────────────────────────
 def main():
     print(f"=== DBPR Ice Machine Citation Scraper ===")
     print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
+    # Full violations mode: triggered when build_violations_list.py has run
+    if os.path.exists(ALL_VIOLATIONS_INPUT):
+        run_full_violations_scrape()
+        return
+
+    # V22 ice machine mode (legacy — runs when full violations list is absent)
     # Regenerate input list from fresh DBPR data (skips already-scraped Visit IDs)
     new_count = refresh_v22_list('data/')
     if new_count == 0:
