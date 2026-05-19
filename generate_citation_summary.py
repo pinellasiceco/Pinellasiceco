@@ -31,7 +31,7 @@ _DBPR_COLS = (
      'Num Critical', 'Num Noncritical', 'Num Total',
      'Num High Priority', 'Num Intermediate',
      'Num Basic', 'PDA Status']
-    + [f'V{i:02d}' for i in range(1, 60)]
+    + [f'V{i:02d}' for i in range(1, 59)]
     + ['License ID', 'Visit ID']
 )
 
