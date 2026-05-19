@@ -222,9 +222,15 @@ def main():
                 summary['best_observation'] = (
                     summary['license'].map(obs_map).fillna('')
                 )
-                print(f'  Merged observation text from {narratives_path}')
+                n_matched = int((summary['best_observation'] != '').sum())
+                n_narratives = int(nar['_key'].nunique())
+                print(f'  Narratives: {n_narratives} unique licenses in file'
+                      f', {n_matched}/{len(summary)} businesses matched'
+                      f' (key col: {key_col})')
             else:
                 summary['best_observation'] = ''
+                print(f'  Narratives: no observation column found in {narratives_path}'
+                      f' (cols: {list(nar.columns[:8])})')
         except Exception as e:
             print(f'  Narratives merge skipped: {e}')
             summary['best_observation'] = ''
