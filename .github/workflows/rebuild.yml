@@ -4,7 +4,7 @@ on:
   push:
     branches: [main, claude/fix-multiple-app-bugs-j1hpJ]
   schedule:
-    - cron: '0 11 * * *'   # Daily at 11:00 UTC (7am ET)
+    - cron: '0 14 * * *'   # Daily at 14:00 UTC (10am ET) — after DBPR publishes
   workflow_dispatch:         # Manual trigger
 
 permissions:
@@ -60,7 +60,7 @@ jobs:
       - name: Run DBPR scraper (all Pinellas violations)
         run: |
           if [ -f scrape_dbpr.py ]; then
-            MAX_RECORDS=150 python scrape_dbpr.py
+            MAX_RECORDS=500 python scrape_dbpr.py
           else
             echo "scrape_dbpr.py not found — skipping"
           fi
@@ -91,6 +91,7 @@ jobs:
           # Scraper outputs are already in working tree from the restore + scraper steps
           git checkout origin/main -- "pinellas v22 to scrape.csv" 2>/dev/null || true
           git add -A
+          git restore --staged .github/ 2>/dev/null || true
           git commit --allow-empty -m "Daily rebuild $(date +'%Y-%m-%d %H:%M')"
           git push origin HEAD:main
 
