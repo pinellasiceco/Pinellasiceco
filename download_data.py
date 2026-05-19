@@ -38,7 +38,11 @@ def download(url, dest, label):
             for chunk in r.iter_content(65536):
                 f.write(chunk)
                 size += len(chunk)
-        print(f'    OK: {dest.name} ({size/1024/1024:.1f} MB)')
+        last_modified = r.headers.get('Last-Modified', '')
+        msg = f'    OK: {dest.name} ({size/1024/1024:.1f} MB)'
+        if last_modified:
+            msg += f' — server Last-Modified: {last_modified}'
+        print(msg)
         return True
     except Exception as e:
         print(f'    WARNING: {label} failed -- {e}')

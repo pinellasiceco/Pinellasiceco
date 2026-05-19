@@ -123,8 +123,8 @@ def refresh_v22_list(data_dir='data/'):
     return len(new_records)
 
 # Delay between requests — be respectful to the server
-MIN_DELAY = 2.5
-MAX_DELAY = 4.5
+MIN_DELAY = 1.5
+MAX_DELAY = 3.0
 
 # Ice machine keywords to search for in observation text
 ICE_KEYWORDS = [
