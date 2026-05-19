@@ -2341,7 +2341,6 @@ header{background:var(--navy);
       <button class="preset-btn"    onclick="setPreset('inplay')"   id="pre-inplay">&#x1F7E1; In Play</button>
       <button class="preset-btn"    onclick="setPreset('freshice')" id="pre-freshice">&#x1F525; Ice Viol.</button>
       <button class="preset-btn" onclick="setPreset('dbpr_cited')" id="pre-dbpr_cited">&#x1F575;&#xFE0F; DBPR <span id="cnt-dbpr"></span></button>
-      <button id="dbpr-sort-btn" ontouchend="event.preventDefault();toggleDbprSort()" onclick="toggleDbprSort()" style="display:none;padding:6px 10px;border-radius:20px;border:1px solid #7C3AED;background:#fff;color:#7C3AED;font-size:11px;font-weight:700;font-family:inherit;cursor:pointer;touch-action:manipulation;white-space:nowrap">&#x1F4CA; Most Cited</button>
       <button class="preset-btn" onclick="setPreset('dbpr_repeat')" id="pre-dbpr_repeat">&#x1F501; Repeat <span id="cnt-repeat"></span></button>
       <button class="preset-btn" onclick="setPreset('followups')" id="pre-followups">&#x1F4C5; Follow-Ups</button>
       <button class="preset-btn" onclick="setPreset('golf')" id="pre-golf">&#x26F3; Golf</button>
@@ -2365,6 +2364,10 @@ header{background:var(--navy);
       <button onclick="clearFilters()" style="font-size:10px;padding:5px 8px;border:1px solid var(--brd);border-radius:6px;background:transparent;color:var(--sub);cursor:pointer;font-family:inherit;flex-shrink:0">Clear</button>
       <button id="btn-show-dead" onclick="toggleShowDead()" style="font-size:10px;padding:5px 8px;border:1px solid #94a3b8;border-radius:6px;background:transparent;color:#94a3b8;cursor:pointer;font-family:inherit;flex-shrink:0">&#x26AB; Show Lost</button>
       <span class="fcnt" id="acnt"></span>
+    </div>
+    <div id="dbpr-sort-row" style="display:none;padding:4px 12px 6px;background:#f8f5ff;border-bottom:1px solid #e9d5ff">
+      <span style="font-size:11px;color:#6d28d9;margin-right:8px">Sort by:</span>
+      <button id="dbpr-sort-btn" ontouchend="event.preventDefault();toggleDbprSort()" onclick="toggleDbprSort()" style="padding:5px 12px;border-radius:20px;border:1px solid #7C3AED;background:#7C3AED;color:#fff;font-size:11px;font-weight:700;font-family:inherit;cursor:pointer;touch-action:manipulation">&#x1F4CA; Most Cited</button>
     </div>
 
 <div class="grid" id="agrid"></div>
@@ -4893,6 +4896,7 @@ function rT(){renderBriefing();}
 
 
 function clearFilters(){
+  document.getElementById('queue-bg')?.classList.remove('on');
   setPreset('all');
 }
 
@@ -5100,8 +5104,6 @@ function toggleDbprSort(){
   var btn=document.getElementById('dbpr-sort-btn');
   if(btn){
     btn.textContent=_dbprSort==='recent'?'&#x1F4C5; Most Recent':'&#x1F4CA; Most Cited';
-    btn.style.background=_dbprSort==='recent'?'#7C3AED':'#fff';
-    btn.style.color=_dbprSort==='recent'?'#fff':'#7C3AED';
   }
   rA();
 }
@@ -5167,12 +5169,14 @@ function setPreset(k){
   else if(k==='golf') presetFilter=p=>p.venue_type==='golf';
   else if(k==='dbpr_cited') presetFilter=p=>!!p.ice_confirmed_dbpr;
   else if(k==='dbpr_repeat') presetFilter=p=>(p.cit_repeat||0)>=1||(p.cit_ice_count||0)>=2;
+  var sortRow=document.getElementById('dbpr-sort-row');
   var sortBtn=document.getElementById('dbpr-sort-btn');
   if(k==='dbpr_cited'){
-    if(sortBtn)sortBtn.style.display='inline-block';
+    if(sortRow)sortRow.style.display='block';
   }else{
     _dbprSort='count';
-    if(sortBtn){sortBtn.style.display='none';sortBtn.textContent='&#x1F4CA; Most Cited';sortBtn.style.background='#fff';sortBtn.style.color='#7C3AED';}
+    if(sortRow)sortRow.style.display='none';
+    if(sortBtn){sortBtn.textContent='&#x1F4CA; Most Cited';sortBtn.style.background='#7C3AED';sortBtn.style.color='#fff';}
   }
   rA();
 }
@@ -5188,6 +5192,7 @@ function clearFilters(){
   ['ac','ac-city','ap','as_'].forEach(id=>{
     const el=document.getElementById(id);if(el)el.value='';
   });
+  document.getElementById('queue-bg')?.classList.remove('on');
   setPreset('all');
 }
 
