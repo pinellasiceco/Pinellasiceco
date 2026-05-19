@@ -17,16 +17,28 @@ SUPABASE_SERVICE_KEY = os.environ.get('SUPABASE_SERVICE_KEY', '')
 FULL_NARRATIVES_CACHE = 'full_inspection_narratives.json'
 
 VIOLATION_CATEGORIES = {
-    'ice_machine': [
-        'ice machine', 'ice maker', 'ice bin', 'evaporator',
-        'water tray', 'spray bar', 'ice storage', 'ice chute',
-        'ice dispenser', 'ice scoop'
-    ],
-    'temperature': [
-        'temperature', 'hot holding', 'cold holding', 'cooling',
-        'reheating', '135 degrees', '41 degrees', 'tcs food',
-        'potentially hazardous', 'time/temperature', 'ambient'
-    ],
+    'ice_machine': {
+        'primary': [
+            'evaporator', 'spray bar', 'water tray', 'ice bin',
+            'ice dispenser', 'ice scoop', 'ice maker interior',
+            'ice machine interior', 'ice machine not maintained',
+            'ice machine soiled', 'ice machine observed',
+        ],
+        'secondary': ['ice machine', 'ice maker'],
+        'negative': [
+            'floor outside', 'standing water', 'near ice',
+            'beside ice', 'next to ice', 'floor near', 'dripping',
+            'outside of ice', 'exterior of ice',
+        ],
+    },
+    'temperature': {
+        'primary': [
+            'temperature', 'hot holding', 'cold holding', 'tcs food',
+            'potentially hazardous', '135', '41 degrees', '41°',
+        ],
+        'secondary': ['cooling', 'reheating', 'ambient', 'time/temperature'],
+        'negative': [],
+    },
     'hand_washing': [
         'handwash', 'hand washing', 'hand sink', 'hair restraint',
         'gloves', 'bare hand', 'employee hygiene',
@@ -108,11 +120,52 @@ def load_full_narratives():
 
 def categorize_violation(text):
     t = text.lower()
-    for cat, kws in VIOLATION_CATEGORIES.items():
-        for kw in kws:
+    best_cat = 'other'
+    best_score = 0
+
+    for cat, rules in VIOLATION_CATEGORIES.items():
+        if isinstance(rules, list):
+            # Simple keyword list — match gets score 1
+            for kw in rules:
+                if kw in t and best_score < 1:
+                    best_cat = cat
+                    best_score = 1
+            continue
+
+        # Scored format with primary/secondary/negative
+        score = 0
+        for neg in rules.get('negative', []):
+            if neg in t:
+                score = -99
+                break
+        if score < 0:
+            continue
+        for kw in rules.get('primary', []):
             if kw in t:
-                return cat
-    return 'other'
+                score += 3
+        for kw in rules.get('secondary', []):
+            if kw in t:
+                score += 1
+        if score > best_score:
+            best_score = score
+            best_cat = cat
+
+    return best_cat
+
+
+def extract_violation_codes(record):
+    """Extract DBPR violation codes (V01-V58) from a prospect record."""
+    codes = record.get('codes') or record.get('violation_codes', [])
+    if codes:
+        return list(codes) if isinstance(codes, list) else [codes]
+    # Fall back to scanning observation text for V## patterns
+    obs = str(record.get('cit_observation', '') or '')
+    found = re.findall(r'\bV\d{2}\b', obs.upper())
+    if found:
+        return list(dict.fromkeys(found))  # deduplicated, order preserved
+    if record.get('ice_confirmed'):
+        return ['V22']
+    return []
 
 
 def load_prospects():
@@ -223,12 +276,20 @@ def parse_violations_from_observation(obs_text, codes):
         else:
             severity = 'major'
 
+        # Try to find a code that matches this specific line
+        line_cat = categorize_violation(line)
+        line_code = next(
+            (c for c in (codes or []) if CODE_CATEGORIES.get(c) == line_cat),
+            codes[0] if codes else None
+        )
         violations.append({
             'text': line[:300],
             'severity': severity,
             'corrected_on_site': corrected,
             'repeat': repeat,
-            'category': categorize_violation(line),
+            'category': line_cat,
+            'code': line_code,
+            'all_codes': list(codes) if codes else [],
         })
     return violations
 
@@ -246,9 +307,10 @@ def synthesize_violations_from_codes(codes, total_viol, high_viol):
                 'corrected_on_site': False,
                 'repeat': False,
                 'category': CODE_CATEGORIES.get(code, 'other'),
+                'code': code,
+                'all_codes': used_codes,
             })
     else:
-        # Fallback: generic entry using violation counts
         severity = 'high' if high_viol > 0 else 'basic'
         violations.append({
             'text': f'{total_viol} violation(s) cited at most recent inspection',
@@ -256,6 +318,8 @@ def synthesize_violations_from_codes(codes, total_viol, high_viol):
             'corrected_on_site': False,
             'repeat': False,
             'category': 'other',
+            'code': None,
+            'all_codes': [],
         })
 
     return violations
@@ -264,7 +328,7 @@ def synthesize_violations_from_codes(codes, total_viol, high_viol):
 def get_best_narrative(r, full_narratives):
     """Return (violations, source) using best available narrative source."""
     lic = str(r.get('id', ''))
-    codes = r.get('codes') or []
+    codes = extract_violation_codes(r)
     total_viol = int(r.get('total_viol') or 0)
     high_viol = int(r.get('high_viol') or 0)
 
@@ -279,8 +343,9 @@ def get_best_narrative(r, full_narratives):
         viols = []
         for entry in cached:
             viol_text = (entry.get('observation') or '').strip()
+            entry_codes = re.findall(r'\bV\d{2}\b', viol_text.upper())
             if len(viol_text) > 10:
-                viols.extend(parse_violations_from_observation(viol_text, []))
+                viols.extend(parse_violations_from_observation(viol_text, entry_codes or codes))
         if viols:
             return viols, 'full_narrative'
 
