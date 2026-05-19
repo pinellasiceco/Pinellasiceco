@@ -5103,7 +5103,7 @@ function toggleDbprSort(){
   _dbprSort=_dbprSort==='count'?'recent':'count';
   var btn=document.getElementById('dbpr-sort-btn');
   if(btn){
-    btn.textContent=_dbprSort==='recent'?'&#x1F4C5; Most Recent':'&#x1F4CA; Most Cited';
+    btn.innerHTML=_dbprSort==='recent'?'&#x1F4C5; Most Recent':'&#x1F4CA; Most Cited';
   }
   rA();
 }
