@@ -31,7 +31,7 @@ _DBPR_COLS = (
      'Num Critical', 'Num Noncritical', 'Num Total',
      'Num High Priority', 'Num Intermediate',
      'Num Basic', 'PDA Status']
-    + [f'V{i:02d}' for i in range(1, 59)]
+    + [f'V{i:02d}' for i in range(1, 60)]
     + ['License ID', 'Visit ID']
 )
 
@@ -72,14 +72,30 @@ def load_file(path, fmt):
         with warnings.catch_warnings():
             warnings.simplefilter('ignore')
             if fmt == 'csv':
-                df = pd.read_csv(
-                    path, header=None, names=_DBPR_COLS,
-                    low_memory=False, encoding='utf-8', errors='replace',
-                )
+                # 'errors' was never a valid read_csv kwarg; use encoding_errors (pandas>=1.3)
+                try:
+                    df = pd.read_csv(
+                        path, header=None, names=_DBPR_COLS,
+                        low_memory=False, encoding='utf-8',
+                        encoding_errors='replace',
+                    )
+                except TypeError:
+                    df = pd.read_csv(
+                        path, header=None, names=_DBPR_COLS,
+                        low_memory=False, encoding='utf-8',
+                    )
             else:
-                raw = pd.read_excel(path, header=None, engine='openpyxl')
+                # Try openpyxl (xlsx), then xlrd (old .xls format)
+                try:
+                    raw = pd.read_excel(path, header=None, engine='openpyxl')
+                except Exception:
+                    raw = pd.read_excel(path, header=None, engine='xlrd')
                 ncols = raw.shape[1]
-                raw.columns = _DBPR_COLS[:ncols]
+                # Pad column list if file has more columns than our spec
+                cols = list(_DBPR_COLS[:ncols])
+                if ncols > len(_DBPR_COLS):
+                    cols += [f'Extra{i}' for i in range(ncols - len(_DBPR_COLS))]
+                raw.columns = cols
                 df = raw
         print(f'  Loaded {path}: {len(df):,} rows')
         return df
