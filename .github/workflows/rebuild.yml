@@ -35,6 +35,14 @@ jobs:
       - name: Download fresh FL DBPR data
         run: python download_data.py
 
+      - name: Build full violations scrape list
+        run: |
+          if [ -f build_violations_list.py ]; then
+            python build_violations_list.py
+          else
+            echo "build_violations_list.py not found — skipping"
+          fi
+
       - name: Pick up atp/ landing page from feature branch
         run: |
           git fetch origin claude/fix-multiple-app-bugs-j1hpJ 2>/dev/null || true
@@ -46,8 +54,10 @@ jobs:
           git checkout origin/main -- pinellas_v22_narratives.csv 2>/dev/null || true
           git checkout origin/main -- scraper_progress.txt 2>/dev/null || true
           git checkout origin/main -- ice_citation_by_business.csv 2>/dev/null || true
+          git checkout origin/main -- full_inspection_narratives.json 2>/dev/null || true
+          git checkout origin/main -- full_scraper_progress.txt 2>/dev/null || true
 
-      - name: Run DBPR scraper (new V22 records only)
+      - name: Run DBPR scraper (all Pinellas violations)
         run: |
           if [ -f scrape_dbpr.py ]; then
             MAX_RECORDS=150 python scrape_dbpr.py

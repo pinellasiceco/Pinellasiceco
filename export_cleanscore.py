@@ -14,6 +14,8 @@ import requests
 SUPABASE_URL = os.environ.get('SUPABASE_URL', '')
 SUPABASE_SERVICE_KEY = os.environ.get('SUPABASE_SERVICE_KEY', '')
 
+FULL_NARRATIVES_CACHE = 'full_inspection_narratives.json'
+
 VIOLATION_CATEGORIES = {
     'ice_machine': [
         'ice machine', 'ice maker', 'ice bin', 'evaporator',
@@ -89,6 +91,19 @@ CODE_DESCRIPTIONS = {
     'V50': 'Food contact surfaces soiled',
     'V51': 'Non-food contact surfaces soiled',
 }
+
+
+def load_full_narratives():
+    if not os.path.exists(FULL_NARRATIVES_CACHE):
+        return {}
+    try:
+        with open(FULL_NARRATIVES_CACHE, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        print(f'  Loaded full narratives for {len(data)} licenses')
+        return data
+    except Exception as e:
+        print(f'  Full narratives load error: {e}')
+        return {}
 
 
 def categorize_violation(text):
@@ -246,7 +261,34 @@ def synthesize_violations_from_codes(codes, total_viol, high_viol):
     return violations
 
 
-def build_violations_export(records):
+def get_best_narrative(r, full_narratives):
+    """Return (violations, source) using best available narrative source."""
+    lic = str(r.get('id', ''))
+    codes = r.get('codes') or []
+    total_viol = int(r.get('total_viol') or 0)
+    high_viol = int(r.get('high_viol') or 0)
+
+    # Priority 1: cit_observation (V22 ice machine text already embedded in P[])
+    obs = (r.get('cit_observation') or '').strip()
+    if obs:
+        return parse_violations_from_observation(obs, codes), 'ice_citation'
+
+    # Priority 2: full inspection narrative from scraper cache
+    cached = full_narratives.get(lic)
+    if cached:
+        viols = []
+        for entry in cached:
+            viol_text = (entry.get('observation') or '').strip()
+            if len(viol_text) > 10:
+                viols.extend(parse_violations_from_observation(viol_text, []))
+        if viols:
+            return viols, 'full_narrative'
+
+    # Priority 3: synthesize from violation codes / counts
+    return synthesize_violations_from_codes(codes, total_viol, high_viol), 'synthesized'
+
+
+def build_violations_export(records, full_narratives=None):
     pinellas = [
         r for r in records
         if str(r.get('county', '')).lower() == 'pinellas'
@@ -269,20 +311,16 @@ def build_violations_export(records):
         'pct_with_any_violation': pct_with_viol,
     }
 
+    if full_narratives is None:
+        full_narratives = {}
+
     export = []
     for r in pinellas:
         total_viol = int(r.get('total_viol') or 0)
         if total_viol == 0:
             continue
 
-        high_viol = int(r.get('high_viol') or 0)
-        codes = r.get('codes') or []
-        obs = (r.get('cit_observation') or '').strip()
-
-        if obs:
-            violations = parse_violations_from_observation(obs, codes)
-        else:
-            violations = synthesize_violations_from_codes(codes, total_viol, high_viol)
+        violations, narrative_source = get_best_narrative(r, full_narratives)
 
         insp_date = str(r.get('last_insp') or '')[:10]
         disposition = str(r.get('last_disp') or '')
@@ -306,6 +344,7 @@ def build_violations_export(records):
             'last_inspection_disposition': disposition,
             'violations': violations,
             'violation_count': total_viol,
+            'narrative_source': narrative_source,
             'inspection_history': history,
             'county_stats': county_stats,
         })
@@ -355,9 +394,10 @@ def main():
         print('  No prospects — aborting export')
         return
 
+    full_narratives = load_full_narratives()
     partner_rows = load_partners()
 
-    violations = build_violations_export(records)
+    violations = build_violations_export(records, full_narratives)
     if violations:
         upload_to_storage('cleanscore_violations.json', violations)
 
@@ -370,8 +410,13 @@ def main():
         json.dump(violations[:5], f, indent=2)
     print('  Sample written to data/cleanscore_violations.json')
 
+    sources = {}
+    for v in violations:
+        s = v.get('narrative_source', 'synthesized')
+        sources[s] = sources.get(s, 0) + 1
+    source_summary = ', '.join(f'{v} {k}' for k, v in sorted(sources.items()))
     print(f'CleanScore export complete: '
-          f'{len(violations)} businesses, '
+          f'{len(violations)} businesses ({source_summary}), '
           f'{len(partners)} partners')
 
 
