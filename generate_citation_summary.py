@@ -163,7 +163,7 @@ def main():
         print(f'  V22 sample values: {pinellas["V22"].dropna().unique()[:10]}')
         return
 
-    v22_rows['license_str'] = v22_rows['License Number'].astype(str).str.strip()
+    v22_rows['license_str'] = v22_rows['License ID'].astype(str).str.strip()
 
     # Per-license aggregation — one row per business
     summary = v22_rows.groupby('license_str').agg(
@@ -188,7 +188,7 @@ def main():
     summary['cit_repeat'] = summary['cit_ice_count'] > 1
 
     # Corrected on site
-    lic_col = v22_rows['License Number'].astype(str).str.strip()
+    lic_col = v22_rows['License ID'].astype(str).str.strip()
     corrected = (
         v22_rows.groupby(lic_col)
         .apply(lambda x: x['Inspection Disposition'].astype(str)
