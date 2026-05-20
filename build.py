@@ -20,6 +20,7 @@ TARGET_COUNTIES  = ['Pinellas', 'Hillsborough', 'Pasco',
 MIN_SCORE        = 5   # Very low - include everything, filter in browser
 TODAY            = date.today()
 OUTPUT_FILE      = Path(__file__).parent / 'prospecting_tool.html'
+REACH_IN_ENABLED = False
 
 # ── CHAIN CLASSIFICATION ──────────────────────────────────────────────────────
 # Corporate chains: national vendor contracts, skip entirely
@@ -1844,7 +1845,8 @@ def build_html(records, partners=None):
                         .replace('%%NGEO%%', str(n_geo))\
                         .replace('%%NCONF%%', str(sum(1 for r in records if r['confirmed'])))\
                         .replace('%%SUPABASE_URL%%', _SUPABASE_URL_ENV)\
-                        .replace('%%SUPABASE_ANON_KEY%%', _SUPABASE_ANON_ENV)
+                        .replace('%%SUPABASE_ANON_KEY%%', _SUPABASE_ANON_ENV)\
+                        .replace('%%REACH_IN_ENABLED%%', 'true' if REACH_IN_ENABLED else 'false')
 
 # ──────────────────────────────────────────────────────────────────────────────
 # HTML TEMPLATE  (everything between the triple-quotes)
@@ -3048,6 +3050,7 @@ header{background:var(--navy);
 <script>
 const P=%%DATA%%;
 const PARTNERS=%%PARTNERS%%;
+var REACH_IN_ENABLED=%%REACH_IN_ENABLED%%;
 const ESCALATION_TREE=[
   {id:'no_ice',     label:'No Ice / Low Output',            icon:'&#x1F9CA;',ptype:'refrigeration',     action:'Compressor or refrigerant issue. Do not attempt repair. Call refrigeration tech.'},
   {id:'water_leak', label:'Water Leak / Flooding',          icon:'&#x1F4A7;',ptype:null,                action:'Shut off supply valve at wall. Licensed plumber needed for line or drain repair.'},
@@ -8484,6 +8487,7 @@ function buildRecentServiceHistory(p,c){
       var post=s.atp?' &#x2192; <span style="color:'+atpCol(s.atp)+';font-weight:700">'+s.atp+'</span>':'';
       var fBadge=s.filter_replaced?'<span style="background:#eff6ff;color:var(--blu);font-size:8px;padding:1px 4px;border-radius:3px;font-weight:600;margin-left:3px">Filter &#x2713;</span>':'';
       var pBadge=(s.photo_urls&&s.photo_urls.length)?'<span style="background:#f5f3ff;color:#7c3aed;font-size:8px;padding:1px 4px;border-radius:3px;font-weight:600;margin-left:3px">'+s.photo_urls.length+' &#x1F4F7;</span>':'';
+      var riBadge=(REACH_IN_ENABLED&&s.reach_in&&s.reach_in.result)?'<span style="background:'+(s.reach_in.result==='pass'?'#f0fdf4':'#fef2f2')+';color:'+(s.reach_in.result==='pass'?'#059669':'#dc2626')+';font-size:8px;padding:1px 4px;border-radius:3px;font-weight:600;margin-left:3px">RI '+(s.reach_in.result==='pass'?'&#x2714;':'&#x2716;')+'</span>':'';
       var typeLabel=s.type==='deep_clean'?'Deep Clean':'60-Day';
       var noteTxt=(s.notes||'').slice(0,120);
       var noteEl=noteTxt?'<div style="font-size:9px;color:var(--sub);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+noteTxt+'</div>':'';
@@ -8494,7 +8498,7 @@ function buildRecentServiceHistory(p,c){
         +'<div style="flex:1">'
         +'<div style="display:flex;justify-content:space-between;align-items:center">'
         +'<div style="font-size:10px;font-weight:600;color:var(--navy)">'+(s.date_display||s.date)
-        +'<span style="font-size:8px;color:var(--sub);font-weight:400;margin-left:4px">'+typeLabel+'</span>'+fBadge+pBadge+'</div>'
+        +'<span style="font-size:8px;color:var(--sub);font-weight:400;margin-left:4px">'+typeLabel+'</span>'+fBadge+pBadge+riBadge+'</div>'
         +'<div style="font-size:10px">'+pre+post+'</div>'
         +'</div>'
         +noteEl
@@ -8767,6 +8771,7 @@ function logServiceFromCal(id,opts){
     units: opts.units||1,
     notes: opts.notes||'',
     photo_urls: opts.photo_urls||[],
+    reach_in: opts.reach_in||null,
     tech: 'Pinellas Ice Co',
   };
 
@@ -8883,6 +8888,17 @@ function openServiceLog(id){
     +'<textarea id="svc-notes" rows="3" placeholder="Machine condition, issues found, recommendations..."'
       +' style="width:100%;padding:8px;border:1px solid var(--brd);border-radius:7px;font-size:11px;font-family:inherit;background:var(--surf);color:var(--txt);outline:none;resize:none;margin-bottom:10px"></textarea>'
 
+    // Reach-in cooler ATP (feature-flagged)
+    +(REACH_IN_ENABLED?
+      '<div style="font-size:9px;font-weight:700;color:var(--sub);text-transform:uppercase;margin-bottom:6px">Reach-In Cooler ATP Testing <span style="font-weight:400;font-style:italic">(Optional)</span></div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">'
+        +'<button id="ri-pass-btn" data-ri="pass" onclick="setRiResult(this.dataset.ri)" ontouchend="event.preventDefault();setRiResult(this.dataset.ri)" style="padding:8px;border:1px solid var(--brd);border-radius:7px;background:var(--surf);color:var(--sub);font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2714; Pass (&#x2264;10 RLU)</button>'
+        +'<button id="ri-fail-btn" data-ri="fail" onclick="setRiResult(this.dataset.ri)" ontouchend="event.preventDefault();setRiResult(this.dataset.ri)" style="padding:8px;border:1px solid var(--brd);border-radius:7px;background:var(--surf);color:var(--sub);font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2716; Fail (&gt;10 RLU)</button>'
+      +'</div>'
+      +'<div id="ri-units" style="margin-bottom:6px"></div>'
+      +'<button onclick="addRiUnit()" ontouchend="event.preventDefault();addRiUnit()" style="width:100%;padding:7px;border:1px dashed #94a3b8;border-radius:7px;background:#f8fafc;color:#64748b;font-size:11px;cursor:pointer;font-family:inherit;margin-bottom:10px">+ Add Reach-In Unit</button>'
+      :'')
+
     // Photos
     +'<div style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;margin-bottom:6px">Before/After Photos</div>'
     +'<div id="svc-photo-preview" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px"></div>'
@@ -8927,11 +8943,44 @@ function openServiceLog(id){
   if(photoInput){
     photoInput.addEventListener('change',function(){_handlePhotoSelection(this.files,document.getElementById('svc-add-photo-btn'));},false);
   }
+
+  // Reach-in state reset — must run every open, not just on close
+  resetRiState();
+  resetRiDom();
+  if(REACH_IN_ENABLED){
+    var riContainer=document.getElementById('ri-units');
+    if(riContainer)riContainer.appendChild(buildRiUnitRow(1));
+  }
 }
 
 let _svcType='maintenance_60';
 var _svcPhotos=[];
+var _riResult=null;
+var _riUnits=[];
 function closeSvcLog(){const el=document.getElementById('svc-log-bg');if(el)el.remove();}
+function resetRiState(){_riResult=null;_riUnits=[];}
+function resetRiDom(){var el=document.getElementById('ri-units');if(el)el.innerHTML='';}
+function buildRiUnitRow(n){
+  var row=document.createElement('div');
+  row.id='ri-row-'+n;
+  row.style.cssText='display:grid;grid-template-columns:1fr 100px;gap:6px;margin-bottom:6px;align-items:center';
+  row.innerHTML='<input id="ri-loc-'+n+'" type="text" placeholder="Location (e.g. Line 1)" style="padding:7px;border:1px solid var(--brd);border-radius:7px;font-size:11px;font-family:inherit;background:var(--surf);color:var(--txt);outline:none">'
+    +'<input id="ri-atp-'+n+'" type="number" min="0" max="9999" placeholder="RLU" style="padding:7px;border:1px solid var(--brd);border-radius:7px;font-size:11px;font-family:inherit;background:var(--surf);color:var(--txt);outline:none;text-align:center">';
+  return row;
+}
+function setRiResult(result){
+  _riResult=result;
+  var pBtn=document.getElementById('ri-pass-btn');
+  var fBtn=document.getElementById('ri-fail-btn');
+  if(pBtn){pBtn.style.background=result==='pass'?'#059669':'var(--surf)';pBtn.style.color=result==='pass'?'#fff':'var(--sub)';pBtn.style.borderColor=result==='pass'?'#059669':'var(--brd)';}
+  if(fBtn){fBtn.style.background=result==='fail'?'#dc2626':'var(--surf)';fBtn.style.color=result==='fail'?'#fff':'var(--sub)';fBtn.style.borderColor=result==='fail'?'#dc2626':'var(--brd)';}
+}
+function addRiUnit(){
+  var container=document.getElementById('ri-units');
+  if(!container)return;
+  var n=container.children.length+1;
+  container.appendChild(buildRiUnitRow(n));
+}
 
 function closeEscBg(){var e=document.getElementById('esc-bg');if(e)e.remove();}
 
@@ -9325,6 +9374,22 @@ async function submitServiceLog(id){
   const machineSerial=(document.getElementById('svc-machine-serial')||{}).value||'';
   const units=parseInt((document.getElementById('svc-units')||{}).value||'1')||1;
 
+  // Collect reach-in data when feature is enabled
+  var riData=null;
+  if(REACH_IN_ENABLED){
+    var riUnitsArr=[];
+    var riContainer=document.getElementById('ri-units');
+    if(riContainer){
+      var riRows=riContainer.children;
+      for(var _ri=0;_ri<riRows.length;_ri++){
+        var riLoc=(document.getElementById('ri-loc-'+(_ri+1))||{}).value||'';
+        var riAtp=(document.getElementById('ri-atp-'+(_ri+1))||{}).value||'';
+        if(riLoc||riAtp)riUnitsArr.push({location:riLoc,atp:riAtp});
+      }
+    }
+    if(_riResult||riUnitsArr.length)riData={result:_riResult,units:riUnitsArr};
+  }
+
   // Upload photos before saving so URLs are included in the service record
   const today_iso=localISO(new Date());
   var photoUrls=await _uploadServicePhotos(id,today_iso,_svcPhotos);
@@ -9340,6 +9405,7 @@ async function submitServiceLog(id){
     machine_serial:machineSerial,
     units,
     photo_urls:photoUrls,
+    reach_in:riData,
   });
 
   // Save machine info and filter to customer record for future reports
