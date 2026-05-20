@@ -545,12 +545,7 @@ def clean_observation(text):
     return cut + '…'
 
 
-_ICE_KEYWORDS = re.compile(
-    r'\b(ice\s+machine|ice\s+maker|ice\s+bin|ice\s+scoop|evaporator|condenser|'
-    r'mold|slime|biofilm|pink|black|green|sanitize|sanitizer|soiled|dirty|'
-    r'buildup|scale|residue|deposit|film|growth|discoloration)\b',
-    re.IGNORECASE,
-)
+_ICE_KEYWORDS = re.compile(r'\b(ice|evaporator)\b', re.IGNORECASE)
 
 
 def extract_ice_snippet(text, max_chars=300):
@@ -8031,7 +8026,7 @@ async function loadCloudData(){
     if(r1.data&&r1.data.data&&Array.isArray(r1.data.data)&&r1.data.data.length&&r1.data.data[0]&&r1.data.data[0].name){
       // Snapshot citation fields from baked P[] before overwriting — Supabase may have an
       // older snapshot that pre-dates the DBPR citation enrichment.
-      var _citFields=['ice_confirmed_dbpr','cit_count','cit_ice_count','cit_latest','cit_earliest','cit_observation','cit_codes','ice_risk_prob','ice_risk_level','ice_risk_reason'];
+      var _citFields=['ice_confirmed_dbpr','cit_count','cit_ice_count','cit_latest','cit_earliest','cit_observation','cit_codes','ice_risk_prob','ice_risk_level','ice_risk_reason','ice_gold'];
       var _citMap={};
       P.forEach(function(p){
         var saved={};
