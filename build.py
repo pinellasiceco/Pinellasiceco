@@ -22,6 +22,10 @@ TODAY            = date.today()
 OUTPUT_FILE      = Path(__file__).parent / 'prospecting_tool.html'
 REACH_IN_ENABLED = False
 
+# Reach-in cooler add-on Stripe price IDs
+STRIPE_REACH_IN_MONTHLY   = 'price_1TZDEZ1DW5dOU2aa40hWFQsm'
+STRIPE_REACH_IN_QUARTERLY = 'price_1TZDF71DW5dOU2aaT1PYaOaw'
+
 # ── CHAIN CLASSIFICATION ──────────────────────────────────────────────────────
 # Corporate chains: national vendor contracts, skip entirely
 CORPORATE_CHAINS = [
@@ -1846,7 +1850,9 @@ def build_html(records, partners=None):
                         .replace('%%NCONF%%', str(sum(1 for r in records if r['confirmed'])))\
                         .replace('%%SUPABASE_URL%%', _SUPABASE_URL_ENV)\
                         .replace('%%SUPABASE_ANON_KEY%%', _SUPABASE_ANON_ENV)\
-                        .replace('%%REACH_IN_ENABLED%%', 'true' if REACH_IN_ENABLED else 'false')
+                        .replace('%%REACH_IN_ENABLED%%', 'true' if REACH_IN_ENABLED else 'false')\
+                        .replace('%%STRIPE_REACH_IN_MONTHLY%%', STRIPE_REACH_IN_MONTHLY)\
+                        .replace('%%STRIPE_REACH_IN_QUARTERLY%%', STRIPE_REACH_IN_QUARTERLY)
 
 # ──────────────────────────────────────────────────────────────────────────────
 # HTML TEMPLATE  (everything between the triple-quotes)
@@ -3668,6 +3674,12 @@ function calcOnetime(machines){
 function calcYear1(plan,machines){
   return (99+Math.max(0,(machines||1)-1)*49)+calcMonthly(plan,machines)*12;
 }
+function calcReachInMonthly(plan){
+  if(!REACH_IN_ENABLED)return 0;
+  var cb=document.getElementById('co-reach-in');
+  if(!cb||!cb.checked)return 0;
+  return plan==='quarterly'?40:50;
+}
 
 function scOpenClose(p,bg){
   _scCardP=p;_scCardBg=bg;
@@ -3678,6 +3690,20 @@ function scOpenClose(p,bg){
   var quarterly=calcMonthly('quarterly',m);
   var onetimePrice=calcOnetime(m);
   var year1=entryDefault+monthly*12;
+  var riToggle=REACH_IN_ENABLED
+    ?'<div style="margin:12px 0;padding:12px;background:#F0F7FF;border-radius:8px;border:1px solid #BDD7EE">'
+      +'<label style="display:flex;align-items:center;justify-content:space-between;cursor:pointer">'
+        +'<div>'
+          +'<div style="font-size:13px;font-weight:700;color:#1A3A5C">&#x2744;&#xFE0F; Reach-In Cooler Service</div>'
+          +'<div style="font-size:11px;color:#6C757D;margin-top:2px">Up to 3 units &middot; same visit</div>'
+        +'</div>'
+        +'<div style="display:flex;align-items:center;gap:8px">'
+          +'<span id="co-reach-in-price" style="font-size:13px;font-weight:700;color:#1A5276">+$50/mo</span>'
+          +'<input type="checkbox" id="co-reach-in" onchange="updateCloseDisplay()" style="width:18px;height:18px;cursor:pointer">'
+        +'</div>'
+      +'</label>'
+    +'</div>'
+    :'';
   var el=document.createElement('div');
   el.id='close-overlay';
   el.style.cssText='position:fixed;inset:0;z-index:600;background:rgba(15,31,56,.85);display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box';
@@ -3715,6 +3741,7 @@ function scOpenClose(p,bg){
     +getActivePartnersForClose()
     +'</select>'
     +'</div>'
+    +riToggle
     +'<div style="padding:10px;background:#f0fdf4;border:1px solid #6ee7b7;border-radius:8px;margin-bottom:10px;text-align:center">'
     +'<div style="font-size:9px;color:#059669;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Year 1 Total Value</div>'
     +'<div id="co-year1-val" style="font-size:22px;font-weight:900;color:#059669">$'+year1.toLocaleString('en-US')+'</div>'
@@ -3757,6 +3784,14 @@ function scOpenClose(p,bg){
   document.body.appendChild(el);
   var flexEl=document.getElementById('co-flex-toggle');
   if(flexEl)flexEl.checked=false;
+  if(REACH_IN_ENABLED){
+    var riCbInit=document.getElementById('co-reach-in');
+    if(riCbInit){
+      var alreadyHasRi=!!(customers[p.id]&&customers[p.id].reach_in_service===true);
+      riCbInit.checked=alreadyHasRi;
+      updateCloseDisplay();
+    }
+  }
   // Auto-populate partner if this prospect was referred via an inbound referral
   var ref=getProspectPartnerRef(p.id);
   if(ref&&ref.partnerId){
@@ -3827,6 +3862,10 @@ function updateCloseDisplay(plan){
     detail='$'+entry+' entry + $'+onetimePrice+' one-time';
   }else{
     var monthlyPrice=Math.max(0,calcMonthly(_closeState.plan,m)-planDisc);
+    var riAdd=calcReachInMonthly(_closeState.plan);
+    monthlyPrice=monthlyPrice+riAdd;
+    var riLblEl=document.getElementById('co-reach-in-price');
+    if(REACH_IN_ENABLED&&riLblEl)riLblEl.textContent=_closeState.plan==='quarterly'?'+$40/mo':'+$50/mo';
     year1=entry+monthlyPrice*12;
     detail='$'+entry+' entry + $'+monthlyPrice+'/mo \xd7 12';
   }
@@ -3867,6 +3906,14 @@ function scMarkWon(onetime){
     filter_installed:'',contract_start:'',contract_term:12,
     contract_renewal:'',service_history:[],atp_history:[],vendor_name:'',
   };
+  if(REACH_IN_ENABLED&&!onetime){
+    var _riWonCb=document.getElementById('co-reach-in');
+    if(_riWonCb&&_riWonCb.checked){
+      customers[p.id].reach_in_service=true;
+      var _riWonAmt=calcReachInMonthly(cs.plan);
+      if(_riWonAmt>0){customers[p.id].monthly=(customers[p.id].monthly||0)+_riWonAmt;}
+    }
+  }
   custSave();p.status=wonStatus;p.monthly=monthlyPrice||p.monthly;p.machines=m;
   if(partnerId)logPartnerReferral(partnerId,p.id,p.name,onetime,monthlyPrice);
   if(!log[p.id])log[p.id]=[];
@@ -3915,6 +3962,7 @@ async function generateStripeCheckout(){
         client_city:p?(p.city||''):'',
         prospect_id:pid||'',
         flex:flex,
+        reach_in_price_id:REACH_IN_ENABLED&&(document.getElementById('co-reach-in')||{}).checked?(plan==='quarterly'?'%%STRIPE_REACH_IN_QUARTERLY%%':'%%STRIPE_REACH_IN_MONTHLY%%'):null,
       }),
     });
     var data=await resp.json();
@@ -3925,6 +3973,12 @@ async function generateStripeCheckout(){
       customers[pid]._pending_plan=plan;
       customers[pid]._pending_machines=m;
       customers[pid]._pending_plan_disc=planDisc;
+      if(REACH_IN_ENABLED){
+        var _riCb=document.getElementById('co-reach-in');
+        var _riChecked=_riCb?_riCb.checked:false;
+        customers[pid]._pending_reach_in=_riChecked;
+        customers[pid]._pending_reach_in_amount=_riChecked?calcReachInMonthly(plan):0;
+      }
       custSave();
     }
     return data.url;
@@ -3989,8 +4043,16 @@ function checkStripeReturn(){
       _scCardP=p;_scCardBg=null;
       var _pm=parseInt((customers[pid]||{})._pending_machines)||p.machines||1;
       var _pd=parseFloat((customers[pid]||{})._pending_plan_disc)||0;
+      var _pri=REACH_IN_ENABLED&&(customers[pid]||{})._pending_reach_in===true;
+      var _priAmt=REACH_IN_ENABLED?((customers[pid]||{})._pending_reach_in_amount||0):0;
       _closeState={plan:pendingPlan,machines:_pm,entryPrice:99+Math.max(0,(_pm)-1)*49,planDisc:_pd};
       scMarkWon(pendingPlan==='onetime');
+      if(REACH_IN_ENABLED&&_pri){
+        if(!customers[pid])customers[pid]={};
+        customers[pid].reach_in_service=true;
+        if(_priAmt>0){customers[pid].monthly=(customers[pid].monthly||0)+_priAmt;}
+        custSave();
+      }
       toast('Payment confirmed — '+(p.name||'client')+' moved to Won');
     }else if(p&&alreadyWon){
       toast('Payment confirmed — '+(p.name||'client')+' is already a client');
@@ -5976,6 +6038,7 @@ function showCard(id){
     ['Quarterly Plan','$'+(p.quarterly||129)+'/mo · Annual · Filters NOT included','#7c3aed'],
     ['One-Time Clean','$'+(p.onetime||395)+' (no plan) · Filters NOT included','#2563eb'],
     ['Entry w/ Plan','$'+(p.intro||99)+' first visit then $'+(p.monthly||149)+'/mo','#ea580c'],
+    (REACH_IN_ENABLED&&c.reach_in_count)?['&#x2744;&#xFE0F; Reach-In Units',c.reach_in_count+(c.reach_in_count>=3?'+':''),'#1A5276']:null,
   ];
   var _intelLines=buildIntelSummary(p);
   var intelWhyH=_intelLines.length
@@ -6121,8 +6184,24 @@ function showCard(id){
     +'style="flex:1;padding:6px;border:1px solid #fde68a;border-radius:6px;font-size:11px;font-family:inherit;background:#fff;color:#1e293b;outline:none">'
     +'<button id="sc-save-vendor" style="padding:6px 10px;border:none;border-radius:6px;background:#92400e;color:#fff;font-size:10px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation">Save</button>'
     +'</div></div>'
+    // Reach-in cooler count (feature-flagged)
+    +(REACH_IN_ENABLED?(function(){
+      var savedRiCount=c.reach_in_count||'';
+      return'<div style="margin-top:10px">'
+        +'<label style="font-size:12px;font-weight:700;color:#4A4A4A;display:block;margin-bottom:4px">&#x2744;&#xFE0F; Reach-In Coolers (est.)</label>'
+        +'<div style="display:flex;gap:8px;align-items:center">'
+          +'<select id="sc-ri-count" style="padding:8px;border:1px solid #E9ECEF;border-radius:8px;font-size:14px;font-family:inherit;background:#fff;flex:1">'
+            +'<option value="">Unknown</option>'
+            +'<option value="1"'+(savedRiCount==1?' selected':'')+'>1 unit</option>'
+            +'<option value="2"'+(savedRiCount==2?' selected':'')+'>2 units</option>'
+            +'<option value="3"'+(savedRiCount>=3?' selected':'')+'>3+ units</option>'
+          +'</select>'
+          +'<button data-scpid="'+p.id+'" ontouchend="event.preventDefault();saveRiCount(this.dataset.scpid)" onclick="saveRiCount(this.dataset.scpid)" style="padding:8px 14px;background:#1A3A5C;color:#fff;border:none;border-radius:8px;font-size:13px;font-family:inherit;cursor:pointer;touch-action:manipulation">Save</button>'
+        +'</div>'
+      +'</div>';
+    }()):'')
     // Contacts
-    +'<div id="sc-contacts-wrap"><div style="font-size:10px;color:#94a3b8">Loading contacts…</div></div>'
+    +'<div id="sc-contacts-wrap"><div style="font-size:10px;color:#94a3b8">Loading contacts&#x2026;</div></div>'
     +'<button id="sc-add-contact" style="width:100%;padding:7px;border:1px dashed #e2e8f0;border-radius:7px;background:transparent;color:#64748b;font-size:10px;cursor:pointer;font-family:inherit;touch-action:manipulation;margin-top:4px">+ Add Contact</button>'
     +'</div>';
 
@@ -8672,7 +8751,9 @@ function renderServiceCal(){
       +'<div style="display:flex;justify-content:space-between;align-items:flex-start">'
         +'<div style="flex:1;min-width:0">'
           +'<div style="font-weight:700;font-size:13px;color:var(--navy)">'+p.name+'</div>'
-          +'<div style="font-size:10px;color:var(--sub)">'+p.city+' &bull; '+p.machines+' machine'+(p.machines>1?'s':'')+' &bull; '+(c.status==='customer_quarterly'?'Quarterly':c.status==='customer_once'?'One-Time':c.status==='customer_intro'?'Intro':'Monthly')+'</div>'
+          +'<div style="font-size:10px;color:var(--sub)">'+p.city+' &bull; '+p.machines+' machine'+(p.machines>1?'s':'')+' &bull; '+(c.status==='customer_quarterly'?'Quarterly':c.status==='customer_once'?'One-Time':c.status==='customer_intro'?'Intro':'Monthly')
+          +(REACH_IN_ENABLED&&c.reach_in_service?'<span style="font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;background:#F0F7FF;color:#1A5276;margin-left:4px">&#x2744;&#xFE0F; + Coolers</span>':'')
+          +'</div>'
           +(p.phone?'<div style="font-size:10px;color:var(--blu)">'+p.phone+'</div>':'')
         +'</div>'
         +'<div style="text-align:right;flex-shrink:0;margin-left:10px">'
@@ -8961,6 +9042,16 @@ var _svcPhotos=[];
 var _riResult=null;
 var _riUnits=[];
 function closeSvcLog(){const el=document.getElementById('svc-log-bg');if(el)el.remove();}
+function saveRiCount(pid){
+  if(!REACH_IN_ENABLED)return;
+  var sel=document.getElementById('sc-ri-count');
+  if(!sel)return;
+  var val=sel.value?parseInt(sel.value):null;
+  if(!customers[pid])customers[pid]={};
+  customers[pid].reach_in_count=val;
+  custSave();
+  toast('Reach-in count saved');
+}
 function resetRiState(){_riResult=null;_riUnits=[];}
 function resetRiDom(){var el=document.getElementById('ri-units');if(el)el.innerHTML='';}
 function buildRiUnitRow(n){
