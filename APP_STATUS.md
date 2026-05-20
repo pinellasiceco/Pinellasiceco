@@ -1,5 +1,5 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-05-20 (session 45 — Gold tier filter + fix irrelevant observation text) by Claude Code*
+*Last updated: 2026-05-20 (session 45 — fix irrelevant observation text in citation cards) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
@@ -187,12 +187,11 @@ To force a fresh PWA load after a push: open the URL directly in Safari (not the
 - `build_date` in P[] records will appear after next CI rebuild; existing records have no `build_date` so freshness indicator shows nothing until rebuilt
 
 ## Recent Changes
-- **2026-05-20 (s45 — Gold tier filter + fix irrelevant observation text):**
-  - **Gold tier filter** (`build.py`, `send_briefing.py`): New `🥇 Gold` chip in Prospects tab surfaces only businesses with a DBPR-confirmed ice citation AND an inspector observation containing specific contamination language (mold, biofilm, slime, soiled, buildup, interior, etc.). `_GOLD_KEYWORDS` list + `is_gold_lead()` Python function bake `ice_gold: true/false` into every P[] record at CI time. CI log shows "Gold ice leads: N". Gold chip appears before 🕵️ DBPR chip; `setPreset('gold_ice')` filter + sort by most recent citation. 🥇 Gold badge shown on cards; GOLD TIER callout added at top of WHY THIS PROSPECT MATTERS in showCard. Daily briefing email shows gold lead count + last-7-days count in Data Status. DBPR chip, Most Recent sort, and Repeat chip unchanged.
-  - **Tighten `_ICE_KEYWORDS`** (`generate_citation_summary.py`, `build.py`): Replaced the 15-term generic list (mold, slime, soiled, dirty, etc.) with `r'\b(ice|evaporator)\b'`. Any real ice machine observation says "ice". Generic food-safety sentences without "ice" are now excluded. Eliminates false positives like BJ'S ASIAN FUSION "food-contact surface soiled" text.
-  - **Pre-filter narratives at source** (`generate_citation_summary.py`): Filters `nar` to only rows containing `_ICE_KEYWORDS` before groupby. Non-ice narrative rows excluded entirely.
-  - **Fallback fix** (both files): `extract_ice_snippet()` returns `''` (not full `text`) when no ice-keyword sentences found.
-  - **Impact**: Citation counts, dates, `ice_confirmed_dbpr` unchanged. `best_observation` clears for non-ice text after next CI rebuild.
+- **2026-05-20 (s45 — fix irrelevant observation text in citation cards):**
+  - **Root cause**: `generate_citation_summary.py` selected the longest observation snippet from all narrative rows for a V22-flagged inspection — including rows for completely unrelated violations (e.g. sushi rice temperature control for BJ'S ASIAN FUSION). The `extract_ice_snippet()` fallback also returned full unrelated text when no ice keywords were found in a sentence.
+  - **Fix 1 — Pre-filter narratives at source** (`generate_citation_summary.py`): Before grouping by license key to pick the best observation, filter `nar` to only rows where the observation column already contains an ice keyword (`_ICE_KEYWORDS` regex). Non-ice narrative rows are excluded from consideration entirely. Businesses with no ice-keyword narrative rows get `best_observation = ''`.
+  - **Fix 2 — Fallback fix** (`generate_citation_summary.py` and `build.py`): `extract_ice_snippet()` now returns `''` (not the full `text`) when no ice-keyword sentences are found. Defense-in-depth for any row that slips through the pre-filter.
+  - **Impact**: Citation counts, dates, and `ice_confirmed_dbpr` flags are completely unaffected. Only `best_observation` changes — non-ice text goes blank; real ice machine quotes (e.g. "ice chute soiled with mold-like substance") are unaffected.
 
 - **2026-05-19 (s44 — citation pipeline fix + workflow revert loop fix + iOS button fixes):**
   - **Citation matching root cause fixed**: `generate_citation_summary.py` was grouping by `License Number` (human-readable string) instead of `License ID` (numeric DB key used by prospect records). Result: citation CSV keys never matched prospect `id` fields → only 3 accidental matches. Fixed both groupby calls to use `License ID`. Narratives key priority also fixed (`license_id` checked before `license_number`). CI log now shows match count: `Narratives: N unique licenses, X/2614 businesses matched (key: license_id)`.
