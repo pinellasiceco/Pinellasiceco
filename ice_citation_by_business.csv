@@ -41,7 +41,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 2234374,LENNYS REST,21220 N US HWY 19,CLEARWATER,2026-05-04,3,Inspection Completed - No Further Action,True,False,"Nonfood-contact surface soiled with grease, food debris, dirt, slime or dust. - walk in cooler shelves soiled - fan dusty in cook line area - storage shelves in cook line area near walk in cooler"
 2234400,UMBERTOS OF LONG IS,150 PATRICIA AVE,DUNEDIN,2026-03-26,3,Inspection Completed - No Further Action,True,False,"Food-contact surface soiled with food debris, mold-like substance or slime. Can opener blade soiled."
 2235337,THE LANDINGS,1875 AIRPORT DR,CLEARWATER,2020-12-10,2,Warning Issued,True,False,
-2235368,CAPOGNA'S DUGOUT REST,1653 GULF TO BAY BLVD,CLEARWATER,2026-03-11,3,Inspection Completed - No Further Action,True,False,Accumulation of black mold-like substance in the interior of the ice bin at wait station . Employee emptied ice at time of inspection and is in the process of cleaning the ice bin
+2235368,CAPOGNA'S DUGOUT REST,1653 GULF TO BAY BLVD,CLEARWATER,2026-05-19,4,Inspection Completed - No Further Action,True,False,Accumulation of black mold-like substance in the interior of the ice bin at wait station . Employee emptied ice at time of inspection and is in the process of cleaning the ice bin
 2235393,SHEPHARDS RESTAURANT,601 S GULFVIEW BLVD,CLEARWATER BCH,2026-04-02,4,Inspection Completed - No Further Action,True,False,"Food-contact surface soiled with food debris, mold-like substance or slime. Reach in freezer soiled on bottom shelf."
 2235497,PAJANOS PIZZA AND SUB,1307 GULF BLVD,INDIAN ROCKS BCH,2021-03-29,1,Administrative complaint recommended,False,False,
 2235536,MCDONALDS #3213,6855 GULF BLVD,ST PETE BCH,2021-03-05,1,Inspection Completed - No Further Action,False,False,
@@ -1141,7 +1141,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 6488126,GRASSROOTS KAVA HOUSE,957 CENTRAL AVE,SAINT PETERSBURG,2025-09-08,1,Inspection Completed - No Further Action,False,False,
 6488216,CHIPOTLE MEXICAN GRILL OF COLORADO,11241 PARK BLVD N STE C,SEMINOLE,2021-01-07,1,Warning Issued,False,False,
 6490777,THE LITTLE LAMB GASTROPUB,2475 MCMULLEN BOOTH ROAD SUITE J,CLEARWATER,2026-04-03,2,Inspection Completed - No Further Action,True,False,
-6491755,BJ'S ASIAN FUSION,883 S PINELLAS AVE,TARPON SPRINGS,2026-05-18,3,Inspection Completed - No Further Action,True,False,"Food-contact surface soiled with food debris, mold-like substance or slime."
+6491755,BJ'S ASIAN FUSION,883 S PINELLAS AVE,TARPON SPRINGS,2026-05-19,4,Inspection Completed - No Further Action,True,False,"Food-contact surface soiled with food debris, mold-like substance or slime."
 6492506,PHO 1,3665 E BAY DR #208,LARGO,2021-03-05,2,Inspection Completed - No Further Action,True,False,
 6495412,BENEDICTS,768 N BELCHER RD,CLEARWATER,2026-04-30,6,Inspection Completed - No Further Action,True,False,Quaternary ammonium sanitizer not at proper minimum strength for manual warewashing. Employee changed empty sanitizer container .
 6496521,OISHI SUSHI & THAI,3705 TAMPA RD #5,OLDSMAR,2021-01-21,2,Inspection Completed - No Further Action,True,False,
@@ -1256,7 +1256,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 6672353,ANTOJITOS DONA CHIRRIS,2095 N HIGHLAND AVE,CLEARWATER,2025-10-30,2,Inspection Completed - No Further Action,True,False,Establishment using a sanitizer solution that does not meet the requirements specified in 40 CFR 180. Only use single-service items to serve food to customers until approved sanitizer is available for warewashing. Operator purchase food safe sanitizer.
 6676529,NUEVO VALLARTA PINELLAS PARK,9359 US HWY 19 N,PINELLAS PARK,2026-03-30,5,Call Back - Complied,True,False,"Nonfood-contact surface soiled with grease, food debris, dirt, slime or dust. Cooler gaskets soiled"
 6682787,TASTE OF THE ISLANDS RESTAURANT AND GRILL,2231 34 ST S,ST. PETERSBURG,2021-04-12,5,Warning Issued,True,False,
-6682814,THE ESTATE/COPPER SHAKER,169 1 AVE N,ST. PETERSBURG,2026-02-20,5,Warning Issued,True,False,"- From initial inspection : Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime."
+6682814,THE ESTATE/COPPER SHAKER,169 1 AVE N,ST. PETERSBURG,2026-05-19,6,Warning Issued,True,False,"- From initial inspection : Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime."
 6683184,KAO THAI KITCHEN,7199 66TH ST N,PINELLAS PARK,2021-05-26,2,Emergency order recommended,True,False,
 6683648,ROUNDABOUT PIZZA,25 CAUSEWAY BLVD STE 103,CLEARWATER,2025-08-05,1,Inspection Completed - No Further Action,False,False,"Food-contact surface soiled with food debris, mold-like substance or slime."
 6685229,SLIZZY MCGEES BAR & GRILL,1159 62 AVE N,ST. PETERSBURG,2020-11-16,2,Call Back - Admin. complaint recommended,True,False,
@@ -1307,7 +1307,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 6775264,SUSHI TU LLC,288 WINDWARD PASSAGE,CLEARWATER,2021-05-12,1,Warning Issued,False,False,
 6777224,LE'S BAGUETTE,9150 49 ST N UNIT J&K,PINELLAS PARK,2021-03-24,5,Warning Issued,True,False,
 6781400,GIGGLEWATERS,737 MAIN ST #104,SAFETY HARBOR,2021-03-01,2,Inspection Completed - No Further Action,True,False,
-6784129,CROWN & BULL,319 MAIN ST,DUNEDIN,2026-05-18,4,Inspection Completed - No Further Action,True,False,"Cardboard used on floor as anti-slip measure not replaced every day or when heavily soiled, whichever comes first. Soiled cardboard on floor of upstairs prep kitchen."
+6784129,CROWN AND BULL,319 MAIN ST 5733,DUNEDIN,2026-05-19,5,Inspection Completed - No Further Action,True,False,"Cardboard used on floor as anti-slip measure not replaced every day or when heavily soiled, whichever comes first. Soiled cardboard on floor of upstairs prep kitchen."
 6784640,PACIUGO GELATO & CAFFE ST PETE,300 BEACH DR NE #120,ST. PETERSBURG,2025-10-09,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Silver counter top ice machine interior soiled with limes ale build up.
 6787280,2ND AND 2ND DINER,201 2 AVE N,ST. PETERSBURG,2021-04-14,2,Inspection Completed - No Further Action,True,False,
 6788400,NUEVA CANTINA EXPRESS,1625 4 ST S,ST. PETERSBURG,2020-08-05,1,Inspection Completed - No Further Action,False,False,
@@ -1672,7 +1672,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7383433,KIMS FAMILY RESTAURANT,2101 STARKEY RD L4 L5,LARGO,2026-04-03,3,Inspection Completed - No Further Action,True,False,Dishmachine chlorine sanitizer not at proper minimum strength. Operator set up sink with quaternary sanitizer and measured at 200ppm.
 7383587,PHILA DELI,1120 PINELLAS BAYWAY S STE 106,TIERRA VERDE,2021-02-26,4,Call Back - Complied,True,False,
 7386755,CLEAN JUICE,2516 N MCMULLEN BOOTH RD STE A,CLEARWATER,2021-02-03,1,Inspection Completed - No Further Action,False,False,
-7391990,STIRLING TROPICAL WINE,461 MAIN ST,DUNEDIN,2020-12-10,1,Inspection Completed - No Further Action,False,False,
+7391990,STIRLING TROPICAL WINE,461 MAIN ST,DUNEDIN,2026-05-19,2,Inspection Completed - No Further Action,True,False,
 7392579,YO! WHATS YOUR SCOOP?,6801 GULFPORT BLVD S,SOUTH PASADENA,2020-08-11,1,Warning Issued,False,False,
 7393000,CRAB HOUSE,811 DR MARTIN LUTHER KING JR ST S,ST PETERSBURG,2025-08-18,1,Inspection Completed - No Further Action,False,False,"Food-contact surface soiled with food debris, mold-like substance or slime. Cutting board on reach-in cooler in kitchen is soiled with food debris between cracks."
 7393131,KUNG FU TEA,7688 N 49TH STREET,PINELLAS PARK,2021-03-23,3,Call Back - Admin. complaint recommended,True,False,
@@ -1944,7 +1944,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7720029,TORIANO'S,1059 62 AVE S,ST. PETERSBURG,2021-02-18,2,Inspection Completed - No Further Action,True,False,
 7720168,THE ONE NIGHT STAND,149 1ST AVE N,SAINT PETERSBURG,2020-07-21,1,Inspection Completed - No Further Action,False,False,
 7720243,OZ,13577 US HIGHWAY 19,CLEARWATER,2020-07-24,1,Inspection Completed - No Further Action,False,False,
-7723103,REBOOT,248  SCOTLAND ST,DUNEDIN,2020-07-14,1,Inspection Completed - No Further Action,False,False,
+7723103,REBOOT,248  SCOTLAND ST,DUNEDIN,2026-05-19,2,Inspection Completed - No Further Action,True,False,
 7723407,GIUSEPPE'S PIZZERIA,6690 GULF BLVD,ST.PETE BEACH,2021-02-16,2,Inspection Completed - No Further Action,True,False,
 7723497,RED TIKI BAR,7361 46 AVE N,ST. PETERSBURG,2026-01-14,6,Administrative complaint recommended,True,False,"- From initial inspection : Basic - Nonfood-contact surface soiled with grease, food debris, dirt, slime or dust. Sides of cook line equipment soiled with grease and food debris - From follow-up inspection 2026-01-14:"
 7724638,JERMAINE C PHILLIPS,5155 HAINES RD,ST. PETERSBURG,2020-12-17,1,Inspection Completed - No Further Action,False,False,
@@ -2140,6 +2140,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 8157222,PORTILLO'S ,2302 TYRONE BLVD N,ST. PETERSBURG,2026-02-12,2,Administrative complaint recommended,True,False,"Food-contact surface soiled with food debris, mold-like substance or slime. Tea dispenser nozzles soiled with accumulation of debris. Can opener blade soiled with debris."
 8160251,OLDE BAY CAFE,51 MAIN ST UNIT 1,DUNEDIN,2025-12-16,1,Inspection Completed - No Further Action,False,False,"Food-contact surface soiled with food debris, mold-like substance or slime."
 8165541,FIREHOUSE SUBS,4949 4  ST N,ST. PETERSBURG,2026-03-25,1,Inspection Completed - No Further Action,False,False,"Food-contact surface soiled with food debris, mold-like substance or slime. Cutting boards soiled on deli reach in cooler on front counter. Soda nozzles soiled on self service drink dispenser."
+8170310,AMEENAHS CATERING & EVENT DESIGN,2213 6 AVENUE SOUTH,SAINT PETERSBURG,2026-05-19,1,Inspection Completed - No Further Action,False,False,
 8182267,LA SEGUNDA BAKERY,2424 4 STREET N,ST. PETERSBURG,2026-01-21,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Ice chute at drink dispenser with black and green mold-like substance.
 8195092,EARLY BIRD,9131 US HWY 19 N,PINELLAS PARK,2026-03-30,2,Administrative complaint recommended,True,False,"Nonfood-contact surface soiled with grease, food debris, dirt, slime or dust. Accumulation of grease on sides of fryers and adjoining metal shelf Slicer guard soiled"
 8203335,RESIDENCE INN & SPRINGHILL SUITES,309 CORONADO DR,CLEARWATER,2026-02-23,2,Inspection Completed - No Further Action,True,False,No measuring device available for measuring utensil surface temperature when using hot water as sanitizer in a dishmachine.
@@ -2245,7 +2246,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 8502541,PASADENA BAR & GRILL,796 PASADENA AVENUE S,SOUTH PASADENA,2025-07-17,1,Inspection Completed - No Further Action,False,False,Interior of oven/microwave has accumulation of black substance/grease/food debris. Microwave oven used more than 24 hours ago is soiled with food debris.
 8506043,SUPER BUFFET SUSHI HIBACHI,1035 62 AVE N,ST. PETERSBURG,2025-11-13,1,Inspection Completed - No Further Action,False,False,"Wall soiled with accumulated grease, food debris, and/or dust."
 8506086,THAI DISH,5545 ROOSEVELT BLVD,CLEARWATER,2026-03-04,1,Inspection Completed - No Further Action,False,False,"Food-contact surface soiled with food debris, mold-like substance or slime."
-8512375,SNAPPERS GRILL AND COMEDY CLUB,36657 US HWY 19 N,PALM HARBOR,2026-05-18,3,Administrative complaint recommended,True,False,"Must wash, rinse and sanitize all dishware, equipment and utensils in three-compartment sink until dishmachine is functioning properly."
+8512375,SNAPPERS GRILL AND COMEDY CLUB,36657 US HWY 19 N,PALM HARBOR,2026-05-19,4,Call Back - Complied,True,False,"Must wash, rinse and sanitize all dishware, equipment and utensils in three-compartment sink until dishmachine is functioning properly."
 8513045,SMASHBURGER,10801 STARKEY RD #4,LARGO,2025-08-19,1,Inspection Completed - No Further Action,False,False,"Food-contact surface soiled with food debris, mold-like substance or slime. Base pads around nozzles on soda machine soiled"
 8513875,ZEINS PIZZA,2091 N HIGHLAND AVE,CLEARWATER,2025-07-22,1,Inspection Completed - No Further Action,False,False,"Food-contact surface soiled with food debris, mold-like substance or slime."
 8514366,THE HANGAR RESTAURANT,540 1 ST SE,ST. PETERSBURG,2026-02-10,3,Inspection Completed - No Further Action,True,False,- From initial inspection : Basic - Interior of oven/microwave has accumulation of black substance/grease/food debris. Convectional oven interior heavily soiled with burnt food debris.
@@ -2255,7 +2256,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 8524352,GRAPE BOTTLE LLC,2668 BAYSHORE BLVD,DUNEDIN,2026-05-07,2,Administrative complaint recommended,True,False,- From initial inspection : High Priority - Heat strip failed to turn black to indicate the sanitization temperature of 160 degrees Fahrenheit was achieved on the dish surface and/or high temperature holding thermometer did not reach 160F. There is no 3 compartment sink to sanitize dishes. No…
 8528955,EL JALISCO,8841 PARK BLVD,SEMINOLE,2026-04-02,2,Inspection Completed - No Further Action,True,False,"Must wash, rinse and sanitize all dishware, equipment and utensils in three-compartment sink until dishmachine is functioning properly."
 8529136,T'ASIA SUSHI AND THAI,4648 PARK BLVD N,PINELLAS PARK,2026-04-02,2,Inspection Completed - No Further Action,True,False,Dishmachine chlorine sanitizer not at proper minimum strength.
-8530042,UBUNTU FOOD TRUCK,1188 KAPP DR.,CLEARWATER,2026-03-17,1,Warning Issued,False,False,"Food-contact surface soiled with food debris, mold-like substance or slime."
+8530042,UBUNTU FOOD TRUCK,1720 CENTRAL AVE,ST. PETERSBURG,2026-05-19,3,Warning Issued,True,False,"Food-contact surface soiled with food debris, mold-like substance or slime."
 8531109,ALLELO,300 BEACH DR NE #128,ST. PETERSBURG,2026-04-21,2,Inspection Completed - No Further Action,True,False,"Nonfood-contact surface soiled with grease, food debris, dirt, slime or dust. Gasket on reach-in cooler across from cook line soiled."
 8539476,SKYWAY JACKS,2795 34 ST S,ST. PETERSBURG,2026-03-26,2,Inspection Completed - No Further Action,True,False,"Nonfood-contact surface soiled with grease, food debris, dirt, slime or dust. Soiled gaskets on reach-in coolers in kitchen"
 8540933,LOS HOMIES TAQUIERIA,"7625 49 ST N, , PINELLAS PARK FL PIN",PINELLAS PARK,2026-04-02,3,Call Back - Complied,True,False,"Box of cabbage on floor near kitchen door, large bag of onions on floor near black reach in cooler, box of oil under hand wash sink in kitchen."
@@ -2269,7 +2270,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 8559103,LOS CHATINOS MEXICAN CUISINE,700 S MISSOURI AVE,CLEARWATER,2026-02-17,1,Warning Issued,False,False,"Food-contact surface soiled with food debris, mold-like substance or slime. Ice machine accumulated with pink substance in the back corner in bar area."
 8559585,MIO'S GRILL & CAFE,1261 GULF BLVD #120,CLEARWATER,2025-08-26,1,Warning Issued,False,False,Dishmachine chlorine sanitizer not at proper minimum strength.
 8562403,JEROME'S CAFE & BAKERY,2475 N MCMULLEN BOOTH RD STE D,CLEARWATER,2026-03-09,1,Inspection Completed - No Further Action,False,False,Toxic substance/chemical ( Lysol spray ) improperly stored on top of ice machine next to container with ice scoop) .
-8570920,THE PEARL RESTAURANT,5802 28 AVE  S,GULFPORT,2026-05-15,1,Warning Issued,False,False,
+8570920,THE PEARL RESTAURANT,5802 28 AVE  S,GULFPORT,2026-05-19,2,"Call Back - Extension given, pending",True,False,
 8576299,MARCO'S PIZZA,1360 34 ST N,ST. PETERSBURG,2026-03-17,1,Inspection Completed - No Further Action,False,False,Interior of oven/microwave has accumulation of black substance/grease/food debris. Conveyor of pizza oven soiled with burnt on food debris.
 8577272,CANE & BARREL,110 2 ST N,ST. PETERSBURG,2026-02-17,2,Inspection Completed - No Further Action,True,False,"Food-contact surface soiled with food debris, mold-like substance or slime. Soda gun noodle soiled with black mold like substance on first floor. Soda gun noodle soiled with black mold like substance in bar of 8th floor. Green cutting boards stored on top of dish machine in bar area are stained.…"
 8582501,AZURA COASTAL KITCHEN,3701 GULF BLVD,ST.PETE BEACH,2025-09-17,1,Inspection Completed - No Further Action,False,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.
@@ -2420,6 +2421,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 8996772,4KS BBQ & CATERING,721 LAKEVIEW RD,CLEARWATER,2026-02-20,1,Warning Issued,False,False,Floor soiled/has accumulation of debris.
 9004550,15TH STREET ECOFARM,342 15 ST N,ST. PETERSBURG,2026-04-14,2,Warning Issued,True,False,"Food-contact surface soiled with food debris, mold-like substance or slime. Meat slicer in prep table soiled with food debris."
 9004574,WHATCHA WANT EATERY,472   DOUGLAS RD E,OLDSMAR,2026-03-16,2,Inspection Completed - No Further Action,True,False,Interior of oven/microwave has accumulation of black substance/grease/food debris. Observed small turbo oven is soiled at time of inspection.
+9005436,CAGE BREWING,2001 1 AVE S,ST PETERSBURG,2026-05-19,1,Inspection Completed - No Further Action,False,False,
 9006937,CJS BACKSTAGE,7022 22 AVE N,ST. PETERSBURG,2026-01-26,1,Inspection Completed - No Further Action,False,False,Establishment using a sanitizer solution that does not meet the requirements specified in 40 CFR 180. Only use single-service items to serve food to customers until approved sanitizer is available for warewashing. -sanitize dispenser in 3 compartment sink is hooked up to a bottle of hand sanitizer.…
 9012056,CULVER'S,3500 E BAY DR,LARGO,2025-11-03,2,Call Back - Admin. complaint recommended,True,False,- From initial inspection : High Priority - Dishmachine chlorine sanitizer not at proper minimum strength.
 9013009,DUNKIN 359045,2641 US ALTERNATE 19,PALM HARBOR,2025-12-05,1,Warning Issued,False,False,Quaternary ammonium sanitizer not at proper minimum strength for manual warewashing.
@@ -2581,9 +2583,10 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 9405725,PERRY'S PORCH,335 2 AVE NE,ST PETERSBURG,2026-04-01,3,Inspection Completed - No Further Action,True,False,"Server handled soiled dishes or utensils and then picked up plated food, served food, or prepared a beverage without washing hands. Server handled dirty dish to clean dish without hand wash."
 9409022,KHAO NEOW SUSHI THAI LAO,17307 GULF BLVD STE B101,NORTH REDINGTON BEAC,2026-01-15,1,Inspection Completed - No Further Action,False,False,Incorrect chemical test kit provided for measuring the concentration of the sanitizer solution used in the three-compartment sink and/or dishmachine.
 9414798,RIZO'S CUISINE,2745  E BAY DR,LARGO,2026-01-21,3,Inspection Completed - No Further Action,True,False,- From initial inspection : Intermediate - Chemical test kit not used to ensure proper sanitization of equipment and utensils when using a chemical sanitizer. Establishment using Purell Foodservice Surface Sanitizer wipes.
-9419963,DOWNTOWN PIZZA SPORTS BAR AND GRILL,428 CLEVELAND ST,CLEARWATER,2026-03-11,1,Warning Issued,False,False,Floor soiled/has accumulation of debris in walk in coolers and long wall in kitchen
+9419963,DOWNTOWN PIZZA SPORTS BAR AND GRILL,428 CLEVELAND ST,CLEARWATER,2026-05-19,3,Warning Issued,True,False,Floor soiled/has accumulation of debris in walk in coolers and long wall in kitchen
 9420105,BACKWATERS N REDINGTON BEACH,17307 GULF BLVD UNIT A103,NORTH REDINGTON BEAC,2026-01-15,3,Inspection Completed - No Further Action,True,False,- From initial inspection : Intermediate - No chemical test kit provided when using sanitizer at three-compartment sink/warewashing machine or wiping cloths.
 9428740,WOOD SHED GRILL,6340 49  ST  N,PINELLAS PARK,2026-03-06,1,Inspection Completed - No Further Action,False,False,
+9431290,MARTINS ITALIAN,3689 TAMPA RD 301,OLDSMAR,2026-05-19,1,Inspection Completed - No Further Action,False,False,
 9433569,CAJUN CAFE ON THE BAYOU,8260 66 ST N,PINELLAS PARK,2026-03-27,1,Warning Issued,False,False,Dishmachine chlorine sanitizer not at proper minimum strength.
 9433637,COUNTRY SKILLET,2839 ROOSEVELT BLVD,CLEARWATER,2025-10-01,3,Call Back - Complied,True,False,Buildup of food debris/soil residue on equipment door handles. Walk in cooler handle soiled with an accumulation of grease and food debris.
 9436441,JERSEY MIKE'S SUBS,3860 TAMPA ROAD,OLDSMAR,2025-07-07,1,Inspection Completed - No Further Action,False,False,
@@ -2719,6 +2722,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 9732347,THE HIVE,1500 16 ST S,ST PETERSBURG,2026-04-15,2,Call Back - Complied,True,False,
 9739242,MONIKAS EUROPEAN KITCHEN,1995 E  BAY DR,LARGO,2025-11-06,1,Warning Issued,False,False,
 9755028,THEE LIBERTY GRILL,1185 N HERCULES AVE,CLEARWATER,2025-10-09,1,Warning Issued,False,False,"Nonfood-contact surface soiled with grease, food debris, dirt, slime or dust. - soiled gaskets on cooler at cook line opposite grill ."
+9757103,THE PLAYGROUND,368 PATRICIA AVE,DUNEDIN,2026-05-19,1,Warning Issued,False,False,
 9777993,TROPICAL SMOOTHIE CAFE,1201 4 ST N,ST. PETERSBURG,2025-11-13,1,Inspection Completed - No Further Action,False,False,"Food-contact surface soiled with food debris, mold-like substance or slime."
 9779762,YESHUA BAKERY & CAFE,34018 US HWY 19 N,PALM HARBOR,2026-04-08,3,Call Back - Complied,True,False,"Employee touched soiled apron/clothes and then engaged in food preparation, handled clean equipment or utensils, or touched unwrapped single-service items without washing hands."
 9781867,CASA MATEO MEXICAN KITCHEN AND CANTINA,37611 US HWY 19 N,PALM HARBOR,2026-04-20,1,Inspection Completed - No Further Action,False,False,
