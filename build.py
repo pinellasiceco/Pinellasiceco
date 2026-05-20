@@ -550,7 +550,7 @@ def extract_ice_snippet(text, max_chars=300):
         return ''
     sentences = re.split(r'(?<=[.!?])\s+', text)
     ice_sents = [s for s in sentences if _ICE_KEYWORDS.search(s)]
-    snippet = ' '.join(ice_sents) if ice_sents else text
+    snippet = ' '.join(ice_sents) if ice_sents else ''
     if len(snippet) <= max_chars:
         return snippet
     cut = snippet[:max_chars].rsplit(' ', 1)[0]

@@ -61,7 +61,7 @@ def extract_ice_snippet(text, max_chars=300):
     text = re.sub(r'\s+', ' ', text).strip()
     sentences = re.split(r'(?<=[.!?])\s+', text)
     ice_sents = [s for s in sentences if _ICE_KEYWORDS.search(s)]
-    snippet = ' '.join(ice_sents) if ice_sents else text
+    snippet = ' '.join(ice_sents) if ice_sents else ''
     if len(snippet) <= max_chars:
         return snippet
     return snippet[:max_chars].rsplit(' ', 1)[0] + '…'
@@ -212,8 +212,11 @@ def main():
             obs_col = next((c for c in ['observation', 'best_observation']
                             if c in nar.columns), None)
             if obs_col:
+                nar_ice = nar[nar[obs_col].astype(str).apply(
+                    lambda x: bool(_ICE_KEYWORDS.search(x))
+                )].copy()
                 obs_map = (
-                    nar.groupby('_key')[obs_col]
+                    nar_ice.groupby('_key')[obs_col]
                     .apply(lambda x: max(
                         (extract_ice_snippet(v) for v in x),
                         key=len, default='',
