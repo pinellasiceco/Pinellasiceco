@@ -8528,6 +8528,9 @@ function openVisitReport(pid,visitIndex){
     _visit_atp_pre:atpPre,
     _visit_photo_urls:visit.photo_urls||[],
   });
+  if(REACH_IN_ENABLED){
+    visitP._visit_reach_in=visit.reach_in!==undefined?visit.reach_in:null;
+  }
   srGenerate(visitP,atpVal,notes);
 }
 
@@ -10138,6 +10141,69 @@ function scStatusReport(p,prefill){
   atpBg.addEventListener('touchend',atpHandle);
 }
 
+function getLatestReachIn(p){
+  if(!REACH_IN_ENABLED)return null;
+  var cust=customers[p.id]||{};
+  var history=cust.service_history||[];
+  if(!history.length)return null;
+  var sorted=history.slice().sort(function(a,b){return(b.date||'').localeCompare(a.date||'');});
+  return sorted[0].reach_in||null;
+}
+function getReachInState(p){
+  if(!REACH_IN_ENABLED)return{hasService:false,data:null};
+  var cust=customers[p.id]||{};
+  var hasService=cust.reach_in_service===true;
+  var data=p._visit_reach_in!==undefined?p._visit_reach_in:getLatestReachIn(p);
+  return{hasService:hasService,data:data};
+}
+function buildReportReachInSection(reachIn,hasRiService){
+  if(!REACH_IN_ENABLED)return'';
+  var hasData=reachIn&&reachIn.units&&reachIn.units.length>0;
+  if(!hasRiService){
+    return'<div style="margin-top:20px;border:1px dashed #BDD7EE;border-radius:8px;padding:14px;background:#F8FBFF">'
+      +'<div style="font-size:12px;font-weight:700;color:#6C757D;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">&#x2744;&#xFE0F; Reach-In Cooler Service</div>'
+      +'<div style="font-size:13px;color:#4A4A4A;margin-bottom:8px">Not included in your current plan.</div>'
+      +'<div style="font-size:12px;color:#6C757D;margin-bottom:10px;line-height:1.5">Reach-in cooler gaskets and interior surfaces are among the most commonly cited violations in Pinellas County inspections. ATP-verified cooler service can be added to your next visit.</div>'
+      +'<div style="font-size:12px;font-weight:700;color:#1A5276">Add to plan: (727) 855-6873 &middot; pinellasiceco.com</div>'
+      +'</div>';
+  }
+  if(!hasData){
+    return'<div style="margin-top:20px;border:1px solid #E9ECEF;border-radius:8px;padding:14px;background:#F8F9FA">'
+      +'<div style="font-size:12px;font-weight:700;color:#6C757D;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">&#x2744;&#xFE0F; Reach-In Cooler Service</div>'
+      +'<div style="font-size:13px;color:#6C757D">Not tested this visit.</div>'
+      +'</div>';
+  }
+  var resultColor=reachIn.result==='pass'?'#27AE60':'#C0392B';
+  var resultLabel=reachIn.result==='pass'?'PASS':'FAIL';
+  var unitRows=reachIn.units.map(function(u){
+    var postVal=u.post!==undefined&&u.post!==null?Number(u.post):(u.atp!==undefined&&u.atp!==''?Number(u.atp):null);
+    var preVal=u.pre!==undefined&&u.pre!==null?Number(u.pre):null;
+    var unitName=u.unit||u.location||'Unit';
+    var postColor=postVal===null?'#9E9E9E':postVal<=10?'#27AE60':postVal<=100?'#E67E22':'#C0392B';
+    var postLabel=postVal===null?'&#8212;':postVal<=10?'PASS':postVal<=100?'MARGINAL':'FAIL';
+    return'<tr>'
+      +'<td style="padding:6px 8px;font-size:12px;border-bottom:1px solid #F0F0F0">Cooler '+unitName+'</td>'
+      +'<td style="padding:6px 8px;font-size:12px;text-align:center;border-bottom:1px solid #F0F0F0">'+(preVal!==null?preVal:'&#8212;')+'</td>'
+      +'<td style="padding:6px 8px;font-size:12px;text-align:center;border-bottom:1px solid #F0F0F0">'+(postVal!==null?postVal:'&#8212;')+'</td>'
+      +'<td style="padding:6px 8px;font-size:11px;text-align:center;font-weight:700;color:'+postColor+';border-bottom:1px solid #F0F0F0">'+postLabel+'</td>'
+      +'</tr>';
+  }).join('');
+  return'<div style="margin-top:20px;page-break-inside:avoid">'
+    +'<div style="background:#1A3A5C;color:#fff;padding:8px 12px;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;border-radius:4px 4px 0 0">&#x2744;&#xFE0F; Reach-In Cooler ATP Results</div>'
+    +'<div style="background:'+resultColor+';color:#fff;padding:8px 12px;font-size:13px;font-weight:700;text-align:center">Overall: '+resultLabel+'</div>'
+    +'<table style="width:100%;border-collapse:collapse;border:1px solid #E9ECEF;border-top:none;border-radius:0 0 4px 4px">'
+    +'<thead><tr style="background:#F8F9FA">'
+    +'<th style="padding:6px 8px;font-size:11px;text-align:left;color:#6C757D">Unit</th>'
+    +'<th style="padding:6px 8px;font-size:11px;text-align:center;color:#6C757D">Pre</th>'
+    +'<th style="padding:6px 8px;font-size:11px;text-align:center;color:#6C757D">Post</th>'
+    +'<th style="padding:6px 8px;font-size:11px;text-align:center;color:#6C757D">Result</th>'
+    +'</tr></thead>'
+    +'<tbody>'+unitRows+'</tbody>'
+    +'</table>'
+    +'<div style="font-size:10px;color:#9E9E9E;margin-top:6px;font-style:italic">ATP target: &lt;100 RLU for cooler surfaces. Tested per manufacturer protocol.</div>'
+    +'</div>';
+}
+
 function srGenerate(p,atpVal,notes){
   var dateStr=p._report_date_override||new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
   var atpStatus,atpColor,atpBgCol,barW;
@@ -10241,6 +10307,7 @@ function srGenerate(p,atpVal,notes){
       +'<div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:6px">Technician Notes</div>'
       +'<div style="font-size:11px;color:#334155;line-height:1.6">'+notes+'</div>'
       +'</div>'):'')
+    +(REACH_IN_ENABLED?(function(){var riState=getReachInState(p);return buildReportReachInSection(riState.data,riState.hasService);}()):'')
     +(function(){var pUrls=p._visit_photo_urls||(((customers[p.id]||{}).service_history||[]).slice(-1)[0]||{}).photo_urls||[];
       if(!pUrls.length)return'';
       return'<div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:10px">'
@@ -10364,6 +10431,46 @@ function srSendEmail(p,atpVal,emailTo,notes){
       +'<div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:6px">Technician Notes</div>'
       +'<div style="font-size:11px;color:#334155;line-height:1.6">'+notes+'</div>'
       +'</div>'):'')
+    +(REACH_IN_ENABLED?(function(){
+      var riState=getReachInState(p);
+      var hasService=riState.hasService;
+      var riData=riState.data;
+      var hasData=riData&&riData.units&&riData.units.length>0;
+      if(!hasService){
+        return'<div style="margin-top:16px;padding:12px;background:#F8FBFF;border-left:3px solid #BDD7EE">'
+          +'<strong style="font-size:13px;color:#1A5276">&#x2744;&#xFE0F; Reach-In Cooler Service</strong><br>'
+          +'<span style="font-size:12px;color:#6C757D">Not included in your current plan. Call (727) 855-6873 to add reach-in cooler ATP verification to your next visit.</span>'
+          +'</div>';
+      }
+      if(!hasData){
+        return'<div style="margin-top:16px;font-size:12px;color:#9E9E9E">&#x2744;&#xFE0F; Reach-in coolers: not tested this visit.</div>';
+      }
+      var riRows=riData.units.map(function(u){
+        var postVal=u.post!==undefined&&u.post!==null?Number(u.post):(u.atp!==undefined&&u.atp!==''?Number(u.atp):null);
+        var preVal=u.pre!==undefined&&u.pre!==null?Number(u.pre):null;
+        var unitName=u.unit||u.location||'Unit';
+        var label=postVal===null?'&#8212;':postVal<=100?'PASS':'FAIL';
+        var color=postVal===null?'#9E9E9E':postVal<=100?'#27AE60':'#C0392B';
+        return'<tr>'
+          +'<td style="padding:5px 8px;font-size:12px">Cooler '+unitName+'</td>'
+          +'<td style="padding:5px 8px;font-size:12px;text-align:center">'+(preVal!==null?preVal:'&#8212;')+'</td>'
+          +'<td style="padding:5px 8px;font-size:12px;text-align:center">'+(postVal!==null?postVal:'&#8212;')+'</td>'
+          +'<td style="padding:5px 8px;font-size:12px;text-align:center;font-weight:700;color:'+color+'">'+label+'</td>'
+          +'</tr>';
+      }).join('');
+      return'<div style="margin-top:16px">'
+        +'<strong style="font-size:13px;color:#1A3A5C">&#x2744;&#xFE0F; Reach-In Cooler Results</strong>'
+        +'<table style="width:100%;margin-top:8px;border-collapse:collapse;font-size:12px">'
+        +'<tr style="background:#F8F9FA">'
+        +'<th style="padding:5px 8px;text-align:left">Unit</th>'
+        +'<th style="padding:5px 8px;text-align:center">Pre</th>'
+        +'<th style="padding:5px 8px;text-align:center">Post</th>'
+        +'<th style="padding:5px 8px;text-align:center">Result</th>'
+        +'</tr>'
+        +riRows
+        +'</table>'
+        +'</div>';
+    }()):'')
     +(function(){var lastSvc=((customers[p.id]||{}).service_history||[]).slice(-1)[0]||{};var pUrls=lastSvc.photo_urls||[];
       if(!pUrls.length)return'';
       return'<div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:14px">'
