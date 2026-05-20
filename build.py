@@ -504,6 +504,24 @@ def calc_ice_risk(record):
     if ds > 365: reasons.append(f'{ds}d since last insp')
     return {'ice_risk_prob': score, 'ice_risk_level': level, 'ice_risk_reason': ' + '.join(reasons[:2])}
 
+_GOLD_KEYWORDS = [
+    'mold', 'mould', 'biofilm', 'slime', 'pink', 'black',
+    'soiled', 'not clean', 'buildup', 'build-up', 'residue',
+    'contamination', 'evaporator', 'spray bar', 'water tray',
+    'ice bin', 'ice chute', 'ice dispenser', 'ice scoop',
+    'accumulated', 'debris', 'scale', 'mineral', 'slimy',
+    'dirty', 'interior', 'inside',
+]
+
+def is_gold_lead(record):
+    """True when a DBPR-confirmed record has an inspector observation with contamination language."""
+    if not record.get('ice_confirmed_dbpr'):
+        return False
+    obs = str(record.get('cit_observation', '') or '').lower()
+    if len(obs) < 10:
+        return False
+    return any(kw in obs for kw in _GOLD_KEYWORDS)
+
 def safe_js_string(s):
     """Escape text for embedding directly inside a JS single-quoted string literal."""
     if not s:
@@ -661,6 +679,7 @@ def enrich_with_citations(records, citations):
         if c['ice_count'] > 0:
             risk = calc_ice_risk(rec)
             rec.update(risk)
+        rec['ice_gold'] = is_gold_lead(rec)
         enriched += 1
     print(f'  Enriched {enriched} records with DBPR citation data')
 
@@ -2340,6 +2359,7 @@ header{background:var(--navy);
       <button class="preset-btn"    onclick="setPreset('notyet')"   id="pre-notyet">Not Contacted</button>
       <button class="preset-btn"    onclick="setPreset('inplay')"   id="pre-inplay">&#x1F7E1; In Play</button>
       <button class="preset-btn"    onclick="setPreset('freshice')" id="pre-freshice">&#x1F525; Ice Viol.</button>
+      <button class="preset-btn" onclick="setPreset('gold_ice')" id="pre-gold_ice">&#x1F947; Gold <span id="cnt-gold"></span></button>
       <button class="preset-btn" onclick="setPreset('dbpr_cited')" id="pre-dbpr_cited">&#x1F575;&#xFE0F; DBPR <span id="cnt-dbpr"></span></button>
       <button class="preset-btn" onclick="setPreset('dbpr_repeat')" id="pre-dbpr_repeat">&#x1F501; Repeat <span id="cnt-repeat"></span></button>
       <button class="preset-btn" onclick="setPreset('followups')" id="pre-followups">&#x1F4C5; Follow-Ups</button>
@@ -5011,6 +5031,12 @@ function rA(){
       const fb=getLC(b.id)?.followup||'9999';
       return fa.localeCompare(fb);
     });
+  } else if(presetFilter&&document.getElementById('pre-gold_ice')?.classList.contains('on')){
+    list.sort(function(a,b){
+      var aDate=a.cit_latest||'1970-01-01';
+      var bDate=b.cit_latest||'1970-01-01';
+      return bDate.localeCompare(aDate);
+    });
   } else if(presetFilter&&(document.getElementById('pre-dbpr_cited')?.classList.contains('on')||document.getElementById('pre-dbpr_repeat')?.classList.contains('on'))){
     if(_dbprSort==='recent'){
       list.sort(function(a,b){
@@ -5167,6 +5193,7 @@ function setPreset(k){
     return lc&&lc.followup&&st==='prospect';
   };
   else if(k==='golf') presetFilter=p=>p.venue_type==='golf';
+  else if(k==='gold_ice')   presetFilter=p=>!!p.ice_gold;
   else if(k==='dbpr_cited') presetFilter=p=>!!p.ice_confirmed_dbpr;
   else if(k==='dbpr_repeat') presetFilter=p=>(p.cit_repeat||0)>=1||(p.cit_ice_count||0)>=2;
   var sortRow=document.getElementById('dbpr-sort-row');
@@ -5184,6 +5211,8 @@ function setPreset(k){
 function updateDbprChipCounts(){
   var nd=P.filter(function(p){return !!p.ice_confirmed_dbpr;}).length;
   var nr=P.filter(function(p){return (p.cit_repeat||0)>=1||(p.cit_ice_count||0)>=2;}).length;
+  var ng=P.filter(function(p){return !!p.ice_gold;}).length;
+  var ge=document.getElementById('cnt-gold');if(ge)ge.textContent=ng?'('+ng+')':'';
   var ce=document.getElementById('cnt-dbpr');if(ce)ce.textContent=nd?'('+nd+')':'';
   var re=document.getElementById('cnt-repeat');if(re)re.textContent=nr?'('+nr+')':'';
 }
@@ -5832,6 +5861,7 @@ function removeStop(id){id=parseInt(id);routeSet.delete(id);route=route.filter(r
 // Works around iOS Safari inline onclick issues on injected divs
 function buildIntelSummary(p){
   var lines=[];
+  if(p.ice_gold)lines.push('&#x1F947; GOLD TIER — Inspector documented ice machine contamination. Highest conversion probability.');
   var ref=getProspectPartnerRef(p.id);
   if(ref)lines.push('&#x1F4E8; Referred by '+ref.partnerName+(ref.referral.note?' — '+ref.referral.note:''));
   if(p.ice_confirmed_dbpr){
@@ -5895,6 +5925,7 @@ function showCard(id){
     p.hours?'<span style="font-size:9px;padding:3px 8px;border-radius:5px;background:#f8fafc;color:#64748b">'+p.hours+'</span>':'',
     p.rating>0?'<span style="font-size:9px;padding:3px 8px;border-radius:5px;background:#fffbeb;color:#d97706">'+stars(p.rating)+'</span>':'',
     p.ice_risk_level==='High'?'<span style="font-size:9px;padding:3px 8px;border-radius:5px;font-weight:700;background:#fef2f2;color:#dc2626;border:1px solid #fecaca">&#x1F9CA; High Risk '+p.ice_risk_prob+'%</span>':p.ice_risk_level==='Medium'?'<span style="font-size:9px;padding:3px 8px;border-radius:5px;font-weight:700;background:#fffbeb;color:#d97706;border:1px solid #fde68a">&#x1F9CA; Med Risk '+p.ice_risk_prob+'%</span>':'',
+    p.ice_gold?'<span style="font-size:9px;padding:3px 8px;border-radius:5px;font-weight:700;background:#FEF9E7;color:#B7950B;border:1px solid #F1C40F">&#x1F947; Gold</span>':'',
   ].filter(Boolean).join(' ');
 
   // Ice history
@@ -10932,6 +10963,11 @@ def main():
     citations = load_ice_citations()
     if citations:
         enrich_with_citations(records, citations)
+    gold_count = sum(1 for r in records if r.get('ice_gold'))
+    for r in records:
+        if 'ice_gold' not in r:
+            r['ice_gold'] = False
+    print(f'  Gold ice leads:        {gold_count}')
 
     print(f"\nBuilding partner records...")
     osm_cache = load_osm_cache(Path('data'))

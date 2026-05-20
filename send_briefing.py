@@ -399,7 +399,7 @@ def build_email(insp_date, lag, n_prospects, n_fresh,
 
     # Citation stats block for Data Status card
     citation_html = ''
-    if citation_stats:
+    if citation_stats and citation_stats.get('total') is not None:
         total     = citation_stats['total']
         fresh_7d  = citation_stats['fresh_7d']
         fresh_24h = citation_stats['fresh_24h']
@@ -426,6 +426,18 @@ def build_email(insp_date, lag, n_prospects, n_fresh,
             f'Last 7 days: {fresh_7d}</span>'
             f'{fresh_24h_html}</div>'
         )
+    gold_html = ''
+    if citation_stats:
+        gl = citation_stats.get('gold_leads', 0)
+        fg = citation_stats.get('fresh_gold', 0)
+        if gl > 0:
+            gold_html = (
+                f'<div style="font-size:13px;color:#475569;margin-top:4px">'
+                f'&#x1F947; Gold leads: <strong style="color:#B7950B">{gl}</strong>'
+                f'<span style="font-size:12px;color:#6C757D">'
+                f' &middot; {fg} cited in last 7 days</span>'
+                f'</div>'
+            )
 
     html = f'''<!DOCTYPE html>
 <html>
@@ -463,6 +475,7 @@ font-family:-apple-system,BlinkMacSystemFont,sans-serif">
       <strong style="color:#1e293b">{n_prospects:,}</strong>
     </div>
     {citation_html}
+    {gold_html}
   </div>
 
   <div style="background:#fff;border:1px solid #e2e8f0;
@@ -533,6 +546,9 @@ def main():
 
     records = load_prospects()
     print(f'  Prospects loaded: {len(records):,}')
+    gold_leads = sum(1 for p in records if p.get('ice_gold'))
+    week_ago_str = str(date.today() - timedelta(days=7))
+    fresh_gold = sum(1 for p in records if p.get('ice_gold') and (p.get('cit_latest') or '') >= week_ago_str)
 
     log_rows  = load_supabase_table('pic_log')
     cust_rows = load_supabase_table('pic_customers')
@@ -553,11 +569,17 @@ def main():
           f'Overdue={n_overdue} Nudges={n_nudges} Retests={n_retests}')
 
     citation_stats = get_citation_stats()
+    if citation_stats is None and gold_leads:
+        citation_stats = {}
+    if citation_stats is not None:
+        citation_stats['gold_leads'] = gold_leads
+        citation_stats['fresh_gold'] = fresh_gold
     if citation_stats:
-        print(f'  Citations total={citation_stats["total"]} '
-              f'7d={citation_stats["fresh_7d"]} '
-              f'24h={citation_stats["fresh_24h"]} '
-              f'delta={citation_stats["delta_total"]}')
+        print(f'  Citations total={citation_stats.get("total","?")} '
+              f'7d={citation_stats.get("fresh_7d","?")} '
+              f'24h={citation_stats.get("fresh_24h","?")} '
+              f'delta={citation_stats.get("delta_total","?")} '
+              f'gold={gold_leads}')
 
     subject, html = build_email(
         insp_date, lag, len(records),
