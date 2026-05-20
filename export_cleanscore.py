@@ -10,6 +10,8 @@ import os
 import json
 import re
 import requests
+from collections import defaultdict
+from datetime import datetime
 
 SUPABASE_URL = os.environ.get('SUPABASE_URL', '')
 SUPABASE_SERVICE_KEY = os.environ.get('SUPABASE_SERVICE_KEY', '')
@@ -103,6 +105,21 @@ CODE_DESCRIPTIONS = {
     'V50': 'Food contact surfaces soiled',
     'V51': 'Non-food contact surfaces soiled',
 }
+
+
+def infer_business_type(name):
+    n = (name or '').lower()
+    if re.search(r'\bbar\b|\btavern\b|\blounge\b|\bnightclub\b|\bbrewery\b|\bsaloon\b', n):
+        return 'bar'
+    if re.search(r'\bcafe\b|\bcoffee\b|\bbakery\b|\bdeli\b|\bbagel\b|\bpastry\b|\bdonut\b', n):
+        return 'cafe'
+    if re.search(r'\bhotel\b|\binn\b|\bresort\b|\bsuites\b|\bmotel\b', n):
+        return 'hotel'
+    if re.search(r'\bschool\b|\belementary\b|\buniversity\b|\bcollege\b|\bcafeteria\b', n):
+        return 'institutional'
+    if re.search(r'\bpizza\b|\bsubway\b|\bmcdonald|\bwendy\b|\bdomino\b', n):
+        return 'fast_food'
+    return 'restaurant'
 
 
 def load_full_narratives():
@@ -451,6 +468,167 @@ def build_partners_export(partner_rows):
     return export
 
 
+def build_stats_export(records, violations_export):
+    """Build data intelligence stats from all Pinellas records."""
+    pinellas = [r for r in records if str(r.get('county', '')).lower() == 'pinellas']
+    if not pinellas:
+        return {}
+
+    today = datetime.utcnow().date()
+
+    # ── 1. Business type risk ─────────────────────────────────────────────────
+    type_totals = defaultdict(lambda: {'count': 0, 'viol_sum': 0, 'with_viols': 0,
+                                       'cat_counts': defaultdict(int)})
+    for r in pinellas:
+        btype = infer_business_type(r.get('name', ''))
+        tv = int(r.get('total_viol') or 0)
+        type_totals[btype]['count'] += 1
+        type_totals[btype]['viol_sum'] += tv
+        if tv > 0:
+            type_totals[btype]['with_viols'] += 1
+    for biz in violations_export:
+        btype = infer_business_type(biz.get('name', ''))
+        for v in biz.get('violations', []):
+            type_totals[btype]['cat_counts'][v.get('category', 'other')] += 1
+
+    business_type_risk = {}
+    for btype, s in type_totals.items():
+        if s['count'] < 5:
+            continue
+        top_cat = max(s['cat_counts'].items(), key=lambda x: x[1])[0] \
+            if s['cat_counts'] else 'other'
+        business_type_risk[btype] = {
+            'count': s['count'],
+            'violation_rate': round(s['with_viols'] / s['count'], 3),
+            'avg_violations': round(s['viol_sum'] / s['count'], 2),
+            'top_category': top_cat,
+        }
+
+    # ── 2. Repeat violation risk ──────────────────────────────────────────────
+    cat_repeat = defaultdict(lambda: {'total': 0, 'repeat': 0})
+    total_viols = total_repeat = 0
+    for biz in violations_export:
+        for v in biz.get('violations', []):
+            cat = v.get('category', 'other')
+            cat_repeat[cat]['total'] += 1
+            total_viols += 1
+            if v.get('repeat'):
+                cat_repeat[cat]['repeat'] += 1
+                total_repeat += 1
+
+    repeat_risk = {
+        'overall': {
+            'total_violations': total_viols,
+            'repeat_count': total_repeat,
+            'rate': round(total_repeat / total_viols, 3) if total_viols else 0,
+        },
+        'by_category': {
+            cat: {
+                'total': s['total'],
+                'repeat_count': s['repeat'],
+                'rate': round(s['repeat'] / s['total'], 3) if s['total'] else 0,
+            }
+            for cat, s in cat_repeat.items() if s['total'] >= 5
+        },
+    }
+
+    # ── 3. Predictive inspection timing ──────────────────────────────────────
+    intervals = []
+    buckets = {'recent': 0, 'normal': 0, 'due': 0, 'overdue': 0}
+    for r in pinellas:
+        ds = str(r.get('last_insp') or '')[:10]
+        if len(ds) == 10:
+            try:
+                insp_date = datetime.strptime(ds, '%Y-%m-%d').date()
+                days = (today - insp_date).days
+                intervals.append(days)
+                if days <= 60:
+                    buckets['recent'] += 1
+                elif days <= 120:
+                    buckets['normal'] += 1
+                elif days <= 180:
+                    buckets['due'] += 1
+                else:
+                    buckets['overdue'] += 1
+            except ValueError:
+                pass
+
+    total_timed = sum(buckets.values())
+    median_days = sorted(intervals)[len(intervals) // 2] if intervals else 180
+    inspection_timing = {
+        'median_days_since_inspection': int(median_days),
+        'total_tracked': total_timed,
+        'tiers': {
+            k: {'label': lbl, 'count': buckets[k],
+                'pct': round(buckets[k] / total_timed, 3) if total_timed else 0}
+            for k, lbl in [('recent', '0-60 days'), ('normal', '60-120 days'),
+                           ('due', '120-180 days'), ('overdue', '180+ days')]
+        },
+    }
+
+    # ── 4. Cross-violation correlation ───────────────────────────────────────
+    co_occur = defaultdict(lambda: defaultdict(int))
+    cat_biz_total = defaultdict(int)
+    for biz in violations_export:
+        cats = list({v.get('category', 'other') for v in biz.get('violations', [])})
+        for cat in cats:
+            cat_biz_total[cat] += 1
+        for i, c1 in enumerate(cats):
+            for c2 in cats[i + 1:]:
+                co_occur[c1][c2] += 1
+                co_occur[c2][c1] += 1
+
+    cross_violations = {}
+    for cat, co in co_occur.items():
+        if cat_biz_total[cat] < 5:
+            continue
+        pairs = sorted(
+            [{'category': c2, 'co_occurrence_rate': round(n / cat_biz_total[cat], 3)}
+             for c2, n in co.items()],
+            key=lambda x: -x['co_occurrence_rate']
+        )[:4]
+        if pairs:
+            cross_violations[cat] = pairs
+
+    # ── 5. Neighborhood benchmarking (by city) ───────────────────────────────
+    city_buckets = defaultdict(lambda: {'count': 0, 'viol_sum': 0, 'score_sum': 0, 'with_viols': 0})
+    for r in pinellas:
+        city = str(r.get('city') or '').strip().lower()
+        if not city:
+            continue
+        tv = int(r.get('total_viol') or 0)
+        hv = int(r.get('high_viol') or 0)
+        score = max(0, min(100, 100 - tv * 8 - hv * 5))
+        city_buckets[city]['count'] += 1
+        city_buckets[city]['viol_sum'] += tv
+        city_buckets[city]['score_sum'] += score
+        if tv > 0:
+            city_buckets[city]['with_viols'] += 1
+
+    neighborhood = {
+        city: {
+            'count': s['count'],
+            'avg_violations': round(s['viol_sum'] / s['count'], 2),
+            'avg_score': round(s['score_sum'] / s['count']),
+            'violation_rate': round(s['with_viols'] / s['count'], 3),
+        }
+        for city, s in city_buckets.items() if s['count'] >= 5
+    }
+
+    print(f'  Stats: {len(business_type_risk)} business types, '
+          f'{len(cross_violations)} cross-violation pairs, '
+          f'{len(neighborhood)} cities')
+    return {
+        'generated_at': datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),
+        'total_businesses': len(pinellas),
+        'business_type_risk': business_type_risk,
+        'repeat_risk': repeat_risk,
+        'inspection_timing': inspection_timing,
+        'cross_violations': cross_violations,
+        'neighborhood': neighborhood,
+    }
+
+
 def main():
     print('Exporting CleanScore data...')
 
@@ -470,6 +648,10 @@ def main():
     if partners:
         upload_to_storage('cleanscore_partners.json', partners)
 
+    stats = build_stats_export(records, violations)
+    if stats:
+        upload_to_storage('cleanscore_stats.json', stats)
+
     os.makedirs('data', exist_ok=True)
     with open('data/cleanscore_violations.json', 'w') as f:
         json.dump(violations[:5], f, indent=2)
@@ -482,7 +664,7 @@ def main():
     source_summary = ', '.join(f'{v} {k}' for k, v in sorted(sources.items()))
     print(f'CleanScore export complete: '
           f'{len(violations)} businesses ({source_summary}), '
-          f'{len(partners)} partners')
+          f'{len(partners)} partners, {len(stats)} stat sections')
 
 
 if __name__ == '__main__':
