@@ -1,5 +1,5 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-05-19 (session 44 — citation pipeline fix, workflow revert loop fix, iOS button fixes) by Claude Code*
+*Last updated: 2026-05-20 (session 45 — fix irrelevant observation text in citation cards) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
@@ -187,6 +187,13 @@ To force a fresh PWA load after a push: open the URL directly in Safari (not the
 - `build_date` in P[] records will appear after next CI rebuild; existing records have no `build_date` so freshness indicator shows nothing until rebuilt
 
 ## Recent Changes
+- **2026-05-20 (s45 — fix irrelevant observation text in citation cards):**
+  - **Root cause**: `_ICE_KEYWORDS` regex contained generic food-safety terms (`mold`, `slime`, `soiled`, `dirty`, `biofilm`, `scale`, `residue`, etc.) that match any violation, not just ice machine citations. BJ'S ASIAN FUSION showed "Food-contact surface soiled with food debris, mold-like substance or slime" because `mold`, `slime`, and `soiled` all hit the old list.
+  - **Fix 1 — Tighten `_ICE_KEYWORDS`** (both `generate_citation_summary.py` and `build.py`): Replaced the broad 15-term list with `r'\b(ice|evaporator)\b'`. Any legitimate ice machine observation says "ice". Generic food-safety sentences without "ice" are now excluded entirely.
+  - **Fix 2 — Pre-filter narratives at source** (`generate_citation_summary.py`): Before grouping by license key to pick the best observation, filter `nar` to only rows where the observation column matches `_ICE_KEYWORDS`. Non-ice narrative rows are excluded before `groupby`.
+  - **Fix 3 — Fallback fix** (both files): `extract_ice_snippet()` returns `''` (not the full `text`) when no ice-keyword sentences are found.
+  - **Impact**: Citation counts, dates, and `ice_confirmed_dbpr` flags are unaffected. Only `best_observation` changes — non-ice text goes blank after next CI rebuild.
+
 - **2026-05-19 (s44 — citation pipeline fix + workflow revert loop fix + iOS button fixes):**
   - **Citation matching root cause fixed**: `generate_citation_summary.py` was grouping by `License Number` (human-readable string) instead of `License ID` (numeric DB key used by prospect records). Result: citation CSV keys never matched prospect `id` fields → only 3 accidental matches. Fixed both groupby calls to use `License ID`. Narratives key priority also fixed (`license_id` checked before `license_number`). CI log now shows match count: `Narratives: N unique licenses, X/2614 businesses matched (key: license_id)`.
   - **DBPR publish time confirmed**: `download_data.py` now logs server `Last-Modified` header. Confirmed DBPR publishes `3fdinspi_current.csv` at ~6:48am ET daily. Cron set to 10am ET for now; will tighten once timing is confirmed consistent over several days.
