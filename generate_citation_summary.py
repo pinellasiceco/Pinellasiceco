@@ -44,12 +44,7 @@ CSV_FILES = [
     ('data/fdinspi_2425.xlsx',    'xlsx'),
 ]
 
-_ICE_KEYWORDS = re.compile(
-    r'\b(ice\s+machine|ice\s+maker|ice\s+bin|ice\s+scoop|evaporator|condenser|'
-    r'mold|slime|biofilm|pink|black|green|sanitize|sanitizer|soiled|dirty|'
-    r'buildup|scale|residue|deposit|film|growth|discoloration)\b',
-    re.IGNORECASE,
-)
+_ICE_KEYWORDS = re.compile(r'\b(ice|evaporator)\b', re.IGNORECASE)
 
 
 def extract_ice_snippet(text, max_chars=300):
