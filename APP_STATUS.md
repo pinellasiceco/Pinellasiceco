@@ -1,5 +1,5 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-05-20 (session 45 — Gold tier filter + fix irrelevant observation text) by Claude Code*
+*Last updated: 2026-05-21 (session 46 — Reach-In Cooler add-on + field manual page) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
@@ -159,14 +159,27 @@ If something appears broken, first try force-closing the PWA and reopening — t
 
 To force a fresh PWA load after a push: open the URL directly in Safari (not the home screen icon), wait for page to load fully, then the home screen icon will serve the updated version.
 
+### Reach-In Cooler Add-On Service (session 46)
+- **Flag**: `REACH_IN_ENABLED = True` — live as of session 46
+- **Pricing**: +$50/mo (monthly plan) or +$40/mo (quarterly plan) — baked at CI time; Stripe line item uses `price_data` (works in both test and live mode)
+- **Close Deal overlay**: ❄️ Reach-In Cooler Service toggle (pre-checked if already enrolled); Year 1 Total updates live; `reach_in: true` sent to Edge Function on checkout
+- **Edge Function** (`stripe-checkout/index.ts`): destructures `reach_in` boolean; adds reach-in `price_data` line item for subscription plans; `hasReachIn` in customer + session + subscription metadata
+- **Service log**: reach-in ATP section shown only for enrolled clients (`reach_in_service === true`); pass/fail buttons + per-unit location + RLU inputs; state reset on every modal open
+- **Reports tab**: `buildReportReachInSection()` injected into `loadReportClient()` — shows ATP table (with pre/post RLU per unit) for enrolled clients with data; "not tested this visit" for enrolled with no data; upsell panel for non-subscribers
+- **Stripe return**: `_pending_reach_in` + `_pending_reach_in_amount` persisted to localStorage before redirect; restored in `checkStripeReturn()` before `scMarkWon()` overwrites customer record
+- **Service history badge**: RI ✔/✖ badge on visit rows when reach-in data present
+- **Calendar badge**: ❄️ + Coolers badge on client service calendar cards for enrolled clients
+- **showCard**: ❄️ Reach-In Units count shown in fact rows when `reach_in_count` is set
+
 ### Technician Field Manual
 - **URL**: `https://pinellasiceco.github.io/Pinellasiceco/docs/fieldmanual/` — **COMPLETE and deployed**
 - **Access**: Settings tab → "Open Technician Field Manual ↗" button
-- **Coverage**: Hoshizaki, Manitowoc, Ice-O-Matic, Scotsman, Follett, Cornelius — 6 brands, ~4,800 lines total
-- **Per-brand pages**: 60-day maintenance checklist, deep clean steps, brand-specific failure modes (spray bar blockage, ice thickness sensor, drain timing, auger sounds), error codes (Scotsman Prodigy E1/E2), chemical concentrations (Nu-Calgon 4oz/gal cleaner, 1oz/gal sanitizer)
+- **Coverage**: Hoshizaki, Manitowoc, Ice-O-Matic, Scotsman, Follett + Reach-In Coolers add-on page
+- **Per-brand pages**: 60-day maintenance checklist, deep clean steps, brand-specific failure modes, error codes, chemical concentrations
+- **Reach-In page** (`reachin.html`): 8 sections — service overview, tools checklist, step-by-step protocol, ATP reference (color-coded table, 100 RLU threshold), gasket condition rating (✅/⚠️/🔶/❌ table), client scripts (4 scenarios), referral triggers, quick-reference checklist
+- **Hub page**: "ADD-ON SERVICES" section above brand cards with reach-in card (blue/teal styling); ❄️ Reach-In tab in bottom nav
 - **Reference page**: ATP scale (PASS ≤10 / MARGINAL 11–100 / FAIL >100), chemical mixing guide, tool checklist
-- **Hub page**: brand cards sorted by market share with search, machine types, where found
-- **Deployed via CI**: `rebuild.yml` picks up entire `docs/` directory from feature branch on each rebuild
+- **Deployed via CI**: `pages.yml` uploads entire repo root — all `docs/fieldmanual/` files deploy automatically on push
 
 ### Channel Partners Tab (session 11)
 - 6th tab: &#x1F91D; Partners — channel partner prospect management
@@ -187,6 +200,11 @@ To force a fresh PWA load after a push: open the URL directly in Safari (not the
 - `build_date` in P[] records will appear after next CI rebuild; existing records have no `build_date` so freshness indicator shows nothing until rebuilt
 
 ## Recent Changes
+- **2026-05-21 (s46 — Reach-In Cooler add-on + field manual page):**
+  - **Reach-In Cooler add-on** (`build.py`, `supabase/functions/stripe-checkout/index.ts`): Full `REACH_IN_ENABLED = True` feature launch. Close Deal overlay toggle adds +$50/mo (monthly) or +$40/mo (quarterly) to Year 1 Total and Stripe checkout. Edge Function handles `reach_in` boolean, adds subscription line item using `price_data` (test/live mode compatible — eliminated static price ID dependency). Service log reach-in ATP section gated on `reach_in_service === true` (Bug 3 fix). Reports tab `loadReportClient()` injects `buildReportReachInSection()` between notes and certification block (Bug 2 fix). Stripe payload sends `reach_in: reachInChecked` boolean (Bug 1 fix). `_pending_reach_in` persisted to localStorage before Stripe redirect and restored in `checkStripeReturn()`.
+  - **Bug fixes during rollout**: (a) Edge Function ReferenceError — rebase left duplicate reach-in block referencing undeclared `reach_in_price_id` variable; removed. (b) Stripe "No such price" error — static price IDs are live-mode only; switched to `price_data` with `recurring: { interval: 'month' }` matching all other line items. (c) NaN in Reports tab — `+(html_string)` unary `+` coerced the reach-in section HTML to a number; removed leading `+` from injection line.
+  - **Field manual reach-in page** (`docs/fieldmanual/reachin.html`): New page with 8 collapsing sections matching brand page design — service overview, tools checklist, 6-step protocol, ATP reference table (100 RLU threshold, color-coded), gasket condition rating (Good/Fair/Poor/Failed table), 4 client scripts, referral triggers, quick-reference checklist. Hub updated: "ADD-ON SERVICES" section label + reach-in card (blue/teal styling) above brand cards; ❄️ tab in bottom nav on both pages.
+
 - **2026-05-20 (s45 — Gold tier filter + fix irrelevant observation text):**
   - **Gold tier filter** (`build.py`, `send_briefing.py`): New `🥇 Gold` chip in Prospects tab surfaces only businesses with a DBPR-confirmed ice citation AND an inspector observation containing specific contamination language (mold, biofilm, slime, soiled, buildup, interior, etc.). `_GOLD_KEYWORDS` list + `is_gold_lead()` Python function bake `ice_gold: true/false` into every P[] record at CI time. CI log shows "Gold ice leads: N". Gold chip appears before 🕵️ DBPR chip; `setPreset('gold_ice')` filter + sort by most recent citation. 🥇 Gold badge shown on cards; GOLD TIER callout added at top of WHY THIS PROSPECT MATTERS in showCard. Daily briefing email shows gold lead count + last-7-days count in Data Status. DBPR chip, Most Recent sort, and Repeat chip unchanged.
   - **Tighten `_ICE_KEYWORDS`** (`generate_citation_summary.py`, `build.py`): Replaced the 15-term generic list (mold, slime, soiled, dirty, etc.) with `r'\b(ice|evaporator)\b'`. Any real ice machine observation says "ice". Generic food-safety sentences without "ice" are now excluded. Eliminates false positives like BJ'S ASIAN FUSION "food-contact surface soiled" text.
@@ -336,9 +354,8 @@ See the SQL in the prompt — creates `pic_prospects`, `pic_partners`, adds `use
 - If Supabase is not configured (no URL/key in env or localStorage), app runs in local-only mode — login screen is skipped, localStorage data used directly. Zero regression for existing usage.
 
 ## Next Session Priorities
-1. **Verify s19/20 fixes**: (a) Toscana Island Clubhouse appears in Clients tab and has correct MRR/ARR after reload; (b) "Follow-Ups" filter on Prospects tab shows prospects with scheduled follow-up dates; (c) Home tab Strike Zone / Cold Targets / Today's Plan only show Pinellas prospects not contacted recently; (d) Email Schedule modal asks for email, pre-fills saved address, shows Sending → ✓ Sent; (e) Compliance Email button shows same send confirmation UX
+1. **Verify reach-in end-to-end after next CI build**: (a) Close Deal overlay shows reach-in toggle and Year 1 Total updates; (b) Charge Now with reach-in checked creates Stripe session with reach-in line item (no errors); (c) Service log shows reach-in section only for enrolled clients; (d) Service → Reports shows reach-in ATP table for enrolled clients with logged data (no NaN)
 2. **Per-customer report history**: Add a "Reports" sub-tab inside each customer card showing all past service visits with ability to view/print/email any individual report — the visit dropdown in Service → Reports is the interim solution
-3. **Verify photos end-to-end**: Log a service visit with photos → confirm upload toast → go to Service → Reports → confirm photos appear in preview and in the emailed report
 
 ## iOS PWA Rules (never violate these)
 - **Buttons in injected HTML:** use inline `ontouchend="event.preventDefault();fn()"` + `onclick="fn()"` — NOT `addEventListener` on innerHTML-injected elements
@@ -368,7 +385,7 @@ See the SQL in the prompt — creates `pic_prospects`, `pic_partners`, adds `use
 | `docs/explore/index.html` | QR code hub page — `https://pinellasiceco.github.io/Pinellasiceco/docs/explore/` — 6-act scrolling page (hero, 215 vs 10 count-up, 3 stat cards, guarantee, features, 3-path CTA); printed on physical business cards |
 | `docs/before-after/index.html` | Before & After ATP gallery — `https://pinellasiceco.github.io/Pinellasiceco/docs/before-after/` — dark industrial design: animated hero counters (523 RLU, 4 RLU after, 10 cards), CSS grid card layout, scroll-triggered ATP number count-ups + progress bars, persistent CTA bar (call + book). Images in `docs/before-after/img/`. Linked from explore page. |
 | `docs/history/index.html` | Easter egg timeline — `https://pinellasiceco.github.io/Pinellasiceco/docs/history/` — 9-milestone ice history (10,000 BC → today), inline SVG illustrations, progress bar, sticky nav with counter; noindex, linked from explore page |
-| `docs/fieldmanual/` | **Technician Field Manual** — `https://pinellasiceco.github.io/Pinellasiceco/docs/fieldmanual/` — **COMPLETE**. 4,835 lines across 8 pages. `index.html`: brand hub with search, links to per-brand pages by market share. Per-brand pages: `hoshizaki.html` (955 lines), `manitowoc.html` (737), `iceomatic.html` (940), `scotsman.html` (709), `follett.html` (841), `reference.html` (354 — chemicals, ATP scale, checklists). Linked from Settings tab → "Open Technician Field Manual ↗". Deployed via CI: `git checkout origin/claude/... -- docs/` in `rebuild.yml`. |
+| `docs/fieldmanual/` | **Technician Field Manual** — `https://pinellasiceco.github.io/Pinellasiceco/docs/fieldmanual/` — **COMPLETE**. 9 pages. `index.html`: hub with "ADD-ON SERVICES" section + brand cards + search. `reachin.html`: reach-in cooler protocol (8 sections). Per-brand pages: `hoshizaki.html`, `manitowoc.html`, `iceomatic.html`, `scotsman.html`, `follett.html`. `reference.html`: chemicals, ATP scale, checklists. Linked from Settings tab. Deployed automatically — `pages.yml` uploads full repo root. |
 | `atp/index.html` | ATP landing page — `https://pinellasiceco.github.io/Pinellasiceco/atp/` — single self-contained HTML file, no external images, inline SVG logo |
 | `customers.json` | Seed customer data (used at build time) |
 | `manifest.json` | PWA manifest |
