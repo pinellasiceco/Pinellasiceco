@@ -149,6 +149,23 @@ def load_full_narratives():
         return {}
 
 
+def get_narrative_text(cache_entry):
+    """Return combined observation text from any cache entry format."""
+    if isinstance(cache_entry, dict):
+        viols = cache_entry.get('violations') or []
+        return '\n'.join(v.get('observation', '') for v in viols if v.get('observation'))
+    if isinstance(cache_entry, list):
+        return '\n'.join(v.get('observation', '') for v in cache_entry if v.get('observation'))
+    return str(cache_entry or '')
+
+
+def get_inspector_name(cache_entry):
+    """Return inspector name from cache entry if present (dict format only)."""
+    if isinstance(cache_entry, dict):
+        return cache_entry.get('inspector_name') or None
+    return None
+
+
 def build_inspection_history():
     """
     Build per-license inspection history from all DBPR historical files.
@@ -568,8 +585,10 @@ def get_best_narrative(r, full_narratives):
     # Priority 2: full inspection narrative from scraper cache
     cached = full_narratives.get(lic)
     if cached:
+        entries = (cached.get('violations', []) if isinstance(cached, dict)
+                   else cached)
         viols = []
-        for entry in cached:
+        for entry in entries:
             viol_text = (entry.get('observation') or '').strip()
             entry_codes = re.findall(r'\bV\d{2}\b', viol_text.upper())
             if len(viol_text) > 10:
@@ -615,6 +634,7 @@ def build_violations_export(records, full_narratives=None, inspection_history=No
             continue
 
         violations, narrative_source = get_best_narrative(r, full_narratives)
+        inspector_name = get_inspector_name(full_narratives.get(str(r.get('id', ''))))
 
         insp_date = str(r.get('last_insp') or '')[:10]
         disposition = str(r.get('last_disp') or '')
@@ -639,6 +659,7 @@ def build_violations_export(records, full_narratives=None, inspection_history=No
             'violations': violations,
             'violation_count': total_viol,
             'narrative_source': narrative_source,
+            'inspector_name': inspector_name,
             'inspection_history': biz_history,
             'inspection_count': len(biz_history),
             'first_inspection_date': (
@@ -912,6 +933,62 @@ def build_stats_export(records, violations_export):
     }
 
 
+_ICE_KWS = ['ice machine', 'ice maker', 'ice bin', 'evaporator', 'spray bar', 'water tray']
+
+
+def build_inspector_analytics(full_cache):
+    """Aggregate per-inspector stats from the full narratives cache."""
+    inspectors = {}
+    for lic, entry in full_cache.items():
+        name = get_inspector_name(entry)
+        if not name:
+            continue
+        if name not in inspectors:
+            inspectors[name] = {
+                'name': name,
+                'inspection_count': 0,
+                'businesses_inspected': set(),
+                'total_violations': 0,
+                'ice_machine_citations': 0,
+            }
+        rec = inspectors[name]
+        rec['inspection_count'] += 1
+        rec['businesses_inspected'].add(lic)
+        entries = entry.get('violations', []) if isinstance(entry, dict) else entry
+        for v in entries:
+            obs = (v.get('observation') or '').lower()
+            rec['total_violations'] += 1
+            if any(kw in obs for kw in _ICE_KWS):
+                rec['ice_machine_citations'] += 1
+
+    result = []
+    for name, data in inspectors.items():
+        count = data['inspection_count']
+        result.append({
+            'name': data['name'],
+            'inspection_count': count,
+            'businesses_inspected': len(data['businesses_inspected']),
+            'avg_violations_per_inspection': (
+                round(data['total_violations'] / count, 2) if count else 0
+            ),
+            'ice_machine_citation_rate': (
+                round(data['ice_machine_citations'] / count, 3) if count else 0
+            ),
+        })
+    result.sort(key=lambda x: -x['inspection_count'])
+    return result
+
+
+def build_inspector_export(full_cache):
+    """Build cleanscore_inspectors.json payload."""
+    analytics = build_inspector_analytics(full_cache)
+    print(f'  Inspector analytics: {len(analytics)} inspectors found')
+    return {
+        'generated_at': datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),
+        'inspectors': analytics,
+    }
+
+
 def main():
     print('Exporting CleanScore data...')
 
@@ -950,6 +1027,10 @@ def main():
     stats = build_stats_export(records, violations)
     if stats:
         upload_to_storage('cleanscore_stats.json', stats)
+
+    inspector_data = build_inspector_export(full_narratives)
+    if inspector_data.get('inspectors'):
+        upload_to_storage('cleanscore_inspectors.json', inspector_data)
 
     os.makedirs('data', exist_ok=True)
     with open('data/cleanscore_violations.json', 'w') as f:
