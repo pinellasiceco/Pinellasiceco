@@ -20,6 +20,8 @@ const STRIPE_PRICES = {
   quarterly_additional:  'price_1TXra61DW5dOU2aaOUH8FbBa',   // $49/mo per extra machine
   onetime_base:          'price_1TXrJQ1DW5dOU2aa4jQguT8b',   // $395 one-time
   onetime_additional:    'price_1TXral1DW5dOU2aaXB5myZ8O',   // $150 per extra machine
+  reach_in_monthly:      'price_1TZDEZ1DW5dOU2aa40hWFQsm',   // $50/mo reach-in add-on
+  reach_in_quarterly:    'price_1TZDF71DW5dOU2aaT1PYaOaw',   // $40/mo reach-in add-on
 };
 
 const TERMS_URL = 'https://www.pinellasiceco.com/terms';
@@ -43,6 +45,7 @@ Deno.serve(async (req) => {
       client_city,       // city from P[] record
       prospect_id,       // for metadata/tracking and return URL
       flex,              // boolean — month-to-month terms if true
+      reach_in,          // boolean — reach-in cooler add-on selected
     } = await req.json();
 
     if (!plan || !machines || Number(machines) < 1) {
@@ -53,6 +56,7 @@ Deno.serve(async (req) => {
     const extraMachines = Math.max(0, m - 1);
     const entryDisc = Math.max(0, Math.min(Number(entry_discount) || 0, 99));
     const planDisc  = Math.max(0, Number(monthly_discount) || 0);
+    const hasReachIn = reach_in === true && plan !== 'onetime';
 
     // --- CREATE NAMED CUSTOMER ---
     const addressParts = [
@@ -71,6 +75,7 @@ Deno.serve(async (req) => {
         city: String(client_city || ''),
         plan: String(plan || ''),
         machines: String(machines || 1),
+        reach_in: hasReachIn ? 'true' : 'false',
       },
     };
     if (client_email) {
@@ -139,13 +144,26 @@ Deno.serve(async (req) => {
         },
         quantity: 1,
       });
+
+      // REACH-IN COOLER ADD-ON
+      // Only for recurring plans (not one-time)
+      // Uses static Stripe price IDs for the add-on subscription
+      if (hasReachIn) {
+        const reachInPriceId = plan === 'quarterly'
+          ? STRIPE_PRICES.reach_in_quarterly
+          : STRIPE_PRICES.reach_in_monthly;
+
+        lineItems.push({
+          price: reachInPriceId,
+          quantity: 1,
+        });
+      }
     }
 
     // --- CHECKOUT SESSION ---
     const successUrl = SUCCESS_BASE
       + '?stripe=success&pid=' + encodeURIComponent(String(prospect_id || ''));
 
-    // Stripe label.custom max 50 chars; full disclosure goes in submitMsg
     const termsLabel = flex
       ? 'I agree to month-to-month terms'
       : 'I agree to the 12-month service terms';
@@ -167,10 +185,7 @@ Deno.serve(async (req) => {
       custom_fields: [
         {
           key: 'terms_agreement',
-          label: {
-            type: 'custom',
-            custom: termsLabel,
-          },
+          label: { type: 'custom', custom: termsLabel },
           type: 'dropdown',
           dropdown: {
             options: [{ label: 'I agree', value: 'agreed' }],
@@ -178,15 +193,14 @@ Deno.serve(async (req) => {
           optional: false,
         },
       ],
-      custom_text: {
-        submit: { message: submitMsg },
-      },
+      custom_text: { submit: { message: submitMsg } },
       metadata: {
         prospect_id: String(prospect_id || ''),
         plan,
         machines: String(m),
         client_name: String(client_name || ''),
         flex: flex ? 'true' : 'false',
+        reach_in: hasReachIn ? 'true' : 'false',
       },
       payment_method_types: ['card'],
       phone_number_collection: { enabled: true },
@@ -200,6 +214,7 @@ Deno.serve(async (req) => {
           machines: String(m),
           client_name: String(client_name || ''),
           flex: flex ? 'true' : 'false',
+          reach_in: hasReachIn ? 'true' : 'false',
         },
       };
     }
