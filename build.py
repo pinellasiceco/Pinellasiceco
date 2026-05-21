@@ -667,6 +667,9 @@ def enrich_with_citations(records, citations):
         rec['cit_count']          = c['citation_count']
         rec['cit_ice_count']      = c['ice_count']
         rec['cit_latest']         = c['latest_date']
+        # Citations ARE inspections — update last_insp if citation date is newer
+        if rec['cit_latest'] and rec['cit_latest'] > rec.get('last_insp', ''):
+            rec['last_insp'] = rec['cit_latest']
         rec['cit_earliest']       = c['earliest_date']
         rec['cit_days_since']     = c['days_since']
         rec['cit_observation']    = c['best_observation']
