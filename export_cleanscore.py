@@ -601,17 +601,9 @@ def get_best_narrative(r, full_narratives):
 
 
 def _has_ice_citation(r):
-    """True if record has a confirmed ice machine citation (handles all field name variants)."""
-    if r.get('ice_confirmed'):
-        return True
-    if r.get('ice_confirmed_dbpr'):
-        return True
-    try:
-        if int(float(r.get('cit_ice_count', 0) or 0)) > 0:
-            return True
-    except (ValueError, TypeError):
-        pass
-    return False
+    """True if record has a confirmed ice machine citation (uses precise confirmed flags only)."""
+    # cit_ice_count overcounts — it includes all V22 history, not just confirmed inspections
+    return bool(r.get('ice_confirmed_dbpr') or r.get('ice_confirmed'))
 
 
 def build_violations_export(records, full_narratives=None, inspection_history=None):
@@ -734,14 +726,6 @@ def build_stats_export(records, violations_export):
 
     total_cited = sum(1 for r in pinellas if _has_ice_citation(r))
     county_rate = total_cited / total_all if total_all else 0
-
-    # Debug: show actual field names on first record so we can confirm
-    if pinellas:
-        sample = pinellas[0]
-        ice_fields = {k: v for k, v in sample.items()
-                      if 'ice' in k.lower() or 'cit' in k.lower()
-                      or 'confirmed' in k.lower()}
-        print(f'  Stats debug — sample record ice fields: {ice_fields}')
 
     print(f'  Stats: {total_all} Pinellas businesses, '
           f'{total_cited} with ice citations '
