@@ -4,7 +4,7 @@ on:
   push:
     branches: [main, claude/fix-multiple-app-bugs-j1hpJ]
   schedule:
-    - cron: '0 14 * * *'   # Daily at 14:00 UTC (10am ET) — after DBPR publishes
+    - cron: '0 13 * * *'   # Daily at 13:00 UTC (9am ET) — after DBPR publishes
   workflow_dispatch:         # Manual trigger
 
 permissions:
