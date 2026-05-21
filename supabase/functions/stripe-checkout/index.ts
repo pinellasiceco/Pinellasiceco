@@ -160,14 +160,6 @@ Deno.serve(async (req) => {
       }
     }
 
-    // REACH-IN COOLER ADD-ON (subscription plans only)
-    if (reach_in && reach_in_price_id && plan !== 'onetime') {
-      lineItems.push({
-        price: String(reach_in_price_id),
-        quantity: 1,
-      });
-    }
-
     // --- CHECKOUT SESSION ---
     const successUrl = SUCCESS_BASE
       + '?stripe=success&pid=' + encodeURIComponent(String(prospect_id || ''));
