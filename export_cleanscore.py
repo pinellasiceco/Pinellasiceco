@@ -252,8 +252,10 @@ def build_inspection_history():
             pinellas[col], errors='coerce').fillna(0).astype(int)
 
     if 'V22' in pinellas.columns:
-        v22 = pinellas['V22'].fillna('').astype(str).str.strip().str.lower()
-        pinellas['had_v22'] = ~v22.isin(['', '0', 'nan', '0.0'])
+        pinellas['had_v22'] = (
+            pinellas['V22'].str.strip()
+            .ne('').ne('0').ne('nan')
+        )
     else:
         pinellas['had_v22'] = False
 
