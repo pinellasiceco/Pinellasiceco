@@ -206,6 +206,29 @@ class InspectionParser(HTMLParser):
         return ' '.join(self.page_text)
 
 
+# ── Inspector name extraction ─────────────────────────────────────────────
+def extract_inspector_name(html):
+    """Extract inspector name from DBPR inspection detail page using regex."""
+    patterns = [
+        # "Inspector: John Smith" or "Inspector Name: John Smith"
+        r'Inspector(?:\s+Name)?[:\s]+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)',
+        # Table cell: <td>Inspector</td><td>John Smith</td>
+        r'<td[^>]*>[^<]*Inspector[^<]*</td>\s*<td[^>]*>\s*([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\s*</td>',
+        # "Inspected by: John Smith"
+        r'Inspected\s+by[:\s]+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)',
+    ]
+    for pattern in patterns:
+        m = re.search(pattern, html)
+        if m:
+            name = m.group(1).strip()
+            parts = name.split()
+            if 2 <= len(parts) <= 4 and all(
+                p.replace('.', '').replace('-', '').isalpha() for p in parts
+            ):
+                return name
+    return None
+
+
 # ── Fetch page ────────────────────────────────────────────────────────────
 def fetch_page(url, session_cookie=None):
     """Fetch a URL and return HTML content."""
@@ -420,13 +443,19 @@ def run_full_violations_scrape():
             continue
 
         violations = parse_inspection(html, vid, biz)
-        print(f" → {len(violations)} violations")
+        inspector_name = extract_inspector_name(html)
+        print(f" → {len(violations)} violations"
+              + (f" | Inspector: {inspector_name}" if inspector_name else ""))
 
         if violations:
-            cache[lic] = [
+            viols_list = [
                 {'code': v['violation_code'], 'observation': v['observation']}
                 for v in violations
             ]
+            if inspector_name:
+                cache[lic] = {'violations': viols_list, 'inspector_name': inspector_name}
+            else:
+                cache[lic] = viols_list
             success_count += 1
 
         save_full_narratives_cache(cache)
