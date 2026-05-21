@@ -354,8 +354,7 @@ See the SQL in the prompt — creates `pic_prospects`, `pic_partners`, adds `use
 - If Supabase is not configured (no URL/key in env or localStorage), app runs in local-only mode — login screen is skipped, localStorage data used directly. Zero regression for existing usage.
 
 ## Next Session Priorities
-1. **Verify reach-in end-to-end after next CI build**: (a) Close Deal overlay shows reach-in toggle and Year 1 Total updates; (b) Charge Now with reach-in checked creates Stripe session with reach-in line item (no errors); (c) Service log shows reach-in section only for enrolled clients; (d) Service → Reports shows reach-in ATP table for enrolled clients with logged data (no NaN)
-2. **Per-customer report history**: Add a "Reports" sub-tab inside each customer card showing all past service visits with ability to view/print/email any individual report — the visit dropdown in Service → Reports is the interim solution
+1. **Per-customer report history**: Add a "Reports" section directly inside each client card (Clients tab) showing all past service visits — view/print/email any individual report without navigating to Service → Reports. The visit dropdown in Service → Reports is the current interim solution.
 
 ## iOS PWA Rules (never violate these)
 - **Buttons in injected HTML:** use inline `ontouchend="event.preventDefault();fn()"` + `onclick="fn()"` — NOT `addEventListener` on innerHTML-injected elements

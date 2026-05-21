@@ -175,7 +175,7 @@ def build_inspection_history():
 
     DATA_FILES = [
         ('data/3fdinspi_2021.csv', 'csv'),
-        # fdinspi_2122.xlsx intentionally skipped — not valid xlsx
+        ('data/fdinspi_2122.xlsx', 'xlsx'),
         ('data/fdinspi_2223.xlsx', 'xlsx'),
         ('data/fdinspi_2324.xlsx', 'xlsx'),
         ('data/fdinspi_2425.xlsx', 'xlsx'),
@@ -194,6 +194,7 @@ def build_inspection_history():
                     names=_DBPR_COLS,
                     low_memory=False,
                     encoding='utf-8',
+                    errors='replace',
                     dtype=str
                 )
             else:
@@ -225,39 +226,13 @@ def build_inspection_history():
     ].copy()
     print(f'  History: {len(pinellas):,} Pinellas rows')
 
-    # Build lic_id: License ID where available, else License Number
-    if 'License ID' not in pinellas.columns:
-        print('  History: License ID column missing — using License Number as key')
-        pinellas['lic_id'] = pinellas['License Number'].astype(str).str.strip()
-    else:
-        pinellas['lic_id'] = pinellas['License ID'].astype(str).str.strip()
-        mask = (
-            pinellas['lic_id'].isna() |
-            (pinellas['lic_id'] == '') |
-            (pinellas['lic_id'] == 'nan') |
-            (pinellas['lic_id'] == 'None')
-        )
-        if mask.any():
-            pinellas.loc[mask, 'lic_id'] = (
-                pinellas.loc[mask, 'License Number']
-                .astype(str).str.strip()
-            )
-
-    unique_lids = pinellas['lic_id'].nunique()
-    nan_lids = (
-        pinellas['lic_id'].isna() |
-        (pinellas['lic_id'] == '') |
-        (pinellas['lic_id'] == 'nan')
-    ).sum()
-    print(f'  History: {unique_lids:,} unique license keys')
-    print(f'  History: {nan_lids:,} rows with no license key')
-
     pinellas = pinellas[
-        pinellas['lic_id'].notna() &
-        (pinellas['lic_id'] != '') &
-        (pinellas['lic_id'] != 'nan') &
-        (pinellas['lic_id'] != 'None')
+        pinellas['License ID'].notna() &
+        (pinellas['License ID'].str.strip() != '') &
+        (pinellas['License ID'].str.strip() != 'nan')
     ].copy()
+
+    pinellas['lic_id'] = pinellas['License ID'].str.strip()
 
     pinellas['insp_date'] = pd.to_datetime(
         pinellas['Inspection Date'],
@@ -277,10 +252,8 @@ def build_inspection_history():
             pinellas[col], errors='coerce').fillna(0).astype(int)
 
     if 'V22' in pinellas.columns:
-        pinellas['had_v22'] = (
-            pinellas['V22'].str.strip()
-            .ne('').ne('0').ne('nan')
-        )
+        v22 = pinellas['V22'].fillna('').astype(str).str.strip().str.lower()
+        pinellas['had_v22'] = ~v22.isin(['', '0', 'nan', '0.0'])
     else:
         pinellas['had_v22'] = False
 
