@@ -1,5 +1,5 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-05-21 (session 47 — CleanScore fixes + Inspector Intelligence) by Claude Code*
+*Last updated: 2026-05-21 (session 46 — Reach-In Cooler add-on + field manual page) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
@@ -200,12 +200,6 @@ To force a fresh PWA load after a push: open the URL directly in Safari (not the
 - `build_date` in P[] records will appear after next CI rebuild; existing records have no `build_date` so freshness indicator shows nothing until rebuilt
 
 ## Recent Changes
-- **2026-05-21 (s47 — CleanScore fixes + Inspector Intelligence):**
-  - **CleanScore stats fixes** (`export_cleanscore.py`): Fixed violation rate (was 84% from V22-only count → now ~7.3% using comprehensive Pinellas filter + `ice_confirmed` field). Fixed median inspection interval (73 days → 121 days constant matching build.py model). Fixed repeat rate (0% → 46.8%) calculated from `cit_ice_count`. Added `ICE_MACHINE_NEGATIVES` guard in `categorize_violation()` to block false ice-machine matches on "bags of ice", "placed ice", etc. Fixed short-text guard (`len(text.strip()) < 15 → 'other'`). Fixed county_stats to use `ice_confirmed` for the rate calculation.
-  - **CleanScore index.html bug fixes** (`cleanscore/index.html`): (1) `renderActionBanners()` rewritten — Admin Complaint dark-red banner (priority 0), callback window fixed to 10–28 days after warning, inspection window guarded by `cit_ice_count>0`. (2) `calcScoreWithActions()` — added disposition score caps: complaint ≤40, warning ≤70, closure ≤20. (3) Repeat violation detection extended to handle `true/string/1` plus ice_machine+cit_ice_count≥2 fallback; `repeatBadge` detail panel added to card body. (4) `categorize_violation()` fixes as above.
-  - **Inspector Intelligence feature** (`scrape_dbpr.py`, `export_cleanscore.py`, `cleanscore/index.html`): `scrape_dbpr.py` — added `extract_inspector_name(html)` using regex on raw HTML (not BeautifulSoup); updated `run_full_violations_scrape()` to store `{'violations': [...], 'inspector_name': name}` dict when inspector name found, list format preserved when not found. `export_cleanscore.py` — added `get_narrative_text()` / `get_inspector_name()` helpers handling all three cache formats (string / list / dict); fixed `get_best_narrative()` to handle dict format; added `inspector_name` field to every violation export record; added `build_inspector_analytics()` and `build_inspector_export()` functions that aggregate per-inspector stats (inspection count, avg violations/visit, ice machine citation rate); uploads `cleanscore_inspectors.json` to Supabase Storage. `cleanscore/index.html` — added `INSPECTORS_URL`, `_inspectors` global, `fetchInspectors()`, `renderInspectorSection()`, wired into `renderReport()` after Data Intelligence block, loaded in `init()`.
-  - **Deployment note**: Inspector section will not show data until the scraper runs under the new code and captures inspector names from DBPR pages. The existing `full_inspection_narratives.json` cache has no `inspector_name` fields — inspector cards appear incrementally as daily scraping runs going forward.
-
 - **2026-05-21 (s46 — Reach-In Cooler add-on + field manual page):**
   - **Reach-In Cooler add-on** (`build.py`, `supabase/functions/stripe-checkout/index.ts`): Full `REACH_IN_ENABLED = True` feature launch. Close Deal overlay toggle adds +$50/mo (monthly) or +$40/mo (quarterly) to Year 1 Total and Stripe checkout. Edge Function handles `reach_in` boolean, adds subscription line item using `price_data` (test/live mode compatible — eliminated static price ID dependency). Service log reach-in ATP section gated on `reach_in_service === true` (Bug 3 fix). Reports tab `loadReportClient()` injects `buildReportReachInSection()` between notes and certification block (Bug 2 fix). Stripe payload sends `reach_in: reachInChecked` boolean (Bug 1 fix). `_pending_reach_in` persisted to localStorage before Stripe redirect and restored in `checkStripeReturn()`.
   - **Bug fixes during rollout**: (a) Edge Function ReferenceError — rebase left duplicate reach-in block referencing undeclared `reach_in_price_id` variable; removed. (b) Stripe "No such price" error — static price IDs are live-mode only; switched to `price_data` with `recurring: { interval: 'month' }` matching all other line items. (c) NaN in Reports tab — `+(html_string)` unary `+` coerced the reach-in section HTML to a number; removed leading `+` from injection line.
@@ -361,8 +355,7 @@ See the SQL in the prompt — creates `pic_prospects`, `pic_partners`, adds `use
 
 ## Next Session Priorities
 1. **Verify reach-in end-to-end after next CI build**: (a) Close Deal overlay shows reach-in toggle and Year 1 Total updates; (b) Charge Now with reach-in checked creates Stripe session with reach-in line item (no errors); (c) Service log shows reach-in section only for enrolled clients; (d) Service → Reports shows reach-in ATP table for enrolled clients with logged data (no NaN)
-2. **Verify Inspector Intelligence data populating**: After daily scraper runs, check `cleanscore_inspectors.json` has non-empty `inspectors` array and that "Know Your Inspector" section appears on CleanScore reports for businesses with scraped narratives
-3. **Per-customer report history**: Add a "Reports" sub-tab inside each customer card showing all past service visits with ability to view/print/email any individual report — the visit dropdown in Service → Reports is the interim solution
+2. **Per-customer report history**: Add a "Reports" sub-tab inside each customer card showing all past service visits with ability to view/print/email any individual report — the visit dropdown in Service → Reports is the interim solution
 
 ## iOS PWA Rules (never violate these)
 - **Buttons in injected HTML:** use inline `ontouchend="event.preventDefault();fn()"` + `onclick="fn()"` — NOT `addEventListener` on innerHTML-injected elements
