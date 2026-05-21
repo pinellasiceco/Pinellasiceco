@@ -600,6 +600,20 @@ def get_best_narrative(r, full_narratives):
     return synthesize_violations_from_codes(codes, total_viol, high_viol), 'synthesized'
 
 
+def _has_ice_citation(r):
+    """True if record has a confirmed ice machine citation (handles all field name variants)."""
+    if r.get('ice_confirmed'):
+        return True
+    if r.get('ice_confirmed_dbpr'):
+        return True
+    try:
+        if int(float(r.get('cit_ice_count', 0) or 0)) > 0:
+            return True
+    except (ValueError, TypeError):
+        pass
+    return False
+
+
 def build_violations_export(records, full_narratives=None, inspection_history=None):
     pinellas = [
         r for r in records
@@ -613,8 +627,7 @@ def build_violations_export(records, full_narratives=None, inspection_history=No
         return []
 
     _pinellas_total = len(pinellas)
-    _pinellas_cited = sum(1 for r in pinellas
-                          if r.get('ice_confirmed'))
+    _pinellas_cited = sum(1 for r in pinellas if _has_ice_citation(r))
     _county_rate = (_pinellas_cited / _pinellas_total
                     if _pinellas_total > 0 else 0.069)
 
@@ -710,27 +723,25 @@ def build_partners_export(partner_rows):
 
 def build_stats_export(records, violations_export):
     """Build data intelligence stats from all Pinellas records."""
-    pinellas = [r for r in records if (
-        str(r.get('county_code', '') or '').strip() == '62'
-        or str(r.get('county', '') or '').lower().strip() == 'pinellas'
-        or any(c in str(r.get('city', '') or '').lower()
-               for c in ['clearwater', 'st. petersburg',
-                         'st petersburg', 'largo', 'tarpon',
-                         'dunedin', 'palm harbor', 'safety harbor',
-                         'pinellas park', 'seminole', 'gulfport',
-                         'treasure island', 'madeira beach',
-                         'indian rocks', 'belleair', 'oldsmar'])
-    )]
+    # All records from load_prospects() are Pinellas businesses.
+    # The city/county filter was passing only ~2,661 of 9,400. Use all records.
+    pinellas = records
 
     total_all = len(pinellas)
     if total_all == 0:
-        print('  Stats: no Pinellas records found')
+        print('  Stats: no records found')
         return {}
 
-    total_cited = sum(1 for r in pinellas
-                      if r.get('ice_confirmed'))
-    county_rate = total_cited / total_all \
-        if total_all else 0
+    total_cited = sum(1 for r in pinellas if _has_ice_citation(r))
+    county_rate = total_cited / total_all if total_all else 0
+
+    # Debug: show actual field names on first record so we can confirm
+    if pinellas:
+        sample = pinellas[0]
+        ice_fields = {k: v for k, v in sample.items()
+                      if 'ice' in k.lower() or 'cit' in k.lower()
+                      or 'confirmed' in k.lower()}
+        print(f'  Stats debug — sample record ice fields: {ice_fields}')
 
     print(f'  Stats: {total_all} Pinellas businesses, '
           f'{total_cited} with ice citations '
@@ -744,11 +755,13 @@ def build_stats_export(records, violations_export):
         except (ValueError, TypeError):
             return 0
 
-    once = sum(1 for r in pinellas
+    # Only count businesses with confirmed citations in repeat calculation
+    cited_records = [r for r in pinellas if _has_ice_citation(r)]
+    once = sum(1 for r in cited_records
                if _safe_int(r.get('cit_ice_count')) == 1)
-    repeat = sum(1 for r in pinellas
+    repeat = sum(1 for r in cited_records
                  if _safe_int(r.get('cit_ice_count')) >= 2)
-    chronic = sum(1 for r in pinellas
+    chronic = sum(1 for r in cited_records
                   if _safe_int(r.get('cit_ice_count')) >= 3)
 
     total_cited_for_repeat = once + repeat
