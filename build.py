@@ -20,7 +20,7 @@ TARGET_COUNTIES  = ['Pinellas', 'Hillsborough', 'Pasco',
 MIN_SCORE        = 5   # Very low - include everything, filter in browser
 TODAY            = date.today()
 OUTPUT_FILE      = Path(__file__).parent / 'prospecting_tool.html'
-REACH_IN_ENABLED = False
+REACH_IN_ENABLED = True
 
 # Reach-in cooler add-on Stripe price IDs
 STRIPE_REACH_IN_MONTHLY   = 'price_1TZDEZ1DW5dOU2aa40hWFQsm'
