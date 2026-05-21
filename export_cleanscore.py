@@ -652,6 +652,10 @@ def build_violations_export(records, full_narratives=None, inspection_history=No
         inspector_name = get_inspector_name(full_narratives.get(str(r.get('id', ''))))
 
         insp_date = str(r.get('last_insp') or '')[:10]
+        # Belt-and-suspenders: a citation IS an inspection — use whichever date is newer
+        cit_date = str(r.get('cit_latest') or '')[:10]
+        if cit_date and cit_date > insp_date:
+            insp_date = cit_date
         disposition = str(r.get('last_disp') or '')
 
         lid = str(r.get('id', '') or '').strip()
