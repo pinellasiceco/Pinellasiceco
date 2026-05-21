@@ -224,7 +224,7 @@ def build_inspection_history():
                 raw.columns = _DBPR_COLS[:n]
                 df = raw
             dfs.append(df)
-            print(f'  History: {path} ({len(df):,} rows)')
+            print(f'  History: {path} ({len(df):,} rows, {len(df.columns)} cols)')
         except Exception as e:
             print(f'  History: error {path}: {e}')
 
@@ -288,10 +288,16 @@ def build_inspection_history():
     )
     print(f'  History: {len(pinellas):,} rows after dedup')
 
-    for col in ['Num Total', 'Num High Priority',
-                'Num Intermediate', 'Num Basic']:
-        pinellas[col] = pd.to_numeric(
-            pinellas[col], errors='coerce').fillna(0).astype(int)
+    def _safe_col(df, col_name):
+        if col_name not in df.columns:
+            return pd.Series(0, index=df.index)
+        return pd.to_numeric(df[col_name], errors='coerce').fillna(0)
+
+    pinellas = pinellas.copy()
+    pinellas['Num Total'] = _safe_col(pinellas, 'Num Total').astype(int)
+    pinellas['Num High Priority'] = _safe_col(pinellas, 'Num High Priority').astype(int)
+    pinellas['Num Intermediate'] = _safe_col(pinellas, 'Num Intermediate').astype(int)
+    pinellas['Num Basic'] = _safe_col(pinellas, 'Num Basic').astype(int)
 
     if 'V22' in pinellas.columns:
         pinellas['had_v22'] = (
@@ -324,6 +330,10 @@ def build_inspection_history():
     ]
 
     slim = slim.sort_values(['lic_id', 'date'])
+
+    # V22 is a violation — if had_v22 but num_total is 0, set to 1
+    mask = slim['had_v22'] & (slim['num_total'] == 0)
+    slim.loc[mask, 'num_total'] = 1
 
     history = {}
     for lic_id, group in slim.groupby('lic_id'):
