@@ -146,15 +146,18 @@ Deno.serve(async (req) => {
       });
 
       // REACH-IN COOLER ADD-ON
-      // Only for recurring plans (not one-time)
-      // Uses static Stripe price IDs for the add-on subscription
       if (hasReachIn) {
-        const reachInPriceId = plan === 'quarterly'
-          ? STRIPE_PRICES.reach_in_quarterly
-          : STRIPE_PRICES.reach_in_monthly;
-
+        const reachInMonthly = plan === 'quarterly' ? 40 : 50;
         lineItems.push({
-          price: reachInPriceId,
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: 'Reach-In Cooler Service',
+              description: 'Up to 3 units, same visit — ATP testing included',
+            },
+            unit_amount: reachInMonthly * 100,
+            recurring: { interval: 'month' },
+          },
           quantity: 1,
         });
       }
