@@ -106,6 +106,20 @@ CODE_DESCRIPTIONS = {
     'V51': 'Non-food contact surfaces soiled',
 }
 
+_DBPR_COLS = (
+    ['District', 'County Number', 'County Name',
+     'License Type Code', 'License Number',
+     'Business Name', 'Address', 'City', 'Zip',
+     'Inspection Number', 'Visit Number',
+     'Inspection Class', 'Inspection Type',
+     'Inspection Disposition', 'Inspection Date',
+     'Num Critical', 'Num Noncritical', 'Num Total',
+     'Num High Priority', 'Num Intermediate',
+     'Num Basic', 'PDA Status']
+    + [f'V{i:02d}' for i in range(1, 59)]
+    + ['License ID', 'Visit ID']
+)
+
 
 def infer_business_type(name):
     n = (name or '').lower()
@@ -133,6 +147,154 @@ def load_full_narratives():
     except Exception as e:
         print(f'  Full narratives load error: {e}')
         return {}
+
+
+def build_inspection_history():
+    """
+    Build per-license inspection history from all DBPR historical files.
+    Uses vectorized pandas operations — no iterrows().
+
+    Returns dict keyed by License ID (string):
+    {
+      '1234567': [
+        {
+          'date': '2024-03-15',
+          'disposition': 'Warning Issued',
+          'num_total': 4,
+          'num_high': 1,
+          'num_intermediate': 2,
+          'num_basic': 1,
+          'had_v22': True,
+          'visit_type': 'Routine'
+        },
+        ...  # sorted date-ascending
+      ]
+    }
+    """
+    import pandas as pd
+
+    DATA_FILES = [
+        ('data/3fdinspi_2021.csv', 'csv'),
+        ('data/fdinspi_2122.xlsx', 'xlsx'),
+        ('data/fdinspi_2223.xlsx', 'xlsx'),
+        ('data/fdinspi_2324.xlsx', 'xlsx'),
+        ('data/fdinspi_2425.xlsx', 'xlsx'),
+        ('data/3fdinspi_current.csv', 'csv'),
+    ]
+
+    dfs = []
+    for path, fmt in DATA_FILES:
+        if not os.path.exists(path):
+            print(f'  History: skip {path} (not found)')
+            continue
+        try:
+            if fmt == 'csv':
+                df = pd.read_csv(
+                    path, header=None,
+                    names=_DBPR_COLS,
+                    low_memory=False,
+                    encoding='utf-8',
+                    errors='replace',
+                    dtype=str
+                )
+            else:
+                raw = pd.read_excel(
+                    path, header=None,
+                    engine='openpyxl',
+                    dtype=str
+                )
+                n = min(len(raw.columns), len(_DBPR_COLS))
+                raw = raw.iloc[:, :n]
+                raw.columns = _DBPR_COLS[:n]
+                df = raw
+            dfs.append(df)
+            print(f'  History: {path} ({len(df):,} rows)')
+        except Exception as e:
+            print(f'  History: error {path}: {e}')
+
+    if not dfs:
+        print('  History: no files loaded')
+        return {}
+
+    all_df = pd.concat(dfs, ignore_index=True)
+    print(f'  History: {len(all_df):,} total rows')
+
+    county = all_df['County Number'].str.strip()
+    county_name = all_df['County Name'].str.lower().str.strip()
+    pinellas = all_df[
+        (county == '62') | (county_name == 'pinellas')
+    ].copy()
+    print(f'  History: {len(pinellas):,} Pinellas rows')
+
+    pinellas = pinellas[
+        pinellas['License ID'].notna() &
+        (pinellas['License ID'].str.strip() != '') &
+        (pinellas['License ID'].str.strip() != 'nan')
+    ].copy()
+
+    pinellas['lic_id'] = pinellas['License ID'].str.strip()
+
+    pinellas['insp_date'] = pd.to_datetime(
+        pinellas['Inspection Date'],
+        errors='coerce'
+    )
+    pinellas = pinellas.dropna(subset=['insp_date'])
+
+    pinellas = pinellas.drop_duplicates(
+        subset=['lic_id', 'Inspection Number'],
+        keep='last'
+    )
+    print(f'  History: {len(pinellas):,} rows after dedup')
+
+    for col in ['Num Total', 'Num High Priority',
+                'Num Intermediate', 'Num Basic']:
+        pinellas[col] = pd.to_numeric(
+            pinellas[col], errors='coerce').fillna(0).astype(int)
+
+    if 'V22' in pinellas.columns:
+        v22 = pinellas['V22'].fillna('').astype(str).str.strip().str.lower()
+        pinellas['had_v22'] = ~v22.isin(['', '0', 'nan', '0.0'])
+    else:
+        pinellas['had_v22'] = False
+
+    visit_num = pd.to_numeric(
+        pinellas['Visit Number'], errors='coerce'
+    ).fillna(1)
+    pinellas['visit_type'] = visit_num.apply(
+        lambda x: 'Callback' if x > 1 else 'Routine'
+    )
+
+    pinellas['date_str'] = pinellas['insp_date'].dt.strftime('%Y-%m-%d')
+
+    keep_cols = [
+        'lic_id', 'date_str', 'Inspection Disposition',
+        'Num Total', 'Num High Priority',
+        'Num Intermediate', 'Num Basic',
+        'had_v22', 'visit_type'
+    ]
+    slim = pinellas[keep_cols].copy()
+    slim.columns = [
+        'lic_id', 'date', 'disposition',
+        'num_total', 'num_high', 'num_intermediate',
+        'num_basic', 'had_v22', 'visit_type'
+    ]
+
+    slim = slim.sort_values(['lic_id', 'date'])
+
+    history = {}
+    for lic_id, group in slim.groupby('lic_id'):
+        records = group.drop(columns=['lic_id']).to_dict('records')
+        for rec in records:
+            rec['num_total'] = int(rec['num_total'])
+            rec['num_high'] = int(rec['num_high'])
+            rec['num_intermediate'] = int(rec['num_intermediate'])
+            rec['num_basic'] = int(rec['num_basic'])
+            rec['had_v22'] = bool(rec['had_v22'])
+            rec['disposition'] = str(rec['disposition'] or '').strip()
+        history[str(lic_id)] = records
+
+    print(f'  History: {len(history):,} unique licenses')
+    return history
 
 
 def categorize_violation(text):
@@ -370,7 +532,7 @@ def get_best_narrative(r, full_narratives):
     return synthesize_violations_from_codes(codes, total_viol, high_viol), 'synthesized'
 
 
-def build_violations_export(records, full_narratives=None):
+def build_violations_export(records, full_narratives=None, inspection_history=None):
     pinellas = [
         r for r in records
         if str(r.get('county', '')).lower() == 'pinellas'
@@ -407,13 +569,13 @@ def build_violations_export(records, full_narratives=None):
         insp_date = str(r.get('last_insp') or '')[:10]
         disposition = str(r.get('last_disp') or '')
 
-        history = []
-        if insp_date:
-            history.append({
-                'date': insp_date,
-                'disposition': disposition,
-                'violation_count': total_viol,
-            })
+        lid = str(r.get('id', '') or '').strip()
+        biz_history = []
+        if inspection_history and lid:
+            biz_history = inspection_history.get(lid, [])
+            if not biz_history:
+                lic = str(r.get('license', '') or '').strip()
+                biz_history = inspection_history.get(lic, [])
 
         export.append({
             'id': str(r.get('id', '')),
@@ -427,7 +589,14 @@ def build_violations_export(records, full_narratives=None):
             'violations': violations,
             'violation_count': total_viol,
             'narrative_source': narrative_source,
-            'inspection_history': history,
+            'inspection_history': biz_history,
+            'inspection_count': len(biz_history),
+            'first_inspection_date': (
+                biz_history[0]['date'] if biz_history else None
+            ),
+            'v22_inspection_dates': [
+                h['date'] for h in biz_history if h.get('had_v22')
+            ],
             'county_stats': county_stats,
         })
 
@@ -640,9 +809,25 @@ def main():
     full_narratives = load_full_narratives()
     partner_rows = load_partners()
 
-    violations = build_violations_export(records, full_narratives)
+    print('Building inspection history...')
+    inspection_history = build_inspection_history()
+    print(f'  {len(inspection_history):,} licenses with history')
+
+    violations = build_violations_export(
+        records, full_narratives,
+        inspection_history=inspection_history
+    )
     if violations:
         upload_to_storage('cleanscore_violations.json', violations)
+        total_with_history = sum(
+            1 for r in violations if r.get('inspection_history')
+        )
+        avg_inspections = (
+            sum(len(r.get('inspection_history', [])) for r in violations)
+            / max(len(violations), 1)
+        )
+        print(f'  Businesses with history: {total_with_history:,}')
+        print(f'  Avg inspections per business: {avg_inspections:.1f}')
 
     partners = build_partners_export(partner_rows)
     if partners:
