@@ -3950,6 +3950,7 @@ async function generateStripeCheckout(){
     var anonKey=_SUPABASE_ANON_KEY||localStorage.getItem('pic_supabase_key')||'';
     if(!supabaseUrl||!anonKey){throw new Error('Supabase not configured — check Settings');}
     var fnUrl=supabaseUrl+'/functions/v1/stripe-checkout';
+    var reachInChecked=REACH_IN_ENABLED&&!!(document.getElementById('co-reach-in')||{}).checked;
     var resp=await fetch(fnUrl,{
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+anonKey},
@@ -3962,7 +3963,8 @@ async function generateStripeCheckout(){
         client_city:p?(p.city||''):'',
         prospect_id:pid||'',
         flex:flex,
-        reach_in_price_id:REACH_IN_ENABLED&&(document.getElementById('co-reach-in')||{}).checked?(plan==='quarterly'?'%%STRIPE_REACH_IN_QUARTERLY%%':'%%STRIPE_REACH_IN_MONTHLY%%'):null,
+        reach_in:reachInChecked,
+        reach_in_price_id:reachInChecked?(plan==='quarterly'?'%%STRIPE_REACH_IN_QUARTERLY%%':'%%STRIPE_REACH_IN_MONTHLY%%'):null,
       }),
     });
     var data=await resp.json();
@@ -8904,6 +8906,7 @@ function openServiceLog(id){
   const p=P.find(x=>x.id===id);
   const c=customers[id]||{};
   if(!p)return;
+  var hasRiService=REACH_IN_ENABLED&&!!(customers[id]&&customers[id].reach_in_service===true);
 
   const brand=c.machine_brand||'';
   const lastSvc=c.service_history&&c.service_history.length
@@ -8972,8 +8975,8 @@ function openServiceLog(id){
     +'<textarea id="svc-notes" rows="3" placeholder="Machine condition, issues found, recommendations..."'
       +' style="width:100%;padding:8px;border:1px solid var(--brd);border-radius:7px;font-size:11px;font-family:inherit;background:var(--surf);color:var(--txt);outline:none;resize:none;margin-bottom:10px"></textarea>'
 
-    // Reach-in cooler ATP (feature-flagged)
-    +(REACH_IN_ENABLED?
+    // Reach-in cooler ATP (subscribers only)
+    +(hasRiService?
       '<div style="font-size:9px;font-weight:700;color:var(--sub);text-transform:uppercase;margin-bottom:6px">Reach-In Cooler ATP Testing <span style="font-weight:400;font-style:italic">(Optional)</span></div>'
       +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">'
         +'<button id="ri-pass-btn" data-ri="pass" onclick="setRiResult(this.dataset.ri)" ontouchend="event.preventDefault();setRiResult(this.dataset.ri)" style="padding:8px;border:1px solid var(--brd);border-radius:7px;background:var(--surf);color:var(--sub);font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2714; Pass (&#x2264;10 RLU)</button>'
@@ -9031,7 +9034,7 @@ function openServiceLog(id){
   // Reach-in state reset — must run every open, not just on close
   resetRiState();
   resetRiDom();
-  if(REACH_IN_ENABLED){
+  if(hasRiService){
     var riContainer=document.getElementById('ri-units');
     if(riContainer)riContainer.appendChild(buildRiUnitRow(1));
   }
@@ -9961,6 +9964,8 @@ function loadReportClient(){
       '<div style="font-size:8px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Technician Notes &amp; Observations</div>'+
       '<textarea id="report-notes-'+id+'" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;font-size:11px;font-family:inherit;color:#1e293b;background:#fff;outline:none;resize:none;line-height:1.6" rows="3" placeholder="Machine condition, scale level, biofilm observed, recommendations, items to monitor...">'+(c.report_notes||lastSvcEntry.notes||'')+'</textarea>'+
     '</div>'+
+
+    +(REACH_IN_ENABLED?buildReportReachInSection(lastSvcEntry.reach_in||null,c.reach_in_service===true):'')+
 
     // ── CERTIFICATION BLOCK ──────────────────────────────────────────────
     '<div style="background:#0f1f38;border-radius:8px;padding:12px;margin-bottom:14px">'+
