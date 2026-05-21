@@ -3964,7 +3964,6 @@ async function generateStripeCheckout(){
         prospect_id:pid||'',
         flex:flex,
         reach_in:reachInChecked,
-        reach_in_price_id:reachInChecked?(plan==='quarterly'?'%%STRIPE_REACH_IN_QUARTERLY%%':'%%STRIPE_REACH_IN_MONTHLY%%'):null,
       }),
     });
     var data=await resp.json();
