@@ -658,7 +658,6 @@ def enrich_with_citations(records, citations):
     if not citations:
         return
     enriched = 0
-    _date_synced_count = 0
     for rec in records:
         # Match on string version of the prospect id (== license_id in scraper output)
         lid = str(rec.get('id', '')).strip()
@@ -671,7 +670,6 @@ def enrich_with_citations(records, citations):
         # Citations ARE inspections — update last_insp if citation date is newer
         if rec['cit_latest'] and rec['cit_latest'] > rec.get('last_insp', ''):
             rec['last_insp'] = rec['cit_latest']
-            _date_synced_count += 1
         rec['cit_earliest']       = c['earliest_date']
         rec['cit_days_since']     = c['days_since']
         rec['cit_observation']    = c['best_observation']
@@ -687,8 +685,6 @@ def enrich_with_citations(records, citations):
         rec['ice_gold'] = is_gold_lead(rec)
         enriched += 1
     print(f'  Enriched {enriched} records with DBPR citation data')
-    if _date_synced_count > 0:
-        print(f'  Date sync: {_date_synced_count} records updated from citation date')
 
 
 def account_tier(seats, rank_code, machines, chronic, confirmed):
