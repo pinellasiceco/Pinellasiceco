@@ -9964,7 +9964,7 @@ function loadReportClient(){
       '<textarea id="report-notes-'+id+'" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;font-size:11px;font-family:inherit;color:#1e293b;background:#fff;outline:none;resize:none;line-height:1.6" rows="3" placeholder="Machine condition, scale level, biofilm observed, recommendations, items to monitor...">'+(c.report_notes||lastSvcEntry.notes||'')+'</textarea>'+
     '</div>'+
 
-    +(REACH_IN_ENABLED?buildReportReachInSection(lastSvcEntry.reach_in||null,c.reach_in_service===true):'')+
+    (REACH_IN_ENABLED?buildReportReachInSection(lastSvcEntry.reach_in||null,c.reach_in_service===true):'')+
 
     // ── CERTIFICATION BLOCK ──────────────────────────────────────────────
     '<div style="background:#0f1f38;border-radius:8px;padding:12px;margin-bottom:14px">'+
