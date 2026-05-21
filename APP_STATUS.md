@@ -1,5 +1,5 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-05-21 (session 47 — CleanScore fixes + Inspector Intelligence + stats fix) by Claude Code*
+*Last updated: 2026-05-21 (session 48 — stats rate fix, date sync, timeline chart) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
@@ -10,7 +10,7 @@
 ## What's Working ✅
 
 ### Deployment
-- Daily cron: `0 14 * * *` (10am ET) in `rebuild.yml` — runs ~3h after DBPR publishes (~6:48am ET confirmed via Last-Modified header)
+- Daily cron: `0 13 * * *` (9am ET) in `rebuild.yml` — runs ~2h after DBPR publishes (~6:48am ET confirmed via Last-Modified header)
 - MAX_RECORDS=500 per daily scrape run (~14 min at 1.5s delay)
 - Scraper delay: MIN_DELAY=1.5s, MAX_DELAY=3.0s (~40% faster than previous 2.5/4.5s)
 - Commit uses `--allow-empty` — always pushes even if no data changes
@@ -200,6 +200,13 @@ To force a fresh PWA load after a push: open the URL directly in Safari (not the
 - `build_date` in P[] records will appear after next CI rebuild; existing records have no `build_date` so freshness indicator shows nothing until rebuilt
 
 ## Recent Changes
+- **2026-05-21 (s48 — stats rate fix, date sync, timeline chart):**
+  - **Stats rate fixed** (`export_cleanscore.py`): `_has_ice_citation()` now uses only `ice_confirmed_dbpr` / `ice_confirmed` — removed `cit_ice_count` fallback that was overcounting 1,761 businesses instead of correct ~681. Expected CI output: `~681 with ice citations (~7.2% rate)`, repeat probability `~46.8%`. Removed debug print statement.
+  - **Date sync confirmed** (`build.py`): `enrich_with_citations()` already had `last_insp` ← `cit_latest` sync from s47. Added `_date_synced_count` counter that prints `Date sync: N records updated from citation date` in CI log — confirms sync is running (expect 500–1,000). Sync runs before `build_html()` so `P[]` in `index.html` gets updated dates.
+  - **Belt-and-suspenders date fix** (`export_cleanscore.py`): `build_violations_export()` now also directly compares `cit_latest` against `last_insp` when setting `last_inspection_date` — ensures exported date is always the more recent of the two, even if the `enrich_with_citations()` sync didn't propagate through `load_prospects()` JSON parse.
+  - **Cron moved to 9am ET** (`rebuild.yml`): `0 14 * * *` → `0 13 * * *`. Committed separately (workflow-first pattern).
+  - **Inspection history chart fixed** (`export_cleanscore.py`): `_safe_col()` helper prevents `KeyError` when xlsx files have fewer columns than `_DBPR_COLS` (Num Total is col index 17 — not present in all files). Added column count to per-file debug print. `had_v22=True` + `num_total=0` → `num_total` bumped to 1 (V22 is a violation — num_total can't be 0).
+
 - **2026-05-21 (s47 — CleanScore fixes + Inspector Intelligence + stats fix):**
   - **CleanScore stats fixes** (`export_cleanscore.py`): (1) Added module-level `_has_ice_citation()` helper checking `ice_confirmed`, `ice_confirmed_dbpr`, and `cit_ice_count>0` — handles all field name variants. (2) `build_stats_export()`: removed narrow city/county filter that was passing only 2,661 of 9,400 records — now uses `pinellas = records` (all records from P[] are Pinellas). (3) Fixed repeat rate denominator: `once`/`repeat`/`chronic` now calculated from `cited_records` filtered by `_has_ice_citation()` — prevents businesses with `cit_ice_count=0` inflating denominator to 64.6%. (4) `build_violations_export()`: `county_stats` now uses `_has_ice_citation()`. (5) `categorize_violation()`: `ICE_MACHINE_NEGATIVES` guard, short-text guard. Action banner and score cap fixes in `cleanscore/index.html`.
   - **Inspector Intelligence feature** (`scrape_dbpr.py`, `export_cleanscore.py`, `cleanscore/index.html`): `extract_inspector_name()` regex on raw HTML; cache stores `{violations, inspector_name}` dict when name found; `get_inspector_name()` helper; `inspector_name` field in violation export; `build_inspector_analytics()` + `build_inspector_export()` upload `cleanscore_inspectors.json`; CleanScore "Know Your Inspector" section shows inspector stats card.
@@ -360,10 +367,11 @@ See the SQL in the prompt — creates `pic_prospects`, `pic_partners`, adds `use
 - If Supabase is not configured (no URL/key in env or localStorage), app runs in local-only mode — login screen is skipped, localStorage data used directly. Zero regression for existing usage.
 
 ## Next Session Priorities
-1. **Verify stats after next CI rebuild**: CI log should show `Stats: ~9,400 Pinellas businesses, ~681 with ice citations (~7%)` and `repeat probability ~46.8%`. Last Inspected dates on DBPR-cited prospects should match or be close to their `cit_latest` date.
-2. **Verify reach-in end-to-end after next CI build**: (a) Close Deal overlay shows reach-in toggle; (b) Charge Now creates Stripe session with reach-in line item; (c) Service log shows reach-in section only for enrolled clients; (d) Reports tab shows reach-in ATP table for enrolled clients with data (no NaN)
-3. **Verify Inspector Intelligence data populating**: After daily scraper runs, check `cleanscore_inspectors.json` has non-empty `inspectors` array and "Know Your Inspector" section appears on CleanScore reports for businesses with scraped narratives
-4. **Per-customer report history**: Add a "Reports" sub-tab inside each customer card showing all past service visits with ability to view/print/email any individual report
+1. **Verify stats after next CI rebuild**: CI log should show `Stats: ~9,400 Pinellas businesses, ~681 with ice citations (~7.2%)`, `repeat probability ~46.8%`, and `Date sync: N records updated from citation date` (N > 0). Last Inspected on DBPR-cited prospects should match `cit_latest`.
+2. **Verify inspection timeline chart**: Open a business with inspection history in CleanScore. Bars should have visible height (not 2px lines). Red bars for V22 visits, amber for other violations, green for clean. Trend text should reflect had_v22 history.
+3. **Verify reach-in end-to-end after next CI build**: (a) Close Deal overlay shows reach-in toggle; (b) Charge Now creates Stripe session with reach-in line item; (c) Service log shows reach-in section only for enrolled clients; (d) Reports tab shows reach-in ATP table for enrolled clients with data (no NaN)
+4. **Verify Inspector Intelligence data populating**: After daily scraper runs, check `cleanscore_inspectors.json` has non-empty `inspectors` array and "Know Your Inspector" section appears on CleanScore reports
+5. **Per-customer report history**: Add a "Reports" sub-tab inside each customer card showing all past service visits with ability to view/print/email any individual report
 
 ## iOS PWA Rules (never violate these)
 - **Buttons in injected HTML:** use inline `ontouchend="event.preventDefault();fn()"` + `onclick="fn()"` — NOT `addEventListener` on innerHTML-injected elements
