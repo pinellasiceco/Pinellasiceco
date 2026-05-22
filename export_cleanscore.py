@@ -611,9 +611,13 @@ def get_best_narrative(r, full_narratives):
 
 
 def _has_ice_citation(r):
-    """True if record has a confirmed ice machine citation (uses precise confirmed flags only)."""
-    # cit_ice_count overcounts — it includes all V22 history, not just confirmed inspections
-    return bool(r.get('ice_confirmed_dbpr') or r.get('ice_confirmed'))
+    """True only when ice machine violation is documented with observation text.
+
+    ice_confirmed_dbpr alone overcounts — it equals cit_ice_count>0 (1,761 businesses).
+    Requiring cit_observation filters to businesses where the violation text is on record,
+    giving ~703 businesses (~7.5%) which matches the expected county rate.
+    """
+    return bool(r.get('ice_confirmed_dbpr') and r.get('cit_observation'))
 
 
 def build_violations_export(records, full_narratives=None, inspection_history=None):
