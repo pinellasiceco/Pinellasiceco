@@ -1824,38 +1824,27 @@ def push_to_supabase(table, data):
         return False
     try:
         import requests as _req
-        headers = {
-            'Content-Type': 'application/json',
-            'apikey': _SUPABASE_KEY_ENV,
-            'Authorization': f'Bearer {_SUPABASE_KEY_ENV}',
-        }
-        payload = {
-            'user_id': _SUPABASE_USER_ID,
-            'data': data,
-            'built_at': date.today().isoformat(),
-        }
-        # PATCH updates existing row; returns updated rows as JSON array
-        r = _req.patch(
-            f'{_SUPABASE_URL_ENV}/rest/v1/{table}?user_id=eq.{_SUPABASE_USER_ID}',
-            headers=headers,
-            json={'data': data, 'built_at': date.today().isoformat()},
-            timeout=30
-        )
-        if r.status_code == 200 and r.json():
-            print(f'  ✓ Updated {len(data)} records in {table}')
-            return True
-        # No existing row — insert
         r = _req.post(
             f'{_SUPABASE_URL_ENV}/rest/v1/{table}',
-            headers=headers,
-            json=payload,
+            headers={
+                'Content-Type': 'application/json',
+                'apikey': _SUPABASE_KEY_ENV,
+                'Authorization': f'Bearer {_SUPABASE_KEY_ENV}',
+                'Prefer': 'resolution=merge-duplicates',
+            },
+            json={
+                'user_id': _SUPABASE_USER_ID,
+                'data': data,
+                'built_at': date.today().isoformat(),
+            },
             timeout=30
         )
         if r.status_code in (200, 201):
-            print(f'  ✓ Inserted {len(data)} records into {table}')
+            print(f'  ✓ Pushed {len(data)} records to {table}')
             return True
-        print(f'  ✗ Supabase push failed ({table}): {r.status_code} {r.text[:200]}')
-        return False
+        else:
+            print(f'  ✗ Supabase push failed ({table}): {r.status_code} {r.text[:200]}')
+            return False
     except Exception as e:
         print(f'  ✗ Supabase push error ({table}): {e}')
         return False
