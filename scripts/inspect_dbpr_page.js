@@ -1,24 +1,86 @@
 /**
- * DBPR Inspector Name Diagnostic
+ * DBPR Inspector Name Diagnostic — Phase 2
  *
- * Fetches one DBPR inspection detail page with a real Chromium browser,
- * intercepts all network requests, and dumps the rendered DOM text.
+ * Checks multiple DBPR pages to find where (if anywhere) inspector names appear:
+ *   1. inspectionDetail.asp         — individual violation detail (confirmed: no name)
+ *   2. LicenseDetail.asp            — license profile page with inspection history list
+ *   3. wl11.asp (search results)    — license search results page
  *
- * Run from repo root:
- *   PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers node scripts/inspect_dbpr_page.js
- *
- * Or if browsers are in the default location:
- *   node scripts/inspect_dbpr_page.js
- *
- * Output tells us:
- *   1. Whether inspector name appears anywhere in the rendered page text
- *   2. Whether any AJAX/fetch calls fire after initial load (and to what URLs)
+ * Run: node scripts/inspect_dbpr_page.js
  */
 
 const { chromium } = require('@playwright/test');
 
-const TERMS_URL  = 'https://www.myfloridalicense.com/insptermsofuse.asp';
-const DETAIL_URL = 'https://www.myfloridalicense.com/inspectionDetail.asp?InspVisitID=13624053';
+const TERMS_URL = 'https://www.myfloridalicense.com/insptermsofuse.asp';
+
+// LA QUINTA INN — License SEA6215501, License ID 6029810, Visit ID 13624053
+const PAGES = [
+  {
+    label: 'License Detail (by numeric ID)',
+    url: 'https://www.myfloridalicense.com/LicenseDetail.asp?SID=&id=6029810',
+  },
+  {
+    label: 'License Search Results (by license number)',
+    url: 'https://www.myfloridalicense.com/wl11.asp?mode=0&SID=&brd=&typ=&LicNumb=SEA6215501&LicType=&CtyCode=&bus=&add=&cty=&stt=&zip=&con=&app=&dis=&disDate=&expDate=&actCode=&Action=Lic+Search&search=Y',
+  },
+  {
+    label: 'Inspection Search (by license number)',
+    url: 'https://www.myfloridalicense.com/inspectionSearch.asp?inspSearchType=LicenseNumber&inspSearchValue=SEA6215501&Action=Search',
+  },
+  {
+    label: 'Inspection Detail (known Visit ID — baseline)',
+    url: 'https://www.myfloridalicense.com/inspectionDetail.asp?InspVisitID=13624053',
+  },
+];
+
+async function checkPage(page, label, url, allRequests) {
+  console.log(`\n${'='.repeat(60)}`);
+  console.log(`PAGE: ${label}`);
+  console.log(`URL:  ${url}`);
+  console.log('='.repeat(60));
+
+  const pageRequests = [];
+  const handler = req => {
+    const type = req.resourceType();
+    if (['xhr', 'fetch', 'document'].includes(type)) {
+      pageRequests.push({ type, url: req.url(), method: req.method() });
+      allRequests.push({ label, type, url: req.url(), method: req.method() });
+    }
+  };
+  page.on('request', handler);
+
+  try {
+    await page.goto(url, { waitUntil: 'networkidle', timeout: 30000 });
+    await page.waitForTimeout(2000);
+  } catch (e) {
+    console.log(`  ERROR loading page: ${e.message}`);
+    page.off('request', handler);
+    return;
+  }
+  page.off('request', handler);
+
+  const bodyText = await page.evaluate(() => document.body.innerText);
+
+  // Print full text
+  console.log('\n--- RENDERED TEXT ---');
+  console.log(bodyText.substring(0, 4000));
+  if (bodyText.length > 4000) console.log(`  ... (${bodyText.length} chars total, truncated)`);
+
+  // Network requests beyond the initial document load
+  const extra = pageRequests.filter(r => r.type !== 'document');
+  if (extra.length) {
+    console.log('\n--- AJAX/FETCH REQUESTS ---');
+    extra.forEach(r => console.log(`  [${r.type}] ${r.method} ${r.url}`));
+  }
+
+  // Inspector name scan — exclude common observation text phrases
+  const NOISE = /inspector (discussed|advised|noted|observed|verified|reviewed|corrected|instructed|educated|checked|was|will|has|had|found|determined|conducted|performed|identified)/i;
+  const lines = bodyText.split('\n').filter(l => l.trim());
+  const hits = lines.filter(l => /inspector/i.test(l) && !NOISE.test(l));
+  console.log('\n--- INSPECTOR MENTIONS (filtered) ---');
+  hits.forEach(l => console.log(' ', l.trim()));
+  if (!hits.length) console.log('  (none)');
+}
 
 (async () => {
   const browser = await chromium.launch({ headless: true });
@@ -26,47 +88,18 @@ const DETAIL_URL = 'https://www.myfloridalicense.com/inspectionDetail.asp?InspVi
     userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
   });
   const page = await context.newPage();
+  const allRequests = [];
 
-  // Collect every network request the page fires
-  const requests = [];
-  page.on('request', req => {
-    const type = req.resourceType();
-    if (['xhr', 'fetch', 'document'].includes(type)) {
-      requests.push({ type, url: req.url(), method: req.method() });
-    }
-  });
-
-  console.log('Step 1: Loading terms page (session init)...');
+  console.log('Initialising session (terms page)...');
   await page.goto(TERMS_URL, { waitUntil: 'networkidle', timeout: 30000 });
-  console.log('  Terms page loaded.\n');
+  console.log('Session ready.\n');
 
-  console.log('Step 2: Loading inspection detail page...');
-  await page.goto(DETAIL_URL, { waitUntil: 'networkidle', timeout: 30000 });
-  // Extra wait for any deferred JS
-  await page.waitForTimeout(3000);
-  console.log('  Detail page loaded.\n');
+  for (const { label, url } of PAGES) {
+    await checkPage(page, label, url, allRequests);
+  }
 
-  // Dump full rendered text
-  const bodyText = await page.evaluate(() => document.body.innerText);
-  console.log('=== FULL RENDERED PAGE TEXT ===');
-  console.log(bodyText);
-  console.log('=== END PAGE TEXT ===\n');
-
-  // Report all network requests
-  console.log('=== NETWORK REQUESTS FIRED ===');
-  requests.forEach(r => console.log(`  [${r.type}] ${r.method} ${r.url}`));
-  if (requests.length === 0) console.log('  (none beyond initial document load)');
-  console.log('=== END NETWORK REQUESTS ===\n');
-
-  // Quick scan for inspector-looking content
-  const lines = bodyText.split('\n').filter(l => l.trim());
-  const inspectorLines = lines.filter(l =>
-    /inspector/i.test(l) && !/inspector (discussed|advised|noted|observed|verified|reviewed|corrected|instructed|educated|checked)/i.test(l)
-  );
-  console.log('=== LINES MENTIONING INSPECTOR (filtered) ===');
-  inspectorLines.forEach(l => console.log(' ', l.trim()));
-  if (inspectorLines.length === 0) console.log('  (none found outside violation text)');
-  console.log('=== END ===');
+  console.log('\n\n=== SUMMARY: ALL NETWORK REQUESTS ACROSS ALL PAGES ===');
+  allRequests.forEach(r => console.log(`  [${r.label}] [${r.type}] ${r.method} ${r.url}`));
 
   await browser.close();
 })();
