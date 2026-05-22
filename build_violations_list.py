@@ -42,6 +42,16 @@ def main():
             header = _DBPR_COLS  # CSV has no header row — first row is data
             print(f'  Reading {input_file}...')
             print(f'  Using column headers: {", ".join(header[:5])}...')
+            # Diagnostic: check actual column count vs our mapping
+            first_row = next(reader, [])
+            actual_cols = len(first_row)
+            mapped_cols = len(_DBPR_COLS)
+            print(f'  CSV actual columns: {actual_cols} | mapped: {mapped_cols}')
+            if actual_cols > mapped_cols:
+                extra = first_row[mapped_cols:]
+                print(f'  UNMAPPED COLUMNS (potential inspector/extra data): {extra}')
+            # Reset — re-read file from start including first row
+            f.seek(0)
 
             pinellas_count = 0
             for row in reader:
