@@ -1817,44 +1817,112 @@ _SUPABASE_KEY_ENV  = os.environ.get('SUPABASE_SERVICE_KEY', '').strip()  # servi
 _SUPABASE_ANON_ENV = os.environ.get('SUPABASE_ANON_KEY', '').strip()     # public anon key (baked into HTML)
 _SUPABASE_USER_ID  = os.environ.get('SUPABASE_USER_ID', '').strip()
 
-def push_to_supabase(table, data):
-    """Push a data payload to a Supabase table using the service role key."""
+def push_to_supabase(table, data, batch_size=500):
+    """Push data to Supabase.
+
+    pic_prospects: batched POST (500 rows/chunk) with merge-duplicates upsert to
+    avoid statement timeouts on 9,400-row payloads.
+
+    pic_partners and other single-row tables: PATCH-first with return=representation
+    so we can detect whether any row was found; falls back to POST on empty response.
+
+    NOTE: pic_prospects batching requires the table to have a prospect_id column and
+    UNIQUE(user_id, prospect_id) constraint. Run the schema migration in Supabase SQL
+    Editor before enabling this push:
+        alter table pic_prospects
+          drop constraint if exists pic_prospects_user_id_key;
+        alter table pic_prospects
+          add column if not exists prospect_id text;
+        alter table pic_prospects
+          add constraint pic_prospects_user_id_prospect_id_key
+          unique (user_id, prospect_id);
+    Until the migration runs, the POST batches will fail (duplicate user_id). The
+    frontend loadCloudData() falls back to embedded P[] when Supabase read fails.
+    """
     if not _SUPABASE_URL_ENV or not _SUPABASE_KEY_ENV or not _SUPABASE_USER_ID:
-        print(f'  Supabase not configured — skipping {table} push')
-        return False
+        print(f'  Supabase push skipped ({table}): missing credentials')
+        return
+
+    import requests as _req
+
+    base_headers = {
+        'apikey': _SUPABASE_KEY_ENV,
+        'Authorization': f'Bearer {_SUPABASE_KEY_ENV}',
+        'Content-Type': 'application/json',
+    }
+
+    if table == 'pic_prospects':
+        # Batch into chunks to avoid statement timeout on 9,400-row JSON blobs
+        upsert_headers = {**base_headers, 'Prefer': 'resolution=merge-duplicates'}
+        total = len(data)
+        success = 0
+        failed = 0
+        for i in range(0, total, batch_size):
+            chunk = data[i:i + batch_size]
+            payload = [
+                {
+                    'user_id': _SUPABASE_USER_ID,
+                    'prospect_id': str(r.get('id', f'p{i + j}')),
+                    'data': r,
+                    'updated_at': date.today().isoformat(),
+                }
+                for j, r in enumerate(chunk)
+            ]
+            try:
+                resp = _req.post(
+                    f'{_SUPABASE_URL_ENV}/rest/v1/{table}',
+                    headers=upsert_headers,
+                    json=payload,
+                    timeout=30,
+                )
+                if resp.status_code in (200, 201):
+                    success += len(chunk)
+                else:
+                    failed += len(chunk)
+                    print(f'  Batch {i // batch_size + 1} failed: '
+                          f'{resp.status_code} {resp.text[:100]}')
+            except Exception as e:
+                failed += len(chunk)
+                print(f'  Batch {i // batch_size + 1} error: {e}')
+        status = '✓' if failed == 0 else '⚠'
+        print(f'  {status} pic_prospects: {success}/{total} pushed'
+              + (f', {failed} failed' if failed else ''))
+        return
+
+    # Single-row tables (pic_partners, etc.): PATCH-first, POST if no row exists.
+    # Prefer: return=representation makes PATCH return 200 + updated rows so we can
+    # distinguish "rows updated" (non-empty JSON) from "no rows matched" (empty []).
+    payload = {
+        'user_id': _SUPABASE_USER_ID,
+        'data': data,
+        'built_at': date.today().isoformat(),
+    }
     try:
-        import requests as _req
-        headers = {
-            'Content-Type': 'application/json',
-            'apikey': _SUPABASE_KEY_ENV,
-            'Authorization': f'Bearer {_SUPABASE_KEY_ENV}',
-        }
-        # PATCH updates the existing row; avoids 409 unique-constraint errors on re-push
+        patch_headers = {**base_headers, 'Prefer': 'return=representation'}
         r = _req.patch(
             f'{_SUPABASE_URL_ENV}/rest/v1/{table}?user_id=eq.{_SUPABASE_USER_ID}',
-            headers=headers,
-            json={'data': data, 'built_at': date.today().isoformat()},
-            timeout=30,
+            headers=patch_headers,
+            json=payload,
+            timeout=15,
         )
         if r.status_code == 200 and r.json():
-            print(f'  ✓ Updated {len(data)} records in {table}')
-            return True
-        # No existing row — insert
+            n = len(data) if isinstance(data, list) else 1
+            print(f'  ✓ {table}: updated ({n} records)')
+            return
+        # Empty response means no row matched the filter — insert instead
+        post_headers = {**base_headers, 'Prefer': 'resolution=merge-duplicates'}
         r = _req.post(
             f'{_SUPABASE_URL_ENV}/rest/v1/{table}',
-            headers=headers,
-            json={'user_id': _SUPABASE_USER_ID, 'data': data,
-                  'built_at': date.today().isoformat()},
-            timeout=30,
+            headers=post_headers,
+            json=payload,
+            timeout=15,
         )
         if r.status_code in (200, 201):
-            print(f'  ✓ Inserted {len(data)} records into {table}')
-            return True
-        print(f'  ✗ Supabase push failed ({table}): {r.status_code} {r.text[:200]}')
-        return False
+            print(f'  ✓ {table}: inserted')
+        else:
+            print(f'  ✗ {table} push failed: {r.status_code} {r.text[:120]}')
     except Exception as e:
-        print(f'  ✗ Supabase push error ({table}): {e}')
-        return False
+        print(f'  ✗ {table} error: {e}')
 
 def build_html(records, partners=None):
     data_js     = json.dumps(records, separators=(',',':')).replace('`', '\\u0060')
