@@ -4160,7 +4160,7 @@ function showCard(id){
   var factRows=[
     ['Predicted Next',p.pred_next||'—','#1e293b'],
     ['Days Until',dL(p.days_until),'#1e293b'],
-    ['Last Inspected',p.last_insp||'—','#1e293b'],
+    ['Last Inspected',(p.cit_latest&&p.cit_latest>(p.last_insp||'')?p.cit_latest:p.last_insp)||'—','#1e293b'],
     ['Inspections on File',p.n_insp,'#1e293b'],
     ['Ice Violations',p.ice_count>0?p.ice_count+'x flagged':'None',p.ice_count>0?'#dc2626':'#059669'],
     p.ice_confirmed_dbpr?['DBPR Citations',(p.cit_ice_count||0)+'x confirmed'+(p.cit_latest?' ('+p.cit_latest+')':''),'#6d28d9']:null,
@@ -4670,7 +4670,7 @@ function openM(id){
     // Timing
     ['Predicted Next',   p.pred_next,''],
     ['Days Until',       dL(p.days_until),''],
-    ['Last Inspected',   p.last_insp,''],
+    ['Last Inspected',(p.cit_latest&&p.cit_latest>(p.last_insp||'')?p.cit_latest:p.last_insp)||'',''],
     ['Days Since Insp.', p.days_since+'d',''],
     ['Inspections on File',p.n_insp,''],
     // Ice intelligence
