@@ -208,34 +208,16 @@ class InspectionParser(HTMLParser):
 
 # ── Inspector name extraction ─────────────────────────────────────────────
 def extract_inspector_name(html):
-    """Extract inspector name from DBPR inspection detail page using regex.
+    """Extract inspector name from DBPR inspection detail page.
 
-    DBPR typically renders names in ALL CAPS (e.g. 'JOHN SMITH'). All
-    patterns use re.IGNORECASE and the result is normalised to Title Case.
+    inspectionDetail.asp does NOT include a labeled Inspector Name field in
+    its static HTML. The word 'Inspector' appears only inside violation
+    observation text ('Inspector discussed with operator...'), so any regex
+    pattern captures garbage from those notes rather than a real name.
+
+    Returning None unconditionally until a reliable source is identified
+    (e.g. a different DBPR endpoint or data export that exposes the field).
     """
-    patterns = [
-        # Table cell: <td>Inspector Name</td><td>JOHN SMITH</td>
-        r'<td[^>]*>\s*Inspector(?:\s+Name)?\s*</td>\s*<td[^>]*>\s*([A-Za-z][A-Za-z\-]+(?:\s+[A-Za-z][A-Za-z\-]+)+)\s*</td>',
-        # Inline label: "Inspector: JOHN SMITH" or "Inspector Name: JOHN SMITH"
-        r'Inspector(?:\s+Name)?[:\s]+([A-Za-z][A-Za-z\-]+(?:\s+[A-Za-z][A-Za-z\-]+)+)',
-        # "Inspected by: JOHN SMITH"
-        r'Inspected\s+by[:\s]+([A-Za-z][A-Za-z\-]+(?:\s+[A-Za-z][A-Za-z\-]+)+)',
-        # Generic label→value in a table row (catches alternate column ordering)
-        r'Inspector[^:<]{0,20}[:\s]+\s*([A-Z]{2,}(?:\s+[A-Z]{2,})+)',
-    ]
-    for pattern in patterns:
-        m = re.search(pattern, html, re.IGNORECASE)
-        if m:
-            name = m.group(1).strip()
-            # Normalise ALL-CAPS to Title Case
-            if name == name.upper():
-                name = name.title()
-            parts = name.split()
-            if 2 <= len(parts) <= 4 and all(
-                p.replace('.', '').replace('-', '').replace("'", '').isalpha()
-                for p in parts
-            ):
-                return name
     return None
 
 

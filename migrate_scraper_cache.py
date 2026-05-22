@@ -90,6 +90,33 @@ def migrate_progress(lic_map):
     print(f'  Progress: {migrated} entries rekeyed ({len(new_lines)} total)')
 
 
+def purge_false_inspector_names():
+    """Remove inspector_name values stored by the broken regex.
+
+    inspectionDetail.asp has no Inspector Name field — the regex was matching
+    the word 'Inspector' inside violation observation text and capturing the
+    words that followed ('operator posted', 'handwashing sign', etc.).
+    All stored inspector_name values are garbage; remove them all.
+    """
+    if not os.path.exists(CACHE_FILE):
+        return
+    with open(CACHE_FILE, 'r', encoding='utf-8') as f:
+        cache = json.load(f)
+
+    removed = 0
+    for value in cache.values():
+        if isinstance(value, dict) and 'inspector_name' in value:
+            del value['inspector_name']
+            removed += 1
+
+    if removed:
+        with open(CACHE_FILE, 'w', encoding='utf-8') as f:
+            json.dump(cache, f)
+        print(f'  Purged {removed} false inspector_name entries from cache')
+    else:
+        print('  No inspector_name entries to purge')
+
+
 if __name__ == '__main__':
     print('Migrating scraper cache to numeric License ID keys...')
     lic_map = build_lic_map()
@@ -100,3 +127,4 @@ if __name__ == '__main__':
         migrate_cache(lic_map)
         migrate_progress(lic_map)
         print('  Migration complete')
+    purge_false_inspector_names()
