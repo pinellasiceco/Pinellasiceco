@@ -1463,6 +1463,15 @@ def run(csv_paths):
 
     # Predict next inspection date
     latest = routine.sort_values('inspection_date').groupby('license_id').last().reset_index()
+
+    # True last inspection date — includes complaint, callback, emergency closures.
+    # inspection_date (above) is last ROUTINE inspection, used for model predictions.
+    # true_last_insp is what we show as "Last Inspected" so the display reflects the
+    # most recent DBPR contact regardless of type.
+    true_last = df_t.groupby('license_id')['inspection_date'].max().reset_index()
+    true_last = true_last.rename(columns={'inspection_date': 'true_last_insp'})
+    latest = latest.merge(true_last, on='license_id', how='left')
+
     latest = latest.merge(ice_hist, on='license_id', how='left')
     for c in ['avg_interval','avg_hv','avg_ice','direct_count']:
         latest[c] = latest.get(c, 0).fillna(0)
@@ -1598,8 +1607,9 @@ def run(csv_paths):
     # Vectorized emergency flag
     result['is_emergency'] = result['license_id'].astype(str).isin(emergency_ids)
 
-    # Vectorized days_since
-    result['days_since'] = (pd.Timestamp(TODAY) - result['inspection_date']).dt.days.fillna(999).astype(int)
+    # Vectorized days_since — use true_last_insp if newer than last routine inspection
+    _display_date = result[['inspection_date', 'true_last_insp']].max(axis=1)
+    result['days_since'] = (pd.Timestamp(TODAY) - _display_date).dt.days.fillna(999).astype(int)
 
     # Fill missing columns safely
     for col, default in [('direct_count',0),('avg_ice',0),('n_insp',1),('disp_raw',''),
@@ -1672,7 +1682,11 @@ def run(csv_paths):
                 'zip':         z5,
                 'lat':         lat,
                 'lon':         lon,
-                'last_insp':   row.inspection_date.strftime('%Y-%m-%d'),
+                'last_insp':   (row.true_last_insp if (
+                    hasattr(row, 'true_last_insp') and
+                    row.true_last_insp == row.true_last_insp and  # NaT check
+                    row.true_last_insp > row.inspection_date
+                ) else row.inspection_date).strftime('%Y-%m-%d'),
                 'last_disp':   disp_raw,
                 'disp_risk':   int(row.dr),
                 'high_viol':   int(row.hv),

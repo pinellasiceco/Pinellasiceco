@@ -1,5 +1,5 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-05-21 (session 48 — stats rate fix, date sync, timeline chart) by Claude Code*
+*Last updated: 2026-05-22 (session 49 — last_insp structural fix, repeat probability fix) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
@@ -200,6 +200,10 @@ To force a fresh PWA load after a push: open the URL directly in Safari (not the
 - `build_date` in P[] records will appear after next CI rebuild; existing records have no `build_date` so freshness indicator shows nothing until rebuilt
 
 ## Recent Changes
+- **2026-05-22 (s49 — last_insp structural fix, repeat probability fix):**
+  - **`last_insp` structural fix** (`build.py`): Root cause of Last Inspected date mismatch: `last_insp` was taken from `routine = df_t[df_t['insp_type'] == 'Routine - Food']` — only routine inspections. Complaint, callback, and emergency closure inspections were excluded, so a V22 citation from a complaint inspection would show a citation date newer than Last Inspected. Fix: compute `true_last_insp = df_t.groupby('license_id')['inspection_date'].max()` (all inspection types) and merge it onto `latest`. `last_insp` in P[] records now uses `true_last_insp` when it's newer than the last routine inspection. `days_since` also updated from `true_last_insp` for accurate scoring. Prediction model (`pred_next`, `days_until`) still uses routine-only `inspection_date` since those intervals are Routine - Food specific. Verification: current P[] has 0 businesses with `cit_latest > last_insp`.
+  - **Repeat probability fix** (`export_cleanscore.py`): Changed once/repeat/chronic thresholds — `once` now `cit_ice_count <= 2`, `repeat` now `>= 3`, `chronic` now `>= 5`. A single inspection often generates 2 V22 codes (e.g., biofilm + scale), so the old `>= 2` threshold overcounted as "repeat". Expected CI output: ~52% repeat probability vs prior 79.4%.
+
 - **2026-05-21 (s48 — stats rate fix, date sync, timeline chart):**
   - **Stats rate fixed** (`export_cleanscore.py`): `_has_ice_citation()` now uses only `ice_confirmed_dbpr` / `ice_confirmed` — removed `cit_ice_count` fallback that was overcounting 1,761 businesses instead of correct ~681. Expected CI output: `~681 with ice citations (~7.2% rate)`, repeat probability `~46.8%`. Removed debug print statement.
   - **Date sync confirmed** (`build.py`): `enrich_with_citations()` already had `last_insp` ← `cit_latest` sync from s47. Added `_date_synced_count` counter that prints `Date sync: N records updated from citation date` in CI log — confirms sync is running (expect 500–1,000). Sync runs before `build_html()` so `P[]` in `index.html` gets updated dates.
