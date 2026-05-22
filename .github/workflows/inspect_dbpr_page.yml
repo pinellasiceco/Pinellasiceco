@@ -1,0 +1,24 @@
+name: DBPR Inspector Name Diagnostic
+
+on:
+  workflow_dispatch:   # Manual trigger only — run once to diagnose
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Playwright
+        run: npm install && npx playwright install chromium --with-deps
+
+      - name: Run DBPR page diagnostic
+        run: node scripts/inspect_dbpr_page.js
