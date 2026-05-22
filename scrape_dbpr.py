@@ -392,9 +392,7 @@ def run_full_violations_scrape():
     print(f"Loaded {len(records)} records from {ALL_VIOLATIONS_INPUT}")
 
     done = load_full_progress()
-    # Key by numeric License ID so cache keys match export_cleanscore.py lookup (str(r['id']))
-    remaining = [r for r in records
-                 if str(r.get('License ID', r.get('license_id', r['License Number']))).strip() not in done]
+    remaining = [r for r in records if r['License Number'] not in done]
     print(f"Already scraped: {len(done)} | Remaining: {len(remaining)}")
 
     max_records = int(os.environ.get('MAX_RECORDS', '0') or 0)
@@ -415,8 +413,7 @@ def run_full_violations_scrape():
     for i, record in enumerate(remaining):
         vid = record['Visit ID'].strip()
         biz = record['Business Name'].strip()
-        # Use numeric License ID as cache key — must match export_cleanscore.py str(r['id']) lookup
-        lic = str(record.get('License ID', record.get('license_id', record['License Number']))).strip()
+        lic = record['License Number'].strip()
 
         if i % 25 == 0:
             print(f"\n[{i+1}/{len(remaining)}] Progress — "
