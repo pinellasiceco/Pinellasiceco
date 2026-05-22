@@ -757,14 +757,17 @@ def build_stats_export(records, violations_export):
         except (ValueError, TypeError):
             return 0
 
-    # Only count businesses with confirmed citations in repeat calculation
+    # Only count businesses with confirmed citations in repeat calculation.
+    # cit_ice_count counts violation code rows, not unique inspection visits.
+    # A single inspection often produces 2 ice codes (e.g., biofilm + scale),
+    # so >=2 overcounts as "repeat". Using >=3 reliably indicates multiple visits.
     cited_records = [r for r in pinellas if _has_ice_citation(r)]
     once = sum(1 for r in cited_records
-               if _safe_int(r.get('cit_ice_count')) == 1)
+               if _safe_int(r.get('cit_ice_count')) <= 2)
     repeat = sum(1 for r in cited_records
-                 if _safe_int(r.get('cit_ice_count')) >= 2)
+                 if _safe_int(r.get('cit_ice_count')) >= 3)
     chronic = sum(1 for r in cited_records
-                  if _safe_int(r.get('cit_ice_count')) >= 3)
+                  if _safe_int(r.get('cit_ice_count')) >= 5)
 
     total_cited_for_repeat = once + repeat
     repeat_probability = (
