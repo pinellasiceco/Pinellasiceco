@@ -26,3 +26,8 @@ jobs:
         run: supabase functions deploy stripe-checkout --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} --use-api
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Deploy trigger-rebuild function
+        run: supabase functions deploy trigger-rebuild --project-ref ${{ secrets.SUPABASE_PROJECT_REF }} --use-api
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
