@@ -57,6 +57,9 @@ jobs:
           git checkout origin/main -- full_inspection_narratives.json 2>/dev/null || true
           git checkout origin/main -- full_scraper_progress.txt 2>/dev/null || true
 
+      - name: Migrate scraper cache to numeric License ID keys
+        run: python migrate_scraper_cache.py
+
       - name: Run DBPR scraper (all Pinellas violations)
         run: |
           if [ -f scrape_dbpr.py ]; then
