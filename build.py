@@ -1864,7 +1864,7 @@ def push_to_supabase(table, data, batch_size=500):
                     'user_id': _SUPABASE_USER_ID,
                     'prospect_id': str(r.get('id', f'p{i + j}')),
                     'data': r,
-                    'updated_at': date.today().isoformat(),
+                    'built_at': date.today().isoformat(),
                 }
                 for j, r in enumerate(chunk)
             ]
