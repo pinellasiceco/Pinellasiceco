@@ -698,33 +698,47 @@ def build_violations_export(records, full_narratives=None, inspection_history=No
     return export
 
 
+_PARTNER_TYPE_MAP = {
+    'hood_cleaning':     'hood',
+    'pest_control':      'pest',
+    'refrigeration':     'refrig',
+    'beverage_equipment':'beverage',
+    'hvac':              'hvac',
+}
+
 def build_partners_export(partner_rows):
-    export = []
+    # pic_partners Supabase row stores data = [array of partner objects].
+    # Unpack the array and map partner_type → CleanScore type field.
+    raw_partners = []
     for row in partner_rows:
-        data = row.get('data') or {}
+        data = row.get('data') or []
         if isinstance(data, str):
             try:
                 data = json.loads(data)
             except Exception:
-                data = {}
-        if not isinstance(data, dict):
-            data = {}
+                data = []
+        if isinstance(data, dict):
+            raw_partners.append(data)
+        elif isinstance(data, list):
+            raw_partners.extend(data)
 
-        ptype = str(data.get('type', '') or row.get('type', '')).lower()
-        name = str(data.get('name', '') or row.get('name', ''))
-        phone = str(data.get('phone', '') or row.get('phone', ''))
-        city = str(data.get('city', '') or row.get('city', ''))
-
-        if not name or not ptype:
+    export = []
+    for p in raw_partners:
+        if not isinstance(p, dict):
             continue
-
+        raw_type = str(p.get('partner_type', '') or p.get('type', '')).lower()
+        mapped_type = _PARTNER_TYPE_MAP.get(raw_type, raw_type)
+        name = str(p.get('name', '') or '').strip()
+        if not name or not mapped_type:
+            continue
         export.append({
-            'id': str(row.get('id', '') or row.get('prospect_id', '')),
-            'name': name,
-            'type': ptype,
-            'phone': phone,
-            'city': city,
-            'fit_score': int(data.get('fit_score', 50) or 50),
+            'id':         str(p.get('id', '')),
+            'name':       name,
+            'type':       mapped_type,
+            'phone':      str(p.get('phone', '') or ''),
+            'city':       str(p.get('city', '') or ''),
+            'fit_score':  int(p.get('fit_score', 50) or 50),
+            'description': str(p.get('description', '') or ''),
         })
 
     print(f'  Built {len(export)} partner records')
