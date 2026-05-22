@@ -1487,6 +1487,16 @@ def run(csv_paths):
     latest['pred_next']  = latest['inspection_date'] + pd.to_timedelta(latest['pred_days'], unit='d')
     latest['days_until'] = (latest['pred_next'] - pd.Timestamp(TODAY)).dt.days.fillna(999).astype(int)
 
+    # Re-anchor pred_next from true_last_insp when it's newer than last routine inspection.
+    # A non-routine citation visit resets the clock — predictions must not fall before it.
+    if 'true_last_insp' in latest.columns:
+        mask = latest['true_last_insp'].notna() & (latest['true_last_insp'] > latest['inspection_date'])
+        latest.loc[mask, 'pred_next'] = (
+            latest.loc[mask, 'true_last_insp'] +
+            pd.to_timedelta(latest.loc[mask, 'pred_days'], unit='d')
+        )
+        latest['days_until'] = (latest['pred_next'] - pd.Timestamp(TODAY)).dt.days.fillna(999).astype(int)
+
     # Score
     def pitch_type(dr, du, ice, chronic, confirmed, days_since=0):
         if dr >= 4 and days_since <= 120: return 'callback'   # admin complaint/emergency = always callback if recent
