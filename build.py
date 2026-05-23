@@ -1870,7 +1870,7 @@ def push_to_supabase(table, data, batch_size=500):
             ]
             try:
                 resp = _req.post(
-                    f'{_SUPABASE_URL_ENV}/rest/v1/{table}',
+                    f'{_SUPABASE_URL_ENV}/rest/v1/{table}?on_conflict=user_id,prospect_id',
                     headers=upsert_headers,
                     json=payload,
                     timeout=30,
