@@ -21,6 +21,7 @@ MIN_SCORE        = 5   # Very low - include everything, filter in browser
 TODAY            = date.today()
 OUTPUT_FILE      = Path(__file__).parent / 'prospecting_tool.html'
 REACH_IN_ENABLED = True
+REPORTS_TAB_ENABLED = True
 
 # Reach-in cooler add-on Stripe price IDs
 STRIPE_REACH_IN_MONTHLY   = 'price_1TZDEZ1DW5dOU2aa40hWFQsm'
@@ -1960,7 +1961,21 @@ def build_html(records, partners=None):
                         .replace('%%SUPABASE_ANON_KEY%%', _SUPABASE_ANON_ENV)\
                         .replace('%%REACH_IN_ENABLED%%', 'true' if REACH_IN_ENABLED else 'false')\
                         .replace('%%STRIPE_REACH_IN_MONTHLY%%', STRIPE_REACH_IN_MONTHLY)\
-                        .replace('%%STRIPE_REACH_IN_QUARTERLY%%', STRIPE_REACH_IN_QUARTERLY)
+                        .replace('%%STRIPE_REACH_IN_QUARTERLY%%', STRIPE_REACH_IN_QUARTERLY)\
+                        .replace('%%REPORTS_TAB_ENABLED%%', 'true' if REPORTS_TAB_ENABLED else 'false')\
+                        .replace('%%REPORTS_TAB%%', (
+                            '<div class="tab" id="tab-reports"'
+                            ' onclick="sw(&#39;reports&#39;)"'
+                            ' ontouchend="event.preventDefault();sw(&#39;reports&#39;)">'
+                            '<span class="tab-icon">&#128202;</span>'
+                            '<span class="tab-lbl">Reports</span></div>'
+                        ) if REPORTS_TAB_ENABLED else '')\
+                        .replace('%%REPORTS_PANEL%%', (
+                            '<div class="panel" id="p-reports">'
+                            '<div id="reports-root">'
+                            '<div class="reports-loading">Loading reports...</div>'
+                            '</div></div>'
+                        ) if REPORTS_TAB_ENABLED else '')
 
 # ──────────────────────────────────────────────────────────────────────────────
 # HTML TEMPLATE  (everything between the triple-quotes)
@@ -2021,10 +2036,11 @@ header{background:var(--navy);
 .srch input:focus{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.4)}
 .si{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.5);font-size:11px;pointer-events:none}
 .tabs{display:flex;background:var(--surf);border-bottom:2px solid var(--brd2);flex-shrink:0;
-  box-shadow:0 1px 3px rgba(45,62,80,.06);position:relative}
+  box-shadow:0 1px 3px rgba(45,62,80,.06);position:relative;overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;flex-wrap:nowrap;scrollbar-width:none;-ms-overflow-style:none}
+.tabs::-webkit-scrollbar{display:none}
 .tab{flex:1;padding:10px 4px;text-align:center;font-size:11px;font-weight:600;
   color:var(--sub);cursor:pointer;border-bottom:2px solid transparent;
-  margin-bottom:-2px;transition:.15s;user-select:none}
+  margin-bottom:-2px;transition:.15s;user-select:none;flex-shrink:0;scroll-snap-align:start}
 .tab.on{color:var(--ora);border-color:var(--ora)}
 .panel{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 16px;display:none;background:var(--bg);min-height:0}
 .panel.on{display:block;height:100%}
@@ -2228,6 +2244,36 @@ header{background:var(--navy);
 .svc-card.on-track{border-left:4px solid #059669;background:#f0fdf4}
 .svc-card.no-date{border-left:4px solid var(--sub);opacity:.7}
 
+/* ===== REPORTS TAB ===== */
+.rpt-header{display:flex;justify-content:space-between;align-items:center;padding:16px 16px 8px;border-bottom:1px solid rgba(168,216,240,0.1)}
+.rpt-title{font-weight:600;font-size:16px;color:var(--white,#f5f9fc)}
+.rpt-periods{display:flex;gap:4px}
+.rpt-period-btn{font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid rgba(168,216,240,0.2);background:transparent;color:rgba(245,249,252,0.5);cursor:pointer;-webkit-tap-highlight-color:transparent;font-family:inherit}
+.rpt-period-active{background:rgba(168,216,240,0.15);color:#a8d8f0;border-color:rgba(168,216,240,0.4)}
+.rpt-section{padding:16px;border-bottom:1px solid rgba(168,216,240,0.08)}
+.rpt-section-highlight{background:rgba(46,204,113,0.04);border-left:3px solid #2ecc71}
+.rpt-section-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:rgba(168,216,240,0.6);margin-bottom:12px}
+.rpt-kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+.rpt-kpi-card{background:rgba(255,255,255,0.04);border:1px solid rgba(168,216,240,0.08);border-radius:6px;padding:12px}
+.rpt-kpi-val{font-size:22px;font-weight:700;color:#f5f9fc;line-height:1;margin-bottom:4px}
+.rpt-kpi-label{font-size:11px;color:rgba(245,249,252,0.5);font-weight:500}
+.rpt-kpi-sub{font-size:10px;color:rgba(245,249,252,0.35);margin-top:2px}
+.rpt-funnel{margin-bottom:8px}
+.funnel-row{display:grid;grid-template-columns:90px 1fr 50px 44px;align-items:center;gap:8px;margin-bottom:6px}
+.funnel-row .funnel-label{font-size:11px;color:rgba(245,249,252,0.55);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.funnel-row .funnel-bar-wrap{background:rgba(255,255,255,0.05);border-radius:2px;height:10px;overflow:hidden}
+.funnel-row .funnel-bar{height:100%;border-radius:2px;transition:width 0.4s ease}
+.funnel-count{font-size:12px;font-weight:600;color:#f5f9fc;text-align:right}
+.funnel-rate{font-size:11px;color:rgba(245,249,252,0.45);text-align:right}
+.rpt-table-wrap{overflow-x:auto;border:1px solid rgba(168,216,240,0.1);border-radius:4px}
+.rpt-table{width:100%;border-collapse:collapse;font-size:12px}
+.rpt-table th{background:rgba(168,216,240,0.08);padding:8px 10px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(168,216,240,0.6);white-space:nowrap}
+.rpt-table td{padding:8px 10px;border-top:1px solid rgba(168,216,240,0.06);color:rgba(245,249,252,0.75)}
+.rpt-chart-wrap{overflow-x:auto;padding:8px 0 4px;-webkit-overflow-scrolling:touch}
+.rpt-sub{font-size:11px;color:rgba(245,249,252,0.35);margin-top:6px}
+.rpt-empty{text-align:center;padding:60px 24px;color:rgba(245,249,252,0.6)}
+.reports-loading{padding:40px 24px;text-align:center;color:rgba(245,249,252,0.4);font-size:13px}
+
 /* ── MOBILE RESPONSIVE ─────────────────────────────── */
 @media(max-width:480px){
   /* Bottom nav for phone */
@@ -2377,6 +2423,7 @@ header{background:var(--navy);
     <div class="tab"     onclick="sw('route')"     ><span class="tab-icon">&#x1F5FA;</span><span class="tab-lbl">Route</span></div>
     <div class="tab"     onclick="sw('clients')"   ><span class="tab-icon">&#x1F91D;</span><span class="tab-lbl">Clients</span></div>
     <div class="tab"     onclick="sw('partners')"  ><span class="tab-icon">&#x1F91D;</span><span class="tab-lbl">Partners</span></div>
+    %%REPORTS_TAB%%
     <button id="gear-btn" onclick="sw('data')" title="Settings" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;cursor:pointer;padding:4px;color:var(--sub);line-height:1">&#x2699;&#xFE0F;</button>
   </nav>
 
@@ -2406,55 +2453,6 @@ header{background:var(--navy);
 
     <!-- ── RE-TEST REMINDERS ─────────────────────────── -->
     <div id="retest-section-wrapper" style="margin-bottom:12px"></div>
-
-    <!-- ── KPI ROW ─────────────────────────────────── -->
-    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:12px" id="kpi-row">
-      <div class="dc" style="text-align:center;padding:8px 4px">
-        <div style="font-size:7px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);margin-bottom:3px">MRR</div>
-        <div style="font-size:17px;font-weight:800;color:var(--grn)" id="kpi-mrr">$0</div>
-      </div>
-      <div class="dc" style="text-align:center;padding:8px 4px">
-        <div style="font-size:7px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);margin-bottom:3px">ARR</div>
-        <div style="font-size:17px;font-weight:800;color:var(--grn)" id="kpi-arr">$0</div>
-      </div>
-      <div class="dc" style="text-align:center;padding:8px 4px">
-        <div style="font-size:7px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);margin-bottom:3px">Clients</div>
-        <div style="font-size:17px;font-weight:800;color:var(--navy)" id="kpi-clients">0</div>
-      </div>
-      <div class="dc" style="text-align:center;padding:8px 4px">
-        <div style="font-size:7px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);margin-bottom:3px">Pipeline</div>
-        <div style="font-size:17px;font-weight:800;color:var(--blu)" id="kpi-pipe">0</div>
-      </div>
-      <div class="dc" style="text-align:center;padding:8px 4px">
-        <div style="font-size:7px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);margin-bottom:3px">This Wk</div>
-        <div style="font-size:17px;font-weight:800;color:var(--ora)" id="kpi-week">0</div>
-      </div>
-    </div>
-
-    <!-- ── FUNNEL ────────────────────────────────────── -->
-    <div class="dc" style="margin-bottom:12px;padding:12px 14px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <div style="font-weight:700;font-size:12px;color:var(--navy)">&#x1F4CA; Weekly Funnel</div>
-        <div style="font-size:9px;color:var(--sub)" id="funnel-week-label"></div>
-      </div>
-      <div id="funnel-stages" style="display:flex;flex-direction:column;gap:6px"></div>
-    </div>
-
-    <!-- ── GOAL PACING ───────────────────────────────── -->
-    <div class="dc" style="margin-bottom:12px;padding:12px 14px" id="goal-pacing-card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <div style="font-weight:700;font-size:12px;color:var(--navy)">&#x1F3AF; Goal Pacing</div>
-        <button onclick="sw('data')" style="font-size:9px;padding:3px 8px;border:1px solid var(--brd);border-radius:6px;background:transparent;color:var(--sub);cursor:pointer;font-family:inherit">&#x2699;&#xFE0F; Settings</button>
-      </div>
-      <div id="goal-pacing-content"></div>
-    </div>
-
-    <!-- ── LOSS REASON BREAKDOWN ─────────────────────── -->
-    <div class="dc" style="margin-bottom:12px;padding:12px 14px" id="loss-breakdown-card">
-      <div style="font-weight:700;font-size:12px;color:var(--navy);margin-bottom:8px">&#x274C; Why You're Losing</div>
-      <div id="loss-breakdown" style="display:flex;flex-direction:column;gap:4px"></div>
-      <div id="loss-empty" style="font-size:11px;color:var(--sub);display:none">Log some walk-ins to see loss patterns.</div>
-    </div>
 
   </div>
 
@@ -2662,26 +2660,6 @@ header{background:var(--navy);
       <div style="font-weight:700;font-size:13px;color:var(--navy);margin-bottom:2px">&#x1F3AF; Pipeline</div>
     </div>
 
-    <!-- KPI bar -->
-    <div id="pipe-kpis" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px">
-      <div class="dc" style="text-align:center;padding:8px 4px">
-        <div style="font-size:9px;color:var(--sub);font-weight:600;margin-bottom:2px">IN PLAY</div>
-        <div style="font-size:20px;font-weight:800;color:var(--navy)" id="pipe-kpi-inplay">0</div>
-      </div>
-      <div class="dc" style="text-align:center;padding:8px 4px">
-        <div style="font-size:9px;color:var(--sub);font-weight:600;margin-bottom:2px">QUOTED</div>
-        <div style="font-size:20px;font-weight:800;color:#7c3aed" id="pipe-kpi-quoted">0</div>
-      </div>
-      <div class="dc" style="text-align:center;padding:8px 4px">
-        <div style="font-size:9px;color:var(--sub);font-weight:600;margin-bottom:2px">CLOSE RATE</div>
-        <div style="font-size:20px;font-weight:800;color:#059669" id="pipe-kpi-close">0%</div>
-      </div>
-      <div class="dc" style="text-align:center;padding:8px 4px">
-        <div style="font-size:9px;color:var(--sub);font-weight:600;margin-bottom:2px">FORECAST</div>
-        <div style="font-size:16px;font-weight:800;color:#d97706" id="pipe-kpi-forecast">$0</div>
-      </div>
-    </div>
-
     <!-- Stage tabs -->
     <div style="display:flex;gap:0;margin-bottom:12px;border:1px solid var(--brd);border-radius:8px;overflow:hidden" id="pipe-tabs">
       <button class="pipe-tab on" id="ptab-inplay"  onclick="setPipeStage('inplay')"  style="flex:1;padding:7px 2px;border:none;background:var(--surf);font-size:10px;font-weight:700;font-family:inherit;cursor:pointer;color:var(--navy)">&#x1F7E1; In Play</button>
@@ -2876,6 +2854,8 @@ header{background:var(--navy);
     <div id="partner-top"></div>
     <div id="partner-list"></div>
   </div>
+
+  %%REPORTS_PANEL%%
 
   <!-- DATA -->
   <div class="panel" id="p-data">
@@ -3165,6 +3145,7 @@ header{background:var(--navy);
 const P=%%DATA%%;
 const PARTNERS=%%PARTNERS%%;
 var REACH_IN_ENABLED=%%REACH_IN_ENABLED%%;
+var REPORTS_TAB_ENABLED=%%REPORTS_TAB_ENABLED%%;
 const ESCALATION_TREE=[
   {id:'no_ice',     label:'No Ice / Low Output',            icon:'&#x1F9CA;',ptype:'refrigeration',     action:'Compressor or refrigerant issue. Do not attempt repair. Call refrigeration tech.'},
   {id:'water_leak', label:'Water Leak / Flooding',          icon:'&#x1F4A7;',ptype:null,                action:'Shut off supply valve at wall. Licensed plumber needed for line or drain repair.'},
@@ -4954,7 +4935,7 @@ function sw(t){
   if(t==='customers'){t='clients';}
   else if(t==='service'){setClientTab('service');t='clients';}
   tab=t;
-  const tabNames=['today','all','pipeline','route','clients','partners'];
+  const tabNames=['today','all','pipeline','route','clients','partners','reports'];
   document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('on',tabNames[i]===t));
   document.querySelectorAll('.panel').forEach(el=>el.classList.remove('on'));
   // panel ID mapping: clients → p-customers, data → p-data, others → p-{t}
@@ -4968,6 +4949,7 @@ function sw(t){
   else if(t==='clients'){if(clientTab==='service')rService();else rCust();}
   else if(t==='partners'){renderPartners();}
   else if(t==='data'){initSettings();}
+  else if(t==='reports'){if(!REPORTS_TAB_ENABLED)return;renderSalesReports();}
   if(t==='route'&&typeof L==='undefined')loadLeaflet();
 }
 function setPipeStage(s){
@@ -11219,6 +11201,464 @@ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded'
     }
   }, {passive:false});
 })();
+
+// ── SALES REPORTS ────────────────────────────────────────────────────────────
+var _reportPeriod=30;
+
+function setReportPeriod(days){
+  _reportPeriod=days;
+  renderSalesReports();
+}
+
+function _periodStart(){
+  if(_reportPeriod===0)return null;
+  var d=new Date();
+  d.setDate(d.getDate()-_reportPeriod);
+  return d;
+}
+
+function _inPeriod(dateStr){
+  if(!dateStr)return false;
+  if(_reportPeriod===0)return true;
+  var start=_periodStart();
+  var d;
+  try{d=new Date(dateStr);}catch(e){return false;}
+  if(isNaN(d.getTime()))return false;
+  return d>=start;
+}
+
+function _allLogEntries(sinceDate){
+  var entries=[];
+  for(var pid in log){
+    if(!log[pid]||!log[pid].length)continue;
+    for(var i=0;i<log[pid].length;i++){
+      var e=log[pid][i];
+      if(!e)continue;
+      if(sinceDate&&!_inPeriod(e.date))continue;
+      entries.push({pid:pid,entry:e});
+    }
+  }
+  return entries;
+}
+
+function _activeClients(){
+  var result=[];
+  for(var pid in customers){
+    var c=customers[pid];
+    if(!c)continue;
+    var st=c.status||\'\';\
+    if(st===\'customer_recurring\'||st===\'customer_quarterly\'||st===\'customer_once\'||st===\'customer_intro\'){
+      result.push({pid:pid,cust:c});
+    }
+  }
+  return result;
+}
+
+function _contacted(){
+  var pids={};
+  for(var pid in log){
+    if(log[pid]&&log[pid].length>0){pids[pid]=true;}
+  }
+  return pids;
+}
+
+function _num(val){
+  var n=parseFloat(val);
+  return isNaN(n)?0:n;
+}
+
+function _custMRR(c){
+  if(!c)return 0;
+  return _num(c.monthly);
+}
+
+function _revenueMetrics(){
+  var clients=_activeClients();
+  var mrr=0;
+  var totalDeals=0;
+  var wonInPeriod=0;
+  var revenueInPeriod=0;
+  for(var i=0;i<clients.length;i++){
+    var c=clients[i].cust;
+    mrr+=_custMRR(c);
+    totalDeals++;
+    if(c.won_date&&_inPeriod(c.won_date)){
+      wonInPeriod++;
+      revenueInPeriod+=_custMRR(c);
+    }
+  }
+  var pipelineVal=0;
+  if(typeof P!==\'undefined\'&&P&&P.length){
+    for(var j=0;j<P.length;j++){
+      var p=P[j];
+      if(!p)continue;
+      var stage=\'\';
+      try{stage=getProspectStage(p);}catch(e){stage=\'\';}
+      if(stage===\'inplay\'||stage===\'quoted\'){pipelineVal+=_num(p.monthly);}
+    }
+  }
+  var avgDeal=totalDeals>0?(mrr/totalDeals):0;
+  return{mrr:mrr,arr:mrr*12,totalClients:totalDeals,wonInPeriod:wonInPeriod,revenueInPeriod:revenueInPeriod,pipelineVal:pipelineVal,avgDeal:avgDeal};
+}
+
+function _funnelMetrics(){
+  var totalLeads=(typeof P!==\'undefined\'&&P&&P.length)?P.length:0;
+  var contacted=_contacted();
+  var contactedCount=Object.keys(contacted).length;
+  var inPlayCount=0;
+  var quotedCount=0;
+  var wonCount=0;
+  if(typeof P!==\'undefined\'&&P&&P.length){
+    for(var i=0;i<P.length;i++){
+      var p=P[i];
+      if(!p)continue;
+      var stage=\'\';
+      try{stage=getProspectStage(p);}catch(e){continue;}
+      if(stage===\'inplay\')inPlayCount++;
+      else if(stage===\'quoted\')quotedCount++;
+      else if(stage===\'won\')wonCount++;
+    }
+  }
+  var contactRate=totalLeads>0?(contactedCount/totalLeads*100):0;
+  var qualRate=contactedCount>0?(inPlayCount/contactedCount*100):0;
+  var quoteRate=inPlayCount>0?(quotedCount/inPlayCount*100):0;
+  var closeRate=quotedCount>0?(wonCount/quotedCount*100):0;
+  var overallRate=totalLeads>0?(wonCount/totalLeads*100):0;
+  return{totalLeads:totalLeads,contacted:contactedCount,inPlay:inPlayCount,quoted:quotedCount,won:wonCount,contactRate:contactRate,qualRate:qualRate,quoteRate:quoteRate,closeRate:closeRate,overallRate:overallRate};
+}
+
+function _outreachMetrics(){
+  var entries=_allLogEntries(_reportPeriod>0?_periodStart():null);
+  var totalEntries=entries.length;
+  var byOutcome={};
+  for(var i=0;i<entries.length;i++){
+    var o=entries[i].entry.outcome||\'unknown\';
+    byOutcome[o]=(byOutcome[o]||0)+1;
+  }
+  var clients=_activeClients();
+  var totalAttempts=0;
+  var dealsWithLog=0;
+  for(var j=0;j<clients.length;j++){
+    var pid=clients[j].pid;
+    var attempts=(log[pid]&&log[pid].length)?log[pid].length:0;
+    if(attempts>0){totalAttempts+=attempts;dealsWithLog++;}
+  }
+  var avgAttemptsToClose=dealsWithLog>0?(totalAttempts/dealsWithLog):0;
+  var touchedPids={};
+  for(var k=0;k<entries.length;k++){touchedPids[entries[k].pid]=true;}
+  return{totalActivities:totalEntries,byOutcome:byOutcome,uniqueProspectsTouched:Object.keys(touchedPids).length,avgAttemptsToClose:avgAttemptsToClose};
+}
+
+function _speedMetrics(){
+  var clients=_activeClients();
+  var timesToClose=[];
+  for(var i=0;i<clients.length;i++){
+    var pid=clients[i].pid;
+    var c=clients[i].cust;
+    var entries=log[pid];
+    if(!entries||!entries.length)continue;
+    var sorted=[];
+    for(var j=0;j<entries.length;j++){
+      if(entries[j]&&entries[j].date){sorted.push(entries[j]);}
+    }
+    sorted.sort(function(a,b){return new Date(a.date)-new Date(b.date);});
+    if(!sorted.length)continue;
+    if(c.won_date){
+      var firstDate,wonDate;
+      try{firstDate=new Date(sorted[0].date);wonDate=new Date(c.won_date);}catch(e){continue;}
+      if(!isNaN(firstDate.getTime())&&!isNaN(wonDate.getTime())){
+        var days=Math.round((wonDate-firstDate)/86400000);
+        if(days>=0)timesToClose.push(days);
+      }
+    }
+  }
+  var staleDays=[];
+  var now=new Date();
+  for(var pid2 in log){
+    if(!log[pid2]||!log[pid2].length)continue;
+    var cust=customers[pid2];
+    if(cust){var st=cust.status||\'\';if(st.indexOf(\'customer\')===0)continue;}
+    var lastDate=null;
+    for(var m=0;m<log[pid2].length;m++){
+      var e=log[pid2][m];
+      if(!e||!e.date)continue;
+      var d;try{d=new Date(e.date);}catch(ex){continue;}
+      if(!lastDate||d>lastDate)lastDate=d;
+    }
+    if(lastDate){
+      var age=Math.round((now-lastDate)/86400000);
+      staleDays.push(age);
+    }
+  }
+  var avgClose=timesToClose.length>0?Math.round(timesToClose.reduce(function(a,b){return a+b;},0)/timesToClose.length):null;
+  var stale30=staleDays.filter(function(d){return d>30;}).length;
+  var stale7=staleDays.filter(function(d){return d>7;}).length;
+  return{avgDaysToClose:avgClose,staleOver30:stale30,staleOver7:stale7,totalTouched:staleDays.length};
+}
+
+function _dbprConversion(){
+  if(typeof P===\'undefined\'||!P||!P.length){return{cited:0,citedContacted:0,citedWon:0,contactRate:0,closeRate:0};}
+  var cited=0;
+  var citedContacted=0;
+  var citedWon=0;
+  for(var i=0;i<P.length;i++){
+    var p=P[i];
+    if(!p||!p.ice_confirmed_dbpr)continue;
+    cited++;
+    var pid=p.id||p.license_number||\'\';
+    if(!pid)continue;
+    var hasLog=log[pid]&&log[pid].length>0;
+    if(hasLog)citedContacted++;
+    var c=customers[pid];
+    if(c){var st=c.status||\'\';if(st.indexOf(\'customer\')===0)citedWon++;}
+  }
+  return{cited:cited,citedContacted:citedContacted,citedWon:citedWon,contactRate:cited>0?(citedContacted/cited*100):0,closeRate:citedContacted>0?(citedWon/citedContacted*100):0};
+}
+
+function _geoPerformance(){
+  if(typeof P===\'undefined\'||!P||!P.length){return[];}
+  var cities={};
+  for(var i=0;i<P.length;i++){
+    var p=P[i];
+    if(!p)continue;
+    var city=(p.city||\'Unknown\').trim();
+    if(!cities[city]){cities[city]={city:city,leads:0,contacted:0,won:0,mrr:0};}
+    cities[city].leads++;
+    var pid=p.id||p.license_number||\'\';
+    if(!pid)continue;
+    if(log[pid]&&log[pid].length>0){cities[city].contacted++;}
+    var c=customers[pid];
+    if(c){var st=c.status||\'\';if(st.indexOf(\'customer\')===0){cities[city].won++;cities[city].mrr+=_custMRR(c);}}
+  }
+  var result=[];
+  for(var city in cities){
+    var cd=cities[city];
+    cd.closeRate=cd.contacted>0?(cd.won/cd.contacted*100):0;
+    result.push(cd);
+  }
+  result.sort(function(a,b){return b.won-a.won;});
+  return result.filter(function(c){return c.contacted>0;}).slice(0,10);
+}
+
+function _activityByDay(){
+  var entries=_allLogEntries(null);
+  var byDay={};
+  for(var i=0;i<entries.length;i++){
+    var dateStr=entries[i].entry.date||\'\';
+    if(!dateStr)continue;
+    var d;try{d=new Date(dateStr);}catch(e){continue;}
+    if(isNaN(d.getTime()))continue;
+    var key=d.toISOString().slice(0,10);
+    byDay[key]=(byDay[key]||0)+1;
+  }
+  var days=_reportPeriod>0?_reportPeriod:30;
+  var result=[];
+  var now=new Date();
+  for(var j=days-1;j>=0;j--){
+    var dt=new Date(now);
+    dt.setDate(dt.getDate()-j);
+    var k=dt.toISOString().slice(0,10);
+    result.push({date:k,count:byDay[k]||0});
+  }
+  var streak=0;
+  var maxStreak=0;
+  var zeroDays=0;
+  for(var m=result.length-1;m>=0;m--){
+    if(result[m].count>0){streak++;if(streak>maxStreak)maxStreak=streak;}
+    else{zeroDays++;if(m===result.length-1)streak=0;}
+  }
+  return{days:result,currentStreak:streak,zeroDays:zeroDays,totalDays:days};
+}
+
+function _clientMetrics(){
+  var clients=_activeClients();
+  var newInPeriod=0;
+  var churned=0;
+  for(var pid in customers){
+    var c=customers[pid];
+    if(!c)continue;
+    if((c.status||\'\')==\'churned\')churned++;
+  }
+  for(var i=0;i<clients.length;i++){
+    var c2=clients[i].cust;
+    if(c2.won_date&&_inPeriod(c2.won_date)){newInPeriod++;}
+  }
+  var totalActive=clients.length;
+  var retentionRate=(totalActive+churned)>0?(totalActive/(totalActive+churned)*100):0;
+  return{totalActive:totalActive,newInPeriod:newInPeriod,churned:churned,retentionRate:retentionRate};
+}
+
+function _svgBarChart(data,width,height,color){
+  if(!data||!data.length){return \'<svg width="\'+width+\'" height="\'+height+\'"></svg>\';}
+  var maxVal=0;
+  for(var i=0;i<data.length;i++){if(_num(data[i].value)>maxVal)maxVal=_num(data[i].value);}
+  if(maxVal===0)maxVal=1;
+  var barW=Math.floor(width/data.length)-2;
+  var svg=\'<svg width="\'+width+\'" height="\'+height+\'" xmlns="http://www.w3.org/2000/svg">\';
+  for(var j=0;j<data.length;j++){
+    var val=_num(data[j].value);
+    var barH=Math.max(2,Math.round(val/maxVal*(height-20)));
+    var x=j*(barW+2);
+    var y=height-barH-20;
+    svg+=\'<rect x="\'+x+\'" y="\'+y+\'" width="\'+barW+\'" height="\'+barH+\'" fill="\'+color+\'" rx="1" opacity="\'+( val>0?\'1\':\'0.2\')+\'"/>\';
+  }
+  svg+=\'</svg>\';
+  return svg;
+}
+
+function _funnelRow(label,count,total,rate,color){
+  var pct=total>0?Math.round(count/total*100):0;
+  var barPct=Math.max(2,pct);
+  return \'<div class="funnel-row">\'
+    +\'<div class="funnel-label">\'+label+\'</div>\'
+    +\'<div class="funnel-bar-wrap"><div class="funnel-bar" style="width:\'+barPct+\'%;background:\'+color+\'"></div></div>\'
+    +\'<div class="funnel-count">\'+count.toLocaleString()+\'</div>\'
+    +\'<div class="funnel-rate">\'+rate.toFixed(1)+\'%</div>\'
+    +\'</div>\';
+}
+
+function _kpiCard(label,val,sub){
+  return \'<div class="rpt-kpi-card">\'
+    +\'<div class="rpt-kpi-val">\'+val+\'</div>\'
+    +\'<div class="rpt-kpi-label">\'+label+\'</div>\'
+    +(sub?\'<div class="rpt-kpi-sub">\'+sub+\'</div>\':\'\')\
+    +\'</div>\';
+}
+
+function renderSalesReports(){
+  if(!REPORTS_TAB_ENABLED)return;
+  var root=document.getElementById(\'reports-root\');
+  if(!root)return;
+
+  var rev,funnel,out,speed,dbpr,geo,act,cli;
+  try{rev=_revenueMetrics();}catch(e){rev={};}
+  try{funnel=_funnelMetrics();}catch(e){funnel={};}
+  try{out=_outreachMetrics();}catch(e){out={};}
+  try{speed=_speedMetrics();}catch(e){speed={};}
+  try{dbpr=_dbprConversion();}catch(e){dbpr={};}
+  try{geo=_geoPerformance();}catch(e){geo=[];}
+  try{act=_activityByDay();}catch(e){act={days:[],currentStreak:0,zeroDays:0,totalDays:30};}
+  try{cli=_clientMetrics();}catch(e){cli={};}
+
+  var hasAnyData=(out.totalActivities||0)>0||(rev.totalClients||0)>0;
+  if(!hasAnyData){
+    root.innerHTML=\'<div class="rpt-empty">\'
+      +\'<div style="font-size:32px;margin-bottom:12px">&#128202;</div>\'
+      +\'<div style="font-weight:600;margin-bottom:8px">No activity yet</div>\'
+      +\'<div style="font-size:13px;color:rgba(245,249,252,0.5)">Reports will populate as you log calls and close deals.</div>\'
+      +\'</div>\';
+    return;
+  }
+
+  var periods=[{label:\'7D\',val:7},{label:\'30D\',val:30},{label:\'90D\',val:90},{label:\'All\',val:0}];
+  var periodBtns=\'\';
+  for(var pi=0;pi<periods.length;pi++){
+    var pd=periods[pi];
+    var active=_reportPeriod===pd.val?\' rpt-period-active\':\'\';
+    periodBtns+=\'<button class="rpt-period-btn\'+active+\'" onclick="setReportPeriod(\'+pd.val+\')" ontouchend="event.preventDefault();setReportPeriod(\'+pd.val+\')\">\'+pd.label+\'</button>\';
+  }
+
+  var actDays=act.days||[];
+  var actChart=_svgBarChart(actDays,actDays.length*12,48,\'#3a8ec9\');
+
+  var geoRows=\'\';
+  for(var gi=0;gi<(geo||[]).length;gi++){
+    var g=geo[gi];
+    geoRows+=\'<tr><td>\'+(g.city||\'\')+\'</td><td>\'+g.leads+\'</td><td>\'+g.contacted+\'</td><td>\'+g.won+\'</td><td>$\'+Math.round(g.mrr)+\'</td><td>\'+g.closeRate.toFixed(1)+\'%</td></tr>\';
+  }
+  if(!geoRows){geoRows=\'<tr><td colspan="6" style="text-align:center;color:#888">No data yet</td></tr>\';}
+
+  var outcomeRows=\'\';
+  var byO=out.byOutcome||{};
+  for(var ok in byO){outcomeRows+=\'<tr><td>\'+ok+\'</td><td>\'+byO[ok]+\'</td></tr>\';}
+
+  root.innerHTML=\'\'
+    +\'<div class="rpt-header">\'
+    +\'<div class="rpt-title">Sales Reports</div>\'
+    +\'<div class="rpt-periods">\'+periodBtns+\'</div>\'
+    +\'</div>\'
+
+    +\'<div class="rpt-section">\'
+    +\'<div class="rpt-section-title">Revenue</div>\'
+    +\'<div class="rpt-kpi-grid">\'
+    +_kpiCard(\'MRR\',\'$\'+Math.round(rev.mrr||0),\'\')
+    +_kpiCard(\'ARR\',\'$\'+Math.round(rev.arr||0),\'\')
+    +_kpiCard(\'Active Clients\',rev.totalClients||0,\'\')
+    +_kpiCard(\'Avg Deal\',\'$\'+Math.round(rev.avgDeal||0)+\'/mo\',\'\')
+    +_kpiCard(\'Pipeline Value\',\'$\'+Math.round(rev.pipelineVal||0)+\'/mo\',\'est.\')
+    +_kpiCard(\'Won This Period\',rev.wonInPeriod||0,\'deals\')
+    +\'</div>\'
+    +\'</div>\'
+
+    +\'<div class="rpt-section">\'
+    +\'<div class="rpt-section-title">Sales Funnel</div>\'
+    +\'<div class="rpt-funnel">\'
+    +_funnelRow(\'Total Leads\',funnel.totalLeads||0,funnel.totalLeads||0,100,\'#243d57\')
+    +_funnelRow(\'Contacted\',funnel.contacted||0,funnel.totalLeads||1,funnel.contactRate||0,\'#1a4a6b\')
+    +_funnelRow(\'In Play\',funnel.inPlay||0,funnel.contacted||1,funnel.qualRate||0,\'#1a5c7a\')
+    +_funnelRow(\'Quoted\',funnel.quoted||0,funnel.inPlay||1,funnel.quoteRate||0,\'#1a6e89\')
+    +_funnelRow(\'Closed\',funnel.won||0,funnel.quoted||1,funnel.closeRate||0,\'#2ecc71\')
+    +\'</div>\'
+    +\'<div class="rpt-sub">Overall close rate: \'+(funnel.overallRate||0).toFixed(2)+\'% (lead to closed)</div>\'
+    +\'</div>\'
+
+    +\'<div class="rpt-section rpt-section-highlight">\'
+    +\'<div class="rpt-section-title">DBPR Citation to Client Conversion</div>\'
+    +\'<div class="rpt-kpi-grid">\'
+    +_kpiCard(\'Cited Businesses\',dbpr.cited||0,\'in Pinellas\')
+    +_kpiCard(\'Cited + Contacted\',dbpr.citedContacted||0,(dbpr.contactRate||0).toFixed(1)+\'% of cited\')
+    +_kpiCard(\'Cited + Closed\',dbpr.citedWon||0,(dbpr.closeRate||0).toFixed(1)+\'% of contacted\')
+    +\'</div>\'
+    +\'</div>\'
+
+    +\'<div class="rpt-section">\'
+    +\'<div class="rpt-section-title">Outreach Effectiveness</div>\'
+    +\'<div class="rpt-kpi-grid">\'
+    +_kpiCard(\'Total Activities\',out.totalActivities||0,\'in period\')
+    +_kpiCard(\'Prospects Touched\',out.uniqueProspectsTouched||0,\'unique\')
+    +_kpiCard(\'Avg Attempts to Close\',(out.avgAttemptsToClose||0).toFixed(1),\'touches\')
+    +\'</div>\'
+    +\'<div class="rpt-table-wrap"><table class="rpt-table"><thead><tr><th>Outcome</th><th>Count</th></tr></thead>\'
+    +\'<tbody>\'+(outcomeRows||\'<tr><td colspan="2">No data</td></tr>\')+\'</tbody></table></div>\'
+    +\'</div>\'
+
+    +\'<div class="rpt-section">\'
+    +\'<div class="rpt-section-title">Speed Metrics</div>\'
+    +\'<div class="rpt-kpi-grid">\'
+    +_kpiCard(\'Avg Days to Close\',speed.avgDaysToClose!==null?speed.avgDaysToClose:\'--\',\'days\')
+    +_kpiCard(\'Leads Stale &gt;30d\',speed.staleOver30||0,\'no activity\')
+    +_kpiCard(\'Leads Stale &gt;7d\',speed.staleOver7||0,\'no activity\')
+    +\'</div>\'
+    +\'</div>\'
+
+    +\'<div class="rpt-section">\'
+    +\'<div class="rpt-section-title">Activity Consistency</div>\'
+    +\'<div class="rpt-kpi-grid">\'
+    +_kpiCard(\'Current Streak\',act.currentStreak||0,\'days\')
+    +_kpiCard(\'Zero-Activity Days\',act.zeroDays||0,\'in period\')
+    +\'</div>\'
+    +\'<div class="rpt-chart-wrap">\'+actChart+\'</div>\'
+    +\'<div class="rpt-sub">Daily activity &mdash; last \'+(act.totalDays||30)+\' days</div>\'
+    +\'</div>\'
+
+    +\'<div class="rpt-section">\'
+    +\'<div class="rpt-section-title">Geographic Performance</div>\'
+    +\'<div class="rpt-table-wrap"><table class="rpt-table"><thead><tr><th>City</th><th>Leads</th><th>Contacted</th><th>Won</th><th>MRR</th><th>Close %</th></tr></thead>\'
+    +\'<tbody>\'+geoRows+\'</tbody></table></div>\'
+    +\'</div>\'
+
+    +\'<div class="rpt-section">\'
+    +\'<div class="rpt-section-title">Client Health</div>\'
+    +\'<div class="rpt-kpi-grid">\'
+    +_kpiCard(\'Active Clients\',cli.totalActive||0,\'\')
+    +_kpiCard(\'New This Period\',cli.newInPeriod||0,\'clients\')
+    +_kpiCard(\'Churned\',cli.churned||0,\'total\')
+    +_kpiCard(\'Retention Rate\',(cli.retentionRate||0).toFixed(1)+\'%\',\'\')
+    +\'</div>\'
+    +\'</div>\'
+
+    +\'<div style="height:60px"></div>\';
+}
 
 // ── OFFLINE DETECTION ────────────────────────────────────────────────────────
 function updateOnlineStatus(){
