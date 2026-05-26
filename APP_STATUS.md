@@ -1,9 +1,9 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-05-22 (session 50 — inspector name investigation closed, CI revert fix, inspector section hidden) by Claude Code*
+*Last updated: 2026-05-26 (session 51 — Reports tab, ATP protocol page, inspection history export, CI fixes) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
-- Last deployed: 2026-05-15 (session 21 — data pipeline refresh)
+- Last deployed: 2026-05-26 (Reports tab + color fix)
 - Build script: `build.py` (repo root) → outputs `index.html` directly
 - `index.html` regenerated from `build.py` using existing P[] data — fully in sync
 
@@ -15,15 +15,18 @@
 - Scraper delay: MIN_DELAY=1.5s, MAX_DELAY=3.0s (~40% faster than previous 2.5/4.5s)
 - Commit uses `--allow-empty` — always pushes even if no data changes
 - **Workflow revert loop permanently fixed**: CI commit step now does `git add -A` then `git restore --staged .github/` — Actions bot can never stage or push workflow files; prevents the daily rebuild from reverting workflow changes
-- `pages.yml` deploys to GitHub Pages on every push to main
+- `pages.yml` deploys to GitHub Pages on every push to main (restored after erroneous deletion — was always needed)
 - `send_briefing.py` runs as **final step in rebuild.yml** — always sends after fresh data is built
 - Daily briefing fallback: `send_briefing.yml` cron at 13:00 UTC (9am ET) if rebuild fails
 - sw.js cache bumped manually when patching index.html; `build.py` auto-stamps on CI rebuild
 - **Concurrency group `rebuild`** in `rebuild.yml` — rapid-fire branch pushes cancel in-progress CI runs so only the latest commit builds; prevents parallel runs racing on `git push origin HEAD:main`
 - **`atp/` copied in CI**: `rebuild.yml` now includes `git checkout origin/claude/... -- atp/` so the landing page folder is picked up from the feature branch and deployed to main automatically
+- **`docs/protocol/` preserved in CI**: `rebuild.yml` `git checkout origin/main -- docs/protocol/` preserves static ATP protocol page through daily rebuilds
 
 ### Navigation
-- 6-tab layout: Home / Prospects / Pipeline / Route / Clients / Partners
+- **7-tab layout**: Home / Prospects / Pipeline / Route / Clients / Partners / Reports
+- Tab bar is horizontally scrollable on mobile (overflow-x, scroll-snap, hidden scrollbar)
+- `REPORTS_TAB_ENABLED` Python flag in `build.py` — set False to hide tab entirely with no JS errors
 - Gear ⚙️ button opens Settings overlay
 - `sw('customers')` and `sw('service')` alias to Clients tab (backward compatible)
 - Clients tab has inner sub-tabs: Clients / Service (via `setClientTab()`)
@@ -47,6 +50,7 @@
 - In Play follow-ups grouped by urgency: Overdue / Today / This Week / This Month
 - Cold targets grid loads on first open
 - **New Since Yesterday** section: split into 🚨 Urgent / ⚠️ Watch / ℹ️ Info tiers based on `change_severity` field baked at CI build time
+- MRR/ARR KPI row, Weekly Funnel, Goal Pacing, and Loss Breakdown blocks **removed** — moved to Reports tab
 
 ### Prospects Tab
 - Full prospect list with search/filter
@@ -70,7 +74,7 @@
 
 ### Pipeline Tab
 - 4-stage tab UI: **In Play / Quoted / Won / Lost** (via `setPipeStage()` / `pipeStage` state)
-- KPI bar: In Play count, Quoted count, Close Rate %
+- KPI bar removed — aggregate metrics moved to Reports tab
 - `getProspectStage(p)` classifies each prospect by stage (checks p.status + last log outcome)
 - In Play / Quoted: grouped by follow-up urgency (Overdue / Today / Week / Month / Later)
 - Won / Lost: chronological list with outcome badge
@@ -201,6 +205,15 @@ To force a fresh PWA load after a push: open the URL directly in Safari (not the
 - **Know Your Inspector section (CleanScore)**: Hidden. Inspector names are definitively not available from any DBPR public source — bulk CSV (82 cols, no inspector field), `inspectionDetail.asp` (static HTML + JS-rendered DOM, zero AJAX calls, no inspector field), `LicenseDetail.asp` (returns error page), `wl11.asp` (returns empty search form), `inspectionSearch.asp` (404). Section removed from CleanScore `renderReport()` and `fetchInspectors()` call removed from `init()`. Re-enable if a reliable data source is found.
 
 ## Recent Changes
+- **2026-05-26 (s51 — Reports tab, ATP protocol page, inspection history, CI fixes):**
+  - **Reports tab** (7th tab, `REPORTS_TAB_ENABLED` flag): `renderSalesReports()` with 8 sections — Revenue KPIs (MRR/ARR/clients/avg deal/pipeline/won), Sales Funnel (5-stage bar chart), DBPR Citation to Client Conversion (highlighted), Outreach Effectiveness (activities/touches/avg-to-close/outcome breakdown), Speed Metrics (avg days to close/stale leads), Activity Consistency (daily bar chart + streak), Geographic Performance (top 10 cities table), Client Health (active/new/churned/retention). Period filter: 7D / 30D / 90D / All. Empty state when no data. All JS uses `var`, `for…in`, no `includes()`/`Object.entries()`/`const`.
+  - **Scrollable tab bar**: `overflow-x:auto`, `scroll-snap-type:x mandatory`, `scrollbar-width:none`, `flex-shrink:0` on tabs — all 7 tabs reachable by swipe on mobile.
+  - **Pipeline KPI bar removed**: In Play / Quoted / Close Rate / Forecast bar deleted from Pipeline panel; aggregate metrics now live in Reports tab.
+  - **Home tab stat blocks removed**: MRR/ARR KPI row, Weekly Funnel card, Goal Pacing card, Loss Breakdown card all removed from Home panel.
+  - **ATP Testing Protocol page**: `docs/protocol/index.html` — clinical SOP-ATP-001 document (IBM Plex fonts, 8 sections). Preserved through CI via `rebuild.yml`. Linked from Explore page ACT 6 CTA as "Methodology / ATP Testing Protocol".
+  - **`pages.yml` restored**: Was erroneously deleted assuming branch-based Pages. GitHub Pages uses Actions deployment (not branch-based). Restored from git history.
+  - **`export_cleanscore.py` inspection history**: `build_inspection_history()` loads 5 DBPR historical files (2021, 2223, 2324, 2425, current CSV), filters to Pinellas, deduplicates, returns dict keyed by License ID. Fixes: removed `errors='replace'` from `read_csv`, skipped invalid `fdinspi_2122.xlsx`, fixed License ID groupby (falls back to License Number column when xlsx files lack the column).
+  - **CSS color fix**: Reports tab CSS was written for dark background. All colors switched to app CSS variables (`--navy`, `--sub`, `--txt`, `--surf`, `--brd`) for the light panel background.
 - **2026-05-22 (s50 — inspector name investigation closed, CI revert fix, inspector section hidden):**
   - **Inspector name investigation closed** (`scrape_dbpr.py`, `migrate_scraper_cache.py`): All DBPR public sources exhausted. (1) DBPR bulk CSV: 82 columns exactly, no inspector name/ID field confirmed via `build_violations_list.py` diagnostic. (2) `inspectionDetail.asp` static HTML: no labeled inspector field — "Inspector" only appears inside violation observation text. (3) `inspectionDetail.asp` JS-rendered DOM (Playwright Phase 1): same, zero AJAX calls fired. (4) `LicenseDetail.asp` (Phase 2): returns "request cannot be processed" error. (5) `wl11.asp` (Phase 2): returns empty search form. (6) `inspectionSearch.asp` (Phase 2): 404. Inspector names are not publicly accessible from any DBPR web interface.
   - **`extract_inspector_name()` stubbed** (`scrape_dbpr.py`): Returns `None` unconditionally. Previous regex matched "inspector" in violation observation text (e.g. "Inspector discussed with operator…"), generating false positives like "operator posted" and "handwashing sign". No labeled inspector field exists anywhere on DBPR pages so the regex cannot be fixed — it must be a no-op until a real data source is found.
@@ -382,11 +395,10 @@ See the SQL in the prompt — creates `pic_prospects`, `pic_partners`, adds `use
 - If Supabase is not configured (no URL/key in env or localStorage), app runs in local-only mode — login screen is skipped, localStorage data used directly. Zero regression for existing usage.
 
 ## Next Session Priorities
-1. **Verify CI revert fix after next rebuild**: CI log should confirm PATCH fix and partner export fix are no longer reverted. `push_to_supabase()` should log `✓ Updated N records` (PATCH path) instead of insert errors.
-2. **Verify stats after next CI rebuild**: CI log should show `Stats: ~9,400 Pinellas businesses, ~681 with ice citations (~7.2%)`, `repeat probability ~46.8%`, and `Date sync: N records updated from citation date` (N > 0). Last Inspected on DBPR-cited prospects should match `cit_latest`.
-3. **Verify inspection timeline chart**: Open a business with inspection history in CleanScore. Bars should have visible height (not 2px lines). Red bars for V22 visits, amber for other violations, green for clean. Trend text should reflect had_v22 history.
-4. **Verify reach-in end-to-end after next CI build**: (a) Close Deal overlay shows reach-in toggle; (b) Charge Now creates Stripe session with reach-in line item; (c) Service log shows reach-in section only for enrolled clients; (d) Reports tab shows reach-in ATP table for enrolled clients with data (no NaN)
-5. **Per-customer report history**: Add a "Reports" sub-tab inside each customer card showing all past service visits with ability to view/print/email any individual report
+1. **Verify Reports tab with real data**: Log several calls and confirm Revenue KPIs, Funnel, DBPR Conversion, Outreach, Speed, Activity chart, and Geo table all populate correctly. Period filter (7D/30D/90D/All) should re-render correctly.
+2. **Verify reach-in end-to-end after next CI build**: (a) Close Deal overlay shows reach-in toggle; (b) Charge Now creates Stripe session with reach-in line item; (c) Service log shows reach-in section only for enrolled clients
+3. **Per-customer report history**: Add a "Reports" sub-tab inside each customer card showing all past service visits with ability to view/print/email any individual report
+4. **Verify inspection history in CleanScore**: Bars should have visible height. Red bars for V22 visits, amber for other violations, green for clean.
 
 ## iOS PWA Rules (never violate these)
 - **Buttons in injected HTML:** use inline `ontouchend="event.preventDefault();fn()"` + `onclick="fn()"` — NOT `addEventListener` on innerHTML-injected elements
@@ -416,6 +428,7 @@ See the SQL in the prompt — creates `pic_prospects`, `pic_partners`, adds `use
 | `docs/explore/index.html` | QR code hub page — `https://pinellasiceco.github.io/Pinellasiceco/docs/explore/` — 6-act scrolling page (hero, 215 vs 10 count-up, 3 stat cards, guarantee, features, 3-path CTA); printed on physical business cards |
 | `docs/before-after/index.html` | Before & After ATP gallery — `https://pinellasiceco.github.io/Pinellasiceco/docs/before-after/` — dark industrial design: animated hero counters (523 RLU, 4 RLU after, 10 cards), CSS grid card layout, scroll-triggered ATP number count-ups + progress bars, persistent CTA bar (call + book). Images in `docs/before-after/img/`. Linked from explore page. |
 | `docs/history/index.html` | Easter egg timeline — `https://pinellasiceco.github.io/Pinellasiceco/docs/history/` — 9-milestone ice history (10,000 BC → today), inline SVG illustrations, progress bar, sticky nav with counter; noindex, linked from explore page |
+| `docs/protocol/index.html` | ATP Testing Protocol SOP — `https://pinellasiceco.github.io/Pinellasiceco/docs/protocol/` — clinical SOP-ATP-001 document: regulatory basis (FDA/DBPR/NSF), Hygiena EnSURE instrumentation, scientific basis, 10-step sampling procedure, 3-tier RLU scale (PASS/MARGINAL/FAIL), surface reference table, QA requirements, scope/limitations. IBM Plex fonts. Static file — preserved through CI rebuilds via `git checkout origin/main -- docs/protocol/`. Linked from Explore page ACT 6 CTA. |
 | `docs/fieldmanual/` | **Technician Field Manual** — `https://pinellasiceco.github.io/Pinellasiceco/docs/fieldmanual/` — **COMPLETE**. 9 pages. `index.html`: hub with "ADD-ON SERVICES" section + brand cards + search. `reachin.html`: reach-in cooler protocol (8 sections). Per-brand pages: `hoshizaki.html`, `manitowoc.html`, `iceomatic.html`, `scotsman.html`, `follett.html`. `reference.html`: chemicals, ATP scale, checklists. Linked from Settings tab. Deployed automatically — `pages.yml` uploads full repo root. |
 | `atp/index.html` | ATP landing page — `https://pinellasiceco.github.io/Pinellasiceco/atp/` — single self-contained HTML file, no external images, inline SVG logo |
 | `customers.json` | Seed customer data (used at build time) |
