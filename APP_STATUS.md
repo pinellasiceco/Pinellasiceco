@@ -1,9 +1,9 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-05-26 (session 51 — Reports tab, ATP protocol page, inspection history export, CI fixes) by Claude Code*
+*Last updated: 2026-05-27 (session 52 — revenue split: MRR vs one-time in Reports + Home tab) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
-- Last deployed: 2026-05-26 (Reports tab + color fix)
+- Last deployed: 2026-05-27 (revenue split — intro fee + one-time tracked separately from MRR)
 - Build script: `build.py` (repo root) → outputs `index.html` directly
 - `index.html` regenerated from `build.py` using existing P[] data — fully in sync
 
@@ -205,6 +205,13 @@ To force a fresh PWA load after a push: open the URL directly in Safari (not the
 - **Know Your Inspector section (CleanScore)**: Hidden. Inspector names are definitively not available from any DBPR public source — bulk CSV (82 cols, no inspector field), `inspectionDetail.asp` (static HTML + JS-rendered DOM, zero AJAX calls, no inspector field), `LicenseDetail.asp` (returns error page), `wl11.asp` (returns empty search form), `inspectionSearch.asp` (404). Section removed from CleanScore `renderReport()` and `fetchInspectors()` call removed from `init()`. Re-enable if a reliable data source is found.
 
 ## Recent Changes
+- **2026-05-27 (s52 — revenue split: MRR vs one-time in Reports + Home tab):**
+  - **`intro_fee` on customer record** (`build.py` `scMarkWon()`): Three new fields saved at close time — `intro_fee` (entry price paid, 0 for one-time cleans), `intro_fee_collected` (bool, false for one-time), `intro_fee_date` (ISO date string). Backward-safe: missing fields default to 0/false via `||`.
+  - **`calcOneTimeRevenue(sinceDate)`** (`build.py`): New JS helper that sums one-time deep-clean amounts (`customer_once` status, `c.onetime`) plus intro fees from recurring/quarterly clients (`c.intro_fee_collected === true`, `c.intro_fee`). Filters to `sinceDate` when provided. Used by both Reports tab and Home tab.
+  - **`_revenueMetrics()` expanded**: Return object now includes `oneTime` (period-filtered via `_periodStart()`) and `totalRev` (MRR + one-time) alongside existing fields.
+  - **Reports tab Revenue section revamped** (`renderSalesReports()`): Grid expanded from 6 to 8 KPI cards — **MRR** (recurring) / **One-Time** (period) / **Total Rev** (MRR+one-time) / **Recurring %** (of total revenue) / ARR (projected) / Active Clients / Avg Deal / Pipeline Value. Sub-note below grid explains what One-Time includes (intro fees + single deep-cleans in period).
+  - **Home tab one-time flash card**: New `<div id="one-time-rev-summary">` after TODAY'S PLAN (hidden by default). `renderBriefing()` computes month-to-date one-time revenue via `calcOneTimeRevenue(monthStart)` and renders a compact card showing the dollar amount + "intro fees + deep cleans" label. Hidden when `$0`.
+
 - **2026-05-26 (s51 — Reports tab, ATP protocol page, inspection history, CI fixes):**
   - **Reports tab** (7th tab, `REPORTS_TAB_ENABLED` flag): `renderSalesReports()` with 8 sections — Revenue KPIs (MRR/ARR/clients/avg deal/pipeline/won), Sales Funnel (5-stage bar chart), DBPR Citation to Client Conversion (highlighted), Outreach Effectiveness (activities/touches/avg-to-close/outcome breakdown), Speed Metrics (avg days to close/stale leads), Activity Consistency (daily bar chart + streak), Geographic Performance (top 10 cities table), Client Health (active/new/churned/retention). Period filter: 7D / 30D / 90D / All. Empty state when no data. All JS uses `var`, `for…in`, no `includes()`/`Object.entries()`/`const`.
   - **Scrollable tab bar**: `overflow-x:auto`, `scroll-snap-type:x mandatory`, `scrollbar-width:none`, `flex-shrink:0` on tabs — all 7 tabs reachable by swipe on mobile.
@@ -395,10 +402,10 @@ See the SQL in the prompt — creates `pic_prospects`, `pic_partners`, adds `use
 - If Supabase is not configured (no URL/key in env or localStorage), app runs in local-only mode — login screen is skipped, localStorage data used directly. Zero regression for existing usage.
 
 ## Next Session Priorities
-1. **Verify Reports tab with real data**: Log several calls and confirm Revenue KPIs, Funnel, DBPR Conversion, Outreach, Speed, Activity chart, and Geo table all populate correctly. Period filter (7D/30D/90D/All) should re-render correctly.
-2. **Verify reach-in end-to-end after next CI build**: (a) Close Deal overlay shows reach-in toggle; (b) Charge Now creates Stripe session with reach-in line item; (c) Service log shows reach-in section only for enrolled clients
-3. **Per-customer report history**: Add a "Reports" sub-tab inside each customer card showing all past service visits with ability to view/print/email any individual report
-4. **Verify inspection history in CleanScore**: Bars should have visible height. Red bars for V22 visits, amber for other violations, green for clean.
+1. **Verify revenue split with real data**: Close a test deal and confirm: (a) `intro_fee` / `intro_fee_collected` / `intro_fee_date` appear in customer record; (b) Reports tab Revenue section shows MRR / One-Time / Total Rev / Recurring % correctly; (c) Home tab shows one-time flash card after close (month-to-date > $0).
+2. **Verify Reports tab with real data**: Log several calls and confirm Funnel, DBPR Conversion, Outreach, Speed, Activity chart, and Geo table all populate correctly. Period filter (7D/30D/90D/All) should re-render correctly.
+3. **Verify reach-in end-to-end after next CI build**: (a) Close Deal overlay shows reach-in toggle; (b) Charge Now creates Stripe session with reach-in line item; (c) Service log shows reach-in section only for enrolled clients
+4. **Per-customer report history**: Add a "Reports" sub-tab inside each customer card showing all past service visits with ability to view/print/email any individual report
 
 ## iOS PWA Rules (never violate these)
 - **Buttons in injected HTML:** use inline `ontouchend="event.preventDefault();fn()"` + `onclick="fn()"` — NOT `addEventListener` on innerHTML-injected elements
