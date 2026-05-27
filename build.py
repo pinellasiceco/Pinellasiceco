@@ -2442,6 +2442,9 @@ header{background:var(--navy);
     <!-- ── TODAY'S PLAN ────────────────────────────── -->
     <div id="todays-plan" style="margin-bottom:12px"></div>
 
+    <!-- ── ONE-TIME REVENUE FLASH ───────────────────── -->
+    <div id="one-time-rev-summary" style="margin-bottom:12px;display:none"></div>
+
     <!-- ── UNCLAIMED CITATIONS ──────────────────────── -->
     <div id="unclaimed-citations-wrapper" style="margin-bottom:12px"></div>
 
@@ -3986,6 +3989,9 @@ function scMarkWon(onetime){
     monthly:monthlyPrice,onetime:onetimePrice,
     entry_price:onetime?0:entry,
     entry_discount:onetime?0:Math.max(0,standardEntry-entry),
+    intro_fee:onetime?0:entry,
+    intro_fee_collected:!onetime,
+    intro_fee_date:onetime?'':localISO(new Date()),
     filters_included:false,close_note:closeNote,
     referred_by_partner:partnerId,
     referred_by_partner_name:partnerObj?partnerObj.name:'',
@@ -7840,6 +7846,22 @@ function renderBriefing(){
   if(kpiEl('kpi-pipe'))kpiEl('kpi-pipe').textContent=pipeCount;
   if(kpiEl('kpi-week'))kpiEl('kpi-week').textContent=weekTotal;
 
+  // ── ONE-TIME REVENUE FLASH ────────────────────────────────────────────
+  const otEl=document.getElementById('one-time-rev-summary');
+  if(otEl){
+    const monthStart=new Date(now.getFullYear(),now.getMonth(),1);
+    const otRev=calcOneTimeRevenue(monthStart);
+    if(otRev>0){
+      otEl.style.display='block';
+      otEl.innerHTML='<div style="background:var(--surf);border:1px solid var(--brd);border-radius:10px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center">'
+        +'<div><div style="font-size:11px;font-weight:600;color:var(--sub)">ONE-TIME REV THIS MONTH</div>'
+        +'<div style="font-size:18px;font-weight:800;color:var(--navy)">$'+otRev.toLocaleString()+'</div></div>'
+        +'<div style="font-size:10px;color:var(--sub);text-align:right">intro fees +<br>deep cleans</div></div>';
+    }else{
+      otEl.style.display='none';
+    }
+  }
+
   // ── FUNNEL (this week) ────────────────────────────────────────────────
   const wWalkins =weekEntries.filter(e=>e.type==='walkin').length;
   const wCalls   =weekEntries.filter(e=>e.type==='call').length;
@@ -11272,6 +11294,25 @@ function _custMRR(c){
   return _num(c.monthly);
 }
 
+function calcOneTimeRevenue(sinceDate){
+  var total=0;
+  var ids=Object.keys(customers);
+  for(var i=0;i<ids.length;i++){
+    var c=customers[ids[i]];
+    if(!c)continue;
+    var st=c.status||\'\';
+    if(st===\'customer_once\'&&_num(c.onetime)){
+      var d=new Date(c.won_date||\'\'  );
+      if(!sinceDate||(!isNaN(d.getTime())&&d>=sinceDate)){total+=_num(c.onetime);}
+    }
+    if((st===\'customer_recurring\'||st===\'customer_quarterly\')&&c.intro_fee_collected&&_num(c.intro_fee)){
+      var d2=new Date(c.intro_fee_date||c.won_date||\'\'  );
+      if(!sinceDate||(!isNaN(d2.getTime())&&d2>=sinceDate)){total+=_num(c.intro_fee);}
+    }
+  }
+  return total;
+}
+
 function _revenueMetrics(){
   var clients=_activeClients();
   var mrr=0;
@@ -11298,7 +11339,9 @@ function _revenueMetrics(){
     }
   }
   var avgDeal=totalDeals>0?(mrr/totalDeals):0;
-  return{mrr:mrr,arr:mrr*12,totalClients:totalDeals,wonInPeriod:wonInPeriod,revenueInPeriod:revenueInPeriod,pipelineVal:pipelineVal,avgDeal:avgDeal};
+  var oneTime=calcOneTimeRevenue(_reportPeriod>0?_periodStart():null);
+  var totalRev=mrr+oneTime;
+  return{mrr:mrr,arr:mrr*12,totalClients:totalDeals,wonInPeriod:wonInPeriod,revenueInPeriod:revenueInPeriod,pipelineVal:pipelineVal,avgDeal:avgDeal,oneTime:oneTime,totalRev:totalRev};
 }
 
 function _funnelMetrics(){
@@ -11581,13 +11624,16 @@ function renderSalesReports(){
     +\'<div class="rpt-section">\'
     +\'<div class="rpt-section-title">Revenue</div>\'
     +\'<div class="rpt-kpi-grid">\'
-    +_kpiCard(\'MRR\',\'$\'+Math.round(rev.mrr||0),\'\')
-    +_kpiCard(\'ARR\',\'$\'+Math.round(rev.arr||0),\'\')
+    +_kpiCard(\'MRR\',\'$\'+Math.round(rev.mrr||0),\'recurring\')
+    +_kpiCard(\'One-Time\',\'$\'+Math.round(rev.oneTime||0),\'period\')
+    +_kpiCard(\'Total Rev\',\'$\'+Math.round(rev.totalRev||0),\'MRR+one-time\')
+    +_kpiCard(\'Recurring %\',(rev.totalRev>0?Math.round(rev.mrr/rev.totalRev*100):0)+\'%\',\'of revenue\')
+    +_kpiCard(\'ARR\',\'$\'+Math.round(rev.arr||0),\'projected\')
     +_kpiCard(\'Active Clients\',rev.totalClients||0,\'\')
     +_kpiCard(\'Avg Deal\',\'$\'+Math.round(rev.avgDeal||0)+\'/mo\',\'\')
     +_kpiCard(\'Pipeline Value\',\'$\'+Math.round(rev.pipelineVal||0)+\'/mo\',\'est.\')
-    +_kpiCard(\'Won This Period\',rev.wonInPeriod||0,\'deals\')
     +\'</div>\'
+    +\'<div class="rpt-sub" style="margin-top:6px">One-Time includes intro fees and single deep-cleans collected in the selected period.</div>\'
     +\'</div>\'
 
     +\'<div class="rpt-section">\'
