@@ -4,7 +4,7 @@ Pinellas Ice Co \u2014 Prospect Tool Builder
 Complete, self-contained. Drop in any folder with your CSV files and run.
 """
 
-import sys, os, json, re, warnings, csv
+import sys, os, json, re, warnings, csv, base64
 from pathlib import Path
 from datetime import date, timedelta
 from math import radians, cos, sin, sqrt, atan2
@@ -1925,7 +1925,54 @@ def push_to_supabase(table, data, batch_size=500):
     except Exception as e:
         print(f'  ✗ {table} error: {e}')
 
-SIGNATURE_B64 = "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"
+_SIGNATURE_B64_FALLBACK = "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"
+
+def load_signature_b64():
+    sig_path = os.path.join(os.path.dirname(__file__), 'assets', 'sig.png')
+    if not os.path.exists(sig_path):
+        print('  WARNING: assets/sig.png not found — using embedded fallback')
+        return 'data:image/png;base64,' + _SIGNATURE_B64_FALLBACK
+    try:
+        with open(sig_path, 'rb') as f:
+            data = base64.b64encode(f.read()).decode()
+        print('  Loaded signature from assets/sig.png')
+        return 'data:image/png;base64,' + data
+    except Exception as e:
+        print(f'  WARNING: Could not load sig: {e}')
+        return 'data:image/png;base64,' + _SIGNATURE_B64_FALLBACK
+
+def build_sig_block(sig_b64, name, title):
+    if sig_b64:
+        img_html = (
+            '<img src="' + sig_b64 + '" alt="Technician signature" '
+            'style="height:48px;width:auto;max-width:200px;'
+            'object-fit:contain;display:block;margin-bottom:4px">'
+        )
+    else:
+        img_html = (
+            '<div style="height:48px;width:160px;border-bottom:1px solid #1a1a1a;'
+            'margin-bottom:4px;display:block"></div>'
+        )
+    return (
+        '<div style="margin-top:20px;padding-top:14px;border-top:1px solid #c8c8c0;'
+        'display:flex;flex-direction:column;align-items:flex-start;gap:4px">'
+        + img_html
+        + '<div style="font-weight:600;font-size:13px;color:#1a1a1a;line-height:1.3">'
+        + name + '</div>'
+        + '<div style="font-size:11px;color:#7a7a7a;line-height:1.3">' + title + '</div>'
+        + '<a href="https://pinellasiceco.github.io/Pinellasiceco/docs/protocol/"'
+        + ' style="font-size:11px;color:#3a8ec9;text-decoration:none;'
+        + 'margin-top:8px;display:inline-block" target="_blank">'
+        + 'Learn about our ATP testing methodology &rarr;</a>'
+        + '</div>'
+    )
+
+SIG_B64 = load_signature_b64()
+SIG_HTML = build_sig_block(
+    SIG_B64,
+    'John Serrantino',
+    'Lead Technician &middot; Pinellas Ice Co.'
+)
 
 def build_html(records, partners=None):
     data_js     = json.dumps(records, separators=(',',':')).replace('`', '\\u0060')
@@ -1975,7 +2022,8 @@ def build_html(records, partners=None):
                             '<div id="reports-root">'
                             '<div class="reports-loading">Loading reports...</div>'
                             '</div></div>'
-                        ) if REPORTS_TAB_ENABLED else '')
+                        ) if REPORTS_TAB_ENABLED else '')\
+                        .replace('%%SIG_BLOCK%%', SIG_HTML)
 
 # ──────────────────────────────────────────────────────────────────────────────
 # HTML TEMPLATE  (everything between the triple-quotes)
@@ -10526,17 +10574,8 @@ function srGenerate(p,atpVal,notes){
         }).join('')
         +'</div></div>';
     }())
-    +'<table style="width:100%;border-collapse:collapse;margin-bottom:10px"><tr>'
-    +'<td style="width:48%;padding-right:14px">'
-    +'<img src="data:image/png;base64,'+SIGNATURE_B64+'" alt="Authorized Signature" style="height:60px;width:auto;max-width:220px;object-fit:contain;display:block;margin-bottom:2px">'
-    +'<div style="width:180px;border-top:1px solid #0f1f38;margin-bottom:4px"></div>'
-    +'<div style="font-size:11px;font-weight:700;color:#0f1f38;letter-spacing:0.02em;line-height:1.3">John Serrantino</div>'
-    +'<div style="font-size:10px;color:#64748b;line-height:1.3">Owner &#45; Pinellas Ice Co.</div>'
-    +'</td>'
-    +'<td style="width:4%"></td>'
-    +'<td style="width:48%;padding-left:14px"><div style="border-bottom:1px solid #94a3b8;height:26px;margin-bottom:3px"></div><div style="font-size:9px;color:#94a3b8">Date</div></td>'
-    +'</tr></table>'
-    +'<div style="text-align:center;font-size:9px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:10px">'
+    +'%%SIG_BLOCK%%'
+    +'<div style="text-align:center;font-size:9px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:10px;margin-top:14px">'
     +'Pinellas Ice Co &nbsp;&middot;&nbsp; pinellasiceco.com &nbsp;&middot;&nbsp; (727) 855-6873<br>'
     +'FDA Food Code &sect;3-502.12 &nbsp;&middot;&nbsp; FL Administrative Code 64E-11 &nbsp;&middot;&nbsp; ATP testing per NSF/ANSI Standard 63'
     +'</div>'
@@ -10694,7 +10733,8 @@ function srSendEmail(p,atpVal,emailTo,notes){
         }).join('')
         +'</div></div>';
     }())
-    +'<div style="text-align:center;font-size:9px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:10px">'
+    +'%%SIG_BLOCK%%'
+    +'<div style="text-align:center;font-size:9px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:10px;margin-top:14px">'
     +'Pinellas Ice Co &nbsp;&middot;&nbsp; pinellasiceco.com &nbsp;&middot;&nbsp; (727) 855-6873<br>'
     +'FDA Food Code &sect;3-502.12 &nbsp;&middot;&nbsp; FL Administrative Code 64E-11 &nbsp;&middot;&nbsp; ATP testing per NSF/ANSI Standard 63'
     +'</div>'
