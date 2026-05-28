@@ -94,6 +94,7 @@ jobs:
           # Scraper outputs are already in working tree from the restore + scraper steps
           git checkout origin/main -- "pinellas v22 to scrape.csv" 2>/dev/null || true
           git checkout origin/main -- docs/protocol/ 2>/dev/null || true
+          git checkout origin/main -- assets/ 2>/dev/null || true
           git add -A
           git restore --staged .github/ 2>/dev/null || true
           git commit --allow-empty -m "Daily rebuild $(date +'%Y-%m-%d %H:%M')"
