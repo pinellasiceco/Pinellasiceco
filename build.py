@@ -1973,6 +1973,21 @@ SIG_HTML = build_sig_block(
     'John Serrantino',
     'Lead Technician &middot; Pinellas Ice Co.'
 )
+# Email-safe version: hosted URL (email clients block data URIs), plain block layout (no flex)
+SIG_HTML_EMAIL = (
+    '<div style="margin-top:20px;padding-top:14px;border-top:1px solid #c8c8c0">'
+    '<img src="https://pinellasiceco.github.io/Pinellasiceco/assets/sig.png"'
+    ' alt="" width="180" height="48"'
+    ' style="height:48px;width:auto;max-width:180px;display:block;margin-bottom:6px">'
+    '<div style="font-weight:600;font-size:13px;color:#1a1a1a;margin-bottom:2px">'
+    'John Serrantino</div>'
+    '<div style="font-size:11px;color:#7a7a7a;margin-bottom:8px">'
+    'Lead Technician &middot; Pinellas Ice Co.</div>'
+    '<a href="https://pinellasiceco.github.io/Pinellasiceco/docs/protocol/"'
+    ' style="font-size:11px;color:#3a8ec9;text-decoration:none;display:block"'
+    ' target="_blank">Learn about our ATP testing methodology &rarr;</a>'
+    '</div>'
+)
 
 def build_html(records, partners=None):
     data_js     = json.dumps(records, separators=(',',':')).replace('`', '\\u0060')
@@ -2024,6 +2039,7 @@ def build_html(records, partners=None):
                             '</div></div>'
                         ) if REPORTS_TAB_ENABLED else '')\
                         .replace('%%SIG_BLOCK%%', SIG_HTML)
+                        .replace('%%SIG_BLOCK_EMAIL%%', SIG_HTML_EMAIL)
 
 # ──────────────────────────────────────────────────────────────────────────────
 # HTML TEMPLATE  (everything between the triple-quotes)
@@ -10140,20 +10156,7 @@ function loadReportClient(){
     (function(){var pUrls=lastSvcEntry.photo_urls||[];if(!pUrls.length)return'';return'<div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:14px">'+'<div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:10px">Before / After Photos</div>'+'<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px">'+pUrls.map(function(url,i){return'<div style="text-align:center"><img src="'+url+'" style="width:100%;border-radius:6px;border:1px solid #e2e8f0;object-fit:cover;aspect-ratio:1"><div style="font-size:9px;color:#94a3b8;margin-top:3px">Photo '+(i+1)+'</div></div>';}).join('')+'</div></div>';}())+
 
     // ── SIGNATURES ───────────────────────────────────────────────────────
-    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:14px">'+
-      '<div>'+
-        '<div style="height:40px;border-bottom:1.5px solid #0f1f38;margin-bottom:4px"></div>'+
-        '<div style="font-size:9px;font-weight:700;color:#475569">Technician Signature</div>'+
-        '<div style="font-size:10px;color:#0f1f38;font-weight:600;margin-top:2px">Pinellas Ice Co</div>'+
-        '<div style="font-size:9px;color:#94a3b8">'+dateStr+'</div>'+
-      '</div>'+
-      '<div>'+
-        '<div style="height:40px;border-bottom:1.5px solid #0f1f38;margin-bottom:4px"></div>'+
-        '<div style="font-size:9px;font-weight:700;color:#475569">Authorized Representative</div>'+
-        '<div style="font-size:10px;color:#94a3b8;margin-top:2px">Print name &amp; sign</div>'+
-        '<div style="font-size:9px;color:#94a3b8">Date</div>'+
-      '</div>'+
-    '</div>'+
+    '%%SIG_BLOCK%%'+
 
     // ── FOOTER ───────────────────────────────────────────────────────────
     '<div style="border-top:1px solid #e2e8f0;padding-top:8px;display:flex;justify-content:space-between;align-items:center">'+
@@ -10733,7 +10736,7 @@ function srSendEmail(p,atpVal,emailTo,notes){
         }).join('')
         +'</div></div>';
     }())
-    +'%%SIG_BLOCK%%'
+    +'%%SIG_BLOCK_EMAIL%%'
     +'<div style="text-align:center;font-size:9px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:10px;margin-top:14px">'
     +'Pinellas Ice Co &nbsp;&middot;&nbsp; pinellasiceco.com &nbsp;&middot;&nbsp; (727) 855-6873<br>'
     +'FDA Food Code &sect;3-502.12 &nbsp;&middot;&nbsp; FL Administrative Code 64E-11 &nbsp;&middot;&nbsp; ATP testing per NSF/ANSI Standard 63'
