@@ -2038,7 +2038,7 @@ def build_html(records, partners=None):
                             '<div class="reports-loading">Loading reports...</div>'
                             '</div></div>'
                         ) if REPORTS_TAB_ENABLED else '')\
-                        .replace('%%SIG_BLOCK%%', SIG_HTML)
+                        .replace('%%SIG_BLOCK%%', SIG_HTML)\
                         .replace('%%SIG_BLOCK_EMAIL%%', SIG_HTML_EMAIL)
 
 # ──────────────────────────────────────────────────────────────────────────────
