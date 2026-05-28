@@ -1973,13 +1973,14 @@ SIG_HTML = build_sig_block(
     'John Serrantino',
     'Lead Technician &middot; Pinellas Ice Co.'
 )
-# Email-safe version: hosted URL (email clients block data URIs), plain block layout (no flex)
+# Email-safe version: data URI image (Apple Mail supports it), plain block layout (no flex/grid)
 SIG_HTML_EMAIL = (
     '<div style="margin-top:20px;padding-top:14px;border-top:1px solid #c8c8c0">'
-    '<img src="https://pinellasiceco.github.io/Pinellasiceco/assets/sig.png"'
-    ' alt="" width="180" height="48"'
-    ' style="height:48px;width:auto;max-width:180px;display:block;margin-bottom:6px">'
-    '<div style="font-weight:600;font-size:13px;color:#1a1a1a;margin-bottom:2px">'
+    + ('<img src="' + SIG_B64 + '" alt="" width="180" height="48"'
+       ' style="height:48px;width:auto;max-width:180px;display:block;margin-bottom:6px">'
+       if SIG_B64 else
+       '<div style="height:48px;width:160px;border-bottom:1px solid #1a1a1a;margin-bottom:6px"></div>')
+    + '<div style="font-weight:600;font-size:13px;color:#1a1a1a;margin-bottom:2px">'
     'John Serrantino</div>'
     '<div style="font-size:11px;color:#7a7a7a;margin-bottom:8px">'
     'Lead Technician &middot; Pinellas Ice Co.</div>'
