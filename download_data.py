@@ -267,3 +267,10 @@ if not partner_downloaded:
     print('  Partner license download unavailable — partner list uses keyword detection only')
 
 print('\nAll downloads complete.')
+
+# Fatal check: main DBPR CSV must exist and be non-empty — anything else means
+# the build would run on stale or missing data with no visible error.
+_main_csv = DATA_DIR / '3fdinspi_current.csv'
+if not _main_csv.exists() or _main_csv.stat().st_size < 1000:
+    print(f'\nFATAL: {_main_csv} missing or empty after download — aborting build.')
+    import sys; sys.exit(1)

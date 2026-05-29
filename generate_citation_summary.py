@@ -13,6 +13,7 @@ Output: ice_citation_by_business.csv (repo root, read by build.py)
 
 import os
 import re
+import sys
 import warnings
 from datetime import date, timedelta
 
@@ -121,7 +122,7 @@ def main():
     df = load_all_data()
     if df.empty:
         print('  No data loaded — aborting')
-        return
+        sys.exit(1)
 
     # Filter to Pinellas County
     county      = df['County Number'].astype(str).str.strip()
@@ -131,7 +132,7 @@ def main():
 
     if pinellas.empty:
         print('  No Pinellas rows found — check county column')
-        return
+        sys.exit(1)
 
     # Parse inspection dates from live CSV — THIS IS THE KEY FIX
     # cit_latest_date is always derived from CSV data, never from scraper cache
@@ -142,7 +143,7 @@ def main():
     # V22 flag: non-empty, non-zero, non-null value means ice machine violation
     if 'V22' not in pinellas.columns:
         print('  WARNING: V22 column not found — check _DBPR_COLS mapping')
-        return
+        sys.exit(1)
 
     v22_str = pinellas['V22'].astype(str).str.strip()
     pinellas['v22_flag'] = (
@@ -156,7 +157,7 @@ def main():
     if v22_rows.empty:
         print('  No V22 violations found — check column mapping')
         print(f'  V22 sample values: {pinellas["V22"].dropna().unique()[:10]}')
-        return
+        sys.exit(1)
 
     v22_rows['license_str'] = v22_rows['License ID'].astype(str).str.strip()
 

@@ -69,9 +69,10 @@ jobs:
           fi
 
       - name: Aggregate citation data
+        continue-on-error: true
         run: |
           if [ -f generate_citation_summary.py ]; then
-            python generate_citation_summary.py || echo "Citation summary failed — continuing"
+            python generate_citation_summary.py
           fi
 
       - name: Build prospect tool
