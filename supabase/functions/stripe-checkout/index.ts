@@ -55,7 +55,7 @@ Deno.serve(async (req) => {
     const m = Math.max(1, Math.round(Number(machines)));
     const extraMachines = Math.max(0, m - 1);
     const entryDisc = Math.max(0, Math.min(Number(entry_discount) || 0, 99));
-    const planDisc  = Math.max(0, Number(monthly_discount) || 0);
+    const planDisc  = Math.max(0, Math.min(Number(monthly_discount) || 0, 100));
     const hasReachIn = reach_in === true && plan !== 'onetime';
 
     // --- CREATE NAMED CUSTOMER ---

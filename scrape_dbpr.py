@@ -259,7 +259,15 @@ def fetch_page(url, session_cookie=None):
                     continue
             return raw.decode('utf-8', errors='replace'), ''
 
-    except (URLError, HTTPError) as e:
+    except HTTPError as e:
+        if e.code == 429:
+            retry_after = int(e.headers.get('Retry-After', '60'))
+            print(f"  Rate limited (429) — sleeping {retry_after}s")
+            time.sleep(retry_after)
+        else:
+            print(f"  Fetch error: {e}")
+        return None, ''
+    except URLError as e:
         print(f"  Fetch error: {e}")
         return None, ''
 

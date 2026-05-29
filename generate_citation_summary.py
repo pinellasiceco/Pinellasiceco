@@ -242,7 +242,9 @@ def main():
     print(f'  Citations in last 30 days: '
           f'{(summary["cit_latest_date"] >= month_ago).sum()}')
 
-    summary.to_csv(OUTPUT, index=False)
+    tmp = OUTPUT + '.tmp'
+    summary.to_csv(tmp, index=False)
+    os.replace(tmp, OUTPUT)
     print(f'  Written: {OUTPUT} ({len(summary)} records)')
 
 

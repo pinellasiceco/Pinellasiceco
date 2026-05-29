@@ -1990,9 +1990,19 @@ SIG_HTML_EMAIL = (
     '</div>'
 )
 
+def _nan_to_null(o):
+    """Recursively replace NaN/Inf floats with None so json.dumps produces valid JSON."""
+    if isinstance(o, float) and not math.isfinite(o):
+        return None
+    if isinstance(o, dict):
+        return {k: _nan_to_null(v) for k, v in o.items()}
+    if isinstance(o, list):
+        return [_nan_to_null(v) for v in o]
+    return o
+
 def build_html(records, partners=None):
-    data_js     = json.dumps(records, separators=(',',':')).replace('`', '\\u0060')
-    partners_js = json.dumps(partners or [], separators=(',',':')).replace('`', '\\u0060')
+    data_js     = json.dumps(_nan_to_null(records), separators=(',',':')).replace('`', '\\u0060')
+    partners_js = json.dumps(_nan_to_null(partners or []), separators=(',',':')).replace('`', '\\u0060')
     phones_js = json.dumps(
         {str(r['id']): {'phone':r['phone'],'rating':r['rating'],'hours':r['hours']}
          for r in records if r['phone']},
@@ -11884,12 +11894,16 @@ def main():
     print(f"\nGenerating HTML...")
     html = build_html(records, partners)
     OUTPUT_FILE.parent.mkdir(exist_ok=True)
-    OUTPUT_FILE.write_text(html, encoding='utf-8')
+    _tmp = OUTPUT_FILE.with_suffix('.tmp')
+    _tmp.write_text(html, encoding='utf-8')
+    os.replace(_tmp, OUTPUT_FILE)
     size_kb = OUTPUT_FILE.stat().st_size // 1024
     print(f"  Written: {OUTPUT_FILE.name} ({size_kb}KB)")
     # Keep index.html in sync (CI does cp prospecting_tool.html index.html; mirror locally)
     index_path = OUTPUT_FILE.parent / 'index.html'
-    index_path.write_text(html, encoding='utf-8')
+    _tmp2 = index_path.with_suffix('.tmp')
+    _tmp2.write_text(html, encoding='utf-8')
+    os.replace(_tmp2, index_path)
     print(f"  Written: index.html")
     # Write sw.js for PWA offline support
     sw_path = OUTPUT_FILE.parent / 'sw.js'
