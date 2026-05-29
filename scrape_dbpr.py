@@ -240,8 +240,8 @@ def extract_inspector_name(html):
 
 
 # ── Fetch page ────────────────────────────────────────────────────────────
-def fetch_page(url, session_cookie=None):
-    """Fetch a URL and return HTML content."""
+def fetch_page(url, session_cookie=None, _retries=2):
+    """Fetch a URL and return HTML content. Retries up to _retries times on 429."""
     headers = HEADERS.copy()
     if session_cookie:
         headers['Cookie'] = session_cookie
@@ -260,12 +260,12 @@ def fetch_page(url, session_cookie=None):
             return raw.decode('utf-8', errors='replace'), ''
 
     except HTTPError as e:
-        if e.code == 429:
+        if e.code == 429 and _retries > 0:
             retry_after = int(e.headers.get('Retry-After', '60'))
-            print(f"  Rate limited (429) — sleeping {retry_after}s")
+            print(f"  Rate limited (429) — sleeping {retry_after}s then retrying ({_retries} left)")
             time.sleep(retry_after)
-        else:
-            print(f"  Fetch error: {e}")
+            return fetch_page(url, session_cookie, _retries - 1)
+        print(f"  Fetch error: {e}")
         return None, ''
     except URLError as e:
         print(f"  Fetch error: {e}")

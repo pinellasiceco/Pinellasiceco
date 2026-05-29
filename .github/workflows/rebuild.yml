@@ -36,11 +36,10 @@ jobs:
         run: python download_data.py
 
       - name: Build full violations scrape list
+        continue-on-error: true
         run: |
           if [ -f build_violations_list.py ]; then
             python build_violations_list.py
-          else
-            echo "build_violations_list.py not found — skipping"
           fi
 
       - name: Pick up atp/ landing page from feature branch
@@ -102,6 +101,7 @@ jobs:
           git push origin HEAD:main
 
       - name: Send daily briefing email
+        continue-on-error: true
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           BRIEFING_EMAIL: ${{ secrets.BRIEFING_EMAIL }}

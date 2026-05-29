@@ -61,12 +61,19 @@ try:
     if pd.notna(_max_date):
         _lag = (date.today() - _max_date.date()).days
         print(f"  Most recent inspection date: {_max_date.strftime('%Y-%m-%d')} (data lag: {_lag} days)")
+        if _lag > 21:
+            print(f'\nFATAL: Inspection data is {_lag} days old (limit: 21) — aborting build.')
+            sys.exit(1)
     del _df
+except SystemExit:
+    raise
 except Exception as e:
     print(f"  Could not read inspection date: {e}")
 
 # Always refresh license extract (phones + seats change as businesses update)
-download(LICENSE_URL, DATA_DIR / 'hrfood3_licenses.csv', 'District 3 license extract')
+_license_ok = download(LICENSE_URL, DATA_DIR / 'hrfood3_licenses.csv', 'District 3 license extract')
+if not _license_ok:
+    print('  WARNING: License extract download failed — phone/seat data will be stale')
 
 # Emergency closures -- last 4 weeks (inspector always returns to these)
 print('  Downloading recent emergency closures...')
