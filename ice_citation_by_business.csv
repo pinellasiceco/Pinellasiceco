@@ -1055,7 +1055,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 6323736,DADDY DAWGS,3101 SR 580 STE E,SAFETY HARBOR,2020-10-26,1,Warning Issued,False,False,
 6328500,HYATT REGENCY CLEARWATER BEACH RESORT & SPA,301 GULFVIEW BLVD,CLEARWATER,2020-09-28,1,Inspection Completed - No Further Action,False,False,
 6328506,HYATT REGENCY CLEARWATER BEACH RESORT & SPA,301 GULF VIEW BLVD,CLEARWATER,2021-04-07,2,Inspection Completed - No Further Action,True,False,
-6330668,DA SPOT,305 S SAFFORD AVE,TARPON SPRINGS,2026-01-23,2,Inspection Completed - No Further Action,True,False,
+6330668,DA SPOT,305 S SAFFORD AVE,TARPON SPRINGS,2026-05-28,3,Inspection Completed - No Further Action,True,False,
 6332315,CHINA TASTE,1901 W BAY DR STE 3,LARGO,2020-11-05,1,Inspection Completed - No Further Action,False,False,
 6332651,TROPICAL SMOOTHIE CAFE,6400 PARK BLVD,PINELLAS PARK,2020-07-17,1,Inspection Completed - No Further Action,False,False,
 6338615,TAMPA BAY SKATING ACADEMY,251 LAKEVIEW DR,OLDSMAR,2021-03-26,1,Inspection Completed - No Further Action,False,False,
@@ -1454,7 +1454,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7032636,FORTUNATO'S ITALIAN RESTAURANT,6890 GULFPORT BLVD,SOUTH PASADENA,2025-07-16,7,Emergency Order Callback Not Complied,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Ice chute on soda machine in dining area is soiled with mold-like substance.
 7034676,BARBACOA MEXICAN GRILL,2657 ULMERTON RD,CLEARWATER,2020-09-04,1,Inspection Completed - No Further Action,False,False,
 7034855,CASITA TAQUERIA #3 INC,2991 66 ST N,ST. PETERSBURG,2026-04-09,3,Inspection Completed - No Further Action,True,False,
-7035826,THE JERK CENTER,405 S PINELLAS AVE,TARPON SPRINGS,2026-01-08,3,Inspection Completed - No Further Action,True,False,
+7035826,THE JERK CENTER,405 S PINELLAS AVE,TARPON SPRINGS,2026-05-28,4,Inspection Completed - No Further Action,True,False,
 7036008,THE JOINT,7630 34 AVE N,ST. PETERSBURG,2026-05-07,8,Call Back - Admin. complaint recommended,True,False,"The affected area contains their main 3 compartment sink, dish machine, hand wash sink for the cook line, and back door to access ice machine."
 7036585,NINE SPICES HOT POT,6851 66 ST N,PINELLAS PARK,2026-03-25,3,Inspection Completed - No Further Action,True,False,"Food stored in undrained ice. Squid, quail eggs, shrimp, mussels inside reach I cooler storage in undrained ice"
 7037183,MR & MRS CRAB,7550 US HWY 19 N,PINELLAS PARK,2026-05-22,1,Inspection Completed - No Further Action,False,False,
@@ -1855,7 +1855,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7605907,CHARLEY'S PHILLY STEAKS,27001 US HWY 19 STE 2085,CLEARWATER,2021-01-14,1,Inspection Completed - No Further Action,False,False,
 7607177,TD BALLPARK GRANT FIELD - FIRST BASE,373 DOUGLAS AVE,DUNEDIN,2026-03-18,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Roof of ice machine has black mold like substance.
 7607202,TD BALLPARK GRANT FIELD - THIRD BASE,373 DOUGLAS AVENUE,DUNEDIN,2026-03-18,1,Inspection Completed - No Further Action,False,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of roof of ice machine as accumulation of black mold like substance.
-7608999,LITTLE THAI CAFE,1810 S PINELLAS AVE 1,TARPON SPRINGS,2021-05-26,1,Inspection Completed - No Further Action,False,False,
+7608999,LITTLE THAI CAFE,1810 S PINELLAS AVE 1,TARPON SPRINGS,2026-05-28,2,Inspection Completed - No Further Action,True,False,
 7609534,GRAND HACIENDA MEXICAN CUISINE,2424 TYRONE BLVD NORTH,ST. PETERSBURG,2026-04-16,4,Warning Issued,True,False,"Live, small flying insects found 3 live flies behind bar 1 live fly in kitchen on cook line Observed landing on stack of napkins and side of ice bin at bar."
 7611692,BAJA'S SOUTHERN STYLE COOKING AND CATERING,1838 49 ST SOUTH,ST PETERSBURG,2025-10-28,4,"Call Back - Extension given, pending",True,False,
 7611741,ROCKING CRAB,391 34 ST N,ST. PETERSBURG,2025-10-16,3,Administrative complaint recommended,True,False,"raw shrimp (47F - Cold Holding); raw chicken (47F - Cold Holding); raw fish (47F - Cold Holding); milk (50F - Cold Holding); muscles (50F - Cold Holding) Items placed on ice, new temps recorded as: raw shrimp (40F - Cold Holding); raw chicken (41F - Cold Holding); raw fish (41F - Cold Holding);…"
@@ -2715,6 +2715,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 9668285,PHO KIEN GIANG,8150 49 ST N,PINELLAS PARK,2026-03-31,2,Administrative complaint recommended,True,False,Food stored in undrained ice.
 9670945,ON THE FLY,7097 30 AVE N,ST. PETERSBURG,2025-08-29,1,Inspection Completed - No Further Action,False,False,
 9673660,CARINOS ITALIAN RESTAURANT,9524 BLIND PASS ROAD SUITE 5-11,ST. PETE BEACH,2026-01-08,3,Call Back - Complied,True,False,
+9674235,MANGOSTEEN DUNEDIN,730 BROADWAY ST#4,DUNEDIN,2026-05-28,1,Warning Issued,False,False,
 9675251,BURGER MONGER ST PETE,1325 4 ST N STE C,ST. PETERSBURG,2026-01-14,3,Call Back - Complied,True,False,
 9675677,BB.Q CHICKEN PPARK,7860 US HWY 19 N,PINELLAS PARK,2026-03-03,1,Warning Issued,False,False,
 9676268,MALBOA,5758 54 AVE N,KENNETH CITY,2025-09-19,1,Inspection Completed - No Further Action,False,False,
