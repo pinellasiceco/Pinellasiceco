@@ -1090,7 +1090,19 @@ def load_emergency_closures(data_dir=None):
                         num = re.sub(r'[^0-9]', '', str(val))
                         if num: closed_ids.add(num)
             except Exception:
-                pass
+                # openpyxl failed (e.g. old XLS format) — try pandas+xlrd
+                try:
+                    import pandas as _pd
+                    _df = _pd.read_excel(str(f), engine='xlrd', header=0)
+                    _lic_col = next((c for c in _df.columns
+                                     if 'license' in str(c).lower()), None)
+                    if _lic_col is not None:
+                        for _val in _df[_lic_col].dropna():
+                            _num = re.sub(r'[^0-9]', '', str(_val))
+                            if _num:
+                                closed_ids.add(_num)
+                except Exception:
+                    pass
     if closed_ids:
         print(f"  Emergency closures: {len(closed_ids)} businesses flagged")
     return closed_ids
