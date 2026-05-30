@@ -33,7 +33,7 @@ def get_data_freshness():
         with warnings.catch_warnings():
             warnings.simplefilter('ignore')
             df = pd.read_csv(csv_path, header=None, low_memory=False)
-        df[14] = pd.to_datetime(df[14], errors='coerce')
+        df[14] = pd.to_datetime(df[14], errors='coerce', format='mixed')
         max_date = df[14].max()
         if hasattr(max_date, 'date'):
             max_date = max_date.date()

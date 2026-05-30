@@ -56,7 +56,7 @@ download(CURRENT_URL, DATA_DIR / '3fdinspi_current.csv', 'District 3 current FY'
 try:
     import pandas as pd
     _df = pd.read_csv(DATA_DIR / '3fdinspi_current.csv', header=None, low_memory=False)
-    _df[14] = pd.to_datetime(_df[14], errors='coerce')
+    _df[14] = pd.to_datetime(_df[14], errors='coerce', format='mixed')
     _max_date = _df[14].max()
     if pd.notna(_max_date):
         _lag = (date.today() - _max_date.date()).days
