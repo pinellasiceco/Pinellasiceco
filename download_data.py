@@ -19,7 +19,7 @@ HISTORICAL = [
     # District 3 specific -- smaller files
     ('3fdinspi_2021.csv',   'https://www2.myfloridalicense.com/sto/file_download/hr/3fdinspi_2021.csv'),
     # Statewide -- larger, build.py filters to District 3 counties
-    ('fdinspi_2122.xlsx',   'https://www2.myfloridalicense.com/hr/inspections/fdinspi_2122.xlsx'),
+    # fdinspi_2122.xlsx removed -- URL now returns an HTML page (DBPR took it offline)
     ('fdinspi_2223.xlsx',   'https://www2.myfloridalicense.com/sto/file_download/hr/fdinspi_2223.xlsx'),
     ('fdinspi_2324.xlsx',   'https://www2.myfloridalicense.com/hr/inspections/fdinspi_2324.xlsx'),
     ('fdinspi_2425.xlsx',   'https://www2.myfloridalicense.com/hr/inspections/fdinspi_2425.xlsx'),
