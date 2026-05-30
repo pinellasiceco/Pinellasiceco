@@ -7,7 +7,7 @@ Complete, self-contained. Drop in any folder with your CSV files and run.
 import sys, os, json, re, warnings, csv, base64
 from pathlib import Path
 from datetime import date, timedelta
-from math import radians, cos, sin, sqrt, atan2
+from math import radians, cos, sin, sqrt, atan2, isfinite
 from collections import Counter
 
 warnings.filterwarnings('ignore')
@@ -1992,7 +1992,7 @@ SIG_HTML_EMAIL = (
 
 def _nan_to_null(o):
     """Recursively replace NaN/Inf floats with None so json.dumps produces valid JSON."""
-    if isinstance(o, float) and not math.isfinite(o):
+    if isinstance(o, float) and not isfinite(o):
         return None
     if isinstance(o, dict):
         return {k: _nan_to_null(v) for k, v in o.items()}
