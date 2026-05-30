@@ -90,13 +90,6 @@ for weeks_back in range(5):
         if download(url, dest, f'Emergency closures week of {sunday}'):
             break  # got the most recent one
 
-# Purge any historical xlsx files that are suspiciously small (bad server response cached from a previous run)
-for fname, _ in HISTORICAL:
-    dest = DATA_DIR / fname
-    if dest.exists() and fname.endswith('.xlsx') and dest.stat().st_size < 5_000_000:
-        print(f'  Removing stale/corrupt cached file: {fname} ({dest.stat().st_size/1024:.0f} KB)')
-        dest.unlink()
-
 # Historical: download once, skip if already cached
 print()
 for fname, url in HISTORICAL:
@@ -104,10 +97,7 @@ for fname, url in HISTORICAL:
     if dest.exists():
         print(f'  {fname}: cached ({dest.stat().st_size/1024/1024:.1f} MB), skipping')
     else:
-        ok = download(url, dest, fname)
-        if ok and fname.endswith('.xlsx') and dest.stat().st_size < 5_000_000:
-            print(f'  WARNING: {fname} downloaded but only {dest.stat().st_size/1024:.0f} KB — expected ~50 MB; deleting so next run retries')
-            dest.unlink()
+        download(url, dest, fname)
 
 # Summary
 print()
