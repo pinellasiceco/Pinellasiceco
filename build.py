@@ -1818,6 +1818,32 @@ _SUPABASE_KEY_ENV  = os.environ.get('SUPABASE_SERVICE_KEY', '').strip()  # servi
 _SUPABASE_ANON_ENV = os.environ.get('SUPABASE_ANON_KEY', '').strip()     # public anon key (baked into HTML)
 _SUPABASE_USER_ID  = os.environ.get('SUPABASE_USER_ID', '').strip()
 
+def build_map_export(records):
+    """Export citation locations for the Dirty Ice Map.
+    No business names or addresses — coordinates and citation metadata only."""
+    import random
+    points = []
+    for r in records:
+        if not r.get('ice_confirmed_dbpr'):
+            continue
+        lat = r.get('lat')
+        lon = r.get('lon')
+        if not lat or not lon:
+            continue
+        # Slightly fuzz coordinates to prevent exact address identification
+        # while preserving neighborhood accuracy (~100m radius)
+        lat_fuzz = lat + random.uniform(-0.001, 0.001)
+        lon_fuzz = lon + random.uniform(-0.001, 0.001)
+        points.append({
+            'lat':    round(lat_fuzz, 4),
+            'lng':    round(lon_fuzz, 4),
+            'gold':   bool(r.get('ice_gold', False)),
+            'count':  int(r.get('cit_ice_count', 1) or 1),
+            'latest': r.get('cit_latest', '') or '',
+            'city':   r.get('city', '') or '',
+        })
+    return points
+
 def push_to_supabase(table, data, batch_size=500):
     """Push data to Supabase.
 
@@ -11907,6 +11933,17 @@ def main():
     from datetime import datetime as _dt
     sw_path.write_text(SW_JS.replace('BUILD_TS', _dt.now().strftime('%Y%m%d%H%M')), encoding='utf-8')
     print(f"  Written: sw.js")
+
+    # Export citation locations for the Dirty Ice Map
+    map_points = build_map_export(records)
+    import os as _os
+    _os.makedirs('docs/map', exist_ok=True)
+    _map_path = Path('docs/map/data.json')
+    _map_tmp = _map_path.with_suffix('.tmp')
+    import json as _json
+    _map_tmp.write_text(_json.dumps(map_points), encoding='utf-8')
+    _os.replace(_map_tmp, _map_path)
+    print(f'  Map: {len(map_points)} citation points exported → docs/map/data.json')
 
     # Push to Supabase (CI only — skipped when env vars not set)
     print(f"\nPushing data to Supabase...")
