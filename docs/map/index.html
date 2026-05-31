@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Dirty Ice Map — Pinellas County, FL</title>
+<meta name="description" content="Live heatmap of ice machine citations from Florida DBPR public health inspections. See the contamination landscape across Pinellas County restaurants.">
+<meta property="og:title" content="The Dirty Ice Map — Pinellas County">
+<meta property="og:description" content="Live heatmap of ice machine citations from Florida DBPR public health inspections. See the contamination landscape in Pinellas County restaurants.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;background:#0d1b2a;color:#f0ece4;font-family:'DM Sans',sans-serif;}
+
+/* ── HEADER ── */
+#header{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  background:linear-gradient(180deg,rgba(13,27,42,0.98) 0%,rgba(13,27,42,0.92) 100%);
+  border-bottom:1px solid rgba(201,151,58,0.3);
+  padding:14px 20px 12px;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+}
+.hdr-brand{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#c9973a;margin-bottom:2px;}
+.hdr-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:#f8fafc;letter-spacing:-.02em;line-height:1.1;}
+.hdr-sub{font-size:11px;color:#7a8898;letter-spacing:.04em;margin-top:3px;}
+.hdr-note{font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px;font-style:italic;}
+
+/* ── MAP CONTAINER ── */
+#map-container{
+  position:fixed;
+  top:90px;left:0;right:0;
+  bottom:110px;
+  z-index:1;
+}
+@media(max-width:480px){
+  #map-container{top:82px;bottom:120px;}
+  .hdr-title{font-size:18px;}
+}
+
+/* ── STATS BAR ── */
+#stats-bar{
+  position:fixed;bottom:58px;left:0;right:0;z-index:1000;
+  background:rgba(13,27,42,0.96);
+  border-top:1px solid rgba(201,151,58,0.25);
+  display:flex;align-items:center;justify-content:center;
+  gap:0;overflow:hidden;
+}
+.stat-item{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:8px 16px;border-right:1px solid rgba(255,255,255,0.07);flex:1;max-width:160px;
+}
+.stat-item:last-child{border-right:none;}
+.stat-value{font-family:'DM Mono',monospace;font-size:20px;font-weight:500;color:#e8b14d;line-height:1;}
+.stat-label{font-size:9px;color:#6a7888;letter-spacing:.1em;text-transform:uppercase;margin-top:3px;}
+@media(max-width:480px){
+  .stat-value{font-size:16px;}
+  .stat-label{font-size:8px;letter-spacing:.06em;}
+  .stat-item{padding:7px 8px;}
+}
+
+/* ── CTA BAR ── */
+#cta-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:1000;
+  background:rgba(8,18,30,0.98);
+  border-top:1px solid rgba(201,151,58,0.2);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 16px;gap:12px;
+}
+.cta-text{font-size:12px;color:rgba(255,255,255,0.55);flex:1;line-height:1.4;}
+.cta-text strong{color:rgba(255,255,255,0.8);}
+.cta-btn{
+  flex-shrink:0;
+  background:#c9973a;color:#0d1b2a;
+  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.04em;
+  padding:9px 16px;border-radius:6px;
+  text-decoration:none;white-space:nowrap;
+  border:none;cursor:pointer;
+  transition:background .15s;
+}
+.cta-btn:hover{background:#e8b14d;}
+
+/* ── LEGEND ── */
+#legend{
+  position:absolute;bottom:16px;left:12px;z-index:900;
+  background:rgba(13,27,42,0.92);
+  border:1px solid rgba(201,151,58,0.25);
+  border-radius:8px;padding:10px 12px;
+  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);
+  pointer-events:none;
+}
+.legend-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:11px;color:#a0a8b0;}
+.legend-row:last-child{margin-bottom:0;}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.legend-dot.red{background:#e74c3c;}
+.legend-dot.amber{background:#f39c12;}
+.legend-dot.large{width:14px;height:14px;}
+.legend-src{margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.08);font-size:9px;color:#4a5568;line-height:1.5;}
+
+/* ── PULSE ANIMATION for gold/mold dots ── */
+@keyframes pulse-ring {
+  0%   { r: 6; opacity: 0.75; }
+  50%  { r: 9; opacity: 0.5;  }
+  100% { r: 6; opacity: 0.75; }
+}
+.pulse-dot circle.ring {
+  animation: pulse-ring 2s ease-in-out infinite;
+}
+
+/* ── LEAFLET OVERRIDES ── */
+.leaflet-container{background:#0d1b2a;}
+.leaflet-control-attribution{display:none;}
+.leaflet-control-zoom a{
+  background:rgba(13,27,42,0.9)!important;
+  color:#c9973a!important;
+  border-color:rgba(201,151,58,0.3)!important;
+}
+.leaflet-control-zoom a:hover{background:rgba(201,151,58,0.15)!important;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div id="header">
+  <div class="hdr-brand">Pinellas Ice Co</div>
+  <div class="hdr-title">THE DIRTY ICE MAP</div>
+  <div class="hdr-sub">Ice Machine Citations &mdash; Pinellas County, FL</div>
+  <div class="hdr-note">Source: Florida DBPR public inspection records &middot; Updated daily &middot; Locations approximate</div>
+</div>
+
+<!-- MAP -->
+<div id="map-container"></div>
+
+<!-- LEGEND (inside map container positioning context) -->
+<div id="map-wrap" style="position:fixed;top:90px;left:0;right:0;bottom:110px;z-index:500;pointer-events:none;">
+  <div id="legend">
+    <div class="legend-row"><div class="legend-dot red"></div>Mold / Biofilm Citation</div>
+    <div class="legend-row"><div class="legend-dot amber"></div>Ice Machine Citation</div>
+    <div class="legend-row"><div class="legend-dot amber large"></div>Multiple Citations</div>
+    <div class="legend-src">Data: FL DBPR Public Records<br>Locations approximate (&plusmn;100m)</div>
+  </div>
+</div>
+
+<!-- STATS BAR -->
+<div id="stats-bar">
+  <div class="stat-item">
+    <div class="stat-value" id="stat-total">—</div>
+    <div class="stat-label">Citations Mapped</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value" id="stat-gold">—</div>
+    <div class="stat-label">Mold / Biofilm</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-value" id="stat-cities">—</div>
+    <div class="stat-label">Cities Affected</div>
+  </div>
+  <div class="stat-item" style="display:flex;flex-direction:column;align-items:center;justify-content:center;">
+    <div class="stat-value" style="font-size:11px;color:#4a7c59;font-family:'DM Sans',sans-serif;font-weight:600;letter-spacing:.04em;">UPDATED</div>
+    <div class="stat-label">Daily</div>
+  </div>
+</div>
+
+<!-- CTA BAR -->
+<div id="cta-bar">
+  <div class="cta-text"><strong>Is your machine on this map?</strong> Find out &mdash; and get certified clean.</div>
+  <a class="cta-btn" href="https://meetings-na2.hubspot.com/stripe/ice-machine-on-site?uuid=9a40fc22-dce2-4258-8e4f-28aa75c892da" target="_blank" rel="noopener">
+    Free ATP Test &rarr;
+  </a>
+</div>
+
+<script>
+// ── MAP INIT ──────────────────────────────────────────────────────────────
+var map = L.map('map-container', {
+  center: [27.90, -82.70],
+  zoom: 11,
+  zoomControl: true,
+  attributionControl: false
+});
+
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  subdomains: 'abcd',
+  maxZoom: 19
+}).addTo(map);
+
+// ── COUNTER ANIMATION ─────────────────────────────────────────────────────
+function animateCount(el, target, duration) {
+  if (!target) { el.textContent = '0'; return; }
+  var start = 0;
+  var step  = target / (duration / 16);
+  var timer = setInterval(function() {
+    start += step;
+    if (start >= target) {
+      start = target;
+      clearInterval(timer);
+    }
+    el.textContent = Math.round(start).toLocaleString();
+  }, 16);
+}
+
+// ── DOT HELPERS ───────────────────────────────────────────────────────────
+function getDotColor(point) {
+  return point.gold ? '#e74c3c' : '#f39c12';
+}
+
+function getDotRadius(point) {
+  if (point.count >= 5) return 10;
+  if (point.count >= 3) return 8;
+  return 6;
+}
+
+// Pulsing SVG icon for gold/mold citations
+function makePulseIcon(color, r) {
+  var size = (r + 8) * 2;
+  var cx   = size / 2;
+  var svg  = '<svg xmlns="http://www.w3.org/2000/svg" width="' + size + '" height="' + size + '">'
+    + '<circle cx="' + cx + '" cy="' + cx + '" r="' + (r + 4) + '" fill="' + color + '" opacity="0" class="ring">'
+    +   '<animate attributeName="r" from="' + r + '" to="' + (r + 8) + '" dur="2s" repeatCount="indefinite"/>'
+    +   '<animate attributeName="opacity" from="0.6" to="0" dur="2s" repeatCount="indefinite"/>'
+    + '</circle>'
+    + '<circle cx="' + cx + '" cy="' + cx + '" r="' + r + '" fill="' + color + '" opacity="0.85"/>'
+    + '</svg>';
+  return L.divIcon({
+    html: svg,
+    className: '',
+    iconSize:   [size, size],
+    iconAnchor: [cx, cx]
+  });
+}
+
+// ── RENDER DOTS ───────────────────────────────────────────────────────────
+function renderDots(points) {
+  for (var i = 0; i < points.length; i++) {
+    var p = points[i];
+    if (!p.lat || !p.lng) continue;
+
+    var r = getDotRadius(p);
+
+    if (p.gold) {
+      // Pulsing marker for mold/biofilm citations
+      L.marker([p.lat, p.lng], { icon: makePulseIcon('#e74c3c', r) }).addTo(map);
+    } else {
+      L.circleMarker([p.lat, p.lng], {
+        radius:      r,
+        fillColor:   '#f39c12',
+        color:       'transparent',
+        fillOpacity: 0.72
+      }).addTo(map);
+    }
+  }
+}
+
+// ── STATS ─────────────────────────────────────────────────────────────────
+function renderStats(points) {
+  var total  = points.length;
+  var gold   = points.filter(function(p) { return p.gold; }).length;
+  var cities = {};
+  points.forEach(function(p) { if (p.city) cities[p.city] = true; });
+  var cityCount = Object.keys(cities).length;
+
+  animateCount(document.getElementById('stat-total'),  total,     1500);
+  animateCount(document.getElementById('stat-gold'),   gold,      1500);
+  animateCount(document.getElementById('stat-cities'), cityCount, 1200);
+}
+
+// ── DATA LOAD ─────────────────────────────────────────────────────────────
+var DATA_URL = 'data.json';
+
+fetch(DATA_URL)
+  .then(function(r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  })
+  .then(function(points) {
+    renderDots(points);
+    renderStats(points);
+  })
+  .catch(function(err) {
+    console.warn('Map data load failed:', err);
+    // Show friendly error in stat bar
+    document.getElementById('stat-total').textContent  = '—';
+    document.getElementById('stat-gold').textContent   = '—';
+    document.getElementById('stat-cities').textContent = '—';
+  });
+</script>
+</body>
+</html>
