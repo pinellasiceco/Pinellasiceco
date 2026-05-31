@@ -2541,11 +2541,8 @@ header{background:var(--navy);
       <button class="preset-btn on" onclick="setPreset('all')"      id="pre-all">All</button>
       <button class="preset-btn"    onclick="setPreset('actnow')"   id="pre-actnow">&#x1F534; Act Now</button>
       <button class="preset-btn"    onclick="setPreset('callback')" id="pre-callback">Callbacks</button>
-      <button class="preset-btn"    onclick="setPreset('phone')"    id="pre-phone">Has Phone</button>
-      <button class="preset-btn"    onclick="setPreset('chronic')"  id="pre-chronic">Chronic Ice</button>
       <button class="preset-btn"    onclick="setPreset('notyet')"   id="pre-notyet">Not Contacted</button>
       <button class="preset-btn"    onclick="setPreset('inplay')"   id="pre-inplay">&#x1F7E1; In Play</button>
-      <button class="preset-btn"    onclick="setPreset('freshice')" id="pre-freshice">&#x1F525; Ice Viol.</button>
       <button class="preset-btn" onclick="setPreset('gold_ice')" id="pre-gold_ice">&#x1F947; Gold <span id="cnt-gold"></span></button>
       <button class="preset-btn" onclick="setPreset('dbpr_cited')" id="pre-dbpr_cited">&#x1F575;&#xFE0F; DBPR <span id="cnt-dbpr"></span></button>
       <button class="preset-btn" onclick="setPreset('dbpr_repeat')" id="pre-dbpr_repeat">&#x1F501; Repeat <span id="cnt-repeat"></span></button>
