@@ -1,5 +1,5 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-06-01 (session 57 — Sales Scenarios expanded to 16, CI build fixes) by Claude Code*
+*Last updated: 2026-06-01 (sessions 55-56 — Sales Playbook v2, Dirty Ice Map, Sales Scenarios) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
@@ -24,10 +24,6 @@
 - **`docs/protocol/` preserved in CI**: `rebuild.yml` `git checkout origin/main -- docs/protocol/` preserves static ATP protocol page through daily rebuilds
 - **`assets/` preserved in CI**: `rebuild.yml` `git checkout origin/main -- assets/` preserves signature image and other assets through daily rebuilds
 - **`build_violations_list.py` step**: `continue-on-error: true` — failure visible in Actions but non-blocking (session 54)
-
-### CI Build Fixes (session 57)
-- **Emergency closure xlrd fallback**: `load_emergency_closures()` in `build.py` now falls back to `pandas`+`xlrd` when `openpyxl` fails — DBPR serves EOS weekly files as legacy XLS (not XLSX/ZIP), so `openpyxl` was silently returning an empty set; emergency-closed businesses are now correctly flagged
-- **`fdinspi_2122.xlsx` removed from HISTORICAL**: DBPR took the 2021-22 statewide file offline — URL was returning an HTML page (0.2 MB). Entry removed from `HISTORICAL` in `download_data.py` so CI no longer attempts or caches it
 
 ### Security & CI Resilience (session 54)
 - **Stripe discount cap**: `monthly_discount` capped at $100 in `stripe-checkout/index.ts` — prevents crafting a $0 subscription via oversized discount
@@ -205,12 +201,10 @@ To force a fresh PWA load after a push: open the URL directly in Safari (not the
 
 ### Sales Scenarios Page (`docs/sales_scenarios.html`)
 - **URL**: `https://pinellasiceco.github.io/Pinellasiceco/docs/sales_scenarios.html`
-- **16 fully-scripted simulated pitch conversations** — walk-in to outcome (expanded from 11 in session 57)
-- Covers: Perfect Close, Gatekeeper, Commitment Objection, Existing Vendor (Polar), Corporate Account, Brush-Off (Ray), Clean Machine Objection, Timing/Access, Multi-Machine, Warm Follow-Up, Price Objection, Referral, Callback, Seasonal Surge, Inbound Lead, Tech Upsell
-- Each scenario: difficulty badge, situation badge, character/setting context box (with DBPR record), full dialogue, ATP reading boxes (before/after RLU), outcome summary with dots, key lesson
-- Every scenario reaching a close includes the Inspection Protection Guarantee
-- Every scenario reaching the machine includes "[You photograph the interior...]" stage direction
-- Linked from Sales Playbook v2 nav pill ("Practice Scenarios")
+- 11 fully-scripted simulated pitch conversations — walk-in to outcome
+- Covers: Perfect Close, Gatekeeper, Commitment Objection, Existing Vendor, Corporate Account, Brush-Off, Clean Machine Objection, Timing/Access, Multi-Machine, Warm Follow-Up, Price Objection
+- Each scenario: character/setting context, full dialogue, ATP boxes (before/after RLU readings), outcome summary, key lesson
+- Linked from Sales Playbook nav pill and back-links to playbook
 - **Preserved in CI**: `git checkout origin/main -- docs/sales_scenarios.html` in `rebuild.yml`
 
 ### Dirty Ice Map (`docs/map/`)
