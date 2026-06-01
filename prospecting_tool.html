@@ -477,15 +477,15 @@ header{background:var(--navy);
     <!-- Preset filters -->
     <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:10px;-webkit-overflow-scrolling:touch">
       <button class="preset-btn on" onclick="setPreset('all')"      id="pre-all">All</button>
+      <button class="preset-btn" onclick="setPreset('gold_ice')" id="pre-gold_ice">&#x1F947; Gold <span id="cnt-gold"></span></button>
+      <button class="preset-btn" onclick="setPreset('dbpr_repeat')" id="pre-dbpr_repeat">&#x1F501; Repeat <span id="cnt-repeat"></span></button>
+      <button class="preset-btn" onclick="setPreset('dbpr_cited')" id="pre-dbpr_cited">&#x1F575;&#xFE0F; DBPR <span id="cnt-dbpr"></span></button>
+      <button class="preset-btn" onclick="setPreset('golf')" id="pre-golf">&#x26F3; Golf</button>
+      <button class="preset-btn" onclick="setPreset('followups')" id="pre-followups">&#x1F4C5; Follow-Ups</button>
       <button class="preset-btn"    onclick="setPreset('actnow')"   id="pre-actnow">&#x1F534; Act Now</button>
       <button class="preset-btn"    onclick="setPreset('callback')" id="pre-callback">Callbacks</button>
       <button class="preset-btn"    onclick="setPreset('notyet')"   id="pre-notyet">Not Contacted</button>
       <button class="preset-btn"    onclick="setPreset('inplay')"   id="pre-inplay">&#x1F7E1; In Play</button>
-      <button class="preset-btn" onclick="setPreset('gold_ice')" id="pre-gold_ice">&#x1F947; Gold <span id="cnt-gold"></span></button>
-      <button class="preset-btn" onclick="setPreset('dbpr_cited')" id="pre-dbpr_cited">&#x1F575;&#xFE0F; DBPR <span id="cnt-dbpr"></span></button>
-      <button class="preset-btn" onclick="setPreset('dbpr_repeat')" id="pre-dbpr_repeat">&#x1F501; Repeat <span id="cnt-repeat"></span></button>
-      <button class="preset-btn" onclick="setPreset('followups')" id="pre-followups">&#x1F4C5; Follow-Ups</button>
-      <button class="preset-btn" onclick="setPreset('golf')" id="pre-golf">&#x26F3; Golf</button>
     </div>
 
     <!-- Filters row -->
@@ -3362,7 +3362,7 @@ function setPreset(k){
   else if(k==='golf') presetFilter=p=>p.venue_type==='golf';
   else if(k==='gold_ice')   presetFilter=p=>!!p.ice_gold;
   else if(k==='dbpr_cited') presetFilter=p=>!!p.ice_confirmed_dbpr;
-  else if(k==='dbpr_repeat') presetFilter=p=>(p.cit_repeat||0)>=1||(p.cit_ice_count||0)>=2;
+  else if(k==='dbpr_repeat') presetFilter=p=>((p.cit_repeat||0)>=1||(p.cit_ice_count||0)>=2)&&!p.ice_gold;
   var sortRow=document.getElementById('dbpr-sort-row');
   var sortBtn=document.getElementById('dbpr-sort-btn');
   if(k==='dbpr_cited'){
@@ -3377,7 +3377,7 @@ function setPreset(k){
 
 function updateDbprChipCounts(){
   var nd=P.filter(function(p){return !!p.ice_confirmed_dbpr;}).length;
-  var nr=P.filter(function(p){return (p.cit_repeat||0)>=1||(p.cit_ice_count||0)>=2;}).length;
+  var nr=P.filter(function(p){return ((p.cit_repeat||0)>=1||(p.cit_ice_count||0)>=2)&&!p.ice_gold;}).length;
   var ng=P.filter(function(p){return !!p.ice_gold;}).length;
   var ge=document.getElementById('cnt-gold');if(ge)ge.textContent=ng?'('+ng+')':'';
   var ce=document.getElementById('cnt-dbpr');if(ce)ce.textContent=nd?'('+nd+')':'';
