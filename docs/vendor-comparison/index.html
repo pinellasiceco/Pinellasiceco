@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vendor Walk-In Comparison — Pinellas Ice Co.</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&family=Syne+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0d1b2a;
+  --ice: #3a8ec9;
+  --gold: #c8973a;
+  --green: #1a6b3a;
+  --green-bg: #e8f5ee;
+  --red: #9b1c1c;
+  --red-bg: #fdecea;
+  --amber: #8a5c00;
+  --amber-bg: #fdf3dc;
+  --blue: #1a4a7a;
+  --blue-bg: #e8f0fb;
+  --bg: #f7f6f3;
+  --card: #ffffff;
+  --border: #e4e2dc;
+  --ink: #1c1c1a;
+  --ink2: #5a5855;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--ink);
+  padding: 24px 16px 80px;
+}
+h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(18px, 4vw, 28px);
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 4px;
+}
+.subtitle {
+  font-size: 12px;
+  color: var(--ink2);
+  margin-bottom: 24px;
+  font-style: italic;
+}
+.section-label {
+  font-family: 'Syne Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink2);
+  margin: 24px 0 10px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* TABLE */
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 20px;
+  -webkit-overflow-scrolling: touch;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+thead tr { background: var(--navy); }
+thead th {
+  padding: 10px 12px;
+  text-align: left;
+  font-family: 'Syne Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.65);
+  white-space: nowrap;
+  font-weight: 400;
+}
+thead th.highlight {
+  color: #ffd700;
+  background: rgba(58,142,201,0.3);
+}
+tbody tr { border-bottom: 1px solid var(--border); }
+tbody tr:last-child { border-bottom: none; }
+tbody tr.ice-row { background: rgba(58,142,201,0.07); }
+tbody tr:not(.ice-row):hover { background: rgba(0,0,0,0.015); }
+tbody tr.ice-row:hover { background: rgba(58,142,201,0.12); }
+td {
+  padding: 10px 12px;
+  vertical-align: middle;
+  color: var(--ink2);
+  line-height: 1.4;
+  font-size: 12px;
+}
+td.vendor {
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+  font-size: 13px;
+}
+td.ice-vendor {
+  font-weight: 700;
+  color: var(--ice);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+/* BADGES */
+.badge {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 3px;
+  font-family: 'Syne Mono', monospace;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.bg { background: var(--green-bg); color: var(--green); }
+.br { background: var(--red-bg); color: var(--red); }
+.ba { background: var(--amber-bg); color: var(--amber); }
+.bb { background: var(--blue-bg); color: var(--blue); }
+.bn { background: var(--navy); color: #fff; }
+.bi { background: rgba(58,142,201,0.15); color: var(--ice); }
+
+/* DOTS */
+.dots { display: flex; gap: 2px; align-items: center; }
+.dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--border);
+}
+.dot.on { background: var(--navy); }
+.dot.on.g { background: var(--green); }
+.dot.on.r { background: var(--red); }
+.dot.on.a { background: #c8973a; }
+.dot.on.b { background: var(--ice); }
+
+/* CALLOUT */
+.callout {
+  border-left: 3px solid var(--ice);
+  background: var(--blue-bg);
+  padding: 14px 18px;
+  border-radius: 0 6px 6px 0;
+  margin-bottom: 14px;
+}
+.callout-label {
+  font-family: 'Syne Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+.callout p { font-size: 12px; color: var(--blue); line-height: 1.6; }
+.callout strong { font-weight: 600; }
+
+.callout.green {
+  border-color: var(--green);
+  background: var(--green-bg);
+}
+.callout.green .callout-label { color: var(--green); }
+.callout.green p { color: var(--green); }
+
+.callout.gold {
+  border-color: var(--gold);
+  background: #fdf5e6;
+}
+.callout.gold .callout-label { color: #7a5100; }
+.callout.gold p { color: #7a5100; }
+
+.footer {
+  margin-top: 40px;
+  font-family: 'Syne Mono', monospace;
+  font-size: 9px;
+  color: var(--ink2);
+}
+</style>
+</head>
+<body>
+<div style="position:sticky;top:0;z-index:999;background:rgba(13,27,42,0.97);backdrop-filter:blur(8px);padding:10px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,255,0.1)"><a href="javascript:history.back()" style="display:inline-flex;align-items:center;gap:6px;color:#fff;text-decoration:none;font-family:'DM Sans',sans-serif;font-size:13px;opacity:0.85"><span style="font-size:16px">&#8592;</span> Back to Playbook</a></div>
+
+<h1>Vendor Walk-In Comparison</h1>
+<p class="subtitle">Every outbound vendor that walks into Pinellas County restaurants — vs. Pinellas Ice Co.</p>
+
+<div class="section-label">Core Comparison — All Outbound Vendors</div>
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr>
+      <th>Vendor Type</th>
+      <th>Monthly Price</th>
+      <th>Sales Cycle</th>
+      <th>Opener Quality</th>
+      <th>Proof Mechanism</th>
+      <th>Owner Resistance</th>
+      <th>Close Rate</th>
+      <th>Recurring Rev</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <tr class="ice-row">
+      <td class="ice-vendor">&#10052; Pinellas Ice Co.</td>
+      <td><strong>$129/mo</strong></td>
+      <td><span class="badge bi">Same day</span></td>
+      <td>
+        <div class="dots">
+          <div class="dot on b"></div><div class="dot on b"></div>
+          <div class="dot on b"></div><div class="dot on b"></div>
+          <div class="dot on b"></div>
+        </div>
+      </td>
+      <td>ATP RLU live number</td>
+      <td><span class="badge bg">LOW — specific intel</span></td>
+      <td><span class="badge bg">25-30% gold leads</span></td>
+      <td><span class="badge bg">100% recurring</span></td>
+    </tr>
+
+    <tr>
+      <td class="vendor">Food / Beverage Distributor<br><small style="color:var(--ink2);font-weight:400">(Sysco, US Foods, PFG)</small></td>
+      <td>Variable — per order</td>
+      <td><span class="badge ba">2-8 weeks</span></td>
+      <td>
+        <div class="dots">
+          <div class="dot on"></div><div class="dot on"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </td>
+      <td>Pricing sheet, samples</td>
+      <td><span class="badge br">VERY HIGH — entrenched</span></td>
+      <td><span class="badge ba">5-10%</span></td>
+      <td><span class="badge bg">High recurring</span></td>
+    </tr>
+
+    <tr>
+      <td class="vendor">Pest Control<br><small style="color:var(--ink2);font-weight:400">(Orkin, Terminix, local)</small></td>
+      <td>$75-150/mo</td>
+      <td><span class="badge ba">1-7 days</span></td>
+      <td>
+        <div class="dots">
+          <div class="dot on"></div><div class="dot on"></div>
+          <div class="dot on"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </td>
+      <td>Visual inspection</td>
+      <td><span class="badge br">HIGH — already have one</span></td>
+      <td><span class="badge ba">10-15%</span></td>
+      <td><span class="badge bg">High recurring</span></td>
+    </tr>
+
+    <tr>
+      <td class="vendor">Credit Card Processing<br><small style="color:var(--ink2);font-weight:400">(Square, Toast, Heartland)</small></td>
+      <td>% of transactions</td>
+      <td><span class="badge br">2-6 weeks</span></td>
+      <td>
+        <div class="dots">
+          <div class="dot on"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </td>
+      <td>Rate comparison sheet</td>
+      <td><span class="badge br">VERY HIGH — hated category</span></td>
+      <td><span class="badge br">3-7%</span></td>
+      <td><span class="badge bg">High recurring</span></td>
+    </tr>
+
+    <tr>
+      <td class="vendor">Linen / Uniform Service<br><small style="color:var(--ink2);font-weight:400">(Cintas, ALSCO, local)</small></td>
+      <td>$200-600/mo</td>
+      <td><span class="badge ba">1-3 weeks</span></td>
+      <td>
+        <div class="dots">
+          <div class="dot on"></div><div class="dot on"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </td>
+      <td>Sample quality, pricing</td>
+      <td><span class="badge br">HIGH — contract locked</span></td>
+      <td><span class="badge ba">8-12%</span></td>
+      <td><span class="badge bg">High recurring</span></td>
+    </tr>
+
+    <tr>
+      <td class="vendor">Hood Cleaning</td>
+      <td>$50-200/mo amortized</td>
+      <td><span class="badge bg">1-5 days</span></td>
+      <td>
+        <div class="dots">
+          <div class="dot on"></div><div class="dot on"></div>
+          <div class="dot on"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </td>
+      <td>Before/after photos</td>
+      <td><span class="badge ba">MEDIUM — compliance fear</span></td>
+      <td><span class="badge ba">15-25%</span></td>
+      <td><span class="badge bg">High recurring</span></td>
+    </tr>
+
+    <tr>
+      <td class="vendor">Grease Trap Service</td>
+      <td>$50-130/mo amortized</td>
+      <td><span class="badge bg">1-3 days</span></td>
+      <td>
+        <div class="dots">
+          <div class="dot on"></div><div class="dot on"></div>
+          <div class="dot on"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </td>
+      <td>Manifest documentation</td>
+      <td><span class="badge ba">MEDIUM — already have one</span></td>
+      <td><span class="badge ba">12-18%</span></td>
+      <td><span class="badge bg">High recurring</span></td>
+    </tr>
+
+    <tr>
+      <td class="vendor">Fire Suppression Inspection</td>
+      <td>$25-67/mo amortized</td>
+      <td><span class="badge bg">1-5 days</span></td>
+      <td>
+        <div class="dots">
+          <div class="dot on"></div><div class="dot on"></div>
+          <div class="dot on"></div><div class="dot on"></div>
+          <div class="dot"></div>
+        </div>
+      </td>
+      <td>Inspection cert, code refs</td>
+      <td><span class="badge ba">LOW-MED — legally required</span></td>
+      <td><span class="badge bg">25-40%</span></td>
+      <td><span class="badge bg">High recurring</span></td>
+    </tr>
+
+    <tr>
+      <td class="vendor">Commercial Insurance</td>
+      <td>$200-800/mo</td>
+      <td><span class="badge br">2-6 weeks</span></td>
+      <td>
+        <div class="dots">
+          <div class="dot on"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </td>
+      <td>Quote comparison</td>
+      <td><span class="badge br">VERY HIGH — relationship locked</span></td>
+      <td><span class="badge br">3-6%</span></td>
+      <td><span class="badge bg">High recurring</span></td>
+    </tr>
+
+    <tr>
+      <td class="vendor">POS / Technology Systems<br><small style="color:var(--ink2);font-weight:400">(Toast, Lightspeed, Aloha)</small></td>
+      <td>$100-400/mo</td>
+      <td><span class="badge br">4-12 weeks</span></td>
+      <td>
+        <div class="dots">
+          <div class="dot on"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </td>
+      <td>Demo, trial period</td>
+      <td><span class="badge br">VERY HIGH — migration fear</span></td>
+      <td><span class="badge br">3-5%</span></td>
+      <td><span class="badge bg">High recurring</span></td>
+    </tr>
+
+    <tr>
+      <td class="vendor">Knife Sharpening Service</td>
+      <td>$50-150/mo</td>
+      <td><span class="badge bg">Same day</span></td>
+      <td>
+        <div class="dots">
+          <div class="dot on"></div><div class="dot on"></div>
+          <div class="dot on"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </td>
+      <td>Live sharpening demo</td>
+      <td><span class="badge ba">MEDIUM — easy to switch</span></td>
+      <td><span class="badge ba">15-20%</span></td>
+      <td><span class="badge bg">High recurring</span></td>
+    </tr>
+
+    <tr>
+      <td class="vendor">Commercial Cleaning / Janitorial</td>
+      <td>$300-1,200/mo</td>
+      <td><span class="badge ba">1-3 weeks</span></td>
+      <td>
+        <div class="dots">
+          <div class="dot on"></div><div class="dot on"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </td>
+      <td>References, walkthrough</td>
+      <td><span class="badge br">HIGH — trust required</span></td>
+      <td><span class="badge ba">8-12%</span></td>
+      <td><span class="badge bg">High recurring</span></td>
+    </tr>
+
+    <tr>
+      <td class="vendor">Staffing / Recruiting</td>
+      <td>Per placement</td>
+      <td><span class="badge br">2-8 weeks</span></td>
+      <td>
+        <div class="dots">
+          <div class="dot on"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </td>
+      <td>Success stories</td>
+      <td><span class="badge br">VERY HIGH — skepticism</span></td>
+      <td><span class="badge br">4-8%</span></td>
+      <td><span class="badge ba">Variable</span></td>
+    </tr>
+
+    <tr>
+      <td class="vendor">Digital Marketing / SEO</td>
+      <td>$500-2,000/mo</td>
+      <td><span class="badge br">2-8 weeks</span></td>
+      <td>
+        <div class="dots">
+          <div class="dot on"></div><div class="dot"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </td>
+      <td>Case studies, reports</td>
+      <td><span class="badge br">VERY HIGH — burned before</span></td>
+      <td><span class="badge br">3-6%</span></td>
+      <td><span class="badge bg">Recurring</span></td>
+    </tr>
+
+    <tr>
+      <td class="vendor">Music Licensing<br><small style="color:var(--ink2);font-weight:400">(BMI, ASCAP, Soundtrack)</small></td>
+      <td>$30-200/mo</td>
+      <td><span class="badge ba">1-2 weeks</span></td>
+      <td>
+        <div class="dots">
+          <div class="dot on"></div><div class="dot on"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </td>
+      <td>Compliance threat letter</td>
+      <td><span class="badge ba">MEDIUM — fear-based</span></td>
+      <td><span class="badge ba">15-25%</span></td>
+      <td><span class="badge bg">Recurring</span></td>
+    </tr>
+
+    <tr>
+      <td class="vendor">Water / Filtration Service<br><small style="color:var(--ink2);font-weight:400">(Culligan, Everpure)</small></td>
+      <td>$50-200/mo</td>
+      <td><span class="badge ba">3-14 days</span></td>
+      <td>
+        <div class="dots">
+          <div class="dot on"></div><div class="dot on"></div>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+      </td>
+      <td>TDS meter test</td>
+      <td><span class="badge ba">MEDIUM</span></td>
+      <td><span class="badge ba">12-18%</span></td>
+      <td><span class="badge bg">Recurring</span></td>
+    </tr>
+
+  </tbody>
+</table>
+</div>
+
+<div class="section-label">The Differentiator Matrix</div>
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr>
+      <th>Vendor Type</th>
+      <th class="highlight">Proprietary Lead Intel</th>
+      <th class="highlight">Live Proof in 15 Sec</th>
+      <th class="highlight">Creates New Category</th>
+      <th>Daily Lead Refresh</th>
+      <th>No License Required</th>
+      <th>Startup Under $5K</th>
+      <th>Local Competition</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="ice-row">
+      <td class="ice-vendor">&#10052; Pinellas Ice Co.</td>
+      <td><span class="badge bg">YES — DBPR daily</span></td>
+      <td><span class="badge bg">YES — ATP RLU</span></td>
+      <td><span class="badge bg">YES — no incumbent</span></td>
+      <td><span class="badge bg">YES — 1-3/day</span></td>
+      <td><span class="badge bg">YES</span></td>
+      <td><span class="badge bg">YES — $2,900</span></td>
+      <td><span class="badge bg">ZERO</span></td>
+    </tr>
+    <tr>
+      <td class="vendor">Food Distributor</td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge bg">YES</span></td>
+      <td><span class="badge br">NO — inventory</span></td>
+      <td><span class="badge br">SATURATED</span></td>
+    </tr>
+    <tr>
+      <td class="vendor">Pest Control</td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge br">NO — FL license</span></td>
+      <td><span class="badge br">NO — $10-25K</span></td>
+      <td><span class="badge br">SATURATED</span></td>
+    </tr>
+    <tr>
+      <td class="vendor">Credit Card Processing</td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge bg">YES</span></td>
+      <td><span class="badge bg">YES</span></td>
+      <td><span class="badge br">SATURATED</span></td>
+    </tr>
+    <tr>
+      <td class="vendor">Linen Service</td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge bg">YES</span></td>
+      <td><span class="badge br">NO — inventory</span></td>
+      <td><span class="badge br">HIGH</span></td>
+    </tr>
+    <tr>
+      <td class="vendor">Hood Cleaning</td>
+      <td><span class="badge ba">PARTIAL — fire records</span></td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge br">NO — NFPA cert</span></td>
+      <td><span class="badge br">NO — $8-20K</span></td>
+      <td><span class="badge ba">MEDIUM</span></td>
+    </tr>
+    <tr>
+      <td class="vendor">Fire Suppression</td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge br">NO — FL contractor</span></td>
+      <td><span class="badge br">NO — $10-25K</span></td>
+      <td><span class="badge ba">MEDIUM</span></td>
+    </tr>
+    <tr>
+      <td class="vendor">Knife Sharpening</td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge bg">YES — demo</span></td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge bg">YES</span></td>
+      <td><span class="badge bg">YES — $2-5K</span></td>
+      <td><span class="badge ba">MEDIUM</span></td>
+    </tr>
+    <tr>
+      <td class="vendor">Water Filtration</td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge ba">PARTIAL — TDS meter</span></td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge ba">VARIES</span></td>
+      <td><span class="badge br">NO — equipment</span></td>
+      <td><span class="badge br">HIGH — Culligan</span></td>
+    </tr>
+    <tr>
+      <td class="vendor">Music Licensing</td>
+      <td><span class="badge ba">PARTIAL — public records</span></td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge bg">YES</span></td>
+      <td><span class="badge bg">YES</span></td>
+      <td><span class="badge br">HIGH</span></td>
+    </tr>
+    <tr>
+      <td class="vendor">POS Systems</td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge br">NO</span></td>
+      <td><span class="badge bg">YES</span></td>
+      <td><span class="badge bg">YES</span></td>
+      <td><span class="badge br">SATURATED</span></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="section-label">Owner Resistance by Vendor Type</div>
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr>
+      <th>Vendor Type</th>
+      <th>Why They Resist</th>
+      <th>Resistance Level</th>
+      <th>Your Advantage Over Them</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="ice-row">
+      <td class="ice-vendor">&#10052; Pinellas Ice Co.</td>
+      <td>New category, new monthly expense</td>
+      <td><span class="badge bi">LOW-MEDIUM</span></td>
+      <td>DBPR record + ATP reading flips dynamic from pitch to consultation</td>
+    </tr>
+    <tr>
+      <td class="vendor">Food Distributor</td>
+      <td>Already have one, switching is painful, relationship loyalty</td>
+      <td><span class="badge br">VERY HIGH</span></td>
+      <td>No incumbent to protect your category</td>
+    </tr>
+    <tr>
+      <td class="vendor">Credit Card Processing</td>
+      <td>Most hated vendor category. Burned repeatedly. Contract fear.</td>
+      <td><span class="badge br">EXTREME</span></td>
+      <td>You carry a device, not a rate sheet</td>
+    </tr>
+    <tr>
+      <td class="vendor">Pest Control</td>
+      <td>Already have one, compliance is handled, switching feels risky</td>
+      <td><span class="badge br">HIGH</span></td>
+      <td>No incumbent in your category in Pinellas</td>
+    </tr>
+    <tr>
+      <td class="vendor">Linen Service</td>
+      <td>Contract lock-in, switching logistics, relationship history</td>
+      <td><span class="badge br">HIGH</span></td>
+      <td>No contract required, cancel anytime</td>
+    </tr>
+    <tr>
+      <td class="vendor">Hood Cleaning</td>
+      <td>Already have one, compliance is handled, price sensitivity</td>
+      <td><span class="badge ba">MEDIUM-HIGH</span></td>
+      <td>You add measurement they don't have</td>
+    </tr>
+    <tr>
+      <td class="vendor">Digital Marketing</td>
+      <td>Burned by previous agencies. No trust. Can't prove ROI.</td>
+      <td><span class="badge br">EXTREME</span></td>
+      <td>Your ROI is a number. 312 to 8 is provable.</td>
+    </tr>
+    <tr>
+      <td class="vendor">Knife Sharpening</td>
+      <td>Low priority, "we manage it ourselves"</td>
+      <td><span class="badge ba">MEDIUM</span></td>
+      <td>Your compliance hook is stronger</td>
+    </tr>
+    <tr>
+      <td class="vendor">Fire Suppression</td>
+      <td>Already inspected, legally mandated so they shop price only</td>
+      <td><span class="badge ba">LOW-MEDIUM</span></td>
+      <td>Similar compliance driver — closest analog</td>
+    </tr>
+    <tr>
+      <td class="vendor">Music Licensing</td>
+      <td>Feels like extortion. Hostility toward the category itself.</td>
+      <td><span class="badge br">HIGH</span></td>
+      <td>You bring value, not a threat</td>
+    </tr>
+    <tr>
+      <td class="vendor">Staffing / Recruiting</td>
+      <td>No trust, high failure rate, expensive when wrong</td>
+      <td><span class="badge br">VERY HIGH</span></td>
+      <td>Your service is self-evident in 15 seconds</td>
+    </tr>
+    <tr>
+      <td class="vendor">POS Systems</td>
+      <td>Migration fear, staff retraining, contract lock-in</td>
+      <td><span class="badge br">EXTREME</span></td>
+      <td>You don't require any behavior change from their operation</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<div class="callout green">
+  <div class="callout-label">The Single Most Important Insight</div>
+  <p>Every other vendor on this list walks in asking the owner to <strong>imagine</strong> a benefit — lower food costs, cleaner linen, better reviews, fewer pests. You walk in and <strong>reveal</strong> a problem that already exists, measured in real time, with a number. That is a fundamentally different sales dynamic. Resistance dissolves when the device shows 312 RLU and you calmly explain that FDA standard is 10. You are not pitching. You are informing. The owner closes themselves.</p>
+</div>
+
+<div class="callout gold">
+  <div class="callout-label">The Conditioned Resistance Problem</div>
+  <p>Restaurant owners have been trained by years of vendor walk-ins to say "we're all set" before they've heard a sentence. The conditioned response fires automatically. <strong>Your DBPR opener bypasses this conditioning</strong> because it references something specific about their business — not a generic pitch. "I pulled your inspection record" is not a vendor line. It's a line from someone who already knows something. That pattern interrupt is your first job every time you walk through a door.</p>
+</div>
+
+<div class="callout">
+  <div class="callout-label">Close Rate Context</div>
+  <p>The average outbound walk-in close rate across all restaurant vendor categories is <strong>5-12%</strong>. Fire suppression (legally mandated, no choice) is the outlier at 25-40%. Pinellas Ice Co. projects 25-30% on gold leads — matching fire suppression's close rate without a legal mandate, purely on the strength of the DBPR intelligence and the ATP demonstration. No other non-mandated vendor category comes close to that close rate on cold walk-ins.</p>
+</div>
+
+<div class="footer">
+  Pinellas Ice Co. — Vendor Comparison Analysis &nbsp;·&nbsp; June 2026 &nbsp;·&nbsp; Pinellas County, FL
+</div>
+
+</body>
+</html>
