@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Pinellas Ice Co — Sales Scenarios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0f1f38;--navy2:#162d4a;--navy3:#1e3a5f;--gold:#c9973a;--gold2:#e8b14d;--cream:#f5f0e8;--white:#fafaf8;--brd:rgba(201,151,58,0.2);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--navy);color:var(--cream);font-family:"DM Sans",sans-serif;font-size:15px;line-height:1.6;min-height:100vh;}
+.hdr{background:linear-gradient(135deg,#0a1628 0%,var(--navy3) 100%);border-bottom:2px solid var(--gold);padding:20px 20px 16px;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,.4);}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.hdr-brand{font-family:"Playfair Display",serif;font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);}
+.hdr-title{font-family:"Playfair Display",serif;font-size:20px;font-weight:900;color:var(--white);letter-spacing:-.02em;}
+.hdr-sub{font-size:11px;color:#888070;letter-spacing:.05em;text-transform:uppercase;margin-top:2px;}
+.hdr-note{font-size:10px;color:rgba(255,255,255,0.3);margin-top:2px;font-style:italic;}
+.hdr-back{display:flex;align-items:center;gap:6px;text-decoration:none;padding:6px 12px;border:1px solid rgba(201,151,58,.3);border-radius:6px;font-size:11px;font-weight:600;color:var(--gold);letter-spacing:.04em;white-space:nowrap;}
+.hdr-back:hover{background:rgba(201,151,58,.1);}
+.nav-pills{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
+.nav-pills::-webkit-scrollbar{display:none;}
+.pill{flex-shrink:0;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.04em;cursor:pointer;border:1px solid rgba(201,151,58,.3);color:#9a9080;background:transparent;transition:all .2s;white-space:nowrap;}
+.pill.active,.pill:hover{background:var(--gold);color:var(--navy);border-color:var(--gold);}
+.content{max-width:680px;margin:0 auto;padding:20px 16px 60px;}
+.section{margin-bottom:12px;border-radius:10px;overflow:hidden;border:1px solid var(--brd);background:#162d4a;}
+.section-hdr{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;user-select:none;transition:background .2s;}
+.section-hdr:hover{background:rgba(201,151,58,.05);}
+.section-hdr.open{background:rgba(201,151,58,.08);border-bottom:1px solid var(--brd);}
+.section-num{font-family:"DM Mono",monospace;font-size:10px;font-weight:500;color:var(--gold);opacity:.7;min-width:24px;}
+.section-icon{font-size:18px;}
+.section-title{flex:1;font-family:"Playfair Display",serif;font-size:16px;font-weight:700;color:var(--white);}
+.section-sub{font-size:10px;color:#7a7060;letter-spacing:.04em;text-transform:uppercase;}
+.chevron{font-size:12px;color:var(--gold);opacity:.9;transition:transform .25s;}
+.section-hdr.open .chevron{transform:rotate(180deg);}
+.section-body{display:none;background:#162d4a;}
+.section-body.open{display:block;}
+.block{padding:16px;border-bottom:1px solid rgba(201,151,58,.08);}
+.block:last-child{border-bottom:none;}
+.block-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+.block p{font-size:14px;line-height:1.7;color:#e0d8cc;margin-bottom:10px;}
+.block p:last-child{margin-bottom:0;}
+.block strong{color:var(--white);font-weight:600;}
+.alert{border-radius:8px;padding:12px 14px;margin:10px 0;font-size:13px;line-height:1.6;}
+.alert-gold{background:rgba(201,151,58,.18);border:1px solid rgba(201,151,58,.5);color:#e8b14d;}
+.alert-green{background:rgba(26,107,60,.18);border:1px solid rgba(26,107,60,.4);color:#8ee8b0;}
+/* ── SCENARIO-SPECIFIC STYLES ── */
+.ctx-box{background:#0c1929;border:1px solid rgba(201,151,58,.25);border-radius:8px;padding:14px 16px;margin:0 0 12px 0;}
+.ctx-row{display:flex;gap:8px;margin-bottom:5px;font-size:12px;}
+.ctx-row:last-child{margin-bottom:0;}
+.ctx-lbl{font-family:"DM Mono",monospace;font-size:10px;font-weight:700;color:var(--gold);min-width:68px;flex-shrink:0;padding-top:1px;}
+.ctx-val{font-size:12px;color:#b8b0a0;line-height:1.5;}
+.ctx-dbpr{background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.3);border-radius:6px;padding:8px 10px;margin-top:8px;}
+.ctx-dbpr-lbl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#f08080;margin-bottom:3px;}
+.ctx-dbpr-txt{font-size:12px;color:#d0a0a0;line-height:1.5;font-style:italic;}
+/* Dialogue */
+.dialogue{display:flex;flex-direction:column;gap:0;}
+.d-line{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start;}
+.spk{font-family:"DM Mono",monospace;font-size:10px;font-weight:700;letter-spacing:.04em;flex-shrink:0;min-width:50px;padding-top:3px;}
+.spk-you{color:var(--gold);}
+.spk-other{color:var(--white);}
+.d-txt{font-size:14px;color:#e0d8cc;line-height:1.7;flex:1;}
+.stage{font-size:12px;font-style:italic;color:#7a8898;margin:6px 0 10px 0;padding:6px 10px 6px 12px;border-left:2px solid rgba(255,255,255,.1);background:rgba(0,0,0,.15);border-radius:0 6px 6px 0;}
+/* ATP reading boxes */
+.atp-box{border-radius:8px;padding:14px 16px;margin:10px 0;text-align:center;}
+.atp-fail{background:rgba(192,57,43,.22);border:2px solid rgba(192,57,43,.55);}
+.atp-marginal{background:rgba(243,156,18,.18);border:2px solid rgba(243,156,18,.45);}
+.atp-pass{background:rgba(26,107,60,.2);border:2px solid rgba(26,107,60,.5);}
+.atp-reading{font-family:"DM Mono",monospace;font-size:30px;font-weight:700;line-height:1;margin-bottom:5px;}
+.atp-fail .atp-reading{color:#ff6b6b;}
+.atp-marginal .atp-reading{color:#f39c12;}
+.atp-pass .atp-reading{color:#7ecfa0;}
+.atp-std{font-size:11px;color:rgba(255,255,255,.45);letter-spacing:.06em;text-transform:uppercase;}
+/* Situation badge */
+.sit-badge{display:inline-block;padding:3px 10px;border-radius:14px;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-right:6px;}
+.sit-gold{background:rgba(201,151,58,.25);color:#e8b14d;border:1px solid rgba(201,151,58,.5);}
+.sit-corp{background:rgba(139,92,246,.2);color:#c4b5fd;border:1px solid rgba(139,92,246,.4);}
+.sit-comp{background:rgba(235,94,40,.2);color:#fb923c;border:1px solid rgba(235,94,40,.4);}
+.sit-partial{background:rgba(59,130,246,.2);color:#93c5fd;border:1px solid rgba(59,130,246,.4);}
+.sit-upsell{background:rgba(16,185,129,.2);color:#6ee7b7;border:1px solid rgba(16,185,129,.4);}
+.sit-nonc{background:rgba(148,163,184,.2);color:#94a3b8;border:1px solid rgba(148,163,184,.4);}
+.sit-price{background:rgba(192,57,43,.2);color:#f08080;border:1px solid rgba(192,57,43,.4);}
+/* Difficulty badge */
+.diff{display:inline-block;padding:3px 10px;border-radius:14px;font-size:9px;font-weight:600;letter-spacing:.06em;}
+.diff-1{background:rgba(26,107,60,.2);color:#7ecfa0;border:1px solid rgba(26,107,60,.35);}
+.diff-2{background:rgba(201,151,58,.2);color:#e8b14d;border:1px solid rgba(201,151,58,.35);}
+.diff-3{background:rgba(243,156,18,.18);color:#f39c12;border:1px solid rgba(243,156,18,.35);}
+.diff-4{background:rgba(235,94,40,.2);color:#fb923c;border:1px solid rgba(235,94,40,.35);}
+.diff-5{background:rgba(192,57,43,.2);color:#f08080;border:1px solid rgba(192,57,43,.35);}
+/* Outcome box */
+.outcome{background:rgba(26,107,60,.15);border:1px solid rgba(26,107,60,.4);border-radius:8px;padding:14px 16px;margin:12px 0;}
+.outcome-title{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#7ecfa0;margin-bottom:8px;}
+.outcome p{font-size:13px;color:#8ee8b0;line-height:1.6;margin-bottom:0;}
+.outcome-row{display:flex;gap:8px;align-items:flex-start;font-size:13px;color:#8ee8b0;margin-bottom:4px;}
+.outcome-row:last-child{margin-bottom:0;}
+.outcome-dot{color:#7ecfa0;flex-shrink:0;font-size:10px;padding-top:3px;}
+/* Key lesson */
+.key-lesson{background:#0c1929;border:2px solid var(--gold);border-radius:10px;padding:16px;margin-top:12px;}
+.kl-title{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+.key-lesson p{font-size:14px;color:#c0b898;line-height:1.75;margin-bottom:8px;}
+.key-lesson p:last-child{margin-bottom:0;}
+/* Amber outcome (no close) */
+.outcome-amber{background:rgba(243,156,18,.1);border:1px solid rgba(243,156,18,.4);border-radius:8px;padding:14px 16px;margin:12px 0;}
+.outcome-amber .outcome-title{color:#f39c12;}
+.outcome-amber .outcome-row,.outcome-amber p{color:#fbbf24;}
+.outcome-amber .outcome-dot{color:#f39c12;}
+@media(max-width:480px){.hdr-title{font-size:17px;}.content{padding:14px 12px 80px;}.section-title{font-size:15px;}.atp-reading{font-size:24px;}}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-top">
+    <div>
+      <div class="hdr-brand">Pinellas Ice Co</div>
+      <div class="hdr-title">Sales Scenarios</div>
+      <div class="hdr-sub">11 Real Conversations — Walk-In to Outcome</div>
+      <div class="hdr-note">Covers 90%+ of situations you will actually encounter in the field.</div>
+    </div>
+    <a class="hdr-back" href="../sales_playbook_v2.html">&#8592; Playbook</a>
+  </div>
+  <div class="nav-pills">
+    <div class="pill active" onclick="jumpTo('sc1')">1 Perfect Close</div>
+    <div class="pill" onclick="jumpTo('sc2')">2 Gatekeeper</div>
+    <div class="pill" onclick="jumpTo('sc3')">3 Commitment Obj.</div>
+    <div class="pill" onclick="jumpTo('sc4')">4 Existing Vendor</div>
+    <div class="pill" onclick="jumpTo('sc5')">5 Corporate</div>
+    <div class="pill" onclick="jumpTo('sc6')">6 Brush-Off</div>
+    <div class="pill" onclick="jumpTo('sc7')">7 Clean Machine</div>
+    <div class="pill" onclick="jumpTo('sc8')">8 Timing / Access</div>
+    <div class="pill" onclick="jumpTo('sc9')">9 Multi-Machine</div>
+    <div class="pill" onclick="jumpTo('sc10')">10 Warm Follow-Up</div>
+    <div class="pill" onclick="jumpTo('sc11')">11 Price Objection</div>
+  </div>
+</div>
+<div class="content">
+
+<div class="alert alert-gold" style="margin-bottom:14px">
+<strong>How to use these scenarios:</strong> Read them before your first walk-in block. The dialogue is word-for-word — the responses to each situation are the ones that work. After 10 real conversations you&rsquo;ll see how closely field interactions follow these patterns.
+</div>
+
+<!-- ═══════════════════════ SCENARIO 1 ═══════════════════════ -->
+<div class="section" id="sc1">
+<div class="section-hdr open" onclick="toggle(this)">
+  <div class="section-num">01</div><div class="section-icon">🏆</div>
+  <div>
+    <div class="section-title">The Perfect Close</div>
+    <div class="section-sub"><span class="sit-badge sit-gold">Gold Lead — Same-Day Close</span><span class="diff diff-1">★☆☆☆☆ Easy</span></div>
+  </div>
+  <div class="chevron">▼</div>
+</div>
+<div class="section-body open">
+<div class="block">
+<div class="block-title">Context</div>
+<div class="ctx-box">
+  <div class="ctx-row"><span class="ctx-lbl">Location</span><span class="ctx-val">Waterfront bar-restaurant, Clearwater Beach</span></div>
+  <div class="ctx-row"><span class="ctx-lbl">Prospect</span><span class="ctx-val">Jake, owner-operator, 12 years at location</span></div>
+  <div class="ctx-row"><span class="ctx-lbl">Time</span><span class="ctx-val">Wednesday 10:15am — post-breakfast, pre-lunch prep. Low-traffic window.</span></div>
+  <div class="ctx-row"><span class="ctx-lbl">Kit</span><span class="ctx-val">Full kit in vehicle. ATP device in hand.</span></div>
+  <div class="ctx-dbpr">
+    <div class="ctx-dbpr-lbl">DBPR — V22 Citation 8 days ago</div>
+    <div class="ctx-dbpr-txt">"Mold observed on interior evaporator components. Corrective action required."</div>
+  </div>
+</div>
+<div class="dialogue">
+  <div class="stage">[You walk in. Jake is behind the bar cutting limes. The restaurant is quiet. You approach with the ATP device visible.]</div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"Hey Jake — I'm [name] with Pinellas Ice Co. We do ATP-certified ice machine cleaning for restaurants on the beach. I pulled your DBPR inspection record this morning — saw you had a citation last week for mold on the evaporator. Mind if I show you something real quick? Takes about 30 seconds."</span></div>
+  <div class="d-line"><span class="spk spk-other">JAKE</span><span class="d-txt">"Yeah I saw that. My manager said he cleaned it out. Should be fine now."</span></div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"That's great — this will tell us for certain. The ATP device measures biological contamination with a number. If it passes I'll tell you that and we go our separate ways."</span></div>
+  <div class="stage">[Jake nods. You open the access panel and run the pre-service swab. 15 seconds.]</div>
+  <div class="atp-box atp-fail"><div class="atp-reading">312 RLU</div><div class="atp-std">FDA Standard: 10 RLU</div></div>
+  <div class="d-line"><span class="spk spk-other">JAKE</span><span class="d-txt">"312. What does that mean exactly?"</span></div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"It means there's active biological contamination in contact with your ice right now. Your manager cleaned the accessible surfaces — but the evaporator plates and water distribution lines are where mold establishes, and those need a full descale and sanitize to clear. Can I take a before photo? We document everything."</span></div>
+  <div class="d-line"><span class="spk spk-other">JAKE</span><span class="d-txt">"Sure."</span></div>
+  <div class="stage">[You photograph the interior — document the pre-service condition before touching anything.]</div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"For $228 today — that's the initial deep clean plus your first month in our quarterly program — we clean the entire machine, run a post-service ATP test to prove it worked, before and after photos on file, certified clean sticker on the machine, and a digital record you can show a health inspector. We come back every 90 days. And if your machine gets cited within 30 days of our service, full refund. We've never had to honor that guarantee."</span></div>
+  <div class="stage">[Pause. Jake looks at the device screen.]</div>
+  <div class="d-line"><span class="spk spk-other">JAKE</span><span class="d-txt">"You can do it today?"</span></div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"Right now. But if lunch prep is tight, I can also come back between 3 and 5 — before your dinner service."</span></div>
+  <div class="d-line"><span class="spk spk-other">JAKE</span><span class="d-txt">"No, do it now. I'll put you in the corner. What do I need to do?"</span></div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"Just keep your staff clear of this area while I work. I'll send the payment link — takes 30 seconds."</span></div>
+  <div class="stage">[You send the Stripe link. Jake pays on his phone. $228 processed. Subscription running. You begin the service.]</div>
+  <div class="stage">[90 minutes later. Post-service swab complete.]</div>
+  <div class="atp-box atp-pass"><div class="atp-reading">8 RLU</div><div class="atp-std">FDA Standard: 10 RLU</div></div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"You went from 312 to 8. FDA standard is 10. Your machine passes."</span></div>
+  <div class="stage">[You place the certification sticker on the machine. Hand Jake the printed ATP report.]</div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"This is your copy. The QR code links to your certification record online. Your staff can scan it, your customers can scan it, and if a health inspector asks about your ice machine you hand them this. We'll be back in 90 days."</span></div>
+  <div class="d-line"><span class="spk spk-other">JAKE</span><span class="d-txt">"What was my manager actually cleaning?"</span></div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"The bin interior and the external surfaces — what he could reach and see. The evaporator is behind the panel. That's where the biology lives."</span></div>
+  <div class="d-line"><span class="spk spk-other">JAKE</span><span class="d-txt">"Good to know. Thank you."</span></div>
+</div>
+</div>
+<div class="block">
+<div class="outcome">
+  <div class="outcome-title">Outcome</div>
+  <div class="outcome-row"><span class="outcome-dot">✓</span><span>Closed same day. $228 collected. $129/month subscription active.</span></div>
+  <div class="outcome-row"><span class="outcome-dot">✓</span><span>Certification sticker placed. First ATP report issued.</span></div>
+</div>
+<div class="key-lesson">
+  <div class="kl-title">Key Lesson</div>
+  <p>The manager's in-house clean failed because surface cleaning never reaches the evaporator. 312 RLU proved it in 15 seconds without an argument. Jake offered the timing hesitation you anticipated — you offered the 3–5pm window which removed it. Your only job was getting permission to run the test. The machine closed the sale. Always offer an alternative time even when same-day is the goal.</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════ SCENARIO 2 ═══════════════════════ -->
+<div class="section" id="sc2">
+<div class="section-hdr" onclick="toggle(this)">
+  <div class="section-num">02</div><div class="section-icon">🚪</div>
+  <div>
+    <div class="section-title">The Gatekeeper</div>
+    <div class="section-sub"><span class="sit-badge sit-gold">Gold Lead — Double Visit Close</span><span class="diff diff-2">★★☆☆☆ Moderate</span></div>
+  </div>
+  <div class="chevron">▼</div>
+</div>
+<div class="section-body">
+<div class="block">
+<div class="block-title">Context</div>
+<div class="ctx-box">
+  <div class="ctx-row"><span class="ctx-lbl">Location</span><span class="ctx-val">Independent cafe, downtown Clearwater</span></div>
+  <div class="ctx-row"><span class="ctx-lbl">Prospect</span><span class="ctx-val">Maria, owner — not present at 10:30am</span></div>
+  <div class="ctx-row"><span class="ctx-lbl">Staff</span><span class="ctx-val">Tyler, server, 20s, not especially helpful</span></div>
+  <div class="ctx-row"><span class="ctx-lbl">Time</span><span class="ctx-val">Tuesday 10:30am. VM left at 8:15am.</span></div>
+  <div class="ctx-dbpr">
+    <div class="ctx-dbpr-lbl">DBPR — V22 Citation 5 days ago</div>
+    <div class="ctx-dbpr-txt">"Slime buildup on ice bin interior and water distribution lines."</div>
+  </div>
+</div>
+<div class="dialogue">
+  <div class="stage">[You walk in. Tyler is on his phone behind the counter. Looks up slowly.]</div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"Hey — is Maria in? I'm [name] with Pinellas Ice Co. I left her a voicemail this morning about her ice machine."</span></div>
+  <div class="d-line"><span class="spk spk-other">TYLER</span><span class="d-txt">"She's not in until like 2-ish."</span></div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"Got it. Any chance you could make sure she gets this? Tell her I called about the DBPR health inspection — there's something about the ice machine she'll want to see."</span></div>
+  <div class="stage">[Tyler takes the card without enthusiasm and sets it next to the register, not where Maria will necessarily find it. You place a collateral piece face-up beside it.]</div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"What time does it usually slow down after 2? I don't want to catch her in the middle of the lunch rush."</span></div>
+  <div class="d-line"><span class="spk spk-other">TYLER</span><span class="d-txt">"Like 2:30 maybe."</span></div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"I'll come back at 2:30. Thanks."</span></div>
+  <div class="stage">[2:38pm. You return. Maria is behind the counter. She's seen the card but not the voicemail yet — Tyler mentioned someone came by.]</div>
+  <div class="d-line"><span class="spk spk-other">MARIA</span><span class="d-txt">"You're the ice machine person?"</span></div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"That's me. [Name], Pinellas Ice Co. Left you a voicemail this morning — did you get a chance to hear it?"</span></div>
+  <div class="d-line"><span class="spk spk-other">MARIA</span><span class="d-txt">"Not yet. What's this about?"</span></div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"Five days ago DBPR cited your machine for slime buildup on the ice bin and water lines. I have my ATP device — measures contamination with a number. Takes 30 seconds. Want to see where it reads right now?"</span></div>
+  <div class="d-line"><span class="spk spk-other">MARIA</span><span class="d-txt">"I already had someone look at it. My refrigeration company said it was fine."</span></div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"The ATP test will confirm that. If it passes I'll tell you that and we go our separate ways. No cost."</span></div>
+  <div class="stage">[Maria shrugs. You run the pre-service test.]</div>
+  <div class="atp-box atp-fail"><div class="atp-reading">248 RLU</div><div class="atp-std">FDA Standard: 10 RLU</div></div>
+  <div class="d-line"><span class="spk spk-other">MARIA</span><span class="d-txt">"248. My guy said it was fine."</span></div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"He probably cleared the visible buildup — what you can see and reach. The slime in the water distribution lines doesn't come out with surface cleaning. That's what the 248 is."</span></div>
+  <div class="stage">[Maria crosses her arms. Processing, not hostile.]</div>
+  <div class="d-line"><span class="spk spk-other">MARIA</span><span class="d-txt">"So what do you do that he doesn't?"</span></div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"Full descale on the water system, brush out the evaporator and distribution lines, sanitize all food-contact surfaces, before and after ATP test to prove it worked. Your refrigeration guy is excellent at repairs. This is specifically contamination remediation with documented proof."</span></div>
+  <div class="stage">[You photograph the interior — document the pre-service condition before touching anything.]</div>
+  <div class="d-line"><span class="spk spk-other">MARIA</span><span class="d-txt">"What does it cost?"</span></div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"$228 today — full deep clean, before and after ATP documentation, certified sticker, and your first month of quarterly service. We come back every 90 days. And if your machine gets cited within 30 days of our service — full refund."</span></div>
+  <div class="d-line"><span class="spk spk-other">MARIA</span><span class="d-txt">"I can't do it right now. I'm down a person."</span></div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"No problem. I can do early morning before you open — 7:30am — or between lunch and dinner. Thursday work?"</span></div>
+  <div class="d-line"><span class="spk spk-other">MARIA</span><span class="d-txt">"Thursday morning. 7:30."</span></div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"Done. I'll confirm by text tomorrow night."</span></div>
+  <div class="stage">[You log Maria in the app. Set a Wednesday evening confirmation text nudge.]</div>
+  <div class="stage">[Thursday 7:35am. You arrive. Maria is prepping pastries. Machine is accessible. Service takes 80 minutes.]</div>
+  <div class="stage">[Post-service swab complete.]</div>
+  <div class="atp-box atp-pass"><div class="atp-reading">9 RLU</div><div class="atp-std">FDA Standard: 10 RLU</div></div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"You went from 248 to 9. FDA standard is 10. Your machine passes."</span></div>
+  <div class="stage">[Maria stops what she's doing. Looks at the two numbers.]</div>
+  <div class="stage">[Maria sets down the pastry she was shaping. Looks at both numbers on the report.]</div>
+  <div class="d-line"><span class="spk spk-other">MARIA</span><span class="d-txt">"248 to 9. That's… that's really different. My guy said it was fine."</span></div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"Your refrigeration company did what they were asked to do — they just don't have this tool. They clean what they can see. This gets what they can't reach. Now you have the before and after on record."</span></div>
+  <div class="stage">[You place the sticker. Hand her the report.]</div>
+  <div class="d-line"><span class="spk spk-other">MARIA</span><span class="d-txt">"Show me how the QR code works."</span></div>
+  <div class="stage">[You scan the sticker with your phone. The CleanScore record pulls up — Maria's cafe, service date, 248 pre, 9 post, certification active.]</div>
+  <div class="d-line"><span class="spk spk-other">MARIA</span><span class="d-txt">"Can my customers actually scan this?"</span></div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"Anyone with a phone. Some owners put it where customers can see it. Your call."</span></div>
+  <div class="d-line"><span class="spk spk-other">MARIA</span><span class="d-txt">"I like that. Thank you."</span></div>
+</div>
+</div>
+<div class="block">
+<div class="outcome">
+  <div class="outcome-title">Outcome</div>
+  <div class="outcome-row"><span class="outcome-dot">✓</span><span>Two visits. Closed Thursday morning. $228 collected. Subscription active.</span></div>
+  <div class="outcome-row"><span class="outcome-dot">✓</span><span>Maria converted from skeptic to advocate. Asked about customer-facing sticker placement.</span></div>
+</div>
+<div class="key-lesson">
+  <div class="kl-title">Key Lesson</div>
+  <p>Tyler not relaying the message is expected. The VM at 8:15am created context — when you returned at 2:30pm you weren't cold. The refrigeration company objection dissolved when you framed the two services as complementary not competitive. The Thursday 7:30am slot is your best friend — owners are calm, kitchen is empty, machine is accessible. Maria's reaction to seeing 248 become 9 in one service is the emotional payoff of this entire business. Always pause after showing the post-service reading. Let them sit with it.</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════ SCENARIO 3 ═══════════════════════ -->
+<div class="section" id="sc3">
+<div class="section-hdr" onclick="toggle(this)">
+  <div class="section-num">03</div><div class="section-icon">🔓</div>
+  <div>
+    <div class="section-title">Commitment Objection</div>
+    <div class="section-sub"><span class="sit-badge sit-gold">Gold Lead — Flex Plan Close</span><span class="diff diff-3">★★★☆☆ Challenging</span></div>
+  </div>
+  <div class="chevron">▼</div>
+</div>
+<div class="section-body">
+<div class="block">
+<div class="block-title">Context</div>
+<div class="ctx-box">
+  <div class="ctx-row"><span class="ctx-lbl">Location</span><span class="ctx-val">Sports bar, St. Petersburg</span></div>
+  <div class="ctx-row"><span class="ctx-lbl">Prospect</span><span class="ctx-val">Derek, owner, mid-40s — had a bad experience with vendor lock-in years ago</span></div>
+  <div class="ctx-row"><span class="ctx-lbl">Time</span><span class="ctx-val">Thursday 11:15am</span></div>
+  <div class="ctx-dbpr">
+    <div class="ctx-dbpr-lbl">DBPR — V22 Citation 3 days ago</div>
+    <div class="ctx-dbpr-txt">"Biofilm present on evaporator plate surfaces. Ice bin interior soiled."</div>
+  </div>
+</div>
+<div class="dialogue">
+  <div class="stage">[Derek is counting the register. Looks up when you walk in — not unfriendly but busy.]</div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"Derek — [name] from Pinellas Ice Co. I pulled your DBPR inspection record. You had a citation Tuesday for biofilm on the evaporator. Mind if I show you the actual reading right now? 30 seconds."</span></div>
+  <div class="d-line"><span class="spk spk-other">DEREK</span><span class="d-txt">"Sure, why not."</span></div>
+  <div class="stage">[You run the pre-service test.]</div>
+  <div class="atp-box atp-fail"><div class="atp-reading">190 RLU</div><div class="atp-std">FDA Standard: 10 RLU</div></div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"190. FDA standard is 10."</span></div>
+  <div class="d-line"><span class="spk spk-other">DEREK</span><span class="d-txt">"Okay. What does it cost to fix it?"</span></div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"For $228 today — full deep clean, before and after ATP test to prove it worked, certified sticker, and first month of our quarterly program at $129 a month."</span></div>
+  <div class="d-line"><span class="spk spk-other">DEREK</span><span class="d-txt">"Yeah I'm not doing a monthly thing. I hate subscriptions. Just do the cleaning, what does that cost?"</span></div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"What specifically concerns you about the monthly piece?"</span></div>
+  <div class="d-line"><span class="spk spk-other">DEREK</span><span class="d-txt">"Last vendor I had a contract with, I was stuck for two years. Couldn't cancel, price went up, never saw a technician. I'm not doing that again."</span></div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"That's fair. We don't have a contract. Cancel anytime with 30 days notice — no annual commitment, no early termination fee. If you want to stop, you let me know 30 days out and you're done. That's it."</span></div>
+  <div class="d-line"><span class="spk spk-other">DEREK</span><span class="d-txt">"Seriously? No contract?"</span></div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"None. The only thing I ask for is 30 days notice so I can adjust the route. The $228 today covers the clean and your first month. After that it's $129 a month and we're back every 90 days."</span></div>
+  <div class="stage">[Pause. Derek looks at the device.]</div>
+  <div class="d-line"><span class="spk spk-other">DEREK</span><span class="d-txt">"And if I'm not happy with the service?"</span></div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"If your machine gets cited by a health inspector within 30 days of our service, full refund. And if you're ever not happy with a visit, call me directly. I'm not a call center."</span></div>
+  <div class="d-line"><span class="spk spk-other">DEREK</span><span class="d-txt">"What's that sticker thing you mentioned?"</span></div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"Goes on the machine. QR code on it — anyone can scan it and see your certification record. Before and after readings, service date, next service due. Some owners like having it visible for staff accountability. A health inspector sees it and knows the machine has a documented service history."</span></div>
+  <div class="stage">[Derek is quiet for a moment. Looks at the 190 on the device screen.]</div>
+  <div class="d-line"><span class="spk spk-other">DEREK</span><span class="d-txt">"Alright. No contract, cancel anytime, money back if I get cited. Let's do it."</span></div>
+  <div class="stage">[You photograph the interior — document the pre-service condition before touching anything.]</div>
+  <div class="d-line"><span class="spk spk-you">YOU</span><span class="d-txt">"I'll send you the payment link — 30 seconds."</span></div>
+</div>
+</div>
+<div class="block">
+<div class="outcome">
+  <div class="outcome-title">Outcome</div>
+  <div class="outcome-row"><span class="outcome-dot">✓</span><span>Closed with flex plan framing. $228 collected. No annual commitment. Subscription active.</span></div>
+</div>
+<div class="key-lesson">
+  <div class="kl-title">Key Lesson</div>
+  <p>Derek's objection had nothing to do with price or value — it was a past trauma with a vendor. Asking "what specifically concerns you" before offering a solution is critical. If you'd gone straight to the flex plan before understanding his real objection, it might not have landed. The guarantee question — "what if I'm not happy?" — is the deeper version of the commitment objection. Answer it directly: your number, not a call center. That's the real differentiator for someone who's been burned before.</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     SCENARIO 4 — I ALREADY HAVE SOMEONE
+     ═══════════════════════════════════════════════════════════════════════ -->
+<section class="scenario-section" id="s4">
+  <div class="scenario-header">
+    <div class="scenario-num">04</div>
+    <div class="scenario-meta">
+      <div class="scenario-title">I Already Have Someone</div>
+      <div class="scenario-subtitle">The Existing Vendor Objection</div>
+    </div>
+    <div class="scenario-badge badge-warm">Warm Convert</div>
+  </div>
+
+  <div class="scenario-context">
+    <strong>Setting:</strong> Carol, owner of a family restaurant in Largo. Well-run place, attentive. You walk in during a slow Tuesday afternoon. She's skeptical but polite — she's been using the same HVAC company for "ice maintenance" for two years.
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">Hi Carol — I'm [Name] with Pinellas Ice Co. Quick question before I let you go: do you know your ice machine's ATP reading right now?</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Carol:</div>
+    <div class="dialogue-text">We already have someone who handles that. Our HVAC company comes out twice a year.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">That's great — most HVAC companies do a solid job on filters and coils. Do they do ATP testing? Like an actual swab that reads contamination in real time?</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Carol:</div>
+    <div class="dialogue-text">I'm... not sure. They do a cleaning. I assume they check it.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">Totally fair. Here's the honest truth — most HVAC visits are visual inspections and filter swaps. ATP testing is a completely different thing. It's a bioluminescence swab that reads bacterial contamination on contact surfaces inside the machine. A lot of cleaned-looking machines still fail because the biofilm is invisible. Can I show you right now? Takes two minutes, costs you nothing, and if your machine passes I'll shake your hand and leave.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Carol:</div>
+    <div class="dialogue-text">Fine. Sure, go ahead.</div>
+  </div>
+
+  <div class="atp-box">
+    <div class="atp-box-label">ATP RESULT — Carol's Machine</div>
+    <div class="atp-readings">
+      <div class="atp-reading">
+        <div class="atp-value fail">156 RLU</div>
+        <div class="atp-desc">Before — Ice chute contact surface</div>
+      </div>
+    </div>
+    <div class="atp-verdict fail-verdict">FAIL — Threshold is &lt;10 RLU. Active contamination present despite recent HVAC visit.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">So — 156. Anything above 10 is a fail. Above 100 is what health inspectors classify as high-risk. I'm not saying your HVAC guy did a bad job on the refrigeration side. But ATP testing isn't part of standard HVAC service. It's a specialty. That's what we do.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Carol:</div>
+    <div class="dialogue-text">I just signed a service contract with them last month.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">You don't have to cancel anything. What we do is different — we're not replacing your HVAC service. We're the ice-specific certification layer. A lot of our clients keep their existing vendor for refrigeration and add us for ATP compliance and documentation. Two different scopes.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Carol:</div>
+    <div class="dialogue-text">What does that cost?</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">The first visit — full ATP-guided deep clean, before and after readings, CleanScore certification — is $228 today. That covers the initial service and your first month of the quarterly program. After that it's $129 a month, four times a year. You get a CleanScore sticker, a compliance certificate, and documented proof that your machine is clean. If you ever get cited within 30 days of a service, full refund.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Carol:</div>
+    <div class="dialogue-text">Let me think about it.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">Of course. But I'll leave you with this: your machine is sitting at 156 right now. If a health inspector walks in this afternoon, that's a citation. I can clean it and retest in about 45 minutes. The risk of waiting is real — and it's documented. You want me to go ahead today?</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Carol:</div>
+    <div class="dialogue-text">Okay. Do it.</div>
+  </div>
+
+  <div class="atp-box pass">
+    <div class="atp-box-label">ATP RESULT — After Service</div>
+    <div class="atp-readings">
+      <div class="atp-reading">
+        <div class="atp-value pass">7 RLU</div>
+        <div class="atp-desc">After — Same contact surface</div>
+      </div>
+    </div>
+    <div class="atp-verdict pass-verdict">PASS — 156 → 7. 96% contamination reduction. CleanScore active.</div>
+  </div>
+
+  <div class="outcome-box">
+    <div class="outcome-label">Outcome</div>
+    <div class="outcome-text">Same-day close at $228. Carol keeps her HVAC vendor. Pinellas Ice Co enrolled as her ATP compliance layer. She texts you the next month: "DBPR inspector came Tuesday. Didn't touch the ice machine."</div>
+  </div>
+
+  <div class="key-lesson">
+    <strong>Key Lesson:</strong> Never argue with an existing vendor. Reframe the scope — you're not competing, you're complementary. ATP testing is a specialty the HVAC company isn't doing. The number (156) does the arguing for you.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     SCENARIO 5 — CORPORATE ACCOUNT
+     ═══════════════════════════════════════════════════════════════════════ -->
+<section class="scenario-section" id="s5">
+  <div class="scenario-header">
+    <div class="scenario-num">05</div>
+    <div class="scenario-meta">
+      <div class="scenario-title">Corporate Account</div>
+      <div class="scenario-subtitle">The Multi-Location Brand</div>
+    </div>
+    <div class="scenario-badge badge-gold">High Value</div>
+  </div>
+
+  <div class="scenario-context">
+    <strong>Setting:</strong> Marcus, F&amp;B director for a Clearwater Beach hotel chain — 3 properties, 6–8 ice machines total. You got his name from a walk-in at the flagship property. He took your card and said to call. This is that call. He has a vendor approval process.
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">Marcus — it's [Name] from Pinellas Ice Co. You told me to call after the Clearwater Beach property walk-in last week.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Marcus:</div>
+    <div class="dialogue-text">Right. I remember. Tell me what you do.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">ATP-verified ice machine cleaning and certification. We test before and after every service using a luminometer — gives you a real-time contamination reading, not just a visual check. You get a compliance certificate and a CleanScore rating after every visit. For a hotel, that's both a health compliance asset and a guest safety document.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Marcus:</div>
+    <div class="dialogue-text">What's the reading at our flagship property right now?</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">287 when I swabbed the ice chute last Tuesday. Anything above 10 is a fail. Above 100 is high-risk territory. I'd expect similar readings across your properties if they're on the same cleaning schedule.</div>
+  </div>
+
+  <div class="atp-box">
+    <div class="atp-box-label">ATP READING — Clearwater Beach Flagship</div>
+    <div class="atp-readings">
+      <div class="atp-reading">
+        <div class="atp-value fail">287 RLU</div>
+        <div class="atp-desc">Ice chute contact surface — walk-in reading</div>
+      </div>
+    </div>
+    <div class="atp-verdict fail-verdict">FAIL — High-risk. Hotel brand exposure if cited during routine DBPR inspection.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Marcus:</div>
+    <div class="dialogue-text">What's your pricing structure for multi-location?</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">Standard is $228 per machine for the initial service — that's the full deep clean, ATP certification, and first month of the quarterly plan. After that it's $129 per machine per month, billed quarterly. For three properties with let's say seven machines, you're looking at about $1,596 all-in for the first service and $903 a month ongoing. We can also do a flat-rate property agreement if that's easier for your accounts process.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Marcus:</div>
+    <div class="dialogue-text">I need to run this through our vendor approval process. Can you send a scope of work and your insurance certificate?</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">Absolutely. I'll send both today. One question — do you want me to do a full demo at the flagship first? No charge, no commitment. You get before and after ATP numbers, a sample compliance certificate, and a CleanScore report for that one machine. Gives you everything you need to show your GM what the program looks like before you put it in front of procurement.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Marcus:</div>
+    <div class="dialogue-text">Yeah, that actually makes sense. Can you do Thursday?</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">Thursday works. I'll confirm by email. I'll bring the full equipment, do the service on one machine, leave you the documentation package. If you want to roll out to all three properties after that, we can start the following week.</div>
+  </div>
+
+  <div class="divider-line"></div>
+
+  <div class="scenario-context" style="margin-top:0">
+    <strong>Day 9 — Follow-Up Text (after no response to Thursday demo paperwork):</strong>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You (text):</div>
+    <div class="dialogue-text">Marcus — [Name] here. Sent the scope + insurance cert last Thursday after the demo. Just want to make sure it didn't land in spam. 287 → 9 on that machine. Happy to walk you through the proposal whenever it's convenient.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Marcus (text):</div>
+    <div class="dialogue-text">Sorry — been slammed. Forwarded to procurement Friday. Should hear back this week.</div>
+  </div>
+
+  <div class="outcome-box">
+    <div class="outcome-label">Outcome</div>
+    <div class="outcome-text">Corporate close takes 3–4 weeks. Demo secures internal champion. Full 3-property enrollment at 7 machines = $228 × 7 = $1,596 initial, $903/month ongoing. This is a $10,800+/year account. Patience and documentation are the close.</div>
+  </div>
+
+  <div class="key-lesson">
+    <strong>Key Lesson:</strong> Corporate buyers can't move fast. Your job at that stage is to remove friction — send clean documents, do a demo that generates real numbers, and stay in contact without being annoying. The 287 reading becomes the internal justification. You don't close Marcus; the ATP result closes procurement.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     SCENARIO 6 — THE BRUSH-OFF
+     ═══════════════════════════════════════════════════════════════════════ -->
+<section class="scenario-section" id="s6">
+  <div class="scenario-header">
+    <div class="scenario-num">06</div>
+    <div class="scenario-meta">
+      <div class="scenario-title">The Brush-Off</div>
+      <div class="scenario-subtitle">When They Won't Stop to Listen</div>
+    </div>
+    <div class="scenario-badge badge-neutral">Plant the Seed</div>
+  </div>
+
+  <div class="scenario-context">
+    <strong>Setting:</strong> Ray, owner of a Largo bar. Busy Thursday night — he's behind the bar, clearly distracted, doesn't want to talk. You've got 20 seconds.
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">Ray — I'm [Name], Pinellas Ice Co. Quick thing: do you know your ice machine's ATP score?</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Ray:</div>
+    <div class="dialogue-text">Not a good time. Come back another day.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">Totally — I'll be quick. We do contamination testing on ice machines, takes two minutes, tells you if your machine would pass a health inspection right now. I'll leave my card. When's a better time — do you have 10 minutes Tuesday morning before open?</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Ray:</div>
+    <div class="dialogue-text">I don't know. Maybe. Just leave your card.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">You got it. I'll write Tuesday 10am on the back — if that works, just text me. If not, we'll find another time. [Name], Pinellas Ice Co.</div>
+  </div>
+
+  <div class="divider-line"></div>
+
+  <div class="scenario-context" style="margin-top:0">
+    <strong>Tuesday — Return Visit (you show up at 10am as suggested):</strong>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">Ray — [Name], I left my card Thursday. Said I'd come by Tuesday. Got two minutes?</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Ray:</div>
+    <div class="dialogue-text">Yeah, sure. What is this exactly?</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">We test ice machines for contamination using an ATP luminometer — same thing hospitals use for surface testing. Takes 90 seconds to swab the inside of your machine. You get a real number: pass is under 10, fail is anything above that. I do it right now, no charge, and you see exactly where you stand.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Ray:</div>
+    <div class="dialogue-text">And if it fails?</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">Then I tell you what I found, what it costs to fix it, and you decide. No pressure. But you'll know — which is more than most bar owners can say about their machine.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Ray:</div>
+    <div class="dialogue-text">All right. Go ahead.</div>
+  </div>
+
+  <div class="atp-box">
+    <div class="atp-box-label">ATP RESULT — Ray's Machine</div>
+    <div class="atp-readings">
+      <div class="atp-reading">
+        <div class="atp-value fail">203 RLU</div>
+        <div class="atp-desc">Ice chute interior — before service</div>
+      </div>
+    </div>
+    <div class="atp-verdict fail-verdict">FAIL — 203 RLU. Biofilm likely present. High-risk for health citation.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">203. That's in the high-risk range. Anything over 100 and a health inspector's going to flag it. I can do the full service right now — ATP-guided deep clean, retest to confirm, CleanScore certificate. It's $228 today, covers the service and starts your quarterly program.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Ray:</div>
+    <div class="dialogue-text">Let's do it.</div>
+  </div>
+
+  <div class="atp-box pass">
+    <div class="atp-box-label">ATP RESULT — After Service</div>
+    <div class="atp-readings">
+      <div class="atp-reading">
+        <div class="atp-value pass">6 RLU</div>
+        <div class="atp-desc">Same surface — after deep clean</div>
+      </div>
+    </div>
+    <div class="atp-verdict pass-verdict">PASS — 203 → 6. Clean. CleanScore sticker issued.</div>
+  </div>
+
+  <div class="outcome-box">
+    <div class="outcome-label">Outcome</div>
+    <div class="outcome-text">Two-visit close. First visit planted the seed; Tuesday return converted. The key was naming a specific time ("Tuesday 10am") instead of a vague "I'll be back." Ray is now a quarterly client.</div>
+  </div>
+
+  <div class="key-lesson">
+    <strong>Key Lesson:</strong> A brush-off isn't a no — it's a timing problem. Never leave without naming a specific return time. Writing it on the back of your card creates a micro-commitment. Show up exactly when you said you would. That reliability closes the door before the ATP test even starts.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     SCENARIO 7 — CLEAN MACHINE OBJECTION
+     ═══════════════════════════════════════════════════════════════════════ -->
+<section class="scenario-section" id="s7">
+  <div class="scenario-header">
+    <div class="scenario-num">07</div>
+    <div class="scenario-meta">
+      <div class="scenario-title">Clean Machine Objection</div>
+      <div class="scenario-subtitle">"We Just Had It Cleaned Last Month"</div>
+    </div>
+    <div class="scenario-badge badge-warm">Data Wins</div>
+  </div>
+
+  <div class="scenario-context">
+    <strong>Setting:</strong> Sandra, manager of a St. Pete waterfront seafood restaurant. Confident, organized. The machine was cleaned by a national service company 4 weeks ago. She has the receipt.
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">Hi Sandra — I'm [Name] with Pinellas Ice Co. Quick question: when was your ice machine last serviced?</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Sandra:</div>
+    <div class="dialogue-text">Actually, we just had it done last month. National company. Full cleaning.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">That's great — good that you're on top of it. Can I ask: did they do ATP testing? An actual swab reading that gives you a number?</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Sandra:</div>
+    <div class="dialogue-text">I don't think so. They cleaned it and certified it. I have the invoice.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">I believe you — and the cleaning probably helped. But here's the thing: visual certification and ATP certification are two completely different standards. ATP testing measures live contamination at the cellular level. A machine can look clean and still fail. I'd love to just show you where yours sits right now. If it passes, great — you've got proof your vendor is doing their job. If it doesn't, you'll want to know before an inspector does. Two minutes, no charge.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Sandra:</div>
+    <div class="dialogue-text">Okay. I'm curious now.</div>
+  </div>
+
+  <div class="atp-box">
+    <div class="atp-box-label">ATP RESULT — Sandra's Machine</div>
+    <div class="atp-readings">
+      <div class="atp-reading">
+        <div class="atp-value fail">89 RLU</div>
+        <div class="atp-desc">Ice chute — 4 weeks post-service</div>
+      </div>
+    </div>
+    <div class="atp-verdict fail-verdict">FAIL — 89 RLU. Below high-risk threshold but active contamination. The prior service missed biofilm.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">So — 89. Pass is under 10. This isn't dire, but it's a fail. The prior service cleaned the accessible surfaces but didn't eliminate the biofilm. That's common — biofilm clings to corners and hard-to-reach spots. ATP-guided cleaning means we swab as we go, so we know exactly what we've eliminated and what we haven't. We don't stop until the number is under 10.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Sandra:</div>
+    <div class="dialogue-text">That's frustrating. I paid for a cleaning.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">I know. And I'm not trying to throw your vendor under the bus — most cleanings aren't ATP-guided. It's a different standard. Here's what I can do: full ATP-guided service today, $228, retest at the end, you get the before and after numbers in writing plus a CleanScore certificate. Then quarterly at $129. You'll never have a 'I thought it was clean' situation again — you'll have proof.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Sandra:</div>
+    <div class="dialogue-text">I want to see the after number before I commit to the ongoing program.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">Fair. Let's do the service. If it passes under 10, you decide about the program. I'm confident in the result.</div>
+  </div>
+
+  <div class="atp-box pass">
+    <div class="atp-box-label">ATP RESULT — After Service</div>
+    <div class="atp-readings">
+      <div class="atp-reading">
+        <div class="atp-value pass">4 RLU</div>
+        <div class="atp-desc">Same surface — after ATP-guided deep clean</div>
+      </div>
+    </div>
+    <div class="atp-verdict pass-verdict">PASS — 89 → 4. Biofilm eliminated. CleanScore active.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">89 to 4. There's your proof. Want to go ahead with the quarterly?</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Sandra:</div>
+    <div class="dialogue-text">Yes. Sign me up.</div>
+  </div>
+
+  <div class="outcome-box">
+    <div class="outcome-label">Outcome</div>
+    <div class="outcome-text">Same-day close. Sandra cancels her existing vendor the following month. The data converted a satisfied client of a competitor into a quarterly Pinellas Ice Co account. The 89 → 4 comparison was the entire close.</div>
+  </div>
+
+  <div class="key-lesson">
+    <strong>Key Lesson:</strong> "We already had it cleaned" is actually an invitation — it's the perfect setup for ATP testing. Let the swab make the comparison. Don't argue about the competitor's quality; just show the number and let Sandra reach her own conclusion. Offer to do the service before asking for the program commitment — it removes the last objection.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     SCENARIO 8 — TIMING / ACCESS OBJECTION
+     ═══════════════════════════════════════════════════════════════════════ -->
+<section class="scenario-section" id="s8">
+  <div class="scenario-header">
+    <div class="scenario-num">08</div>
+    <div class="scenario-meta">
+      <div class="scenario-title">Timing / Access Objection</div>
+      <div class="scenario-subtitle">"Can't Take the Machine Down Right Now"</div>
+    </div>
+    <div class="scenario-badge badge-neutral">Schedule It</div>
+  </div>
+
+  <div class="scenario-context">
+    <strong>Setting:</strong> Victor, kitchen manager at a busy Dunedin pizza place. It's 12:15pm on a Friday — machine is running at capacity. He's not wrong that now is a bad time.
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">Victor — quick question: do you know your ice machine's current contamination reading?</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Victor:</div>
+    <div class="dialogue-text">I don't even know what that means, and this is our lunch rush. Not a good time.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">Completely fair — I wouldn't ask you to pull the machine now. We do ice machine ATP testing and cleaning. Takes about 45 minutes, and you want it done before open or after close. When do you open tomorrow?</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Victor:</div>
+    <div class="dialogue-text">11am.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">I can be here at 9. Free ATP test first — takes two minutes, shows you exactly where your machine stands. If it passes, you know you're good. If it doesn't, we clean it right there and retest. You're open on time either way.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Victor:</div>
+    <div class="dialogue-text">What does the cleaning cost?</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">$228 for the full service — ATP-guided deep clean, before and after readings, CleanScore certification, starts your quarterly program. After that it's $129 a month. But let's start with the test tomorrow. If your machine is clean, you're done in two minutes for free. Deal?</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Victor:</div>
+    <div class="dialogue-text">Yeah, come by at 9. I'll be here.</div>
+  </div>
+
+  <div class="divider-line"></div>
+
+  <div class="scenario-context" style="margin-top:0">
+    <strong>Saturday, 9:02am — Victor opens the door:</strong>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">Morning. Two minutes on the swab and we'll know.</div>
+  </div>
+
+  <div class="atp-box">
+    <div class="atp-box-label">ATP RESULT — Victor's Machine</div>
+    <div class="atp-readings">
+      <div class="atp-reading">
+        <div class="atp-value fail">174 RLU</div>
+        <div class="atp-desc">Ice chute contact surface — before service</div>
+      </div>
+    </div>
+    <div class="atp-verdict fail-verdict">FAIL — 174 RLU. Active biofilm. Service needed before open.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">174 — that's a clear fail. I can have this done and retested by 9:45. You'll be fully clean and certified before your first customer walks in.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Victor:</div>
+    <div class="dialogue-text">Let's do it.</div>
+  </div>
+
+  <div class="atp-box pass">
+    <div class="atp-box-label">ATP RESULT — After Service</div>
+    <div class="atp-readings">
+      <div class="atp-reading">
+        <div class="atp-value pass">8 RLU</div>
+        <div class="atp-desc">Same surface — 9:44am, before open</div>
+      </div>
+    </div>
+    <div class="atp-verdict pass-verdict">PASS — 174 → 8. Machine certified clean. Open on time.</div>
+  </div>
+
+  <div class="outcome-box">
+    <div class="outcome-label">Outcome</div>
+    <div class="outcome-text">Close at $228 on the Saturday morning appointment. Victor enrolls in the quarterly program. The timing objection became the close — by scheduling around his operation, you became the vendor who works on his schedule, not yours.</div>
+  </div>
+
+  <div class="key-lesson">
+    <strong>Key Lesson:</strong> Timing objections are logistical, not emotional. Remove the logistics barrier: name a specific time that works for their operation, show up exactly on time, and be done before it matters. The Friday brush-off becomes a Saturday morning close when you make scheduling easy.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     SCENARIO 9 — MULTI-MACHINE
+     ═══════════════════════════════════════════════════════════════════════ -->
+<section class="scenario-section" id="s9">
+  <div class="scenario-header">
+    <div class="scenario-num">09</div>
+    <div class="scenario-meta">
+      <div class="scenario-title">Multi-Machine Close</div>
+      <div class="scenario-subtitle">Bar with Two or Three Machines</div>
+    </div>
+    <div class="scenario-badge badge-gold">Upsell</div>
+  </div>
+
+  <div class="scenario-context">
+    <strong>Setting:</strong> Tommy, owner of a Clearwater sports bar. Three ice machines — one behind the main bar, one in the service well, one in the back prep area. He's agreed to the free ATP test. You've already swabbed the main bar machine.
+  </div>
+
+  <div class="atp-box">
+    <div class="atp-box-label">ATP RESULT — Main Bar Machine</div>
+    <div class="atp-readings">
+      <div class="atp-reading">
+        <div class="atp-value fail">221 RLU</div>
+        <div class="atp-desc">Ice chute — main bar</div>
+      </div>
+    </div>
+    <div class="atp-verdict fail-verdict">FAIL — 221 RLU. High-risk. Your busiest machine serves the most ice.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">221 on the main bar machine. That's the one your guests use the most, so it's the highest exposure. I'd like to swab the service well and the prep area too while I'm here — you want to know all three before we talk about a plan.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Tommy:</div>
+    <div class="dialogue-text">Yeah, go for it.</div>
+  </div>
+
+  <div class="atp-box">
+    <div class="atp-box-label">ATP RESULT — All Three Machines</div>
+    <div class="atp-readings">
+      <div class="atp-reading">
+        <div class="atp-value fail">221 RLU</div>
+        <div class="atp-desc">Main bar machine</div>
+      </div>
+      <div class="atp-reading">
+        <div class="atp-value fail">167 RLU</div>
+        <div class="atp-desc">Service well machine</div>
+      </div>
+      <div class="atp-reading">
+        <div class="atp-value fail">98 RLU</div>
+        <div class="atp-desc">Prep area machine</div>
+      </div>
+    </div>
+    <div class="atp-verdict fail-verdict">ALL THREE FAIL — Average 162 RLU across the operation. Any one of these is a citation risk.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">All three are failing. The prep machine is lowest at 98 — still a fail, but the main bar at 221 is your biggest risk since that's what's going into drinks. Here's the thing, Tommy: if an inspector comes in and spot-checks any one of these, you're getting cited. And it's $228 per machine for the initial service.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Tommy:</div>
+    <div class="dialogue-text">That's $684 all at once.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">It is — but think about what you're buying. Three ATP-certified machines, three CleanScore stickers, full documentation. That's your entire ice operation certified clean in one visit. If any inspector walks in within 30 days and cites you anyway, full refund — that's our guarantee. And the ongoing program is $129 per machine per month, so $387 a month for all three, billed quarterly. I can also do $650 for all three today as a multi-machine bundle.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Tommy:</div>
+    <div class="dialogue-text">650?</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">$650 for all three initial services — saves you $34 off the $684 standard rate. All three cleaned, retested, certified today. The quarterly program stays at $129 per machine.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Tommy:</div>
+    <div class="dialogue-text">Fine. Let's do all three.</div>
+  </div>
+
+  <div class="atp-box pass">
+    <div class="atp-box-label">ATP RESULT — After Service (All Three)</div>
+    <div class="atp-readings">
+      <div class="atp-reading">
+        <div class="atp-value pass">7 RLU</div>
+        <div class="atp-desc">Main bar — certified clean</div>
+      </div>
+      <div class="atp-reading">
+        <div class="atp-value pass">5 RLU</div>
+        <div class="atp-desc">Service well — certified clean</div>
+      </div>
+      <div class="atp-reading">
+        <div class="atp-value pass">9 RLU</div>
+        <div class="atp-desc">Prep area — certified clean</div>
+      </div>
+    </div>
+    <div class="atp-verdict pass-verdict">ALL THREE PASS — 221 / 167 / 98 → 7 / 5 / 9. Full operation certified. Three CleanScore stickers issued.</div>
+  </div>
+
+  <div class="outcome-box">
+    <div class="outcome-label">Outcome</div>
+    <div class="outcome-text">$650 initial close (multi-machine bundle). $387/month ongoing (3 machines × $129). Annual value: $650 + ($387 × 12) = $5,294. Swabbing all three machines before quoting was the move — it justified the full scope and made the bundle obvious.</div>
+  </div>
+
+  <div class="key-lesson">
+    <strong>Key Lesson:</strong> Always swab every machine on-site before quoting multi-machine accounts. You need the full picture — and so does the owner. Three failing machines makes the bundle feel necessary, not like an upsell. The multi-machine discount ($650 vs $684) creates urgency to do all three now instead of one at a time.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     SCENARIO 10 — WARM FOLLOW-UP
+     ═══════════════════════════════════════════════════════════════════════ -->
+<section class="scenario-section" id="s10">
+  <div class="scenario-header">
+    <div class="scenario-num">10</div>
+    <div class="scenario-meta">
+      <div class="scenario-title">Warm Follow-Up</div>
+      <div class="scenario-subtitle">They Took the Card, Didn't Call</div>
+    </div>
+    <div class="scenario-badge badge-warm">Re-Engage</div>
+  </div>
+
+  <div class="scenario-context">
+    <strong>Setting:</strong> Lisa, owner of a Palm Harbor breakfast café. You stopped in 8 days ago, did a free ATP test (reading: 143 RLU), left your card. She said she'd "think about it." No call back. This is your follow-up text.
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You (text, Day 8):</div>
+    <div class="dialogue-text">Hi Lisa — [Name] from Pinellas Ice Co. Came by last week and tested your machine at 143 RLU. Just checking in — still a clear fail and inspection season is active in Pinellas right now. Happy to come back whenever works for you. Takes about 45 min.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Lisa (text):</div>
+    <div class="dialogue-text">Sorry I didn't get back to you. Can you do Thursday before 10?</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You (text):</div>
+    <div class="dialogue-text">Thursday at 8:30 works perfectly. See you then.</div>
+  </div>
+
+  <div class="divider-line"></div>
+
+  <div class="scenario-context" style="margin-top:0">
+    <strong>Thursday, 8:30am — In person:</strong>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">Morning, Lisa. I've got the reading from last week right here — 143. Let me do a quick reswab to confirm where we are now, then I'll get started.</div>
+  </div>
+
+  <div class="atp-box">
+    <div class="atp-box-label">ATP RESULT — Lisa's Machine (Day 8 Re-Test)</div>
+    <div class="atp-readings">
+      <div class="atp-reading">
+        <div class="atp-value fail">159 RLU</div>
+        <div class="atp-desc">Retest — 8 days later, no service</div>
+      </div>
+    </div>
+    <div class="atp-verdict fail-verdict">STILL FAILING — 143 → 159. Biofilm is growing, not self-correcting. Waiting made it worse.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">159 now — it went up. Biofilm doesn't go away on its own. Eight days without service and it got worse. Good news: I can have it under 10 in about 40 minutes. $228 today, quarterly program starts immediately.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Lisa:</div>
+    <div class="dialogue-text">Let's just get it done.</div>
+  </div>
+
+  <div class="atp-box pass">
+    <div class="atp-box-label">ATP RESULT — After Service</div>
+    <div class="atp-readings">
+      <div class="atp-reading">
+        <div class="atp-value pass">6 RLU</div>
+        <div class="atp-desc">After ATP-guided deep clean</div>
+      </div>
+    </div>
+    <div class="atp-verdict pass-verdict">PASS — 159 → 6. Contamination eliminated. CleanScore active.</div>
+  </div>
+
+  <div class="outcome-box">
+    <div class="outcome-label">Outcome</div>
+    <div class="outcome-text">Close at $228 on the second visit. The retest showing 143 → 159 (it got worse) removed any remaining hesitation. Lisa later tells you: "I almost called you on Day 4 when I was cleaning the machine myself and noticed the slime."</div>
+  </div>
+
+  <div class="key-lesson">
+    <strong>Key Lesson:</strong> Follow up within 7–10 days — biofilm grows, and the second reading proves it. The re-test is your close. Don't follow up with "just checking in" — follow up with the number. Text is fine; it's low-pressure and gives her time to respond on her own schedule. A specific time offered in the follow-up text books the appointment.
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     SCENARIO 11 — PRICE OBJECTION
+     ═══════════════════════════════════════════════════════════════════════ -->
+<section class="scenario-section" id="s11">
+  <div class="scenario-header">
+    <div class="scenario-num">11</div>
+    <div class="scenario-meta">
+      <div class="scenario-title">Price Objection</div>
+      <div class="scenario-subtitle">"That's Too Expensive"</div>
+    </div>
+    <div class="scenario-badge badge-warm">Value Stack</div>
+  </div>
+
+  <div class="scenario-context">
+    <strong>Setting:</strong> Pete, owner of a Seminole deli. Single machine, tight margins, price-sensitive. Reading came back at 117 RLU — he knows it's a fail, he just doesn't want to spend $228.
+  </div>
+
+  <div class="atp-box">
+    <div class="atp-box-label">ATP RESULT — Pete's Machine</div>
+    <div class="atp-readings">
+      <div class="atp-reading">
+        <div class="atp-value fail">117 RLU</div>
+        <div class="atp-desc">Ice chute — current reading</div>
+      </div>
+    </div>
+    <div class="atp-verdict fail-verdict">FAIL — 117 RLU. Above high-risk threshold. Active citation exposure.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">117 — that's in the high-risk range. Anything over 100 and an inspector will pull the machine from service. The full ATP service and quarterly program is $228 today to start.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Pete:</div>
+    <div class="dialogue-text">$228 is a lot. I didn't budget for this.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">I hear you. Let me put that number in context. A health citation in Pinellas County runs $250 to $500 minimum — and that's if they don't require a re-inspection visit, which adds another fee. A single shutdown during a lunch rush costs you more than $228 in lost sales in the first hour. What you're buying today is insurance against that — documented proof that your machine was tested and certified clean.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Pete:</div>
+    <div class="dialogue-text">What if I just do the cleaning once and skip the monthly thing?</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">The $228 covers the initial service and your first month of the quarterly program — that's bundled together. Here's why that matters to you: your CleanScore sticker is only active while you're enrolled. The sticker is what shows an inspector you're on a documented maintenance program. Without the quarterly enrollment, you get a clean machine today but no ongoing certification. The sticker alone is worth it — it signals compliance before an inspector ever opens the machine.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Pete:</div>
+    <div class="dialogue-text">And after the first month?</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">$129 a month, service every 90 days, ATP-verified. For a single machine that's $1,548 a year. That's less than most restaurants lose in one bad inspection cycle — between the citation fine, the re-inspection fee, and the reputational hit if it gets around. Think of it as a compliance subscription. You cancel anytime.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Pete:</div>
+    <div class="dialogue-text">Fine. Do the service. But if I want to cancel after the first few months?</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-you">You:</div>
+    <div class="dialogue-text">Month-to-month, no contract. You can stop anytime. I'd just ask you to give the quarterly program a full 90 days — see how your numbers look on the retest. If you're not seeing value, cancel. But most clients don't — because they've seen what a dirty machine looks like, and they don't want to go back to that.</div>
+  </div>
+
+  <div class="dialogue-block">
+    <div class="speaker-them">Pete:</div>
+    <div class="dialogue-text">All right. Let's go.</div>
+  </div>
+
+  <div class="atp-box pass">
+    <div class="atp-box-label">ATP RESULT — After Service</div>
+    <div class="atp-readings">
+      <div class="atp-reading">
+        <div class="atp-value pass">5 RLU</div>
+        <div class="atp-desc">After ATP-guided deep clean</div>
+      </div>
+    </div>
+    <div class="atp-verdict pass-verdict">PASS — 117 → 5. Certified clean. CleanScore sticker active.</div>
+  </div>
+
+  <div class="outcome-box">
+    <div class="outcome-label">Outcome</div>
+    <div class="outcome-text">Close at $228. Pete stays enrolled 14 months and counting. The price objection dissolved when you reframed $228 against the cost of a single citation. Never discount — reframe the comparison.</div>
+  </div>
+
+  <div class="key-lesson">
+    <strong>Key Lesson:</strong> Never discount. Reframe. The question isn't "is $228 a lot?" — it's "$228 compared to what?" A citation, a shutdown, a bad Google review. The CleanScore sticker argument is underused: it's the visible proof of ongoing compliance, not just a clean machine on one day. The no-contract offer removes the last psychological barrier.
+  </div>
+</section>
+
+</div><!-- /.content -->
+</main>
+
+<script>
+// ── SMOOTH SCROLL FOR NAV PILLS ────────────────────────────────────────────
+document.querySelectorAll('.nav-pill[href^="#"]').forEach(function(pill) {
+  pill.addEventListener('click', function(e) {
+    e.preventDefault();
+    var target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      var top = target.getBoundingClientRect().top + window.pageYOffset - 80;
+      window.scrollTo({ top: top, behavior: 'smooth' });
+    }
+    // Update active pill
+    document.querySelectorAll('.nav-pill').forEach(function(p) { p.classList.remove('active'); });
+    this.classList.add('active');
+  });
+});
+
+// ── ACTIVE PILL ON SCROLL ──────────────────────────────────────────────────
+var sections = document.querySelectorAll('.scenario-section');
+var pills    = document.querySelectorAll('.nav-pill[href^="#"]');
+
+function onScroll() {
+  var scrollY = window.pageYOffset + 120;
+  var current = '';
+  sections.forEach(function(sec) {
+    if (sec.offsetTop <= scrollY) {
+      current = sec.id;
+    }
+  });
+  pills.forEach(function(p) {
+    p.classList.toggle('active', p.getAttribute('href') === '#' + current);
+  });
+}
+
+window.addEventListener('scroll', onScroll, { passive: true });
+onScroll();
+</script>
+
+</body>
+</html>
