@@ -510,6 +510,114 @@ def calc_ice_risk(record):
     if ds > 365: reasons.append(f'{ds}d since last insp')
     return {'ice_risk_prob': score, 'ice_risk_level': level, 'ice_risk_reason': ' + '.join(reasons[:2])}
 
+
+def calc_premium_score(record):
+    """Revenue tier proxy score 0.0-10.0. Higher = more likely Tier 1-2 account."""
+    try:
+        score = 0.0
+        name     = (record.get('name') or '').upper()
+        city     = (record.get('city') or '').upper().strip()
+        zip_code = str(record.get('zip') or '').strip()
+
+        # ── Name keywords — one match per category ───────────────────────────
+        _TIER1_NAMES = [
+            'RESORT', 'HOTEL', 'SUITES', 'MARRIOTT', 'HILTON',
+            'HYATT', 'SHERATON', 'WESTIN', 'OMNI', 'DOUBLETREE',
+            'WYNDHAM', 'RITZ', 'SANDPEARL', 'DON CESAR', 'TRADEWINDS',
+            'INNISBROOK', 'BIRCHWOOD', 'ZAMORA', 'FENWAY',
+        ]
+        _TIER2_NAMES = [
+            'WATERFRONT', 'BEACH', 'MARINA', 'HARBOR', 'GULF',
+            'ISLAND', 'BAYVIEW', 'BAYSIDE', 'BAYSHORE',
+        ]
+        _VENUE_NAMES = [
+            'GRILLE', 'TAVERN', 'LOUNGE', 'BISTRO', 'BRASSERIE',
+            'STEAKHOUSE', 'CHOPHOUSE', 'SEAFOOD', 'CHOP HOUSE',
+            'COUNTRY CLUB', 'GOLF CLUB', 'YACHT CLUB',
+        ]
+
+        name_scored = False
+        for kw in _TIER1_NAMES:
+            if kw in name:
+                score += 4.5
+                name_scored = True
+                break
+        if not name_scored:
+            if ' INN' in name or name.endswith('INN'):
+                score += 4.5
+                name_scored = True
+        if not name_scored:
+            for kw in _TIER2_NAMES:
+                if kw in name:
+                    score += 2.0
+                    name_scored = True
+                    break
+
+        venue_scored = False
+        for kw in _VENUE_NAMES:
+            if kw in name:
+                score += 1.5
+                venue_scored = True
+                break
+        if not venue_scored:
+            if ' BAR ' in name or name.startswith('BAR ') or name.endswith(' BAR'):
+                score += 1.5
+                venue_scored = True  # noqa: F841
+
+        # ── City/location signals ─────────────────────────────────────────────
+        _BEACH_CITIES = {
+            'CLEARWATER BEACH',
+            'ST PETE BEACH', 'ST. PETE BEACH', 'ST.PETE BEACH', 'SAINT PETE BEACH',
+            'TREASURE ISLAND',
+            'MADEIRA BEACH', 'MADEIRA BCH',
+            'INDIAN ROCKS BEACH', 'INDIAN ROCKS BCH',
+            'BELLEAIR BEACH',
+            'REDINGTON BEACH', 'REDINGTON SHORES',
+            'N REDINGTON BEACH', 'NORTH REDINGTON BCH', 'NORTH REDINGTON BEAC',
+            'INDIAN SHORES',
+            'PASS-A-GRILLE',
+        }
+        # DBPR often records Clearwater Beach businesses under city="CLEARWATER"
+        _BEACH_ZIPS = {'33767'}
+        _DOWNTOWN_ZIPS = {
+            '33701', '33702', '33703', '33704', '33705', '33706', '33711',
+        }
+        _DOWNTOWN_CITIES = {'ST PETERSBURG', 'ST. PETERSBURG', 'SAINT PETERSBURG', 'SAINT PETE', 'ST PETE'}
+
+        city_scored = False
+        if city in _BEACH_CITIES or zip_code in _BEACH_ZIPS:
+            score += 3.0
+            city_scored = True
+        if not city_scored and city in _DOWNTOWN_CITIES and zip_code in _DOWNTOWN_ZIPS:
+            score += 2.0
+
+        # ── Machine count ─────────────────────────────────────────────────────
+        machine_count = int(record.get('machines') or 0)
+        if machine_count >= 3:
+            score += 2.0
+        elif machine_count >= 2:
+            score += 1.0
+
+        # ── Inspection frequency ──────────────────────────────────────────────
+        n_insp = int(record.get('n_insp') or 0)
+        if n_insp >= 5:
+            score += 1.0
+        elif n_insp >= 3:
+            score += 0.5
+
+        # ── Total violations ──────────────────────────────────────────────────
+        total_viol = int(record.get('total_viol') or 0)
+        if total_viol >= 10:
+            score += 1.0
+        elif total_viol >= 5:
+            score += 0.5
+
+        return min(round(score, 1), 10.0)
+
+    except Exception:
+        return 0.0
+
+
 _GOLD_KEYWORDS = [
     'mold', 'mould', 'biofilm', 'slime', 'pink', 'black',
     'soiled', 'not clean', 'buildup', 'build-up', 'residue',
@@ -2568,6 +2676,7 @@ header{background:var(--navy);
       <button class="preset-btn" onclick="setPreset('gold_ice')" id="pre-gold_ice">&#x1F947; Gold <span id="cnt-gold"></span></button>
       <button class="preset-btn" onclick="setPreset('dbpr_repeat')" id="pre-dbpr_repeat">&#x1F501; Repeat <span id="cnt-repeat"></span></button>
       <button class="preset-btn" onclick="setPreset('dbpr_cited')" id="pre-dbpr_cited">&#x1F575;&#xFE0F; DBPR <span id="cnt-dbpr"></span></button>
+      <button class="preset-btn" onclick="setPreset('premium')" id="pre-premium">&#x2605; Premium <span id="cnt-premium"></span></button>
       <button class="preset-btn" onclick="setPreset('golf')" id="pre-golf">&#x26F3; Golf</button>
       <button class="preset-btn" onclick="setPreset('followups')" id="pre-followups">&#x1F4C5; Follow-Ups</button>
       <button class="preset-btn"    onclick="setPreset('actnow')"   id="pre-actnow">&#x1F534; Act Now</button>
@@ -5292,6 +5401,8 @@ function rA(){
       var bDate=b.cit_latest||'1970-01-01';
       return bDate.localeCompare(aDate);
     });
+  } else if(_premiumSort){
+    list.sort(function(a,b){return (b.premium_score||0)-(a.premium_score||0);});
   } else if(presetFilter&&(document.getElementById('pre-dbpr_cited')?.classList.contains('on')||document.getElementById('pre-dbpr_repeat')?.classList.contains('on'))){
     if(_dbprSort==='recent'){
       list.sort(function(a,b){
@@ -5379,6 +5490,7 @@ function rA(){
 let presetFilter=null;
 var _activeFilter=null;
 var _dbprSort='count'; // 'count' or 'recent'
+var _premiumSort=false;
 
 function toggleDbprSort(){
   _dbprSort=_dbprSort==='count'?'recent':'count';
@@ -5425,6 +5537,7 @@ function clearTempFilter(){
 
 function setPreset(k){
   _activeFilter=null;
+  _premiumSort=false;
   document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('on'));
   document.getElementById('pre-'+k)?.classList.add('on');
   // Reset city/county/status filters
@@ -5451,6 +5564,7 @@ function setPreset(k){
   else if(k==='gold_ice')   presetFilter=p=>!!p.ice_gold;
   else if(k==='dbpr_cited') presetFilter=p=>!!p.ice_confirmed_dbpr;
   else if(k==='dbpr_repeat') presetFilter=p=>((p.cit_repeat||0)>=1||(p.cit_ice_count||0)>=2)&&!p.ice_gold;
+  else if(k==='premium'){presetFilter=p=>!p.ice_confirmed_dbpr&&(p.premium_score||0)>=4;_premiumSort=true;}
   var sortRow=document.getElementById('dbpr-sort-row');
   var sortBtn=document.getElementById('dbpr-sort-btn');
   if(k==='dbpr_cited'){
@@ -5467,9 +5581,11 @@ function updateDbprChipCounts(){
   var nd=P.filter(function(p){return !!p.ice_confirmed_dbpr;}).length;
   var nr=P.filter(function(p){return ((p.cit_repeat||0)>=1||(p.cit_ice_count||0)>=2)&&!p.ice_gold;}).length;
   var ng=P.filter(function(p){return !!p.ice_gold;}).length;
+  var npm=P.filter(function(p){return !p.ice_confirmed_dbpr&&(p.premium_score||0)>=4;}).length;
   var ge=document.getElementById('cnt-gold');if(ge)ge.textContent=ng?'('+ng+')':'';
   var ce=document.getElementById('cnt-dbpr');if(ce)ce.textContent=nd?'('+nd+')':'';
   var re=document.getElementById('cnt-repeat');if(re)re.textContent=nr?'('+nr+')':'';
+  var pe=document.getElementById('cnt-premium');if(pe)pe.textContent=npm?'('+npm+')':'';
 }
 
 function clearFilters(){
@@ -6181,6 +6297,7 @@ function showCard(id){
     p.rating>0?'<span style="font-size:9px;padding:3px 8px;border-radius:5px;background:#fffbeb;color:#d97706">'+stars(p.rating)+'</span>':'',
     p.ice_risk_level==='High'?'<span style="font-size:9px;padding:3px 8px;border-radius:5px;font-weight:700;background:#fef2f2;color:#dc2626;border:1px solid #fecaca">&#x1F9CA; High Risk '+p.ice_risk_prob+'%</span>':p.ice_risk_level==='Medium'?'<span style="font-size:9px;padding:3px 8px;border-radius:5px;font-weight:700;background:#fffbeb;color:#d97706;border:1px solid #fde68a">&#x1F9CA; Med Risk '+p.ice_risk_prob+'%</span>':'',
     p.ice_gold?'<span style="font-size:9px;padding:3px 8px;border-radius:5px;font-weight:700;background:#FEF9E7;color:#B7950B;border:1px solid #F1C40F">&#x1F947; Gold</span>':'',
+    (function(){var ps=p.premium_score||0;return ps>=7?'<span style="font-size:9px;padding:3px 8px;border-radius:5px;font-weight:700;background:#fffbeb;color:#d97706;border:1px solid #fde68a">&#x2605; '+ps.toFixed(1)+'</span>':ps>=4?'<span style="font-size:9px;padding:3px 8px;border-radius:5px;font-weight:700;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe">&#x2605; '+ps.toFixed(1)+'</span>':'';}()),
   ].filter(Boolean).join(' ');
 
   // Ice history
@@ -11906,6 +12023,7 @@ def main():
     for r in records:
         if 'ice_gold' not in r:
             r['ice_gold'] = False
+        r['premium_score'] = calc_premium_score(r)
     print(f'  Gold ice leads:        {gold_count}')
 
     print(f"\nBuilding partner records...")
