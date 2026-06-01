@@ -27,7 +27,7 @@
 
 ### CI Build Fixes (session 57)
 - **Emergency closure xlrd fallback**: `load_emergency_closures()` in `build.py` now falls back to `pandas`+`xlrd` when `openpyxl` fails — DBPR serves EOS weekly files as legacy XLS (not XLSX/ZIP), so `openpyxl` was silently returning an empty set; emergency-closed businesses are now correctly flagged
-- **Historical XLSX size validation**: `download_data.py` deletes any cached historical XLSX that is <5 MB (stale/corrupt) at startup and after each download; prints a WARNING so CI logs show the retry; prevents a bad file from being permanently cached. First affected file: `fdinspi_2122.xlsx` (was 0.2 MB — state server was returning wrong content at that URL)
+- **`fdinspi_2122.xlsx` removed from HISTORICAL**: DBPR took the 2021-22 statewide file offline — URL was returning an HTML page (0.2 MB). Entry removed from `HISTORICAL` in `download_data.py` so CI no longer attempts or caches it
 
 ### Security & CI Resilience (session 54)
 - **Stripe discount cap**: `monthly_discount` capped at $100 in `stripe-checkout/index.ts` — prevents crafting a $0 subscription via oversized discount
