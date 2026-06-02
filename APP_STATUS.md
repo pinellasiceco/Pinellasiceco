@@ -1,5 +1,5 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-06-01 (session 57 — Sales Scenarios expanded to 16, CI build fixes) by Claude Code*
+*Last updated: 2026-06-02 (session 58 — Strategic & Gold contact research workflows, DM title field, import buttons) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
@@ -24,6 +24,19 @@
 - **`docs/protocol/` preserved in CI**: `rebuild.yml` `git checkout origin/main -- docs/protocol/` preserves static ATP protocol page through daily rebuilds
 - **`assets/` preserved in CI**: `rebuild.yml` `git checkout origin/main -- assets/` preserves signature image and other assets through daily rebuilds
 - **`build_violations_list.py` step**: `continue-on-error: true` — failure visible in Actions but non-blocking (session 54)
+
+### Strategic & Gold Contact Research (session 58)
+- **`research_contacts.yml`**: GitHub Actions `workflow_dispatch` workflow — checks out repo, runs `research_contacts.py`, commits `docs/data/strategic_contacts.json` to main. Timeout 90 min. Fetch+rebase before push prevents conflict if main was updated during the long script run.
+- **`research_contacts.py`**: Searches Anthropic API (claude-haiku-4-5 + web_search tool) for Director of Engineering / F&B Director / GM at all Premium accounts (premium_score >= 4). Skip-if-exists skips only entries where `dm_name` is already set — null entries are re-researched on re-runs. Saves checkpoint every 50 accounts. Output: `docs/data/strategic_contacts.json`.
+- **`research_gold_contacts.yml`**: Same structure, targets Gold leads — `workflow_dispatch`, 90-min timeout, commits `docs/data/gold_contacts.json`.
+- **`research_gold_contacts.py`**: Searches for Owner / GM / Bar Manager at all `ice_gold == True` prospects (~538 accounts). Same skip-if-exists and checkpoint-every-50 patterns. Expected found rate 10-20% (independent restaurants have limited web presence). Output: `docs/data/gold_contacts.json`.
+- **P[] extraction**: Both scripts use bracket-counting (not regex) to extract the P[] array from index.html — regex with large quantifiers fails on the 9000+ record array.
+- **`dm_title` field in showCard**: DM panel now has a "Title or role" input above the phone field. Saved alongside `dm_name` and `dm_phone` in customer record. Displayed statically as a muted label next to the DM name when set.
+- **`importStrategicContacts()`** in app: fetches `docs/data/strategic_contacts.json` from GitHub Pages; writes `dm_name` + `dm_title` to customer records; skips any account where user has already entered a different name. Toast shows count imported or "0 found — run workflow first" if file is empty.
+- **`importGoldContacts()`** in app: same pattern, fetches `docs/data/gold_contacts.json`.
+- **Settings buttons**: "Strategic Contacts" section has blue Import Strategic Contacts button; "Gold Lead Contacts" section has amber Import Gold Contacts button. Both in Settings overlay.
+- **`docs/data/` preserved in CI**: `rebuild.yml` commit step includes `git checkout origin/main -- docs/data/` — JSON contact files survive daily rebuilds.
+- **Known**: Gold workflow first run found 49/538 contacts (9.1%) — slightly below 10% warning threshold but results look legitimate. Re-run after push fix committed the file correctly.
 
 ### CI Build Fixes (session 57)
 - **Emergency closure xlrd fallback**: `load_emergency_closures()` in `build.py` now falls back to `pandas`+`xlrd` when `openpyxl` fails — DBPR serves EOS weekly files as legacy XLS (not XLSX/ZIP), so `openpyxl` was silently returning an empty set; emergency-closed businesses are now correctly flagged
