@@ -132,14 +132,8 @@ skipped = 0
 for i, p in enumerate(premium):
     pid = str(p.get('id') or p.get('pid') or i)
 
-    # Skip if already have a contact
+    # Skip only if we already have a confirmed contact name
     if pid in existing and existing[pid].get('dm_name'):
-        contacts[pid] = existing[pid]
-        skipped += 1
-        continue
-
-    # Skip if previously searched and confirmed not findable
-    if pid in existing:
         contacts[pid] = existing[pid]
         skipped += 1
         continue

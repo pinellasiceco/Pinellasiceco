@@ -3202,7 +3202,10 @@ header{background:var(--navy);
     <div class="dc" style="margin-top:12px">
       <div class="dct">&#x2B50; Strategic Contacts</div>
       <div style="font-size:9px;color:var(--sub);margin-bottom:8px">Import decision maker names and titles for Premium accounts (Director of Engineering, GM, etc.). Does not overwrite contacts you have entered manually.</div>
-      <button class="xbtn" onclick="importStrategicContacts()" ontouchend="event.preventDefault();importStrategicContacts()" style="width:100%;background:#0369a1;color:#fff;border-color:#0369a1;font-weight:700">&#x1F4E5; Import Strategic Contacts</button>
+      <button class="xbtn" onclick="importStrategicContacts()" ontouchend="event.preventDefault();importStrategicContacts()" style="width:100%;background:#0369a1;color:#fff;border-color:#0369a1;font-weight:700;margin-bottom:6px">&#x1F4E5; Import Strategic Contacts</button>
+      <div class="dct" style="margin-top:10px">&#x1F7E1; Gold Lead Contacts</div>
+      <div style="font-size:9px;color:var(--sub);margin-bottom:8px">Import Owner/GM contacts for Gold leads (independent restaurants and bars). Does not overwrite contacts you have entered manually.</div>
+      <button class="xbtn" onclick="importGoldContacts()" ontouchend="event.preventDefault();importGoldContacts()" style="width:100%;background:#b45309;color:#fff;border-color:#b45309;font-weight:700">&#x1F4E5; Import Gold Contacts</button>
     </div>
 
     <div class="dc" style="margin-top:12px">
@@ -7133,7 +7136,7 @@ function addPhone(){
 function importStrategicContacts(){
   var url='https://pinellasiceco.github.io/Pinellasiceco/docs/data/strategic_contacts.json';
   fetch(url)
-    .then(function(r){return r.json();})
+    .then(function(r){if(!r.ok)throw new Error(r.status);return r.json();})
     .then(function(data){
       var count=0;
       var keys=Object.keys(data);
@@ -7148,10 +7151,38 @@ function importStrategicContacts(){
         count++;
       }
       custSave();
-      toast(count+' strategic contacts imported');
+      if(count>0){toast(count+' strategic contacts imported');}
+      else{toast('0 found — run Research Strategic workflow first');}
     })
-    .catch(function(){
-      toast('Import failed — check connection');
+    .catch(function(e){
+      toast('Import failed — run Strategic workflow first');
+    });
+}
+
+// GOLD CONTACTS IMPORT
+function importGoldContacts(){
+  var url='https://pinellasiceco.github.io/Pinellasiceco/docs/data/gold_contacts.json';
+  fetch(url)
+    .then(function(r){if(!r.ok)throw new Error(r.status);return r.json();})
+    .then(function(data){
+      var count=0;
+      var keys=Object.keys(data);
+      for(var i=0;i<keys.length;i++){
+        var pid=keys[i];
+        var contact=data[pid];
+        if(!contact.dm_name)continue;
+        if(customers[pid]&&customers[pid].dm_name&&customers[pid].dm_name!==contact.dm_name)continue;
+        if(!customers[pid])customers[pid]={};
+        customers[pid].dm_name=contact.dm_name;
+        customers[pid].dm_title=contact.dm_title||'';
+        count++;
+      }
+      custSave();
+      if(count>0){toast(count+' gold contacts imported');}
+      else{toast('0 found — run Research Gold workflow first');}
+    })
+    .catch(function(e){
+      toast('Import failed — run Gold workflow first');
     });
 }
 
