@@ -17,16 +17,27 @@ import anthropic
 # ── Extract premium accounts from built index.html ────────────────────────────
 html = open('index.html').read()
 
-# index.html uses const P= (not var P=)
-match = re.search(r'const P=(\[.{0,5000000}\]);', html, re.DOTALL)
-if not match:
-    # fallback for var P=
-    match = re.search(r'var P=(\[.{0,5000000}\]);', html, re.DOTALL)
-if not match:
+# Use bracket-counting to extract P[] — regex fails on the large 9000+ record array
+idx = html.find('const P=[')
+if idx == -1:
+    idx = html.find('var P=[')
+if idx == -1:
     print('ERROR: P[] not found in index.html')
     exit(1)
 
-prospects = json.loads(match.group(1))
+start = idx + html[idx:].index('[')
+depth = 0
+end = start
+for i, ch in enumerate(html[start:], start):
+    if ch == '[':
+        depth += 1
+    elif ch == ']':
+        depth -= 1
+        if depth == 0:
+            end = i + 1
+            break
+
+prospects = json.loads(html[start:end])
 premium = [
     p for p in prospects
     if (p.get('premium_score') or 0) >= 4
