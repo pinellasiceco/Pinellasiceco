@@ -11832,113 +11832,6 @@ function _kpiCard(label,val,sub){
     +\'</div>\';
 }
 
-function safeRate(a,b){return b>0?Math.round(a/b*100):0;}
-function segStatusStyle(rate,low,high){return rate>=high?\'#2ecc71\':rate>=low?\'#f0ad4e\':\'#e74c3c\';}
-
-function calcWeeklyContacts(){
-  var cutoff=new Date();cutoff.setDate(cutoff.getDate()-7);
-  var count=0;
-  for(var pid in log){
-    var entries=log[pid];
-    if(!entries||!entries.length)continue;
-    for(var i=0;i<entries.length;i++){
-      var e=entries[i];
-      if(!e||!e.date)continue;
-      var d;try{d=new Date(e.date);}catch(ex){continue;}
-      if(isNaN(d.getTime()))continue;
-      if(d>=cutoff){count++;break;}
-    }
-  }
-  return count;
-}
-
-function calcSegmentStats(){
-  if(typeof P===\'undefined\'||!P||!P.length)return[];
-  var segs=[
-    {id:\'gold\',name:\'Gold\',icon:\'&#11088;\',desc:\'Gold accounts\',
-     filter:function(p){return p.ice_gold===true;},low:20,high:28},
-    {id:\'repeat\',name:\'Repeat\',icon:\'&#128260;\',desc:\'2+ citations\',
-     filter:function(p){return((p.cit_repeat||0)>=1||(p.cit_ice_count||0)>=2)&&!p.ice_gold;},low:10,high:15},
-    {id:\'dbpr\',name:\'DBPR\',icon:\'&#128203;\',desc:\'Single citation\',
-     filter:function(p){return p.ice_confirmed_dbpr===true&&p.ice_gold!==true&&(p.cit_ice_count||0)<2;},low:5,high:10},
-    {id:\'premium\',name:\'Premium\',icon:\'&#9733;\',desc:\'High revenue proxy\',
-     filter:function(p){return p.ice_confirmed_dbpr!==true&&(p.premium_score||0)>=4;},low:8,high:12},
-    {id:\'golf\',name:\'Golf\',icon:\'&#9971;\',desc:\'Golf courses\',
-     filter:function(p){return p.venue_type===\'golf\';},low:15,high:20}
-  ];
-  var results=[];
-  for(var si=0;si<segs.length;si++){
-    var seg=segs[si];
-    var total=0,contacted=0,closed=0;
-    for(var i=0;i<P.length;i++){
-      var p=P[i];
-      if(!p||!seg.filter(p))continue;
-      total++;
-      var pid=p.id||p.license_number||\'\';\
-      if(!pid)continue;
-      if(log[pid]&&log[pid].length>0)contacted++;
-      var c=customers[pid];
-      if(c){var st=c.status||\'\';if(st.indexOf(\'customer\')===0)closed++;}
-    }
-    results.push({id:seg.id,name:seg.name,icon:seg.icon,desc:seg.desc,
-      total:total,contacted:contacted,closed:closed,
-      contactRate:safeRate(contacted,total),
-      closeRate:safeRate(closed,contacted),
-      low:seg.low,high:seg.high});
-  }
-  return results;
-}
-
-function renderSegmentTracker(){
-  var segs;try{segs=calcSegmentStats();}catch(e){segs=[];}
-  var totalClients=_activeClients().length;
-  var goalClients=30;
-  var goalPct=Math.min(Math.round(totalClients/goalClients*100),100);
-  var weeklyContacts;try{weeklyContacts=calcWeeklyContacts();}catch(e){weeklyContacts=0;}
-  var weeklyGoal=20;
-  var weeklyPct=Math.min(Math.round(weeklyContacts/weeklyGoal*100),100);
-  var weeklyColor=weeklyContacts>=weeklyGoal?\'#2ecc71\':weeklyContacts>=12?\'#f0ad4e\':\'#e74c3c\';
-  var goalColor=totalClients>=goalClients?\'#2ecc71\':totalClients>=21?\'#f0ad4e\':\'#e74c3c\';
-  var segRows=\'\';
-  for(var si=0;si<segs.length;si++){
-    var s=segs[si];
-    var rateColor=segStatusStyle(s.closeRate,s.low,s.high);
-    var badge=s.closeRate>=s.high?\'&#10003; On Track\':s.closeRate>=s.low?\'&#9675; Getting There\':\'&#9679; Below Target\';
-    segRows+=\'<tr>\'
-      +\'<td style="white-space:nowrap">\'+s.icon+\' \'+s.name+\'<br><span style="font-size:11px;color:var(--sub)">\'+s.desc+\'</span></td>\'
-      +\'<td style="text-align:center">\'+s.total.toLocaleString()+\'</td>\'
-      +\'<td style="text-align:center">\'+s.contacted+\'</td>\'
-      +\'<td style="text-align:center">\'+s.closed+\'</td>\'
-      +\'<td style="text-align:center;font-weight:600;color:\'+rateColor+\'">\'+s.closeRate+\'%</td>\'
-      +\'<td style="text-align:center;color:rgba(245,249,252,0.45)">\'+s.low+\'%\'+\'&ndash;\'+s.high+\'%</td>\'
-      +\'<td style="text-align:center;font-size:11px;font-weight:600;color:\'+rateColor+\'">\'+badge+\'</td>\'
-      +\'</tr>\';
-  }
-  return \'<div class="rpt-section">\'
-    +\'<div class="rpt-section-title">Segment Conversion Tracker</div>\'
-    +\'<div class="rpt-kpi-grid">\'
-    +\'<div class="rpt-kpi-card">\'
-    +\'<div class="rpt-kpi-val" style="color:\'+goalColor+\'">\'+totalClients+\' / \'+goalClients+\'</div>\'
-    +\'<div class="rpt-kpi-label">Goal Progress</div>\'
-    +\'<div class="rpt-kpi-sub">active clients</div>\'
-    +\'<div style="margin-top:8px;background:rgba(26,53,72,0.8);border-radius:4px;height:6px">\'
-    +\'<div style="width:\'+goalPct+\'%;height:6px;border-radius:4px;background:\'+goalColor+\'"></div>\'
-    +\'</div></div>\'
-    +\'<div class="rpt-kpi-card">\'
-    +\'<div class="rpt-kpi-val" style="color:\'+weeklyColor+\'">\'+weeklyContacts+\' / \'+weeklyGoal+\'</div>\'
-    +\'<div class="rpt-kpi-label">Weekly Activity</div>\'
-    +\'<div class="rpt-kpi-sub">prospects touched (7d)</div>\'
-    +\'<div style="margin-top:8px;background:rgba(26,53,72,0.8);border-radius:4px;height:6px">\'
-    +\'<div style="width:\'+weeklyPct+\'%;height:6px;border-radius:4px;background:\'+weeklyColor+\'"></div>\'
-    +\'</div></div>\'
-    +\'</div>\'
-    +\'<div class="rpt-table-wrap" style="margin-top:12px">\'
-    +\'<table class="rpt-table"><thead>\'
-    +\'<tr><th>Segment</th><th>Total</th><th>Contacted</th><th>Closed</th><th>Rate</th><th>Target</th><th>Status</th></tr>\'
-    +\'</thead><tbody>\'+segRows+\'</tbody></table></div>\'
-    +\'</div>\';
-}
-
 function renderSalesReports(){
   if(!REPORTS_TAB_ENABLED)return;
   var root=document.getElementById(\'reports-root\');
@@ -12027,8 +11920,6 @@ function renderSalesReports(){
     +_kpiCard(\'Cited + Closed\',dbpr.citedWon||0,(dbpr.closeRate||0).toFixed(1)+\'% of contacted\')
     +\'</div>\'
     +\'</div>\'
-
-    +renderSegmentTracker()
 
     +\'<div class="rpt-section">\'
     +\'<div class="rpt-section-title">Outreach Effectiveness</div>\'
