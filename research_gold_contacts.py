@@ -1,10 +1,10 @@
 """
-research_contacts.py — Find decision maker contacts for all Premium accounts.
+research_gold_contacts.py — Find Owner/GM contacts for all Gold lead accounts.
 
 Run with ANTHROPIC_API_KEY set:
-    ANTHROPIC_API_KEY=sk-ant-... python3 research_contacts.py
+    ANTHROPIC_API_KEY=sk-ant-... python3 research_gold_contacts.py
 
-Writes output to docs/data/strategic_contacts.json.
+Writes output to docs/data/gold_contacts.json.
 """
 import json
 import re
@@ -13,7 +13,7 @@ import os
 
 import anthropic
 
-# ── Extract premium accounts from built index.html ────────────────────────────
+# ── Extract gold leads from built index.html ──────────────────────────────────
 html = open('index.html').read()
 
 # Use bracket-counting to extract P[] — regex fails on the large 9000+ record array
@@ -37,30 +37,23 @@ for i, ch in enumerate(html[start:], start):
             break
 
 prospects = json.loads(html[start:end])
-premium = [
+gold = [
     p for p in prospects
-    if (p.get('premium_score') or 0) >= 4
+    if p.get('ice_gold') == True
 ]
-print(f'Found {len(premium)} Premium accounts')
+print(f'Found {len(gold)} Gold leads')
 
 # ── API client ────────────────────────────────────────────────────────────────
 client = anthropic.Anthropic()
 
 
-def find_contact(business_name, city, score):
-    if score >= 7:
-        role_priority = (
-            "Director of Engineering, Chief Engineer, "
-            "Director of Food and Beverage, or General Manager"
-        )
-    else:
-        role_priority = (
-            "Owner, General Manager, Bar Manager, "
-            "or Restaurant Manager"
-        )
-
+def find_contact(business_name, city):
     prompt = (
-        f"Find the {role_priority} at {business_name} in {city}, Florida.\n\n"
+        f"Find the Owner, General Manager, or Bar Manager at "
+        f"{business_name} in {city}, Florida.\n\n"
+        "These are independent restaurants, bars, cafes, and food service "
+        "businesses — not large hotels. Look for the current business owner, "
+        "operator, or general manager by name.\n\n"
         "Return ONLY a valid JSON object, no other text:\n"
         '{"name": "Full Name", "title": "Exact Title"}\n\n'
         "If you cannot find a specific named person, return exactly:\n"
@@ -108,7 +101,7 @@ def find_contact(business_name, city, score):
 
 
 # ── Load existing contacts to enable resume ───────────────────────────────────
-output_path = 'docs/data/strategic_contacts.json'
+output_path = 'docs/data/gold_contacts.json'
 os.makedirs('docs/data', exist_ok=True)
 
 existing = {}
@@ -129,7 +122,7 @@ found = 0
 not_found = 0
 skipped = 0
 
-for i, p in enumerate(premium):
+for i, p in enumerate(gold):
     pid = str(p.get('id') or p.get('pid') or i)
 
     # Skip if already have a contact
@@ -146,16 +139,14 @@ for i, p in enumerate(premium):
 
     name = p.get('name', 'Unknown')
     city = p.get('city', 'Pinellas County')
-    score = p.get('premium_score', 0)
 
-    print(f'[{i+1}/{len(premium)}] {name[:50]} — {city}')
+    print(f'[{i+1}/{len(gold)}] {name[:50]} — {city}')
 
-    result = find_contact(name, city, score)
+    result = find_contact(name, city)
 
     contacts[pid] = {
         'business_name': name,
         'city': city,
-        'premium_score': score,
         'dm_name': result['name'],
         'dm_title': result['title']
     }
@@ -189,7 +180,7 @@ print(f'Not found: {not_found}')
 print(f'Total entries: {len(contacts)}')
 print(f'Saved to:  {output_path}')
 
-if found_pct < 30:
-    print('\nWARNING: Found rate below 30% — check API output above for errors.')
-elif found_pct >= 70:
-    print('\nQuality looks good (>= 70% found rate). Proceed to commit.')
+if found_pct < 10:
+    print('\nWARNING: Found rate below 10% — check API output above for errors.')
+elif found_pct >= 30:
+    print('\nQuality looks good (>= 30% found rate). Proceed to commit.')
