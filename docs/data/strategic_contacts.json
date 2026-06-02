@@ -1,0 +1,3481 @@
+{
+  "3754544": {
+    "business_name": "INNISBROOK RESORT & GOLF CLUB OSPREY CLUBHOUSE",
+    "city": "PALM HARBOR",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6097529": {
+    "business_name": "STILLWATERS TAVERN",
+    "city": "ST. PETERSBURG",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7031204": {
+    "business_name": "MARY MARGARET'S OLDE IRISH TAVERN",
+    "city": "ST. PETERSBURG",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7128013": {
+    "business_name": "MARRIOTT ST PETERSBURG CLEARWATER",
+    "city": "ST. PETERSBURG",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8294878": {
+    "business_name": "ISLAND GRILLE AND RAW BAR",
+    "city": "TIERRA VERDE",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9463400": {
+    "business_name": "GYROS AND SEAFOOD EXPRESS",
+    "city": "SAINT PETERSBURG",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3789074": {
+    "business_name": "THE HOTEL TEA ROOM",
+    "city": "DAVENPORT",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6497868": {
+    "business_name": "FOUR POINTS SHERATON TAMPA AIRPORT WESTSHORE",
+    "city": "TAMPA",
+    "premium_score": 6.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7089149": {
+    "business_name": "JERK HUT ISLAND GRILLE AND BEACH CLUB",
+    "city": "TAMPA",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7911634": {
+    "business_name": "TRADEWINDS RESTAURANT",
+    "city": "DAVENPORT",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8836352": {
+    "business_name": "WESTIN TAMPA BAY AQUA",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8849725": {
+    "business_name": "FAIRFIELD INN AND SUITES TAMPA BRANDON",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9662235": {
+    "business_name": "HOME2 SUITES BY HILTON WILDWOOD THE VILLAGES",
+    "city": "WILDWOOD",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6352426": {
+    "business_name": "MARINA CANTINA",
+    "city": "CLEARWATER",
+    "premium_score": 6.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9660116": {
+    "business_name": "ISLAND TIMEZ CARIBBEAN RESTAURANT & LOUNGE INC",
+    "city": "ST. PETERSBURG",
+    "premium_score": 6.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7690445": {
+    "business_name": "TIKI DOCKS SKYWAY BAR & GRILL",
+    "city": "ST. PETERSBURG",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3953685": {
+    "business_name": "GREEN ISLAND FROZEN YOGURT AND TEA BAR",
+    "city": "TAMPA",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6520176": {
+    "business_name": "HOUSE OF MAMA D'S BARBEQUE & SEAFOOD SHACK",
+    "city": "ST. PETERSBURG",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7742316": {
+    "business_name": "SWIGWAM BEACH BAR",
+    "city": "ST.PETE BEACH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6640817": {
+    "business_name": "BEST WESTERN PLUS YACHT HARBOR INN #10226",
+    "city": "DUNEDIN",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9571319": {
+    "business_name": "JIMMY'S ISLAND GRILL",
+    "city": "CLEARWATER BEACH",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8334403": {
+    "business_name": "LA QUINTA INN AND SUITES TAMPA USF",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6737529": {
+    "business_name": "HYATT PLACE ST PETERSBURG 5TH FLOOR PANTRY",
+    "city": "ST. PETERSBURG",
+    "premium_score": 6.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9114036": {
+    "business_name": "BROKE N BOARD",
+    "city": "REDINGTON SHORES",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9504308": {
+    "business_name": "HILTON GARDEN INN NORTHWEST OLDSMAR",
+    "city": "OLDSMAR",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7944986": {
+    "business_name": "TAVERNA COSTALE",
+    "city": "ST. PETERSBURG",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8480700": {
+    "business_name": "TAHITIAN RESORT",
+    "city": "TREASURE ISLAND",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9515993": {
+    "business_name": "COOL VIBES ON THE BEACH",
+    "city": "ST.PETE BEACH",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7555140": {
+    "business_name": "DRACULA'S LEGACY WINE BAR",
+    "city": "SAINT PETERSBURG",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7912264": {
+    "business_name": "NEW HOTEL COLLECTION DOWNTOWN ST PETE",
+    "city": "ST. PETERSBURG",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8282577": {
+    "business_name": "DAYS INN CLEARWATER CENTRAL",
+    "city": "CLEARWATER",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3386085": {
+    "business_name": "COUNTRY INN & SUITES",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8929378": {
+    "business_name": "HOTEL FLOR THE DAN RESTAURANT",
+    "city": "TAMPA",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8809080": {
+    "business_name": "AC CLEARWATER BEACH",
+    "city": "CLEARWATER BEACH",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2240176": {
+    "business_name": "FAIRFIELD INN & SUITES",
+    "city": "CLEARWATER",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7599078": {
+    "business_name": "THE MONKEY ISLAND BAR AND GRILL",
+    "city": "HOMOSASSA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6932769": {
+    "business_name": "HAMPTON INN AND SUITES",
+    "city": "TAMPA",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8895838": {
+    "business_name": "DAYS INN & SUITES TAMPA",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6217663": {
+    "business_name": "BRGR KITCHEN & BAR",
+    "city": "TREASURE ISLAND",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2994383": {
+    "business_name": "SAFETY HARBOR RESORT& KITCHEN",
+    "city": "SAFETY HARBOR",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9190007": {
+    "business_name": "BEACH MARKET CAFE",
+    "city": "CLEARWATER BEACH",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6310263": {
+    "business_name": "HOLIDAY INN EXPRESS",
+    "city": "LAKE WALES",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8581306": {
+    "business_name": "QUALITY INN  AND SUITES",
+    "city": "HERNANDO",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8611111": {
+    "business_name": "HOTEL TAMPA RIVERWALK",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7086130": {
+    "business_name": "FRESCOS WATERFRONT BISTRO",
+    "city": "ST. PETERSBURG",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8182192": {
+    "business_name": "HILTON GARDEN INN TAMPA YBOR",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3775580": {
+    "business_name": "HAMPTON INN & SUITES",
+    "city": "LAKE WALES",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8597256": {
+    "business_name": "COURTYARD BY MARRIOTT ST PETERSBURG MARRIOTT",
+    "city": "ST. PETERSBURG",
+    "premium_score": 6.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3816249": {
+    "business_name": "LAQUINTA INN & SUITES TAMPA CENTRAL",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7601812": {
+    "business_name": "HOLIDAY INN EXPRESS & SUITES",
+    "city": "PORT RICHEY",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8713516": {
+    "business_name": "HILTON GARDEN INN BRANDON",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7355801": {
+    "business_name": "HOME 2 SUITES TAMPA USF",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8357026": {
+    "business_name": "CHASSAHOWITZKA HOTEL",
+    "city": "HOMOSASSA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5696723": {
+    "business_name": "COMFORT INN",
+    "city": "CLEARWATER",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6521788": {
+    "business_name": "HAMPTON INN PLANT CITY",
+    "city": "PLANT CITY",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8501509": {
+    "business_name": "CHIKI CHURROS DESSERT BAR",
+    "city": "ST. PETERSBURG",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6301558": {
+    "business_name": "HOLIDAY INN EXPRESS & SUITES",
+    "city": "LARGO",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "4326314": {
+    "business_name": "LADY LAKE HAMPTON INN & SUITES",
+    "city": "LADY LAKE",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7929239": {
+    "business_name": "DAYS INN WILDWOOD",
+    "city": "WILDWOOD",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5811196": {
+    "business_name": "DAYS INN CENTRAL",
+    "city": "ST. PETERSBURG",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6071528": {
+    "business_name": "COUNTRY INN & SUITE",
+    "city": "PINELLAS PARK",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6648404": {
+    "business_name": "FAIRFIELD INN & SUITES BY MARRIOTT",
+    "city": "CLEARWATER BEACH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7303269": {
+    "business_name": "HAMPTON INN BY HILTON DUNEDIN",
+    "city": "DUNEDIN",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9484705": {
+    "business_name": "BEACH BURGER SHACK",
+    "city": "CLEARWATER",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6482412": {
+    "business_name": "HAMPTON INN TAMPA AIRPORT",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6548123": {
+    "business_name": "HOLIDAY INN EXPRESS & SUITES LAKELAND SOUTH",
+    "city": "LAKELAND",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7250625": {
+    "business_name": "HOLIDAY INN EXPRESS & SUITES",
+    "city": "BROOKSVILLE",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7348877": {
+    "business_name": "QUALITY INN",
+    "city": "ZEPHYRHILLS",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8898413": {
+    "business_name": "SEFFNER INN AND SUITES",
+    "city": "SEFFNER",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9142180": {
+    "business_name": "HOLIDAY INN EXPRESS AND SUITES HOTEL BUSCH GARDENS",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9476273": {
+    "business_name": "HOLIDAY INN EXPRESS & SUITES",
+    "city": "PLANT CITY",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2240058": {
+    "business_name": "ISLAND WAY GRILL",
+    "city": "CLEARWATER BCH",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5248905": {
+    "business_name": "TATE ISLAND GRILL",
+    "city": "CLEARWATER BEACH",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7027408": {
+    "business_name": "BRITT'S BAR & GRILL",
+    "city": "TREASURE ISLAND",
+    "premium_score": 6.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8898223": {
+    "business_name": "TAVERNA ON THE BAY",
+    "city": "ST PETE BEACH",
+    "premium_score": 6.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2537325": {
+    "business_name": "RUMBA ISLAND BAR & GRILL",
+    "city": "CLEARWATER",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3754529": {
+    "business_name": "INNISBROOK RESORT & GOLF CLUB",
+    "city": "PALM HARBOR",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2236871": {
+    "business_name": "MAINSTAY TAVERN",
+    "city": "CLEARWATER BCH",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6045349": {
+    "business_name": "SAND BAR & GRILL",
+    "city": "CLEARWATER",
+    "premium_score": 6.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8371828": {
+    "business_name": "BONU TAVERNA",
+    "city": "ST. PETERSBURG",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6524356": {
+    "business_name": "THE COVE RESORT AND PUB",
+    "city": "INVERNESS",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3756519": {
+    "business_name": "ST PETERSBURG YACHT CLUB",
+    "city": "ST.PETE BEACH",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9042046": {
+    "business_name": "OSAKA SUSHI AND THAI",
+    "city": "MADEIRA BEACH",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9326316": {
+    "business_name": "CANCUN BEACH BAR & GRILL",
+    "city": "PORT RICHEY",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9297393": {
+    "business_name": "VOILA MERCI",
+    "city": "INDIAN SHORES",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6488644": {
+    "business_name": "HOTEL BAR",
+    "city": "TAMPA",
+    "premium_score": 7.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6620320": {
+    "business_name": "LA QUINTA INN & SUITES CLEARWATER SOUTH",
+    "city": "CLEARWATER",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7416882": {
+    "business_name": "DOCK'S WATERFRONT SEAFOOD GRILL",
+    "city": "TARPON SPRINGS",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8422951": {
+    "business_name": "NEW YORK SEAFOOD MARKET & RESTAURANT",
+    "city": "ST. PETERSBURG",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7320706": {
+    "business_name": "THE TAVERN AT BAYBORO",
+    "city": "ST. PETERSBURG",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6323487": {
+    "business_name": "COUNTRY INN & SUITES TAMPA/BRANDON",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8901087": {
+    "business_name": "SPARROW & POOL BAR",
+    "city": "ST. PETERSBURG",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6990470": {
+    "business_name": "BASIL LEAF LLC",
+    "city": "ST.PETE BEACH",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8668731": {
+    "business_name": "WAHOOS BAYSIDE PUB AND GRILL",
+    "city": "REDINGTON SHORES",
+    "premium_score": 6.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7042746": {
+    "business_name": "HILTON GARDEN INN TAMPA SUNCOAST PARKWAY",
+    "city": "LUTZ",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8047735": {
+    "business_name": "PARADISE LAKES RESORT",
+    "city": "LUTZ",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7777289": {
+    "business_name": "FLOR FINA / HOTEL HAYA",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6012756": {
+    "business_name": "AL & STELLA RISTORANTE PIZZERIA",
+    "city": "CLEARWATER",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5518352": {
+    "business_name": "SEARED 1200 CHOPHOUSE",
+    "city": "ST.PETE BEACH",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9406797": {
+    "business_name": "MALIO'S BEACH HOUSE",
+    "city": "ST PETE BEACH",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3907353": {
+    "business_name": "COMFORT SUITES",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5248896": {
+    "business_name": "CARETTA ON THE GULF",
+    "city": "CLEARWATER BEACH",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7587855": {
+    "business_name": "THE BROWNWOOD HOTEL AND SPA",
+    "city": "THE VILLAGES",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3990215": {
+    "business_name": "HULA BAY CLUB/DUKES RETIRED SURFERS ISLAND BAR",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3697387": {
+    "business_name": "RESIDENCE INN BY MARRIOTT",
+    "city": "TREASURE ISLAND",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2236770": {
+    "business_name": "BEACH SHANTY CAFE",
+    "city": "CLEARWATER BCH",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7635242": {
+    "business_name": "LAQUINTA INN",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8165101": {
+    "business_name": "MANDALAY PRIME STEAKHOUSE AND LOUNGE",
+    "city": "CLEARWATER BEACH",
+    "premium_score": 6.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2150240": {
+    "business_name": "NATURES RESORT",
+    "city": "HOMOSASSA",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3240722": {
+    "business_name": "COURTYARD BY MARRIOTT",
+    "city": "CLEARWATER",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9517668": {
+    "business_name": "LITTLE ISLAND ICE CREAM",
+    "city": "INDIAN SHORES",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3511938": {
+    "business_name": "RUSKIN INN",
+    "city": "RUSKIN",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7143377": {
+    "business_name": "FAIRFIELD INN & SUITES TAMPA WESLEY CHAPEL",
+    "city": "WESLEY CHAPEL",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7571723": {
+    "business_name": "BELLE PARC RV RESORT",
+    "city": "BROOKSVILLE",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8755982": {
+    "business_name": "FAIRFIELD INN AND  SUITES TAMPA FAIRGROUNDS",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2773537": {
+    "business_name": "EL TENAMPA",
+    "city": "ST. PETERSBURG",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6159807": {
+    "business_name": "JUNGLE PRADA TAVERN",
+    "city": "ST. PETERSBURG",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8226057": {
+    "business_name": "THREE BIRDS TAVERN",
+    "city": "ST PETERSBURG",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8635953": {
+    "business_name": "RUMBA ISLAND BAR & GRILL",
+    "city": "ST. PETERSBURG",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3754537": {
+    "business_name": "INNISBROOK RESORT & GOLF CLUB TURNBERRY PUB ISLAND",
+    "city": "PALM HARBOR",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8501115": {
+    "business_name": "SUNSET BAR AND GRILL AT LITTLE HARBOR",
+    "city": "RUSKIN",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3754540": {
+    "business_name": "INNISBROOK RESORT & GOLF CLUB LOCHNESS POOL GRILL",
+    "city": "PALM HARBOR",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6531107": {
+    "business_name": "PASADENA YACHT & COUNTRY CLUB BAYSIDE GRILL",
+    "city": "GULFPORT",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3828059": {
+    "business_name": "CESARE AT THE BEACH",
+    "city": "CLEARWATER BEACH",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5916818": {
+    "business_name": "THAI STAR SUSHI BAR",
+    "city": "MADEIRA BEACH",
+    "premium_score": 6.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3754525": {
+    "business_name": "INNISBROOK RESORT & GOLF CLUB PACKARDS COPPERHEAD ",
+    "city": "PALM HARBOR",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7095532": {
+    "business_name": "THE VINOY RESORT AND GOLF CLUB - PAUL'S LANDING",
+    "city": "ST. PETERSBURG",
+    "premium_score": 9.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7095698": {
+    "business_name": "THE VINOY RESORT AND GOLF CLUB - PALM COURT BALLRO",
+    "city": "ST. PETERSBURG",
+    "premium_score": 9.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7421538": {
+    "business_name": "HOOKS SUSHI BAR AND THAI FOOD",
+    "city": "ST. PETERSBURG",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7664053": {
+    "business_name": "DOC FORD'S RUM BAR & GRILLE",
+    "city": "ST. PETERSBURG",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9188658": {
+    "business_name": "DRIFT KITCHEN & BAR",
+    "city": "CLEARWATER BEACH",
+    "premium_score": 6.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7569482": {
+    "business_name": "CONCH REPUBLIC GRILL AND RAW BAR",
+    "city": "NORTH REDINGTON BEAC",
+    "premium_score": 6.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9209543": {
+    "business_name": "HOGGDADDYS BEACH BAR AND GRILL",
+    "city": "CLEARWATER BEACH",
+    "premium_score": 8.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3088227": {
+    "business_name": "SILVER DOLLAR RV RESORT GOLF",
+    "city": "ODESSA",
+    "premium_score": 6.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3895857": {
+    "business_name": "THE DRUNKEN CLAM",
+    "city": "ST.PETE BEACH",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2237970": {
+    "business_name": "FERGS SPORTS BAR & GRILLE",
+    "city": "ST PETERSBURG",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6154188": {
+    "business_name": "CRYSTAL BAY HOTEL",
+    "city": "ST. PETERSBURG",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6236618": {
+    "business_name": "SANDBAR - TIKI BAR @ OPAL SANDS RESORT",
+    "city": "CLEARWATER",
+    "premium_score": 10.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6800555": {
+    "business_name": "BAMBOO BEACH BAR AND GRILL",
+    "city": "MADEIRA BEACH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8372573": {
+    "business_name": "GUILTY SEA PUB AND SPORTS BAR",
+    "city": "INDIAN ROCKS BEACH",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7095679": {
+    "business_name": "THE VINOY RESORT & GOLF CLUB - ELLIOTT ASTER & VER",
+    "city": "ST. PETERSBURG",
+    "premium_score": 9.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5476707": {
+    "business_name": "NORI THAI RESTAURANT",
+    "city": "ST.PETE BEACH",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7791748": {
+    "business_name": "TOASTED MONKEY BEACH BAR AND GRILL",
+    "city": "ST.PETE BEACH",
+    "premium_score": 8.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9695860": {
+    "business_name": "FRIENDLY TAVERN",
+    "city": "REDINGTON SHORES",
+    "premium_score": 6.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7095621": {
+    "business_name": "THE VINOY RESORT AND GOLF CLUB - VINOY CLUB GRILL",
+    "city": "ST. PETERSBURG",
+    "premium_score": 9.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2235393": {
+    "business_name": "SHEPHARDS RESTAURANT",
+    "city": "CLEARWATER BEACH",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "4012171": {
+    "business_name": "SUNSET GRILLE",
+    "city": "ST. PETERSBURG",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6510605": {
+    "business_name": "SLOPPY JOE'S",
+    "city": "TREASURE ISLAND",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7559897": {
+    "business_name": "CAMBRIA MADEIRA BEACH HOTEL",
+    "city": "MADEIRA BEACH",
+    "premium_score": 8.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2548736": {
+    "business_name": "JIMMYS FISH HOUSE AND IGUANA BAR",
+    "city": "CLEARWATER BEACH",
+    "premium_score": 6.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5428411": {
+    "business_name": "BIRCHWOOD INN 4TH FL KITCHEN & 5TH FL BAR",
+    "city": "ST. PETERSBURG",
+    "premium_score": 9.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8494180": {
+    "business_name": "MAD BEACH CANTINA",
+    "city": "MADEIRA BEACH",
+    "premium_score": 6.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8502717": {
+    "business_name": "COCONUT CHARLIE'S BEACH BAR & GRILL",
+    "city": "NORTH REDINGTON BEAC",
+    "premium_score": 8.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "4097467": {
+    "business_name": "CASSIS AMERICAN BRASSERIE",
+    "city": "ST. PETERSBURG",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9278019": {
+    "business_name": "MARIO'S RISTORANTE",
+    "city": "MADEIRA BEACH",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2183614": {
+    "business_name": "VILLAGE INN PANCAKE HOUSE",
+    "city": "TAMPA",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8553970": {
+    "business_name": "COCO'S CRUSH BAR & GRILL",
+    "city": "INDIAN ROCKS BEACH",
+    "premium_score": 6.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9667044": {
+    "business_name": "GREEN LIGHT LOUNGE + KITCHEN",
+    "city": "ST. PETERSBURG",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9420105": {
+    "business_name": "BACKWATERS N REDINGTON BEACH",
+    "city": "NORTH REDINGTON BEAC",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3378601": {
+    "business_name": "SUNSET CAFE AND BEACH BAR",
+    "city": "TREASURE ISLAND",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7852973": {
+    "business_name": "BUOYS WATERFRONT BAR AND GRILL",
+    "city": "ST.PETE BEACH",
+    "premium_score": 8.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2235884": {
+    "business_name": "FRIENDLY FISHERMAN RESTAURANT",
+    "city": "MADEIRA BCH",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2431997": {
+    "business_name": "FRENCHY'S SOUTH BEACH CAFE",
+    "city": "CLEARWATER BEACH",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6237446": {
+    "business_name": "MAD BEACH CRAFT BREWING COMPANY",
+    "city": "MADEIRA BEACH",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9241632": {
+    "business_name": "DICK'S LAST RESORT",
+    "city": "MADEIRA BEACH",
+    "premium_score": 8.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2184018": {
+    "business_name": "VILLAGE INN PANCAKE HOUSE",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5354701": {
+    "business_name": "APPLEBEES NEIGHBORHOOD GRILL & BAR",
+    "city": "ST. PETERSBURG",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6274968": {
+    "business_name": "SOLA BISTRO & WINE BAR",
+    "city": "ST.PETE BEACH",
+    "premium_score": 6.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9484357": {
+    "business_name": "BEACH HOUSE SUITES BY DON CESAR",
+    "city": "ST PETE BEACH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7711014": {
+    "business_name": "VILLAGE INN RESTAURANT",
+    "city": "LAND O' LAKES",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7429890": {
+    "business_name": "BEACH BIRDS BEACH BAR",
+    "city": "CLEARWATER BEACH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7573110": {
+    "business_name": "CEVICHE TAPAS BAR AND RESTAURANT",
+    "city": "ST. PETERSBURG",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7095430": {
+    "business_name": "THE VINOY RESORT AND GOLF CLUB - SUNSET BALLROOM",
+    "city": "ST. PETERSBURG",
+    "premium_score": 9.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8670078": {
+    "business_name": "DOUBLETREE BY HILTON TAMPA ROCKY POINT WATERFRONT",
+    "city": "TAMPA",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5296245": {
+    "business_name": "HOOTERS OF CLEARWATER BEACH",
+    "city": "CLEARWATER",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6497283": {
+    "business_name": "THE REEF",
+    "city": "MADEIRA BEACH",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7323448": {
+    "business_name": "PARADISE GRILLE",
+    "city": "ST.PETE BEACH",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8203335": {
+    "business_name": "RESIDENCE INN & SPRINGHILL SUITES",
+    "city": "CLEARWATER",
+    "premium_score": 8.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9312044": {
+    "business_name": "HURRICANE EDDIES",
+    "city": "CLEARWATER BEACH",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9439122": {
+    "business_name": "GULF BISTRO",
+    "city": "LARGO",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6022011": {
+    "business_name": "HYATT PLACE LAKELAND CENTER",
+    "city": "LAKELAND",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6479695": {
+    "business_name": "SHERATON TAMPA EAST",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9696490": {
+    "business_name": "HILTON GARDEN INN TAMPA YBOR",
+    "city": "TAMPA",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2236476": {
+    "business_name": "JIMMY GUANA'S BAR & GRILL",
+    "city": "INDIAN ROCKS BCH",
+    "premium_score": 6.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7381232": {
+    "business_name": "COCO'S CRUSH BAR AND GRILL",
+    "city": "CLEARWATER BEACH",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2232479": {
+    "business_name": "SAM'S HUDSON BEACH BAR",
+    "city": "HUDSON",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6528048": {
+    "business_name": "DANSTE HOSPITALITY GROUP LLC",
+    "city": "CLEARWATER BEACH",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7008977": {
+    "business_name": "FENWAY HOTEL",
+    "city": "DUNEDIN",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3633358": {
+    "business_name": "BAYPORT INN",
+    "city": "WEEKI WACHEE",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7726502": {
+    "business_name": "JAKES COASTAL CANTINA",
+    "city": "INDIAN ROCKS BEACH",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8346187": {
+    "business_name": "THE WHARF",
+    "city": "ST.PETE BEACH",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8418454": {
+    "business_name": "INDIAN BISTRO",
+    "city": "ST.PETE BEACH",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9722152": {
+    "business_name": "KENNYS KORNER ONE",
+    "city": "REDINGTON SHORES",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2240902": {
+    "business_name": "ANDYS DRIVE INN REST",
+    "city": "WINTER HAVEN",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8423448": {
+    "business_name": "KARMA JUICE BAR",
+    "city": "ST. PETERSBURG",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2554581": {
+    "business_name": "DELOSA'S PIZZERIA  AND RESTAURANT",
+    "city": "MADEIRA BEACH",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6236635": {
+    "business_name": "BANQUET KITCHEN @ OPAL SANDS RESORT",
+    "city": "CLEARWATER",
+    "premium_score": 8.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6610686": {
+    "business_name": "SLYCE",
+    "city": "MADEIRA BEACH",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6647442": {
+    "business_name": "ANNEX 400 BEACH",
+    "city": "ST. PETERSBURG",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8451475": {
+    "business_name": "SHRIMPYS BLUES BISTRO",
+    "city": "SAINT PETE BEACH",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7135150": {
+    "business_name": "COURTYARD BY MARRIOTT WINTER HAVEN",
+    "city": "WINTER HAVEN",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8582798": {
+    "business_name": "QUALITY INN TAMPA BRANDON CONFERENCE CENTER",
+    "city": "TAMPA",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5887289": {
+    "business_name": "WINDWARD BAR & GRILLE",
+    "city": "CLEARWATER",
+    "premium_score": 6.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7454607": {
+    "business_name": "SALTY'S BEACH BAR",
+    "city": "ST. PETE BEACH",
+    "premium_score": 8.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8645696": {
+    "business_name": "TREASURE ISLAND R BAR",
+    "city": "TREASURE ISLAND",
+    "premium_score": 8.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7095485": {
+    "business_name": "THE VINOY RESORT AND GOLF CLUB - EMPLOYEE CAFETERI",
+    "city": "ST. PETERSBURG",
+    "premium_score": 9.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5994021": {
+    "business_name": "BOULEVARD BURGERS & TAP HOUSE",
+    "city": "ST.PETE BEACH",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2237544": {
+    "business_name": "MARRIOTT KOKOMOS GRILL",
+    "city": "CLEARWATER BEACH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8937535": {
+    "business_name": "MADFISH",
+    "city": "ST PETE BEACH",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9447030": {
+    "business_name": "CAMBRIA HOTEL TAMPA BRANDON",
+    "city": "TAMPA",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "4135116": {
+    "business_name": "PIRATES PUB-N-GRUB",
+    "city": "MADEIRA BEACH",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6380942": {
+    "business_name": "BAYSIDE BAR & GRILL",
+    "city": "CLEARWATER",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8894476": {
+    "business_name": "ROSE'S COFFEE BAR & LOBBY BAR",
+    "city": "ST. PETERSBURG",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5417379": {
+    "business_name": "BIRCHWOOD INN",
+    "city": "ST. PETERSBURG",
+    "premium_score": 6.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6781612": {
+    "business_name": "HAMPTON INN & SUITES TAMPA NORTHWEST/OLDSMAR",
+    "city": "OLDSMAR",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9324222": {
+    "business_name": "HYATT REGENCY CLEARWATER BEACH RESORT AND SPA",
+    "city": "CLEARWATER",
+    "premium_score": 8.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7091455": {
+    "business_name": "COURTYARD BY MARRIOTT",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2237273": {
+    "business_name": "GONDOLIER PIZZA",
+    "city": "CLEARWATER BCH",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6110170": {
+    "business_name": "VILLAGE INN",
+    "city": "SEMINOLE",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7450656": {
+    "business_name": "RUMFISH GRILL",
+    "city": "ST.PETE BEACH",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3751057": {
+    "business_name": "HILTON GARDEN INN-TAMPA SOUTHEAST",
+    "city": "RIVERVIEW",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "4300694": {
+    "business_name": "MANGO'S RESTAURANT AT EMBASSY SUITES",
+    "city": "BRANDON",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9648771": {
+    "business_name": "VILLAGE INN RESTAURANT",
+    "city": "RIVERVIEW",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6506477": {
+    "business_name": "SPOTTED DONKEY CANTINA",
+    "city": "CLEARWATER BEACH",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5628020": {
+    "business_name": "HOLIDAY INN/EXPRESS",
+    "city": "CLEARWATER",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5867876": {
+    "business_name": "SHELLS OF ST PETE BEACH",
+    "city": "ST.PETE BEACH",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7538359": {
+    "business_name": "SAMS GYRO & SEAFOOD INC",
+    "city": "ST. PETERSBURG",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7546022": {
+    "business_name": "GULFSIDE GRILL",
+    "city": "ST.PETE BEACH",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8841968": {
+    "business_name": "CONEY ISLAND DRIVE INN LARGO",
+    "city": "LARGO",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6759533": {
+    "business_name": "RESIDENCE INN TAMPA SABAL PARK BRANDON",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6932652": {
+    "business_name": "HYATT PLACE WESLEY CHAPEL",
+    "city": "LUTZ",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7930912": {
+    "business_name": "RODEWAY INN",
+    "city": "WESLEY CHAPEL",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8129852": {
+    "business_name": "LAKELAND COURTYARD BY MARRIOTT",
+    "city": "LAKELAND",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8776329": {
+    "business_name": "LA QUINTA INN & SUITES",
+    "city": "LAKELAND",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7458350": {
+    "business_name": "TRADEWINDS LOBBY BAR",
+    "city": "ST.PETE BEACH",
+    "premium_score": 10.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8400493": {
+    "business_name": "MAIN KITCHEN AND LOBBY BAR",
+    "city": "CLEARWATER",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2237570": {
+    "business_name": "CHECKERS DRIVE INN REST #170",
+    "city": "CLEARWATER",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9453440": {
+    "business_name": "TURTLE ISLAND BAR AND GRILL",
+    "city": "TARPON SPRINGS",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6697537": {
+    "business_name": "HYATT PLACE ST PETERSBURG",
+    "city": "ST PETERSBURG",
+    "premium_score": 7.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9096886": {
+    "business_name": "HOLIDAY INN EXPRESS CLEARWATER",
+    "city": "CLEARWATER",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7742802": {
+    "business_name": "TERRACE HOTEL RESTAURANT",
+    "city": "LAKELAND",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8412633": {
+    "business_name": "RESIDENCE INN BY MARRIOTT",
+    "city": "LAKELAND",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9219082": {
+    "business_name": "SPRINGHILL SUITES TAMPA EIGHTH FLOOR",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9323520": {
+    "business_name": "FAIRFIELD INN AND SUITES LAKELAND PLANT CITY",
+    "city": "PLANT CITY",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2235698": {
+    "business_name": "CLEARWATER YACHT CLUB",
+    "city": "CLEARWATER BCH",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6138196": {
+    "business_name": "THE INN ON THIRD",
+    "city": "ST. PETERSBURG",
+    "premium_score": 6.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7713095": {
+    "business_name": "CADDY'S MADIERA BEACH",
+    "city": "MADEIRA BEACH",
+    "premium_score": 6.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8635473": {
+    "business_name": "COMPASS GRILLE",
+    "city": "ST.PETE BEACH",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8701558": {
+    "business_name": "ARAMARK AT LEGOLAND FLORIDA RESORT HOTEL BRICKS",
+    "city": "WINTER HAVEN",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2996544": {
+    "business_name": "SAFETY HARBOR RESORT CONF. CENTER (TIKI BAR)",
+    "city": "SAFETY HARBOR",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5558048": {
+    "business_name": "MACNASTY'S SPORT BAR",
+    "city": "ST.PETE BEACH",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7251271": {
+    "business_name": "CLEARWATER WINE BAR & BISTRO",
+    "city": "CLEARWATER",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7371469": {
+    "business_name": "THE SALTY CRAB BAR & GRILL NORTH BEACH",
+    "city": "CLEARWATER BEACH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7719683": {
+    "business_name": "CELLARMASTERS WINE BAR AND BOTTLE SHOP",
+    "city": "ST. PETERSBURG",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7855102": {
+    "business_name": "VIKKIS ISLAND GIRL TIKI BAR",
+    "city": "TREASURE ISLAND",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9609163": {
+    "business_name": "SHARKY'S SEA PUB",
+    "city": "INDIAN SHORES",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5603613": {
+    "business_name": "STREAMSONG RESORT- ROOF TOP BAR",
+    "city": "STREAMSONG",
+    "premium_score": 7.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2234119": {
+    "business_name": "CARLOUEL YACHT CLUB",
+    "city": "CLEARWATER BCH",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "4384480": {
+    "business_name": "LAQUINTA INN",
+    "city": "ST. PETERSBURG",
+    "premium_score": 6.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6608143": {
+    "business_name": "DON CESAR - SOCIETY TABLE",
+    "city": "ST.PETE BEACH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8471547": {
+    "business_name": "TOWNEPLACE SUITES BY MARRIOTT TAMPA CLEARWATER",
+    "city": "CLEARWATER",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8481649": {
+    "business_name": "MAD BEACH POKE",
+    "city": "MADEIRA BEACH",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8704969": {
+    "business_name": "TREASURE BAY RESORT AND MARINA",
+    "city": "TREASURE ISLAND",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9529294": {
+    "business_name": "SHERATON SAND KEY RESORT - BEACHSIDE BITES",
+    "city": "CLEARWATER BEACH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9859406": {
+    "business_name": "CRABBY'S BEACHSIDE PAVILION",
+    "city": "CLEARWATER",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3088208": {
+    "business_name": "SILVER DOLLAR RV RESORT TRAP",
+    "city": "ODESSA",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5603873": {
+    "business_name": "STREAMSONG RESORT-3 MEAL RESTAURANT (P205)",
+    "city": "STREAMSONG",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5913452": {
+    "business_name": "HOMEWOOD SUITES PORT RICHEY",
+    "city": "PORT RICHEY",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6545859": {
+    "business_name": "MARRIOTT TOWNEPLACE SUITES",
+    "city": "LAKELAND",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6777686": {
+    "business_name": "STAYBRIDGE SUITES - LAKELAND WEST",
+    "city": "LAKELAND",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7001434": {
+    "business_name": "RENAISSANCE TAMPA INTERNATIONAL PLAZA HOTEL CATERI",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7195464": {
+    "business_name": "HAMPTON INN & SUITES",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7685630": {
+    "business_name": "HYATT HOUSE TAMPA AIRPORT WESTSHORE",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7788930": {
+    "business_name": "HYATT PLACE/HYATT HOUSE TAMPA DOWNTOWN",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8951573": {
+    "business_name": "HAMPTON INN AND SUITES RUSKIN",
+    "city": "RUSKIN",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5894313": {
+    "business_name": "COMFORT INN NORTH",
+    "city": "ST. PETERSBURG",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6800713": {
+    "business_name": "FAIRFIELD INN & SUITES",
+    "city": "ST. PETERSBURG",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7529315": {
+    "business_name": "SPA BEACH BISTRO",
+    "city": "ST. PETERSBURG",
+    "premium_score": 6.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3876032": {
+    "business_name": "HOMEWOOD SUITES",
+    "city": "TAMPA",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7584264": {
+    "business_name": "HOLIDAY INN EXPRESS AND SUITES TAMPA FAIRGROUNDS C",
+    "city": "TAMPA",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8754608": {
+    "business_name": "VILLAGE INN RESTAURANT",
+    "city": "ZEPHYRHILLS",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5269779": {
+    "business_name": "ECONO LODGE INN AND SUITES",
+    "city": "CLEARWATER",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6351139": {
+    "business_name": "HOLIDAY INN EXPRESS",
+    "city": "TEMPLE TERRACE",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7774161": {
+    "business_name": "HOLIDAY INN EXPRESS WILDWOOD",
+    "city": "WILDWOOD",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8457532": {
+    "business_name": "HAMPTON INN & SUITES BY HILTON",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9007260": {
+    "business_name": "HILTON GARDEN INN TAMPA NORTH",
+    "city": "TEMPLE TERRACE",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2344800": {
+    "business_name": "HAMPTON INN &SUITES",
+    "city": "ST. PETERSBURG",
+    "premium_score": 7.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7454692": {
+    "business_name": "TW RESORT CONVENTION CENTER",
+    "city": "ST. PETE BEACH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7545872": {
+    "business_name": "TIERRA VERDE RESIDENCE INN BY MARRIOTT",
+    "city": "ST. PETERSBURG",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8372434": {
+    "business_name": "KEEGAN'S SEAFOOD GRILLE",
+    "city": "INDIAN ROCKS BEACH",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8386255": {
+    "business_name": "KAIA BOWLS CLEARWATER BEACH N",
+    "city": "CLEARWATER BEACH",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6022000": {
+    "business_name": "HYATT PLACE TAMPA BUSCH GARDENS",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6650673": {
+    "business_name": "QUALITY INN AIRPORT CRUISE PORT",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7793550": {
+    "business_name": "HOLIDAY INN NORTH TAMPA USF",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8281460": {
+    "business_name": "HOME2 SUITES",
+    "city": "DAVENPORT",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8357051": {
+    "business_name": "SLEEP INN",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9098072": {
+    "business_name": "HOME2 SUITES BY HILTON LAKELAND NORTH I4",
+    "city": "LAKELAND",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9260541": {
+    "business_name": "QUALITY INN BROOKSVILLE",
+    "city": "BROOKSVILLE",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7095659": {
+    "business_name": "THE VINOY RESORT AND GOLF CLUB - FRED'S BAR",
+    "city": "ST. PETERSBURG",
+    "premium_score": 9.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6607616": {
+    "business_name": "DON CESAR - BEACON BAR & LOOKOUT",
+    "city": "ST.PETE BEACH",
+    "premium_score": 10.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9792927": {
+    "business_name": "BROKE N BOARD BAR & GRILL",
+    "city": "MADEIRA BEACH",
+    "premium_score": 6.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9012903": {
+    "business_name": "RODEWAY INN DAVENPORT",
+    "city": "DAVENPORT",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2237190": {
+    "business_name": "KAHUNA'S BAR & GRILL",
+    "city": "ST PETERSBURG",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2237191": {
+    "business_name": "SPORTS BAR & GRILL",
+    "city": "ST PETERSBURG",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2238303": {
+    "business_name": "BOBBY'S BISTRO & WINE BAR",
+    "city": "CLEARWATER",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2240203": {
+    "business_name": "HOLIDAY INN BREAKFAST BAR",
+    "city": "DUNEDIN",
+    "premium_score": 7.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2426310": {
+    "business_name": "UNDERTOW BEACH BAR",
+    "city": "ST.PETE BEACH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3043538": {
+    "business_name": "BAREFOOT BEACH HOUSE",
+    "city": "CLEARWATER",
+    "premium_score": 6.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "4049899": {
+    "business_name": "THE BAIT HOUSE TACKLE AND TAVERN",
+    "city": "CLEARWATER",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "4436727": {
+    "business_name": "BAMBOO BEACH BAR AND GRILL",
+    "city": "MADEIRA BEACH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6041584": {
+    "business_name": "SALTY'S ISLAND BAR AND GRILLE",
+    "city": "CLEARWATER",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6415982": {
+    "business_name": "CLEARWATER BEACH BAR",
+    "city": "CLEARWATER",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6608164": {
+    "business_name": "DON CESAR BANQUET KITCHEN/DON CLUB LOUNGE",
+    "city": "ST.PETE BEACH",
+    "premium_score": 10.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7116272": {
+    "business_name": "SEKUSHI SUSHI DUMPLING AND NOODLE BAR",
+    "city": "CLEARWATER",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7185640": {
+    "business_name": "GRAND PLAZA HOTEL SPINNERS LOUNGE",
+    "city": "ST.PETE BEACH",
+    "premium_score": 10.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8391098": {
+    "business_name": "COCOS CRUSH BAR NORTH BEACH",
+    "city": "CLEARWATER BEACH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9032401": {
+    "business_name": "HARRYS BEACH BAR",
+    "city": "ST. PETE BEACH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9553908": {
+    "business_name": "COCONUT CHARLIE'S BEACH BAR",
+    "city": "ST. PETE BEACH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3534972": {
+    "business_name": "HOLIDAY INN EXPRESS START BREAKFAST BAR",
+    "city": "SPRING HILL",
+    "premium_score": 7.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3700888": {
+    "business_name": "HOLIDAY INN EXPRESS",
+    "city": "LECANTO",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5281531": {
+    "business_name": "THE BEACH BAR",
+    "city": "SPRING HILL",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6288119": {
+    "business_name": "BEECHWOOD BARTOW HOTEL",
+    "city": "BARTOW",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7473228": {
+    "business_name": "HOLIDAY INN EXPRESS HOTEL",
+    "city": "RUSKIN",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6976569": {
+    "business_name": "HOLIDAY INN EXPRESS AND SUITES TRINITY",
+    "city": "TRINITY",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6983170": {
+    "business_name": "COMFORT INN",
+    "city": "WILDWOOD",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6908664": {
+    "business_name": "HYATT PLACE WESLEY CHAPEL",
+    "city": "LUTZ",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3885613": {
+    "business_name": "CRABBYS BEACH WALK & GRILL",
+    "city": "CLEARWATER",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7477491": {
+    "business_name": "KAROL HOTEL",
+    "city": "CLEARWATER",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7861163": {
+    "business_name": "HOME2 SUITES BY HILTON LARGO",
+    "city": "LARGO",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8784504": {
+    "business_name": "VILLAGE INN RESTAURANT",
+    "city": "OLDSMAR",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8613782": {
+    "business_name": "SPOT X HOTEL",
+    "city": "WESLEY CHAPEL",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9119704": {
+    "business_name": "SPRINGHILL SUITES BY MARRIOTT TAMPA BRANDON",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2236835": {
+    "business_name": "BEACH PIZZA PLUS",
+    "city": "REDINGTON SHORES",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6464952": {
+    "business_name": "RESIDENCE INN CLEARWATER DOWNTOWN",
+    "city": "CLEARWATER",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7274509": {
+    "business_name": "QUALITY INN AND SUITES",
+    "city": "TARPON SPRINGS",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8894000": {
+    "business_name": "HAMPTON INN AND SUITES CLEARWATER/ST. PETERSBURG U",
+    "city": "CLEARWATER",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9472776": {
+    "business_name": "LDVT ST PETE BEACH",
+    "city": "ST PETE BEACH",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5612352": {
+    "business_name": "HOLIDAY INN / EXPRESS -ROCKY POINT",
+    "city": "TAMPA",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5883423": {
+    "business_name": "CONEY ISLAND DRIVE-INN",
+    "city": "BROOKSVILLE",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7443861": {
+    "business_name": "FAIRFIELD INN RIVERVIEW",
+    "city": "RIVERVIEW",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2234055": {
+    "business_name": "BEACHCOMBER",
+    "city": "CLEARWATER BCH",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2235547": {
+    "business_name": "SHERATON RUSTYS",
+    "city": "CLEARWATER BCH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2235799": {
+    "business_name": "SHERATON POOLSIDE CAFE",
+    "city": "CLEARWATER BCH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2240484": {
+    "business_name": "HAMPTON INN & SUITES",
+    "city": "TARPON SPGS",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2240606": {
+    "business_name": "GULF QUEEN",
+    "city": "CLEARWATER",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3969857": {
+    "business_name": "HOLIDAY INN EXPRESS ST. PETE",
+    "city": "ST. PETERSBURG",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5231721": {
+    "business_name": "COMFORT INN & SUITES",
+    "city": "ST. PETERSBURG",
+    "premium_score": 6.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5238416": {
+    "business_name": "HOLIDAY INN EXPRESS OLDSMAR",
+    "city": "OLDSMAR",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6029797": {
+    "business_name": "LA QUINTA INN & SUITES CLEARWATER CENTRAL #0776",
+    "city": "CLEARWATER",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6047158": {
+    "business_name": "COURTYARD BY MARRIOTT MADEIRA BEACH",
+    "city": "MADEIRA BEACH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6119278": {
+    "business_name": "CADDY'S ON THE BEACH",
+    "city": "TREASURE ISLAND",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6301387": {
+    "business_name": "HAMPTON INN & SUITES",
+    "city": "LARGO",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6607738": {
+    "business_name": "DON CESAR RESORT SPA - TAKE 5",
+    "city": "ST.PETE BEACH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6607844": {
+    "business_name": "DON CESAR - MARITANA",
+    "city": "ST.PETE BEACH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6618888": {
+    "business_name": "DON CESAR - UNCLE ANDY'S MARKET",
+    "city": "ST.PETE BEACH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6659932": {
+    "business_name": "HOLIDAY INN EXPRESS HOTEL SEMINOLE FL",
+    "city": "ST PETERSBURG",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6669712": {
+    "business_name": "COMFORT SUITES CLEARWATER",
+    "city": "CLEARWATER",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6897593": {
+    "business_name": "PREMIUM SUITES PANTRY",
+    "city": "ST. PETERSBURG",
+    "premium_score": 6.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7185367": {
+    "business_name": "GRAND PLAZA HOTEL PENTHOUSE KITCHEN",
+    "city": "ST.PETE BEACH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7185397": {
+    "business_name": "GRAND PLAZA HOTEL LEVEL 11",
+    "city": "ST.PETE BEACH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7185625": {
+    "business_name": "GRAND PLAZA HOTEL BONGOS",
+    "city": "ST.PETE BEACH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7185632": {
+    "business_name": "GRAND PLAZA HOTEL CRYSTAL BALLROOM BANQUET FACILIT",
+    "city": "ST.PETE BEACH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7185671": {
+    "business_name": "BEACHCOMBER BEACH RESORT HOTEL",
+    "city": "ST.PETE BEACH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7185680": {
+    "business_name": "BEACHCOMBER BEACH RESORT HOTEL JIMMY B'S",
+    "city": "ST.PETE BEACH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7225357": {
+    "business_name": "QUALITY INN SUITES",
+    "city": "ST. PETERSBURG",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7640601": {
+    "business_name": "TRU BY HILTON ST PETERSBURG",
+    "city": "ST PETERSBURG",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7655878": {
+    "business_name": "SFMB TREASURE ISLAND PROPERTY",
+    "city": "TREASURE ISLAND",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7833547": {
+    "business_name": "BEACH WAVES GRILL",
+    "city": "INDIAN ROCKS BEACH",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8318364": {
+    "business_name": "HAMPTON INN",
+    "city": "PINELLAS PARK",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8332386": {
+    "business_name": "3 DAUGHTERS BREWING OF CLEARWATER BEACH",
+    "city": "CLEARWATER",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8381767": {
+    "business_name": "FAIRFIELD INN AND SUITES ST PETERSBURG CLEARWATER",
+    "city": "CLEARWATER",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8432078": {
+    "business_name": "TREAS ISLAND LLC",
+    "city": "TREASURE ISLAND",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8442298": {
+    "business_name": "THE DOLPHIN BEACH RESORT",
+    "city": "ST.PETE BEACH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8761650": {
+    "business_name": "SLEEP INN CLEARWATER",
+    "city": "CLEARWATER",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8808997": {
+    "business_name": "CY CLEARWATER BEACH",
+    "city": "CLEARWATER BEACH",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8903039": {
+    "business_name": "COURTYARD BY MARRIOTT TAMPA OLDSMAR",
+    "city": "OLDSMAR",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8903089": {
+    "business_name": "RESIDENCE INN BY MARRIOTT TAMPA OLDSMAR",
+    "city": "OLDSMAR",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9288339": {
+    "business_name": "HOMEWOOD SUITES CLEARWATER",
+    "city": "CLEARWATER",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9324248": {
+    "business_name": "HYATT REGENCY CLEARWATER",
+    "city": "CLEARWATER",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9461473": {
+    "business_name": "CARLOUEL BEACH AND YACHT CLUB",
+    "city": "CLEARWATER BEACH",
+    "premium_score": 6.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9493442": {
+    "business_name": "HOME2 SUITES BY HILTON CLEARWATER ST. PETERSBURG U",
+    "city": "CLEARWATER",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9531540": {
+    "business_name": "HOWARD JOHNSON BY WYNDHAM",
+    "city": "CLEARWATER",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9542495": {
+    "business_name": "SUNSHINE GROUNDS & GOODS RUM FISH BEACH RESORT",
+    "city": "ST.PETE BEACH",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2232605": {
+    "business_name": "SAIL INN",
+    "city": "NEW PORT RICHEY",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2233450": {
+    "business_name": "ROADSTAR HOTEL ZEPHYRHILLS",
+    "city": "ZEPHYRHILLS",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2252216": {
+    "business_name": "ROCKING CHAIR INN",
+    "city": "WEBSTER",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2762574": {
+    "business_name": "HAMPTON INN",
+    "city": "LAKELAND",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3322049": {
+    "business_name": "HOLIDAY INN EXPRESS RESTAURANT",
+    "city": "BROOKSVILLE",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3374696": {
+    "business_name": "BEST WESTERN AUBURNDALE INN & SUITES",
+    "city": "AUBURNDALE",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3421822": {
+    "business_name": "HOLIDAY INN EXPRESS CONTINENTAL BREAKFAST",
+    "city": "BARTOW",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3484337": {
+    "business_name": "COMFORT INN & SUITES",
+    "city": "LAKELAND",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3719217": {
+    "business_name": "HOLIDAY INN EXPRESS HOTEL & SUITES",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3740904": {
+    "business_name": "HOLIDAY INN",
+    "city": "WINTER HAVEN",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3804768": {
+    "business_name": "HAMPTON INN AND SUITES-TAMPA",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3813544": {
+    "business_name": "HOLIDAY INN EXPRESS",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3850984": {
+    "business_name": "HAMPTON INN & SUITES LAKELAND-SOUTH POLK PARKWAY",
+    "city": "LAKELAND",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3943292": {
+    "business_name": "LAQUINTA INN & SUITES #1039",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3953624": {
+    "business_name": "HOLIDAY INN EXPRESS & SUITES",
+    "city": "LAKELAND",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3989740": {
+    "business_name": "RAMADA INN",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "4103105": {
+    "business_name": "HAMPTON INN BY HILTON TAMPA FAIRGROUNDS CASINO",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "4163164": {
+    "business_name": "HAMPTON INN & SUITES",
+    "city": "PORT RICHEY",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "4170738": {
+    "business_name": "COMFORT INN",
+    "city": "SUN CITY CENTER",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "4280136": {
+    "business_name": "WILLIE'S INN",
+    "city": "DUNDEE",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "4344615": {
+    "business_name": "THE HAMPTON INN",
+    "city": "WINTER HAVEN",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5277052": {
+    "business_name": "MICROTEL INN & SUITES",
+    "city": "BUSHNELL",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5487477": {
+    "business_name": "LAKE SHIPP INN",
+    "city": "WINTER HAVEN",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5595719": {
+    "business_name": "LA QUINTA INN & SUITES NEW TAMPA I75",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5612358": {
+    "business_name": "HAMPTON INN- ROCKY POINT",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5624551": {
+    "business_name": "HAMPTON INN CRYSTAL RIVER FL",
+    "city": "CRYSTAL RIVER",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5681500": {
+    "business_name": "WESTGATE RESORT RIVER RANCH BANQUET KITCHEN/COMMIS",
+    "city": "RIVER RANCH",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "5978515": {
+    "business_name": "LAKE ROY BEACH INN",
+    "city": "WINTER HAVEN",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6038421": {
+    "business_name": "COMFORT SUITES",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6209684": {
+    "business_name": "QUALITY INN & SUITES TAMPA FAIRGROUND",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6259336": {
+    "business_name": "RIVER RANCH RV RESORT OWNERS ASSOCIATION INC",
+    "city": "RIVER RANCH",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6299810": {
+    "business_name": "FAIRFIELD INN & SUTIES TAMPA WESTSHORE AIRPORT",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6403531": {
+    "business_name": "HOWARD JOHNSON INN",
+    "city": "WINTER HAVEN",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6411823": {
+    "business_name": "HOLIDAY INN EXPRESS",
+    "city": "DAVENPORT",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6462351": {
+    "business_name": "HAMPTON INN WESLEY CHAPEL",
+    "city": "WESLEY CHAPEL",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6490651": {
+    "business_name": "DAYS INN & SUITES PORT RICHEY",
+    "city": "PORT RICHEY",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6553021": {
+    "business_name": "HAMPTON INN & SUITES TAMPA AIRPORT AVION PARK WEST",
+    "city": "TAMPA",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6581850": {
+    "business_name": "COUNTRY INN & SUITES TAMPA AIRPORT NORTH",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6592224": {
+    "business_name": "COURTYARD BY MARRIOTT TAMPA NORTH/I-75",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6601324": {
+    "business_name": "HOTEL AND SUITES SOUTH TAMPA",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6664474": {
+    "business_name": "COMFORT INN PLANT CITY",
+    "city": "PLANT CITY",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6708682": {
+    "business_name": "SPARK BY HILTON",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6756651": {
+    "business_name": "RESIDENCE INN BY MARRIOTT",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6772941": {
+    "business_name": "CAMP MACK RIVER RESORT",
+    "city": "LAKE WALES",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6863932": {
+    "business_name": "HOLIDAY INN EXPRESS & SUITES",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6924373": {
+    "business_name": "LA QUINTA INN &SUITES",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6996930": {
+    "business_name": "SLEEP INN",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7014318": {
+    "business_name": "RESIDENCE INN TAMPA DOWNTOWN",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7028665": {
+    "business_name": "AC HOTEL TAMPA AIRPORT",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7051718": {
+    "business_name": "EMBASSY SUITES BY HILTON TAMPA AIRPORT WESTSHORE",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7073441": {
+    "business_name": "SPRINGHILL SUITES TAMPA NORTH LAND O' LAKES",
+    "city": "LAND O LAKES",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7125178": {
+    "business_name": "SURESTAY HOTEL BY BEST WESTERN CLERMONT THEME PARK",
+    "city": "CLERMONT",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7149635": {
+    "business_name": "HILTON GARDEN INN WESLEY CHAPEL",
+    "city": "WESLEY CHAPEL",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7176002": {
+    "business_name": "HOME2 SUITES LAKELAND - SOUTH POLK PARKWAY",
+    "city": "LAKELAND",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7202980": {
+    "business_name": "TOWNEPLACE SUITES TAMPA WESTSHORE SOUTH (TPAXT)",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7236504": {
+    "business_name": "SUITES PANTRY LSA PLSA",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7311986": {
+    "business_name": "SUITES PARTNER USC PUSC",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7311996": {
+    "business_name": "SUITES PANTRY USA PUSA",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7312026": {
+    "business_name": "SUITES PANTRY LSB PLSB",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7350474": {
+    "business_name": "HAMPTON INN BROOKSVILLE",
+    "city": "BROOKSVILLE",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7375340": {
+    "business_name": "QUALITY INN",
+    "city": "CRYSTAL RIVER",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7387522": {
+    "business_name": "DAYS INN -BROOKSVILLE",
+    "city": "BROOKSVILLE",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7404195": {
+    "business_name": "HAMPTON INN",
+    "city": "ODESSA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7405734": {
+    "business_name": "FAIRFIELD INN & SUITES HOLIDAY TARPON SPRINGS",
+    "city": "HOLIDAY",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7571275": {
+    "business_name": "SPRINGHILL SUITES BY MARRIOTT - LAKELAND",
+    "city": "LAKELAND",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7594680": {
+    "business_name": "CONEY ISLAND DRIVE INN",
+    "city": "CRYSTAL RIVER",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7639779": {
+    "business_name": "LAQUINTA INN FOWLER-72455",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7688307": {
+    "business_name": "FAIRFIELD BY MARRIOTT INN & SUITES SUNCOAST PARKWA",
+    "city": "BROOKSVILLE",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7897739": {
+    "business_name": "TOWNEPLACE SUITES BY MARRIOTT PLANT CITY",
+    "city": "PLANT CITY",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7898224": {
+    "business_name": "TOWNEPLACE SUITES BY MARRIOTT",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7965479": {
+    "business_name": "HOME2 SUITES TAMPA",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8059524": {
+    "business_name": "MICROTEL INN & SUITES",
+    "city": "BROOKSVILLE",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8099884": {
+    "business_name": "HAMPTON INN/HOME 2 TAMPA CHANNELSIDE",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8199873": {
+    "business_name": "BIG BASS GRILL AND LAKEFRONT RESORT INC",
+    "city": "LAKE PANASOFFKEE",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8291876": {
+    "business_name": "HOLIDAY INN EXPRESS TAMPA BRANDON",
+    "city": "BRANDON",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8309540": {
+    "business_name": "HAMPTON INN",
+    "city": "DADE CITY",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8366194": {
+    "business_name": "THE RESORT AT CANOPY OAKS",
+    "city": "LAKE WALES",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8387253": {
+    "business_name": "EDEN RV RESORT AND LAND TRUST",
+    "city": "HUDSON",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8456653": {
+    "business_name": "TRAVELER'S REST RESORT SNACK SHACK",
+    "city": "DADE CITY",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8563776": {
+    "business_name": "MICROTEL INN AND SUITES",
+    "city": "SPRING HILL",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8675139": {
+    "business_name": "RESIDENCE INN TAMPA SUNCOAST PARKWAY AT NORTHPOINT",
+    "city": "LUTZ",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8686285": {
+    "business_name": "RAMADA INN DAVENPORT",
+    "city": "DAVENPORT",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8689947": {
+    "business_name": "QUALITY INN",
+    "city": "WEEKI WACHEE",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8695422": {
+    "business_name": "NIGHTS INN",
+    "city": "PLANT CITY",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8707857": {
+    "business_name": "HAMPTON INN",
+    "city": "DAVENPORT",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8747177": {
+    "business_name": "COMFORT INN & SUITES",
+    "city": "NEW PORT RICHEY",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8776652": {
+    "business_name": "HOLIDAY INN EXPRESS & SUITES TAMPA STADIUM",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8893407": {
+    "business_name": "STAYBRIDGE SUITES HOTEL",
+    "city": "WINTER HAVEN",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8933190": {
+    "business_name": "HAMPTON INN TAMPA-VETERANS EXPWY AIRPORT NORTH",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9027390": {
+    "business_name": "HAMPTON INN",
+    "city": "SPRING HILL",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9027762": {
+    "business_name": "RESIDENCE INN BY MARRIOTT",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9072537": {
+    "business_name": "TOWNEPLACE SUITES BY MARRIOTT TAMPA WESTSHORE",
+    "city": "TAMPA",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9111151": {
+    "business_name": "COURTYARD BY MARRIOTT TAMPA NORTHWEST",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9186528": {
+    "business_name": "SPRINGHILL SUITES TAMPA FIRST FLOOR",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9199899": {
+    "business_name": "VILLAGE INN RESTAURANT",
+    "city": "BRANDON",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9204369": {
+    "business_name": "HOME2 SUITES BY HILTON WINTER HAVEN",
+    "city": "WINTER HAVEN",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9235696": {
+    "business_name": "HYATT PLACE TAMPA AIRPORT/WESTSHORE",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9240175": {
+    "business_name": "RESIDENCE INN WESLEY CHAPEL",
+    "city": "WESLEY CHAPEL",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9248463": {
+    "business_name": "UNIVERSITY HOTEL TAMPA LLC",
+    "city": "TEMPLE TERRACE",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9363242": {
+    "business_name": "WINDSOR ISLAND RESORT",
+    "city": "DAVENPORT",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9436914": {
+    "business_name": "BALMORAL RESORT",
+    "city": "HAINES CITY",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9480828": {
+    "business_name": "QUALITY INN AIRPORT",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9635768": {
+    "business_name": "LA QUINTA INN AND SUITES",
+    "city": "BRANDON",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9637729": {
+    "business_name": "WESTIN TAMPA WATERSODE",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9740156": {
+    "business_name": "RESIDENCE INN TAMPA DOWNTOWN",
+    "city": "TAMPA",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "2508496": {
+    "business_name": "DAIQUIRI SHAK RAW BAR AND GRILL",
+    "city": "MADEIRA BEACH",
+    "premium_score": 6.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "6936115": {
+    "business_name": "VILLAGE INN RESTAURANT",
+    "city": "ST. PETERSBURG",
+    "premium_score": 7.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "8732528": {
+    "business_name": "LOCALZ SPORTS BAR & GRILL",
+    "city": "ST. PETERSBURG",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7691411": {
+    "business_name": "BIG BASS GRILL AND LAKEFRONT RESORT",
+    "city": "LAKE PANASOFFKEE",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "7323444": {
+    "business_name": "PARADISE GRILLE",
+    "city": "ST.PETE BEACH",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "4441676": {
+    "business_name": "VILLAGE INN",
+    "city": "LARGO",
+    "premium_score": 5.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3897967": {
+    "business_name": "CAPTAIN JACK'S WATERFRONT GRILLE",
+    "city": "TARPON SPRINGS",
+    "premium_score": 4.0,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "9097865": {
+    "business_name": "QUALITY INN",
+    "city": "ST PETERSBURG",
+    "premium_score": 4.5,
+    "dm_name": null,
+    "dm_title": null
+  },
+  "3214944": {
+    "business_name": "GUPPY'S ON THE BEACH",
+    "city": "INDIAN ROCKS BEACH",
+    "premium_score": 5.5,
+    "dm_name": null,
+    "dm_title": null
+  }
+}
