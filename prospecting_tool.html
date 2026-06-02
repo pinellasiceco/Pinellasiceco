@@ -1004,6 +1004,12 @@ header{background:var(--navy);
     </div>
 
     <div class="dc" style="margin-top:12px">
+      <div class="dct">&#x2B50; Strategic Contacts</div>
+      <div style="font-size:9px;color:var(--sub);margin-bottom:8px">Import decision maker names and titles for Premium accounts (Director of Engineering, GM, etc.). Does not overwrite contacts you have entered manually.</div>
+      <button class="xbtn" onclick="importStrategicContacts()" ontouchend="event.preventDefault();importStrategicContacts()" style="width:100%;background:#0369a1;color:#fff;border-color:#0369a1;font-weight:700">&#x1F4E5; Import Strategic Contacts</button>
+    </div>
+
+    <div class="dc" style="margin-top:12px">
       <div class="dct">&#x1F4E4; Export &amp; Reset</div>
       <button class="xbtn" onclick="exportCSV()" style="margin-bottom:6px;width:100%">Export Pipeline to CSV</button>
       <button class="xbtn" onclick="exportDirectoryData()" style="background:#059669;color:#fff;border-color:#059669;margin-bottom:10px;width:100%">&#x1F4E5; Export Directory Data</button>
@@ -4282,8 +4288,13 @@ function showCard(id){
     // Decision maker fields
     +'<div style="margin-bottom:10px;padding:8px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:7px">'
     +'<div style="font-size:9px;font-weight:700;color:#0369a1;margin-bottom:6px">&#x1F4F1; Decision Maker &mdash; for text follow-ups</div>'
+    +(c.dm_name?'<div style="font-size:11px;font-weight:600;color:#0f172a;margin-bottom:4px">'+c.dm_name+(c.dm_title?'<span style="font-size:10px;font-weight:400;color:#64748b;margin-left:4px">&middot; '+c.dm_title+'</span>':'')+'</div>':'')
     +'<div style="display:flex;gap:5px;margin-bottom:5px">'
     +'<input id="sc-dm-name" type="text" value="'+(c.dm_name||'')+'" placeholder="First name (optional)" '
+    +'style="flex:1;padding:7px;border:1px solid #bae6fd;border-radius:6px;font-size:12px;font-family:inherit;background:#fff;color:#1e293b;outline:none">'
+    +'</div>'
+    +'<div style="display:flex;gap:5px;margin-bottom:5px">'
+    +'<input id="sc-dm-title" type="text" value="'+(c.dm_title||'')+'" placeholder="Title or role" '
     +'style="flex:1;padding:7px;border:1px solid #bae6fd;border-radius:6px;font-size:12px;font-family:inherit;background:#fff;color:#1e293b;outline:none">'
     +'</div>'
     +'<div style="display:flex;gap:5px">'
@@ -4522,9 +4533,11 @@ function showCard(id){
     // DM save
     if(bid==='sc-save-dm'){
       var dmName=(document.getElementById('sc-dm-name')||{}).value||'';
+      var dmTitle=(document.getElementById('sc-dm-title')||{}).value||'';
       var dmPhone=((document.getElementById('sc-dm-phone')||{}).value||'').replace(/\D/g,'');
       if(!customers[p.id])customers[p.id]={name:p.name,address:p.address,city:p.city,phone:ph,machines:p.machines,status:'prospect'};
       customers[p.id].dm_name=dmName;
+      customers[p.id].dm_title=dmTitle;
       customers[p.id].dm_phone=dmPhone;
       customers[p.id].nudge_dismissed=false;
       custSave();
@@ -4918,6 +4931,32 @@ function addPhone(){
   // Re-render current view lightly
   if(tab==='all')rA();
   else if(tab==='today')renderKPIs();
+}
+
+// STRATEGIC CONTACTS IMPORT
+function importStrategicContacts(){
+  var url='https://pinellasiceco.github.io/Pinellasiceco/docs/data/strategic_contacts.json';
+  fetch(url)
+    .then(function(r){return r.json();})
+    .then(function(data){
+      var count=0;
+      var keys=Object.keys(data);
+      for(var i=0;i<keys.length;i++){
+        var pid=keys[i];
+        var contact=data[pid];
+        if(!contact.dm_name)continue;
+        if(customers[pid]&&customers[pid].dm_name&&customers[pid].dm_name!==contact.dm_name)continue;
+        if(!customers[pid])customers[pid]={};
+        customers[pid].dm_name=contact.dm_name;
+        customers[pid].dm_title=contact.dm_title||'';
+        count++;
+      }
+      custSave();
+      toast(count+' strategic contacts imported');
+    })
+    .catch(function(){
+      toast('Import failed — check connection');
+    });
 }
 
 // EXPORT
