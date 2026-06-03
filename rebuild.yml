@@ -47,7 +47,8 @@ jobs:
           git checkout origin/main -- docs/data/     2>/dev/null || true
           git checkout origin/main -- docs/report/   2>/dev/null || true
           git checkout origin/main -- docs/explore/  2>/dev/null || true
-          git checkout origin/main -- docs/history/  2>/dev/null || true
+          git checkout origin/main -- docs/history/   2>/dev/null || true
+          git checkout origin/main -- cleanscore.json 2>/dev/null || true
 
       - name: Commit and push
         run: |
