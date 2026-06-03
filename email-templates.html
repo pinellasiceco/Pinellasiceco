@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Email Templates | Pinellas Ice Co.</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0f1f38;
+  --gold: #c9973a;
+  --ice: #5b9fd4;
+  --green: #1a7a45;
+  --green-bg: #e8f5ee;
+  --amber: #8a5c00;
+  --amber-bg: #fdf6e0;
+  --purple: #5a2a7a;
+  --purple-bg: #f4eefb;
+  --gray: #6b7280;
+  --border: #dde2ea;
+  --ink: #1a2535;
+  --bg: #f4f6f9;
+  --card: #ffffff;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  font-family: 'Barlow', sans-serif;
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* HEADER */
+.topbar {
+  background: var(--navy);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.topbar img { height: 26px; width: auto; }
+.topbar-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  color: white;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  flex: 1;
+}
+.topbar-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.4);
+}
+
+/* PAGE HEADER */
+.page-header {
+  padding: 28px 20px 20px;
+  border-bottom: 1px solid var(--border);
+  background: white;
+}
+.page-header h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--navy);
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  margin-bottom: 4px;
+}
+.page-header p {
+  font-size: 13px;
+  color: var(--gray);
+}
+
+/* NAV TABS */
+.tabs {
+  background: white;
+  padding: 0 20px;
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--border);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--gray);
+  padding: 12px 16px;
+  cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  user-select: none;
+  transition: color .15s, border-color .15s;
+}
+.tab:hover { color: var(--navy); }
+.tab.active { color: var(--navy); border-bottom-color: var(--navy); }
+
+/* SECTIONS */
+.section {
+  display: none;
+  padding: 20px;
+}
+.section.active { display: block; }
+
+/* TEMPLATE CARD */
+.template-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.tc-header {
+  padding: 16px 18px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.tc-meta { flex: 1; }
+.tc-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.badge-sales { background: #e8f0fb; color: #1a4a7a; }
+.badge-client { background: var(--green-bg); color: var(--green); }
+.tc-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--navy);
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  line-height: 1.1;
+  margin-bottom: 3px;
+}
+.tc-when {
+  font-size: 12px;
+  color: var(--gray);
+  font-style: italic;
+}
+.copy-all-btn {
+  flex-shrink: 0;
+  background: var(--navy);
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background .15s;
+  white-space: nowrap;
+}
+.copy-all-btn:hover { background: #162840; }
+.copy-all-btn.copied { background: var(--green); }
+
+/* EMAIL FIELDS */
+.tc-body { padding: 18px; }
+.email-field { margin-bottom: 16px; }
+.email-field:last-child { margin-bottom: 0; }
+.field-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.copy-field-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--gray);
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all .15s;
+}
+.copy-field-btn:hover { border-color: var(--navy); color: var(--navy); }
+.copy-field-btn.copied { border-color: var(--green); color: var(--green); background: var(--green-bg); }
+
+.field-content {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 14px;
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.65;
+  white-space: pre-wrap;
+  font-family: 'Barlow', sans-serif;
+  cursor: text;
+  user-select: text;
+}
+.field-content .placeholder {
+  background: rgba(201,151,58,.15);
+  color: var(--amber);
+  border-radius: 3px;
+  padding: 0 3px;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+/* NOTES */
+.tc-note {
+  padding: 12px 18px;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--gray);
+  font-style: italic;
+  line-height: 1.5;
+}
+.tc-note strong { color: var(--ink); font-weight: 600; font-style: normal; }
+
+/* LINKS QUICK REF */
+.links-card {
+  background: var(--navy);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.links-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+.link-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.link-row:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+.link-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: rgba(255,255,255,.7);
+  width: 130px;
+  flex-shrink: 0;
+}
+.link-url {
+  font-size: 12px;
+  color: var(--ice);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: rgba(91,159,212,.4);
+}
+.link-copy-btn {
+  background: none;
+  border: 1px solid rgba(255,255,255,.2);
+  color: rgba(255,255,255,.5);
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.link-copy-btn:hover { border-color: rgba(255,255,255,.5); color: rgba(255,255,255,.8); }
+.link-copy-btn.copied { border-color: var(--green); color: #4db87a; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <img src="https://raw.githubusercontent.com/pinellasiceco/Pinellasiceco/main/pic_logo.png"
+       alt="Pinellas Ice Co."
+       onerror="this.style.display='none'">
+  <div class="topbar-name">Pinellas Ice Co.</div>
+  <div class="topbar-label">Email Templates</div>
+</div>
+
+<div class="page-header">
+  <h1>Email Templates</h1>
+  <p>Copy and customize. Highlighted fields in <span style="background:rgba(201,151,58,.15);color:var(--amber);padding:0 4px;border-radius:2px;font-weight:600;font-size:12px">brackets</span> need to be filled in.</p>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('sales', this)">Sales Follow-Up</div>
+  <div class="tab" onclick="switchTab('client', this)">Client Templates</div>
+  <div class="tab" onclick="switchTab('links', this)">Quick Links</div>
+</div>
+
+<!-- SALES SECTION -->
+<div id="sales" class="section active">
+
+  <!-- 1. WALK-IN FOLLOW-UP -->
+  <div class="template-card">
+    <div class="tc-header">
+      <div class="tc-meta">
+        <div class="tc-badge badge-sales">Sales</div>
+        <div class="tc-name">Walk-In Follow-Up</div>
+        <div class="tc-when">Send within 2 hours of leaving — any walk-in that didn&#39;t close same day</div>
+      </div>
+      <button class="copy-all-btn" onclick="copyAll(this, 'walkin')">Copy All</button>
+    </div>
+    <div class="tc-body">
+      <div class="email-field">
+        <div class="field-label">
+          Subject Line
+          <button class="copy-field-btn" onclick="copyField(this, 'walkin-subject')">Copy</button>
+        </div>
+        <div class="field-content" id="walkin-subject">Quick follow-up from Pinellas Ice Co.</div>
+      </div>
+      <div class="email-field">
+        <div class="field-label">
+          Body
+          <button class="copy-field-btn" onclick="copyField(this, 'walkin-body')">Copy</button>
+        </div>
+        <div class="field-content" id="walkin-body">Hi <span class="placeholder">[Name]</span>,
+
+Thanks for taking a few minutes to chat today at <span class="placeholder">[Business Name]</span>. Here&#39;s everything in one place:
+
+What we do: pinellasiceco.github.io/Pinellasiceco/pricing.html
+What a visit looks like: pinellasiceco.github.io/Pinellasiceco/process.html
+
+The short version — we clean and ATP-certify commercial ice machines on a quarterly basis at $129/month. Every visit includes a bioluminescence test that gives you a documented RLU score before and after. Most machines we test fail the FDA standard of 10 RLU on the first visit.
+
+The first inspection is always free. No obligation to continue.
+
+Happy to answer any questions — just reply here or call me directly.
+
+John
+Pinellas Ice Co.
+(727) 855-6873</div>
+      </div>
+    </div>
+    <div class="tc-note"><strong>Tip:</strong> If you showed the device, reference the reading in the subject line instead — see the ATP Follow-Up template.</div>
+  </div>
+
+  <!-- 2. POST-ATP DEMO -->
+  <div class="template-card">
+    <div class="tc-header">
+      <div class="tc-meta">
+        <div class="tc-badge badge-sales">Sales</div>
+        <div class="tc-name">Post-ATP Demo</div>
+        <div class="tc-when">Send when you ran a live test during the walk-in — reference the actual number</div>
+      </div>
+      <button class="copy-all-btn" onclick="copyAll(this, 'atp')">Copy All</button>
+    </div>
+    <div class="tc-body">
+      <div class="email-field">
+        <div class="field-label">
+          Subject Line
+          <button class="copy-field-btn" onclick="copyField(this, 'atp-subject')">Copy</button>
+        </div>
+        <div class="field-content" id="atp-subject">Your machine scored <span class="placeholder">[X]</span> RLU today</div>
+      </div>
+      <div class="email-field">
+        <div class="field-label">
+          Body
+          <button class="copy-field-btn" onclick="copyField(this, 'atp-body')">Copy</button>
+        </div>
+        <div class="field-content" id="atp-body">Hi <span class="placeholder">[Name]</span>,
+
+As I mentioned — the ice machine at <span class="placeholder">[Business Name]</span> tested at <span class="placeholder">[X]</span> RLU this afternoon. The FDA acceptable standard for food contact surfaces is 10 RLU.
+
+Here&#39;s a breakdown of what that number means and what we do about it:
+pinellasiceco.github.io/Pinellasiceco/atp-explainer.html
+
+After a full service visit, we typically bring machines down to under 5 RLU. We document both scores and issue a CleanScore certificate with a QR code your health inspector can scan to verify.
+
+If you&#39;d like to get it cleaned and certified before your next inspection, you can book directly here:
+meetings-na2.hubspot.com/stripe/ice-machine-on-site?uuid=9a40fc22-dce2-4258-8e4f-28aa75c892da
+
+Or just reply and we can coordinate directly.
+
+John
+Pinellas Ice Co.
+(727) 855-6873</div>
+      </div>
+    </div>
+    <div class="tc-note"><strong>Tip:</strong> The subject line with the actual score is the highest-open subject line you have. Use the real number — it stops people from skimming.</div>
+  </div>
+
+  <!-- 3. CITED ACCOUNT -->
+  <div class="template-card">
+    <div class="tc-header">
+      <div class="tc-meta">
+        <div class="tc-badge badge-sales">Sales</div>
+        <div class="tc-name">Cited Account</div>
+        <div class="tc-when">Send same day — active DBPR ice machine citation on record</div>
+      </div>
+      <button class="copy-all-btn" onclick="copyAll(this, 'cited')">Copy All</button>
+    </div>
+    <div class="tc-body">
+      <div class="email-field">
+        <div class="field-label">
+          Subject Line
+          <button class="copy-field-btn" onclick="copyField(this, 'cited-subject')">Copy</button>
+        </div>
+        <div class="field-content" id="cited-subject">Your ice machine citation — what happens next</div>
+      </div>
+      <div class="email-field">
+        <div class="field-label">
+          Body
+          <button class="copy-field-btn" onclick="copyField(this, 'cited-body')">Copy</button>
+        </div>
+        <div class="field-content" id="cited-body">Hi <span class="placeholder">[Name]</span>,
+
+I stopped by <span class="placeholder">[Business Name]</span> today — I&#39;d pulled your recent DBPR inspection record and saw the ice machine citation from <span class="placeholder">[date]</span>.
+
+Wanted to send you this before the follow-up inspection arrives — it explains exactly what the citation means, what the inspector will look for on their return visit, and what documentation actually resolves it:
+
+pinellasiceco.github.io/Pinellasiceco/dbpr-citation.html
+
+The short version: a service record showing someone cleaned it helps. An ATP bioluminescence score showing the machine passed biological standards helps more. That&#39;s what we provide.
+
+We have same-week availability and can have your machine certified before the follow-up. The first inspection is free.
+
+John
+Pinellas Ice Co.
+(727) 855-6873</div>
+      </div>
+    </div>
+    <div class="tc-note"><strong>Tip:</strong> Don&#39;t oversell urgency — the DBPR page does that. Keep the email factual and helpful in tone. You&#39;re informing, not pressuring.</div>
+  </div>
+
+  <!-- 4. ALREADY HAVE SOMEONE -->
+  <div class="template-card">
+    <div class="tc-header">
+      <div class="tc-meta">
+        <div class="tc-badge badge-sales">Sales</div>
+        <div class="tc-name">Already Have Someone</div>
+        <div class="tc-when">Send when they said "we already use Crystal Ice / Easy Ice / someone else"</div>
+      </div>
+      <button class="copy-all-btn" onclick="copyAll(this, 'incumbent')">Copy All</button>
+    </div>
+    <div class="tc-body">
+      <div class="email-field">
+        <div class="field-label">
+          Subject Line
+          <button class="copy-field-btn" onclick="copyField(this, 'incumbent-subject')">Copy</button>
+        </div>
+        <div class="field-content" id="incumbent-subject">Leaving this here in case it&#39;s ever useful</div>
+      </div>
+      <div class="email-field">
+        <div class="field-label">
+          Body
+          <button class="copy-field-btn" onclick="copyField(this, 'incumbent-body')">Copy</button>
+        </div>
+        <div class="field-content" id="incumbent-body">Hi <span class="placeholder">[Name]</span>,
+
+Totally understand — no pressure at all.
+
+One thing worth knowing is that most commercial ice machine cleaning services, including <span class="placeholder">[Crystal Ice / Easy Ice]</span>, don&#39;t include ATP bioluminescence testing. They clean the machine and leave a service record. We clean the machine and leave a documented RLU score, a CleanScore certificate, and a QR sticker your health inspector can scan to verify the result.
+
+Here&#39;s a quick side-by-side if it&#39;s ever useful:
+<span class="placeholder">[comparison link — use Crystal Ice or Easy Ice version]</span>
+
+If your situation ever changes — new citation, upcoming inspection, or just wondering what your machine actually scores — feel free to reach out. The first test is always free.
+
+John
+Pinellas Ice Co.
+(727) 855-6873</div>
+      </div>
+    </div>
+    <div class="tc-note"><strong>Crystal Ice comparison:</strong> pinellasiceco.github.io/Pinellasiceco/comparison.html &nbsp;|&nbsp; <strong>Easy Ice:</strong> pinellasiceco.github.io/Pinellasiceco/comparison-easyice.html</div>
+  </div>
+
+</div>
+
+<!-- CLIENT SECTION -->
+<div id="client" class="section">
+
+  <!-- 5. NEW CLIENT WELCOME -->
+  <div class="template-card">
+    <div class="tc-header">
+      <div class="tc-meta">
+        <div class="tc-badge badge-client">Client</div>
+        <div class="tc-name">New Client Welcome</div>
+        <div class="tc-when">Send immediately after closing — confirms everything, sets expectations</div>
+      </div>
+      <button class="copy-all-btn" onclick="copyAll(this, 'welcome')">Copy All</button>
+    </div>
+    <div class="tc-body">
+      <div class="email-field">
+        <div class="field-label">
+          Subject Line
+          <button class="copy-field-btn" onclick="copyField(this, 'welcome-subject')">Copy</button>
+        </div>
+        <div class="field-content" id="welcome-subject">Welcome to Pinellas Ice Co. — your first visit is confirmed</div>
+      </div>
+      <div class="email-field">
+        <div class="field-label">
+          Body
+          <button class="copy-field-btn" onclick="copyField(this, 'welcome-body')">Copy</button>
+        </div>
+        <div class="field-content" id="welcome-body">Hi <span class="placeholder">[Name]</span>,
+
+Welcome aboard — glad to have <span class="placeholder">[Business Name]</span> on the Pinellas Ice Co. schedule.
+
+Here&#39;s what to expect:
+
+First visit: <span class="placeholder">[Date]</span> at <span class="placeholder">[Time]</span>
+What happens: pinellasiceco.github.io/Pinellasiceco/process.html
+
+The visit takes about 60–90 minutes. We&#39;ll run a pre-clean ATP test first so you can see your machine&#39;s baseline score, then do the full clean and post-test. You&#39;ll leave with a CleanScore certificate and a QR sticker on the machine.
+
+After the first visit, we&#39;ll schedule your next three quarterly dates and you&#39;ll get a reminder 48 hours before each one.
+
+Billing is $129/month starting after the first visit. Month-to-month — no contract.
+
+Any questions before then, just reply here or text/call me directly at (727) 855-6873.
+
+John
+Pinellas Ice Co.</div>
+      </div>
+    </div>
+    <div class="tc-note"><strong>Tip:</strong> Send this within 30 minutes of closing. Sets a professional tone from day one and reduces any buyer&#39;s remorse.</div>
+  </div>
+
+  <!-- 6. PRE-VISIT REMINDER -->
+  <div class="template-card">
+    <div class="tc-header">
+      <div class="tc-meta">
+        <div class="tc-badge badge-client">Client</div>
+        <div class="tc-name">Pre-Visit Reminder</div>
+        <div class="tc-when">Send 48 hours before each quarterly visit</div>
+      </div>
+      <button class="copy-all-btn" onclick="copyAll(this, 'reminder')">Copy All</button>
+    </div>
+    <div class="tc-body">
+      <div class="email-field">
+        <div class="field-label">
+          Subject Line
+          <button class="copy-field-btn" onclick="copyField(this, 'reminder-subject')">Copy</button>
+        </div>
+        <div class="field-content" id="reminder-subject">Your ice machine service is Thursday — a few quick notes</div>
+      </div>
+      <div class="email-field">
+        <div class="field-label">
+          Body
+          <button class="copy-field-btn" onclick="copyField(this, 'reminder-body')">Copy</button>
+        </div>
+        <div class="field-content" id="reminder-body">Hi <span class="placeholder">[Name]</span>,
+
+Just a quick heads-up — your quarterly ice machine service at <span class="placeholder">[Business Name]</span> is coming up:
+
+Date: <span class="placeholder">[Day, Date]</span>
+Time: <span class="placeholder">[Time]</span>
+Estimated duration: 60–90 minutes
+
+A couple of things that help:
+— Empty the ice bin if possible, or let me know if you&#39;d prefer I work around a full bin
+— If the machine is in a tight space, a few minutes of access clearance helps
+
+I&#39;ll have your ATP scores and CleanScore certificate ready before I leave.
+
+Any schedule changes needed, just reply or text me at (727) 855-6873.
+
+John
+Pinellas Ice Co.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. POST-SERVICE SUMMARY -->
+  <div class="template-card">
+    <div class="tc-header">
+      <div class="tc-meta">
+        <div class="tc-badge badge-client">Client</div>
+        <div class="tc-name">Post-Service Summary</div>
+        <div class="tc-when">Send within 1 hour of completing each visit</div>
+      </div>
+      <button class="copy-all-btn" onclick="copyAll(this, 'summary')">Copy All</button>
+    </div>
+    <div class="tc-body">
+      <div class="email-field">
+        <div class="field-label">
+          Subject Line
+          <button class="copy-field-btn" onclick="copyField(this, 'summary-subject')">Copy</button>
+        </div>
+        <div class="field-content" id="summary-subject"><span class="placeholder">[Business Name]</span> — certified clean ✓ ATP results inside</div>
+      </div>
+      <div class="email-field">
+        <div class="field-label">
+          Body
+          <button class="copy-field-btn" onclick="copyField(this, 'summary-body')">Copy</button>
+        </div>
+        <div class="field-content" id="summary-body">Hi <span class="placeholder">[Name]</span>,
+
+Your ice machine is certified clean. Here&#39;s the record from today&#39;s visit:
+
+Establishment: <span class="placeholder">[Business Name]</span>
+Date: <span class="placeholder">[Date]</span>
+Technician: John, Pinellas Ice Co.
+
+ATP Results:
+Pre-clean score:  <span class="placeholder">[X]</span> RLU
+Post-clean score: <span class="placeholder">[X]</span> RLU
+FDA standard:     10 RLU ✓ PASSED
+
+Your CleanScore certificate is now active — the QR sticker on your machine links directly to the verified record. Any health inspector can scan it.
+
+Your next quarterly service is scheduled for <span class="placeholder">[Date]</span>. You&#39;ll get a reminder 48 hours out.
+
+Let me know if you have any questions.
+
+John
+Pinellas Ice Co.
+(727) 855-6873</div>
+      </div>
+    </div>
+    <div class="tc-note"><strong>Tip:</strong> The post-service email with actual scores is your strongest retention tool. It makes the value tangible every single visit and builds the paper trail that matters at inspection time.</div>
+  </div>
+
+</div>
+
+<!-- QUICK LINKS -->
+<div id="links" class="section">
+
+  <div class="links-card">
+    <div class="links-title">Sales Asset Pages</div>
+
+    <div class="link-row">
+      <div class="link-name">Pricing</div>
+      <div class="link-url">pinellasiceco.github.io/Pinellasiceco/pricing.html</div>
+      <button class="link-copy-btn" onclick="copyLink(this, 'https://pinellasiceco.github.io/Pinellasiceco/pricing.html')">Copy</button>
+    </div>
+    <div class="link-row">
+      <div class="link-name">Process</div>
+      <div class="link-url">pinellasiceco.github.io/Pinellasiceco/process.html</div>
+      <button class="link-copy-btn" onclick="copyLink(this, 'https://pinellasiceco.github.io/Pinellasiceco/process.html')">Copy</button>
+    </div>
+    <div class="link-row">
+      <div class="link-name">ATP Explainer</div>
+      <div class="link-url">pinellasiceco.github.io/Pinellasiceco/atp-explainer.html</div>
+      <button class="link-copy-btn" onclick="copyLink(this, 'https://pinellasiceco.github.io/Pinellasiceco/atp-explainer.html')">Copy</button>
+    </div>
+    <div class="link-row">
+      <div class="link-name">DBPR Citation</div>
+      <div class="link-url">pinellasiceco.github.io/Pinellasiceco/dbpr-citation.html</div>
+      <button class="link-copy-btn" onclick="copyLink(this, 'https://pinellasiceco.github.io/Pinellasiceco/dbpr-citation.html')">Copy</button>
+    </div>
+    <div class="link-row">
+      <div class="link-name">vs Crystal Ice</div>
+      <div class="link-url">pinellasiceco.github.io/Pinellasiceco/comparison.html</div>
+      <button class="link-copy-btn" onclick="copyLink(this, 'https://pinellasiceco.github.io/Pinellasiceco/comparison.html')">Copy</button>
+    </div>
+    <div class="link-row">
+      <div class="link-name">vs Easy Ice</div>
+      <div class="link-url">pinellasiceco.github.io/Pinellasiceco/comparison-easyice.html</div>
+      <button class="link-copy-btn" onclick="copyLink(this, 'https://pinellasiceco.github.io/Pinellasiceco/comparison-easyice.html')">Copy</button>
+    </div>
+  </div>
+
+  <div class="links-card" style="margin-top:0">
+    <div class="links-title">Booking &amp; Contact</div>
+    <div class="link-row">
+      <div class="link-name">Book Inspection</div>
+      <div class="link-url">meetings-na2.hubspot.com/stripe/ice-machine-on-site</div>
+      <button class="link-copy-btn" onclick="copyLink(this, 'https://meetings-na2.hubspot.com/stripe/ice-machine-on-site?uuid=9a40fc22-dce2-4258-8e4f-28aa75c892da')">Copy</button>
+    </div>
+    <div class="link-row">
+      <div class="link-name">Phone</div>
+      <div class="link-url">(727) 855-6873</div>
+      <button class="link-copy-btn" onclick="copyLink(this, '(727) 855-6873')">Copy</button>
+    </div>
+    <div class="link-row">
+      <div class="link-name">Website</div>
+      <div class="link-url">www.pinellasiceco.com</div>
+      <button class="link-copy-btn" onclick="copyLink(this, 'https://www.pinellasiceco.com')">Copy</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function switchTab(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+}
+
+function getPlainText(elementId) {
+  const el = document.getElementById(elementId);
+  // Replace placeholder spans with bracket text
+  const clone = el.cloneNode(true);
+  clone.querySelectorAll('.placeholder').forEach(p => {
+    p.textContent = p.textContent;
+  });
+  return clone.innerText || clone.textContent;
+}
+
+function copyField(btn, id) {
+  const text = getPlainText(id);
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+function copyAll(btn, prefix) {
+  const subject = getPlainText(prefix + '-subject');
+  const body = getPlainText(prefix + '-body');
+  const text = 'SUBJECT: ' + subject + '\n\n' + body;
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = orig;
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+function copyLink(btn, url) {
+  navigator.clipboard.writeText(url).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+</script>
+
+</body>
+</html>
