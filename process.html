@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What a Visit Looks Like | Pinellas Ice Co.</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0f1f38;
+  --gold: #c9973a;
+  --ice: #5b9fd4;
+  --green: #1a7a45;
+  --green-bg: #e8f5ee;
+  --amber: #8a5c00;
+  --amber-bg: #fdf6e0;
+  --gray: #6b7280;
+  --border: #dde2ea;
+  --ink: #1a2535;
+  --bg: #f4f6f9;
+  --step1: #1a7a45;
+  --step2: #1a5a8a;
+  --step3: #8a3a00;
+  --step4: #5a1a7a;
+  --step5: #1a6a5a;
+  --step6: #7a5500;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: white;
+  font-family: 'Barlow', sans-serif;
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.topbar {
+  background: var(--navy);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.topbar img { height: 28px; width: auto; }
+.topbar-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  color: white;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.content { padding: 28px 20px; }
+
+h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1.1;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+h1 span { color: var(--ice); }
+
+.lead {
+  font-size: 15px;
+  color: var(--gray);
+  line-height: 1.7;
+  margin-bottom: 28px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+}
+.lead strong { color: var(--ink); font-weight: 600; }
+
+/* TIME BANNER */
+.time-banner {
+  background: var(--navy);
+  border-radius: 8px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.time-icon { font-size: 24px; flex-shrink: 0; }
+.time-text {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+.time-sub { font-size: 12px; color: rgba(255,255,255,.55); font-family: 'Barlow', sans-serif; font-weight: 400; letter-spacing: 0; text-transform: none; margin-top: 2px; }
+
+h2 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--navy);
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  margin-bottom: 20px;
+}
+
+/* STEPS */
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 28px;
+  position: relative;
+}
+.step {
+  display: flex;
+  gap: 16px;
+  position: relative;
+}
+.step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 19px;
+  top: 42px;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+.step-num {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  color: white;
+  position: relative;
+  z-index: 1;
+  margin-top: 2px;
+}
+.step-body {
+  padding: 4px 0 28px;
+  flex: 1;
+}
+.step-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  margin-bottom: 4px;
+}
+.step-time {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: 8px;
+}
+.step-desc {
+  font-size: 14px;
+  color: var(--gray);
+  line-height: 1.55;
+}
+.step-desc strong { color: var(--ink); font-weight: 600; }
+
+/* STEP DETAILS */
+.step-detail {
+  background: var(--bg);
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin-top: 10px;
+}
+.sd-items {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.sd-items li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--gray);
+  line-height: 1.4;
+}
+.sd-dot { flex-shrink: 0; font-size: 6px; margin-top: 6px; color: var(--gray); }
+
+/* RLU MINI */
+.rlu-mini {
+  background: var(--navy);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-top: 10px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.rlu-mini-item { text-align: center; flex: 1; }
+.rlu-mini-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1;
+}
+.rlu-mini-label { font-size: 10px; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: .08em; margin-top: 2px; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; }
+.rlu-arrow { font-size: 20px; color: rgba(255,255,255,.3); }
+
+.sec-divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+/* WHAT YOU KEEP */
+.keep-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.keep-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--gray);
+}
+.keep-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.keep-list li strong { color: var(--ink); font-weight: 600; display: block; font-size: 14px; }
+.keep-list li span { display: block; font-size: 13px; color: var(--gray); margin-top: 1px; }
+
+/* INFO BOX */
+.info-box {
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+  border-left: 3px solid;
+}
+.info-box.navy { background: #eef2f8; border-color: var(--navy); }
+.info-box.gold { background: var(--amber-bg); border-color: var(--gold); }
+.info-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.info-box.navy .info-label { color: var(--navy); }
+.info-box.gold .info-label { color: var(--amber); }
+.info-text { font-size: 14px; line-height: 1.6; color: var(--gray); }
+.info-box.navy .info-text { color: var(--ink); }
+.info-box.gold .info-text { color: #5a3800; }
+.info-text strong { font-weight: 600; }
+
+/* CTA */
+.cta-block {
+  background: var(--navy);
+  border-radius: 10px;
+  padding: 24px 20px;
+  margin-top: 8px;
+  text-align: center;
+}
+.cta-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.cta-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: white;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+.cta-sub { font-size: 13px; color: rgba(255,255,255,.6); margin-bottom: 18px; }
+.cta-btn {
+  display: block;
+  background: var(--gold);
+  color: var(--navy);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 14px 24px;
+  border-radius: 6px;
+  text-decoration: none;
+  margin-bottom: 10px;
+}
+.cta-phone { font-size: 14px; color: rgba(255,255,255,.55); }
+.cta-phone a { color: rgba(255,255,255,.7); text-decoration: none; }
+
+footer {
+  background: var(--bg);
+  padding: 20px;
+  text-align: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--gray);
+  border-top: 1px solid var(--border);
+  margin-top: 28px;
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <img src="https://raw.githubusercontent.com/pinellasiceco/Pinellasiceco/main/pic_logo.png"
+       alt="Pinellas Ice Co."
+       onerror="this.style.display='none'">
+  <div class="topbar-name">Pinellas Ice Co.</div>
+</div>
+
+<div class="content">
+
+  <h1>What a Visit<br><span>Looks Like</span></h1>
+  <p class="lead">Every Pinellas Ice Co. service visit follows the same six-step process — from the moment we arrive to the certification sticker on your machine. <strong>Here&#39;s exactly what happens, in order.</strong></p>
+
+  <div class="time-banner">
+    <div class="time-icon">⏱</div>
+    <div>
+      <div class="time-text">60 – 90 Minutes Total</div>
+      <div class="time-sub">We work around your schedule — before open, during slow hours, or at close.</div>
+    </div>
+  </div>
+
+  <h2>The Six Steps</h2>
+
+  <div class="steps">
+
+    <!-- STEP 1 -->
+    <div class="step">
+      <div class="step-num" style="background:#1a7a45">1</div>
+      <div class="step-body">
+        <div class="step-title" style="color:#1a7a45">Arrival &amp; DBPR Review</div>
+        <div class="step-time">5 minutes</div>
+        <div class="step-desc">Before touching the machine, we pull your establishment&#39;s current DBPR inspection record. We review any active citations, prior ice machine violations, and scheduled inspection windows. <strong>You get a summary of where you stand before we start.</strong></div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step">
+      <div class="step-num" style="background:#1a5a8a">2</div>
+      <div class="step-body">
+        <div class="step-title" style="color:#1a5a8a">Pre-Clean ATP Test</div>
+        <div class="step-time">5 minutes</div>
+        <div class="step-desc">We swab the ice-contact surfaces using a <strong>Hygiena EnSURE V2 luminometer</strong> before any cleaning begins. This establishes your baseline RLU score — the number that shows exactly how contaminated the machine is right now.</div>
+        <div class="rlu-mini">
+          <div class="rlu-mini-item">
+            <div class="rlu-mini-num" style="color:#e05252">312</div>
+            <div class="rlu-mini-label">Typical pre-clean</div>
+          </div>
+          <div class="rlu-arrow">→</div>
+          <div class="rlu-mini-item">
+            <div class="rlu-mini-num" style="color:#4db87a">&#60;5</div>
+            <div class="rlu-mini-label">Target post-clean</div>
+          </div>
+          <div class="rlu-arrow" style="opacity:0">→</div>
+          <div class="rlu-mini-item">
+            <div class="rlu-mini-num" style="color:rgba(255,255,255,.4)">10</div>
+            <div class="rlu-mini-label">FDA standard</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step">
+      <div class="step-num" style="background:#8a3a00">3</div>
+      <div class="step-body">
+        <div class="step-title" style="color:#8a3a00">Disassembly &amp; Inspection</div>
+        <div class="step-time">10 minutes</div>
+        <div class="step-desc">We remove accessible panels and components to reach all water-contact surfaces. We inspect for visible mold, biofilm, scale buildup, filter condition, and any mechanical issues worth noting.</div>
+        <div class="step-detail">
+          <ul class="sd-items">
+            <li><span class="sd-dot">●</span> Ice-making components and evaporator plates</li>
+            <li><span class="sd-dot">●</span> Water distribution system and inlet lines</li>
+            <li><span class="sd-dot">●</span> Ice bin interior and bin liner</li>
+            <li><span class="sd-dot">●</span> Air filters and condenser (if accessible)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step">
+      <div class="step-num" style="background:#5a1a7a">4</div>
+      <div class="step-body">
+        <div class="step-title" style="color:#5a1a7a">Descale &amp; Deep Clean</div>
+        <div class="step-time">30 – 45 minutes</div>
+        <div class="step-desc">The core of the service. We use a <strong>Nucalgon descaler</strong> to break down mineral deposits and scale buildup, followed by a full sanitization of all water-contact surfaces. Removes biofilm, mold, bacteria, and the scale that traps contamination between visits.</div>
+        <div class="step-detail">
+          <ul class="sd-items">
+            <li><span class="sd-dot">●</span> Descaling cycle — mineral and scale removal</li>
+            <li><span class="sd-dot">●</span> Sanitization of evaporator, distribution lines, bin</li>
+            <li><span class="sd-dot">●</span> Manual scrubbing of accessible surfaces</li>
+            <li><span class="sd-dot">●</span> Flush and rinse cycle before reassembly</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="step">
+      <div class="step-num" style="background:#1a6a5a">5</div>
+      <div class="step-body">
+        <div class="step-title" style="color:#1a6a5a">Post-Clean ATP Verification</div>
+        <div class="step-time">5 minutes</div>
+        <div class="step-desc">We swab the same surfaces again and run a second ATP test. <strong>The machine must score at or below 10 RLU to pass.</strong> If it doesn&#39;t, we clean again. We don&#39;t leave until it passes — the certificate is only issued when the standard is met.</div>
+      </div>
+    </div>
+
+    <!-- STEP 6 -->
+    <div class="step">
+      <div class="step-num" style="background:#7a5500">6</div>
+      <div class="step-body">
+        <div class="step-title" style="color:#7a5500">Certification &amp; Sticker</div>
+        <div class="step-time">5 minutes</div>
+        <div class="step-desc">We issue a <strong>CleanScore certificate</strong> showing both RLU scores, the date, technician ID, and your establishment. A QR cert sticker goes on the machine — any health inspector, manager, or customer can scan it to verify the result in real time.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="sec-divider">
+
+  <!-- WHAT YOU KEEP -->
+  <h2>What You Have When We Leave</h2>
+
+  <ul class="keep-list">
+    <li>
+      <div class="keep-icon">📄</div>
+      <div>
+        <strong>CleanScore Certificate</strong>
+        <span>Pre-clean RLU, post-clean RLU, date, technician. PDF for your records and digital link for inspectors.</span>
+      </div>
+    </li>
+    <li>
+      <div class="keep-icon">🔲</div>
+      <div>
+        <strong>QR Cert Sticker on Your Machine</strong>
+        <span>Placed on the machine exterior. Scans to your live CleanScore record — verifiable by anyone.</span>
+      </div>
+    </li>
+    <li>
+      <div class="keep-icon">📋</div>
+      <div>
+        <strong>Service Record</strong>
+        <span>Dated documentation of work performed — for your files and for DBPR inspectors who ask for remediation proof.</span>
+      </div>
+    </li>
+    <li>
+      <div class="keep-icon">🧊</div>
+      <div>
+        <strong>A Machine That Passed</strong>
+        <span>Ice contact surfaces at or below 10 RLU. Verified, documented, certified.</span>
+      </div>
+    </li>
+  </ul>
+
+  <hr class="sec-divider">
+
+  <!-- SCHEDULING -->
+  <h2>Scheduling</h2>
+
+  <div class="info-box navy">
+    <div class="info-label">How It Works</div>
+    <div class="info-text">After the first visit, we schedule your next three quarterly visits in advance. You get a reminder 48 hours before each one. <strong>We come to you — no drop-off, no downtime beyond the 60–90 minute service window.</strong> We work around your operation.</div>
+  </div>
+
+  <div class="info-box gold">
+    <div class="info-label">Cited Accounts — Priority Scheduling</div>
+    <div class="info-text">If your establishment has an active DBPR ice machine citation, <strong>we prioritize same-week scheduling.</strong> The follow-up inspection comes unannounced. Getting documented ATP verification before it arrives is the fastest way to resolve the violation on record.</div>
+  </div>
+
+  <div class="cta-block">
+    <div class="cta-label">See It for Yourself</div>
+    <div class="cta-title">Free First Visit — No Obligation</div>
+    <div class="cta-sub">We&#39;ll run the pre-clean ATP test and show you your score before we do anything. Most machines fail. You&#39;ll see why this matters.</div>
+    <a href="https://meetings-na2.hubspot.com/stripe/ice-machine-on-site?uuid=9a40fc22-dce2-4258-8e4f-28aa75c892da" class="cta-btn">Book Free Inspection</a>
+    <div class="cta-phone">Or call: <a href="tel:7278556873">(727) 855-6873</a></div>
+  </div>
+
+</div>
+
+<footer>
+  Pinellas Ice Co. &nbsp;·&nbsp; Clearwater, FL &nbsp;·&nbsp; ATP-Verified Ice Machine Cleaning &nbsp;·&nbsp; PinellasIceCo.com
+</footer>
+
+</body>
+</html>
