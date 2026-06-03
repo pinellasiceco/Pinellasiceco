@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing & What's Included | Pinellas Ice Co.</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0f1f38;
+  --gold: #c9973a;
+  --ice: #5b9fd4;
+  --red: #c0392b;
+  --red-bg: #fdf0ee;
+  --green: #1a7a45;
+  --green-bg: #e8f5ee;
+  --amber: #8a5c00;
+  --amber-bg: #fdf6e0;
+  --gray: #6b7280;
+  --border: #dde2ea;
+  --ink: #1a2535;
+  --bg: #f4f6f9;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: white;
+  font-family: 'Barlow', sans-serif;
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.topbar {
+  background: var(--navy);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.topbar img { height: 28px; width: auto; }
+.topbar-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  color: white;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.content { padding: 28px 20px; }
+
+h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1.1;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+h1 span { color: var(--gold); }
+
+.lead {
+  font-size: 15px;
+  color: var(--gray);
+  line-height: 1.7;
+  margin-bottom: 28px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* PRICE CARD */
+.price-card {
+  background: var(--navy);
+  border-radius: 12px;
+  padding: 28px 24px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.price-card::before {
+  content: '';
+  position: absolute;
+  right: -30px;
+  top: -30px;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(91,159,212,.15), transparent 70%);
+  pointer-events: none;
+}
+.price-eyebrow {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.price-main {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+.price-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 64px;
+  font-weight: 900;
+  color: white;
+  line-height: 1;
+}
+.price-per {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: rgba(255,255,255,.5);
+}
+.price-annual {
+  font-size: 13px;
+  color: rgba(255,255,255,.45);
+  margin-bottom: 20px;
+}
+.price-divider {
+  border: none;
+  border-top: 1px solid rgba(255,255,255,.12);
+  margin-bottom: 20px;
+}
+.price-includes-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+.price-items {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.price-items li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: rgba(255,255,255,.85);
+}
+.pi-check { color: var(--gold); font-weight: 800; flex-shrink: 0; font-size: 14px; }
+.price-items li strong { color: white; font-weight: 600; }
+
+/* WHAT'S NOT INCLUDED */
+.not-included {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+.ni-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: 12px;
+}
+.ni-items {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ni-items li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--gray);
+  line-height: 1.4;
+}
+.ni-dash { color: var(--border); flex-shrink: 0; font-weight: 700; }
+
+h2 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--navy);
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  margin-bottom: 14px;
+}
+
+/* TERMS GRID */
+.terms-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.term-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+.term-icon { font-size: 20px; margin-bottom: 6px; }
+.term-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--navy);
+  letter-spacing: .04em;
+  margin-bottom: 4px;
+}
+.term-desc { font-size: 13px; color: var(--gray); line-height: 1.4; }
+
+.sec-divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+/* INFO BOX */
+.info-box {
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+  border-left: 3px solid;
+}
+.info-box.green { background: var(--green-bg); border-color: var(--green); }
+.info-box.navy { background: #eef2f8; border-color: var(--navy); }
+.info-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.info-box.green .info-label { color: var(--green); }
+.info-box.navy .info-label { color: var(--navy); }
+.info-text { font-size: 14px; line-height: 1.6; }
+.info-box.green .info-text { color: #0f4a25; }
+.info-box.navy .info-text { color: var(--ink); }
+.info-text strong { font-weight: 600; }
+
+/* FAQ */
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.faq-item {
+  border-bottom: 1px solid var(--border);
+  padding: 16px 18px;
+}
+.faq-item:last-child { border-bottom: none; }
+.faq-q {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--navy);
+  margin-bottom: 6px;
+}
+.faq-a { font-size: 13px; color: var(--gray); line-height: 1.5; }
+.faq-a strong { color: var(--ink); font-weight: 600; }
+
+/* CTA */
+.cta-block {
+  background: var(--navy);
+  border-radius: 10px;
+  padding: 24px 20px;
+  margin-top: 8px;
+  text-align: center;
+}
+.cta-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.cta-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: white;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+.cta-sub { font-size: 13px; color: rgba(255,255,255,.6); margin-bottom: 18px; line-height: 1.5; }
+.cta-btn {
+  display: block;
+  background: var(--gold);
+  color: var(--navy);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 14px 24px;
+  border-radius: 6px;
+  text-decoration: none;
+  margin-bottom: 10px;
+}
+.cta-phone { font-size: 14px; color: rgba(255,255,255,.55); }
+.cta-phone a { color: rgba(255,255,255,.7); text-decoration: none; }
+
+footer {
+  background: var(--bg);
+  padding: 20px;
+  text-align: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--gray);
+  border-top: 1px solid var(--border);
+  margin-top: 28px;
+}
+
+@media (max-width: 400px) {
+  .terms-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <img src="https://raw.githubusercontent.com/pinellasiceco/Pinellasiceco/main/pic_logo.png"
+       alt="Pinellas Ice Co."
+       onerror="this.style.display='none'">
+  <div class="topbar-name">Pinellas Ice Co.</div>
+</div>
+
+<div class="content">
+
+  <h1>Pricing &amp;<br><span>What&#39;s Included</span></h1>
+  <p class="lead">One plan. One price. Everything your ice machine needs to stay certified clean — with documentation every time.</p>
+
+  <!-- PRICE CARD -->
+  <div class="price-card">
+    <div class="price-eyebrow">&#10052; Certified Cleaning Plan</div>
+    <div class="price-main">
+      <div class="price-num">$129</div>
+      <div class="price-per">/month</div>
+    </div>
+    <div class="price-annual">$1,548/year &nbsp;·&nbsp; 4 certified visits &nbsp;·&nbsp; cancel anytime</div>
+    <div class="price-divider"></div>
+    <div class="price-includes-label">Everything included</div>
+    <ul class="price-items">
+      <li><span class="pi-check">✓</span> <span><strong>4 quarterly cleaning visits</strong> — every 90 days, on schedule</span></li>
+      <li><span class="pi-check">✓</span> <span><strong>ATP bioluminescence test</strong> every visit — before and after</span></li>
+      <li><span class="pi-check">✓</span> <span><strong>RLU score documented</strong> — objective proof of cleanliness</span></li>
+      <li><span class="pi-check">✓</span> <span><strong>Deep sanitization</strong> — all water-contact surfaces, bin, water lines</span></li>
+      <li><span class="pi-check">✓</span> <span><strong>Scale and mineral deposit removal</strong></span></li>
+      <li><span class="pi-check">✓</span> <span><strong>CleanScore certification</strong> issued after every visit</span></li>
+      <li><span class="pi-check">✓</span> <span><strong>QR cert sticker on your machine</strong> — health inspectors can scan and verify</span></li>
+      <li><span class="pi-check">✓</span> <span><strong>DBPR inspection history reviewed</strong> before every visit</span></li>
+      <li><span class="pi-check">✓</span> <span><strong>Service record</strong> for your files</span></li>
+    </ul>
+  </div>
+
+  <!-- NOT INCLUDED -->
+  <div class="not-included">
+    <div class="ni-title">Not Included — Billed Separately if Needed</div>
+    <ul class="ni-items">
+      <li><span class="ni-dash">—</span> Mechanical repairs (compressor, valves, board replacement)</li>
+      <li><span class="ni-dash">—</span> Water filter replacement (if needed, billed at cost)</li>
+      <li><span class="ni-dash">—</span> Emergency after-hours response (available on request)</li>
+    </ul>
+  </div>
+
+  <div class="info-box green">
+    <div class="info-label">No Surprises</div>
+    <div class="info-text">We tell you what we find before we charge for anything extra. <strong>Cleaning visits are always $129/month flat.</strong> If we notice something mechanical during a visit, we tell you — and you decide whether to address it. No upselling, no bundled repair packages.</div>
+  </div>
+
+  <hr class="sec-divider">
+
+  <!-- TERMS -->
+  <h2>Simple Terms</h2>
+  <div class="terms-grid">
+    <div class="term-card">
+      <div class="term-icon">📅</div>
+      <div class="term-title">Month-to-Month</div>
+      <div class="term-desc">No annual contract. No multi-year commitment. Pay monthly, stop anytime.</div>
+    </div>
+    <div class="term-card">
+      <div class="term-icon">🚫</div>
+      <div class="term-title">No Setup Fee</div>
+      <div class="term-desc">No upfront cost, no installation charge, no onboarding fee.</div>
+    </div>
+    <div class="term-card">
+      <div class="term-icon">❌</div>
+      <div class="term-title">No Cancellation Fee</div>
+      <div class="term-desc">Cancel anytime. We ask for 30 days notice. That&#39;s it.</div>
+    </div>
+    <div class="term-card">
+      <div class="term-icon">🏠</div>
+      <div class="term-title">You Own Your Machine</div>
+      <div class="term-desc">We service it. You keep it. No lease, no buyback, no equipment lock-in.</div>
+    </div>
+  </div>
+
+  <hr class="sec-divider">
+
+  <!-- FAQ -->
+  <h2>Common Questions</h2>
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-q">How often do you come out?</div>
+      <div class="faq-a">Every 90 days — four times per year. We schedule the visits in advance and send a reminder before each one. <strong>FDA and NSF guidelines recommend cleaning commercial ice machines at minimum every 6 months.</strong> We do it quarterly because more frequent cleaning means lower contamination levels and a faster clean each visit.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How long does a visit take?</div>
+      <div class="faq-a">Typically 60–90 minutes depending on machine size and contamination level. We work around your schedule — we can come before open, during slow hours, or at close.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Do I have to sign a contract?</div>
+      <div class="faq-a">No contract. Month-to-month billing. <strong>If you want to cancel, give us 30 days notice.</strong> We&#39;ll process your last visit and close the account. No fees, no questions.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What if my machine fails the ATP test after cleaning?</div>
+      <div class="faq-a">We don&#39;t leave until it passes. If the post-clean RLU score is above 10, we clean again. The certificate is only issued when the machine meets standard.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Do you handle repairs?</div>
+      <div class="faq-a">Cleaning and sanitation only — that&#39;s our specialty. If we spot a mechanical issue during a visit we&#39;ll tell you what we observed and recommend a refrigeration service provider. <strong>We don&#39;t upsell repairs we didn&#39;t come to do.</strong></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I start with just one visit?</div>
+      <div class="faq-a">Yes. The free inspection is always no-obligation. After that, most customers start with a one-time initial service before enrolling in the quarterly plan — especially if there&#39;s a DBPR citation to address first.</div>
+    </div>
+  </div>
+
+  <div class="info-box navy">
+    <div class="info-label">Pinellas County Only</div>
+    <div class="info-text">We serve Pinellas County exclusively — Clearwater, St. Petersburg, Largo, Dunedin, Tarpon Springs, Safety Harbor, and surrounding areas. <strong>Focused territory means faster scheduling and a technician who knows your inspection environment.</strong></div>
+  </div>
+
+  <div class="cta-block">
+    <div class="cta-label">Get Started</div>
+    <div class="cta-title">Free On-Site ATP Test</div>
+    <div class="cta-sub">We&#39;ll visit, test your machine, and show you the score. No charge, no obligation. Most machines fail.</div>
+    <a href="https://meetings-na2.hubspot.com/stripe/ice-machine-on-site?uuid=9a40fc22-dce2-4258-8e4f-28aa75c892da" class="cta-btn">Book Free Inspection</a>
+    <div class="cta-phone">Or call: <a href="tel:7278556873">(727) 855-6873</a></div>
+  </div>
+
+</div>
+
+<footer>
+  Pinellas Ice Co. &nbsp;·&nbsp; Clearwater, FL &nbsp;·&nbsp; ATP-Verified Ice Machine Cleaning &nbsp;·&nbsp; PinellasIceCo.com
+</footer>
+
+</body>
+</html>
