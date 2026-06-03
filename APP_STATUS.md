@@ -1,5 +1,5 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-06-02 (session 58 — Strategic & Gold contact research workflows, DM title field, import buttons) by Claude Code*
+*Last updated: 2026-06-03 (session 59 — Segment conversion tracker, playbook nav updates, partner page fixes) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
@@ -24,6 +24,22 @@
 - **`docs/protocol/` preserved in CI**: `rebuild.yml` `git checkout origin/main -- docs/protocol/` preserves static ATP protocol page through daily rebuilds
 - **`assets/` preserved in CI**: `rebuild.yml` `git checkout origin/main -- assets/` preserves signature image and other assets through daily rebuilds
 - **`build_violations_list.py` step**: `continue-on-error: true` — failure visible in Actions but non-blocking (session 54)
+
+### Reports Tab: Segment Conversion Tracker (session 59)
+- **`renderSegmentTracker()`** in `build.py` — new section injected into Reports tab, renders after the DBPR Citation to Client Conversion section
+- **Goal Progress card**: active client count vs. 30-client goal with a color-coded progress bar (green ≥30, amber ≥21, red below)
+- **Weekly Activity card**: unique prospects touched in the last 7 days vs. a goal of 20, with a progress bar
+- **Five segment rows**: Gold ⭐ / Repeat 🔄 / DBPR 📋 / Premium ★ / Golf ⛳ — each shows Total / Contacted / Closed / Close Rate / Target Range / Status badge (✓ On Track / ○ Getting There / ● Below Target)
+- **Target ranges**: Gold 20–28%, Repeat 10–15%, DBPR 5–10%, Premium 8–12%, Golf 15–20%
+- **Helper functions added**: `safeRate(a,b)`, `segStatusStyle(rate,low,high)`, `calcWeeklyContacts()`, `calcSegmentStats()`
+- **Data sources**: `P[]` array for segment filters, global `log[pid]` for contact history, `customers[pid].status` for closed status
+- **Segment filter logic** mirrors `setPreset()` exactly: Gold = `ice_gold===true`; Repeat = `(cit_repeat≥1 or cit_ice_count≥2) and !ice_gold`; DBPR = `ice_confirmed_dbpr and !ice_gold and cit_ice_count<2`; Premium = `!ice_confirmed_dbpr and premium_score≥4`; Golf = `venue_type==='golf'`
+
+### Sales Playbook Nav & Partner Page Fixes (session 59)
+- **Three new nav pills** in `sales_playbook_v2.html`: Pinellas Operator Census (`pinellas-ice-census.html`), Full Census & Demand Analysis (`pinellas-ice-full-census.html`), Intelligence Update (`pinellas-intelligence-update.html`)
+- **Email Templates nav pill** in `sales_playbook_v2.html`: links to `https://pinellasiceco.github.io/Pinellasiceco/email-templates.html`, opens `target="_blank"`
+- **Back buttons** on all three new census/intelligence docs — `position:fixed; top:12px; left:16px; z-index:999`; each styled with the file's own CSS variables; links back to `sales_playbook_v2.html`
+- **Logo URL fix** in `partner-coastline.html` and `partner-pelican.html`: 3 instances each corrected from `assets/pic_logo.png` to `pic_logo.png` in the raw GitHub URL
 
 ### Strategic & Gold Contact Research (session 58)
 - **`research_contacts.yml`**: GitHub Actions `workflow_dispatch` workflow — checks out repo, runs `research_contacts.py`, commits `docs/data/strategic_contacts.json` to main. Timeout 90 min. Fetch+rebase before push prevents conflict if main was updated during the long script run.
