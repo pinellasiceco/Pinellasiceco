@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Ice Machine Was Cited | Pinellas Ice Co.</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0f1f38;
+  --gold: #c9973a;
+  --ice: #5b9fd4;
+  --red: #c0392b;
+  --red-bg: #fdf0ee;
+  --green: #1a7a45;
+  --green-bg: #e8f5ee;
+  --amber: #8a5c00;
+  --amber-bg: #fdf6e0;
+  --gray: #6b7280;
+  --border: #dde2ea;
+  --ink: #1a2535;
+  --bg: #f4f6f9;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: white;
+  font-family: 'Barlow', sans-serif;
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* TOP BAR */
+.topbar {
+  background: var(--navy);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.topbar img { height: 28px; width: auto; }
+.topbar-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  color: white;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+/* ALERT BANNER */
+.alert-banner {
+  background: var(--red);
+  padding: 16px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.alert-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.alert-text {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: white;
+  letter-spacing: .02em;
+  line-height: 1.4;
+}
+.alert-text span {
+  font-weight: 400;
+  font-size: 13px;
+  display: block;
+  color: rgba(255,255,255,.8);
+  margin-top: 2px;
+  font-family: 'Barlow', sans-serif;
+  letter-spacing: 0;
+}
+
+/* CONTENT */
+.content { padding: 28px 20px; }
+
+h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1.1;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+h1 span { color: var(--red); }
+
+.lead {
+  font-size: 16px;
+  color: var(--gray);
+  line-height: 1.7;
+  margin-bottom: 28px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* SECTION */
+h2 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--navy);
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  margin-bottom: 14px;
+}
+
+/* TIMELINE */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 28px;
+}
+.tl-item {
+  display: flex;
+  gap: 16px;
+  position: relative;
+}
+.tl-item:not(:last-child) .tl-line {
+  position: absolute;
+  left: 15px;
+  top: 32px;
+  bottom: -4px;
+  width: 2px;
+  background: var(--border);
+}
+.tl-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  margin-top: 2px;
+  position: relative;
+  z-index: 1;
+}
+.tl-dot.red { background: var(--red-bg); color: var(--red); }
+.tl-dot.amber { background: var(--amber-bg); color: var(--amber); }
+.tl-dot.green { background: var(--green-bg); color: var(--green); }
+.tl-body {
+  padding: 4px 0 24px;
+  flex: 1;
+}
+.tl-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--navy);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-bottom: 4px;
+}
+.tl-desc {
+  font-size: 14px;
+  color: var(--gray);
+  line-height: 1.5;
+}
+.tl-desc strong { color: var(--ink); font-weight: 600; }
+
+/* INFO BOXES */
+.info-box {
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+  border-left: 3px solid;
+}
+.info-box.red { background: var(--red-bg); border-color: var(--red); }
+.info-box.amber { background: var(--amber-bg); border-color: var(--gold); }
+.info-box.green { background: var(--green-bg); border-color: var(--green); }
+.info-box.navy { background: #eef2f8; border-color: var(--navy); }
+.info-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.info-box.red .info-label { color: var(--red); }
+.info-box.amber .info-label { color: var(--amber); }
+.info-box.green .info-label { color: var(--green); }
+.info-box.navy .info-label { color: var(--navy); }
+.info-text {
+  font-size: 14px;
+  line-height: 1.6;
+}
+.info-box.red .info-text { color: #7a2020; }
+.info-box.amber .info-text { color: #5a3800; }
+.info-box.green .info-text { color: #0f4a25; }
+.info-box.navy .info-text { color: var(--navy); }
+.info-text strong { font-weight: 600; }
+
+/* CHECKLIST */
+.checklist {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--gray);
+}
+.checklist li strong { color: var(--ink); font-weight: 600; }
+.cl-icon { flex-shrink: 0; margin-top: 2px; font-size: 14px; }
+.cl-red { color: var(--red); }
+.cl-green { color: var(--green); }
+.cl-amber { color: var(--amber); }
+
+/* SECTION DIVIDER */
+.sec-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 28px 0;
+}
+
+/* CTA */
+.cta-block {
+  background: var(--navy);
+  border-radius: 10px;
+  padding: 24px 20px;
+  margin-top: 28px;
+  text-align: center;
+}
+.cta-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.cta-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: white;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+.cta-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,.6);
+  margin-bottom: 18px;
+  line-height: 1.5;
+}
+.cta-btn {
+  display: block;
+  background: var(--gold);
+  color: var(--navy);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 14px 24px;
+  border-radius: 6px;
+  text-decoration: none;
+  margin-bottom: 10px;
+}
+.cta-phone {
+  font-size: 14px;
+  color: rgba(255,255,255,.55);
+}
+.cta-phone a { color: rgba(255,255,255,.7); text-decoration: none; }
+
+/* FOOTER */
+footer {
+  background: var(--bg);
+  padding: 20px;
+  text-align: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--gray);
+  border-top: 1px solid var(--border);
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <img src="https://raw.githubusercontent.com/pinellasiceco/Pinellasiceco/main/pic_logo.png"
+       alt="Pinellas Ice Co."
+       onerror="this.style.display='none'">
+  <div class="topbar-name">Pinellas Ice Co.</div>
+</div>
+
+<div class="alert-banner">
+  <div class="alert-icon">⚠️</div>
+  <div class="alert-text">
+    DBPR Ice Machine Violation on Record
+    <span>This page explains what happens next and what you need to do before your follow-up inspection.</span>
+  </div>
+</div>
+
+<div class="content">
+
+  <h1>Your Ice Machine<br>Was <span>Cited.</span></h1>
+  <p class="lead">A DBPR inspector documented a violation at your establishment. Here&#39;s exactly what that means, what the inspector will look for on their return visit, and the fastest path to getting this off your record.</p>
+
+  <!-- WHAT THE CITATION MEANS -->
+  <h2>What the Citation Actually Means</h2>
+
+  <div class="info-box red">
+    <div class="info-label">Important</div>
+    <div class="info-text">An ice machine citation means the inspector observed visible contamination, mold, biofilm, or sanitation failure during their visit. <strong>Ice is classified as food under Florida law.</strong> Contaminated ice is a food safety violation, not a cosmetic issue.</div>
+  </div>
+
+  <ul class="checklist">
+    <li>
+      <span class="cl-icon cl-red">●</span>
+      <span><strong>The citation is on your public record.</strong> DBPR inspection reports are published online and searchable by anyone — including customers, journalists, and health advocacy groups.</span>
+    </li>
+    <li>
+      <span class="cl-icon cl-red">●</span>
+      <span><strong>A follow-up inspection is coming.</strong> DBPR does not treat ice machine citations as self-resolved. An inspector will return to verify the issue has been corrected.</span>
+    </li>
+    <li>
+      <span class="cl-icon cl-amber">●</span>
+      <span><strong>Repeat violations escalate.</strong> A second citation for the same issue can trigger fines, increased inspection frequency, and in serious cases, suspension of your food service permit.</span>
+    </li>
+    <li>
+      <span class="cl-icon cl-amber">●</span>
+      <span><strong>&#34;We cleaned it ourselves&#34; is not documentation.</strong> An inspector can&#39;t verify a self-reported cleaning. They need evidence the machine meets food safety standards.</span>
+    </li>
+  </ul>
+
+  <hr class="sec-divider">
+
+  <!-- WHAT HAPPENS NEXT -->
+  <h2>What Happens on the Follow-Up Visit</h2>
+  <p style="font-size:14px;color:var(--gray);margin-bottom:20px;line-height:1.6">DBPR follow-up inspections for ice machine violations are focused and specific. The inspector is looking for evidence that the violation was corrected — not a general re-inspection of your establishment.</p>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-line"></div>
+      <div class="tl-dot red">1</div>
+      <div class="tl-body">
+        <div class="tl-title">Inspector Returns Unannounced</div>
+        <div class="tl-desc">Follow-up inspections are not scheduled in advance. The inspector may return within days or weeks. You will not receive prior notice.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-line"></div>
+      <div class="tl-dot amber">2</div>
+      <div class="tl-body">
+        <div class="tl-title">Inspector Examines the Machine</div>
+        <div class="tl-desc">They will open the ice machine and inspect water-contact surfaces, bin interior, water lines, and filters for visible contamination or biofilm. <strong>Visual cleanliness is the minimum standard — not the only standard.</strong></div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-line"></div>
+      <div class="tl-dot amber">3</div>
+      <div class="tl-body">
+        <div class="tl-title">Inspector Asks for Documentation</div>
+        <div class="tl-desc">They will ask what corrective action was taken and when. <strong>A service record showing who cleaned it and when helps. A verified ATP score showing the machine passed biological standards helps more.</strong></div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot green">4</div>
+      <div class="tl-body">
+        <div class="tl-title">Violation Is Resolved or Re-Cited</div>
+        <div class="tl-desc">If the machine passes, the violation is marked corrected. If it fails again, you receive a second citation with escalating consequences.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box amber">
+    <div class="info-label">The Documentation Problem</div>
+    <div class="info-text">Most professional cleaning services leave a service record with a date. That tells the inspector <em>someone came</em>. It does not tell them whether the machine is actually clean. <strong>An ATP bioluminescence test result — showing an RLU score at or below the FDA-acceptable standard of 10 — is objective, measurable evidence that the machine passed biological standards.</strong> That&#39;s the difference between hoping the inspector agrees it looks clean and proving it with a number.</div>
+  </div>
+
+  <hr class="sec-divider">
+
+  <!-- WHAT GOOD DOCUMENTATION LOOKS LIKE -->
+  <h2>What Strong Documentation Looks Like</h2>
+
+  <ul class="checklist">
+    <li>
+      <span class="cl-icon cl-green">✓</span>
+      <span><strong>Professional cleaning by a licensed service provider</strong> — with a dated service record on company letterhead</span>
+    </li>
+    <li>
+      <span class="cl-icon cl-green">✓</span>
+      <span><strong>ATP bioluminescence test result</strong> — showing pre-clean and post-clean RLU scores, with post-clean at or below 10 RLU</span>
+    </li>
+    <li>
+      <span class="cl-icon cl-green">✓</span>
+      <span><strong>Certification on the machine</strong> — a cert sticker with a scannable QR code that pulls up the verified test record</span>
+    </li>
+    <li>
+      <span class="cl-icon cl-green">✓</span>
+      <span><strong>A documented service schedule</strong> — showing quarterly or semi-annual cleaning as an ongoing practice, not a one-time reaction</span>
+    </li>
+    <li>
+      <span class="cl-icon cl-red">✕</span>
+      <span><strong>Not sufficient:</strong> &#34;We cleaned it ourselves.&#34; Self-reported cleaning with no third-party verification.</span>
+    </li>
+    <li>
+      <span class="cl-icon cl-red">✕</span>
+      <span><strong>Not sufficient:</strong> A receipt from a cleaning service with no biological verification result.</span>
+    </li>
+  </ul>
+
+  <hr class="sec-divider">
+
+  <!-- HOW WE HELP -->
+  <h2>How Pinellas Ice Co. Resolves This</h2>
+
+  <div class="info-box navy">
+    <div class="info-label">Our Process</div>
+    <div class="info-text">We use a <strong>Hygiena EnSURE V2 luminometer</strong> — the same ATP testing technology used in food safety audits and hospital sanitation verification. We test the machine before cleaning and after. Both scores are documented on your CleanScore certificate. The certificate includes a QR code that any inspector can scan to verify the result in real time. You leave with proof, not just a receipt.</div>
+  </div>
+
+  <ul class="checklist">
+    <li>
+      <span class="cl-icon cl-green">✓</span>
+      <span>Same-week availability — before your follow-up inspection</span>
+    </li>
+    <li>
+      <span class="cl-icon cl-green">✓</span>
+      <span>ATP score documented in minutes — before and after</span>
+    </li>
+    <li>
+      <span class="cl-icon cl-green">✓</span>
+      <span>CleanScore certificate issued same day</span>
+    </li>
+    <li>
+      <span class="cl-icon cl-green">✓</span>
+      <span>Cert sticker placed on machine — QR code scannable</span>
+    </li>
+    <li>
+      <span class="cl-icon cl-green">✓</span>
+      <span>Ongoing quarterly service keeps this from happening again</span>
+    </li>
+  </ul>
+
+  <div class="cta-block">
+    <div class="cta-label">Act Before the Follow-Up</div>
+    <div class="cta-title">Book a Same-Week Inspection</div>
+    <div class="cta-sub">Free on-site ATP test. Documentation ready before your inspector returns.</div>
+    <a href="https://meetings-na2.hubspot.com/stripe/ice-machine-on-site?uuid=9a40fc22-dce2-4258-8e4f-28aa75c892da" class="cta-btn">Schedule Now</a>
+    <div class="cta-phone">Or call directly: <a href="tel:7278556873">(727) 855-6873</a></div>
+  </div>
+
+</div>
+
+<footer>
+  Pinellas Ice Co. &nbsp;·&nbsp; Clearwater, FL &nbsp;·&nbsp; ATP-Verified Ice Machine Cleaning &nbsp;·&nbsp; PinellasIceCo.com
+</footer>
+
+</body>
+</html>
