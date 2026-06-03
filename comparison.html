@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ice Machine Service Comparison | Pinellas Ice Co.</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0f1f38;
+  --navy-light: #162840;
+  --gold: #c9973a;
+  --gold-light: #e0b05a;
+  --ice: #5b9fd4;
+  --ice-light: #7ab8e8;
+  --bg: #f4f6f9;
+  --white: #ffffff;
+  --red: #c0392b;
+  --red-bg: #fdf0ee;
+  --green: #1a7a45;
+  --green-bg: #e8f5ee;
+  --gray: #6b7280;
+  --border: #dde2ea;
+  --ink: #1a2535;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  font-family: 'Barlow', sans-serif;
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* HEADER */
+.header {
+  background: var(--navy);
+  padding: 20px 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.header img { height: 36px; width: auto; }
+.header-wordmark {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: white;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+}
+
+/* HERO */
+.hero {
+  background: var(--navy);
+  padding: 64px 32px 72px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 60% 40%, rgba(91,159,212,.12) 0%, transparent 65%);
+  pointer-events: none;
+}
+.hero-eyebrow {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(36px, 6vw, 64px);
+  font-weight: 900;
+  color: white;
+  line-height: 1.0;
+  text-transform: uppercase;
+  letter-spacing: .01em;
+  margin-bottom: 20px;
+}
+.hero h1 span { color: var(--gold); }
+.hero-sub {
+  font-size: 17px;
+  color: rgba(255,255,255,.65);
+  max-width: 560px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* SECTION WRAPPER */
+.section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 56px 24px;
+}
+.section-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: 10px;
+}
+.section-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(26px, 4vw, 38px);
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1.1;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+}
+.section-title span { color: var(--ice); }
+
+/* COMPARISON TABLE */
+.compare-wrap {
+  overflow-x: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(15,31,56,.10);
+  border: 1px solid var(--border);
+}
+table.compare {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 680px;
+  background: white;
+}
+table.compare thead tr {
+  background: transparent;
+}
+table.compare thead th {
+  padding: 0;
+  vertical-align: bottom;
+  border-bottom: 2px solid var(--border);
+}
+.th-inner {
+  padding: 28px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  height: 100%;
+}
+.th-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+.th-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 1.1;
+  color: var(--navy);
+}
+.th-price {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--navy);
+  line-height: 1;
+  margin-top: 4px;
+}
+.th-price sub {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gray);
+}
+.th-annual {
+  font-size: 12px;
+  color: var(--gray);
+  font-weight: 400;
+}
+th.th-feature {
+  background: var(--navy);
+  padding: 16px 24px;
+  text-align: left;
+  width: 30%;
+}
+th.th-feature span {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.5);
+}
+th.th-pic { background: #f8f0e8; border-right: 1px solid var(--border); }
+th.th-pic .th-name { color: #7a5520; }
+th.th-pic .th-price { color: #7a5520; }
+th.th-standalone { background: #f0f4f9; border-right: 1px solid var(--border); }
+th.th-us {
+  background: linear-gradient(135deg, var(--navy) 0%, #1a3a5c 100%);
+  position: relative;
+}
+th.th-us .th-label { color: var(--gold); }
+th.th-us .th-name { color: white; }
+th.th-us .th-price { color: var(--gold); }
+th.th-us .th-annual { color: rgba(255,255,255,.6); }
+.best-badge {
+  display: inline-block;
+  background: var(--gold);
+  color: white;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 3px;
+  margin-bottom: 4px;
+}
+
+/* TABLE ROWS */
+tbody tr {
+  border-bottom: 1px solid var(--border);
+}
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover td { background: rgba(91,159,212,.03); }
+tbody tr:hover td.td-us { background: rgba(15,31,56,.97); }
+td {
+  padding: 16px 24px;
+  vertical-align: middle;
+  font-size: 13px;
+  color: var(--gray);
+  line-height: 1.4;
+  border-right: 1px solid var(--border);
+}
+td:last-child { border-right: none; }
+td.td-feature {
+  background: #fafbfc;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--navy);
+  border-right: 2px solid var(--border);
+}
+td.td-us {
+  background: var(--navy);
+  color: rgba(255,255,255,.85);
+  font-weight: 500;
+}
+td.td-us strong { color: var(--gold); }
+
+/* YES / NO / PARTIAL chips */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.chip-no { background: var(--red-bg); color: var(--red); }
+.chip-yes { background: var(--green-bg); color: var(--green); }
+.chip-partial { background: #fdf6e8; color: #8a5c00; }
+.chip-gold { background: rgba(201,151,58,.12); color: #7a4e00; border: 1px solid rgba(201,151,58,.3); }
+
+/* COST SECTION */
+.cost-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 12px;
+}
+.cost-card {
+  border-radius: 10px;
+  padding: 28px 24px;
+  border: 1px solid var(--border);
+  background: white;
+}
+.cost-card.ours {
+  background: var(--navy);
+  border-color: var(--navy);
+}
+.cost-co {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: 8px;
+}
+.cost-card.ours .cost-co { color: var(--gold); }
+.cost-amount {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 48px;
+  font-weight: 900;
+  color: var(--navy);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.cost-card.ours .cost-amount { color: white; }
+.cost-per {
+  font-size: 13px;
+  color: var(--gray);
+  margin-bottom: 16px;
+}
+.cost-card.ours .cost-per { color: rgba(255,255,255,.55); }
+.cost-items {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.cost-items li {
+  font-size: 13px;
+  color: var(--gray);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.4;
+}
+.cost-card.ours .cost-items li { color: rgba(255,255,255,.7); }
+.cost-items li::before {
+  content: '—';
+  color: var(--border);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.cost-card.ours .cost-items li::before { content: '✓'; color: var(--gold); font-weight: 700; }
+.cost-note {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--red);
+  font-style: italic;
+  font-weight: 500;
+}
+.cost-card.ours .cost-note { border-color: rgba(255,255,255,.15); color: var(--gold-light); }
+
+/* CALLOUT */
+.callout {
+  border-radius: 10px;
+  padding: 28px 32px;
+  margin: 48px 0 0;
+  position: relative;
+  overflow: hidden;
+}
+.callout-navy {
+  background: var(--navy);
+}
+.callout-navy::before {
+  content: '';
+  position: absolute;
+  right: -40px;
+  top: -40px;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(91,159,212,.15), transparent 70%);
+  pointer-events: none;
+}
+.callout-eyebrow {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+.callout-text {
+  font-size: 16px;
+  color: rgba(255,255,255,.85);
+  line-height: 1.7;
+  max-width: 800px;
+}
+.callout-text strong { color: white; font-weight: 600; }
+
+/* INSPECTOR SECTION */
+.inspector-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 12px;
+}
+.inspector-card {
+  border-radius: 10px;
+  padding: 28px;
+  border: 1px solid var(--border);
+}
+.inspector-card.them { background: #fdf8f7; border-color: #e8d0cc; }
+.inspector-card.us { background: var(--navy); border-color: var(--navy); }
+.inspector-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.inspector-card.them .inspector-title { color: var(--red); }
+.inspector-card.us .inspector-title { color: var(--gold); }
+.inspector-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.inspector-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+.inspector-card.them .inspector-list li { color: #7a4040; }
+.inspector-card.us .inspector-list li { color: rgba(255,255,255,.8); }
+.icon-x { color: var(--red); font-weight: 800; font-size: 15px; flex-shrink: 0; }
+.icon-check { color: var(--gold); font-weight: 800; font-size: 15px; flex-shrink: 0; }
+
+/* ATP SPOTLIGHT */
+.atp-block {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+.atp-header {
+  background: var(--navy);
+  padding: 20px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.atp-header-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: white;
+  letter-spacing: .04em;
+}
+.atp-header-sub {
+  font-size: 12px;
+  color: rgba(255,255,255,.55);
+  margin-top: 2px;
+}
+.rlu-display {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.rlu-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 42px;
+  font-weight: 900;
+  color: var(--red);
+  line-height: 1;
+}
+.rlu-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,.5);
+  text-transform: uppercase;
+}
+.atp-body {
+  padding: 24px 28px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.atp-col-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.atp-col.them .atp-col-title { color: var(--red); }
+.atp-col.us .atp-col-title { color: var(--green); }
+.atp-col-content {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--gray);
+}
+.atp-col.us .atp-col-content { color: var(--ink); }
+.atp-divider {
+  width: 1px;
+  background: var(--border);
+  align-self: stretch;
+  display: none;
+}
+
+/* BOTTOM CTA */
+.cta-bar {
+  background: var(--gold);
+  padding: 40px 32px;
+  text-align: center;
+}
+.cta-bar h2 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(24px, 4vw, 38px);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--navy);
+  margin-bottom: 10px;
+  letter-spacing: .02em;
+}
+.cta-bar p {
+  font-size: 16px;
+  color: rgba(15,31,56,.7);
+  margin-bottom: 24px;
+}
+.cta-btn {
+  display: inline-block;
+  background: var(--navy);
+  color: white;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 14px 36px;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background .2s;
+}
+.cta-btn:hover { background: #162840; }
+
+/* DIVIDER */
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0;
+}
+
+/* FOOTER */
+footer {
+  background: var(--navy);
+  padding: 24px 32px;
+  text-align: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.35);
+}
+
+@media (max-width: 640px) {
+  .cost-grid { grid-template-columns: 1fr; }
+  .inspector-grid { grid-template-columns: 1fr; }
+  .atp-body { grid-template-columns: 1fr; }
+  .hero { padding: 48px 20px 56px; }
+  .section { padding: 40px 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <img src="https://raw.githubusercontent.com/pinellasiceco/Pinellasiceco/main/pic_logo.png"
+       alt="Pinellas Ice Co."
+       onerror="this.style.display='none'">
+  <div class="header-wordmark">Pinellas Ice Co.</div>
+</div>
+
+<div class="hero">
+  <div class="hero-eyebrow">Service Comparison — Pinellas County</div>
+  <h1>Not All Ice Machine<br><span>Service Is Equal</span></h1>
+  <p class="hero-sub">Here&#39;s what you&#39;re actually getting from different providers — and what you&#39;re not.</p>
+</div>
+
+<!-- MAIN COMPARISON TABLE -->
+<div class="section">
+  <div class="section-label">Side by Side</div>
+  <div class="section-title">What Each Service<br><span>Actually Includes</span></div>
+
+  <div class="compare-wrap">
+    <table class="compare">
+      <thead>
+        <tr>
+          <th class="th-feature"><span>Feature</span></th>
+          <th class="th-pic">
+            <div class="th-inner">
+              <div class="th-label">Competitor</div>
+              <div class="th-name">Crystal Ice<br>Lease</div>
+              <div class="th-price">$175<sub>/mo</sub></div>
+              <div class="th-annual">$2,100/year</div>
+            </div>
+          </th>
+          <th class="th-standalone">
+            <div class="th-inner">
+              <div class="th-label">Competitor</div>
+              <div class="th-name">Crystal Ice<br>Standalone PM</div>
+              <div class="th-price">$295<sub>/visit</sub></div>
+              <div class="th-annual">$590/year (2 visits)</div>
+            </div>
+          </th>
+          <th class="th-us">
+            <div class="th-inner">
+              <div class="best-badge">&#10052; Pinellas Ice Co.</div>
+              <div class="th-name">Certified<br>Cleaning Plan</div>
+              <div class="th-price">$129<sub>/mo</sub></div>
+              <div class="th-annual">$1,548/year · 4 visits</div>
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-feature">Service Visits / Year</td>
+          <td>2 × semi-annual</td>
+          <td>2 × semi-annual</td>
+          <td class="td-us"><strong>4 × quarterly</strong></td>
+        </tr>
+        <tr>
+          <td class="td-feature">ATP Bioluminescence Test</td>
+          <td><span class="chip chip-no">✕ Never</span></td>
+          <td><span class="chip chip-no">✕ Never</span></td>
+          <td class="td-us"><span class="chip chip-yes">✓ Every Visit</span></td>
+        </tr>
+        <tr>
+          <td class="td-feature">RLU Score Documented</td>
+          <td><span class="chip chip-no">✕ No</span></td>
+          <td><span class="chip chip-no">✕ No</span></td>
+          <td class="td-us"><strong>Yes — before &amp; after</strong></td>
+        </tr>
+        <tr>
+          <td class="td-feature">Compliance Documentation</td>
+          <td>Service record only<br><span style="font-size:11px;color:#aaa">— date stamp, no proof</span></td>
+          <td>Service record only<br><span style="font-size:11px;color:#aaa">— date stamp, no proof</span></td>
+          <td class="td-us"><strong>ATP-verified certificate<br></strong><span style="font-size:11px;color:rgba(255,255,255,.5)">— scannable, inspector-ready</span></td>
+        </tr>
+        <tr>
+          <td class="td-feature">CleanScore Certification</td>
+          <td><span class="chip chip-no">✕ No</span></td>
+          <td><span class="chip chip-no">✕ No</span></td>
+          <td class="td-us"><span class="chip chip-yes">✓ Every Service</span></td>
+        </tr>
+        <tr>
+          <td class="td-feature">QR Sticker on Machine</td>
+          <td><span class="chip chip-no">✕ No</span></td>
+          <td><span class="chip chip-no">✕ No</span></td>
+          <td class="td-us"><strong>Yes — inspectors can scan</strong></td>
+        </tr>
+        <tr>
+          <td class="td-feature">DBPR Inspection History</td>
+          <td><span class="chip chip-no">✕ Not checked</span></td>
+          <td><span class="chip chip-no">✕ Not checked</span></td>
+          <td class="td-us"><strong>Reviewed every visit</strong></td>
+        </tr>
+        <tr>
+          <td class="td-feature">Response Territory</td>
+          <td>4 counties, 3 techs</td>
+          <td>4 counties, 3 techs</td>
+          <td class="td-us"><strong>Pinellas only — faster</strong></td>
+        </tr>
+        <tr>
+          <td class="td-feature">You Own Your Machine</td>
+          <td><span class="chip chip-no">✕ They own it</span></td>
+          <td><span class="chip chip-yes">✓ Yes</span></td>
+          <td class="td-us"><span class="chip chip-yes">✓ Yes</span></td>
+        </tr>
+        <tr>
+          <td class="td-feature">Monthly Recurring Cost</td>
+          <td>$175/mo (machine + service)</td>
+          <td>$49/mo amortized</td>
+          <td class="td-us"><strong>$129/mo all-in</strong></td>
+        </tr>
+        <tr>
+          <td class="td-feature">Contract Required</td>
+          <td><span class="chip chip-partial">Month-to-month</span></td>
+          <td><span class="chip chip-yes">✓ None</span></td>
+          <td class="td-us"><strong>None — cancel anytime</strong></td>
+        </tr>
+        <tr>
+          <td class="td-feature">Machine Repair Included</td>
+          <td><span class="chip chip-yes">✓ Yes</span></td>
+          <td><span class="chip chip-no">✕ Extra cost</span></td>
+          <td class="td-us">Separate — transparent pricing</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ANNUAL COST BREAKDOWN -->
+<div class="section">
+  <div class="section-label">Real Cost Analysis</div>
+  <div class="section-title">What You&#39;re Actually<br><span>Paying Per Year</span></div>
+
+  <div class="cost-grid">
+    <div class="cost-card">
+      <div class="cost-co">Crystal Ice — Lease</div>
+      <div class="cost-amount">$2,100</div>
+      <div class="cost-per">per year (machine you don&#39;t own)</div>
+      <ul class="cost-items">
+        <li>2 semi-annual cleanings included</li>
+        <li>All repairs included</li>
+        <li>Machine belongs to Crystal Ice</li>
+        <li>No ATP verification ever</li>
+        <li>Service record only — no proof</li>
+      </ul>
+      <div class="cost-note">After 18 months you&#39;ve paid off their machine cost. Still paying full price.</div>
+    </div>
+    <div class="cost-card">
+      <div class="cost-co">Crystal Ice — Standalone PM</div>
+      <div class="cost-amount">$590</div>
+      <div class="cost-per">per year (2 visits at $295 each)</div>
+      <ul class="cost-items">
+        <li>2 visits per year</li>
+        <li>Scale removal and sanitization</li>
+        <li>Service record &#34;compliance docs&#34;</li>
+        <li>No ATP score — no measurement</li>
+        <li>No cert sticker — no inspector proof</li>
+      </ul>
+      <div class="cost-note">Lowest cost option. Zero verifiable proof of result.</div>
+    </div>
+    <div class="cost-card ours">
+      <div class="cost-co">Pinellas Ice Co.</div>
+      <div class="cost-amount">$1,548</div>
+      <div class="cost-per">per year · 4 certified visits</div>
+      <ul class="cost-items">
+        <li>4 quarterly visits — 2× more frequent</li>
+        <li>ATP test every single visit</li>
+        <li>RLU score before and after</li>
+        <li>CleanScore certificate issued</li>
+        <li>QR sticker — inspectors scan and verify</li>
+        <li>DBPR history reviewed each visit</li>
+      </ul>
+      <div class="cost-note">$958 more than Crystal Ice standalone — with 2× more visits and actual proof every time.</div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ATP SPOTLIGHT -->
+<div class="section">
+  <div class="section-label">The Core Difference</div>
+  <div class="section-title">What &#34;Compliance Docs&#34;<br><span>Actually Means</span></div>
+
+  <div class="atp-block">
+    <div class="atp-header">
+      <div>
+        <div class="atp-header-title">ATP Bioluminescence Testing</div>
+        <div class="atp-header-sub">The only objective measurement of biological contamination in an ice machine</div>
+      </div>
+      <div class="rlu-display">
+        <div class="rlu-num">312</div>
+        <div class="rlu-label">RLU<br>typical<br>uncleaned</div>
+      </div>
+    </div>
+    <div class="atp-body">
+      <div class="atp-col them">
+        <div class="atp-col-title">Crystal Ice &#34;Compliance Docs&#34;</div>
+        <div class="atp-col-content">
+          A printed service record that says a technician visited on a specific date. It lists what was done: sanitization, scale removal, inspection. <strong style="color:var(--red)">There is no number. There is no measurement. There is no proof the machine is actually clean after the visit.</strong> A health inspector looking at this document cannot verify the result — only that someone showed up.
+        </div>
+      </div>
+      <div class="atp-col us">
+        <div class="atp-col-title">Pinellas Ice Co. ATP Certificate</div>
+        <div class="atp-col-content" style="color:var(--ink)">
+          A Hygiena EnSURE V2 luminometer swab test records the exact RLU score before cleaning and after. <strong>FDA acceptable standard is 10 RLU. Most uncleaned machines test above 200.</strong> Your CleanScore certificate shows the pre-clean number, the post-clean number, technician ID, date, and a QR code any inspector can scan to verify in real time. That&#39;s not a visit record — that&#39;s proof.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-navy" style="margin-top:20px">
+    <div class="callout-eyebrow">The Inspection Reality</div>
+    <p class="callout-text">When a DBPR inspector cites your establishment for ice machine contamination, a service record showing &#34;cleaning performed&#34; does not resolve the citation. <strong>A documented ATP score showing post-clean RLU below 10 does.</strong> One is a paper trail. The other is evidence. Crystal Ice gives you the first. We give you the second.</p>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- WHAT THE INSPECTOR SEES -->
+<div class="section">
+  <div class="section-label">Health Inspector&#39;s View</div>
+  <div class="section-title">What They See When<br><span>They Walk In</span></div>
+
+  <div class="inspector-grid">
+    <div class="inspector-card them">
+      <div class="inspector-title">With Crystal Ice</div>
+      <ul class="inspector-list">
+        <li><span class="icon-x">✕</span> A service sticker with a date — no RLU score</li>
+        <li><span class="icon-x">✕</span> No way to verify cleaning actually removed contamination</li>
+        <li><span class="icon-x">✕</span> No certification ID to cross-reference</li>
+        <li><span class="icon-x">✕</span> No QR code — inspector must take your word for it</li>
+        <li><span class="icon-x">✕</span> If cited, service record does not prove remediation</li>
+      </ul>
+    </div>
+    <div class="inspector-card us">
+      <div class="inspector-title">With Pinellas Ice Co.</div>
+      <ul class="inspector-list">
+        <li><span class="icon-check">✓</span> CleanScore sticker with cert ID on the machine</li>
+        <li><span class="icon-check">✓</span> QR code scans to live ATP score record</li>
+        <li><span class="icon-check">✓</span> Pre-clean and post-clean RLU documented</li>
+        <li><span class="icon-check">✓</span> Date, technician, and result — all verifiable</li>
+        <li><span class="icon-check">✓</span> Demonstrates proactive compliance — not just reactive</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-bar">
+  <h2>See What&#39;s in Your Machine</h2>
+  <p>Free on-site ATP test. No obligation. Most machines we test fail initial standards.</p>
+  <a href="https://meetings-na2.hubspot.com/stripe/ice-machine-on-site?uuid=9a40fc22-dce2-4258-8e4f-28aa75c892da" class="cta-btn">Book Free Inspection</a>
+</div>
+
+<footer>
+  Pinellas Ice Co. &nbsp;&#183;&nbsp; Clearwater, FL &nbsp;&#183;&nbsp; ATP-Verified Ice Machine Cleaning &nbsp;&#183;&nbsp; (727) 855-6873
+</footer>
+
+</body>
+</html>
