@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pinellas Ice Co. — Full Market Census & Demand Analysis</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+:root {
+  --bg:#070d0a; --s1:#0c1410; --s2:#101a13; --s3:#142018;
+  --b1:#1a2e1e; --b2:#243828; --b3:#2e4533;
+  --t1:#c8e0cc; --t2:#7da887; --t3:#3d6645; --t4:#1e3422;
+  --g:#3ddc6e; --gd:#1a6b35; --gb:#051509;
+  --r:#f26b6b; --rd:#7a2020; --rb:#150505;
+  --a:#f5c842; --ad:#7a5c10; --ab:#150f00;
+  --bl:#5aa8f5; --bld:#1a4070; --blb:#030d1a;
+  --p:#c084f5; --pd:#6030a0; --pb:#0d0520;
+  --o:#f5923a; --od:#8a4010; --ob:#150800;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;font-size:12px;line-height:1.5;}
+a{color:var(--g);text-decoration:none;}
+
+/* ── HEADER ── */
+.hdr{background:var(--s1);border-bottom:1px solid var(--b1);padding:18px 28px;position:sticky;top:0;z-index:300;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.hdr-title{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--g);letter-spacing:.1em;text-transform:uppercase;}
+.hdr-sub{font-size:9px;color:var(--t3);font-family:'JetBrains Mono',monospace;margin-top:2px;}
+.hdr-stats{display:flex;gap:16px;flex-wrap:wrap;}
+.hstat{text-align:center;}
+.hstat-n{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;display:block;line-height:1;}
+.hstat-l{font-size:8px;color:var(--t3);font-family:'JetBrains Mono',monospace;letter-spacing:.08em;text-transform:uppercase;}
+
+/* ── NAV TABS ── */
+.nav{background:var(--s2);border-bottom:1px solid var(--b1);display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.nav-item{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:10px 18px;white-space:nowrap;cursor:pointer;color:var(--t3);border-bottom:2px solid transparent;transition:all .15s;}
+.nav-item.active{color:var(--g);border-bottom-color:var(--g);}
+
+/* ── SECTION HEADER ── */
+.sh{display:flex;align-items:center;gap:10px;padding:16px 28px 8px;border-bottom:1px solid var(--b1);}
+.sh-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;}
+.sh-cnt{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);background:var(--s2);border:1px solid var(--b1);padding:1px 6px;border-radius:2px;}
+.sh-note{font-size:10px;color:var(--t3);margin-left:auto;font-style:italic;}
+
+/* ── TABLES ── */
+.twrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-bottom:1px solid var(--b1);}
+table{width:100%;border-collapse:collapse;min-width:1250px;}
+thead th{background:var(--s2);color:var(--t3);font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:7px 10px;text-align:left;border-bottom:1px solid var(--b2);border-right:1px solid var(--b1);white-space:nowrap;}
+thead th:last-child{border-right:none;}
+tbody tr{border-bottom:1px solid var(--b1);}
+tbody tr:hover{background:rgba(61,220,110,.03);}
+tbody tr.you-r{background:rgba(61,220,110,.06);}
+tbody tr.you-r:hover{background:rgba(61,220,110,.09);}
+tbody tr.you-r td:first-child{border-left:3px solid var(--g);}
+tbody tr.dead{opacity:.4;}
+tbody tr.unc{opacity:.7;}
+td{padding:8px 10px;vertical-align:top;border-right:1px solid var(--b1);color:var(--t1);}
+td:last-child{border-right:none;}
+
+/* ── CO CELL ── */
+.cn{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:#e8f5ea;display:block;margin-bottom:2px;}
+.cn.you{color:var(--g);}
+.cn.dead{color:var(--r);text-decoration:line-through;}
+.cn.warn{color:var(--a);}
+.ca{font-size:9px;color:var(--t3);display:block;line-height:1.4;}
+.cp{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);display:block;margin-top:2px;}
+
+/* ── BADGES ── */
+.b{display:inline-block;padding:2px 6px;border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;margin:1px 1px 1px 0;}
+.by{background:var(--gb);color:var(--g);border:1px solid var(--gd);}
+.bg{background:var(--gb);color:var(--g);border:1px solid var(--gd);}
+.br{background:var(--rb);color:var(--r);border:1px solid var(--rd);}
+.ba{background:var(--ab);color:var(--a);border:1px solid var(--ad);}
+.bb{background:var(--blb);color:var(--bl);border:1px solid var(--bld);}
+.bp{background:var(--pb);color:var(--p);border:1px solid var(--pd);}
+.bo{background:var(--ob);color:var(--o);border:1px solid var(--od);}
+.bn{background:var(--s2);color:var(--t3);border:1px solid var(--b2);}
+.na{color:var(--t3);font-size:10px;}
+
+/* ── CATEGORY CHIPS ── */
+.cat{display:inline-block;padding:1px 5px;border-radius:2px;font-size:8px;font-family:'JetBrains Mono',monospace;font-weight:700;letter-spacing:.03em;text-transform:uppercase;}
+.c1{background:var(--gb);color:var(--g);border:1px solid var(--gd);}
+.c2{background:var(--blb);color:var(--bl);border:1px solid var(--bld);}
+.c3{background:var(--pb);color:var(--p);border:1px solid var(--pd);}
+.c4{background:var(--ab);color:var(--a);border:1px solid var(--ad);}
+.c5{background:#1a0a1a;color:#e879f9;border:1px solid #7e22ce;}
+
+/* ── NOTE CELL ── */
+.nt{font-size:10px;color:var(--t2);line-height:1.5;max-width:280px;}
+.nt strong{color:var(--t1);font-weight:500;}
+.fl{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;padding:1px 4px;border-radius:2px;margin-right:2px;}
+.fh{background:#3d1010;color:var(--r);}
+.fo{background:var(--gb);color:var(--g);}
+.fw{background:var(--ab);color:var(--a);}
+.fv{background:var(--blb);color:var(--bl);}
+.fc{background:var(--pb);color:var(--p);}
+
+/* ── PRICE ── */
+.pm{font-family:'JetBrains Mono',monospace;font-size:11px;color:#e8f5ea;display:block;}
+.pm.you{color:var(--g);}
+.ps{font-size:9px;color:var(--t3);display:block;}
+
+/* ── DEMAND ANALYSIS ── */
+.demand{padding:28px;max-width:1400px;}
+.demand-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
+.dcard{background:var(--s2);border:1px solid var(--b1);padding:16px;border-radius:2px;}
+.dcard-label{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
+.dcard-num{font-family:'JetBrains Mono',monospace;font-size:32px;font-weight:700;line-height:1;margin-bottom:4px;}
+.dcard-sub{font-size:10px;color:var(--t3);line-height:1.5;}
+.dcard.g{border-left:3px solid var(--g);}
+.dcard.a{border-left:3px solid var(--a);}
+.dcard.b{border-left:3px solid var(--bl);}
+.dcard.r{border-left:3px solid var(--r);}
+.dcard.p{border-left:3px solid var(--p);}
+.dcard.o{border-left:3px solid var(--o);}
+
+.calc-table{width:100%;border-collapse:collapse;margin-bottom:24px;}
+.calc-table th{background:var(--s2);color:var(--t3);font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;text-align:left;border-bottom:1px solid var(--b2);border-right:1px solid var(--b1);}
+.calc-table th:last-child{border-right:none;}
+.calc-table td{padding:8px 12px;border-bottom:1px solid var(--b1);border-right:1px solid var(--b1);font-size:11px;color:var(--t1);}
+.calc-table td:last-child{border-right:none;}
+.calc-table tr.tot td{background:var(--s2);font-weight:700;color:#e8f5ea;}
+.calc-table tr.hi td{background:rgba(61,220,110,.06);}
+.mono{font-family:'JetBrains Mono',monospace;}
+
+.gap-bar{background:var(--s2);border:1px solid var(--b1);padding:16px;margin-bottom:24px;}
+.gap-bar-label{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.bar-name{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t2);width:180px;flex-shrink:0;}
+.bar-track{flex:1;background:var(--b1);height:14px;border-radius:2px;overflow:hidden;position:relative;}
+.bar-fill{height:100%;border-radius:2px;display:flex;align-items:center;padding-left:6px;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;white-space:nowrap;transition:width .3s;}
+.bar-val{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);width:70px;text-align:right;flex-shrink:0;}
+
+.insight{background:var(--s2);border:1px solid var(--b1);border-left:3px solid var(--g);padding:14px 18px;margin-bottom:12px;}
+.insight-label{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--g);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;}
+.insight-text{font-size:11px;color:var(--t2);line-height:1.6;}
+.insight-text strong{color:var(--t1);}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--b1);padding:14px 28px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.ft{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);}
+
+@media(max-width:800px){.demand-grid{grid-template-columns:1fr 1fr;}.hdr-stats{gap:10px;}.hstat-n{font-size:15px;}}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div>
+    <div class="hdr-title">Pinellas Ice Co. — Full Market Census &amp; Supply/Demand Analysis</div>
+    <div class="hdr-sub">Every operator · Every segment · Market sizing · June 2026 · For internal use only</div>
+  </div>
+  <div class="hdr-stats">
+    <div class="hstat"><span class="hstat-n" style="color:var(--g)">1</span><span class="hstat-l">ATP Clean Only</span></div>
+    <div class="hstat"><span class="hstat-n" style="color:var(--g)">7</span><span class="hstat-l">Dedicated Ice Co.</span></div>
+    <div class="hstat"><span class="hstat-n" style="color:var(--bl)">8</span><span class="hstat-l">Refrig/Rest. Equip.</span></div>
+    <div class="hstat"><span class="hstat-n" style="color:var(--p)">12</span><span class="hstat-l">Appliance Repair</span></div>
+    <div class="hstat"><span class="hstat-n" style="color:var(--a)">4</span><span class="hstat-l">Unidentified Ops</span></div>
+    <div class="hstat"><span class="hstat-n" style="color:var(--t3)">~9,420</span><span class="hstat-l">DBPR Establishments</span></div>
+  </div>
+</div>
+
+<div class="nav">
+  <div class="nav-item active">Dedicated Ice Companies</div>
+  <div class="nav-item">Commercial Refrigeration</div>
+  <div class="nav-item">Restaurant Equipment</div>
+  <div class="nav-item">Appliance Repair</div>
+  <div class="nav-item">Unidentified Operators</div>
+  <div class="nav-item">Supply vs. Demand</div>
+</div>
+
+<!-- ═══════════════ TIER 1: YOU ═══════════════ -->
+<div class="sh">
+  <span class="sh-lbl" style="color:var(--g)">▸ Pinellas Ice Co.</span>
+  <span class="sh-cnt">1</span>
+  <span class="sh-note">The only ATP-verified, DBPR-informed, dedicated cleaning operator in Pinellas County</span>
+</div>
+<div class="twrap">
+<table>
+  <thead><tr><th style="min-width:175px">Company</th><th>Cat</th><th>Status</th><th style="min-width:90px">Price</th><th>Recurring</th><th>ATP Test</th><th>Cert Docs</th><th>Focus</th><th>Hours</th><th>Est.</th><th style="min-width:200px">Notes</th></tr></thead>
+  <tbody>
+  <tr class="you-r">
+    <td><span class="cn you">Pinellas Ice Co.</span><span class="ca">Clearwater FL · pinellasiceco.com</span><span class="cp">(727) 855-6873</span></td>
+    <td><span class="cat c1">A — Dedicated</span></td>
+    <td><span class="b by">YOU</span></td>
+    <td><span class="pm you">$99 initial</span><span class="ps" style="color:var(--g)">+$129/mo recurring</span></td>
+    <td><span class="b bg">YES · Quarterly</span></td>
+    <td><span class="b bg">YES · Hygiena V2</span></td>
+    <td><span class="b bg">RLU Report + CleanScore QR</span></td>
+    <td><span class="b bg">CLEANING ONLY</span></td>
+    <td>Field hours</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">2025</span></td>
+    <td class="nt"><strong>Only ATP-verified service in county. Only DBPR-driven prospecting. Dedicated cleaning — no repair, no rental. CleanScore QR certification platform. Quarterly cadence.</strong></td>
+  </tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ═══════════════ TIER 1B: DEDICATED ICE ═══════════════ -->
+<div class="sh">
+  <span class="sh-lbl" style="color:var(--g)">▸ Category A — Dedicated Ice Machine Companies (Ice = Primary Business)</span>
+  <span class="sh-cnt">6 active · 2 inactive</span>
+  <span class="sh-note">Core competition — these companies exist specifically for ice machine service</span>
+</div>
+<div class="twrap">
+<table>
+  <thead><tr><th style="min-width:175px">Company</th><th>Cat</th><th>Status</th><th style="min-width:90px">Per-Visit Price</th><th>Recurring</th><th>ATP Test</th><th>Cert Docs</th><th>Focus</th><th>Hours</th><th>Est.</th><th style="min-width:200px">Notes</th></tr></thead>
+  <tbody>
+
+  <tr>
+    <td><span class="cn">Crystal Ice Machine Services</span><span class="ca">1491 S MLK Jr Ave, Clearwater 33756</span><span class="cp">(727) 441-8780 · crystalice.com</span></td>
+    <td><span class="cat c1">A</span></td>
+    <td><span class="b bg">Active</span></td>
+    <td><span class="pm">$295 / visit</span><span class="ps">Bi-annual PM. Lease ~$175/mo all-in</span></td>
+    <td><span class="b bg">YES · Bi-Annual</span></td>
+    <td><span class="b bn">No</span></td>
+    <td><span class="b ba">Compliance docs noted</span></td>
+    <td>Clean + repair + lease</td>
+    <td>Business hrs</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">1992</span></td>
+    <td class="nt"><span class="fl fh">THREAT #1</span> 33-year incumbent. Only published pricing ($295/visit). "Clean Ice Club" 15% loyalty discount. Lease-primary — <strong>machine-owners are your opening</strong>. Bi-annual not quarterly. No ATP.</td>
+  </tr>
+
+  <tr>
+    <td><span class="cn">Al's Ice Machine Rentals</span><span class="ca">713 Dempsey St, Clearwater 33756</span><span class="cp">(727) 447-0236 · alsicerentals.com</span></td>
+    <td><span class="cat c1">A</span></td>
+    <td><span class="b bg">Active</span></td>
+    <td><span class="pm">Call for quote</span><span class="ps">Not published</span></td>
+    <td><span class="b bn">Unknown cadence</span></td>
+    <td><span class="b bn">No</span></td>
+    <td><span class="b bn">No</span></td>
+    <td>Rental + repair + cleaning</td>
+    <td>Mon–Fri 8–5 only</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">2005</span></td>
+    <td class="nt">~$363K annual revenue, ~4 employees. Factory-trained techs. <strong>Closed Sat/Sun — gap for bars/restaurants</strong>. No ATP, no cert, no digital acquisition. Rental-primary.</td>
+  </tr>
+
+  <tr>
+    <td><span class="cn">Polar Ice Machines</span><span class="ca">PO Box 56857, St. Petersburg 33703</span><span class="cp">(727) 522-5386 · polaricemachines.com</span></td>
+    <td><span class="cat c1">A</span></td>
+    <td><span class="b bg">Active</span></td>
+    <td><span class="pm">Call for quote</span><span class="ps">Bi-annual in maint. plans</span></td>
+    <td><span class="b bg">YES · Bi-Annual</span></td>
+    <td><span class="b bn">No</span></td>
+    <td><span class="b bn">No</span></td>
+    <td>Repair + service + sales</td>
+    <td>Business hrs</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">c. 1990</span></td>
+    <td class="nt">"Ice machines are our only business." 35+ yr legacy. 36-mo parts/labor + 5-yr compressor warranty on sales. <strong>Deep legacy accounts — hard to pry. New accounts: open field.</strong></td>
+  </tr>
+
+  <tr>
+    <td><span class="cn">Extreme Ice Machine Repairs</span><span class="ca">12431 Del Verde Dr, Largo 33773</span><span class="cp">(727) 539-1474</span></td>
+    <td><span class="cat c1">A</span></td>
+    <td><span class="b bg">Active</span></td>
+    <td><span class="pm">Call for quote</span></td>
+    <td><span class="b bn">Unknown</span></td>
+    <td><span class="b bn">No</span></td>
+    <td><span class="b bn">No</span></td>
+    <td>Repair primary</td>
+    <td>24/7</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">2001</span></td>
+    <td class="nt">~$164K revenue, ~2 employees. Yahoo email. BBB file 01/2025 — not accredited. Minimal digital presence. Repair-first, not cleaning-first. Low compliance threat.</td>
+  </tr>
+
+  <tr class="unc">
+    <td><span class="cn warn">Stillwater Ice Machines LLC</span><span class="ca">2321 Harn Blvd, Clearwater 33764</span><span class="cp">(727) 458-0066 / (727) 647-8707 — verify</span></td>
+    <td><span class="cat c1">A</span></td>
+    <td><span class="b ba">STATUS UNCLEAR</span></td>
+    <td><span class="pm">Not published</span></td>
+    <td><span class="b bn">Unknown</span></td>
+    <td><span class="b bn">No</span></td>
+    <td><span class="b bn">Unknown</span></td>
+    <td><span class="b bg">CLEANING SPECIALTY</span></td>
+    <td>Unknown</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">c. 2013</span></td>
+    <td class="nt"><span class="fl fv">CALL NOW</span> Yelp: "Cleaning Ice Machines is our Specialty." Sunbiz: ACTIVE (reinstated 09/2023). <strong>If operating, only other cleaning-specialist in county. Must confirm before next walk-in.</strong></td>
+  </tr>
+
+  <tr>
+    <td><span class="cn">Soda Services of Florida LLC</span><span class="ca">14184 Mark Dr, Largo 33774</span><span class="cp">(727) 595-7632 · floridasodaservice.com</span></td>
+    <td><span class="cat c1">A+E</span></td>
+    <td><span class="b bg">Active</span></td>
+    <td><span class="pm">Estimate on request</span></td>
+    <td><span class="b bg">Maintenance plans</span></td>
+    <td><span class="b bn">No</span></td>
+    <td><span class="b bn">No</span></td>
+    <td>Soda + draft beer + ice machines</td>
+    <td>24/7 emergency</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">Active</span></td>
+    <td class="nt">Bruce Bialaski, Largo. Soda, CO2, draft beer, ice machines, kegerators. Restaurant-focused. Mixed reviews (1.8★ on some platforms). Repair + install, not cleaning-specialist.</td>
+  </tr>
+
+  <tr class="dead">
+    <td><span class="cn dead">Suncoast Ice Machines</span><span class="ca">4193 114th Ter N, St. Pete · 13633 65th St, Largo</span><span class="cp">(727) 572-4243</span></td>
+    <td><span class="cat c1">A</span></td>
+    <td><span class="b br">CLOSED</span></td>
+    <td><span class="na">—</span></td><td><span class="na">—</span></td><td><span class="na">—</span></td><td><span class="na">—</span></td><td><span class="na">—</span></td>
+    <td><span class="na">—</span></td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">c. 2007</span></td>
+    <td class="nt"><span class="fl fo">LEADS</span> Yelp: CLOSED. "Very poor service" pre-closure. Two address listings (St. Pete + Largo). <strong>Former accounts are unserved — walk their territory.</strong></td>
+  </tr>
+
+  <tr class="dead">
+    <td><span class="cn dead">Guy's Ice Machine Service</span><span class="ca">604 Blanche B Littlejohn Trl, Clearwater 33755</span><span class="cp">(727) 447-5917 → now Quench</span></td>
+    <td><span class="cat c1">A</span></td>
+    <td><span class="b bo">ACQUIRED 09/2023</span></td>
+    <td><span class="na">—</span></td><td><span class="na">—</span></td><td><span class="na">—</span></td><td><span class="na">—</span></td><td><span class="na">—</span></td>
+    <td>National Quench hrs</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">Est. 1960</span></td>
+    <td class="nt"><span class="fl fo">PRIORITY LEADS</span> 63-yr Clearwater institution absorbed by Quench corporate (King of Prussia PA). Former customers on lock-in contracts. Documented complaints: slow response, impersonal. <strong>Walk this territory.</strong></td>
+  </tr>
+
+  </tbody>
+</table>
+</div>
+
+<!-- ═══════════════ TIER 2: COMMERCIAL REFRIGERATION ═══════════════ -->
+<div class="sh">
+  <span class="sh-lbl" style="color:var(--bl)">▸ Category B — Commercial Refrigeration Contractors (Ice Machine = Significant Service Line)</span>
+  <span class="sh-cnt">5 companies</span>
+  <span class="sh-note">Licensed contractors — ice machine service is real and recurring, not incidental</span>
+</div>
+<div class="twrap">
+<table>
+  <thead><tr><th style="min-width:175px">Company</th><th>Cat</th><th>Status</th><th style="min-width:90px">Pricing</th><th>Recurring PM?</th><th>ATP?</th><th>License</th><th>Hours</th><th>Est.</th><th>Coverage</th><th style="min-width:200px">Notes</th></tr></thead>
+  <tbody>
+
+  <tr>
+    <td><span class="cn">Main Commercial Refrigeration</span><span class="ca">16705 Scheer Blvd, Hudson FL 34667 (Pasco-based)</span><span class="cp">(727) 868-8586 · maincomm.com</span></td>
+    <td><span class="cat c2">B</span></td>
+    <td><span class="b bg">Active</span></td>
+    <td><span class="pm">Not published</span><span class="ps">Quote-based</span></td>
+    <td><span class="b bg">YES</span></td>
+    <td><span class="b bn">No</span></td>
+    <td><span class="b bg">FL CMC1249884</span></td>
+    <td>24/7 emergency</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">1983</span></td>
+    <td>Pinellas, Hillsborough, Pasco, Hernando, Citrus, Sarasota, Manatee</td>
+    <td class="nt"><span class="fl fh">ESTABLISHED</span> 40+ years. Hospitals, theme parks, restaurants, grocery stores, country clubs. 727 phone — Pinellas-native number. All major brands. Fleet of commercial vehicles, 24/7 emergency. Refrigeration-primary, ice machine = major service line.</td>
+  </tr>
+
+  <tr>
+    <td><span class="cn">Suncoast Cold Systems</span><span class="ca">Tampa Bay area</span><span class="cp">(813) 599-5988 · suncoastcold.com</span></td>
+    <td><span class="cat c2">B</span></td>
+    <td><span class="b bg">Active</span></td>
+    <td><span class="pm">Flat quarterly pricing</span><span class="ps">Prepay discount up to 15%</span></td>
+    <td><span class="b bg">YES · Quarterly</span></td>
+    <td><span class="b bn">No</span></td>
+    <td><span class="b bg">Class A Licensed</span></td>
+    <td>24/7</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">Active</span></td>
+    <td>Clearwater (specific page), all Pinellas, full Tampa Bay</td>
+    <td class="nt"><span class="fl fw">MONITOR</span> Has Clearwater-specific page citing DBPR violation data. Quarterly flat-rate PM with prepay discounts. IoT monitoring. <strong>Most digitally-sophisticated non-dedicated competitor.</strong> Refrig/HVAC primary — ice cleaning is service line.</td>
+  </tr>
+
+  <tr>
+    <td><span class="cn">Carr Air Conditioning &amp; Heating</span><span class="ca">1619 S Missouri Ave, Clearwater 33756</span><span class="cp">(727) 447-7212 · carrairconditioning.com</span></td>
+    <td><span class="cat c2">B</span></td>
+    <td><span class="b bg">Active</span></td>
+    <td><span class="pm">Not published</span></td>
+    <td><span class="b ba">Bi-Annual (likely)</span></td>
+    <td><span class="b bn">No</span></td>
+    <td><span class="b bg">CAC1819311</span></td>
+    <td>Mon–Fri 8–5</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">1989</span></td>
+    <td>Pinellas County, Southern Pasco</td>
+    <td class="nt">35-yr HVAC company. Restaurants, golf courses, gas stations, bars. Ice machine cleaning is add-on service. <strong>HVAC is the revenue driver.</strong> No ATP, no compliance focus, no recurring model.</td>
+  </tr>
+
+  <tr>
+    <td><span class="cn">24 Hour Refrigeration</span><span class="ca">Tampa-based + multi-market</span><span class="cp">(813) 768-0247 · 24hourrefrigeration.com</span></td>
+    <td><span class="cat c2">B</span></td>
+    <td><span class="b bg">Active</span></td>
+    <td><span class="pm">Not published</span></td>
+    <td><span class="b bn">Not mentioned</span></td>
+    <td><span class="b bn">No</span></td>
+    <td><span class="b bn">Not confirmed</span></td>
+    <td>24/7</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">Multi-market</span></td>
+    <td>Tampa + multi-city FL landing pages</td>
+    <td class="nt">Tampa 813 number. Dedicated Tampa cleaning landing page. Also Hollywood FL + national SEO. <strong>Repair/refrigeration first</strong> — call when machine breaks, not for compliance cleaning. No recurring model, no ATP.</td>
+  </tr>
+
+  <tr>
+    <td><span class="cn">PGM Service Group</span><span class="ca">Clearwater FL</span><span class="cp">pgmservicegroup.com</span></td>
+    <td><span class="cat c2">B</span></td>
+    <td><span class="b bg">Active</span></td>
+    <td><span class="pm">Not published</span></td>
+    <td><span class="b bg">Preventive maintenance</span></td>
+    <td><span class="b bn">No</span></td>
+    <td><span class="b bn">Not specified</span></td>
+    <td>Business hrs</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">20+ yrs</span></td>
+    <td>Clearwater FL, Pinellas County</td>
+    <td class="nt">Clearwater-based. "20 years of experience." Commercial kitchen equipment including ice machines. Restaurants, hotels. Repair + preventive maintenance model. No ATP, no compliance focus.</td>
+  </tr>
+
+  </tbody>
+</table>
+</div>
+
+<!-- ═══════════════ TIER 3: RESTAURANT EQUIPMENT ═══════════════ -->
+<div class="sh">
+  <span class="sh-lbl" style="color:var(--a)">▸ Category C — Restaurant/Commercial Kitchen Equipment (Full Kitchen Scope Including Ice Machines)</span>
+  <span class="sh-cnt">4 companies</span>
+  <span class="sh-note">Full commercial kitchen service — ice machines are part of their scope, not primary focus</span>
+</div>
+<div class="twrap">
+<table>
+  <thead><tr><th style="min-width:175px">Company</th><th>Cat</th><th>Status</th><th style="min-width:90px">Pricing</th><th>PM Plans?</th><th>CFESA Cert?</th><th>Hours</th><th>Est.</th><th>Coverage</th><th style="min-width:200px">Notes</th></tr></thead>
+  <tbody>
+
+  <tr>
+    <td><span class="cn">CAPS — Commercial Appliance Parts &amp; Service</span><span class="ca">8416 Laurel Fair Cir #114, Tampa FL 33610</span><span class="cp">(813) 663-0313 · comapp.com</span></td>
+    <td><span class="cat c4">C</span></td>
+    <td><span class="b bg">Active</span></td>
+    <td><span class="pm">Not published</span><span class="ps">90-day guarantee</span></td>
+    <td><span class="b bg">YES — Planned Maintenance</span></td>
+    <td><span class="b bg">CFESA + Mfg Certified</span></td>
+    <td>24/7</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">2004</span></td>
+    <td>Florida &amp; Georgia (Tampa office covers Pinellas)</td>
+    <td class="nt"><span class="fl fh">INSTITUTIONAL</span> ~$5M revenue, ~35 employees. CFESA-certified. Full hot side + refrigeration + ice + HVAC + warewashing. Parts inventory + installations + PM. Primarily serves chain accounts and institutional. 24/7. <strong>Pinellas restaurants in their scope.</strong></td>
+  </tr>
+
+  <tr>
+    <td><span class="cn">First Choice Repair</span><span class="ca">St. Petersburg FL</span><span class="cp">(727) 558-7950 · fcrepairfl.com</span></td>
+    <td><span class="cat c4">C</span></td>
+    <td><span class="b bg">Active</span></td>
+    <td><span class="pm">Not published</span></td>
+    <td><span class="b bg">Maintenance plans</span></td>
+    <td><span class="b bn">Not mentioned</span></td>
+    <td>Business hrs</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">Active</span></td>
+    <td>50-mile radius from Brooksville — covers all Pinellas</td>
+    <td class="nt">St. Pete-based. Explicit Clearwater + St. Pete pages. Full commercial kitchen: fryers, grills, ovens, ice machines, dish machines, food trucks. <strong>Repair-first, not cleaning-specialist.</strong> No ATP.</td>
+  </tr>
+
+  <tr>
+    <td><span class="cn">Certified Service Center Inc.</span><span class="ca">1183 Grove St, Clearwater FL (downtown)</span><span class="cp">Pinellas &amp; Pasco coverage</span></td>
+    <td><span class="cat c4">C</span></td>
+    <td><span class="b bg">Active</span></td>
+    <td><span class="pm">Not published</span><span class="ps">Sales, service, parts</span></td>
+    <td><span class="b bg">Yes</span></td>
+    <td><span class="b bn">Not specified</span></td>
+    <td>Business hrs</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">2001</span></td>
+    <td>All of Pinellas + Pasco (fleet visible across both counties)</td>
+    <td class="nt"><span class="fl fw">LOCAL</span> "Small family owned and operated. Office in downtown Clearwater, trucks all over Pinellas &amp; Pasco." Commercial cooking equipment sales, service, parts. 23 years in Clearwater. Ice machines in scope. <strong>Repair-focused, not cleaning-specialist.</strong></td>
+  </tr>
+
+  <tr>
+    <td><span class="cn">Unknown — "Licensed Contractor, 20 Yrs, New Pinellas Business"</span><span class="ca">Pinellas County — identity unresolved</span><span class="cp">Directory listing only</span></td>
+    <td><span class="cat c4">C</span></td>
+    <td><span class="b ba">UNCONFIRMED</span></td>
+    <td><span class="pm">Unknown</span></td>
+    <td><span class="b bn">Unknown</span></td>
+    <td><span class="b bn">Unknown</span></td>
+    <td>Unknown</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">New entrant</span></td>
+    <td>Pinellas County</td>
+    <td class="nt"><span class="fl fv">IDENTIFY</span> YP description: "A local licensed contractor with over 20 years experience servicing refrigeration and cooking equipment, opening a new business in Pinellas County." Listed under restaurant equipment repair + ice machines. <strong>This is a new entrant worth finding.</strong></td>
+  </tr>
+
+  </tbody>
+</table>
+</div>
+
+<!-- ═══════════════ TIER 4: APPLIANCE REPAIR ═══════════════ -->
+<div class="sh">
+  <span class="sh-lbl" style="color:var(--p)">▸ Category D — General Appliance Repair (Ice Machine = One of Many Services)</span>
+  <span class="sh-cnt">12 operators</span>
+  <span class="sh-note">Called when the machine breaks, not for compliance cleaning — low direct competition but inform the market picture</span>
+</div>
+<div class="twrap">
+<table>
+  <thead><tr><th style="min-width:175px">Company</th><th>Status</th><th style="min-width:90px">Pricing</th><th>Commercial?</th><th>ATP?</th><th>Hours</th><th>Est.</th><th>Coverage</th><th style="min-width:200px">Notes</th></tr></thead>
+  <tbody>
+
+  <tr>
+    <td><span class="cn">Flat Rate Appliance Repair</span><span class="ca">Pinellas County</span><span class="cp">(727) 618-4400 · flatrateappliancerepair.com</span></td>
+    <td><span class="b bg">Active</span></td>
+    <td><span class="pm">$79–$249</span><span class="ps">Published range</span></td>
+    <td><span class="b ba">Light commercial</span></td>
+    <td><span class="b bn">No</span></td>
+    <td>Same-day avail.</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">Active</span></td>
+    <td>All Pinellas County</td>
+    <td class="nt">Only operator with published pricing range in appliance repair segment. $79–249. Repair-only, no cleaning program.</td>
+  </tr>
+
+  <tr>
+    <td><span class="cn">Professional Appliance Repair</span><span class="ca">Pinellas County</span><span class="cp">(727) 361-9800 · profapplianceservice.com</span></td>
+    <td><span class="b bg">Active</span></td>
+    <td><span class="pm">Not published</span></td>
+    <td><span class="b bg">YES — commercial brands</span></td>
+    <td><span class="b bn">No</span></td>
+    <td>6 days/wk emergency</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">Active</span></td>
+    <td>All Pinellas + New Port Richey</td>
+    <td class="nt">Markets commercial ice machine repair: Scotsman, Hoshizaki, Ice-O-Matic, Avalon. Repair-only, no cleaning program, no ATP.</td>
+  </tr>
+
+  <tr>
+    <td><span class="cn">Smart Appliance Services</span><span class="ca">Tampa Bay</span><span class="cp">(727) 275-7555 · smartapplianceservices.com</span></td>
+    <td><span class="b bg">Active</span></td>
+    <td><span class="pm">Not published</span></td>
+    <td><span class="b bg">YES</span></td>
+    <td><span class="b bn">No</span></td>
+    <td>24/7 booking</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">Active</span></td>
+    <td>Pinellas, Pasco, Hillsborough</td>
+    <td class="nt">727 area code. Strong 5★ reviews (technician Alex cited repeatedly). Online scheduling. Repair-driven, not cleaning-focused.</td>
+  </tr>
+
+  <tr>
+    <td><span class="cn">Ralph's Appliance Repair</span><span class="ca">Tampa-based, Pinellas dedicated numbers</span><span class="cp">(727) 898-4315 Clearwater · (727) 230-4815 St. Pete</span></td>
+    <td><span class="b bg">Active</span></td>
+    <td><span class="pm">Not published</span></td>
+    <td><span class="b bg">YES</span></td>
+    <td><span class="b bn">No</span></td>
+    <td>Business hrs</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">1984</span></td>
+    <td>Pinellas, Hillsborough, Polk</td>
+    <td class="nt">Founded 1984. Family-owned. Dedicated Pinellas numbers. Ice machines listed as "small appliance." No commercial cleaning specialization.</td>
+  </tr>
+
+  <tr>
+    <td><span class="cn">Appliance of Pinellas</span><span class="ca">Pinellas County</span><span class="cp">applianceofpinellas.com</span></td>
+    <td><span class="b bg">Active</span></td>
+    <td><span class="pm">Not published</span></td>
+    <td><span class="b bg">High-end + commercial</span></td>
+    <td><span class="b bn">No</span></td>
+    <td>Business hrs</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">Active</span></td>
+    <td>All Pinellas (Belleair, Tierra Verde, St. Pete Beach, Treasure Island)</td>
+    <td class="nt">Specializes in high-end Sub-Zero, Wolf, Miele, Viking. Factory-trained. "Sealed system refrigerator repairs, high-performance ice makers." Luxury residential + light commercial.</td>
+  </tr>
+
+  <tr>
+    <td><span class="cn">Mr. Appliance of Pinellas County</span><span class="ca">Pinellas County (franchise)</span><span class="cp">mrappliance.com/pinellas-county</span></td>
+    <td><span class="b bg">Active</span></td>
+    <td><span class="pm">Upfront / flat-rate</span><span class="ps">Not listed online</span></td>
+    <td><span class="b br">Residential-grade only</span></td>
+    <td><span class="b bn">No</span></td>
+    <td>Scheduled + same-day</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">Franchise</span></td>
+    <td>All Pinellas County</td>
+    <td class="nt"><strong>Explicitly does NOT repair commercial restaurant ice machines.</strong> Residential-grade in commercial settings only. 10 techs, 100+ yrs combined experience. Low threat to restaurant ice cleaning market.</td>
+  </tr>
+
+  <tr>
+    <td><span class="cn">Pinellas County Appliance Repair / Clearwater Appliance Repair</span><span class="ca">Clearwater FL</span><span class="cp">pinellasappliancerepair.com</span></td>
+    <td><span class="b bg">Active</span></td>
+    <td><span class="pm">Not published</span></td>
+    <td><span class="b ba">Both</span></td>
+    <td><span class="b bn">No</span></td>
+    <td>Business hrs</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">Active</span></td>
+    <td>All Pinellas</td>
+    <td class="nt">Full-county coverage. Multiple domain presence. Ice maker repair listed. No commercial cleaning focus.</td>
+  </tr>
+
+  <tr>
+    <td><span class="cn">Master Appliance Tampa</span><span class="ca">Tampa-based</span><span class="cp">masterappliancetampa.com</span></td>
+    <td><span class="b bg">Active</span></td>
+    <td><span class="pm">Not published</span></td>
+    <td><span class="b bg">Both</span></td>
+    <td><span class="b bn">No</span></td>
+    <td>Business hrs</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">Active</span></td>
+    <td>Tampa, Clearwater, Largo, Pinellas</td>
+    <td class="nt">Explicitly covers Clearwater and Largo. Descaling, filter replacement, sanitization mentioned. Residential-leaning.</td>
+  </tr>
+
+  <tr>
+    <td><span class="cn">AACO Advanced Appliance Co.</span><span class="ca">Seminole area</span><span class="cp">(727) 420-2469</span></td>
+    <td><span class="b bg">Active</span></td>
+    <td><span class="pm">Trip charge waived w/repair</span></td>
+    <td><span class="b bg">30+ yrs exp.</span></td>
+    <td><span class="b bn">No</span></td>
+    <td>Mon–Sat (phones 7 days)</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">30+ yrs</span></td>
+    <td>Pinellas County</td>
+    <td class="nt">Local/family/owner-operated. "Once you use us you'll never need another appliance company." Appliance repair generalist.</td>
+  </tr>
+
+  <tr>
+    <td><span class="cn">Gulf Coast Appliance Repair</span><span class="ca">Clearwater area</span><span class="cp">(727) 510-3524 · gulfcoastappliances.com</span></td>
+    <td><span class="b bg">Active</span></td>
+    <td><span class="pm">Not published</span></td>
+    <td><span class="b bg">Both</span></td>
+    <td><span class="b bn">No</span></td>
+    <td>Same/next day</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">Active</span></td>
+    <td>Clearwater area, Pinellas</td>
+    <td class="nt">Clearwater-based. Good local presence. All major appliances inc. ice machines. Residential-leaning.</td>
+  </tr>
+
+  <tr>
+    <td><span class="cn">The Appliance Repair Men (St. Pete / Pinellas Park)</span><span class="ca">National franchise network, local Pinellas dispatch</span><span class="cp">(813) 452-5531 St. Pete · (813) 534-6218 Pinellas Park</span></td>
+    <td><span class="b bg">Active</span></td>
+    <td><span class="pm">Diag fee 30% below Blue Book</span></td>
+    <td><span class="b bg">All brands 24/7</span></td>
+    <td><span class="b bn">No</span></td>
+    <td>24/7 same-day</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">Franchise</span></td>
+    <td>All Pinellas County (every ZIP listed)</td>
+    <td class="nt">813 numbers servicing Pinellas — dispatches from Tampa metro. Lists every Pinellas ZIP. Repair-only, no cleaning program, no commercial specialization.</td>
+  </tr>
+
+  <tr>
+    <td><span class="cn">The Ice Doctors / S&amp;W Refrigeration</span><span class="ca">Tampa FL</span><span class="cp">theicedoctors.com</span></td>
+    <td><span class="b bg">Active</span></td>
+    <td><span class="pm">Quote-based</span><span class="ps">Quarterly PM on leased machines</span></td>
+    <td><span class="b bg">YES — all commercial</span></td>
+    <td><span class="b bn">No</span></td>
+    <td>Business hrs</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">1997</span></td>
+    <td>Hillsborough, Pinellas, Pasco, Manatee, Hernando, Polk</td>
+    <td class="nt">Family-owned, 19+ years. Lease-primary — cleaning only for their leased machines. Tampa Bay restaurants, airlines, country clubs, sports venues, hospitals. <strong>Not a competitor for machine-owners.</strong></td>
+  </tr>
+
+  </tbody>
+</table>
+</div>
+
+<!-- ═══════════════ TIER 5: UNIDENTIFIED ═══════════════ -->
+<div class="sh">
+  <span class="sh-lbl" style="color:var(--a)">▸ Unidentified — Phone Numbers Appearing in Ice Machine Service Directories (Pinellas County)</span>
+  <span class="sh-count">4 entries</span>
+  <span class="sh-note">Real service providers with no identified company name — solo operators or ghost listings — CALL BEFORE DISMISSING</span>
+</div>
+<div class="twrap">
+<table>
+  <thead><tr><th style="min-width:140px">Phone / Address</th><th>Directory Description</th><th>Years Listed</th><th>Hours</th><th>Coverage Area</th><th>Rating</th><th style="min-width:200px">Action Required</th></tr></thead>
+  <tbody>
+
+  <tr class="unc">
+    <td><span class="cn warn">(727) 570-8748</span><span class="ca">St. Petersburg FL 33702</span><span class="cp">Mobile: (727) 455-3786 · Fax: 727-498-6664</span></td>
+    <td>YP/Superpages: "Available 24 hours a day, 7 days a week, 365 days." Categories: Ice Machines Repair &amp; Service, Ice Cream Freezers, Refrigeration Equipment Commercial &amp; Industrial.</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">14 years in business</span></td>
+    <td>24/7/365</td>
+    <td>St. Pete, Seminole area</td>
+    <td><span class="b bg">5.0★</span> "Quality work done right at a good price! Seemed very honest. Highly Recommend!!"</td>
+    <td class="nt"><span class="fl fv">CALL IMMEDIATELY</span> 24/7, 14 years, 5-star review, commercial refrigeration scope. <strong>This is a real operator actively serving your target market. Identify before your next south Pinellas walk-in day.</strong></td>
+  </tr>
+
+  <tr class="unc">
+    <td><span class="cn warn">(727) 612-6640</span><span class="ca">Clearwater FL 33762</span></td>
+    <td>Superpages: "Refrigerating Equipment Commercial &amp; Industrial Servicing / Ice Machines Repair &amp; Service." Open 24 hours. Clearwater 33762.</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">Unknown</span></td>
+    <td>24/7</td>
+    <td>Clearwater area</td>
+    <td><span class="na">No reviews found</span></td>
+    <td class="nt"><span class="fl fv">CALL TO IDENTIFY</span> Commercial refrigeration + ice machines, Clearwater-based, 24/7. No business name in any directory. Likely a solo operator. <strong>Could be servicing your target accounts right now.</strong></td>
+  </tr>
+
+  <tr class="unc">
+    <td><span class="cn warn">(727) 287-6402</span><span class="ca">Serving Seminole / Pinellas Park area</span></td>
+    <td>Superpages + YP: "Ice Machines Repair &amp; Service / Ice Making Equipment &amp; Machines." Listed under Pinellas Park and Seminole searches. Hours: 8am–5pm.</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">Unknown</span></td>
+    <td>8am–5pm</td>
+    <td>Seminole / Pinellas Park</td>
+    <td><span class="na">No reviews found</span></td>
+    <td class="nt"><span class="fl fv">CALL TO IDENTIFY</span> Business hours suggest single operator (not 24/7). Could be a technician who went independent from Crystal Ice, Al's, or Polar. Covers south Pinellas.</td>
+  </tr>
+
+  <tr class="unc">
+    <td><span class="cn warn">(727) 647-8707</span><span class="ca">Serving Seminole area — also listed at 2321 Harn Blvd Clearwater</span></td>
+    <td>Superpages: "Ice Machines Repair &amp; Service / Refrigerating Equipment Commercial &amp; Industrial Servicing." 37 years in business per directory listing.</td>
+    <td><span class="mono" style="font-size:9px;color:var(--t3)">37 years (est. c. 1987)</span></td>
+    <td>Business hrs</td>
+    <td>Seminole, south Pinellas</td>
+    <td><span class="na">No reviews found</span></td>
+    <td class="nt"><span class="fl fw">PRIORITY — CALL FIRST</span> <strong>37 years in business is the longest tenure of any unidentified operator.</strong> Possible second contact for Stillwater (same Harn Blvd address). Deep legacy account relationships in south Pinellas. Identifying this operator is high-priority intel before prospecting Seminole/south Pinellas.</td>
+  </tr>
+
+  </tbody>
+</table>
+</div>
+
+<!-- ═══════════════ SUPPLY VS DEMAND ANALYSIS ═══════════════ -->
+<div class="sh">
+  <span class="sh-lbl" style="color:var(--g)">▸ Supply vs. Demand Analysis — Pinellas County Ice Machine Cleaning Market</span>
+  <span class="sh-note">Built from DBPR data, industry benchmarks, and operator census above</span>
+</div>
+
+<div class="demand">
+
+  <!-- DEMAND SIDE -->
+  <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.12em;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--b1);">▸ Demand Side — How Many Machines Need Cleaning?</div>
+
+  <div class="demand-grid">
+    <div class="dcard g">
+      <div class="dcard-label">Total DBPR-Licensed Establishments (Pinellas)</div>
+      <div class="dcard-num" style="color:var(--g)">~9,420</div>
+      <div class="dcard-sub">Active food service licenses in Pinellas County per DBPR current-year data (source: Pinellas Ice Co. prospecting app database, populated from DBPR inspection records)</div>
+    </div>
+    <div class="dcard a">
+      <div class="dcard-label">Establishments with Commercial Ice Machines</div>
+      <div class="dcard-num" style="color:var(--a)">~4,700</div>
+      <div class="dcard-sub">~50% of DBPR-licensed establishments have commercial ice machines. Restaurants (full-service, QSR, bars) and hotels are primary. Food trucks, caterers, and some prep kitchens excluded.</div>
+    </div>
+    <div class="dcard b">
+      <div class="dcard-label">Target Addressable Accounts (restaurants/bars/hotels with machines)</div>
+      <div class="dcard-num" style="color:var(--bl)">~4,700</div>
+      <div class="dcard-sub">This is your serviceable market — establishments that both have a machine and are in DBPR's inspection scope. Hotels with bars, beach bars, country clubs, sports venues all included.</div>
+    </div>
+    <div class="dcard r">
+      <div class="dcard-label">Annual Cleaning Events Needed (Quarterly Cadence)</div>
+      <div class="dcard-num" style="color:var(--r)">~18,800</div>
+      <div class="dcard-sub">4,700 machines × 4 cleanings/year = 18,800 cleaning events annually if 100% of machines are serviced quarterly. FDA high-volume guidance and Florida climate support quarterly standard.</div>
+    </div>
+    <div class="dcard p">
+      <div class="dcard-label">Annual Cleaning Events (Bi-Annual, Current Industry Norm)</div>
+      <div class="dcard-num" style="color:var(--p)">~9,400</div>
+      <div class="dcard-sub">At the current industry standard of bi-annual service, 9,400 cleaning events needed per year. This is how Crystal Ice, Polar, and Al's operate their existing books.</div>
+    </div>
+    <div class="dcard o">
+      <div class="dcard-label">DBPR Ice Machine Citations (Pinellas, Annual Estimate)</div>
+      <div class="dcard-num" style="color:var(--o)">~1,750</div>
+      <div class="dcard-sub">Based on your app's cited dataset (~1,771 active ice citations in the DBPR data). These are the Gold + DBPR filter targets — highest urgency cleaning demand.</div>
+    </div>
+  </div>
+
+  <!-- SUPPLY SIDE -->
+  <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.12em;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--b1);">▸ Supply Side — How Many Cleanings Can Current Operators Provide?</div>
+
+  <table class="calc-table">
+    <thead>
+      <tr>
+        <th style="min-width:220px">Operator</th>
+        <th>Cleaning Focus</th>
+        <th>Est. Technicians (Ice Cleaning)</th>
+        <th>Est. Cleanings/Day/Tech</th>
+        <th>Working Days/Yr</th>
+        <th>Annual Cleaning Capacity</th>
+        <th>Approx. Accounts Served</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="hi">
+        <td class="mono">Pinellas Ice Co. (YOU)</td>
+        <td><span class="b bg">Cleaning-Only</span></td>
+        <td>1 (you)</td>
+        <td>4–6</td>
+        <td>230</td>
+        <td class="mono" style="color:var(--g)">920–1,380/yr</td>
+        <td>230–345 accounts (quarterly)</td>
+        <td>Solo ceiling. At 150 clients quarterly = 600 cleanings/yr</td>
+      </tr>
+      <tr>
+        <td class="mono">Crystal Ice Machine Services</td>
+        <td><span class="b ba">Cleaning + Repair + Lease</span></td>
+        <td>~2 dedicated to cleaning (est.)</td>
+        <td>2–3 (mixed with repair)</td>
+        <td>250</td>
+        <td class="mono">1,000–1,500/yr</td>
+        <td>500–750 bi-annual accounts</td>
+        <td>Bi-annual standard. Majority of book is leased machines — cleaning bundled.</td>
+      </tr>
+      <tr>
+        <td class="mono">Al's Ice Machine Rentals</td>
+        <td><span class="b bn">Rental + Repair (cleaning incidental)</span></td>
+        <td>~1 (est.)</td>
+        <td>1–2 (mixed)</td>
+        <td>200 (M–F only)</td>
+        <td class="mono">200–400/yr</td>
+        <td>100–200 accounts</td>
+        <td>Cleaning is service add-on, not primary. Mon–Fri limits weekend demand.</td>
+      </tr>
+      <tr>
+        <td class="mono">Polar Ice Machines</td>
+        <td><span class="b bn">Repair + Service (cleaning bi-annual)</span></td>
+        <td>~2 (est., mixed)</td>
+        <td>1–2 (mixed with repair)</td>
+        <td>250</td>
+        <td class="mono">500–1,000/yr</td>
+        <td>250–500 bi-annual accounts</td>
+        <td>35-year book of legacy accounts. Bi-annual. Repair = primary revenue driver.</td>
+      </tr>
+      <tr>
+        <td class="mono">Extreme Ice Machine Repairs</td>
+        <td><span class="b bn">Repair primary</span></td>
+        <td>~1 (est.)</td>
+        <td>0–1 (mostly repair)</td>
+        <td>250</td>
+        <td class="mono">&lt;100/yr</td>
+        <td>&lt;50 accounts</td>
+        <td>2 employees, ~$164K revenue. Cleaning is incidental to repair calls.</td>
+      </tr>
+      <tr>
+        <td class="mono">Stillwater Ice Machines</td>
+        <td><span class="b ba">Cleaning Specialty (if active)</span></td>
+        <td>1–2 (if active)</td>
+        <td>2–4 (if active)</td>
+        <td>?</td>
+        <td class="mono">Unknown (unconfirmed)</td>
+        <td>Unknown</td>
+        <td>Unconfirmed active status. If operating, could have 50–200 accounts. Call to verify.</td>
+      </tr>
+      <tr>
+        <td class="mono">All HVAC/Refrig/Restaurant equip. combined</td>
+        <td><span class="b bn">Ice cleaning = fraction of work</span></td>
+        <td>~3–5 total (est. across all)</td>
+        <td>0.5–1 (cleaning only)</td>
+        <td>250</td>
+        <td class="mono">375–1,250/yr total</td>
+        <td>~200–600 accounts across all</td>
+        <td>Main Comm, Suncoast Cold, Carr AC, PGM, CAPS, First Choice, Certified Svc Center combined estimate</td>
+      </tr>
+      <tr>
+        <td class="mono">All Appliance Repair operators combined</td>
+        <td><span class="b bn">Ice cleaning = rare</span></td>
+        <td>~1–2 total (est.)</td>
+        <td>&lt;0.5</td>
+        <td>250</td>
+        <td class="mono">&lt;250/yr total</td>
+        <td>&lt;125 accounts</td>
+        <td">12 operators combined — but ice cleaning is not their service. Most "clean" only when doing repair calls.</td>
+      </tr>
+      <tr class="tot">
+        <td>TOTAL ESTIMATED SUPPLY (ALL OPERATORS)</td>
+        <td></td>
+        <td>~12–15 techs touching ice machine cleaning across all</td>
+        <td></td>
+        <td></td>
+        <td class="mono" style="color:var(--a)">~3,350–5,880 cleanings/yr</td>
+        <td>~1,600–2,400 accounts</td>
+        <td>Best-case estimate for entire market supply</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- GAP VISUALIZATION -->
+  <div class="gap-bar">
+    <div class="gap-bar-label">Market Gap Visualization — Annual Cleaning Events (Pinellas County)</div>
+    <div class="bar-row">
+      <div class="bar-name">Demand (quarterly standard)</div>
+      <div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--r);color:#fff;">18,800 cleaning events/yr needed</div></div>
+      <div class="bar-val" style="color:var(--r)">18,800</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-name">Demand (bi-annual standard)</div>
+      <div class="bar-track"><div class="bar-fill" style="width:50%;background:var(--a);color:#000;">9,400/yr</div></div>
+      <div class="bar-val" style="color:var(--a)">9,400</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-name">Total supply (all operators)</div>
+      <div class="bar-track"><div class="bar-fill" style="width:31%;background:var(--bl);color:#fff;">~5,880/yr best case</div></div>
+      <div class="bar-val" style="color:var(--bl)">~5,880</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-name">Pinellas Ice Co. at capacity (150 clients)</div>
+      <div class="bar-track"><div class="bar-fill" style="width:3.2%;background:var(--g);color:#000;">600</div></div>
+      <div class="bar-val" style="color:var(--g)">600</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-name">Dedicated-only cleaning supply (you + Crystal + Stillwater)</div>
+      <div class="bar-track"><div class="bar-fill" style="width:16%;background:#5aa860;">~3,000/yr</div></div>
+      <div class="bar-val" style="color:#5aa860">~3,000</div>
+    </div>
+    <div style="font-size:9px;color:var(--t3);margin-top:8px;font-style:italic;">Note: At bi-annual standard (current norm), supply gap is ~3,500–6,000 cleanings/yr. At quarterly standard, gap exceeds 12,000/yr. This market is massively undersupplied.</div>
+  </div>
+
+  <!-- KEY INSIGHTS -->
+  <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.12em;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--b1);">▸ What This Analysis Tells You</div>
+
+  <div class="insight">
+    <div class="insight-label">The Supply Gap is Structural, Not Cyclical</div>
+    <div class="insight-text">Even at the <em>current industry standard</em> of bi-annual cleaning, the entire Pinellas supply chain (all operators combined) cannot fully service the market. At the quarterly standard that Florida's climate and FDA guidance actually warrant, the gap is north of 12,000 cleaning events per year. <strong>This is not a market where you're stealing from competitors — you're creating demand that currently goes unmet.</strong></div>
+  </div>
+
+  <div class="insight" style="border-left-color:var(--a);">
+    <div class="insight-label" style="color:var(--a);">Competitor Capacity is Mostly Locked Up in Repair and Rental</div>
+    <div class="insight-text">Crystal Ice, Al's, and Polar collectively own most of the existing cleaning relationships — but they are primarily repair and rental businesses. Their cleaning work is bundled into service calls or lease agreements, not sold as standalone cleaning. <strong>The standalone compliance-cleaning market segment is essentially unclaimed.</strong> When a restaurant owner with a cited ice machine violation needs a cleaning specialist (not a repair tech), there is almost no one to call except you.</div>
+  </div>
+
+  <div class="insight" style="border-left-color:var(--bl);">
+    <div class="insight-label" style="color:var(--bl);">The 1,750 Cited Accounts Are the Wedge</div>
+    <div class="insight-text">Of ~4,700 total ice machine accounts in Pinellas, ~1,750 have active DBPR ice machine citations. These are your Gold + DBPR leads — the ones where the health department has already documented the problem. <strong>Not one of the ~30 operators in this census uses DBPR citation data as a proactive sales tool.</strong> You have proprietary intelligence advantage over every single competitor in this market.</div>
+  </div>
+
+  <div class="insight" style="border-left-color:var(--r);">
+    <div class="insight-label" style="color:var(--r);">Your Solo Ceiling is Not a Market Ceiling</div>
+    <div class="insight-text">At 150 clients on a quarterly cadence, you are serving ~600 cleaning events per year — approximately 3% of the market need at the bi-annual standard, or 3.2% at quarterly. <strong>Solo capacity at 150–180 clients is a business capacity ceiling, not a market ceiling.</strong> The market can absorb a second tech, a third tech, and eventually a technician franchise or territory licensing model without approaching saturation.</div>
+  </div>
+
+</div>
+
+<footer>
+  <span class="ft">Pinellas Ice Co. — Comprehensive Market Census &amp; Demand Analysis · June 2026</span>
+  <span class="ft">Sources: Yelp, YP, Superpages, BBB, Sunbiz, HomeAdvisor, DBPR Annual Report 2024-25, CFESA Directory, Primary Websites · pinellasiceco.com</span>
+</footer>
+
+</body>
+</html>

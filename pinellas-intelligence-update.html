@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pinellas Ice Co. — Intelligence Update & Corrections</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+:root{
+  --bg:#070d0a;--s1:#0c1410;--s2:#101a13;--b1:#1a2e1e;--b2:#243828;
+  --t1:#c8e0cc;--t2:#7da887;--t3:#3d6645;--t4:#1e3422;
+  --g:#3ddc6e;--gd:#1a6b35;--gb:#051509;
+  --r:#f26b6b;--rd:#7a2020;--rb:#150505;
+  --a:#f5c842;--ad:#7a5c10;--ab:#150f00;
+  --bl:#5aa8f5;--bld:#1a4070;--blb:#030d1a;
+  --o:#f5923a;--od:#8a4010;--ob:#150800;
+  --p:#c084f5;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--t1);font-family:'Inter',sans-serif;font-size:13px;line-height:1.6;}
+
+.hdr{background:var(--s1);border-bottom:1px solid var(--b1);padding:20px 32px;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.hdr-title{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--g);letter-spacing:.1em;text-transform:uppercase;}
+.hdr-sub{font-size:10px;color:var(--t3);font-family:'JetBrains Mono',monospace;margin-top:3px;}
+
+.page{max-width:1200px;margin:0 auto;padding:32px;}
+
+/* SECTION */
+.sec{margin-bottom:40px;}
+.sec-title{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid var(--b1);margin-bottom:16px;}
+
+/* CARDS */
+.card{background:var(--s1);border:1px solid var(--b1);padding:20px;margin-bottom:12px;border-radius:2px;}
+.card.g{border-left:3px solid var(--g);}
+.card.r{border-left:3px solid var(--r);}
+.card.a{border-left:3px solid var(--a);}
+.card.b{border-left:3px solid var(--bl);}
+.card.o{border-left:3px solid var(--o);}
+.card.p{border-left:3px solid var(--p);}
+
+.card-label{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;}
+.card-label.g{color:var(--g);}
+.card-label.r{color:var(--r);}
+.card-label.a{color:var(--a);}
+.card-label.b{color:var(--bl);}
+.card-label.o{color:var(--o);}
+.card-label.p{color:var(--p);}
+
+.card-body{font-size:12px;color:var(--t2);line-height:1.7;}
+.card-body strong{color:var(--t1);font-weight:500;}
+.card-body .hi{color:var(--g);font-weight:600;}
+.card-body .warn{color:var(--a);}
+.card-body .bad{color:var(--r);}
+
+/* DATA TABLE */
+.dtable{width:100%;border-collapse:collapse;margin-top:12px;}
+.dtable th{background:var(--s2);color:var(--t3);font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:7px 10px;text-align:left;border-bottom:1px solid var(--b2);border-right:1px solid var(--b1);}
+.dtable th:last-child{border-right:none;}
+.dtable td{padding:8px 10px;border-bottom:1px solid var(--b1);border-right:1px solid var(--b1);font-size:11px;color:var(--t1);}
+.dtable td:last-child{border-right:none;}
+.dtable tr:last-child td{border-bottom:none;}
+.dtable tr.was{background:rgba(245,146,58,.04);}
+.dtable tr.now{background:rgba(61,220,110,.04);}
+.dtable tr.hi td{background:rgba(61,220,110,.05);}
+.dtable tr.bad td{background:rgba(242,107,107,.04);}
+
+/* MONO */
+.mono{font-family:'JetBrains Mono',monospace;}
+.num-big{font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:700;line-height:1;display:block;margin-bottom:4px;}
+.num-sub{font-size:10px;color:var(--t3);}
+
+/* GRID */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+
+/* BADGE */
+.b{display:inline-block;padding:1px 6px;border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;}
+.bg{background:var(--gb);color:var(--g);border:1px solid var(--gd);}
+.br{background:var(--rb);color:var(--r);border:1px solid var(--rd);}
+.ba{background:var(--ab);color:var(--a);border:1px solid var(--ad);}
+.bb{background:var(--blb);color:var(--bl);border:1px solid var(--bld);}
+.bo{background:var(--ob);color:var(--o);border:1px solid var(--od);}
+
+/* SEARCH RESULT */
+.serp{background:var(--s2);border:1px solid var(--b1);padding:16px;margin-bottom:10px;border-radius:2px;}
+.serp-pos{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t3);margin-bottom:4px;}
+.serp-title{color:#88c4ff;font-size:13px;margin-bottom:3px;}
+.serp-url{font-size:10px;color:var(--g);margin-bottom:4px;}
+.serp-desc{font-size:11px;color:var(--t2);line-height:1.5;}
+.serp-you{border-left:3px solid var(--g);}
+.serp-comp{border-left:3px solid var(--r);}
+.serp-gap{border:1px dashed var(--b2);background:transparent;padding:12px;color:var(--t3);font-size:11px;font-style:italic;}
+
+/* ACTION ITEMS */
+.action-list{list-style:none;padding:0;}
+.action-list li{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--b1);}
+.action-list li:last-child{border-bottom:none;}
+.action-num{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--g);flex-shrink:0;width:24px;}
+.action-text{font-size:12px;color:var(--t2);line-height:1.6;}
+.action-text strong{color:var(--t1);}
+.action-text .tag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:1px 5px;border-radius:2px;margin-left:4px;}
+.urgent{background:var(--rb);color:var(--r);border:1px solid var(--rd);}
+.easy{background:var(--gb);color:var(--g);border:1px solid var(--gd);}
+.medium{background:var(--ab);color:var(--a);border:1px solid var(--ad);}
+
+footer{border-top:1px solid var(--b1);padding:16px 32px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.ft{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t3);}
+
+@media(max-width:700px){.grid2,.grid3{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div>
+    <div class="hdr-title">Pinellas Ice Co. — Intelligence Update, Corrections & New Findings</div>
+    <div class="hdr-sub">Session: June 2 2026 · Augments full-census.html with verified data and four research tasks completed</div>
+  </div>
+</div>
+
+<div class="page">
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- TASK 1: DBPR ESTABLISHMENT COUNT — CORRECTED      -->
+<!-- ══════════════════════════════════════════════════ -->
+
+<div class="sec">
+  <div class="sec-title" style="color:var(--r)">▸ Task 1 — DBPR Establishment Count: Corrected</div>
+
+  <div class="card r">
+    <div class="card-label r">Critical Correction — Our 9,420 Estimate Was Wrong</div>
+    <div class="card-body">
+      Per FloridaFoodSafety.org (aggregates live DBPR + FDACS data, updated weekly): <strong class="hi">Pinellas County has 5,193 DBPR-licensed food service establishments</strong> — not 9,420.
+      The app's larger number reflects cumulative inspection records across time: the same establishment appears multiple times across inspection cycles, some records are for closed/expired licenses, and the DBPR dataset includes all historical records, not just currently active licenses. The 5,193 is the active-establishment headcount.
+    </div>
+  </div>
+
+  <div class="grid3">
+    <div class="card g">
+      <div class="card-label g">Active DBPR Establishments (Pinellas)</div>
+      <span class="num-big" style="color:var(--g)">5,193</span>
+      <div class="num-sub">Source: FloridaFoodSafety.org, June 2026 · DBPR restaurant/food service scope only</div>
+    </div>
+    <div class="card a">
+      <div class="card-label a">FDACS Retail Food (grocery, gas station markets)</div>
+      <span class="num-big" style="color:var(--a)">2,755</span>
+      <div class="num-sub">Not our market — grocery stores rarely have commercial ice machines in restaurant sense</div>
+    </div>
+    <div class="card b">
+      <div class="card-label b">Combined food establishments (total)</div>
+      <span class="num-big" style="color:var(--bl)">7,948</span>
+      <div class="num-sub">Full count including retail food — DBPR 5,193 is your relevant universe</div>
+    </div>
+  </div>
+
+  <div class="card a">
+    <div class="card-label a">Pinellas County Compliance Performance vs. State Average</div>
+    <div class="card-body">
+      <table class="dtable">
+        <thead><tr><th>Metric</th><th>Pinellas County</th><th>Florida State Average</th><th>Direction</th></tr></thead>
+        <tbody>
+          <tr class="bad"><td>Inspection Pass Rate</td><td class="mono" style="color:var(--r)">80.1%</td><td class="mono">86.0%</td><td style="color:var(--r)">▼ Worse</td></tr>
+          <tr class="bad"><td>Average Violations per Inspection</td><td class="mono" style="color:var(--r)">6.1</td><td class="mono">4.7</td><td style="color:var(--r)">▲ Higher</td></tr>
+          <tr class="bad"><td>Closures per 100 Facilities (2026 YTD)</td><td class="mono" style="color:var(--r)">1.44</td><td class="mono">1.38</td><td style="color:var(--r)">▲ Higher</td></tr>
+          <tr><td>Emergency Closures (2026 YTD)</td><td class="mono">75</td><td class="mono">State total: 246</td><td style="color:var(--a)">Pinellas = 30.5% of all FL closures</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:12px;font-size:11px;color:var(--a);">
+        <strong style="color:var(--t1);">What this means for your pitch:</strong> Pinellas County restaurants fail inspections at a rate 5.9 points worse than the state average and rack up 30% more violations per inspection. The compliance urgency argument isn't hypothetical here — it's supported by county-level data. When you walk in and say "Pinellas restaurants are flagged at above-average rates," you're telling the truth and you can cite it.
+      </div>
+    </div>
+  </div>
+
+  <div class="card g">
+    <div class="card-label g">Revised TAM Calculation (Corrected)</div>
+    <div class="card-body">
+      <table class="dtable">
+        <thead><tr><th>Metric</th><th>Previous (Estimate)</th><th>Corrected</th><th>Change</th></tr></thead>
+        <tbody>
+          <tr class="was"><td>Total DBPR Establishments</td><td class="mono warn">~9,420</td><td class="mono hi">5,193</td><td style="color:var(--r)">-45%</td></tr>
+          <tr><td>Estimated w/ commercial ice machines (~60%)</td><td class="mono">~4,700</td><td class="mono">~3,116</td><td style="color:var(--r)">-34%</td></tr>
+          <tr><td>Machines (×1.35 multi-machine multiplier)</td><td class="mono">~4,700</td><td class="mono">~4,207</td><td style="color:var(--a)">Similar — multiplier offsets</td></tr>
+          <tr class="hi"><td>Annual cleaning events needed (quarterly)</td><td class="mono">~18,800</td><td class="mono hi">~16,828</td><td style="color:var(--a)">-10%</td></tr>
+          <tr class="hi"><td>Annual cleaning events (bi-annual standard)</td><td class="mono">~9,400</td><td class="mono hi">~8,414</td><td style="color:var(--a)">-10%</td></tr>
+          <tr class="hi"><td>Revenue opportunity (150 clients quarterly, $129/mo)</td><td class="mono hi">$232,200 ARR</td><td class="mono hi">$232,200 ARR</td><td style="color:var(--g)">Unchanged — client capacity not market-limited</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:12px;font-size:11px;color:var(--t2);">
+        The corrected numbers reduce the TAM by ~10% but don't materially change the core thesis. At 150 clients you're still serving &lt;5% of the market. The supply gap remains structural. Your revenue ceiling is your time, not market demand.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- TASK 2: GOOGLE MAPS / SEARCH AUDIT                -->
+<!-- ══════════════════════════════════════════════════ -->
+
+<div class="sec">
+  <div class="sec-title" style="color:var(--bl)">▸ Task 2 — Google Search & Local Pack Audit</div>
+
+  <div class="card b">
+    <div class="card-label b">Methodology Note</div>
+    <div class="card-body">
+      Google Maps 3-pack results are location-dependent and device-dependent — remote research cannot reproduce what a Clearwater restaurant owner sees when they search on their phone. What we <em>can</em> determine: what ranks in organic search, who has GMB listings, and which platforms aggregate you vs. competitors. The 3-pack itself requires you to test in the field: open an incognito Chrome tab on your phone while in Clearwater and search each query below.
+    </div>
+  </div>
+
+  <div class="card-label b" style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;color:var(--bl);">Query: "ice machine cleaning Clearwater Florida"</div>
+  <div class="serp serp-you">
+    <div class="serp-pos">Organic Result — CONFIRMED PRESENT</div>
+    <div class="serp-title">Ice Machine Cleaning Clearwater, FL | Pinellas Ice Co</div>
+    <div class="serp-url">pinellasiceco.com/ice-machine-cleaning-clearwater-fl-pinellas-ice-co</div>
+    <div class="serp-desc">Your city landing page ranks organically. "$99 Initial Clean &amp; Test · Serving Clearwater · Same-week availability · ATP results in minutes · No obligation." Good keyword targeting. Page exists and indexes.</div>
+  </div>
+  <div class="serp serp-comp">
+    <div class="serp-pos">Competitor Organic Result — CONFIRMED PRESENT</div>
+    <div class="serp-title">Crystal Ice Machine Services | Tampa Bay, FL</div>
+    <div class="serp-url">crystalice.com</div>
+    <div class="serp-desc">Ranks for same queries. "PM cleanings at $295/visit · Lease from ~$175/mo all-in." Transparent pricing on page — strong organic positioning. 30+ year domain authority.</div>
+  </div>
+  <div class="serp serp-gap">
+    <strong>3-Pack status: UNKNOWN.</strong> Must test in-market on mobile in incognito mode. Your GMB profile is incomplete per prior sessions — this is the most likely reason you may not appear in the local pack. Completing GMB is the highest-ROI action from this entire analysis.
+  </div>
+
+  <div class="card o" style="margin-top:16px;">
+    <div class="card-label o">New Platform Found: ColdFix.com</div>
+    <div class="card-body">
+      ColdFix.com is a commercial refrigeration marketplace (like Angi, but specifically for commercial refrigeration). Crystal Ice is already listed there with a <strong class="bad">3.9★ rating from 14 reviews</strong> and a <strong class="warn">$205 diagnostic fee</strong>. This platform is growing and restaurant owners searching for ice machine service may find it. <strong>You are not listed on ColdFix.</strong>
+      <br><br>
+      Claiming a ColdFix listing is free and puts you in front of restaurant owners who are specifically searching for commercial refrigeration service — your exact target audience. Crystal Ice's 3.9★ on this platform (vs. their stronger Yelp reviews) suggests some dissatisfied commercial customers. Review their negative reviews to understand the pain points to address.
+      <br><br>
+      <span class="b ba">ACTION</span> Visit commercialcoldfix.com → click "Add Your Business" → claim a listing. Zero cost.
+    </div>
+  </div>
+
+  <div class="card a" style="margin-top:12px;">
+    <div class="card-label a">Organic Search Summary — What You Control vs. What's Missing</div>
+    <div class="card-body">
+      <table class="dtable">
+        <thead><tr><th>Search Channel</th><th>Your Status</th><th>Competitor Status</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr class="hi"><td>Google Organic (city pages)</td><td style="color:var(--g)">✓ Ranking (Clearwater confirmed)</td><td>Crystal Ice also ranking</td><td><span class="b bg">Good — maintain</span></td></tr>
+          <tr class="bad"><td>Google Maps 3-Pack (GMB)</td><td style="color:var(--r)">⚠ Unknown — GMB incomplete</td><td>Crystal Ice likely present</td><td><span class="b br">Complete GMB NOW</span></td></tr>
+          <tr><td>Yelp</td><td>Not confirmed listed</td><td>Crystal Ice, Al's, Polar listed</td><td><span class="b ba">Add free listing</span></td></tr>
+          <tr class="bad"><td>ColdFix.com (commercial refrigeration marketplace)</td><td style="color:var(--r)">✗ Not listed</td><td>Crystal Ice listed (3.9★)</td><td><span class="b br">Claim listing</span></td></tr>
+          <tr><td>Thumbtack / Angi / HomeAdvisor</td><td>Not confirmed</td><td>Various operators listed</td><td><span class="b ba">Optional — add later</span></td></tr>
+          <tr><td>pinellasiceco.github.io (CleanScore directory)</td><td style="color:var(--g)">✓ Live and QR-linked</td><td>No competitor has equivalent</td><td><span class="b bg">Moat — protect it</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- TASK 3: COMPETITIVE INTELLIGENCE (MYSTERY SHOP)   -->
+<!-- ══════════════════════════════════════════════════ -->
+
+<div class="sec">
+  <div class="sec-title" style="color:var(--a)">▸ Task 3 — Competitive Intelligence (Remote Mystery Shop)</div>
+
+  <div class="grid2">
+    <div class="card a">
+      <div class="card-label a">Crystal Ice Machine Services — Updated Profile</div>
+      <div class="card-body">
+        <table class="dtable">
+          <tbody>
+            <tr><td style="width:140px">Google Rating (ColdFix)</td><td class="mono bad">3.9★ from 14 reviews</td></tr>
+            <tr><td>Diagnostic Fee</td><td class="mono warn">$205 just to show up</td></tr>
+            <tr><td>PM Cleaning Price</td><td class="mono">$295 / visit (semi-annual)</td></tr>
+            <tr><td>All-In Lease Price</td><td class="mono">~$175/month</td></tr>
+            <tr><td>Customer Testimonials</td><td>"No-contract thing sold us" · "Actual people who pick up the phone" · "Emergency repair on a Saturday morning [Tyler was] there in 2 hours"</td></tr>
+            <tr><td>Complaint signals</td><td>3.9★ suggests meaningful dissatisfied customers at commercial level</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:10px;font-size:11px;color:var(--a);">
+          <strong style="color:var(--t1);">Pitch implication:</strong> When a prospect says "we already use Crystal Ice," your response: "How much are they charging for a cleaning visit? $295? And did they show you a number proving the machine actually passed? We charge $129/month and every cleaning generates an RLU report you can show your health inspector."
+        </div>
+      </div>
+    </div>
+
+    <div class="card r">
+      <div class="card-label r">NEW Competitor Found: Pure Ice LLC (pureicecleaning.com)</div>
+      <div class="card-body">
+        <table class="dtable">
+          <tbody>
+            <tr><td style="width:120px">Owner</td><td>Al Perrotta — retired Volusia County Sheriff, 30-year law enforcement</td></tr>
+            <tr><td>HQ</td><td>New Smyrna Beach, FL 32168</td></tr>
+            <tr><td>Phone</td><td class="mono">(386) 690-2730</td></tr>
+            <tr><td>Founded</td><td>Post-2019 retirement</td></tr>
+            <tr><td>Model</td><td>Dedicated ice machine cleaning only — bi-annual standard</td></tr>
+            <tr><td>Price</td><td>Not published — "Get a Free Quote"</td></tr>
+            <tr><td>ATP Testing</td><td style="color:var(--r)">No</td></tr>
+            <tr><td>Coverage</td><td>Florida + Georgia (statewide claim)</td></tr>
+            <tr><td>Review</td><td>"Spent over 3 hours cleaning our machine ... got it looking better than the day we purchased it"</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:10px;font-size:11px;color:var(--r);">
+          <strong style="color:var(--t1);">Assessment:</strong> Most directly philosophically similar to Pinellas Ice Co. — solo operator, cleaning-only, post-career pivot, integrity-forward. HQ is Volusia County (Daytona area) which is ~100 miles from Pinellas. Serves "Florida and Georgia" but response time to Pinellas from New Smyrna Beach is likely 1.5-2 hours — makes him non-competitive for same-day prospecting. No ATP, no DBPR intelligence. Not a current threat in Pinellas, but the model validates yours nationally.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card g" style="margin-top:0;">
+    <div class="card-label g">Manufacturer Warranty = Compliance Lever (Confirmed)</div>
+    <div class="card-body">
+      All major manufacturers (Scotsman, Hoshizaki, Manitowoc, Ice-O-Matic, Follett) explicitly require semi-annual professional cleaning to maintain warranty. Direct quote from industry source: <em>"Professional cleaning and servicing on a semi-annual basis is recommended by all ice machine manufacturers and <strong>may void any warranties if not properly maintained.</strong>"</em>
+      <br><br>
+      Hoshizaki America's service department: <em>"All ice machines require at least an annual cleaning and sanitizing — more often if conditions require it."</em>
+      <br><br>
+      <strong style="color:var(--g);">This is a pitch argument you haven't been using explicitly:</strong> Beyond DBPR compliance, your cleaning documentation protects the manufacturer warranty. If a machine fails and the manufacturer sees no cleaning records, they can deny the warranty claim. Your RLU report + service record = documented proof of compliance that protects the machine investment. That's a CFO-level argument on top of the health code argument.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- TASK 4: MANUFACTURER AUTHORIZED SERVICE NETWORK   -->
+<!-- ══════════════════════════════════════════════════ -->
+
+<div class="sec">
+  <div class="sec-title" style="color:var(--p)">▸ Task 4 — Manufacturer Authorized Service Network</div>
+
+  <div class="card" style="border-left:3px solid var(--p);">
+    <div class="card-label" style="color:var(--p);">Hoshizaki Southeastern Distribution Center — Key Finding</div>
+    <div class="card-body">
+      In January 2025, Hoshizaki acquired Cannon Marketing Inc. (a major Southeast US foodservice equipment distributor) and merged it into <strong>Hoshizaki Southeastern Distribution Center, Inc.</strong> (800 Jetstream Dr, Orlando FL 32824). This entity now manages all Hoshizaki authorized service reps for the Southeast including Florida.
+      <br><br>
+      <strong>Why this matters:</strong> Hoshizaki authorized service reps in Pinellas County — likely Crystal Ice, Al's, and/or Polar — touch machines for warranty work and authorized PM. They are inside the accounts you're prospecting. They do not compete on cleaning-only compliance service, but they have relationships with the same owners. <strong>One of them could become a referral partner</strong> — if their repair tech shows up, finds the machine is visibly contaminated, and has no cleaning program to offer, they could hand your card to the owner.
+      <br><br>
+      Hoshizaki America maintains a "Find a Service Rep" locator at hoshizakiamerica.com/locate-service-rep/ — the tool is JavaScript-rendered and couldn't be extracted remotely, but searching it on your desktop will show which company in Pinellas County is the authorized Hoshizaki service rep. <strong>That company is a referral relationship to build.</strong>
+    </div>
+  </div>
+
+  <div class="card a">
+    <div class="card-label a">Manufacturer Authorized Service — What You Should Know</div>
+    <div class="card-body">
+      <table class="dtable">
+        <thead><tr><th>Brand</th><th>Southeast US Authority</th><th>Pinellas Authorized Rep</th><th>Strategy</th></tr></thead>
+        <tbody>
+          <tr><td>Hoshizaki</td><td>Hoshizaki Southeastern Dist. Center, Orlando (407-297-8833)</td><td>Unknown — check hoshizakiamerica.com/locate-service-rep</td><td>Identify → referral partnership pitch</td></tr>
+          <tr><td>Manitowoc</td><td>Manitowoc Ice (national) — welbilt.com</td><td>Likely Crystal Ice or Al's (both list Manitowoc)</td><td>Same — identify, pitch referral</td></tr>
+          <tr><td>Scotsman</td><td>Scotsman Ice (national) — scotsman-ice.com</td><td>Crystal Ice, Al's list Scotsman servicing</td><td>Same approach</td></tr>
+          <tr><td>Ice-O-Matic</td><td>Ice-O-Matic (national)</td><td>Professional Appliance Repair markets Ice-O-Matic</td><td>Same approach</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:10px;font-size:11px;color:var(--a);">
+        The referral play: Authorized repair techs are reactive (fix what's broken). You are proactive (prevent what would break). These are complements, not competitors. A Hoshizaki-authorized tech who shows up to a restaurant with a contaminated machine and can say "call Pinellas Ice Co. for a cleaning — they do ATP verification" is a warm referral engine. Worth a 15-minute coffee with whoever holds the authorized service contract.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- ADDITIONAL INTELLIGENCE: NOT IN PREVIOUS CENSUS   -->
+<!-- ══════════════════════════════════════════════════ -->
+
+<div class="sec">
+  <div class="sec-title" style="color:var(--o)">▸ Additional Intelligence — Items Not in Previous Census</div>
+
+  <div class="grid2">
+    <div class="card o">
+      <div class="card-label o">Keys Jam-rock Grill — Most Recent Pinellas Closure</div>
+      <div class="card-body">
+        Tarpon Springs restaurant closed May 28, 2026 for roach activity. This demonstrates ongoing inspection activity and enforcement in Pinellas. <strong>The most recent DBPR-cited establishments are warm leads — they are actively under regulatory pressure right now.</strong> Your app's daily DBPR pull should surface these accounts as same-week prospecting priorities.
+      </div>
+    </div>
+
+    <div class="card r">
+      <div class="card-label r">Crystal Ice Rating Discrepancy</div>
+      <div class="card-body">
+        Crystal Ice has <strong class="bad">3.9★ from 14 reviews on ColdFix</strong> (commercial refrigeration marketplace) vs. stronger ratings on Yelp and Google. The ColdFix audience is commercial operators specifically — the reviews there may be more relevant to restaurant owners than residential Yelp reviews. A 3.9★ in a commercial context is meaningful. One in four customers was not fully satisfied. <strong>Find and read those negative reviews before your next Crystal Ice prospect conversation.</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="card g">
+    <div class="card-label g">Your Website Appearing Organically for Key Queries</div>
+    <div class="card-body">
+      pinellasiceco.com appeared in organic search results for "ice machine cleaning Clearwater Florida" — confirming the city-page SEO strategy is working. This is significant because it means inbound leads who Google this query will find you. The gap: <strong>your GMB profile is incomplete, meaning you likely don't appear in the local map pack</strong> — the three results with star ratings and phone numbers that appear above organic results. That's the highest-click placement in local search. Completing GMB is the highest-priority digital action from this entire analysis. Cost: zero. Time: 30 minutes.
+    </div>
+  </div>
+
+  <div class="card b">
+    <div class="card-label b">Pinellas County Closure Seasonality (2026 Data)</div>
+    <div class="card-body">
+      75 emergency closures in 2026 YTD as of June 2. This tracks to roughly 150 closures projected for the full year — above the historical Pinellas rate. Most recent closures: Keys Jam-rock Grill (Tarpon Springs, roaches), Hong Kong Restaurant (South Pasadena, roaches), Discovery Indian Cuisine (Palm Harbor, rodents), Chiang Mai (Clearwater, no warewash facilities), Red Lobster #0019 (St. Pete, roaches). <br><br>
+      <strong>Ice machine contamination is not a closure trigger by itself</strong> — machines don't close restaurants, other violations do. But inspection events that find ice machine violations (your DBPR data) often precede broader scrutiny and re-inspections. An owner who got cited for ice machine contamination is also a worried owner. That's your opening.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- PRIORITIZED ACTION LIST                           -->
+<!-- ══════════════════════════════════════════════════ -->
+
+<div class="sec">
+  <div class="sec-title" style="color:var(--g)">▸ Prioritized Action List — What This Research Demands</div>
+
+  <ul class="action-list">
+    <li>
+      <div class="action-num">1</div>
+      <div class="action-text">
+        <strong>Complete your Google My Business profile.</strong> 30 minutes. Zero cost. Highest return of anything in this document. Your organic ranking is confirmed; your 3-pack presence is not. GMB completion is the single action that closes that gap. Add photos, verify address, add service areas (all Pinellas cities), add service category (Ice Machine Cleaning Service). <span class="tag urgent">URGENT</span>
+      </div>
+    </li>
+    <li>
+      <div class="action-num">2</div>
+      <div class="action-text">
+        <strong>Call (727) 647-8707 and (727) 570-8748.</strong> Two unidentified operators: one with 37 years in business, one with a 5-star review and 14 years. These people are actively in your market. Ask for a commercial ice machine cleaning quote. You'll learn who they are, what they charge, and whether they are a competitor or a referral source. 10 minutes each. <span class="tag urgent">URGENT</span>
+      </div>
+    </li>
+    <li>
+      <div class="action-num">3</div>
+      <div class="action-text">
+        <strong>Call Stillwater Ice Machines at (727) 458-0066 and (727) 647-8707.</strong> These may be the same operation. Stillwater's Yelp says "Cleaning Ice Machines is our Specialty." If they are operating, you have a direct cleaning-specialist competitor in Pinellas. If not, you don't. You cannot run accurate competitive intelligence with this unknown. <span class="tag urgent">URGENT</span>
+      </div>
+    </li>
+    <li>
+      <div class="action-num">4</div>
+      <div class="action-text">
+        <strong>Claim a ColdFix listing at commercialcoldfix.com/submit.</strong> Crystal Ice is already listed there at 3.9★. ColdFix is where commercial operators specifically search for ice machine service. Your ATP differentiation and CleanScore QR would be visible on that platform to exactly your target audience. Free. <span class="tag easy">EASY WIN</span>
+      </div>
+    </li>
+    <li>
+      <div class="action-num">5</div>
+      <div class="action-text">
+        <strong>Test the Google 3-pack in the field.</strong> Open Chrome incognito on your phone in Clearwater, St. Pete, and Largo. Search "ice machine cleaning near me" and "ice machine cleaning Clearwater." Screenshot what appears. Do this in multiple parts of the county. This is the one thing only you can do — it requires physical location. 20 minutes on your next prospecting day. <span class="tag easy">EASY WIN</span>
+      </div>
+    </li>
+    <li>
+      <div class="action-num">6</div>
+      <div class="action-text">
+        <strong>Look up the Hoshizaki authorized service rep for Pinellas at hoshizakiamerica.com/locate-service-rep/.</strong> Enter a Clearwater ZIP code. Whoever comes up — Crystal Ice, Al's, Polar, or someone else — is the company that touches Hoshizaki warranty machines in your territory. That's a referral relationship worth a conversation. <span class="tag medium">MEDIUM TERM</span>
+      </div>
+    </li>
+    <li>
+      <div class="action-num">7</div>
+      <div class="action-text">
+        <strong>Add warranty protection to your pitch.</strong> Manufacturer warranty requires documented professional cleaning. Your RLU report + service record = warranty protection documentation. This is a CFO/owner argument that works at premium accounts: "We're not just keeping you compliant with health code — we're protecting your $4,000-$12,000 machine investment from a voided warranty claim." <span class="tag medium">PITCH UPDATE</span>
+      </div>
+    </li>
+    <li>
+      <div class="action-num">8</div>
+      <div class="action-text">
+        <strong>Update your TAM presentation to use 5,193 establishments.</strong> The 9,420 figure in the app reflects historical cumulative records, not active current licenses. For investor conversations, pitches to FRLA, or any external presentation: 5,193 DBPR-licensed establishments, ~3,116 with ice machines, ~4,200 total machines, 8,400-16,800 annual cleaning events needed. These are defensible, sourced numbers. <span class="tag medium">ACCURACY</span>
+      </div>
+    </li>
+    <li>
+      <div class="action-num">9</div>
+      <div class="action-text">
+        <strong>Read Crystal Ice's negative reviews on ColdFix.</strong> Their 3.9★ means some customers are unhappy. The specific complaints (response time? pricing surprises? cleaning quality?) tell you what to lead with when you walk in on a Crystal Ice account. If the complaint pattern is "they're slow," you lead with same-week availability. If it's pricing, you lead with your published model. <span class="tag medium">INTELLIGENCE</span>
+      </div>
+    </li>
+    <li>
+      <div class="action-num">10</div>
+      <div class="action-text">
+        <strong>Add the Pinellas compliance stats to your walk-in opener.</strong> "Pinellas County restaurants fail inspections at an 80.1% pass rate — below the state average of 86%. You're already in a higher-scrutiny environment." This is factual, county-specific, and creates urgency without feeling like a generic pitch. Source is FloridaFoodSafety.org and DBPR data. <span class="tag medium">PITCH UPDATE</span>
+      </div>
+    </li>
+  </ul>
+</div>
+
+</div><!-- /page -->
+
+<footer>
+  <span class="ft">Pinellas Ice Co. — Intelligence Update · June 2 2026 · Sources: FloridaFoodSafety.org, ColdFix.com, pureicecleaning.com, hoshizakiamerica.com, DBPR Annual Report 2024-25</span>
+  <span class="ft">pinellasiceco.com · For internal use only</span>
+</footer>
+
+</body>
+</html>
