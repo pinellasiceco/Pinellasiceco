@@ -1015,8 +1015,7 @@ header{background:var(--navy);
     <div class="dc" style="margin-top:12px">
       <div class="dct">&#x1F4E4; Export &amp; Reset</div>
       <button class="xbtn" onclick="exportCSV()" style="margin-bottom:6px;width:100%">Export Pipeline to CSV</button>
-      <button class="xbtn" onclick="exportDirectoryData()" style="background:#059669;color:#fff;border-color:#059669;margin-bottom:6px;width:100%">&#x1F4E5; Export Directory Data</button>
-      <button class="xbtn" onclick="exportCleanScoreJSON()" ontouchend="event.preventDefault();exportCleanScoreJSON()" style="background:#0f766e;color:#fff;border-color:#0f766e;margin-bottom:10px;width:100%;touch-action:manipulation">&#x1F4CB; Export CleanScore JSON</button>
+      <button class="xbtn" onclick="exportDirectoryData()" style="background:#059669;color:#fff;border-color:#059669;margin-bottom:10px;width:100%">&#x1F4E5; Export Directory Data</button>
       <button class="dbtn" onclick="clrLog()" style="margin-bottom:4px;width:100%">Clear Call Log</button>
       <button class="dbtn" onclick="clrCustomers()" style="margin-bottom:4px;width:100%">Clear Customer Data</button>
       <button class="dbtn" onclick="clrAll()" style="margin-bottom:4px;width:100%">Clear ALL Data (local reset)</button>
@@ -5007,61 +5006,6 @@ function exportCSV(){
   a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
   a.download='pic_prospects_'+localISO(new Date())+'.csv';
   a.click();toast('CSV exported');
-}
-function buildCleanScoreExport(){
-  var ACTIVE=['customer_recurring','customer_quarterly','customer_once','customer_intro'];
-  var output={};
-  var seq=parseInt(localStorage.getItem('cleanscore_seq')||'0',10);
-  var changed=false;
-  for(var pid in customers){
-    var c=customers[pid];
-    if(!c||!c.status)continue;
-    if(ACTIVE.indexOf(c.status)===-1)continue;
-    var hist=c.service_history;
-    if(!hist||!hist.length)continue;
-    var sorted=hist.slice().sort(function(a,b){return new Date(b.date)-new Date(a.date);});
-    var visit=sorted[0];
-    if(!visit||!visit.date)continue;
-    var certId=c.cert_id;
-    if(!certId){
-      seq++;
-      certId='PIC-'+String(seq).padStart(4,'0');
-      c.cert_id=certId;
-      changed=true;
-    }
-    var atpPre=null;
-    if(visit.atp_pre!==undefined&&visit.atp_pre!==''){var p0=Number(visit.atp_pre);atpPre=isNaN(p0)?null:p0;}
-    var atpPost=null;
-    var rawPost=visit.atp_post!==undefined?visit.atp_post:visit.atp;
-    if(rawPost!==undefined&&rawPost!==''){var p1=Number(rawPost);atpPost=isNaN(p1)?null:p1;}
-    var biz=c.name||'';
-    if(!biz){var pr=P.find(function(x){return String(x.id)===String(pid);});if(pr)biz=pr.name||'';}
-    var svcType=visit.type||'';
-    if(svcType==='maintenance_60')svcType='60-Day Certified Clean';
-    else if(svcType==='deep_clean')svcType='Deep Clean';
-    else if(!svcType)svcType='Quarterly Certified Clean';
-    output[certId]={business_name:biz,last_service_date:visit.date,next_service_date:c.next_service||null,service_type:svcType,atp_pre:atpPre,atp_post:atpPost};
-  }
-  if(changed){custSave();localStorage.setItem('cleanscore_seq',String(seq));}
-  function nullify(v){
-    if(v===undefined||v===null)return null;
-    if(typeof v!=='object')return v;
-    var r=Array.isArray(v)?[]:{};
-    for(var k in v){r[k]=v[k]===undefined?null:nullify(v[k]);}
-    return r;
-  }
-  return nullify(output);
-}
-function exportCleanScoreJSON(){
-  var data=buildCleanScoreExport();
-  var json=JSON.stringify(data,null,2);
-  var blob=new Blob([json],{type:'application/json'});
-  var url=URL.createObjectURL(blob);
-  var a=document.createElement('a');
-  a.href=url;a.download='cleanscore.json';
-  document.body.appendChild(a);a.click();document.body.removeChild(a);
-  setTimeout(function(){URL.revokeObjectURL(url);},1000);
-  toast('cleanscore.json downloaded — commit to repo root');
 }
 function clrLog(){
   if(!confirm('Clear all call log data? Cannot be undone.'))return;
