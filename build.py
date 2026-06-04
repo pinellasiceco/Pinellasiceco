@@ -7341,12 +7341,15 @@ function picSupabaseUrl(){
 function pushCustomerToSupabase(pid){
   var key=localStorage.getItem('pic_supabase_key');
   if(!key)return;
-  fetch(picSupabaseUrl()+'/customers',{
+  fetch(picSupabaseUrl()+'/customers?on_conflict=pid',{
     method:'POST',
-    headers:{'Content-Type':'application/json','Authorization':'Bearer '+key,'apikey':key,'Prefer':'resolution=merge-duplicates'},
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+key,'apikey':key,'Prefer':'resolution=merge-duplicates,return=representation'},
     body:JSON.stringify({pid:Number(pid),data:customers[pid],updated_at:new Date().toISOString()})
   }).then(function(r){
-    if(!r.ok){r.text().then(function(t){toast('Sync error '+r.status+': '+t.slice(0,80));});}
+    r.text().then(function(t){
+      if(!r.ok){toast('Sync error '+r.status+': '+t.slice(0,80));}
+      else{toast('Sync OK: '+t.slice(0,80));}
+    });
   }).catch(function(e){toast('Sync fetch error: '+e.message);});
 }
 function pullCustomersFromSupabase(){
