@@ -7,439 +7,126 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --navy: #0f1f38;
-  --gold: #c9973a;
-  --ice: #5b9fd4;
-  --green: #1a7a45;
-  --green-bg: #e8f5ee;
-  --red: #c0392b;
-  --red-bg: #fdf0ee;
-  --amber: #8a5c00;
-  --amber-bg: #fdf6e0;
-  --gray: #6b7280;
-  --border: #dde2ea;
-  --ink: #1a2535;
-  --bg: #f4f6f9;
+  --navy:#0f1f38;--gold:#c9973a;--ice:#5b9fd4;
+  --green:#1a7a45;--green-bg:#e8f5ee;
+  --red:#c0392b;--red-bg:#fdf0ee;
+  --amber:#8a5c00;--amber-bg:#fdf6e0;
+  --gray:#6b7280;--border:#dde2ea;--ink:#1a2535;--bg:#f4f6f9;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  background: var(--bg);
-  font-family: 'Barlow', sans-serif;
-  color: var(--ink);
-  font-size: 15px;
-  line-height: 1.6;
-  max-width: 520px;
-  margin: 0 auto;
-  min-height: 100vh;
-}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);font-family:'Barlow',sans-serif;color:var(--ink);font-size:15px;line-height:1.6;max-width:520px;margin:0 auto;min-height:100vh;}
 
 /* HEADER */
-.header {
-  background: var(--navy);
-  padding: 16px 20px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.header img { height: 28px; width: auto; }
-.header-name {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 16px;
-  font-weight: 800;
-  color: white;
-  letter-spacing: .04em;
-  text-transform: uppercase;
-  flex: 1;
-}
-.header-badge {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--gold);
-  background: rgba(201,151,58,.15);
-  padding: 4px 8px;
-  border-radius: 3px;
-}
+.header{background:var(--navy);padding:14px 20px;display:flex;align-items:center;gap:10px;}
+.header-pic-logo{height:28px;width:auto;}
+.header-name{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:white;letter-spacing:.04em;text-transform:uppercase;flex:1;}
+.header-cs-logo{height:28px;width:auto;object-fit:contain;}
 
 /* STATES */
-.state { display: none; }
-.state.active { display: block; }
+.state{display:none;}
+.state.active{display:block;}
 
 /* LOADING */
-#state-loading {
-  padding: 60px 20px;
-  text-align: center;
-}
-.spinner {
-  width: 36px;
-  height: 36px;
-  border: 3px solid var(--border);
-  border-top-color: var(--navy);
-  border-radius: 50%;
-  animation: spin .8s linear infinite;
-  margin: 0 auto 16px;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.loading-text {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--gray);
-}
+#state-loading{padding:60px 20px;text-align:center;}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--navy);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-text{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);}
 
 /* NOT FOUND */
-#state-notfound {
-  padding: 48px 20px;
-  text-align: center;
-}
-.nf-icon { font-size: 40px; margin-bottom: 16px; }
-.nf-title {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--navy);
-  text-transform: uppercase;
-  margin-bottom: 10px;
-}
-.nf-text { font-size: 14px; color: var(--gray); line-height: 1.6; }
-.nf-id {
-  display: inline-block;
-  background: var(--red-bg);
-  color: var(--red);
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: .08em;
-  padding: 4px 10px;
-  border-radius: 4px;
-  margin: 12px 0;
-}
+#state-notfound{padding:48px 20px;text-align:center;}
+.nf-icon{font-size:40px;margin-bottom:16px;}
+.nf-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--navy);text-transform:uppercase;margin-bottom:10px;}
+.nf-text{font-size:14px;color:var(--gray);line-height:1.6;}
+.nf-id{display:inline-block;background:var(--red-bg);color:var(--red);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:.08em;padding:4px 10px;border-radius:4px;margin:12px 0;}
 
-/* CERT CARD */
-#state-found { padding: 20px; }
+/* ERROR */
+#state-error{padding:48px 20px;text-align:center;}
 
-.cert-status-bar {
-  border-radius: 10px;
-  padding: 18px 20px;
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.cert-status-bar.pass { background: var(--green-bg); border: 1px solid #a8d5b8; }
-.cert-status-bar.expired { background: var(--amber-bg); border: 1px solid #e8c97a; }
-.cert-status-bar.fail { background: var(--red-bg); border: 1px solid #e8b0a8; }
+/* FOUND */
+#state-found{padding:20px;}
 
-.status-icon { font-size: 28px; flex-shrink: 0; }
-.status-text { flex: 1; }
-.status-label {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 18px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: .04em;
-  line-height: 1.1;
-  margin-bottom: 2px;
-}
-.pass .status-label { color: var(--green); }
-.expired .status-label { color: var(--amber); }
-.fail .status-label { color: var(--red); }
-.status-sub { font-size: 12px; color: var(--gray); }
+/* STATUS BAR */
+.cert-status-bar{border-radius:10px;padding:16px 18px;margin-bottom:18px;display:flex;align-items:center;gap:14px;}
+.cert-status-bar.pass{background:var(--green-bg);border:1px solid #a8d5b8;}
+.cert-status-bar.expired{background:var(--amber-bg);border:1px solid #e8c97a;}
+.cert-status-bar.fail{background:var(--red-bg);border:1px solid #e8b0a8;}
+.status-icon{font-size:26px;flex-shrink:0;}
+.status-label{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;line-height:1.1;margin-bottom:2px;}
+.pass .status-label{color:var(--green);}
+.expired .status-label{color:var(--amber);}
+.fail .status-label{color:var(--red);}
+.status-sub{font-size:12px;color:var(--gray);}
 
-/* SHIELD */
-.shield-wrap {
-  text-align: center;
-  margin-bottom: 20px;
-}
-.shield {
-  display: inline-block;
-  background: var(--navy);
-  clip-path: polygon(50% 0%, 100% 15%, 100% 65%, 50% 100%, 0% 65%, 0% 15%);
-  width: 110px;
-  height: 126px;
-  padding: 22px 14px 30px;
-  text-align: center;
-}
-.shield-top {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 7px;
-  font-weight: 700;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,.6);
-  margin-bottom: 2px;
-}
-.shield-main {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 13px;
-  font-weight: 900;
-  color: white;
-  text-transform: uppercase;
-  line-height: 1.05;
-  margin-bottom: 4px;
-}
-.shield-sub {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 7px;
-  font-weight: 700;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--gold);
-}
+/* CERT BADGE IMAGE */
+.badge-wrap{text-align:center;margin-bottom:18px;}
+.cert-badge-img{width:180px;height:auto;display:block;margin:0 auto;filter:drop-shadow(0 4px 16px rgba(15,31,56,.25));}
+.clean-ice-img{width:56px;height:auto;display:block;margin:8px auto 0;opacity:.85;}
 
-/* MAIN CARD */
-.info-card {
-  background: white;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: 16px;
-}
-.info-card-header {
-  background: var(--navy);
-  padding: 14px 18px;
-}
-.info-card-title {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 4px;
-}
-.info-card-name {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 22px;
-  font-weight: 800;
-  color: white;
-  text-transform: uppercase;
-  line-height: 1.1;
-}
-.info-card-body { padding: 0; }
+/* INFO CARD */
+.info-card{background:white;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px;}
+.info-card-header{background:var(--navy);padding:14px 18px;}
+.info-card-title{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+.info-card-name{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:white;text-transform:uppercase;line-height:1.1;}
+.info-row{display:flex;align-items:center;padding:11px 18px;border-bottom:1px solid var(--border);gap:12px;}
+.info-row:last-child{border-bottom:none;}
+.info-row-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gray);width:110px;flex-shrink:0;}
+.info-row-value{font-size:14px;color:var(--ink);font-weight:500;flex:1;}
+.info-row-value.mono{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:.04em;}
 
-.info-row {
-  display: flex;
-  align-items: center;
-  padding: 12px 18px;
-  border-bottom: 1px solid var(--border);
-  gap: 12px;
-}
-.info-row:last-child { border-bottom: none; }
-.info-row-label {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--gray);
-  width: 110px;
-  flex-shrink: 0;
-}
-.info-row-value {
-  font-size: 14px;
-  color: var(--ink);
-  font-weight: 500;
-  flex: 1;
-}
-.info-row-value.mono {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: .04em;
-}
-
-/* ATP SCORES */
-.atp-card {
-  background: white;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: 16px;
-}
-.atp-card-header {
-  padding: 14px 18px 12px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.atp-card-title {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--gray);
-}
-.atp-pass-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 3px 8px;
-  border-radius: 3px;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-.atp-pass-badge.pass { background: var(--green-bg); color: var(--green); }
-.atp-pass-badge.marginal { background: var(--amber-bg); color: var(--amber); }
-.atp-pass-badge.fail { background: var(--red-bg); color: var(--red); }
-
-.atp-scores {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  padding: 16px 18px;
-  gap: 8px;
-}
-.atp-score-item { text-align: center; }
-.atp-score-num {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 36px;
-  font-weight: 900;
-  line-height: 1;
-  margin-bottom: 2px;
-}
-.atp-score-num.pre { color: var(--red); }
-.atp-score-num.post { color: var(--green); }
-.atp-score-num.standard { color: var(--gray); }
-.atp-score-label {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--gray);
-  line-height: 1.3;
-}
-.atp-arrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  color: var(--border);
-  padding-top: 8px;
-}
+/* ATP CARD */
+.atp-card{background:white;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px;}
+.atp-card-header{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.atp-card-title{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gray);}
+.atp-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:3px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
+.atp-badge.pass{background:var(--green-bg);color:var(--green);}
+.atp-badge.marginal{background:var(--amber-bg);color:var(--amber);}
+.atp-badge.fail{background:var(--red-bg);color:var(--red);}
+.atp-badge.pending{background:#f0f4f8;color:var(--gray);}
+.atp-scores{display:grid;grid-template-columns:1fr 1fr 1fr;padding:16px 18px;gap:8px;}
+.atp-score-item{text-align:center;}
+.atp-score-num{font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;line-height:1;margin-bottom:2px;}
+.atp-score-num.pre{color:var(--red);}
+.atp-score-num.post{color:var(--green);}
+.atp-score-num.standard{color:var(--gray);}
+.atp-score-num.pending{color:var(--gray);font-size:24px;}
+.atp-score-label{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);line-height:1.3;}
+.atp-arrow{display:flex;align-items:center;justify-content:center;padding-top:8px;font-size:18px;color:var(--border);}
+.atp-pending-note{padding:12px 18px;border-top:1px solid var(--border);font-size:12px;color:var(--gray);font-style:italic;}
 
 /* NEXT SERVICE */
-.next-card {
-  background: white;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 16px 18px;
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.next-icon { font-size: 24px; flex-shrink: 0; }
-.next-label {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--gray);
-  margin-bottom: 3px;
-}
-.next-date {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 18px;
-  font-weight: 800;
-  color: var(--navy);
-  text-transform: uppercase;
-}
+.next-card{background:white;border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;gap:14px;}
+.next-icon{font-size:22px;flex-shrink:0;}
+.next-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gray);margin-bottom:3px;}
+.next-date{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:var(--navy);text-transform:uppercase;}
 
 /* TECH BLOCK */
-.tech-block {
-  background: var(--navy);
-  border-radius: 10px;
-  padding: 16px 18px;
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.tech-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: rgba(255,255,255,.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 16px;
-  font-weight: 800;
-  color: white;
-  flex-shrink: 0;
-}
-.tech-info { flex: 1; }
-.tech-name {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 15px;
-  font-weight: 800;
-  color: white;
-  text-transform: uppercase;
-  margin-bottom: 1px;
-}
-.tech-role {
-  font-size: 12px;
-  color: rgba(255,255,255,.5);
-}
-.tech-cert {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--gold);
-  text-align: right;
-}
-.tech-cert span {
-  display: block;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 13px;
-  font-weight: 800;
-  color: rgba(255,255,255,.7);
-  letter-spacing: .06em;
-  margin-top: 1px;
-}
+.tech-block{background:var(--navy);border-radius:10px;padding:16px 18px;margin-bottom:14px;display:flex;align-items:center;gap:14px;}
+.tech-left{display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;}
+.tech-avatar{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:white;}
+.tech-clean-ice{width:32px;height:auto;opacity:.75;}
+.tech-info{flex:1;}
+.tech-name{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;color:white;text-transform:uppercase;margin-bottom:1px;}
+.tech-role{font-size:12px;color:rgba(255,255,255,.5);}
+.tech-cert{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);text-align:right;}
+.tech-cert span{display:block;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.06em;margin-top:1px;}
 
-/* FOOTER NOTE */
-.verify-note {
-  text-align: center;
-  padding: 8px 20px 28px;
-  font-size: 12px;
-  color: var(--gray);
-  line-height: 1.5;
-}
-.verify-note a {
-  color: var(--ice);
-  text-decoration: none;
-}
-
-/* ERROR state */
-#state-error {
-  padding: 48px 20px;
-  text-align: center;
-}
+/* VERIFY NOTE */
+.verify-note{text-align:center;padding:8px 20px 28px;font-size:12px;color:var(--gray);line-height:1.5;}
+.verify-note a{color:var(--ice);text-decoration:none;}
 </style>
 </head>
 <body>
 
 <div class="header">
-  <img src="https://raw.githubusercontent.com/pinellasiceco/Pinellasiceco/main/pic_logo.png"
-       alt="Pinellas Ice Co."
-       onerror="this.style.display='none'">
+  <img class="header-pic-logo"
+    src="https://raw.githubusercontent.com/pinellasiceco/Pinellasiceco/main/pic_logo.png"
+    alt="Pinellas Ice Co."
+    onerror="this.style.display='none'">
   <div class="header-name">Pinellas Ice Co.</div>
-  <div class="header-badge">CleanScore</div>
+  <img class="header-cs-logo"
+    src="https://raw.githubusercontent.com/pinellasiceco/Pinellasiceco/main/3B82805F-8BA4-42EA-98C1-92FC16CE7F84.png"
+    alt="CleanScore"
+    onerror="this.outerHTML='<div style=\'font-family:Barlow Condensed,sans-serif;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);background:rgba(201,151,58,.15);border:1px solid rgba(201,151,58,.25);padding:4px 10px;border-radius:20px;\'>CleanScore</div>'">
 </div>
 
 <!-- LOADING -->
@@ -450,7 +137,7 @@ body {
 
 <!-- NOT FOUND -->
 <div id="state-notfound" class="state">
-  <div class="nf-icon">🔍</div>
+  <div class="nf-icon">&#128269;</div>
   <div class="nf-title">Certificate Not Found</div>
   <div class="nf-id" id="nf-id-display"></div>
   <p class="nf-text">This certificate ID was not found in our records. If you believe this is an error, please contact Pinellas Ice Co. directly.<br><br><a href="tel:7278556873" style="color:var(--ice)">(727) 855-6873</a></p>
@@ -458,51 +145,56 @@ body {
 
 <!-- ERROR -->
 <div id="state-error" class="state">
-  <div class="nf-icon">⚠️</div>
-  <div class="nf-title" style="color:var(--navy)">Verification Unavailable</div>
-  <p class="nf-text" style="margin-top:8px">Unable to load verification data. Please try again in a moment or contact us directly.<br><br><a href="tel:7278556873" style="color:var(--ice)">(727) 855-6873</a></p>
+  <div style="padding:48px 20px;text-align:center;">
+    <div style="font-size:40px;margin-bottom:16px;">&#9888;&#65039;</div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:var(--navy);text-transform:uppercase;margin-bottom:10px;">Verification Unavailable</div>
+    <p style="font-size:14px;color:var(--gray);line-height:1.6;">Unable to load verification data. Please try again or contact us directly.<br><br><a href="tel:7278556873" style="color:var(--ice)">(727) 855-6873</a></p>
+  </div>
 </div>
 
 <!-- FOUND -->
 <div id="state-found" class="state">
 
   <div id="cert-status-bar" class="cert-status-bar pass">
-    <div class="status-icon" id="status-icon">✅</div>
+    <div class="status-icon" id="status-icon">&#9989;</div>
     <div class="status-text">
       <div class="status-label" id="status-label">Certified Clean</div>
-      <div class="status-sub" id="status-sub">ATP verified · Last service <span id="status-date"></span></div>
+      <div class="status-sub" id="status-sub">ATP verified &middot; Last service <span id="status-date"></span></div>
     </div>
   </div>
 
-  <div class="shield-wrap">
-    <div class="shield">
-      <div class="shield-top">Pinellas Ice Co.</div>
-      <div class="shield-main">Sanitized<br>Ice</div>
-      <div class="shield-sub">ATP Verified</div>
-    </div>
+  <div class="badge-wrap">
+    <img class="cert-badge-img"
+      src="https://raw.githubusercontent.com/pinellasiceco/Pinellasiceco/main/7400C4E1-A18C-4836-AF45-DE503D636E5B.png"
+      alt="Sanitized Ice Certified"
+      onerror="this.style.display='none'">
+    <img class="clean-ice-img"
+      src="https://raw.githubusercontent.com/pinellasiceco/Pinellasiceco/main/5791D747-D1F5-4957-922E-3B35A5D4B7D4.png"
+      alt="Clean Ice"
+      onerror="this.style.display='none'">
   </div>
 
   <div class="info-card">
     <div class="info-card-header">
       <div class="info-card-title">Verified Location</div>
-      <div class="info-card-name" id="biz-name">—</div>
+      <div class="info-card-name" id="biz-name">&#8212;</div>
     </div>
-    <div class="info-card-body">
+    <div>
       <div class="info-row">
         <div class="info-row-label">Cert ID</div>
-        <div class="info-row-value mono" id="cert-id-display">—</div>
+        <div class="info-row-value mono" id="cert-id-display">&#8212;</div>
       </div>
       <div class="info-row">
         <div class="info-row-label">Last Service</div>
-        <div class="info-row-value" id="last-service">—</div>
+        <div class="info-row-value" id="last-service">&#8212;</div>
       </div>
       <div class="info-row">
         <div class="info-row-label">Service Type</div>
-        <div class="info-row-value" id="service-type">—</div>
+        <div class="info-row-value" id="service-type">&#8212;</div>
       </div>
       <div class="info-row">
         <div class="info-row-label">Verified By</div>
-        <div class="info-row-value">Pinellas Ice Co. · Clearwater, FL</div>
+        <div class="info-row-value">Pinellas Ice Co. &middot; Clearwater, FL</div>
       </div>
     </div>
   </div>
@@ -510,16 +202,16 @@ body {
   <div class="atp-card">
     <div class="atp-card-header">
       <div class="atp-card-title">ATP Bioluminescence Results</div>
-      <div class="atp-pass-badge pass" id="atp-badge">✓ Passed</div>
+      <div class="atp-badge pass" id="atp-badge">&#10003; Passed</div>
     </div>
-    <div class="atp-scores">
+    <div class="atp-scores" id="atp-scores-block">
       <div class="atp-score-item">
-        <div class="atp-score-num pre" id="atp-pre">—</div>
+        <div class="atp-score-num pre" id="atp-pre">&#8212;</div>
         <div class="atp-score-label">Pre-Clean<br>RLU</div>
       </div>
-      <div class="atp-arrow">→</div>
+      <div class="atp-arrow">&#8594;</div>
       <div class="atp-score-item">
-        <div class="atp-score-num post" id="atp-post">—</div>
+        <div class="atp-score-num post" id="atp-post">&#8212;</div>
         <div class="atp-score-label">Post-Clean<br>RLU</div>
       </div>
       <div style="display:flex;align-items:center;justify-content:center;padding-top:8px;font-size:18px;color:var(--border)">|</div>
@@ -528,156 +220,142 @@ body {
         <div class="atp-score-label">FDA<br>Standard</div>
       </div>
     </div>
+    <div class="atp-pending-note" id="atp-pending-note" style="display:none">ATP scores not recorded for this visit.</div>
   </div>
 
   <div class="next-card" id="next-service-card">
-    <div class="next-icon">📅</div>
+    <div class="next-icon">&#128197;</div>
     <div>
       <div class="next-label">Next Scheduled Service</div>
-      <div class="next-date" id="next-service">—</div>
+      <div class="next-date" id="next-service">&#8212;</div>
     </div>
   </div>
 
   <div class="tech-block">
-    <div class="tech-avatar">J</div>
+    <div class="tech-left">
+      <div class="tech-avatar">J</div>
+      <img class="tech-clean-ice"
+        src="https://raw.githubusercontent.com/pinellasiceco/Pinellasiceco/main/5791D747-D1F5-4957-922E-3B35A5D4B7D4.png"
+        alt="Clean Ice"
+        onerror="this.style.display='none'">
+    </div>
     <div class="tech-info">
       <div class="tech-name">John Serrantino</div>
-      <div class="tech-role">Lead Technician · Pinellas Ice Co.</div>
+      <div class="tech-role">Lead Technician &middot; Pinellas Ice Co.</div>
     </div>
     <div class="tech-cert">
       Cert ID
-      <span id="cert-id-footer">—</span>
+      <span id="cert-id-footer">&#8212;</span>
     </div>
   </div>
 
   <div class="verify-note">
-    This certificate was issued by Pinellas Ice Co. and is verified against our live service records.<br>
-    Questions? <a href="tel:7278556873">(727) 855-6873</a> · <a href="https://www.pinellasiceco.com">PinellasIceCo.com</a>
+    This certificate was issued by Pinellas Ice Co. and verified against live service records.<br>
+    Questions? <a href="tel:7278556873">(727) 855-6873</a> &middot; <a href="https://www.pinellasiceco.com">PinellasIceCo.com</a>
   </div>
 
 </div>
 
 <script>
-const CLEANSCORE_URL = 'https://pinellasiceco.github.io/Pinellasiceco/cleanscore.json';
+var CLEANSCORE_URL='https://pinellasiceco.github.io/Pinellasiceco/cleanscore.json';
 
-function show(id) {
-  document.querySelectorAll('.state').forEach(function(s) {
-    s.classList.remove('active');
-  });
+function show(id){
+  document.querySelectorAll('.state').forEach(function(s){s.classList.remove('active');});
   document.getElementById(id).classList.add('active');
 }
 
-function formatDate(iso) {
-  if (!iso) return 'Not scheduled';
-  var d = new Date(iso + 'T12:00:00');
-  return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+function formatDate(iso){
+  if(!iso)return 'Not scheduled';
+  var d=new Date(iso+'T12:00:00');
+  return d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
 }
 
-function getDaysSince(iso) {
-  if (!iso) return 999;
-  var d = new Date(iso + 'T12:00:00');
-  var now = new Date();
-  return Math.floor((now - d) / (1000 * 60 * 60 * 24));
+function daysSince(iso){
+  if(!iso)return 999;
+  var d=new Date(iso+'T12:00:00');
+  return Math.floor((new Date()-d)/(1000*60*60*24));
 }
 
-function getCertStatus(rec) {
-  var days = getDaysSince(rec.last_service_date);
-  var post = rec.atp_post;
-  if (post === null || post === undefined) return 'unknown';
-  if (post > 10) return 'fail';
-  if (days > 120) return 'expired';
+function certStatus(rec){
+  var days=daysSince(rec.last_service_date);
+  var post=rec.atp_post;
+  if(post!==null&&post!==undefined){
+    if(post>10)return 'fail';
+  }
+  if(days>120)return 'expired';
   return 'pass';
 }
 
-function renderCert(certId, rec) {
-  var status = getCertStatus(rec);
-  var bar = document.getElementById('cert-status-bar');
-  var icon = document.getElementById('status-icon');
-  var label = document.getElementById('status-label');
-  var sub = document.getElementById('status-sub');
+function renderCert(certId,rec){
+  var status=certStatus(rec);
+  var bar=document.getElementById('cert-status-bar');
+  var icon=document.getElementById('status-icon');
+  var label=document.getElementById('status-label');
 
-  bar.className = 'cert-status-bar ' + status;
-  if (status === 'pass') {
-    icon.textContent = '\u2705';
-    label.textContent = 'Certified Clean';
-  } else if (status === 'expired') {
-    icon.textContent = '\u23F0';
-    label.textContent = 'Service Overdue';
-  } else if (status === 'fail') {
-    icon.textContent = '\u26A0\uFE0F';
-    label.textContent = 'Remediation Required';
-  } else {
-    icon.textContent = '\u2753';
-    label.textContent = 'Status Unknown';
-  }
+  bar.className='cert-status-bar '+status;
+  if(status==='pass'){icon.textContent='\u2705';label.textContent='Certified Clean';}
+  else if(status==='expired'){icon.textContent='\u23F0';label.textContent='Service Overdue';}
+  else{icon.textContent='\u26A0\uFE0F';label.textContent='Remediation Required';}
 
-  document.getElementById('status-date').textContent = formatDate(rec.last_service_date);
-  document.getElementById('biz-name').textContent = rec.business_name || 'Verified Establishment';
-  document.getElementById('cert-id-display').textContent = certId;
-  document.getElementById('cert-id-footer').textContent = certId;
-  document.getElementById('last-service').textContent = formatDate(rec.last_service_date);
-  document.getElementById('service-type').textContent = rec.service_type || 'Quarterly Certified Clean';
+  document.getElementById('status-date').textContent=formatDate(rec.last_service_date);
+  document.getElementById('biz-name').textContent=rec.business_name||'Verified Establishment';
+  document.getElementById('cert-id-display').textContent=certId;
+  document.getElementById('cert-id-footer').textContent=certId;
+  document.getElementById('last-service').textContent=formatDate(rec.last_service_date);
+  document.getElementById('service-type').textContent=rec.service_type||'Quarterly Certified Clean';
 
-  var pre = rec.atp_pre;
-  var post = rec.atp_post;
-  document.getElementById('atp-pre').textContent = (pre !== null && pre !== undefined) ? pre : '—';
-  document.getElementById('atp-post').textContent = (post !== null && post !== undefined) ? post : '—';
+  var pre=rec.atp_pre,post=rec.atp_post;
+  var hasAtp=(pre!==null&&pre!==undefined)||(post!==null&&post!==undefined);
 
-  var badge = document.getElementById('atp-badge');
-  if (post !== null && post !== undefined) {
-    if (post <= 10) {
-      badge.className = 'atp-pass-badge pass';
-      badge.textContent = '\u2713 Passed';
-    } else if (post <= 100) {
-      badge.className = 'atp-pass-badge marginal';
-      badge.textContent = '\u26A0 Marginal';
-    } else {
-      badge.className = 'atp-pass-badge fail';
-      badge.textContent = '\u2715 Failed';
+  if(hasAtp){
+    document.getElementById('atp-pre').textContent=(pre!==null&&pre!==undefined)?pre:'\u2014';
+    document.getElementById('atp-post').textContent=(post!==null&&post!==undefined)?post:'\u2014';
+    var badge=document.getElementById('atp-badge');
+    if(post!==null&&post!==undefined){
+      if(post<=10){badge.className='atp-badge pass';badge.textContent='\u2713 Passed';}
+      else if(post<=100){badge.className='atp-badge marginal';badge.textContent='\u26A0 Marginal';}
+      else{badge.className='atp-badge fail';badge.textContent='\u2715 Failed';}
     }
+  } else {
+    document.getElementById('atp-scores-block').style.display='none';
+    document.getElementById('atp-pending-note').style.display='block';
+    document.getElementById('atp-badge').className='atp-badge pending';
+    document.getElementById('atp-badge').textContent='Pending';
   }
 
-  var nextEl = document.getElementById('next-service');
-  if (rec.next_service_date) {
-    nextEl.textContent = formatDate(rec.next_service_date);
+  var nextEl=document.getElementById('next-service');
+  if(rec.next_service_date){
+    nextEl.textContent=formatDate(rec.next_service_date);
   } else {
-    document.getElementById('next-service-card').style.display = 'none';
+    document.getElementById('next-service-card').style.display='none';
   }
 
   show('state-found');
 }
 
-function init() {
-  var params = new URLSearchParams(window.location.search);
-  var certId = (params.get('id') || '').toUpperCase().trim();
-
-  if (!certId) {
-    document.getElementById('nf-id-display').textContent = 'No certificate ID provided';
+function init(){
+  var params=new URLSearchParams(window.location.search);
+  var certId=(params.get('id')||'').toUpperCase().trim();
+  if(!certId){
+    document.getElementById('nf-id-display').textContent='No certificate ID provided';
     show('state-notfound');
     return;
   }
-
-  fetch(CLEANSCORE_URL + '?v=' + Date.now())
-    .then(function(r) {
-      if (!r.ok) throw new Error('fetch failed');
-      return r.json();
-    })
-    .then(function(data) {
-      var rec = data[certId];
-      if (!rec) {
-        document.getElementById('nf-id-display').textContent = certId;
+  fetch(CLEANSCORE_URL+'?v='+Date.now())
+    .then(function(r){if(!r.ok)throw new Error('fetch failed');return r.json();})
+    .then(function(data){
+      var rec=data[certId];
+      if(!rec){
+        document.getElementById('nf-id-display').textContent=certId;
         show('state-notfound');
         return;
       }
-      renderCert(certId, rec);
+      renderCert(certId,rec);
     })
-    .catch(function() {
-      show('state-error');
-    });
+    .catch(function(){show('state-error');});
 }
 
 init();
 </script>
-
 </body>
 </html>
