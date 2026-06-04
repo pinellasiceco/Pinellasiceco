@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PIC Roadmap">
+<meta name="theme-color" content="#0f1f38">
+<title>18-Month Roadmap | Pinellas Ice Co.</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0f1f38;--navy2:#162840;--gold:#c9973a;--gold2:#e0b05a;--ice:#5b9fd4;--ice2:#7ab8e8;
+  --gray:#6b7280;--border:#e2e8f0;--ink:#1a2535;--bg:#f0f4f8;--card:#fff;
+  --p1:#1a7a45;--p1b:#e8f5ee;--p1m:#a8d5b8;
+  --p2:#1a5a9a;--p2b:#e8f0fb;--p2m:#a8c0e8;
+  --p3:#7a4a00;--p3b:#fdf3dc;--p3m:#e8c97a;
+  --p4:#6a1a7a;--p4b:#f4eefb;--p4m:#c8a0e0;
+  --p5:#0f5a5a;--p5b:#e6f5f5;--p5m:#8ad0d0;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);font-family:'Barlow',sans-serif;color:var(--ink);font-size:14px;line-height:1.5;min-height:100vh;padding-bottom:calc(20px + env(safe-area-inset-bottom));}
+
+/* HEADER */
+.site-header{background:var(--navy);padding:0 20px;padding-top:env(safe-area-inset-top);position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.3);}
+.hdr-inner{max-width:860px;margin:0 auto;display:flex;align-items:center;gap:12px;height:52px;}
+.hdr-logo{height:24px;width:auto;}
+.hdr-title{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.06em;flex:1;}
+.hdr-pill{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);background:rgba(201,151,58,.15);border:1px solid rgba(201,151,58,.25);padding:4px 10px;border-radius:20px;white-space:nowrap;}
+
+.main{max-width:860px;margin:0 auto;padding:20px 16px 60px;}
+
+/* TRACKER */
+.tracker{background:var(--navy);border-radius:14px;padding:22px 20px 20px;margin-bottom:18px;position:relative;overflow:hidden;}
+.tracker::after{content:'';position:absolute;right:-50px;top:-50px;width:200px;height:200px;background:radial-gradient(circle,rgba(91,159,212,.1),transparent 65%);pointer-events:none;}
+.tr-eye{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
+.tr-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px;}
+.tr-stat{text-align:center;}
+.tr-num{font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:900;line-height:1;margin-bottom:2px;color:#fff;}
+.tr-num.gold{color:var(--gold2);}.tr-num.ice{color:var(--ice2);}.tr-num.green{color:#4db87a;}.tr-num.amber{color:#f0c060;}
+.tr-lbl{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);}
+.tr-inputs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding-top:16px;border-top:1px solid rgba(255,255,255,.1);}
+.tr-inp-lbl{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.38);margin-bottom:5px;}
+.tr-inp{width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:7px;padding:8px 10px;color:#fff;font-family:'DM Mono',monospace;font-size:15px;font-weight:500;text-align:center;outline:none;-webkit-appearance:none;transition:border-color .2s;}
+.tr-inp:focus{border-color:rgba(201,151,58,.5);}
+.tr-inp::placeholder{color:rgba(255,255,255,.18);}
+.tr-inp[type="date"]{font-size:13px;}
+
+/* OVERALL PROGRESS */
+.goal-card{background:#fff;border-radius:10px;border:1px solid var(--border);padding:16px 18px;margin-bottom:18px;}
+.gc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.gc-lbl{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gray);}
+.gc-pct{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:900;color:var(--navy);}
+.gc-bar-wrap{height:7px;background:var(--bg);border-radius:4px;overflow:hidden;margin-bottom:12px;}
+.gc-bar-fill{height:100%;background:linear-gradient(90deg,var(--navy),var(--ice));border-radius:4px;transition:width .4s ease;min-width:0;}
+.gc-chips{display:flex;gap:5px;}
+.gc-chip{flex:1;text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:4px 2px;border-radius:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background .2s,color .2s;}
+
+/* PHASE CARD */
+.phase-card{background:#fff;border-radius:14px;border:1px solid var(--border);margin-bottom:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04);transition:box-shadow .2s;}
+.phase-card.current-phase{box-shadow:0 0 0 2px var(--gold),0 4px 16px rgba(0,0,0,.08);}
+
+.ph-hdr{padding:16px 18px 12px;display:flex;align-items:flex-start;gap:12px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;}
+.ph-hdr:active{background:rgba(0,0,0,.03);}
+.ph-num{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;padding:4px 9px;border-radius:20px;white-space:nowrap;flex-shrink:0;margin-top:3px;}
+.ph-meta{flex:1;min-width:0;}
+.ph-name{font-family:'Barlow Condensed',sans-serif;font-size:21px;font-weight:900;text-transform:uppercase;letter-spacing:.03em;line-height:1.05;color:var(--navy);margin-bottom:2px;}
+.ph-target{font-size:11.5px;color:var(--gray);line-height:1.4;}
+.ph-target strong{font-weight:600;color:var(--ink);}
+.ph-next-up{font-size:11px;color:var(--gray);margin-top:5px;font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ph-next-up span{font-style:normal;font-weight:600;color:var(--ink);}
+.ph-chevron{font-size:16px;color:var(--gray);transition:transform .25s;flex-shrink:0;margin-top:6px;}
+.phase-card.open .ph-chevron{transform:rotate(180deg);}
+
+.ph-prog{padding:0 18px 12px;display:flex;align-items:center;gap:10px;}
+.ph-bar-wrap{flex:1;height:4px;background:var(--bg);border-radius:2px;overflow:hidden;}
+.ph-bar-fill{height:100%;border-radius:2px;transition:width .4s ease;}
+.ph-prog-lbl{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;color:var(--gray);white-space:nowrap;}
+
+.phase-body{display:none;padding:2px 18px 20px;border-top:1px solid var(--border);}
+.phase-card.open .phase-body{display:block;}
+
+.cat-lbl{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gray);margin:16px 0 6px;}
+
+/* OBJECTIVE */
+.obj{display:flex;align-items:flex-start;gap:11px;padding:8px 6px;margin:0 -6px;cursor:pointer;border-radius:5px;border-bottom:1px solid rgba(0,0,0,.04);-webkit-tap-highlight-color:transparent;transition:background .12s;}
+.obj:last-child{border-bottom:none;}
+.obj:active{background:rgba(0,0,0,.04);}
+.obj-dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:background .18s,border-color .18s;}
+.obj-dot svg{opacity:0;transition:opacity .18s;}
+.obj.done .obj-dot{border-color:transparent;}
+.obj.done .obj-dot svg{opacity:1;}
+.obj-body{flex:1;min-width:0;}
+.obj-txt{font-size:13.5px;color:var(--ink);line-height:1.45;transition:color .18s;}
+.obj.done .obj-txt{color:var(--gray);text-decoration:line-through;text-decoration-color:var(--border);}
+.obj-key-badge{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#7a4e00;background:#fdf0d0;border:1px solid #e8c97a;padding:1px 6px;border-radius:3px;margin-bottom:3px;}
+
+/* KEY MILESTONE styling */
+.obj.key-milestone .obj-dot{border-color:var(--gold);}
+.obj.key-milestone.done .obj-dot{background:var(--gold);border-color:var(--gold);}
+.obj.key-milestone .obj-txt{font-weight:500;}
+
+/* PHASE COLORS */
+.p1 .ph-num{background:var(--p1b);color:var(--p1);}
+.p1 .ph-bar-fill{background:var(--p1);}
+.p1 .obj.done .obj-dot{background:var(--p1);}
+.p1 .obj.key-milestone.done .obj-dot{background:var(--gold);}
+.p1-chip{background:var(--p1b);color:var(--p1);}
+
+.p2 .ph-num{background:var(--p2b);color:var(--p2);}
+.p2 .ph-bar-fill{background:var(--p2);}
+.p2 .obj.done .obj-dot{background:var(--p2);}
+.p2 .obj.key-milestone.done .obj-dot{background:var(--gold);}
+.p2-chip{background:var(--p2b);color:var(--p2);}
+
+.p3 .ph-num{background:var(--p3b);color:var(--p3);}
+.p3 .ph-bar-fill{background:var(--p3);}
+.p3 .obj.done .obj-dot{background:var(--p3);}
+.p3 .obj.key-milestone.done .obj-dot{background:var(--gold);}
+.p3-chip{background:var(--p3b);color:var(--p3);}
+
+.p4 .ph-num{background:var(--p4b);color:var(--p4);}
+.p4 .ph-bar-fill{background:var(--p4);}
+.p4 .obj.done .obj-dot{background:var(--p4);}
+.p4 .obj.key-milestone.done .obj-dot{background:var(--gold);}
+.p4-chip{background:var(--p4b);color:var(--p4);}
+
+.p5 .ph-num{background:var(--p5b);color:var(--p5);}
+.p5 .ph-bar-fill{background:var(--p5);}
+.p5 .obj.done .obj-dot{background:var(--p5);}
+.p5 .obj.key-milestone.done .obj-dot{background:var(--gold);}
+.p5-chip{background:var(--p5b);color:var(--p5);}
+
+.chip-done{background:var(--navy);color:#fff;}
+
+/* FOOTER */
+.footer{text-align:center;padding-top:20px;}
+.reset-btn{background:none;border:1px solid var(--border);color:var(--gray);font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:8px 18px;border-radius:6px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.reset-btn:active{border-color:#c0392b;color:#c0392b;}
+.footnote{text-align:center;margin-top:14px;font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--gray);}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="hdr-inner">
+    <img class="hdr-logo"
+      src="https://raw.githubusercontent.com/pinellasiceco/Pinellasiceco/main/pic_logo.png"
+      alt="Pinellas Ice Co." onerror="this.style.display='none'">
+    <div class="hdr-title">Pinellas Ice Co.</div>
+    <div class="hdr-pill">18-Month Roadmap</div>
+  </div>
+</header>
+
+<main class="main">
+
+  <div class="tracker">
+    <div class="tr-eye">&#10052; Live Performance</div>
+    <div class="tr-grid">
+      <div class="tr-stat">
+        <div class="tr-num gold" id="d-clients">0</div>
+        <div class="tr-lbl">Clients</div>
+      </div>
+      <div class="tr-stat">
+        <div class="tr-num ice" id="d-mrr">$0</div>
+        <div class="tr-lbl">MRR</div>
+      </div>
+      <div class="tr-stat">
+        <div class="tr-num" id="d-goal">0%</div>
+        <div class="tr-lbl">To 150</div>
+      </div>
+      <div class="tr-stat">
+        <div class="tr-num amber" id="d-days">—</div>
+        <div class="tr-lbl">Days In</div>
+      </div>
+    </div>
+    <div class="tr-inputs">
+      <div>
+        <div class="tr-inp-lbl">Active Clients</div>
+        <input class="tr-inp" type="number" id="inp-clients" min="0" max="999" placeholder="0">
+      </div>
+      <div>
+        <div class="tr-inp-lbl">Walk-Ins This Week</div>
+        <input class="tr-inp" type="number" id="inp-walkins" min="0" max="999" placeholder="0">
+      </div>
+      <div>
+        <div class="tr-inp-lbl">Launch Date</div>
+        <input class="tr-inp" type="date" id="inp-date">
+      </div>
+    </div>
+  </div>
+
+  <div class="goal-card">
+    <div class="gc-top">
+      <div class="gc-lbl">Overall Roadmap Completion</div>
+      <div class="gc-pct" id="gc-pct">0%</div>
+    </div>
+    <div class="gc-bar-wrap">
+      <div class="gc-bar-fill" id="gc-bar" style="width:0%"></div>
+    </div>
+    <div class="gc-chips" id="gc-chips"></div>
+  </div>
+
+  <div id="phases-root"></div>
+
+  <div class="footer">
+    <button class="reset-btn" onclick="resetAll()">Reset All Progress</button>
+  </div>
+  <div class="footnote">Pinellas Ice Co. &#183; Clearwater, FL &#183; Progress saved locally on this device</div>
+
+</main>
+
+<script>
+var PHASES = [
+  {
+    id:'p1', cls:'p1', label:'Phase 1', name:'Foundation',
+    target:'5 clients &nbsp;&#183;&nbsp; $645 MRR &nbsp;&#183;&nbsp; First cert on a machine',
+    cats:[
+      {name:'Infrastructure', items:[
+        {t:'Google My Business profile complete — photos, description, category set correctly'},
+        {t:'ColdFix listing live and accurate'},
+        {t:'Service agreement written — scope, 30-day cancel notice, payment terms'},
+        {t:'Label maker purchased and QR sticker system tested end-to-end'},
+        {t:'Email signature active with pricing page link'},
+        {t:'All 6 sales asset pages committed to repo and live'},
+        {t:'CleanScore export button live in app and verify.html deployed'}
+      ]},
+      {name:'Daily Systems', items:[
+        {t:'DBPR morning briefing reviewed — first gold leads identified and prioritized'},
+        {t:'First daily walk-in route planned using DBPR briefing data'},
+        {t:'Prospecting app confirmed current — gold lead pipeline active and accurate'}
+      ]},
+      {name:'Field Activity', items:[
+        {t:'40 walk-ins completed — Week 1'},
+        {t:'40 walk-ins completed — Week 2'},
+        {t:'40 walk-ins completed — Week 3'},
+        {t:'40 walk-ins completed — Week 4'},
+        {t:'ATP device carried and demonstrated on every walk-in'},
+        {t:'First follow-up call or text made to a walk-in prospect who did not close same day'}
+      ]},
+      {name:'Milestones', items:[
+        {t:'First walk-in completed'},
+        {t:'First live ATP demo performed in the field'},
+        {t:'3 most common objections logged with tested responses'},
+        {t:'First client signed', key:true},
+        {t:'First service visit completed and documented'},
+        {t:'First CleanScore certificate issued'},
+        {t:'First QR sticker placed on a machine'},
+        {t:'First follow-up conversion — prospect closed after not closing same day'},
+        {t:'5 clients signed — Phase 1 complete', key:true}
+      ]}
+    ]
+  },
+  {
+    id:'p2', cls:'p2', label:'Phase 2', name:'Traction',
+    target:'20 clients &nbsp;&#183;&nbsp; $2,580 MRR &nbsp;&#183;&nbsp; Pitch proven in field',
+    cats:[
+      {name:'Field Activity', items:[
+        {t:'40 walk-ins/week maintained — Weeks 5 through 8'},
+        {t:'40 walk-ins/week maintained — Weeks 9 through 12'},
+        {t:'DBPR gold leads worked daily from morning briefing'},
+        {t:'Follow-up email templates in active use after every walk-in'},
+        {t:'Cited account follow-up link sent same day on every gold lead'},
+        {t:'Follow-up call tested — phone outreach 3 days after unopened email'}
+      ]},
+      {name:'Milestones', items:[
+        {t:'10 clients signed'},
+        {t:'First client quarterly renewal completed — proves retention model', key:true},
+        {t:'15 clients signed'},
+        {t:'20 clients signed — Phase 2 complete', key:true},
+        {t:'First 5 Google reviews earned from real clients'},
+        {t:'First walk-out converted via follow-up email or text'},
+        {t:'Zero churns in first 90 days'},
+        {t:'Pitch script updated based on minimum 5 real field walk-in outcomes'},
+        {t:'First before/after ATP photo documented for future marketing use'},
+        {t:'First reach-in cooler upsell converted — revenue per account expansion begins', key:true}
+      ]},
+      {name:'Brand and Network', items:[
+        {t:'FRLA — first networking event attended'},
+        {t:'ColdFix — first external review received'},
+        {t:'GMB — first inbound call or inquiry generated from listing without outbound effort'}
+      ]}
+    ]
+  },
+  {
+    id:'p3', cls:'p3', label:'Phase 3', name:'Momentum',
+    target:'50 clients &nbsp;&#183;&nbsp; $6,450 MRR &nbsp;&#183;&nbsp; Hire milestone reached',
+    cats:[
+      {name:'Field Activity', items:[
+        {t:'40 walk-ins/week maintained throughout Phase 3'},
+        {t:'Route clusters fully optimized — Clearwater, Largo, St. Pete running efficiently'},
+        {t:'First referral client signed — came from existing client word of mouth'},
+        {t:'First inbound lead converted from GMB or website without cold outreach'}
+      ]},
+      {name:'Service Quality', items:[
+        {t:'Service schedule stress test — all clients serviced on quarterly cadence solo'},
+        {t:'Margins Tracker reviewed against actual figures — model validated in practice'},
+        {t:'First client who explicitly shows CleanScore cert to a health inspector'},
+        {t:'Top 10 clients contacted informally — relationships confirmed and healthy'}
+      ]},
+      {name:'Milestones', items:[
+        {t:'25 clients signed'},
+        {t:'30 clients signed'},
+        {t:'35 clients signed'},
+        {t:'40 clients signed'},
+        {t:'45 clients signed'},
+        {t:'50 clients signed — hire milestone reached', key:true},
+        {t:'10 Google reviews earned'},
+        {t:'First full month with zero churn'},
+        {t:'$6,000+ MRR achieved', key:true},
+        {t:'FRLA — 3 events attended with genuine relationships forming'},
+        {t:'CleanScore — 50 certified locations on record'}
+      ]},
+      {name:'Hiring and Scale Prep', items:[
+        {t:'Technician job description written'},
+        {t:'Technician hiring criteria defined — skills, background check, compensation'},
+        {t:'Service process documented well enough to train someone from scratch'},
+        {t:'Two-person Pinellas route map designed'},
+        {t:'Technician hired', key:true},
+        {t:'Tech fully trained and independently completing first solo service visits'}
+      ]}
+    ]
+  },
+  {
+    id:'p4', cls:'p4', label:'Phase 4', name:'Scale',
+    target:'100 clients &nbsp;&#183;&nbsp; $12,900 MRR &nbsp;&#183;&nbsp; Hillsborough expansion',
+    cats:[
+      {name:'Field Activity', items:[
+        {t:'Tech operating Pinellas independently with minimal oversight'},
+        {t:'First full week where John has zero Pinellas service visits — tech owns territory', key:true},
+        {t:'John begins Hillsborough (Tampa) walk-in campaign — 40/week'},
+        {t:'First referral partnership established — service provider with no cleaning overlap'},
+        {t:'Referral pipeline generating 1+ new client per month consistently'}
+      ]},
+      {name:'Milestones', items:[
+        {t:'60 clients signed'},
+        {t:'First Hillsborough client signed', key:true},
+        {t:'70 clients signed'},
+        {t:'$10,000+ MRR achieved', key:true},
+        {t:'80 clients signed'},
+        {t:'10+ Hillsborough clients — Tampa territory established'},
+        {t:'90 clients signed'},
+        {t:'First referral partner lead converted to signed client'},
+        {t:'100 clients signed — Phase 4 complete', key:true},
+        {t:'20+ Google reviews across Pinellas and Hillsborough'},
+        {t:'Zero churn for 3 consecutive months'},
+        {t:'Top 20 clients contacted — informal satisfaction check completed'}
+      ]},
+      {name:'Team and Operations', items:[
+        {t:'Tech 1 performance and retention formally reviewed'},
+        {t:'Tech 1 bonus or compensation structure established'},
+        {t:'Tech 2 hiring criteria defined for Phase 5'},
+        {t:'Hillsborough route fully optimized as a standalone territory'},
+        {t:'Client communication and service cadence fully systematized'},
+        {t:'Margins Tracker updated with 2-tech operational cost model'}
+      ]}
+    ]
+  },
+  {
+    id:'p5', cls:'p5', label:'Phase 5', name:'Platform',
+    target:'150 clients &nbsp;&#183;&nbsp; $19,350 MRR &nbsp;&#183;&nbsp; Platform play begins',
+    cats:[
+      {name:'Field Activity', items:[
+        {t:'Two-county operation running with minimal direct involvement from John'},
+        {t:'Inbound channel generating consistent client flow without cold outbound'},
+        {t:'Tech 2 hired and operational in Hillsborough', key:true},
+        {t:'Partnership network generating consistent referrals across both counties'}
+      ]},
+      {name:'Milestones', items:[
+        {t:'110 clients signed'},
+        {t:'125 clients signed'},
+        {t:'150 clients signed — scale milestone reached', key:true},
+        {t:'$15,000+ MRR achieved'},
+        {t:'$19,000+ MRR achieved', key:true},
+        {t:'30+ Google reviews earned'},
+        {t:'CleanScore — 150 certified locations on record'},
+        {t:'Zero churn maintained across both counties'},
+        {t:'First client acquired through seeing a QR sticker on another establishment machine'},
+        {t:'Business valuation exercise completed — 2-3x SDE benchmark documented'},
+        {t:'Business structure reviewed with attorney and accountant at scale'}
+      ]},
+      {name:'Platform Play', items:[
+        {t:'CleanScore platform vision documented as a standalone product concept'},
+        {t:'White-label or licensing model for CleanScore drafted'},
+        {t:'First exploratory conversation with potential national partner or investor', key:true},
+        {t:'Third county expansion plan drafted — territory, operator census, timeline'},
+        {t:'Year 3 plan written — team size, revenue target, exit or reinvestment decision'}
+      ]}
+    ]
+  }
+];
+
+var SK='pic_rm18_v2',CK='pic_rm18_clients',WK='pic_rm18_walkins',DK='pic_rm18_date',GOAL=150;
+
+function load(){try{return JSON.parse(localStorage.getItem(SK)||'{}');}catch(e){return{};}}
+function save(s){try{localStorage.setItem(SK,JSON.stringify(s));}catch(e){}}
+var state=load();
+
+function key(pid,ci,ii){return pid+'_'+ci+'_'+ii;}
+
+function phaseCount(ph){
+  var t=0,d=0;
+  ph.cats.forEach(function(c,ci){c.items.forEach(function(_,ii){t++;if(state[key(ph.id,ci,ii)])d++;});});
+  return{t:t,d:d};
+}
+function allCount(){
+  var t=0,d=0;
+  PHASES.forEach(function(p){var c=phaseCount(p);t+=c.t;d+=c.d;});
+  return{t:t,d:d};
+}
+function pct(d,t){return t?Math.round(d/t*100):0;}
+
+function fmrr(n){
+  n=parseInt(n)||0;var m=n*129;
+  if(m>=10000)return '$'+(m/1000).toFixed(1).replace(/\.0$/,'')+'K';
+  if(m>=1000)return '$'+(m/1000).toFixed(1).replace(/\.0$/,'')+'K';
+  return '$'+m;
+}
+
+function curPhase(c){
+  c=parseInt(c)||0;
+  if(c<5)return 0;if(c<20)return 1;if(c<50)return 2;if(c<100)return 3;return 4;
+}
+
+function daysSince(dateStr){
+  if(!dateStr)return null;
+  var d=new Date(dateStr+'T12:00:00');
+  var now=new Date();
+  var diff=Math.floor((now-d)/(1000*60*60*24));
+  return diff>=0?diff:null;
+}
+
+function updateTracker(){
+  var c=parseInt(document.getElementById('inp-clients').value)||0;
+  var dateStr=document.getElementById('inp-date').value;
+  document.getElementById('d-clients').textContent=c;
+  document.getElementById('d-mrr').textContent=fmrr(c);
+  document.getElementById('d-goal').textContent=Math.round(Math.min(c/GOAL*100,100))+'%';
+  var days=daysSince(dateStr);
+  document.getElementById('d-days').textContent=days!==null?days:'—';
+  highlightCurrentPhase(c);
+}
+
+function highlightCurrentPhase(c){
+  var pi=curPhase(c);
+  document.querySelectorAll('.phase-card').forEach(function(card,i){
+    card.classList.toggle('current-phase',i===pi);
+  });
+}
+
+function updateGoalCard(){
+  var a=allCount();var p=pct(a.d,a.t);
+  document.getElementById('gc-pct').textContent=p+'%';
+  document.getElementById('gc-bar').style.width=p+'%';
+  var chips=document.getElementById('gc-chips');chips.innerHTML='';
+  PHASES.forEach(function(ph,i){
+    var c=phaseCount(ph);var pp=pct(c.d,c.t);
+    var el=document.createElement('div');var lbl='P'+(i+1);
+    if(pp===100){el.className='gc-chip chip-done';el.textContent=lbl+' \u2713';}
+    else if(pp>0){el.className='gc-chip '+ph.cls+'-chip';el.textContent=lbl+' '+pp+'%';}
+    else{el.className='gc-chip '+ph.cls+'-chip';el.textContent=lbl;}
+    chips.appendChild(el);
+  });
+}
+
+function updatePhaseBar(ph,card){
+  var c=phaseCount(ph);
+  card.querySelector('.ph-bar-fill').style.width=pct(c.d,c.t)+'%';
+  card.querySelector('.ph-prog-lbl').textContent=c.d+' / '+c.t+' done';
+  updateNextUp(ph,card);
+}
+
+function updateNextUp(ph,card){
+  var el=card.querySelector('.ph-next-up');if(!el)return;
+  var first=null;
+  outer:for(var ci=0;ci<ph.cats.length;ci++){
+    for(var ii=0;ii<ph.cats[ci].items.length;ii++){
+      if(!state[key(ph.id,ci,ii)]){first=ph.cats[ci].items[ii].t;break outer;}
+    }
+  }
+  if(first){el.innerHTML='Next: <span>'+first.replace(/&nbsp;/g,' ').substring(0,55)+(first.length>55?'...':'')+'</span>';}
+  else{el.innerHTML='<span>All objectives complete \u2713</span>';}
+}
+
+function toggleObj(ph,ci,ii,el){
+  var k=key(ph.id,ci,ii);state[k]=!state[k];save(state);
+  el.classList.toggle('done',state[k]);
+  updatePhaseBar(ph,el.closest('.phase-card'));
+  updateGoalCard();
+}
+
+function togglePhase(card){card.classList.toggle('open');}
+
+function renderPhases(){
+  var root=document.getElementById('phases-root');root.innerHTML='';
+  var clients=parseInt(document.getElementById('inp-clients').value)||0;
+  var activePi=curPhase(clients);
+
+  PHASES.forEach(function(ph,pi){
+    var c=phaseCount(ph);var p=pct(c.d,c.t);
+    var card=document.createElement('div');
+    var isCurrent=pi===activePi;
+    card.className='phase-card '+ph.cls+(pi===0||isCurrent?' open':'')+(isCurrent?' current-phase':'');
+
+    var firstIncomplete=null;
+    outer:for(var ci=0;ci<ph.cats.length;ci++){
+      for(var ii=0;ii<ph.cats[ci].items.length;ii++){
+        if(!state[key(ph.id,ci,ii)]){firstIncomplete=ph.cats[ci].items[ii].t;break outer;}
+      }
+    }
+    var nextUpHtml=firstIncomplete
+      ?'Next: <span>'+firstIncomplete.replace(/&nbsp;/g,' ').substring(0,55)+(firstIncomplete.length>55?'...':'')+'</span>'
+      :'<span>All objectives complete \u2713</span>';
+
+    var hdr='<div class="ph-hdr" onclick="togglePhase(this.closest(\'.phase-card\'))">'
+      +'<div class="ph-num">'+ph.label+'</div>'
+      +'<div class="ph-meta">'
+      +'<div class="ph-name">'+ph.name+'</div>'
+      +'<div class="ph-target">'+ph.target+'</div>'
+      +'<div class="ph-next-up">'+nextUpHtml+'</div>'
+      +'</div>'
+      +'<div class="ph-chevron">&#8964;</div>'
+      +'</div>';
+
+    var prog='<div class="ph-prog">'
+      +'<div class="ph-bar-wrap"><div class="ph-bar-fill" style="width:'+p+'%"></div></div>'
+      +'<div class="ph-prog-lbl">'+c.d+' / '+c.t+' done</div>'
+      +'</div>';
+
+    var body='<div class="phase-body">';
+    ph.cats.forEach(function(cat,ci){
+      body+='<div class="cat-lbl">'+cat.name+'</div>';
+      cat.items.forEach(function(item,ii){
+        var k=key(ph.id,ci,ii);
+        var done=state[k]?' done':'';
+        var km=item.key?' key-milestone':'';
+        body+='<div class="obj'+done+km+'" data-pi="'+pi+'" data-ci="'+ci+'" data-ii="'+ii+'">'
+          +'<div class="obj-dot"><svg width="10" height="8" viewBox="0 0 10 8" fill="none">'
+          +'<path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>'
+          +'</svg></div>'
+          +'<div class="obj-body">'
+          +(item.key?'<div class="obj-key-badge">&#11088; Key Milestone</div>':'')
+          +'<div class="obj-txt">'+item.t+'</div>'
+          +'</div>'
+          +'</div>';
+      });
+    });
+    body+='</div>';
+
+    card.innerHTML=hdr+prog+body;
+    root.appendChild(card);
+  });
+
+  root.addEventListener('click',function(e){
+    var el=e.target.closest('.obj');if(!el)return;
+    var pi=parseInt(el.dataset.pi),ci=parseInt(el.dataset.ci),ii=parseInt(el.dataset.ii);
+    toggleObj(PHASES[pi],ci,ii,el);
+  });
+}
+
+function resetAll(){
+  if(!confirm('Reset all progress? This cannot be undone.'))return;
+  state={};save(state);renderPhases();updateGoalCard();
+}
+
+// init
+var sc=localStorage.getItem(CK)||'';
+var sw=localStorage.getItem(WK)||'';
+var sd=localStorage.getItem(DK)||'';
+document.getElementById('inp-clients').value=sc;
+document.getElementById('inp-walkins').value=sw;
+document.getElementById('inp-date').value=sd;
+
+document.getElementById('inp-clients').addEventListener('input',function(){localStorage.setItem(CK,this.value);updateTracker();});
+document.getElementById('inp-walkins').addEventListener('input',function(){localStorage.setItem(WK,this.value);});
+document.getElementById('inp-date').addEventListener('change',function(){localStorage.setItem(DK,this.value);updateTracker();});
+
+renderPhases();updateTracker();updateGoalCard();
+</script>
+</body>
+</html>
