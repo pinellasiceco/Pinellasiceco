@@ -1198,7 +1198,18 @@ def load_emergency_closures(data_dir=None):
                         num = re.sub(r'[^0-9]', '', str(val))
                         if num: closed_ids.add(num)
             except Exception:
-                pass
+                try:
+                    import pandas as pd
+                    df = pd.read_excel(str(f), engine='xlrd', header=0)
+                    lic_col = next((c for c in df.columns
+                                    if 'license' in str(c).lower()), None)
+                    if lic_col is not None:
+                        for val in df[lic_col].dropna():
+                            num = re.sub(r'[^0-9]', '', str(val))
+                            if num:
+                                closed_ids.add(num)
+                except Exception:
+                    pass
     if closed_ids:
         print(f"  Emergency closures: {len(closed_ids)} businesses flagged")
     return closed_ids
