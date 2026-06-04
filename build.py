@@ -3166,6 +3166,11 @@ header{background:var(--navy);
       <button onclick="saveSupabaseSettings();location.reload()" ontouchend="event.preventDefault();saveSupabaseSettings();location.reload()" style="width:100%;margin-top:8px;padding:9px;background:#0ea5e9;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Connect &amp; Login</button>
       <div id="auth-status-row" style="margin-top:10px;padding:8px;background:#f0fdf4;border-radius:8px;font-size:10px;color:#059669;font-weight:600;display:none">&#x2713; Logged in</div>
       <button id="signout-btn" onclick="if(confirm('Sign out? You will need to tap a magic link to sign back in.'))signOut()" ontouchend="event.preventDefault();if(confirm('Sign out?'))signOut()" style="width:100%;margin-top:8px;padding:9px;border:1px solid #fca5a5;border-radius:8px;background:#fef2f2;color:#dc2626;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation;display:none">Sign Out</button>
+      <div style="border-top:1px solid #e2e8f0;margin-top:10px;padding-top:10px">
+        <div style="font-size:9px;color:var(--sub);margin-bottom:6px">Customer data sync — backup and restore across devices without requiring auth login.</div>
+        <button onclick="pushAllToCloud()" ontouchend="event.preventDefault();pushAllToCloud()" style="width:100%;margin-bottom:6px;padding:9px;background:#0369a1;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2601;&#xFE0F; Push All to Cloud</button>
+        <button onclick="syncFromCloud()" ontouchend="event.preventDefault();syncFromCloud()" style="width:100%;padding:9px;background:#0f766e;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F504; Sync from Cloud</button>
+      </div>
     </div>
 
     <div class="dc" style="margin-top:12px">
@@ -7327,6 +7332,53 @@ function custSave(){
   if(_sb&&_userId){
     Object.keys(customers).forEach(function(pid){sbUpsert('pic_customers',pid,customers[pid]);});
   }
+  Object.keys(customers).forEach(function(pid){pushCustomerToSupabase(pid);});
+}
+function picSupabaseUrl(){
+  return 'https://kbyqatbkqqhuasbjlcwe.supabase.co/rest/v1';
+}
+function pushCustomerToSupabase(pid){
+  var key=localStorage.getItem('pic_supabase_key');
+  if(!key)return;
+  fetch(picSupabaseUrl()+'/customers',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+key,'apikey':key,'Prefer':'resolution=merge-duplicates'},
+    body:JSON.stringify({pid:Number(pid),data:customers[pid],updated_at:new Date().toISOString()})
+  }).catch(function(){});
+}
+function pullCustomersFromSupabase(){
+  var key=localStorage.getItem('pic_supabase_key');
+  if(!key)return;
+  var lastPull=localStorage.getItem('pic_supa_last_pull');
+  if(lastPull&&(new Date()-new Date(lastPull))<3600000)return;
+  fetch(picSupabaseUrl()+'/customers?select=pid,data,updated_at&order=updated_at.desc',{
+    headers:{'Authorization':'Bearer '+key,'apikey':key}
+  }).then(function(r){return r.json();}).then(function(rows){
+    if(!Array.isArray(rows))return;
+    var bootstrapped=localStorage.getItem('pic_supa_bootstrapped');
+    var added=0;
+    if(!bootstrapped){
+      rows.forEach(function(row){customers[row.pid]=row.data;});
+      added=rows.length;
+      localStorage.setItem('pic_supa_bootstrapped','true');
+      custSave();
+      if(added>0){toast('Synced '+added+' records from cloud');_renderApp();}
+    }else{
+      rows.forEach(function(row){if(!customers[row.pid]){customers[row.pid]=row.data;added++;}});
+      if(added>0){custSave();toast('Synced '+added+' new records from cloud');_renderApp();}
+    }
+    localStorage.setItem('pic_supa_last_pull',new Date().toISOString());
+  }).catch(function(){});
+}
+function syncFromCloud(){
+  localStorage.removeItem('pic_supa_last_pull');
+  pullCustomersFromSupabase();
+  toast('Syncing from cloud...');
+}
+function pushAllToCloud(){
+  var pids=Object.keys(customers);
+  pids.forEach(function(pid){pushCustomerToSupabase(pid);});
+  toast('Pushing '+pids.length+' records to cloud');
 }
 
 function markWon(status){
@@ -11420,6 +11472,7 @@ async function init(){
 
   // Always render app immediately from local cache so UI is never blocked
   lLoad();custLoad();
+  pullCustomersFromSupabase();
   _renderApp();
   updateDataFreshness();checkDataStaleness();
 
