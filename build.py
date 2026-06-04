@@ -7343,37 +7343,34 @@ function pushCustomerToSupabase(pid){
   if(!key)return;
   fetch(picSupabaseUrl()+'/customers?on_conflict=pid',{
     method:'POST',
-    headers:{'Content-Type':'application/json','Authorization':'Bearer '+key,'apikey':key,'Prefer':'resolution=merge-duplicates,return=representation'},
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+key,'apikey':key,'Prefer':'resolution=merge-duplicates'},
     body:JSON.stringify({pid:Number(pid),data:customers[pid],updated_at:new Date().toISOString()})
-  }).then(function(r){
-    r.text().then(function(t){
-      if(!r.ok){toast('Sync error '+r.status+': '+t.slice(0,80));}
-      else{toast('Sync OK: '+t.slice(0,80));}
-    });
-  }).catch(function(e){toast('Sync fetch error: '+e.message);});
+  }).catch(function(){});
 }
 function pullCustomersFromSupabase(){
   var key=_SUPABASE_ANON_KEY||(localStorage.getItem('pic_supabase_key')||'').trim();
   if(!key)return;
   var lastPull=localStorage.getItem('pic_supa_last_pull');
   if(lastPull&&(new Date()-new Date(lastPull))<3600000)return;
+  var lastPullDate=lastPull?new Date(lastPull):new Date(0);
   fetch(picSupabaseUrl()+'/customers?select=pid,data,updated_at&order=updated_at.desc',{
     headers:{'Authorization':'Bearer '+key,'apikey':key}
   }).then(function(r){return r.json();}).then(function(rows){
     if(!Array.isArray(rows))return;
-    var bootstrapped=localStorage.getItem('pic_supa_bootstrapped');
-    var added=0;
-    if(!bootstrapped){
-      rows.forEach(function(row){customers[row.pid]=row.data;});
-      added=rows.length;
-      localStorage.setItem('pic_supa_bootstrapped','true');
-      custSave();
-      if(added>0){toast('Synced '+added+' records from cloud');_renderApp();}
-    }else{
-      rows.forEach(function(row){if(!customers[row.pid]){customers[row.pid]=row.data;added++;}});
-      if(added>0){custSave();toast('Synced '+added+' new records from cloud');_renderApp();}
-    }
+    var changed=0;
+    rows.forEach(function(row){
+      if(!customers[row.pid]||new Date(row.updated_at)>lastPullDate){
+        customers[row.pid]=row.data;
+        changed++;
+      }
+    });
     localStorage.setItem('pic_supa_last_pull',new Date().toISOString());
+    localStorage.setItem('pic_supa_bootstrapped','true');
+    if(changed>0){
+      try{localStorage.setItem('pic_customers',JSON.stringify(customers));}catch(e){}
+      toast('Synced '+changed+' records from cloud');
+      _renderApp();
+    }
   }).catch(function(){});
 }
 function syncFromCloud(){
