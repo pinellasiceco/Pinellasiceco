@@ -1,5 +1,5 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-06-03 (session 59 — Segment conversion tracker, playbook nav updates, partner page fixes) by Claude Code*
+*Last updated: 2026-06-04 (session 60 — CleanScore JSON export for verify.html) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
@@ -24,6 +24,15 @@
 - **`docs/protocol/` preserved in CI**: `rebuild.yml` `git checkout origin/main -- docs/protocol/` preserves static ATP protocol page through daily rebuilds
 - **`assets/` preserved in CI**: `rebuild.yml` `git checkout origin/main -- assets/` preserves signature image and other assets through daily rebuilds
 - **`build_violations_list.py` step**: `continue-on-error: true` — failure visible in Actions but non-blocking (session 54)
+
+### CleanScore JSON Export (session 60)
+- **`buildCleanScoreExport()`** — iterates `customers` for all active statuses (`customer_recurring`, `customer_quarterly`, `customer_once`, `customer_intro`); skips clients with no `service_history`; sorts history by date descending; takes most recent visit; auto-assigns `PIC-XXXX` cert IDs via `localStorage` key `cleanscore_seq` (persisted via `custSave()`); extracts `atp_pre` / `atp_post` (handles both `visit.atp_post` and `visit.atp` field names); maps `maintenance_60` → `60-Day Certified Clean`, `deep_clean` → `Deep Clean`; runs `nullify()` to replace any `undefined` with `null`
+- **Output schema** — flat keyed object matching `verify.html`'s `data[certId]` lookup: `{ "PIC-0001": { business_name, last_service_date, next_service_date, service_type, atp_pre, atp_post } }`
+- **`exportCleanScoreJSON()`** — Blob download (`application/json`), iOS-safe (`createObjectURL` + temp `<a>` + `revokeObjectURL` after 1000ms); both `onclick` and `ontouchend`
+- **Settings button** — teal (`#0f766e`) in Settings → Export & Reset, between Export Directory Data and Clear Call Log
+- **CI persistence** — functions baked into `build.py` HTML_TEMPLATE JS block; `rebuild.yml` preserves committed `cleanscore.json` via `git checkout origin/main -- cleanscore.json 2>/dev/null || true`
+- **verify.html** — fetches `cleanscore.json` from GitHub Pages, looks up `data[certId]` (from `?id=` query param), renders cert status (pass/expired/fail based on `atp_post` and days since service), ATP scores, next service date, tech block
+- **Workflow** — export from app → commit `cleanscore.json` to repo root → GitHub Pages serves it → `verify.html` renders the cert card
 
 ### Reports Tab: Segment Conversion Tracker (session 59)
 - **`renderSegmentTracker()`** in `build.py` — new section injected into Reports tab, renders after the DBPR Citation to Client Conversion section
