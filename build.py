@@ -2434,6 +2434,7 @@ header{background:var(--navy);
   background:var(--navy);border-radius:10px;
   padding:9px 16px;font-size:11px;color:#fff;transition:transform .2s;z-index:9999;white-space:nowrap;
   box-shadow:0 4px 16px rgba(45,62,80,.25);font-weight:500}
+#toast.on{transform:translateX(-50%) translateY(0)}
 .tsect-hdr{display:flex;flex-direction:column;gap:2px;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--brd2)}
 .tsect-hdr span:first-child{font-weight:700;font-size:14px;color:var(--navy)}
 .tsect-sub{font-size:10px;color:var(--sub);font-weight:400}
