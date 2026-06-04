@@ -94,6 +94,18 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+          # Preserve static assets that must survive any push to main
+          git checkout origin/main -- cleanscore.json 2>/dev/null || true
+          git checkout origin/main -- roadmap.html 2>/dev/null || true
+          git checkout origin/main -- verify.html 2>/dev/null || true
+          git checkout origin/main -- pricing.html 2>/dev/null || true
+          git checkout origin/main -- process.html 2>/dev/null || true
+          git checkout origin/main -- atp-explainer.html 2>/dev/null || true
+          git checkout origin/main -- dbpr-citation.html 2>/dev/null || true
+          git checkout origin/main -- comparison.html 2>/dev/null || true
+          git checkout origin/main -- comparison-easyice.html 2>/dev/null || true
+          git checkout origin/main -- email-templates.html 2>/dev/null || true
+
           # Stage only the scraper output files — never touch index.html or app files
           git add pinellas_v22_narratives.csv scraper_progress.txt 2>/dev/null || true
 
