@@ -2527,6 +2527,7 @@ function doResetFees(){
 }
 function doResetLocal(){
   if(!confirm('Clear all call logs, customer records, and partner data? This cannot be undone.'))return;
+  deleteAllCustomersFromSupabase();
   ['pic_v4','pic_customers','pic_partners_v1','pic_settings','pic_phones','pic_goals','pic_route_state'].forEach(function(k){localStorage.removeItem(k);});
   toast('Local data cleared — reloading…');
   setTimeout(function(){location.reload();},1200);
@@ -2534,6 +2535,7 @@ function doResetLocal(){
 function doResetAll(){
   if(!confirm('Wipe ALL data from this device? This is permanent and cannot be undone.'))return;
   if(!confirm('Are you absolutely sure? Every setting and record will be deleted.'))return;
+  deleteAllCustomersFromSupabase();
   localStorage.clear();
   toast('All data wiped');
   setTimeout(function(){location.reload();},1200);
