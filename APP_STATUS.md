@@ -1,9 +1,9 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-06-04 (session 61 — Supabase customer sync + full app audit) by Claude Code*
+*Last updated: 2026-06-04 (session 60 — CleanScore JSON export for verify.html) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
-- Last deployed: 2026-06-04 (Supabase customer sync + bug fixes from full audit)
+- Last deployed: 2026-05-28 (technician signature on ATP reports)
 - Build script: `build.py` (repo root) → outputs `index.html` directly
 - `index.html` regenerated from `build.py` using existing P[] data — fully in sync
 
@@ -24,30 +24,6 @@
 - **`docs/protocol/` preserved in CI**: `rebuild.yml` `git checkout origin/main -- docs/protocol/` preserves static ATP protocol page through daily rebuilds
 - **`assets/` preserved in CI**: `rebuild.yml` `git checkout origin/main -- assets/` preserves signature image and other assets through daily rebuilds
 - **`build_violations_list.py` step**: `continue-on-error: true` — failure visible in Actions but non-blocking (session 54)
-
-### Supabase Customer Data Sync (session 61)
-- **Table**: `public.customers` — `pid bigint PK`, `data jsonb`, `updated_at timestamptz`. RLS disabled. Explicit `GRANT SELECT, INSERT, UPDATE, DELETE ON public.customers TO anon`.
-- **Auto-push on save**: `custSave()` calls `pushCustomerToSupabase(pid)` for every customer — silent fire-and-forget upsert to `/rest/v1/customers?on_conflict=pid` with `Prefer: resolution=merge-duplicates`. Uses CI-injected `_SUPABASE_ANON_KEY` (no manual key entry required). HTTP errors surface via toast; network failures are silent.
-- **Auto-pull on open**: `pullCustomersFromSupabase()` fires in `init()`, throttled to once per hour. Fetches all rows ordered by `updated_at desc`. For each row: updates local record if pid is missing OR Supabase `updated_at > pic_supa_last_pull` (captures edits made on other devices). Saves to localStorage directly (not via custSave to avoid push-back loop). Shows "Synced N records" toast only when changes found.
-- **Settings buttons**: "Push All to Cloud" (force-uploads all customers) and "Sync from Cloud" (force-pulls, bypasses throttle) in Settings overlay Cloud Sync section.
-- **Reset integration**: all 5 reset paths (`clrCustomers`, `clrAll`, `clrAllCloud`, `doResetLocal`, `doResetAll`) call `deleteAllCustomersFromSupabase(onDone)` which DELETEs all rows via REST, then clears `pic_supa_last_pull` + `pic_supa_bootstrapped` flags in the callback (not before — prevents restore if DELETE fails). Reload fires inside the callback after DELETE completes.
-- **Migration**: `supabase/migrations/20260604_customers_sync.sql` in repo.
-- **Multi-device flow**: primary device pushes on every save; secondary device pulls on open (hourly); edits from device A propagate to device B on next pull because `updated_at` comparison catches post-last-pull changes.
-- **App works identically if Supabase unreachable** — all operations are fire-and-forget; localStorage is always the source of truth.
-
-### Full App Audit + Bug Fixes (session 61)
-Five bugs fixed after a full 200+ function audit across all app areas:
-1. **`markWon()` data clobber** — complete overwrite of `customers[p.id]` destroyed HubSpot URLs, machine info, notes, service history when re-marking a prospect. Now spreads existing record first; only status/service fields are overwritten.
-2. **`saveContractField()` bogus 1970 renewal date** — when saving `contract_term` before `contract_start` was set, fallback `contract_start||value` passed the numeric term integer to `new Date()`, generating a 1970 date. Now guards: only computes renewal when `contract_start` is non-empty.
-3. **`renderBriefing()` `null/wk` display** — goal deadline of today or past made `daysLeft===0` (falsy), causing `weeksLeft=null` → `perWeek=null` → renders "null/wk". Fixed `daysLeft!==null` check so deadline-day uses `weeksLeft=1`.
-4. **`printReport()` crash on blocked popup** — `window.open()` returns null if popups blocked; next line threw `TypeError`. Added null-check with "Enable pop-ups to print reports" toast.
-5. **`logService()` comment wrong** — said "30 days", code set 60 days.
-
-Four sync/reset bugs fixed by code review (same session):
-- Sync flags cleared before DELETE resolved → moved to callback
-- Reload race (1200ms shorter than DELETE RTT) → reload now fires inside callback
-- `pushCustomerToSupabase()` swallowed HTTP errors → re-added `!r.ok` toast
-- `deleteAllCustomersFromSupabase()` didn't purge legacy `pic_customers` SDK table → added SDK delete in callback when session exists
 
 ### CleanScore JSON Export (session 60)
 - **`buildCleanScoreExport()`** — iterates `customers` for all active statuses (`customer_recurring`, `customer_quarterly`, `customer_once`, `customer_intro`); skips clients with no `service_history`; sorts history by date descending; takes most recent visit; auto-assigns `PIC-XXXX` cert IDs via `localStorage` key `cleanscore_seq` (persisted via `custSave()`); extracts `atp_pre` / `atp_post` (handles both `visit.atp_post` and `visit.atp` field names); maps `maintenance_60` → `60-Day Certified Clean`, `deep_clean` → `Deep Clean`; runs `nullify()` to replace any `undefined` with `null`
