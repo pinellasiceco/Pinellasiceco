@@ -5075,23 +5075,36 @@ function clrLog(){
   if(tab==='today'){rT();renderBriefing();}
   toast('Call log cleared');
 }
+function deleteAllCustomersFromSupabase(){
+  var key=_SUPABASE_ANON_KEY||(localStorage.getItem('pic_supabase_key')||'').trim();
+  localStorage.removeItem('pic_supa_last_pull');
+  localStorage.removeItem('pic_supa_bootstrapped');
+  if(!key)return;
+  fetch(picSupabaseUrl()+'/customers?updated_at=gte.1970-01-01',{
+    method:'DELETE',
+    headers:{'Authorization':'Bearer '+key,'apikey':key,'Prefer':'return=minimal'}
+  }).catch(function(){});
+}
 function clrCustomers(){
-  if(!confirm('Clear all customer data? Cannot be undone.'))return;
-  customers={};custSave();
+  if(!confirm('Clear all customer data? Clears local and cloud. Cannot be undone.'))return;
+  customers={};
+  try{localStorage.setItem('pic_customers','{}');}catch(e){}
+  deleteAllCustomersFromSupabase();
   P.forEach(p=>{if(p.status!=='prospect')p.status='prospect';});
   if(tab==='clients')rCust();
   renderBriefing();
   toast('Customer data cleared');
 }
 function clrAll(){
-  if(!confirm('Reset ALL data? Clears log, customers, contacts, vendors, goals. Cannot be undone.'))return;
+  if(!confirm('Reset ALL data? Clears log, customers, contacts, vendors, goals and cloud customer records. Cannot be undone.'))return;
   log={};lSave();
-  customers={};custSave();
+  customers={};
+  try{localStorage.setItem('pic_customers','{}');}catch(e){}
+  deleteAllCustomersFromSupabase();
   contacts={};contactsSave();
   vendors={};vendorsSave();
   P.forEach(p=>p.status='prospect');
   if(tab==='today'){rT();renderBriefing();}
-  
   else if(tab==='clients'&&clientTab==='service')rService();
   else if(tab==='clients')rCust();
   else{rT();renderBriefing();}
@@ -5100,26 +5113,22 @@ function clrAll(){
 }
 async function clrAllCloud(){
   if(!confirm('Clear all call logs and client records on THIS device AND in the cloud? Cannot be undone.'))return;
-  if(!_sb||!_userId){
-    toast('Not logged in — cloud not cleared. Use "Clear ALL Data" instead.');
-    return;
-  }
-  // Clear locally
   log={};lSave();
-  customers={};custSave();
+  customers={};
+  try{localStorage.setItem('pic_customers','{}');}catch(e){}
+  deleteAllCustomersFromSupabase();
   contacts={};contactsSave();
   vendors={};vendorsSave();
   P.forEach(p=>{p.status='prospect';});
-  // Clear cloud tables for this user
-  try{
-    await Promise.all([
-      _sb.from('pic_log').delete().eq('device_id',_userId),
-      _sb.from('pic_customers').delete().eq('device_id',_userId)
-    ]);
-    toast('Local + cloud data cleared — reloading…');
-  }catch(e){
-    toast('Local cleared; cloud error: '+(e.message||e));
+  if(_sb&&_userId){
+    try{
+      await Promise.all([
+        _sb.from('pic_log').delete().eq('device_id',_userId),
+        _sb.from('pic_customers').delete().eq('device_id',_userId)
+      ]);
+    }catch(e){}
   }
+  toast('Local + cloud data cleared — reloading…');
   setTimeout(()=>window.location.reload(),1500);
 }
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2200);}
