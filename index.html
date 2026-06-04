@@ -5175,9 +5175,7 @@ function pullCustomersFromSupabase(){
       if(added>0){custSave();toast('Synced '+added+' new records from cloud');_renderApp();}
     }
     localStorage.setItem('pic_supa_last_pull',new Date().toISOString());
-  }).then(function(r){
-    if(!r.ok){r.text().then(function(t){toast('Sync error '+r.status+': '+t.slice(0,80));});}
-  }).catch(function(e){toast('Sync fetch error: '+e.message);});
+  }).catch(function(){});
 }
 function syncFromCloud(){
   localStorage.removeItem('pic_supa_last_pull');

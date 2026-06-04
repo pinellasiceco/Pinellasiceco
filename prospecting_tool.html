@@ -5149,7 +5149,9 @@ function pushCustomerToSupabase(pid){
     method:'POST',
     headers:{'Content-Type':'application/json','Authorization':'Bearer '+key,'apikey':key,'Prefer':'resolution=merge-duplicates'},
     body:JSON.stringify({pid:Number(pid),data:customers[pid],updated_at:new Date().toISOString()})
-  }).catch(function(){});
+  }).then(function(r){
+    if(!r.ok){r.text().then(function(t){toast('Sync error '+r.status+': '+t.slice(0,80));});}
+  }).catch(function(e){toast('Sync fetch error: '+e.message);});
 }
 function pullCustomersFromSupabase(){
   var key=localStorage.getItem('pic_supabase_key');
