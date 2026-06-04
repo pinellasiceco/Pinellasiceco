@@ -101,8 +101,18 @@ jobs:
           git checkout origin/main -- docs/vendor-comparison/ 2>/dev/null || true
           git checkout origin/main -- docs/business-matrix/ 2>/dev/null || true
           git checkout origin/main -- docs/data/ 2>/dev/null || true
-          git checkout origin/main -- sales_playbook_v2.html 2>/dev/null || true
-          git checkout origin/main -- assets/ 2>/dev/null || true
+          git checkout origin/main -- sales_playbook_v2.html  2>/dev/null || true
+          git checkout origin/main -- assets/                2>/dev/null || true
+          git checkout origin/main -- verify.html             2>/dev/null || true
+          git checkout origin/main -- roadmap.html            2>/dev/null || true
+          git checkout origin/main -- pricing.html            2>/dev/null || true
+          git checkout origin/main -- process.html            2>/dev/null || true
+          git checkout origin/main -- atp-explainer.html      2>/dev/null || true
+          git checkout origin/main -- dbpr-citation.html      2>/dev/null || true
+          git checkout origin/main -- comparison.html         2>/dev/null || true
+          git checkout origin/main -- comparison-easyice.html 2>/dev/null || true
+          git checkout origin/main -- email-templates.html    2>/dev/null || true
+          git checkout origin/main -- cleanscore.json         2>/dev/null || true
           git add -A
           git restore --staged .github/ 2>/dev/null || true
           git commit --allow-empty -m "Daily rebuild $(date +'%Y-%m-%d %H:%M')"
