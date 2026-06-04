@@ -5147,7 +5147,7 @@ function pushCustomerToSupabase(pid){
   if(!key)return;
   fetch(picSupabaseUrl()+'/customers?on_conflict=pid',{
     method:'POST',
-    headers:{'Content-Type':'application/json','Authorization':'Bearer '+key,'apikey':key,'Prefer':'resolution=merge-duplicates'},
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+key,'apikey':key,'Prefer':'resolution=merge-duplicates,return=representation'},
     body:JSON.stringify({pid:Number(pid),data:customers[pid],updated_at:new Date().toISOString()})
   }).then(function(r){
     r.text().then(function(t){
