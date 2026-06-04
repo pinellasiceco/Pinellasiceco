@@ -2527,18 +2527,20 @@ function doResetFees(){
 }
 function doResetLocal(){
   if(!confirm('Clear all call logs, customer records, and partner data? This cannot be undone.'))return;
-  deleteAllCustomersFromSupabase();
   ['pic_v4','pic_customers','pic_partners_v1','pic_settings','pic_phones','pic_goals','pic_route_state'].forEach(function(k){localStorage.removeItem(k);});
-  toast('Local data cleared — reloading…');
-  setTimeout(function(){location.reload();},1200);
+  deleteAllCustomersFromSupabase(function(){
+    toast('Local data cleared — reloading…');
+    setTimeout(function(){location.reload();},300);
+  });
 }
 function doResetAll(){
   if(!confirm('Wipe ALL data from this device? This is permanent and cannot be undone.'))return;
   if(!confirm('Are you absolutely sure? Every setting and record will be deleted.'))return;
-  deleteAllCustomersFromSupabase();
-  localStorage.clear();
-  toast('All data wiped');
-  setTimeout(function(){location.reload();},1200);
+  deleteAllCustomersFromSupabase(function(){
+    localStorage.clear();
+    toast('All data wiped');
+    setTimeout(function(){location.reload();},300);
+  });
 }
 function setType(t){
   selType=t;
@@ -5077,32 +5079,35 @@ function clrLog(){
   if(tab==='today'){rT();renderBriefing();}
   toast('Call log cleared');
 }
-function deleteAllCustomersFromSupabase(){
+function deleteAllCustomersFromSupabase(onDone){
   var key=_SUPABASE_ANON_KEY||(localStorage.getItem('pic_supabase_key')||'').trim();
-  localStorage.removeItem('pic_supa_last_pull');
-  localStorage.removeItem('pic_supa_bootstrapped');
-  if(!key)return;
-  fetch(picSupabaseUrl()+'/customers?updated_at=gte.1970-01-01',{
+  function done(){
+    localStorage.removeItem('pic_supa_last_pull');
+    localStorage.removeItem('pic_supa_bootstrapped');
+    if(_sb&&_userId){try{_sb.from('pic_customers').delete().eq('device_id',_userId);}catch(e){}}
+    if(onDone)onDone();
+  }
+  if(!key){done();return;}
+  fetch(picSupabaseUrl()+'/customers?updated_at=gte.1970-01-01T00:00:00.000Z',{
     method:'DELETE',
     headers:{'Authorization':'Bearer '+key,'apikey':key,'Prefer':'return=minimal'}
-  }).catch(function(){});
+  }).then(done).catch(done);
 }
 function clrCustomers(){
   if(!confirm('Clear all customer data? Clears local and cloud. Cannot be undone.'))return;
   customers={};
   try{localStorage.setItem('pic_customers','{}');}catch(e){}
-  deleteAllCustomersFromSupabase();
   P.forEach(p=>{if(p.status!=='prospect')p.status='prospect';});
   if(tab==='clients')rCust();
   renderBriefing();
   toast('Customer data cleared');
+  deleteAllCustomersFromSupabase();
 }
 function clrAll(){
   if(!confirm('Reset ALL data? Clears log, customers, contacts, vendors, goals and cloud customer records. Cannot be undone.'))return;
   log={};lSave();
   customers={};
   try{localStorage.setItem('pic_customers','{}');}catch(e){}
-  deleteAllCustomersFromSupabase();
   contacts={};contactsSave();
   vendors={};vendorsSave();
   P.forEach(p=>p.status='prospect');
@@ -5110,18 +5115,20 @@ function clrAll(){
   else if(tab==='clients'&&clientTab==='service')rService();
   else if(tab==='clients')rCust();
   else{rT();renderBriefing();}
-  toast('All data cleared. Reloading...');
-  setTimeout(()=>window.location.reload(),1200);
+  deleteAllCustomersFromSupabase(function(){
+    toast('All data cleared. Reloading...');
+    setTimeout(()=>window.location.reload(),300);
+  });
 }
 async function clrAllCloud(){
   if(!confirm('Clear all call logs and client records on THIS device AND in the cloud? Cannot be undone.'))return;
   log={};lSave();
   customers={};
   try{localStorage.setItem('pic_customers','{}');}catch(e){}
-  deleteAllCustomersFromSupabase();
   contacts={};contactsSave();
   vendors={};vendorsSave();
   P.forEach(p=>{p.status='prospect';});
+  await new Promise(function(resolve){deleteAllCustomersFromSupabase(resolve);});
   if(_sb&&_userId){
     try{
       await Promise.all([
@@ -5131,7 +5138,7 @@ async function clrAllCloud(){
     }catch(e){}
   }
   toast('Local + cloud data cleared — reloading…');
-  setTimeout(()=>window.location.reload(),1500);
+  setTimeout(()=>window.location.reload(),300);
 }
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2200);}
 
@@ -5160,6 +5167,8 @@ function pushCustomerToSupabase(pid){
     method:'POST',
     headers:{'Content-Type':'application/json','Authorization':'Bearer '+key,'apikey':key,'Prefer':'resolution=merge-duplicates'},
     body:JSON.stringify({pid:Number(pid),data:customers[pid],updated_at:new Date().toISOString()})
+  }).then(function(r){
+    if(!r.ok)r.text().then(function(t){toast('Sync error '+r.status+': '+t.slice(0,60));});
   }).catch(function(){});
 }
 function pullCustomersFromSupabase(){
