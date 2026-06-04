@@ -7408,7 +7408,12 @@ function markWon(status){
   if(!cur)return;
   const p=cur;
   const now=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  const _prev=customers[p.id]||{};
   customers[p.id]={
+    notes:'',last_service:'',next_service:'',hubspot_url:'',square_url:'',
+    machine_brand:'',machine_model:'',machine_type:'',filter_type:'',filter_installed:'',
+    contract_start:'',contract_term:6,contract_renewal:'',service_history:[],atp_history:[],
+    ..._prev,
     status,
     won_date: now,
     service_type: status==='customer_recurring'?'recurring':status==='customer_intro'?'intro':'one_time',
@@ -7418,22 +7423,7 @@ function markWon(status){
     name: p.name,
     address: p.address,
     city: p.city,
-    phone: p.phone,
-    notes: '',
-    last_service: '',
-    next_service: '',
-    hubspot_url: '',
-    square_url: '',
-    machine_brand: '',
-    machine_model: '',
-    machine_type: '',
-    filter_type: '',
-    filter_installed: '',
-    contract_start: '',
-    contract_term: 6,
-    contract_renewal: '',
-    service_history: [],
-    atp_history: [],
+    phone: p.phone||_prev.phone||'',
   };
   p.status=status;
   custSave();
@@ -7870,14 +7860,16 @@ function saveMachineField(id,field,value){
 function saveContractField(id,field,value){
   if(!customers[id])customers[id]={};
   customers[id][field]=value;
-  // Auto-calculate renewal date
   if(field==='contract_start'||field==='contract_term'){
-    const start=new Date(customers[id].contract_start||value);
-    const term=parseInt(customers[id].contract_term||6);
-    if(!isNaN(start)){
-      const renewal=new Date(start);
-      renewal.setMonth(renewal.getMonth()+term);
-      customers[id].contract_renewal=localISO(renewal);
+    const startStr=customers[id].contract_start;
+    if(startStr){
+      const start=new Date(startStr);
+      const term=parseInt(customers[id].contract_term||6);
+      if(!isNaN(start)){
+        const renewal=new Date(start);
+        renewal.setMonth(renewal.getMonth()+term);
+        customers[id].contract_renewal=localISO(renewal);
+      }
     }
   }
   custSave();
@@ -7897,7 +7889,7 @@ function logService(id){
   const today=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
   if(!customers[id])customers[id]={};
   customers[id].last_service=today;
-  // Default next service in 30 days for recurring
+  // Default next service in 60 days for recurring
   const p=P.find(x=>x.id===id);
   if(p&&p.status==='customer_recurring'){
     const next=new Date();next.setDate(next.getDate()+60);
@@ -8312,7 +8304,7 @@ function renderBriefing(){
     const goalClients=goals.clients||10;
     const deadline=goals.deadline?parseLD(goals.deadline):null;
     const daysLeft=deadline?Math.ceil((deadline-now)/864e5):null;
-    const weeksLeft=daysLeft?Math.max(1,daysLeft/7):null;
+    const weeksLeft=daysLeft!==null?Math.max(1,daysLeft/7):null;
     const needed=Math.max(0,goalClients-clientCount);
     const perWeek=weeksLeft?Math.ceil(needed/weeksLeft):null;
     // Current pace (closes last 4 weeks)
@@ -10581,6 +10573,7 @@ function printReport(){
   const content=document.getElementById('report-content');
   if(!content)return;
   const win=window.open('','_blank');
+  if(!win){toast('Enable pop-ups to print reports');return;}
   win.document.write('<html><head><title>Service Report - Pinellas Ice Co</title>'
     +'<style>body{font-family:system-ui,sans-serif;padding:14px;max-width:600px;margin:0 auto;color:#1e293b}'
     +'*{box-sizing:border-box}textarea{border:1px solid #cbd5e1;border-radius:4px;padding:6px;width:100%;font-family:inherit}'
