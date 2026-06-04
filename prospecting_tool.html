@@ -5143,7 +5143,7 @@ function picSupabaseUrl(){
   return 'https://kbyqatbkqqhuasbjlcwe.supabase.co/rest/v1';
 }
 function pushCustomerToSupabase(pid){
-  var key=localStorage.getItem('pic_supabase_key');
+  var key=_SUPABASE_ANON_KEY||(localStorage.getItem('pic_supabase_key')||'').trim();
   if(!key)return;
   fetch(picSupabaseUrl()+'/customers?on_conflict=pid',{
     method:'POST',
@@ -5157,7 +5157,7 @@ function pushCustomerToSupabase(pid){
   }).catch(function(e){toast('Sync fetch error: '+e.message);});
 }
 function pullCustomersFromSupabase(){
-  var key=localStorage.getItem('pic_supabase_key');
+  var key=_SUPABASE_ANON_KEY||(localStorage.getItem('pic_supabase_key')||'').trim();
   if(!key)return;
   var lastPull=localStorage.getItem('pic_supa_last_pull');
   if(lastPull&&(new Date()-new Date(lastPull))<3600000)return;
