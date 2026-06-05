@@ -881,10 +881,14 @@ COLUMN_MAP = {
     'Inspection Type': ['InspectionType','INSPECTION TYPE','Type','Insp Type'],
     'Inspection Disposition': ['Disposition','DISPOSITION','InspectionDisposition','Result'],
     'Number of High Priority Violations': [
-        'High Priority Violations','HighPriorityViolations','High Violations','HP Violations','HV'],
-    'Number of Total Violations': ['Total Violations','TotalViolations','Total','TV'],
-    'Number of Intermediate Violations': ['Intermediate Violations','IntermediateViolations','IV'],
-    'Number of Basic Violations': ['Basic Violations','BasicViolations','BV'],
+        'High Priority Violations','HighPriorityViolations','High Violations','HP Violations','HV',
+        'Num High Priority','NumHighPriority'],
+    'Number of Total Violations': ['Total Violations','TotalViolations','Total','TV',
+        'Num Total','NumTotal'],
+    'Number of Intermediate Violations': ['Intermediate Violations','IntermediateViolations','IV',
+        'Num Intermediate','NumIntermediate'],
+    'Number of Basic Violations': ['Basic Violations','BasicViolations','BV',
+        'Num Basic','NumBasic'],
     'Visit Number': ['VisitNumber','Visit','VISIT NUMBER','Visit_Number'],
 }
 
