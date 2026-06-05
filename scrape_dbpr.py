@@ -410,21 +410,19 @@ def run_full_violations_scrape():
     print(f"Loaded {len(records)} records from {ALL_VIOLATIONS_INPUT}")
 
     done = load_full_progress()
+    cache = load_full_narratives_cache()
+    # A record is truly done only if it's in the cache (successful scrape with data).
+    # Progress-only entries with no cache data were REDIRECT/FAILED — retry them.
+    # This self-heals any records that were permanently locked by old code.
+    cache_keys = set(str(k) for k in cache.keys())
+
+    def _is_done(lic):
+        return lic in done and lic in cache_keys
+
     # Key by numeric License ID so cache keys match export_cleanscore.py lookup (str(r['id']))
     remaining = [r for r in records
-                 if str(r.get('License ID', r.get('license_id', r['License Number']))).strip() not in done]
-    print(f"Already scraped: {len(done)} | Remaining: {len(remaining)}")
-
-    max_records = int(os.environ.get('MAX_RECORDS', '0') or 0)
-    if max_records > 0:
-        remaining = remaining[:max_records]
-        print(f"Capped to {max_records} records (MAX_RECORDS env var)")
-
-    if not remaining:
-        print("All records already scraped!")
-        return
-
-    cache = load_full_narratives_cache()
+                 if not _is_done(str(r.get('License ID', r.get('license_id', r['License Number']))).strip())]
+    print(f"Cached with data: {len(cache_keys)} | Progress entries: {len(done)} | Remaining: {len(remaining)}")
     session_cookie = init_session()
 
     success_count = 0
