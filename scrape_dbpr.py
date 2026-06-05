@@ -472,11 +472,23 @@ def run_full_violations_scrape():
             if new_cookie:
                 session_cookie = new_cookie
             if not html or not is_valid_inspection(html, vid):
-                print(" still REDIRECT — will retry next run")
+                if html and ('cannot be processed at this time' in html
+                             or 'Error Has Occured' in html):
+                    # DBPR returns this error for inspections that exist in the
+                    # download CSV but have no accessible public detail page
+                    # (e.g. administrative/complaint visits). Mark as permanently
+                    # done with an empty violations list so we stop retrying.
+                    print(" → DBPR_ERROR (no public detail page, marking done)")
+                    cache[lic] = []
+                    save_full_narratives_cache(cache)
+                    save_full_progress(lic)
+                else:
+                    print(" still REDIRECT — will retry next run")
+                    _dbg = re.sub(r'<[^>]+>', ' ', html or '')
+                    _dbg = re.sub(r'\s+', ' ', _dbg).strip()[:300]
+                    print(f"    [REDIRECT_DEBUG] lic={lic} vid={vid} url={url}")
+                    print(f"    [REDIRECT_DEBUG] html={_dbg!r}")
                 fail_count += 1
-                # Do NOT save_full_progress — allows retry on next CI run.
-                # DBPR may not yet have published the detail page for very
-                # recent inspections; they typically appear within 24-48h.
                 time.sleep(MIN_DELAY)
                 continue
             print(" retry OK", end='', flush=True)
