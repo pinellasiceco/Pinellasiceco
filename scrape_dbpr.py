@@ -455,13 +455,23 @@ def run_full_violations_scrape():
             continue
 
         if not is_valid_inspection(html, vid):
-            print(" → REDIRECT")
-            fail_count += 1
-            if fail_count % 10 == 0:
-                session_cookie = init_session()
-            save_full_progress(lic)
-            time.sleep(MIN_DELAY)
-            continue
+            # Re-init session immediately and retry once — DBPR redirects to a
+            # default page when the session expires or when a very recent
+            # inspection page hasn't been fully published yet.
+            print(" → REDIRECT (retrying with fresh session...)", end='', flush=True)
+            session_cookie = init_session()
+            html, new_cookie = fetch_page(url, session_cookie)
+            if new_cookie:
+                session_cookie = new_cookie
+            if not html or not is_valid_inspection(html, vid):
+                print(" still REDIRECT — will retry next run")
+                fail_count += 1
+                # Do NOT save_full_progress — allows retry on next CI run.
+                # DBPR may not yet have published the detail page for very
+                # recent inspections; they typically appear within 24-48h.
+                time.sleep(MIN_DELAY)
+                continue
+            print(" retry OK", end='', flush=True)
 
         violations = parse_inspection(html, vid, biz)
         inspector_name = extract_inspector_name(html)
@@ -594,14 +604,18 @@ def main():
             continue
 
         if not is_valid_inspection(html, vid):
-            print(" → REDIRECT (session issue)")
-            fail_count += 1
-            # Try re-initializing session
-            if fail_count % 10 == 0:
-                session_cookie = init_session()
-            save_progress(vid)
-            time.sleep(MIN_DELAY)
-            continue
+            print(" → REDIRECT (retrying with fresh session...)", end='', flush=True)
+            session_cookie = init_session()
+            html, new_cookie = fetch_page(url, session_cookie)
+            if new_cookie:
+                session_cookie = new_cookie
+            if not html or not is_valid_inspection(html, vid):
+                print(" still REDIRECT — will retry next run")
+                fail_count += 1
+                # Do NOT save_progress — allows retry on next CI run
+                time.sleep(MIN_DELAY)
+                continue
+            print(" retry OK", end='', flush=True)
 
         violations = parse_inspection(html, vid, biz)
 
