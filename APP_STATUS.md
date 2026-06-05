@@ -1,5 +1,5 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-06-04 (session 61 — Supabase customer sync + full app audit) by Claude Code*
+*Last updated: 2026-06-05 (session 62 — Stripe live mode, scraper REDIRECT fix, CI persistence, CleanScore + Dirty Ice Map fixes) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
@@ -86,6 +86,32 @@ Four sync/reset bugs fixed by code review (same session):
 - **Settings buttons**: "Strategic Contacts" section has blue Import Strategic Contacts button; "Gold Lead Contacts" section has amber Import Gold Contacts button. Both in Settings overlay.
 - **`docs/data/` preserved in CI**: `rebuild.yml` commit step includes `git checkout origin/main -- docs/data/` — JSON contact files survive daily rebuilds.
 - **Known**: Gold workflow first run found 49/538 contacts (9.1%) — slightly below 10% warning threshold but results look legitimate. Re-run after push fix committed the file correctly.
+
+### Stripe Live Mode (session 62)
+- **Live mode active**: `STRIPE_SECRET_KEY` in Supabase Edge Function secrets updated to `sk_live_...` restricted key (Customers + Checkout Sessions write permissions)
+- **No code changes required**: `stripe-checkout/index.ts` uses `price_data` objects (dynamic pricing) — not hardcoded price IDs — so test→live switch is purely a secret swap
+- **Receipt emails**: enabled in Stripe Dashboard → Settings → Emails → "Successful payments"; Stripe sends receipts automatically, no app code needed
+- **Live price IDs** (reference only, not used in checkout logic): `quarterly_base: price_1TXrIu1DW5dOU2aacIeDByPC`, `reach_in_quarterly: price_1TZDF71DW5dOU2aaT1PYaOaw`
+
+### DBPR Scraper Fixes (session 62)
+- **REDIRECT no longer permanently excludes records**: old code called `save_full_progress(lic)` on REDIRECT, locking records out forever (no cache entry = stuck). Fixed: progress is NOT saved on REDIRECT; only saved on explicit success or hard network failure. Records retry every CI run until DBPR publishes the page.
+- **`_is_done()` requires cache presence**: a record is only considered done if it has an entry in BOTH `full_scraper_progress.txt` AND `full_inspection_narratives.json`. Progress-only entries (REDIRECT/FAILED) are retried automatically. This is self-healing — any future locked records are caught by this check.
+- **Print format updated**: CI log now shows `Cached with data: N | Progress entries: N | Remaining: N` (old: `Already scraped: N | Remaining: N`)
+- **28 REDIRECT records (known, DBPR-side)**: these are the most recent inspections in the violations list. DBPR's inspection detail pages have a 24–48h publishing lag for brand-new inspections. 6 of 28 are businesses where the V22 scraper already succeeded with older Visit IDs (Oct–Jan inspections) — the full violations scraper uses their newer Visit IDs that aren't published yet. All 28 retry automatically each CI run and will resolve once DBPR publishes.
+
+### CI Persistence Fix (session 62)
+- **Root cause identified and fixed**: when two code pushes happen in close succession, CI run A (triggered by push A) reaches its commit step after push B lands on main. `git reset --soft origin/main` moves HEAD to B, but `git add -A` then stages A's working-tree `.py` files on top — silently reverting the newer code. This caused every fix from session 62 to revert within minutes of being pushed.
+- **Fix**: commit step now runs `git checkout origin/main -- *.py 2>/dev/null || true` and `git checkout origin/main -- supabase/ 2>/dev/null || true` immediately after `git reset --soft origin/main` and before `git add -A`. Source code always comes from the latest main; generated data (CSV, JSON, HTML) still comes from the current CI run.
+- **Self-reinforcing**: once this fix is on main, every subsequent CI run restores the correct `.py` files — no future code push can be silently reverted by a lagging CI run.
+
+### CleanScore Non-Ice Violations Fix (session 62)
+- **Root cause**: `COLUMN_MAP` in `build.py` was missing aliases for the shorthand column names used in DBPR CSV extracts: `'Num Total'`, `'Num High Priority'`, `'Num Intermediate'`, `'Num Basic'`. Without these, `total_viol` and `high_viol` were 0 for all CSV-sourced records.
+- **Effect**: `export_cleanscore.py` filters `if total_viol == 0: continue` — all non-ice-machine violations were silently skipped. CleanScore only showed ice machine violations.
+- **Fix**: added all four shorthand column names as aliases in `COLUMN_MAP`. All violation records now have correct counts and appear in CleanScore.
+
+### Dirty Ice Map Fix (session 62)
+- **Root cause**: `rebuild.yml` commit step had `git checkout origin/main -- docs/map/` which restored the ENTIRE `docs/map/` directory from main — including `data.json`. This overwrote the freshly generated `data.json` with the previous day's stale version on every CI run, making the map always show 0 points.
+- **Fix**: changed to `git checkout origin/main -- docs/map/index.html` (only the static HTML shell). `data.json` is regenerated by `build.py` each run and must not be restored from main.
 
 ### CI Build Fixes (session 57)
 - **Emergency closure xlrd fallback**: `load_emergency_closures()` in `build.py` now falls back to `pandas`+`xlrd` when `openpyxl` fails — DBPR serves EOS weekly files as legacy XLS (not XLSX/ZIP), so `openpyxl` was silently returning an empty set; emergency-closed businesses are now correctly flagged
@@ -230,6 +256,8 @@ Four sync/reset bugs fixed by code review (same session):
 
 ## What's Broken / Watch List ⚠️
 
+- **28 REDIRECT records pending (DBPR publishing lag)**: as of 2026-06-05, 28 businesses in the violations list have inspection detail pages that DBPR has not yet published. The scraper retries all 28 on every CI run — no action needed. Expected to resolve within 24–48h of each inspection being finalized by DBPR. Monitor via CI log: `Remaining: N` will tick down to 0 as pages come online. These businesses will appear in the app (and Gold section if applicable) the day after their page is published.
+
 - **Stripe redirect wipes in-memory state**: Any data set on `customers[pid]` in memory before `window.location.href = stripeUrl` is lost — Stripe navigates away and the app reloads from localStorage. Always call `custSave()` immediately after writing anything to `customers[pid]` that needs to survive the redirect.
 - **iPad copy-paste**: copying code blocks from chat on iPad adds angle brackets around URLs. Never paste code directly into Supabase editor — use the GitHub Actions deploy workflow instead.
 - **`\n` in build.py strings**: never use `\n` inside Python triple-quoted strings for JS string literals — the literal newline breaks JS parsing and silently disables all buttons. Always use `\\n`.
@@ -284,7 +312,7 @@ To force a fresh PWA load after a push: open the URL directly in Safari (not the
 - Stats bar: animated counters for total citations, mold/biofilm count, cities affected
 - CTA bar: "Free ATP Test →" button linking to HubSpot booking
 - CartoDB dark tile layer (no API key required)
-- **Preserved in CI**: `git checkout origin/main -- docs/map/` in `rebuild.yml`
+- **Preserved in CI**: `git checkout origin/main -- docs/map/index.html` only — `data.json` is regenerated each run and must NOT be restored from main (restoring the whole `docs/map/` directory was the bug that caused 0 points)
 - Linked from `docs/explore/index.html` (6th card in path-cards section)
 
 ### Technician Field Manual
