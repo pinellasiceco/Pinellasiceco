@@ -473,12 +473,10 @@ def run_full_violations_scrape():
                 session_cookie = new_cookie
             if not html or not is_valid_inspection(html, vid):
                 print(" still REDIRECT — will retry next run")
-                _dbg = re.sub(r'<[^>]+>', ' ', html or '')
-                _dbg = re.sub(r'\s+', ' ', _dbg).strip()[:300]
-                print(f"    [REDIRECT_DEBUG] lic={lic} vid={vid} url={url}")
-                print(f"    [REDIRECT_DEBUG] html={_dbg!r}")
                 fail_count += 1
                 # Do NOT save_full_progress — allows retry on next CI run.
+                # DBPR may not yet have published the detail page for very
+                # recent inspections; they typically appear within 24-48h.
                 time.sleep(MIN_DELAY)
                 continue
             print(" retry OK", end='', flush=True)
@@ -621,10 +619,6 @@ def main():
                 session_cookie = new_cookie
             if not html or not is_valid_inspection(html, vid):
                 print(" still REDIRECT — will retry next run")
-                _dbg = re.sub(r'<[^>]+>', ' ', html or '')
-                _dbg = re.sub(r'\s+', ' ', _dbg).strip()[:300]
-                print(f"    [REDIRECT_DEBUG] vid={vid} url={url}")
-                print(f"    [REDIRECT_DEBUG] html={_dbg!r}")
                 fail_count += 1
                 # Do NOT save_progress — allows retry on next CI run
                 time.sleep(MIN_DELAY)
