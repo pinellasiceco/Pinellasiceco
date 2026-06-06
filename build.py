@@ -727,6 +727,7 @@ def load_ice_citations(csv_path='ice_citation_by_business.csv'):
                         'earliest_date':     '',
                         'days_since':        days_since,
                         'best_observation':  extract_ice_snippet(row.get('best_observation', '')),
+                        'observation_date':  row.get('cit_observation_date', '').strip(),
                         'codes':             [],
                         'repeat_violations': repeat_int,
                         'warnings_issued':   0,
@@ -783,8 +784,9 @@ def enrich_with_citations(records, citations):
             _date_synced_count += 1
         rec['cit_earliest']       = c['earliest_date']
         rec['cit_days_since']     = c['days_since']
-        rec['cit_observation']    = c['best_observation']
-        rec['cit_codes']          = c['codes']
+        rec['cit_observation']      = c['best_observation']
+        rec['cit_observation_date'] = c.get('observation_date', '')
+        rec['cit_codes']            = c['codes']
         rec['cit_repeat']         = c['repeat_violations']
         rec['cit_mold_black']     = c['mold_black']
         rec['cit_mold_pink']      = c['mold_pink']
@@ -6275,7 +6277,7 @@ function buildIntelSummary(p){
     var citLine='&#x1F575;&#xFE0F; DBPR Inspector Confirmed — '+citN+' ice citation'+(citN!==1?'s':'');
     if(p.cit_latest)citLine+=' (latest: '+p.cit_latest+')';
     lines.push(citLine);
-    if(p.cit_observation)lines.push('&#x00A0;&#x00A0;&#x201C;'+p.cit_observation+'&#x201D;');
+    if(p.cit_observation){var _obsLbl='';if(p.cit_observation_date&&p.cit_latest&&p.cit_observation_date<p.cit_latest){try{var _od=new Date(p.cit_observation_date+'T12:00:00');_obsLbl='&#x26A0; From '+_od.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})+' inspection: ';}catch(e){}}lines.push('&#x00A0;&#x00A0;'+_obsLbl+'&#x201C;'+p.cit_observation+'&#x201D;');}
   }
   if(p.n_callbacks>0)lines.push('&#x1F6A8; '+p.n_callbacks+'x callback — inspector returned');
   if(p.chronic)lines.push('&#x1F9CA; Chronic ice — '+p.ice_count+' inspections flagged');
@@ -6347,7 +6349,7 @@ function showCard(id){
           +(p.cit_latest?' &bull; latest: '+p.cit_latest:'')
         +'</div>'
         +(p.cit_observation
-          ?('<div style="font-size:10px;color:#4c1d95;font-style:italic;line-height:1.45;padding:6px 8px;background:#ede9fe;border-radius:5px">&#x201C;'+p.cit_observation+'&#x201D;</div>')
+          ?(function(){var _dl='';if(p.cit_observation_date&&p.cit_latest&&p.cit_observation_date<p.cit_latest){try{var _od2=new Date(p.cit_observation_date+'T12:00:00');_dl='<div style="font-size:9px;color:#7c3aed;font-weight:700;margin-bottom:3px">&#x26A0; From '+_od2.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})+' inspection</div>';}catch(e){}}return '<div style="font-size:10px;color:#4c1d95;font-style:italic;line-height:1.45;padding:6px 8px;background:#ede9fe;border-radius:5px">'+_dl+'&#x201C;'+p.cit_observation+'&#x201D;</div>';})()
           :'')
         +'</div>')
       :'';
@@ -8644,7 +8646,7 @@ async function loadCloudData(){
     if(r1.data&&r1.data.data&&Array.isArray(r1.data.data)&&r1.data.data.length&&r1.data.data[0]&&r1.data.data[0].name){
       // Snapshot citation fields from baked P[] before overwriting — Supabase may have an
       // older snapshot that pre-dates the DBPR citation enrichment.
-      var _citFields=['ice_confirmed_dbpr','cit_count','cit_ice_count','cit_latest','cit_earliest','cit_observation','cit_codes','ice_risk_prob','ice_risk_level','ice_risk_reason','ice_gold'];
+      var _citFields=['ice_confirmed_dbpr','cit_count','cit_ice_count','cit_latest','cit_earliest','cit_observation','cit_observation_date','cit_codes','ice_risk_prob','ice_risk_level','ice_risk_reason','ice_gold'];
       var _citMap={};
       P.forEach(function(p){
         var saved={};

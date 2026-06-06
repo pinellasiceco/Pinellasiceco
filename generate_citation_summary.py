@@ -212,26 +212,51 @@ def main():
                 nar_ice = nar[nar[obs_col].astype(str).apply(
                     lambda x: bool(_ICE_KEYWORDS.search(x))
                 )].copy()
-                obs_map = (
-                    nar_ice.groupby('_key')[obs_col]
-                    .apply(lambda x: max(
-                        (extract_ice_snippet(v) for v in x),
-                        key=len, default='',
-                    ))
-                )
-                summary['best_observation'] = (
-                    summary['license'].map(obs_map).fillna('')
-                )
+                from datetime import datetime as _dtt
+                def _best_with_date(grp):
+                    best_snippet = ''
+                    best_date = ''
+                    for _, row in grp.iterrows():
+                        s = extract_ice_snippet(str(row[obs_col]))
+                        if len(s) > len(best_snippet):
+                            best_snippet = s
+                            raw = str(row.get('inspection_date', '')).strip()
+                            if raw and raw not in ('nan', 'NaT', 'None', ''):
+                                try:
+                                    best_date = _dtt.strptime(raw, '%m/%d/%Y').strftime('%Y-%m-%d')
+                                except ValueError:
+                                    best_date = raw[:10] if len(raw) >= 10 else ''
+                            else:
+                                best_date = ''
+                    return pd.Series({'obs': best_snippet, 'obs_date': best_date})
+                if 'inspection_date' in nar_ice.columns and not nar_ice.empty:
+                    _nar_result = nar_ice.groupby('_key').apply(_best_with_date)
+                    obs_map = _nar_result['obs']
+                    date_map = _nar_result['obs_date']
+                else:
+                    obs_map = (
+                        nar_ice.groupby('_key')[obs_col]
+                        .apply(lambda x: max(
+                            (extract_ice_snippet(v) for v in x),
+                            key=len, default='',
+                        ))
+                    )
+                    date_map = pd.Series(dtype=str)
+                summary['best_observation'] = summary['license'].map(obs_map).fillna('')
+                summary['cit_observation_date'] = summary['license'].map(date_map).fillna('')
                 n_matched = int((summary['best_observation'] != '').sum())
                 n_nar = int(nar['_key'].nunique())
                 print(f'  Narratives: {n_nar} unique licenses, {n_matched}/{len(summary)} businesses matched (key: {key_col})')
             else:
                 summary['best_observation'] = ''
+                summary['cit_observation_date'] = ''
         except Exception as e:
             print(f'  Narratives merge skipped: {e}')
             summary['best_observation'] = ''
+            summary['cit_observation_date'] = ''
     else:
         summary['best_observation'] = ''
+        summary['cit_observation_date'] = ''
 
     # Fallback: fill remaining blanks from full_inspection_narratives.json.
     # Covers licenses the V22 file never scraped (newer inspections, April 2026+).
@@ -259,6 +284,7 @@ def main():
                 _snippet = extract_ice_snippet(_obs_text)
                 if _snippet:
                     summary.at[_idx, 'best_observation'] = _snippet
+                    summary.at[_idx, 'cit_observation_date'] = ''
                     _fallback_count += 1
             print(f'  Full narratives fallback: {_fallback_count} additional licenses matched')
         except Exception as _e:
