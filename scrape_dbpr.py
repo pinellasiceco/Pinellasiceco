@@ -510,10 +510,11 @@ def run_full_violations_scrape():
                 {'code': v['violation_code'], 'observation': v['observation']}
                 for v in violations
             ]
+            _scrape_date = date.today().isoformat()
             if inspector_name:
-                cache[lic] = {'violations': viols_list, 'inspector_name': inspector_name}
+                cache[lic] = {'violations': viols_list, 'inspector_name': inspector_name, 'scrape_date': _scrape_date}
             else:
-                cache[lic] = viols_list
+                cache[lic] = {'violations': viols_list, 'scrape_date': _scrape_date}
             success_count += 1
 
         save_full_narratives_cache(cache)
