@@ -474,14 +474,9 @@ def run_full_violations_scrape():
             if not html or not is_valid_inspection(html, vid):
                 if html and ('cannot be processed at this time' in html
                              or 'Error Has Occured' in html):
-                    # DBPR returns this error for inspections that exist in the
-                    # download CSV but have no accessible public detail page
-                    # (e.g. administrative/complaint visits). Mark as permanently
-                    # done with an empty violations list so we stop retrying.
-                    print(" → DBPR_ERROR (no public detail page, marking done)")
-                    cache[lic] = []
-                    save_full_narratives_cache(cache)
-                    save_full_progress(lic)
+                    # DBPR generic server error — transient, not a permanent
+                    # "page doesn't exist" signal. Do NOT permanently exclude.
+                    print(" → DBPR_ERROR (will retry next run)")
                 else:
                     print(" still REDIRECT — will retry next run")
                     _dbg = re.sub(r'<[^>]+>', ' ', html or '')
@@ -489,6 +484,7 @@ def run_full_violations_scrape():
                     print(f"    [REDIRECT_DEBUG] lic={lic} vid={vid} url={url}")
                     print(f"    [REDIRECT_DEBUG] html={_dbg!r}")
                 fail_count += 1
+                # Do NOT save to cache or progress — allows retry on next CI run
                 time.sleep(MIN_DELAY)
                 continue
             print(" retry OK", end='', flush=True)
