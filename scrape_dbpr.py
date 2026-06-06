@@ -12,7 +12,7 @@ import random
 import os
 import re
 import sys
-from datetime import datetime
+from datetime import datetime, date
 from urllib.request import urlopen, Request
 from urllib.error import URLError, HTTPError
 from html.parser import HTMLParser
@@ -417,7 +417,15 @@ def run_full_violations_scrape():
     cache_keys = set(str(k) for k in cache.keys())
 
     def _is_done(lic):
-        return lic in done and lic in cache_keys
+        if lic not in done or lic not in cache_keys:
+            return False
+        val = cache.get(lic)
+        if isinstance(val, dict) and val.get('status') == 'DBPR_ERROR':
+            try:
+                return (date.today() - date.fromisoformat(val['date'])).days < 7
+            except (ValueError, TypeError, KeyError):
+                return False
+        return True
 
     # Key by numeric License ID so cache keys match export_cleanscore.py lookup (str(r['id']))
     remaining = [r for r in records
@@ -474,9 +482,12 @@ def run_full_violations_scrape():
             if not html or not is_valid_inspection(html, vid):
                 if html and ('cannot be processed at this time' in html
                              or 'Error Has Occured' in html):
-                    # DBPR generic server error — transient, not a permanent
-                    # "page doesn't exist" signal. Do NOT permanently exclude.
-                    print(" → DBPR_ERROR (will retry next run)")
+                    # DBPR publishing lag — page not yet live. Save with today's
+                    # date so it's skipped for 7 days, then retried automatically.
+                    cache[lic] = {'status': 'DBPR_ERROR', 'date': date.today().isoformat()}
+                    save_full_narratives_cache(cache)
+                    save_full_progress(lic)
+                    print(" → DBPR_ERROR (will retry in 7 days)")
                 else:
                     print(" still REDIRECT — will retry next run")
                     _dbg = re.sub(r'<[^>]+>', ' ', html or '')
