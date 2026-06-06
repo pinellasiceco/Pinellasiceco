@@ -11,6 +11,7 @@ This ensures Fresh Citations on the Home tab reflects current data.
 Output: ice_citation_by_business.csv (repo root, read by build.py)
 """
 
+import json
 import os
 import re
 import sys
@@ -231,6 +232,37 @@ def main():
             summary['best_observation'] = ''
     else:
         summary['best_observation'] = ''
+
+    # Fallback: fill remaining blanks from full_inspection_narratives.json.
+    # Covers licenses the V22 file never scraped (newer inspections, April 2026+).
+    # Applies the same _ICE_KEYWORDS filter and extract_ice_snippet() as V22 pipeline.
+    _full_nar_path = 'full_inspection_narratives.json'
+    if os.path.exists(_full_nar_path):
+        try:
+            with open(_full_nar_path) as _f:
+                _full_cache = json.load(_f)
+            _fallback_count = 0
+            _blank_mask = summary['best_observation'] == ''
+            for _idx, _row in summary[_blank_mask].iterrows():
+                _cached = _full_cache.get(str(_row['license']))
+                if not _cached:
+                    continue
+                if isinstance(_cached, list):
+                    _obs_parts = [e.get('observation', '') for e in _cached if e.get('observation')]
+                elif isinstance(_cached, dict) and 'violations' in _cached:
+                    _obs_parts = [e.get('observation', '') for e in _cached['violations'] if e.get('observation')]
+                else:
+                    continue
+                _obs_text = ' '.join(_obs_parts)
+                if not _obs_text or not _ICE_KEYWORDS.search(_obs_text):
+                    continue
+                _snippet = extract_ice_snippet(_obs_text)
+                if _snippet:
+                    summary.at[_idx, 'best_observation'] = _snippet
+                    _fallback_count += 1
+            print(f'  Full narratives fallback: {_fallback_count} additional licenses matched')
+        except Exception as _e:
+            print(f'  Full narratives fallback skipped: {_e}')
 
     today     = date.today()
     week_ago  = str(today - timedelta(days=7))
