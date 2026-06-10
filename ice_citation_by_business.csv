@@ -536,7 +536,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 4005740,LOVEN PIZZA,2194A MAIN STREET,DUNEDIN,2021-01-13,2,Warning Issued,True,False,,
 4009764,GYROS & SEAFOOD EXPRESS,1760 9 ST SOUTH,ST. PETERSBURG,2021-01-13,1,Inspection Completed - No Further Action,False,False,,
 4012171,SUNSET GRILLE,2996 DR MARTIN LUTHER KING JR ST N,ST. PETERSBURG,2025-08-11,4,Call Back - Complied,True,False,,
-4017040,THE BOAT CLUB,819 BECKETT WAY,TARPON SPRINGS,2026-06-08,3,Warning Issued,True,False,,
+4017040,THE BOAT CLUB,1761 BECKETT WAY,TARPON SPRINGS,2026-06-09,4,Warning Issued,True,False,,
 4024789,SENOR TACO,6447 PARK BLVD STE# 1,PINELLAS PARK,2021-03-24,2,Inspection Completed - No Further Action,True,False,,
 4025270,SUN RV RESORT,2920 N ALT 19 N,DUNEDIN,2020-09-16,1,Inspection Completed - No Further Action,False,False,,
 4031726,SLICE OF THE BURG,10484 ROOSEVELT BLVD,ST. PETERSBURG,2025-08-06,4,Inspection Completed - No Further Action,True,False,,
@@ -603,7 +603,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 4267328,CHINA 1 TAKE OUT RESTAURANT,2261 34 ST S  UNIT 2261,ST. PETERSBURG,2026-03-20,6,Call Back - Complied,True,False,- From initial inspection : Basic - Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup up inside multiple reach-in freezers located throughout establishment.,2026-03-20
 4275460,CODY'S ORIGINAL ROADHOUSE,4360 PARK ST N,ST. PETERSBURG,2021-01-08,2,Inspection Completed - No Further Action,True,False,,
 4275474,QSL RESTAURANT FLORIDA LIMITED,10400 49 ST N,CLEARWATER,2026-03-16,2,Inspection Completed - No Further Action,True,False,,
-4276336,GRATZZI'S RESTAURANT,211 2ND STREET S.,ST. PETERSBURG,2021-04-29,3,Call Back - Complied,True,False,,
+4276336,GRATZZI'S RESTAURANT,211 2ND STREET S.,ST. PETERSBURG,2026-06-09,4,Call Back - Complied,True,False,,
 4280218,ACROPOLIS,515 CENTRAL AVE,ST PETERSBURG,2021-05-21,6,Warning Issued,True,False,,
 4283799,IHOP #36-212,30200 US HWY 19 N,CLEARWATER,2021-02-05,2,Inspection Completed - No Further Action,True,False,,
 4285389,HAROLD SELTZERS STEAKHOUSE,3500 TYRONE BLVD,ST PETERSBURG,2021-06-02,4,Inspection Completed - No Further Action,True,False,,
@@ -743,7 +743,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 5496526,WOK N ROLL,1112 94 AVE N,ST. PETERSBURG,2026-02-11,3,Inspection Completed - No Further Action,True,False,,
 5505125,SEA HAGS BAR AND GRILL,9555 BLIND PASS RD,ST. PETE BEACH,2021-04-19,2,Warning Issued,True,False,,
 5505867,CHINA HOUSE,2898 ALT 19,PALM HARBOR,2021-03-16,3,Warning Issued,True,False,Cooler handles soiled Basic - Ice buildup in reach-in freezer and/or walk-in freezer.,
-5506894,CHINA WOK,1951 N PINELLAS AVE STE 501,TARPON SPRINGS,2026-01-29,2,Inspection Completed - No Further Action,True,False,,
+5506894,CHINA WOK,1951 N PINELLAS AVE STE 501,TARPON SPRINGS,2026-06-09,3,Inspection Completed - No Further Action,True,False,,
 5510066,GOLDEN STAR,10805 102  AVE,LARGO,2026-01-09,2,Inspection Completed - No Further Action,True,False,Food stored in undrained ice.,2026-01-09
 5511305,HOME PLATE,234 DOUGLAS AVE,DUNEDIN,2020-12-07,2,Inspection Completed - No Further Action,True,False,,
 5511425,FIRST WATCH RESTAURANT #125,4055 N TYRONE BLVD #204,ST. PETERSBURG,2021-01-07,2,Inspection Completed - No Further Action,True,False,,
@@ -1833,7 +1833,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7583528,BUFFALO WILD WINGS GRILL & BAR,4058 TAMPA RD STE 2,OLDSMAR,2026-02-06,3,Inspection Completed - No Further Action,True,False,,
 7584078,NATURE'S TABLE CITY CENTER,100 2 AVE S,SAINT PETERSBURG,2021-04-08,1,Inspection Completed - No Further Action,False,False,,
 7584080,BUFFALO WILD WINGS,2938 TYRONE BLVD N,ST. PETERSBURG,2025-07-24,3,Inspection Completed - No Further Action,True,False,,
-7584087,SEA WORTHY FISH BAR,1110 PINELLAS BAYWAY S STE 206,TIERRA VERDE,2025-10-29,3,Warning Issued,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-10-29
+7584087,SEA WORTHY FISH BAR,1110 PINELLAS BAYWAY S STE 206,TIERRA VERDE,2026-06-09,4,Warning Issued,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-10-29
 7584942,THE FORGE WOOD FIRED PIZZA,205  DEMPSEY RD,PALM HARBOR,2021-01-21,2,"Call Back - Extension given, pending",True,False,,
 7586715,NACHO DADDY,3390 GANDY BLVD,ST. PETERSBURG,2021-06-24,1,Administrative complaint recommended,False,False,,
 7588351,MADELINES FALAFEL AND SHAWARMA INC,13 N PINELLAS AVE,TARPON SPRINGS,2026-04-22,3,Emergency order recommended,True,False,,
@@ -2091,6 +2091,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7954264,SEASONS CAFE & BAKERY,7261 US HWY 19 N,PINELLAS PARK,2021-04-15,3,Warning Issued,True,False,,
 7954381,PB AND JELLY DELI INC,3884 20 ST N,ST. PETERSBURG,2021-04-20,1,Inspection Completed - No Further Action,False,False,,
 7957739,CANTEEN AT RAYMOND JAMES TOWER 3,880 CARILLON PKWY,SAINT PETERSBURG,2026-03-11,1,Warning Issued,False,False,,
+7958627,AFRICAN PEOPLE'S EDUCATION AND DEFENSE FUND INC,1245 18 AVENUE SOUTH,ST. PETERSBURG,2026-06-09,1,Warning Issued,False,False,,
 7961977,22 SOUTH,642 22ND STREET S,ST. PETERSBURG,2021-03-12,1,Inspection Completed - No Further Action,False,False,,
 7963376,FOOD STATION,472 DOUGLAS RD  E,OLDSMAR,2021-04-14,1,Warning Issued,False,False,,
 7964510,HERO KABAB AND  SHAWARMA,5281 PARK ST N,SAINT PETERSBURG ,2021-04-05,1,Inspection Completed - No Further Action,False,False,,
@@ -2118,6 +2119,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 8038215,JUNO AND THE PEACOCK,400 BEACH DR STE 120,ST. PETERSBURG,2025-09-30,1,Inspection Completed - No Further Action,False,False,,
 8045919,CLEAR SKY CLUB HAUS,36355 E LAKE RD,PALM HARBOR,2025-08-14,1,Inspection Completed - No Further Action,False,False,Operator added ice to the well.,2025-08-14
 8050975,THE LITTLE LUNCH BOX,6340 126 AVE N,LARGO,2021-06-21,1,Inspection Completed - No Further Action,False,False,,
+8053262,IN BETWEEN DAYS,2340 1ST AVE S,ST. PETERSBURG,2026-06-09,1,Inspection Completed - No Further Action,False,False,,
 8063166,DOMINOS 5120,4925 34 ST S,ST. PETERSBURG,2025-10-28,1,Inspection Completed - No Further Action,False,False,,
 8063188,DOMINOS 5022,5830 9 AVE N,ST. PETERSBURG,2026-02-02,1,Inspection Completed - No Further Action,False,False,,
 8065024,MOWGLI'S TIFFIN,165 DR. MLK JR. STREET NORTH,ST. PETERSBURG,2025-10-21,2,Call Back - Complied,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-10-21
