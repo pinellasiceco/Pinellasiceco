@@ -337,7 +337,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 2621739,NIAGARA TAP,11950 SEMINOLE BLVD,LARGO,2021-04-22,2,Inspection Completed - No Further Action,True,False,,
 2629896,COURTSIDE GRILLE,110 FOUNTAIN PKWY N,ST PETERSBURG,2026-03-02,6,"Call Back - Extension given, pending",True,False,Accumulation of black mold-like substance in the interior of the ice machine.,2026-03-02
 2631831,DUNEDIN BREWERY,937 DOUGLAS AVE,DUNEDIN,2025-12-19,3,"Call Back - Extension given, pending",True,False,Under cook line Basic - Ice buildup in reach-in freezer and/or walk-in freezer.,
-2725158,MASSIMO'S,31876 N. US . HWY 19,PALM HARBOR,2025-07-09,3,Inspection Completed - No Further Action,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Side walls of ice machine behind bar.,2025-07-09
+2725158,MASSIMO'S,31876 N. US . HWY 19,PALM HARBOR,2026-06-10,4,Inspection Completed - No Further Action,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Side walls of ice machine behind bar.,2025-07-09
 2766268,DAIRY INN,1201 9 ST N,ST. PETERSBURG,2021-01-12,2,Inspection Completed - No Further Action,True,False,,
 2773537,EL TENAMPA,1800 16 ST N,ST. PETERSBURG,2026-01-13,12,Call Back - Complied,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin. - From follow-up inspection 2025-07-10: Condition of ice machine improved however requires additional cleaning.,2025-07-10
 2790571,VICTORS KITCHEN FAMILY RESTAURANT,5571 PARK BLVD,PINELLAS PARK,2021-02-24,2,Inspection Completed - No Further Action,True,False,,
@@ -536,7 +536,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 4005740,LOVEN PIZZA,2194A MAIN STREET,DUNEDIN,2021-01-13,2,Warning Issued,True,False,,
 4009764,GYROS & SEAFOOD EXPRESS,1760 9 ST SOUTH,ST. PETERSBURG,2021-01-13,1,Inspection Completed - No Further Action,False,False,,
 4012171,SUNSET GRILLE,2996 DR MARTIN LUTHER KING JR ST N,ST. PETERSBURG,2025-08-11,4,Call Back - Complied,True,False,,
-4017040,THE BOAT CLUB,1761 BECKETT WAY,TARPON SPRINGS,2026-06-09,4,Warning Issued,True,False,,
+4017040,THE BOAT CLUB,1761 BECKETT WAY,TARPON SPRINGS,2026-06-10,5,Warning Issued,True,False,,
 4024789,SENOR TACO,6447 PARK BLVD STE# 1,PINELLAS PARK,2021-03-24,2,Inspection Completed - No Further Action,True,False,,
 4025270,SUN RV RESORT,2920 N ALT 19 N,DUNEDIN,2020-09-16,1,Inspection Completed - No Further Action,False,False,,
 4031726,SLICE OF THE BURG,10484 ROOSEVELT BLVD,ST. PETERSBURG,2025-08-06,4,Inspection Completed - No Further Action,True,False,,
@@ -1635,7 +1635,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7314573,BENEDICTS,7048 PARK BLVD N,PINELLAS PARK,2021-02-04,2,Inspection Completed - No Further Action,True,False,,
 7314721,NEW BAMBOO,2612 BAYSHORE BLVD,DUNEDIN,2026-04-03,3,Inspection Completed - No Further Action,True,False,,
 7316372,SAKURA SUSHI RESTAURANT,3438 E LAKE RD STE 16,PALM HARBOR,2021-02-01,2,Inspection Completed - No Further Action,True,False,,
-7320706,THE TAVERN AT BAYBORO,120 6 AVE S,ST. PETERSBURG,2026-05-05,2,Inspection Completed - No Further Action,True,False,,
+7320706,THE TAVERN AT BAYBORO,120 6 AVE S,ST. PETERSBURG,2026-06-10,3,Inspection Completed - No Further Action,True,False,,
 7321099,DERUSSO'S PIZZERIA,1120 PINELLAS BAYWAY S UNIT 102-103,TIERRA VERDE,2025-10-02,3,Inspection Completed - No Further Action,True,False,,
 7322975,GRUMPY GRINGO,2510 22 AVE N,ST. PETERSBURG,2025-11-03,4,Inspection Completed - No Further Action,True,False,,
 7323425,COOL VIBES SPORTS BAR INC,5488 58 ST N,KENNETH CITY,2020-09-29,2,Warning Issued,True,False,,
@@ -2716,7 +2716,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 9650220,SAM'S GYROS & SEAFOOF,3501 34TH ST N,ST. PETERSBURG,2025-09-09,1,Inspection Completed - No Further Action,False,False,Observed employee not change gloves after cooking at fryer with raw proteins and begin to retrieve ice.,2025-09-09
 9652931,METRO DINER PALM HARBOR,35000 US HWY 19 N,PALM HARBOR,2026-03-17,2,Call Back - Complied,True,False,- From initial inspection : Basic - Accumulation of pink mold-like substance in the interior of the ice machine/bin.,2026-03-17
 9655160,THE VIOLET STONE,2607 9 ST N,ST PETERSBURG,2025-08-12,1,Warning Issued,False,False,,
-9658171,AJI CEVICHE BAR ST PETERSBURG,"200 1ST AVE S, STE B",ST.PETERSBURG,2025-11-03,1,Inspection Completed - No Further Action,False,False,Missing at hand sink next to ice machine in bar 2.,2025-11-03
+9658171,AJI CEVICHE BAR ST PETERSBURG,"200 1ST AVE S, STE B",ST.PETERSBURG,2026-06-10,2,Administrative complaint recommended,True,False,Missing at hand sink next to ice machine in bar 2.,2025-11-03
 9659334,KOPPER KITCHEN,5562 CENTRAL AVE,ST. PETERSBURG,2026-04-15,3,Administrative complaint recommended,True,False,-on prep table and small wait station next to ice machine.,2025-11-03
 9660116,ISLAND TIMEZ CARIBBEAN RESTAURANT & LOUNGE INC,9291 DR MARTIN LUTHER KING JR ST N,ST. PETERSBURG,2026-02-03,1,Warning Issued,False,False,,
 9662894,MIXERS BAR AND GRILLE,3430 E LAKE RD STE 1,PALM HARBOR,2026-03-02,1,Emergency order recommended,False,False,,
