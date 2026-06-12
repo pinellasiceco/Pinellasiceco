@@ -1319,7 +1319,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 6789374,RED MESA EVENTS,128 3 ST S,ST. PETERSBURG,2021-05-04,3,Warning Issued,True,False,,
 6789836,11 CHICKS WHOLESALES DIV,199 DR MLK JR ST N,ST. PETERSBURG,2025-10-21,3,Administrative complaint recommended,True,False,,
 6790470,EL GUERRERO MEXICAN GRILL INC,9727 66 ST N,PINELLAS PARK,2021-04-16,2,Warning Issued,True,False,,
-6792061,THE BISTRO,17 N SAFFORD AVE,TARPON SPRINGS,2025-12-11,1,Warning Issued,False,False,,
+6792061,THE BISTRO,17 N SAFFORD AVE,TARPON SPRINGS,2026-06-11,2,Inspection Completed - No Further Action,True,False,,
 6794600,SUBWAY #468,9301 4 ST N,SAINT PETERSBURG,2020-11-19,1,Inspection Completed - No Further Action,False,False,,
 6799668,MAPLE STREET BISCUIT COMPANY,662 CENTRAL AVE,ST. PETERSBURG,2020-08-18,1,Warning Issued,False,False,,
 6800713,FAIRFIELD INN & SUITES,2575 54 AVE N,ST. PETERSBURG,2025-11-07,1,Inspection Completed - No Further Action,False,False,Inspector discussed utilizing reach-in cooler at customer self service for cream cheese and butter rather than ice packets to keep food items cold.,2025-11-07
@@ -1756,7 +1756,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7462210,HONG KONG,11204 PARK BLVD N,SEMINOLE,2025-10-23,4,Call Back - Complied,True,False,Ice buildup in reach-in freezer and/or walk-in freezer.,2025-10-23
 7464964,KATERINA'S GREEK GRILL,619 N PINELLAS AVE,TARPON SPRINGS,2026-04-06,4,Warning Issued,True,False,,
 7465472,TUTTO BENNE,3038 BEACH BLVD,GULFPORT,2020-10-01,1,Inspection Completed - No Further Action,False,False,,
-7465977,EL CAP INC,3500 4 ST N,ST PETERSBURG,2026-01-23,2,Inspection Completed - No Further Action,True,False,,
+7465977,EL CAP INC,3500 4 ST N,ST PETERSBURG,2026-06-11,3,Warning Issued,True,False,,
 7467109,LANE'S LEMONADE & DELI,349A MAIN ST,DUNEDIN,2020-11-06,1,Warning Issued,False,False,,
 7467744,HIBACHI EXPRESS,2104 E BAY DR,LARGO,2021-04-06,2,Call Back - Complied,True,False,,
 7471078,THE TIKI TAVERN LLC,201 MAIN STREET SUITE 101,SAFETY HARBOR,2020-10-28,1,Warning Issued,False,False,,
@@ -1844,7 +1844,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7591819,D TOWN BAR AND GRILL,1056 MAIN ST,DUNEDIN,2021-05-27,3,Inspection Completed - No Further Action,True,False,,
 7592391,THE SCREAMING JALAPENO,100 MAIN ST #109,SAFETY HARBOR,2021-01-05,2,Call Back - Admin. complaint recommended,True,False,,
 7592729,HUNGRY CRAB,8841 PARK BLVD,SEMINOLE,2020-10-23,2,"Call Back - Extension given, pending",True,False,,
-7593864,3 BROTHERS PIZZA,3436 TAMPA RD,PALM HARBOR,2026-04-06,4,Inspection Completed - No Further Action,True,False,,
+7593864,3 BROTHERS PIZZA,3436 TAMPA RD,PALM HARBOR,2026-06-11,5,Inspection Completed - No Further Action,True,False,,
 7594305,MAMAS FAMOUS PIZZA,9045 STARKEY ROAD,LARGO,2021-04-01,3,Inspection Completed - No Further Action,True,False,,
 7595439,JAX IN AND OUT,4928 GULFPORT BLVD S,GULFPORT,2026-02-24,3,Inspection Completed - No Further Action,True,False,,
 7595730,DJ'S CLAM SHACK,19705 GULF BLVD  STE A,INDIAN SHORES,2026-01-28,2,Inspection Completed - No Further Action,True,False,,
@@ -2716,7 +2716,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 9650220,SAM'S GYROS & SEAFOOF,3501 34TH ST N,ST. PETERSBURG,2025-09-09,1,Inspection Completed - No Further Action,False,False,Observed employee not change gloves after cooking at fryer with raw proteins and begin to retrieve ice.,2025-09-09
 9652931,METRO DINER PALM HARBOR,35000 US HWY 19 N,PALM HARBOR,2026-03-17,2,Call Back - Complied,True,False,- From initial inspection : Basic - Accumulation of pink mold-like substance in the interior of the ice machine/bin.,2026-03-17
 9655160,THE VIOLET STONE,2607 9 ST N,ST PETERSBURG,2025-08-12,1,Warning Issued,False,False,,
-9658171,AJI CEVICHE BAR ST PETERSBURG,"200 1ST AVE S, STE B",ST.PETERSBURG,2026-06-10,2,Administrative complaint recommended,True,False,Missing at hand sink next to ice machine in bar 2.,2025-11-03
+9658171,AJI CEVICHE BAR ST PETERSBURG,"200 1ST AVE S, STE B",ST.PETERSBURG,2026-06-11,3,Call Back - Complied,True,False,Missing at hand sink next to ice machine in bar 2.,2025-11-03
 9659334,KOPPER KITCHEN,5562 CENTRAL AVE,ST. PETERSBURG,2026-04-15,3,Administrative complaint recommended,True,False,-on prep table and small wait station next to ice machine.,2025-11-03
 9660116,ISLAND TIMEZ CARIBBEAN RESTAURANT & LOUNGE INC,9291 DR MARTIN LUTHER KING JR ST N,ST. PETERSBURG,2026-02-03,1,Warning Issued,False,False,,
 9662894,MIXERS BAR AND GRILLE,3430 E LAKE RD STE 1,PALM HARBOR,2026-03-02,1,Emergency order recommended,False,False,,
