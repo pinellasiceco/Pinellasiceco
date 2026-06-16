@@ -514,6 +514,9 @@ header{background:var(--navy);
       <button id="dbpr-sort-btn" ontouchend="event.preventDefault();toggleDbprSort()" onclick="toggleDbprSort()" style="padding:5px 12px;border-radius:20px;border:1px solid #7C3AED;background:#7C3AED;color:#fff;font-size:11px;font-weight:700;font-family:inherit;cursor:pointer;touch-action:manipulation">&#x1F4CA; Most Cited</button>
     </div>
 
+<div style="padding:0 0 8px 0;text-align:right">
+      <button onclick="openAddBusinessModal()" ontouchend="event.preventDefault();openAddBusinessModal()" style="font-size:11px;font-weight:700;padding:6px 14px;border:1.5px dashed #15803d;border-radius:8px;background:#f0fdf4;color:#15803d;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2B; Add Business</button>
+    </div>
 <div class="grid" id="agrid"></div>
     <div class="tempty" id="a-empty" style="display:none">
       <div class="ei">&#x1F50D;</div>
@@ -3071,6 +3074,7 @@ function cardHTML(p){
   const _hasLog=(log[p.id]||[]).filter(function(e){return e.notes!=='Skipped';}).length>0;
   const _hasPhone=!!(_ph||(customers[p.id]||{}).dm_phone);
   const noPhoneBadge=(_hasLog&&!_hasPhone)?('<span style="font-size:9px;padding:1px 5px;border-radius:4px;background:#fef3c7;color:#92400e;font-weight:700;margin-left:4px">&#x1F4F5; No #</span>'):'';
+  const manualBadge=p.manual_entry?('<span style="font-size:9px;padding:1px 5px;border-radius:4px;background:#f0fdf4;color:#15803d;border:1px solid #86efac;font-weight:700;margin-left:4px">&#x270F; Added by You</span>'):'';
 
   const confCol=p.confidence>=75?'#059669':p.confidence>=50?'#d97706':'#9ca3af';
   const confH='<span style="font-size:8px;font-weight:600;color:'+confCol+'" title="Prediction confidence">'+p.confidence+'% conf</span>';
@@ -3079,7 +3083,7 @@ function cardHTML(p){
     ?('<div style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;display:inline-block;margin-bottom:4px;background:'+(p.status==='customer_recurring'?'#ecfdf5':p.status==='customer_once'?'#eff6ff':'#fff7f5')+';color:'+(p.status==='customer_recurring'?'#059669':p.status==='customer_once'?'var(--blu)':'var(--ora)')+'">'+({'customer_recurring':'Recurring Customer','customer_once':'One-Time Customer','quoted':'Quote Sent','churned':'Churned'}[p.status]||p.status)+'</div>')
     :'';
   return '<div class="card '+p.priority+(isC(p.id)?' done':'')+'" data-id="'+p.id+'">'
-    +'<div class="ctop"><div class="cname">'+p.name+tierH+emergH+newBadge+routeBadge+refBadge+noPhoneBadge+'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px"><span class="pbadge '+p.priority+'">'+p.priority+'</span>'+confH+'</div></div>'
+    +'<div class="ctop"><div class="cname">'+p.name+tierH+emergH+newBadge+routeBadge+refBadge+noPhoneBadge+manualBadge+'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px"><span class="pbadge '+p.priority+'">'+p.priority+'</span>'+confH+'</div></div>'
     +'<div class="cloc">'+p.city+', '+p.county+' '+franchH+'</div>'
     +custStatusH+revenueH+phH+ratH+callH+hrH+golfH+iceH+dbprH+cbH+codesH+insH
     +'<div class="cmeta">'
@@ -4294,6 +4298,7 @@ function showCard(id){
       +'🤝 Close Deal<br><span style="font-size:10px;font-weight:400">$'+(p.intro||99)+' entry · Monthly $'+(p.monthly||149)+'/mo · Quarterly $'+(p.quarterly||129)+'/mo</span></button>'
       +'<button id="sc-lost-btn" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:8px;background:transparent;color:#94a3b8;font-size:10px;cursor:pointer;font-family:inherit;touch-action:manipulation">'
       +'Mark as Lost / Churned</button>'
+      +(p.manual_entry?('<button id="sc-del-manual-btn" onclick="deleteManualBusiness(&#39;'+p.id+'&#39;)" ontouchend="event.preventDefault();deleteManualBusiness(&#39;'+p.id+'&#39;)" style="width:100%;margin-top:6px;padding:7px;border:1px solid #fecaca;border-radius:8px;background:#fef2f2;color:#dc2626;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F5D1; Remove This Business</button>'):'')
       +'</div>');
 
   // Contacts & Intel section
@@ -9289,12 +9294,127 @@ function checkDataStaleness(){
   var app=document.getElementById('app');
   if(app)app.insertBefore(banner,app.firstChild.nextSibling);
 }
+function mergeManualProspects(){
+  try{
+    var stored=localStorage.getItem('pic_manual_prospects');
+    if(!stored)return;
+    var manual=JSON.parse(stored);
+    if(!Array.isArray(manual)||!manual.length)return;
+    var existingIds=new Set(P.map(function(x){return String(x.id);}));
+    manual.forEach(function(r){if(!existingIds.has(String(r.id))){P.push(r);}});
+  }catch(e){console.warn('mergeManualProspects error:',e);}
+}
+function openAddBusinessModal(){
+  var existing=document.getElementById('add-biz-bg');
+  if(existing)existing.remove();
+  var bg=document.createElement('div');
+  bg.id='add-biz-bg';
+  bg.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.55);z-index:1000;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;align-items:flex-start;justify-content:center;padding:16px;box-sizing:border-box;';
+  bg.innerHTML='<div style="background:#fff;border-radius:14px;padding:20px;width:100%;max-width:480px;margin-top:20px;box-sizing:border-box;">'
+    +'<div style="font-size:17px;font-weight:700;color:#0f1f38;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;">'
+    +'Add Business'
+    +'<button onclick="document.getElementById(&#39;add-biz-bg&#39;).remove()" ontouchend="event.preventDefault();document.getElementById(&#39;add-biz-bg&#39;).remove()" style="background:none;border:none;font-size:22px;color:#64748b;cursor:pointer;padding:0 4px;touch-action:manipulation;">&#x2715;</button>'
+    +'</div>'
+    +'<div id="add-biz-err" style="display:none;background:#fef2f2;border:1px solid #fecaca;border-radius:7px;padding:8px 12px;font-size:12px;color:#dc2626;margin-bottom:12px;"></div>'
+    +'<div style="margin-bottom:12px;">'
+    +'<label style="font-size:11px;font-weight:600;color:#475569;display:block;margin-bottom:4px;">BUSINESS NAME *</label>'
+    +'<input id="abiz-name" type="text" placeholder="e.g. The Rusty Anchor Bar" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;outline:none;">'
+    +'</div>'
+    +'<div style="margin-bottom:12px;">'
+    +'<label style="font-size:11px;font-weight:600;color:#475569;display:block;margin-bottom:4px;">ADDRESS *</label>'
+    +'<input id="abiz-addr" type="text" placeholder="123 Main St" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;outline:none;">'
+    +'</div>'
+    +'<div style="display:flex;gap:10px;margin-bottom:12px;">'
+    +'<div style="flex:2"><label style="font-size:11px;font-weight:600;color:#475569;display:block;margin-bottom:4px;">CITY *</label>'
+    +'<input id="abiz-city" type="text" placeholder="Clearwater" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;outline:none;"></div>'
+    +'<div style="flex:1"><label style="font-size:11px;font-weight:600;color:#475569;display:block;margin-bottom:4px;">ZIP *</label>'
+    +'<input id="abiz-zip" type="text" placeholder="33755" maxlength="5" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;outline:none;"></div>'
+    +'</div>'
+    +'<div style="margin-bottom:12px;">'
+    +'<label style="font-size:11px;font-weight:600;color:#475569;display:block;margin-bottom:4px;">PHONE</label>'
+    +'<input id="abiz-phone" type="tel" placeholder="(727) 555-1234" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;outline:none;">'
+    +'</div>'
+    +'<div style="margin-bottom:12px;">'
+    +'<label style="font-size:11px;font-weight:600;color:#475569;display:block;margin-bottom:4px;">VENUE TYPE</label>'
+    +'<select id="abiz-vtype" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;outline:none;background:#fff;">'
+    +'<option value="">-- select --</option>'
+    +'<option value="restaurant">Restaurant</option>'
+    +'<option value="bar">Bar</option>'
+    +'<option value="hotel">Hotel</option>'
+    +'<option value="golf">Golf / Country Club</option>'
+    +'<option value="cafe">Cafe</option>'
+    +'<option value="other">Other</option>'
+    +'</select>'
+    +'</div>'
+    +'<div style="display:flex;gap:10px;margin-bottom:12px;">'
+    +'<div style="flex:1"><label style="font-size:11px;font-weight:600;color:#475569;display:block;margin-bottom:4px;">LATITUDE (optional)</label>'
+    +'<input id="abiz-lat" type="number" step="any" placeholder="27.9758" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;outline:none;"></div>'
+    +'<div style="flex:1"><label style="font-size:11px;font-weight:600;color:#475569;display:block;margin-bottom:4px;">LONGITUDE (optional)</label>'
+    +'<input id="abiz-lon" type="number" step="any" placeholder="-82.8001" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;outline:none;"></div>'
+    +'</div>'
+    +'<div style="margin-bottom:20px;">'
+    +'<label style="font-size:11px;font-weight:600;color:#475569;display:block;margin-bottom:4px;">NOTES</label>'
+    +'<textarea id="abiz-notes" rows="3" placeholder="Saw 2 machines, owner was friendly..." style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;font-family:inherit;box-sizing:border-box;outline:none;resize:vertical;"></textarea>'
+    +'</div>'
+    +'<div style="display:flex;gap:10px;">'
+    +'<button onclick="document.getElementById(&#39;add-biz-bg&#39;).remove()" ontouchend="event.preventDefault();document.getElementById(&#39;add-biz-bg&#39;).remove()" style="flex:1;padding:13px;border:1px solid #e2e8f0;border-radius:10px;font-size:15px;font-weight:600;color:#475569;background:#fff;cursor:pointer;font-family:inherit;touch-action:manipulation;">Cancel</button>'
+    +'<button onclick="saveNewBusiness()" ontouchend="event.preventDefault();saveNewBusiness()" style="flex:2;padding:13px;background:#0f1f38;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation;">Save Business</button>'
+    +'</div>'
+    +'</div>';
+  document.body.appendChild(bg);
+  setTimeout(function(){var el=document.getElementById('abiz-name');if(el)el.focus();},100);
+}
+function saveNewBusiness(){
+  var name=(document.getElementById('abiz-name').value||'').trim();
+  var addr=(document.getElementById('abiz-addr').value||'').trim();
+  var city=(document.getElementById('abiz-city').value||'').trim();
+  var zip=(document.getElementById('abiz-zip').value||'').trim();
+  var phone=(document.getElementById('abiz-phone').value||'').trim();
+  var vtype=(document.getElementById('abiz-vtype').value||'').trim();
+  var latRaw=(document.getElementById('abiz-lat').value||'').trim();
+  var lonRaw=(document.getElementById('abiz-lon').value||'').trim();
+  var notes=(document.getElementById('abiz-notes').value||'').trim();
+  var errEl=document.getElementById('add-biz-err');
+  if(!name||!addr||!city||!zip){errEl.textContent='Please fill in all required fields (name, address, city, zip).';errEl.style.display='block';return;}
+  errEl.style.display='none';
+  var lat=latRaw?parseFloat(latRaw):0;
+  var lon=lonRaw?parseFloat(lonRaw):0;
+  var newId='MANUAL-'+Date.now();
+  var rec={id:newId,name:name,county:'Pinellas',city:city,address:addr,zip:zip,lat:lat,lon:lon,
+    last_insp:'',last_disp:'',disp_risk:0,high_viol:0,total_viol:0,n_insp:0,pred_next:'',days_until:0,days_since:0,
+    pitch_type:'',score:0,confidence:0,priority:'WARM',ice_rel:0,confirmed:false,chronic:false,ice_count:0,codes:[],
+    trending:false,is_emergency:false,biz_type:'independent',is_bar:vtype==='bar',venue_type:vtype||'restaurant',
+    seats:0,machines:1,monthly:149,quarterly:129,onetime:395,intro:99,year1_monthly:1887,year1_quarterly:1647,
+    tier:'',phone:phone,status:'prospect',rating:0,build_date:'',hours:'',n_callbacks:0,escalation:0,
+    ice_recent:false,ice_fresh:false,days_since_ice:0,code_diversity:0,avg_visit:0,ice_risk_prob:0,
+    ice_risk_level:'',ice_risk_reason:'',new_reason:null,change_severity:null,cit_count:0,cit_ice_count:0,
+    cit_latest:'',cit_earliest:'',cit_days_since:0,cit_observation:'',cit_observation_date:'',cit_codes:[],
+    cit_repeat:0,cit_mold_black:0,cit_mold_pink:0,cit_scoop:0,ice_confirmed_dbpr:false,ice_gold:false,
+    premium_score:0,manual_entry:true};
+  if(notes){if(!customers[newId])customers[newId]={};customers[newId].notes=notes;custSave();}
+  var stored=[];try{stored=JSON.parse(localStorage.getItem('pic_manual_prospects')||'[]');}catch(e){}
+  stored.push(rec);
+  localStorage.setItem('pic_manual_prospects',JSON.stringify(stored));
+  P.push(rec);
+  var bg=document.getElementById('add-biz-bg');if(bg)bg.remove();
+  rA();
+  toast('Business added &#8212; ready to log');
+}
+function deleteManualBusiness(id){
+  if(!confirm('Remove this business from your list?'))return;
+  try{var stored=JSON.parse(localStorage.getItem('pic_manual_prospects')||'[]');stored=stored.filter(function(r){return String(r.id)!==String(id);});localStorage.setItem('pic_manual_prospects',JSON.stringify(stored));}catch(e){}
+  for(var i=0;i<P.length;i++){if(String(P[i].id)===String(id)){P.splice(i,1);break;}}
+  var sc=document.getElementById('sc-bg');if(sc)sc.remove();
+  rA();
+  toast('Business removed');
+}
 async function init(){
   _initTouchHandlers();
   initSupabase();
 
   // Always render app immediately from local cache so UI is never blocked
   lLoad();custLoad();
+  mergeManualProspects();
   pullCustomersFromSupabase();
   _renderApp();
   updateDataFreshness();checkDataStaleness();
