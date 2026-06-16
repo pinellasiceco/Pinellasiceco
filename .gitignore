@@ -19,6 +19,3 @@ __pycache__/
 # Editor
 .vscode/
 *.swp
-
-# Claude Code internal state
-.claude/
