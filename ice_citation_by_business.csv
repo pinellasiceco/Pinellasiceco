@@ -1756,7 +1756,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7462210,HONG KONG,11204 PARK BLVD N,SEMINOLE,2025-10-23,4,Call Back - Complied,True,False,Ice buildup in reach-in freezer and/or walk-in freezer.,2025-10-23
 7464964,KATERINA'S GREEK GRILL,619 N PINELLAS AVE,TARPON SPRINGS,2026-04-06,4,Warning Issued,True,False,,
 7465472,TUTTO BENNE,3038 BEACH BLVD,GULFPORT,2020-10-01,1,Inspection Completed - No Further Action,False,False,,
-7465977,EL CAP INC,3500 4 ST N,ST PETERSBURG,2026-06-11,3,Warning Issued,True,False,,
+7465977,EL CAP INC,3500 4 ST N,ST PETERSBURG,2026-06-15,4,Call Back - Complied,True,False,,
 7467109,LANE'S LEMONADE & DELI,349A MAIN ST,DUNEDIN,2020-11-06,1,Warning Issued,False,False,,
 7467744,HIBACHI EXPRESS,2104 E BAY DR,LARGO,2021-04-06,2,Call Back - Complied,True,False,,
 7471078,THE TIKI TAVERN LLC,201 MAIN STREET SUITE 101,SAFETY HARBOR,2020-10-28,1,Warning Issued,False,False,,
@@ -2478,6 +2478,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 9089415,TCHOTCHKE,3920 6TH ST S,ST. PETERSBURG,2025-12-11,3,Inspection Completed - No Further Action,True,False,"- From initial inspection : High Priority - Live, small flying insects found 10 live flies in liquor storage area near ice machine 4 live flies in dry storage near restroom 2 live flies behind bar area 3 live flies near soda lines and ice machine 2 live flies in employee locker area 11 live flies…",2025-10-08
 9090057,CHINA BOI HIBACHI,401 49 ST S,ST PETERSBURG,2026-03-19,1,Inspection Completed - No Further Action,False,False,,
 9093015,MAPLE STREET BISCUIT,2233 GULF TO BAY BLVD,CLEARWATER,2025-08-05,1,Inspection Completed - No Further Action,False,False,"Ceiling/ceiling tiles/vents soiled with accumulated dust, or mold-like substance in dry storage area near ice machine",2025-08-05
+9093143,JB'S SEAFOOD TAKE OUT,6657 49 ST N,PINELLAS PARK,2026-06-15,1,Inspection Completed - No Further Action,False,False,,
 9096963,WILLIAMS SUBMARINE SHOP,3801 TYRONE BLVD N ST,ST. PETERSBURG,2025-11-17,1,Inspection Completed - No Further Action,False,False,,
 9099757,LIBRARY JV MANAGEMENT LLC & FOR ALL KIDS LLC,600 5 ST S,ST. PETERSBURG,2026-04-22,3,"Call Back - Extension given, pending",True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-10-06
 9100451,NEIGHBORHOOD JOE,2325 DR MLK JR ST N,ST. PETERSBURG,2025-12-17,3,Inspection Completed - No Further Action,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin at front counter ice machine next to handwash sink.,2025-08-15
