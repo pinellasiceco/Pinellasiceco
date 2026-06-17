@@ -7492,12 +7492,13 @@ function markWon(status){
     sw('customers');
   }
 }
+const QUARTERLY_INTERVAL_DAYS=90;
 function markSupplementalWon(){
   if(!cur)return;
   const p=cur;
   const now=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
   const _prev=customers[p.id]||{};
-  const _nd=new Date();_nd.setDate(_nd.getDate()+90);
+  const _nd=new Date();_nd.setDate(_nd.getDate()+QUARTERLY_INTERVAL_DAYS);
   const nextISO=_nd.getFullYear()+'-'+String(_nd.getMonth()+1).padStart(2,'0')+'-'+String(_nd.getDate()).padStart(2,'0');
   customers[p.id]={
     notes:'',last_service:'',next_service:'',hubspot_url:'',square_url:'',
@@ -7535,7 +7536,7 @@ function logSupplementalService(id){
   if(!customers[id])return;
   const c=customers[id];
   const todayISO=localISO(new Date());
-  const _nd=new Date();_nd.setDate(_nd.getDate()+90);
+  const _nd=new Date();_nd.setDate(_nd.getDate()+QUARTERLY_INTERVAL_DAYS);
   const nextISO=_nd.getFullYear()+'-'+String(_nd.getMonth()+1).padStart(2,'0')+'-'+String(_nd.getDate()).padStart(2,'0');
   c.supplemental_last_service=todayISO;
   c.supplemental_next_service=nextISO;
@@ -7795,7 +7796,7 @@ function rCust(){
           +'<div style="font-size:9px;font-weight:700;color:'+col+';margin-top:2px">'+lbl+'</div>'
         +'</div>'
         +'<div style="text-align:right;flex-shrink:0;margin-left:10px">'
-          +(rev?'<div style="font-size:13px;font-weight:800;color:var(--grn)">'+rev+'</div>':'')
+          +(rev?'<div style="font-size:13px;font-weight:800;color:'+(p.status==='customer_supplemental_only'?'#7c3aed':'var(--grn)')+'">'+rev+'</div>'+(p.status==='customer_supplemental_only'?'<div style="font-size:8px;color:#9ca3af;margin-top:1px">Manual billing &#x2014; not in MRR</div>':''):'')
           +(c.won_date?'<div style="font-size:9px;color:var(--sub)">Since '+c.won_date+'</div>':'')
         +'</div>'
       +'</div>'
@@ -8901,7 +8902,7 @@ function buildAnnualSchedule(id){
   const [sy,sm,sd]=startStr.split('-').map(Number);
   const start=new Date(sy,sm-1,sd,12,0,0);
   const isQuarterly=c.service_type==='quarterly';
-  const intervalDays=isQuarterly?90:60;
+  const intervalDays=isQuarterly?QUARTERLY_INTERVAL_DAYS:60;
   const totalVisits=isQuarterly?4:6;
   // deep cleans: visit 1 and 4 (monthly) or visit 1 and 3 (quarterly)
   const deepVisits=isQuarterly?new Set([1,3]):new Set([1,4]);
