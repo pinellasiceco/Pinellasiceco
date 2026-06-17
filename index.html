@@ -5284,8 +5284,8 @@ function markWon(status){
 }
 const QUARTERLY_INTERVAL_DAYS=90;
 function markSupplementalWon(){
-  if(!cur)return;
-  const p=cur;
+  const p=_scCardP||cur;
+  if(!p)return;
   const now=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
   const _prev=customers[p.id]||{};
   const _nd=new Date();_nd.setDate(_nd.getDate()+QUARTERLY_INTERVAL_DAYS);
@@ -5321,7 +5321,7 @@ function markSupplementalWon(){
   },2500);
   toast('Supplemental Package won! First service in 90 days.');
   var _co=document.getElementById('close-overlay');if(_co)_co.remove();
-  document.getElementById('mbg').classList.remove('on');
+  var _mbg=document.getElementById('mbg');if(_mbg)_mbg.classList.remove('on');
   sw('customers');
 }
 function logSupplementalService(id){
