@@ -7515,7 +7515,6 @@ function custSave(){
   if(_sb&&_userId){
     Object.keys(customers).forEach(function(pid){sbUpsert('pic_customers',pid,customers[pid]);});
   }
-  Object.keys(customers).forEach(function(pid){pushCustomerToSupabase(pid);});
 }
 function picSupabaseUrl(){
   return 'https://kbyqatbkqqhuasbjlcwe.supabase.co/rest/v1';
@@ -9612,9 +9611,10 @@ function logServiceFromCal(id,opts){
   c.last_service=todayStr;
   c.last_service_iso=localISO(today);
 
-  // Next service: 60 days for maintenance, but auto-schedule deep clean at 6 months
+  // Next service: quarterly customers use 90-day interval, others use 60-day
   const next=new Date(today);
-  next.setDate(next.getDate()+60);
+  const _logNextDays=(c.status==='customer_quarterly'||c.service_type==='quarterly')?QUARTERLY_INTERVAL_DAYS:60;
+  next.setDate(next.getDate()+_logNextDays);
   c.next_service=localISO(next);
 
   // Flag 6-month deep clean if approaching
