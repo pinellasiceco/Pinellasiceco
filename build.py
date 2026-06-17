@@ -3345,6 +3345,10 @@ header{background:var(--navy);
           &#x1F9FC; Won  -  One-Time<br><span style="font-size:10px;font-weight:400" id="mwon-onetime"></span>
         </button>
       </div>
+      <button onclick="markSupplementalWon()" ontouchend="event.preventDefault();markSupplementalWon()"
+        style="width:100%;padding:8px;border:2px solid #7c3aed;border-radius:9px;background:#f5f3ff;color:#7c3aed;font-weight:700;font-size:11px;cursor:pointer;font-family:inherit;margin-bottom:6px;touch-action:manipulation">
+        &#x1F4CB; Supplemental Package  -  $79/mo<br><span style="font-size:10px;font-weight:400">Quarterly service &middot; No ice machine clean from us</span>
+      </button>
       <button onclick="markWon('churned')"
         style="width:100%;padding:6px;border:1px solid var(--brd);border-radius:8px;background:transparent;color:var(--sub);font-size:10px;cursor:pointer;font-family:inherit">
         Mark as Lost / Churned
@@ -5293,7 +5297,7 @@ function cardHTML(p){
   const confH='<span style="font-size:8px;font-weight:600;color:'+confCol+'" title="Prediction confidence">'+p.confidence+'% conf</span>';
   const franchH=p.biz_type==='franchise'?'<span style="font-size:8px;padding:1px 5px;border-radius:10px;background:#f0f9ff;color:#0ea5e9;border:1px solid #bae6fd">Franchise</span>':'';
   const custStatusH=(p.status&&p.status!=='prospect')
-    ?('<div style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;display:inline-block;margin-bottom:4px;background:'+(p.status==='customer_recurring'?'#ecfdf5':p.status==='customer_once'?'#eff6ff':'#fff7f5')+';color:'+(p.status==='customer_recurring'?'#059669':p.status==='customer_once'?'var(--blu)':'var(--ora)')+'">'+({'customer_recurring':'Recurring Customer','customer_once':'One-Time Customer','quoted':'Quote Sent','churned':'Churned'}[p.status]||p.status)+'</div>')
+    ?('<div style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;display:inline-block;margin-bottom:4px;background:'+(p.status==='customer_recurring'?'#ecfdf5':p.status==='customer_once'?'#eff6ff':p.status==='customer_supplemental_only'?'#f5f3ff':'#fff7f5')+';color:'+(p.status==='customer_recurring'?'#059669':p.status==='customer_once'?'var(--blu)':p.status==='customer_supplemental_only'?'#7c3aed':'var(--ora)')+'">'+({'customer_recurring':'Recurring Customer','customer_once':'One-Time Customer','quoted':'Quote Sent','churned':'Churned','customer_supplemental_only':'Supplemental Only'}[p.status]||p.status)+'</div>')
     :'';
   return '<div class="card '+p.priority+(isC(p.id)?' done':'')+'" data-id="'+p.id+'">'
     +'<div class="ctop"><div class="cname">'+p.name+tierH+emergH+newBadge+routeBadge+refBadge+noPhoneBadge+manualBadge+'</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px"><span class="pbadge '+p.priority+'">'+p.priority+'</span>'+confH+'</div></div>'
@@ -6498,7 +6502,7 @@ function showCard(id){
 
   // CLOSE DEAL section
   var _cRec=customers[p.id]||null;
-  var _alreadyWon=_cRec&&['customer_recurring','customer_once','customer_quarterly','customer_intro'].includes(_cRec.status);
+  var _alreadyWon=_cRec&&['customer_recurring','customer_once','customer_quarterly','customer_intro','customer_supplemental_only'].includes(_cRec.status);
   var closeH=_alreadyWon
     ?('<div style="margin-bottom:12px;padding:12px;background:#ecfdf5;border:2px solid #6ee7b7;border-radius:10px">'
       +'<div style="font-size:11px;font-weight:800;color:#059669;margin-bottom:4px">✅ Active Client</div>'
@@ -7237,7 +7241,7 @@ function exportCSV(){
   a.click();toast('CSV exported');
 }
 function buildCleanScoreExport(){
-  var ACTIVE=['customer_recurring','customer_quarterly','customer_once','customer_intro'];
+  var ACTIVE=['customer_recurring','customer_quarterly','customer_once','customer_intro','customer_supplemental_only'];
   var output={};
   var seq=parseInt(localStorage.getItem('cleanscore_seq')||'0',10);
   var changed=false;
@@ -7245,11 +7249,27 @@ function buildCleanScoreExport(){
     var c=customers[pid];
     if(!c||!c.status)continue;
     if(ACTIVE.indexOf(c.status)===-1)continue;
-    var hist=c.service_history;
-    if(!hist||!hist.length)continue;
-    var sorted=hist.slice().sort(function(a,b){return new Date(b.date)-new Date(a.date);});
-    var visit=sorted[0];
-    if(!visit||!visit.date)continue;
+    var isSupplementalOnly=c.status==='customer_supplemental_only';
+    var lastDate=null;var svcType='';var atpPre=null;var atpPost=null;
+    if(isSupplementalOnly){
+      if(!c.supplemental_last_service)continue;
+      lastDate=c.supplemental_last_service;
+      svcType='Supplemental Services Package';
+    }else{
+      var hist=c.service_history;
+      if(!hist||!hist.length)continue;
+      var sorted=hist.slice().sort(function(a,b){return new Date(b.date)-new Date(a.date);});
+      var visit=sorted[0];
+      if(!visit||!visit.date)continue;
+      lastDate=visit.date;
+      if(visit.atp_pre!==undefined&&visit.atp_pre!==''){var p0=Number(visit.atp_pre);atpPre=isNaN(p0)?null:p0;}
+      var rawPost=visit.atp_post!==undefined?visit.atp_post:visit.atp;
+      if(rawPost!==undefined&&rawPost!==''){var p1=Number(rawPost);atpPost=isNaN(p1)?null:p1;}
+      svcType=visit.type||'';
+      if(svcType==='maintenance_60')svcType='60-Day Certified Clean';
+      else if(svcType==='deep_clean')svcType='Deep Clean';
+      else if(!svcType)svcType='Quarterly Certified Clean';
+    }
     var certId=c.cert_id;
     if(!certId){
       seq++;
@@ -7257,18 +7277,12 @@ function buildCleanScoreExport(){
       c.cert_id=certId;
       changed=true;
     }
-    var atpPre=null;
-    if(visit.atp_pre!==undefined&&visit.atp_pre!==''){var p0=Number(visit.atp_pre);atpPre=isNaN(p0)?null:p0;}
-    var atpPost=null;
-    var rawPost=visit.atp_post!==undefined?visit.atp_post:visit.atp;
-    if(rawPost!==undefined&&rawPost!==''){var p1=Number(rawPost);atpPost=isNaN(p1)?null:p1;}
     var biz=c.name||'';
     if(!biz){var pr=P.find(function(x){return String(x.id)===String(pid);});if(pr)biz=pr.name||'';}
-    var svcType=visit.type||'';
-    if(svcType==='maintenance_60')svcType='60-Day Certified Clean';
-    else if(svcType==='deep_clean')svcType='Deep Clean';
-    else if(!svcType)svcType='Quarterly Certified Clean';
-    output[certId]={business_name:biz,last_service_date:visit.date,next_service_date:c.next_service||null,service_type:svcType,atp_pre:atpPre,atp_post:atpPost};
+    var rec={business_name:biz,last_service_date:lastDate,next_service_date:c.next_service||null,service_type:svcType,atp_pre:atpPre,atp_post:atpPost};
+    if(isSupplementalOnly)rec.is_supplemental_only=true;
+    if(c.supplemental_reach_in&&!isSupplementalOnly){rec.supplemental=true;rec.supplemental_next_service=c.supplemental_next_service||null;}
+    output[certId]=rec;
   }
   if(changed){custSave();localStorage.setItem('cleanscore_seq',String(seq));}
   function nullify(v){
@@ -7478,10 +7492,63 @@ function markWon(status){
     sw('customers');
   }
 }
+function markSupplementalWon(){
+  if(!cur)return;
+  const p=cur;
+  const now=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  const _prev=customers[p.id]||{};
+  const _nd=new Date();_nd.setDate(_nd.getDate()+90);
+  const nextISO=_nd.getFullYear()+'-'+String(_nd.getMonth()+1).padStart(2,'0')+'-'+String(_nd.getDate()).padStart(2,'0');
+  customers[p.id]={
+    notes:'',last_service:'',next_service:'',hubspot_url:'',square_url:'',
+    machine_brand:'',machine_model:'',machine_type:'',filter_type:'',filter_installed:'',
+    contract_start:'',contract_term:6,contract_renewal:'',service_history:[],atp_history:[],
+    ..._prev,
+    status:'customer_supplemental_only',
+    won_date:now,
+    service_type:'supplemental',
+    supplemental_reach_in:true,
+    supplemental_won_date:now,
+    supplemental_next_service:nextISO,
+    next_service:nextISO,
+    machines:p.machines,
+    name:p.name,
+    address:p.address,
+    city:p.city,
+    phone:p.phone||_prev.phone||'',
+  };
+  p.status='customer_supplemental_only';
+  custSave();
+  if(!log[p.id])log[p.id]=[];
+  log[p.id].push({outcome:'customer_supplemental_only',date:now,notes:'Supplemental Services Package won'});
+  lSave();
+  setTimeout(async function(){
+    if(!_sb||!_userId)return;
+    var chk=await _sb.from('pic_customers').select('prospect_id').eq('device_id',_userId).eq('prospect_id',String(p.id)).single();
+    if(chk.error||!chk.data){toast('&#x26A0; Cloud save may not have gone through &#x2014; tap sync dot to retry');}
+  },2500);
+  toast('Supplemental Package won! First service in 90 days.');
+  document.getElementById('mbg').classList.remove('on');
+  sw('customers');
+}
+function logSupplementalService(id){
+  if(!customers[id])return;
+  const c=customers[id];
+  const todayISO=localISO(new Date());
+  const _nd=new Date();_nd.setDate(_nd.getDate()+90);
+  const nextISO=_nd.getFullYear()+'-'+String(_nd.getMonth()+1).padStart(2,'0')+'-'+String(_nd.getDate()).padStart(2,'0');
+  c.supplemental_last_service=todayISO;
+  c.supplemental_next_service=nextISO;
+  c.last_service=todayISO;
+  c.next_service=nextISO;
+  custSave();
+  renderServiceCal();
+  toast('Supplemental visit logged. Next: '+nextISO);
+}
 
 function getProspectStage(p){
   // Won = customer statuses
-  const CUST=new Set(['customer_recurring','customer_quarterly','customer_intro','customer_once']);
+  const CUST=new Set(['customer_recurring','customer_quarterly','customer_intro','customer_once','customer_supplemental_only']);
   if(CUST.has(p.status))return 'won';
   if(p.status==='churned')return 'lost';
   if(p.status==='quoted')return 'quoted';
@@ -7683,12 +7750,14 @@ function rCust(){
   const STATUS_LABELS={
     customer_recurring:'&#x1F504; Recurring',customer_quarterly:'&#x1F4C5; Quarterly',
     customer_once:'&#x1F9FC; One-Time',customer_intro:'&#x1F525; Intro ($99)',
+    customer_supplemental_only:'&#x1F4CB; Supplemental',
     quoted:'&#x1F4C4; Quote Sent',churned:'&#x274C; Churned'
   };
   const STATUS_COLORS={
     customer_recurring:'#059669',customer_quarterly:'#0891b2',
     customer_once:'var(--blu)',customer_intro:'var(--ora)',
-    quoted:'#7c3aed',churned:'var(--cb)'
+    customer_supplemental_only:'#7c3aed',
+    quoted:'#6d28d9',churned:'var(--cb)'
   };
 
   // Portal ID for HubSpot links
@@ -7700,7 +7769,7 @@ function rCust(){
     const c=customers[p.id]||{};
     const col=STATUS_COLORS[p.status]||'var(--sub)';
     const lbl=STATUS_LABELS[p.status]||p.status;
-    const rev=p.status==='customer_recurring'||p.status==='customer_quarterly'?('$'+(c.monthly||p.monthly||149)+'/mo'):p.status==='customer_once'?('$'+(c.onetime||p.onetime||0)+' one-time'):'';
+    const rev=p.status==='customer_recurring'||p.status==='customer_quarterly'?('$'+(c.monthly||p.monthly||149)+'/mo'):p.status==='customer_once'?('$'+(c.onetime||p.onetime||0)+' one-time'):p.status==='customer_supplemental_only'?'$79/mo':'';
 
     // Service due indicator
     let serviceDueH='';
@@ -9237,7 +9306,7 @@ function renderServiceCal(){
   if(!el)return;
 
   const today=new Date();
-  const ACTIVE_SVC_STATUSES=new Set(['customer_recurring','customer_quarterly','customer_once','customer_intro']);
+  const ACTIVE_SVC_STATUSES=new Set(['customer_recurring','customer_quarterly','customer_once','customer_intro','customer_supplemental_only']);
   const recurring=P.filter(p=>{
     const c=customers[p.id];
     return c&&ACTIVE_SVC_STATUSES.has(c.status);
@@ -9294,14 +9363,14 @@ function renderServiceCal(){
       +'<div style="display:flex;justify-content:space-between;align-items:flex-start">'
         +'<div style="flex:1;min-width:0">'
           +'<div style="font-weight:700;font-size:13px;color:var(--navy)">'+p.name+'</div>'
-          +'<div style="font-size:10px;color:var(--sub)">'+p.city+' &bull; '+p.machines+' machine'+(p.machines>1?'s':'')+' &bull; '+(c.status==='customer_quarterly'?'Quarterly':c.status==='customer_once'?'One-Time':c.status==='customer_intro'?'Intro':'Monthly')
+          +'<div style="font-size:10px;color:var(--sub)">'+p.city+' &bull; '+p.machines+' machine'+(p.machines>1?'s':'')+' &bull; '+(c.status==='customer_quarterly'?'Quarterly':c.status==='customer_once'?'One-Time':c.status==='customer_intro'?'Intro':c.status==='customer_supplemental_only'?'Supplemental':'Monthly')
           +(REACH_IN_ENABLED&&c.reach_in_service?'<span style="font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;background:#F0F7FF;color:#1A5276;margin-left:4px">&#x2744;&#xFE0F; + Coolers</span>':'')
           +'</div>'
           +(p.phone?'<div style="font-size:10px;color:var(--blu)">'+p.phone+'</div>':'')
         +'</div>'
         +'<div style="text-align:right;flex-shrink:0;margin-left:10px">'
           +'<div style="font-size:12px;font-weight:800;color:'+duCol+'">'+duLabel+'</div>'
-          +'<div style="font-size:10px;font-weight:700;color:#059669">$'+(c.monthly||p.monthly||149)+'/mo</div>'
+          +'<div style="font-size:10px;font-weight:700;color:'+(c.status==='customer_supplemental_only'?'#7c3aed':'#059669')+'">$'+(c.status==='customer_supplemental_only'?79:(c.monthly||p.monthly||149))+'/mo</div>'
           +(function(){var _ls=(c.service_history||[]).slice(-1)[0];var _la=_ls&&_ls.atp?_ls.atp:'';return _la?'<span style="background:#f0fdf4;color:#059669;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;display:inline-block;margin-top:2px">Last: '+_la+' RLU</span>':'';}())
         +'</div>'
       +'</div>'
@@ -9312,7 +9381,9 @@ function renderServiceCal(){
       +'</div>'
       // Actions
       +'<div style="display:flex;gap:5px;flex-wrap:wrap">'
-        +'<button onclick="openServiceLog('+p.id+')" ontouchend="event.preventDefault();openServiceLog('+p.id+')" style="flex:2;min-width:120px;padding:7px;border:none;border-radius:7px;background:#059669;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Log Service Visit</button>'
+        +(c.status==='customer_supplemental_only'
+          ?'<button onclick="logSupplementalService('+p.id+')" ontouchend="event.preventDefault();logSupplementalService('+p.id+')" style="flex:2;min-width:120px;padding:7px;border:none;border-radius:7px;background:#7c3aed;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Log Supplemental Visit</button>'
+          :'<button onclick="openServiceLog('+p.id+')" ontouchend="event.preventDefault();openServiceLog('+p.id+')" style="flex:2;min-width:120px;padding:7px;border:none;border-radius:7px;background:#059669;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Log Service Visit</button>')
         +'<button onclick="openEscalation('+p.id+')" ontouchend="event.preventDefault();openEscalation('+p.id+')" style="flex:1;min-width:80px;padding:7px;border:1px solid #d97706;border-radius:7px;background:#fffbeb;color:#d97706;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x26A0; Escalate</button>'
         +'<button onclick="reschedule('+p.id+')" style="flex:1;padding:7px;border:1px solid var(--brd);border-radius:7px;background:var(--surf);color:var(--sub);font-size:10px;cursor:pointer;font-family:inherit">Reschedule</button>'
         +(c.annual_schedule?'<button onclick="exportSchedulePDF('+p.id+')" style="flex:1;padding:7px;border:1px solid var(--blu);border-radius:7px;background:#eff6ff;color:var(--blu);font-size:10px;cursor:pointer;font-family:inherit">&#x1F4C5; Schedule</button>':'')

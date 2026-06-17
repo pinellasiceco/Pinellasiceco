@@ -464,6 +464,13 @@ body{background:var(--cream);font-family:'Barlow',sans-serif;color:var(--ink);ma
     </div>
   </div>
 
+  <!-- SUPPLEMENTAL-ONLY: ICE MACHINE PARTNER NOTE -->
+  <div id="partner-note" style="display:none;background:#f5f3ff;border-top:3px solid #7c3aed;padding:24px;text-align:center">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#7c3aed;margin-bottom:8px">Ice Machine Service</div>
+    <div style="font-size:15px;font-weight:700;color:#4c1d95;margin-bottom:8px">Serviced by a Certified Alternative Partner</div>
+    <div style="font-size:13px;color:#6d28d9;line-height:1.6">This establishment&#39;s ice machine is cleaned and maintained by an independent certified vendor. Pinellas Ice Co. provides supplemental sanitation services for this location.</div>
+  </div>
+
   <!-- CERT DETAILS -->
   <div class="details-section">
     <div class="details-eyebrow">Certificate of Verification</div>
@@ -496,6 +503,12 @@ body{background:var(--cream);font-family:'Barlow',sans-serif;color:var(--ink);ma
         <div class="next-date" id="next-date">&#8212;</div>
       </div>
     </div>
+  </div>
+
+  <!-- STACKED: SUPPLEMENTAL SERVICES BADGE -->
+  <div id="supplemental-badge" style="display:none;margin:0 24px 16px;padding:14px 16px;background:#f5f3ff;border:1px solid #c4b5fd;border-radius:8px">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#7c3aed;margin-bottom:4px">&#x1F4CB; Supplemental Services Package</div>
+    <div style="font-size:12px;color:#6d28d9;line-height:1.5">Also enrolled in quarterly supplemental cleaning services.<br><span id="supp-next-date" style="font-weight:600"></span></div>
   </div>
 
   <!-- COMPANY FOOTER -->
@@ -569,6 +582,7 @@ function shareThis(){
 function renderCert(certId,rec){
   _certId=certId;
   _bizName=rec.business_name||'This Establishment';
+  var isSupplementalOnly=rec.is_supplemental_only===true;
   var status=certStatus(rec);
   var post=rec.atp_post;
   var pre=rec.atp_pre;
@@ -576,9 +590,16 @@ function renderCert(certId,rec){
   /* hero dot */
   var dot=document.getElementById('hero-dot');
   var pillTxt=document.getElementById('hero-pill-text');
-  if(status==='pass'){dot.className='hero-pill-dot';pillTxt.textContent='ATP Certified Clean';}
-  else if(status==='expired'){dot.className='hero-pill-dot amber';pillTxt.textContent='Service Scheduled';}
-  else{dot.className='hero-pill-dot red';pillTxt.textContent='Remediation Underway';}
+  if(isSupplementalOnly){
+    dot.className='hero-pill-dot';
+    pillTxt.textContent='Supplemental Services Enrolled';
+  }else if(status==='pass'){
+    dot.className='hero-pill-dot';pillTxt.textContent='ATP Certified Clean';
+  }else if(status==='expired'){
+    dot.className='hero-pill-dot amber';pillTxt.textContent='Service Scheduled';
+  }else{
+    dot.className='hero-pill-dot red';pillTxt.textContent='Remediation Underway';
+  }
 
   /* hero content */
   document.getElementById('hero-biz').textContent=_bizName;
@@ -588,7 +609,11 @@ function renderCert(certId,rec){
   var headline=document.getElementById('story-headline');
   var body=document.getElementById('story-body');
 
-  if(status==='pass'){
+  if(isSupplementalOnly){
+    kicker.textContent='Committed to cleanliness';
+    headline.textContent='This establishment invests in certified supplemental sanitation.';
+    body.innerHTML='<p>This establishment partners with Pinellas Ice Co. for supplemental cleaning services. Ice machine service at this location is provided by a certified independent vendor.</p><br><p>Pinellas Ice Co. provides quarterly supplemental sanitation visits, documented and on record.</p>';
+  }else if(status==='pass'){
     kicker.textContent='A higher standard';
     headline.textContent='Most restaurants assume their ice is clean. This one proves it.';
     body.innerHTML='<p>Every piece of ice served here has been verified by an independent ATP bioluminescence test &mdash; the same technology used to certify hospital operating rooms and pharmaceutical clean rooms.</p><br><p>The score below is not an estimate. It is not a visual inspection. It is a <strong>measured biological reading</strong> from the actual machine that made your ice, taken before and after our last service visit. The FDA acceptable standard is 10 RLU. See how this establishment scored.</p>';
@@ -610,30 +635,35 @@ function renderCert(certId,rec){
   document.getElementById('service-type').textContent=rec.service_type||'Quarterly Certified Clean';
 
   /* ATP */
-  var hasAtp=(pre!==null&&pre!==undefined)||(post!==null&&post!==undefined);
-  if(hasAtp){
-    document.getElementById('atp-pre').textContent=(pre!==null&&pre!==undefined)?pre:'\u2014';
-    document.getElementById('atp-post').textContent=(post!==null&&post!==undefined)?post:'\u2014';
-
-    /* scale marker for post score */
-    var MAX_RLU=300;
-    if(post!==null&&post!==undefined){
-      var pos=scalePos(post,MAX_RLU);
-      document.getElementById('scale-marker').style.left=pos+'%';
-      document.getElementById('scale-marker-lbl').textContent='This machine';
-    }
-
-    /* badge */
-    var badge=document.getElementById('atp-badge');
-    if(post!==null&&post!==undefined){
-      if(post<=10){badge.className='atp-result-badge pass';badge.innerHTML='\u2713&nbsp; Passed FDA Standard';}
-      else if(post<=100){badge.className='atp-result-badge marginal';badge.innerHTML='\u26A0&nbsp; Marginal \u2014 Below 100 RLU';}
-      else{badge.className='atp-result-badge fail';badge.innerHTML='\u2715&nbsp; Remediation Required';}
-    }
+  if(isSupplementalOnly){
+    document.querySelector('.atp-section').style.display='none';
+    document.getElementById('partner-note').style.display='block';
   }else{
-    document.getElementById('atp-scores-block').style.display='none';
-    document.getElementById('atp-pending-note').style.display='block';
-    document.getElementById('atp-badge').className='atp-badge pending';
+    var hasAtp=(pre!==null&&pre!==undefined)||(post!==null&&post!==undefined);
+    if(hasAtp){
+      document.getElementById('atp-pre').textContent=(pre!==null&&pre!==undefined)?pre:'\u2014';
+      document.getElementById('atp-post').textContent=(post!==null&&post!==undefined)?post:'\u2014';
+
+      /* scale marker for post score */
+      var MAX_RLU=300;
+      if(post!==null&&post!==undefined){
+        var pos=scalePos(post,MAX_RLU);
+        document.getElementById('scale-marker').style.left=pos+'%';
+        document.getElementById('scale-marker-lbl').textContent='This machine';
+      }
+
+      /* badge */
+      var badge=document.getElementById('atp-badge');
+      if(post!==null&&post!==undefined){
+        if(post<=10){badge.className='atp-result-badge pass';badge.innerHTML='\u2713&nbsp; Passed FDA Standard';}
+        else if(post<=100){badge.className='atp-result-badge marginal';badge.innerHTML='\u26A0&nbsp; Marginal \u2014 Below 100 RLU';}
+        else{badge.className='atp-result-badge fail';badge.innerHTML='\u2715&nbsp; Remediation Required';}
+      }
+    }else{
+      document.getElementById('atp-scores-block').style.display='none';
+      document.getElementById('atp-pending-note').style.display='block';
+      document.getElementById('atp-badge').className='atp-badge pending';
+    }
   }
 
   /* next service */
@@ -641,6 +671,14 @@ function renderCert(certId,rec){
     document.getElementById('next-date').textContent=fmtDate(rec.next_service_date);
   }else{
     document.getElementById('next-card').style.display='none';
+  }
+
+  /* stacked supplemental badge */
+  if(rec.supplemental){
+    document.getElementById('supplemental-badge').style.display='block';
+    if(rec.supplemental_next_service){
+      document.getElementById('supp-next-date').textContent='Next supplemental service: '+fmtDate(rec.supplemental_next_service);
+    }
   }
 
   show('state-found');
