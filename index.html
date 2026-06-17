@@ -3287,7 +3287,7 @@ function attachGridListeners(grid){
     const card=e.target.closest('[data-id]');
     if(card&&!e.target.closest('a')&&!e.target.closest('input')){
       e.preventDefault();
-      const id=parseInt(card.dataset.id||'0');
+      const id=card.dataset.id;
       if(id)openM(id);
     }
   },false);
@@ -5732,7 +5732,7 @@ function rCust(){
       +'</div>'
       // Action buttons
       +'<div style="display:flex;gap:5px;flex-wrap:wrap">'
-        +'<button onclick="event.stopPropagation();openM('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();openM('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:1px solid var(--brd);border-radius:6px;background:var(--surf);color:var(--navy);cursor:pointer;font-family:inherit;touch-action:manipulation">Details</button>'
+        +'<button onclick="event.stopPropagation();openM(&#39;'+p.id+'&#39;)" ontouchend="event.stopPropagation();event.preventDefault();openM(&#39;'+p.id+'&#39;)" style="flex:1;font-size:9px;padding:5px;border:1px solid var(--brd);border-radius:6px;background:var(--surf);color:var(--navy);cursor:pointer;font-family:inherit;touch-action:manipulation">Details</button>'
         +(c.hubspot_url
           ?'<a href="'+c.hubspot_url+'" target="_blank" onclick="event.stopPropagation()" style="flex:1;font-size:9px;padding:5px;border:1px solid #ff7a59;border-radius:6px;background:#fff7f5;color:#ff7a59;cursor:pointer;font-family:inherit;text-decoration:none;text-align:center;display:flex;align-items:center;justify-content:center">HubSpot &#x2197;</a>'
           :'<a href="'+hsUrl+'" target="_blank" onclick="event.stopPropagation()" style="flex:1;font-size:9px;padding:5px;border:1px solid #ff7a59;border-radius:6px;background:#fff7f5;color:#ff7a59;cursor:pointer;font-family:inherit;text-decoration:none;text-align:center;display:flex;align-items:center;justify-content:center">+ HubSpot</a>')
