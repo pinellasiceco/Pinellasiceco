@@ -35,6 +35,7 @@ Deno.serve(async (req) => {
 
   try {
     const {
+      mode,              // NEW: 'supplemental_only' triggers isolated branch
       plan,              // 'monthly' | 'quarterly' | 'onetime'
       machines,          // number, minimum 1
       entry_discount,    // dollar amount off entry fee (0 if none)
@@ -46,7 +47,88 @@ Deno.serve(async (req) => {
       prospect_id,       // for metadata/tracking and return URL
       flex,              // boolean — month-to-month terms if true
       reach_in,          // boolean — reach-in cooler add-on selected
+      supplemental_reach_in, // NEW: boolean — add $79/mo supplemental to existing plan
     } = await req.json();
+
+    // ── SUPPLEMENTAL-ONLY ISOLATED BRANCH — exits before existing guard ─────
+    if (mode === 'supplemental_only') {
+      if (!prospect_id) {
+        throw new Error('Invalid parameters: prospect_id required');
+      }
+      const suppAddressParts = [
+        String(client_address || '').trim(),
+        String(client_city || '').trim(),
+        'FL',
+      ].filter(Boolean);
+      const suppCustomerParams: Stripe.CustomerCreateParams = {
+        name: String(client_name || '').trim() || 'Unknown',
+        description: suppAddressParts.join(', '),
+        metadata: {
+          prospect_id: String(prospect_id || ''),
+          address:     String(client_address || ''),
+          city:        String(client_city || ''),
+          mode:        'supplemental_only',
+        },
+      };
+      if (client_email) suppCustomerParams.email = String(client_email);
+      const suppCustomer = await stripe.customers.create(suppCustomerParams);
+
+      const suppLineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: 'Supplemental Services Package',
+              description: 'Quarterly reach-in inspection, compliance support',
+            },
+            unit_amount: 79 * 100,
+            recurring: { interval: 'month' },
+          },
+          quantity: 1,
+        },
+      ];
+
+      const suppSuccessUrl = SUCCESS_BASE
+        + '?stripe=supplemental_success&pid=' + encodeURIComponent(String(prospect_id || ''));
+
+      const suppSessionParams: Stripe.Checkout.SessionCreateParams = {
+        mode: 'subscription',
+        customer: suppCustomer.id,
+        line_items: suppLineItems,
+        success_url: suppSuccessUrl,
+        cancel_url: CANCEL_URL,
+        custom_text: {
+          submit: {
+            message: 'Monthly billing, cancel anytime with 30 days written notice. '
+              + 'Full terms & conditions: ' + TERMS_URL,
+          },
+        },
+        metadata: {
+          prospect_id: String(prospect_id || ''),
+          mode:        'supplemental_only',
+          client_name: String(client_name || ''),
+        },
+        subscription_data: {
+          metadata: {
+            prospect_id: String(prospect_id || ''),
+            mode:        'supplemental_only',
+            client_name: String(client_name || ''),
+          },
+        },
+        payment_method_types: ['card'],
+        phone_number_collection: { enabled: true },
+      };
+
+      const suppSession = await stripe.checkout.sessions.create(suppSessionParams);
+      return new Response(
+        JSON.stringify({ url: suppSession.url, session_id: suppSession.id }),
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 200,
+        }
+      );
+    }
+    // ── END SUPPLEMENTAL-ONLY BRANCH ─────────────────────────────────────────
 
     if (!plan || !machines || Number(machines) < 1) {
       throw new Error('Invalid parameters: plan and machines required');
@@ -56,7 +138,8 @@ Deno.serve(async (req) => {
     const extraMachines = Math.max(0, m - 1);
     const entryDisc = Math.max(0, Math.min(Number(entry_discount) || 0, 99));
     const planDisc  = Math.max(0, Math.min(Number(monthly_discount) || 0, 100));
-    const hasReachIn = reach_in === true && plan !== 'onetime';
+    const hasReachIn    = reach_in === true && plan !== 'onetime';
+    const hasSupplemental = supplemental_reach_in === true && plan !== 'onetime';
 
     // --- CREATE NAMED CUSTOMER ---
     const addressParts = [
@@ -161,6 +244,22 @@ Deno.serve(async (req) => {
           quantity: 1,
         });
       }
+
+      // SUPPLEMENTAL SERVICES PACKAGE — bundled add-on
+      if (hasSupplemental) {
+        lineItems.push({
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: 'Supplemental Services Package',
+              description: 'Quarterly reach-in inspection, compliance support',
+            },
+            unit_amount: 79 * 100,
+            recurring: { interval: 'month' },
+          },
+          quantity: 1,
+        });
+      }
     }
 
     // --- CHECKOUT SESSION ---
@@ -204,6 +303,7 @@ Deno.serve(async (req) => {
         client_name: String(client_name || ''),
         flex: flex ? 'true' : 'false',
         reach_in: hasReachIn ? 'true' : 'false',
+        supplemental: hasSupplemental ? 'true' : 'false',
       },
       payment_method_types: ['card'],
       phone_number_collection: { enabled: true },
@@ -218,6 +318,7 @@ Deno.serve(async (req) => {
           client_name: String(client_name || ''),
           flex: flex ? 'true' : 'false',
           reach_in: hasReachIn ? 'true' : 'false',
+          supplemental: hasSupplemental ? 'true' : 'false',
         },
       };
     }

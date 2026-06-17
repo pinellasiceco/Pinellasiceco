@@ -4043,6 +4043,18 @@ function scOpenClose(p,bg){
       +'</label>'
     +'</div>'
     :'';
+  var suppBundleToggle='<div style="margin:12px 0;padding:12px;background:#f5f3ff;border-radius:8px;border:1px solid #ddd6fe">'
+    +'<label style="display:flex;align-items:center;justify-content:space-between;cursor:pointer">'
+      +'<div>'
+        +'<div style="font-size:13px;font-weight:700;color:#5b21b6">&#x1F4CB; Supplemental Services Package</div>'
+        +'<div style="font-size:11px;color:#6c757d;margin-top:2px">Quarterly inspection &middot; $79/mo add-on</div>'
+      +'</div>'
+      +'<div style="display:flex;align-items:center;gap:8px">'
+        +'<span style="font-size:13px;font-weight:700;color:#5b21b6">+$79/mo</span>'
+        +'<input type="checkbox" id="co-supplemental-ri" style="width:18px;height:18px;cursor:pointer">'
+      +'</div>'
+    +'</label>'
+  +'</div>';
   var el=document.createElement('div');
   el.id='close-overlay';
   el.style.cssText='position:fixed;inset:0;z-index:600;background:rgba(15,31,56,.85);display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box';
@@ -4081,6 +4093,7 @@ function scOpenClose(p,bg){
     +'</select>'
     +'</div>'
     +riToggle
+    +suppBundleToggle
     +'<div style="padding:10px;background:#f0fdf4;border:1px solid #6ee7b7;border-radius:8px;margin-bottom:10px;text-align:center">'
     +'<div style="font-size:9px;color:#059669;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Year 1 Total Value</div>'
     +'<div id="co-year1-val" style="font-size:22px;font-weight:900;color:#059669">$'+year1.toLocaleString('en-US')+'</div>'
@@ -4120,6 +4133,9 @@ function scOpenClose(p,bg){
     +'</div>'
     +'<div style="text-align:center;margin-bottom:4px">'
     +'<button onclick="markSupplementalWon()" ontouchend="event.preventDefault();markSupplementalWon()" style="border:none;background:transparent;font-size:10px;color:#7c3aed;cursor:pointer;font-family:inherit;text-decoration:underline;touch-action:manipulation">&#x1F4CB; Supplemental Package instead ($79/mo &#x2014; no ice machine clean)</button>'
+    +'</div>'
+    +'<div style="text-align:center;margin-bottom:4px">'
+    +'<button id="co-supp-stripe-btn" onclick="coChargeSupplemental()" ontouchend="event.preventDefault();coChargeSupplemental()" style="border:none;background:transparent;font-size:10px;color:#7c3aed;cursor:pointer;font-family:inherit;text-decoration:underline;touch-action:manipulation">&#x1F4B3; Supplemental via Stripe &#x2014; $79/mo</button>'
     +'</div>'
     +'<button id="co-cancel" onclick="closeOverlayById(\\'close-overlay\\')" ontouchend="event.preventDefault();closeOverlayById(\\'close-overlay\\')" style="width:100%;padding:8px;border:none;border-radius:8px;background:transparent;color:#94a3b8;font-size:11px;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
     +'</div>';
@@ -4296,6 +4312,7 @@ async function generateStripeCheckout(){
     if(!supabaseUrl||!anonKey){throw new Error('Supabase not configured — check Settings');}
     var fnUrl=supabaseUrl+'/functions/v1/stripe-checkout';
     var reachInChecked=REACH_IN_ENABLED&&!!(document.getElementById('co-reach-in')||{}).checked;
+    var suppBundleChecked=!!(document.getElementById('co-supplemental-ri')||{}).checked;
     var resp=await fetch(fnUrl,{
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+anonKey},
@@ -4309,6 +4326,7 @@ async function generateStripeCheckout(){
         prospect_id:pid||'',
         flex:flex,
         reach_in:reachInChecked,
+        supplemental_reach_in:suppBundleChecked,
       }),
     });
     var data=await resp.json();
@@ -4325,6 +4343,7 @@ async function generateStripeCheckout(){
         customers[pid]._pending_reach_in=_riChecked;
         customers[pid]._pending_reach_in_amount=_riChecked?calcReachInMonthly(plan):0;
       }
+      customers[pid]._pending_supplemental_reach_in=suppBundleChecked;
       custSave();
     }
     return data.url;
@@ -4338,6 +4357,60 @@ async function generateStripeCheckout(){
     if(sendBtn)sendBtn.disabled=false;
     if(chargeBtn)chargeBtn.disabled=false;
   }
+}
+
+async function generateSupplementalCheckout(){
+  var p=_scCardP||cur;
+  if(!p)return null;
+  var pid=p.id;
+  var loadingEl=document.getElementById('co-loading');
+  var errEl=document.getElementById('co-error');
+  var suppBtn=document.getElementById('co-supp-stripe-btn');
+  if(loadingEl)loadingEl.style.display='block';
+  if(errEl)errEl.style.display='none';
+  if(suppBtn)suppBtn.disabled=true;
+  try{
+    var supabaseUrl=_SUPABASE_URL||localStorage.getItem('pic_supabase_url')||'';
+    var anonKey=_SUPABASE_ANON_KEY||localStorage.getItem('pic_supabase_key')||'';
+    if(!supabaseUrl||!anonKey){throw new Error('Supabase not configured &#x2014; check Settings');}
+    var fnUrl=supabaseUrl+'/functions/v1/stripe-checkout';
+    var resp=await fetch(fnUrl,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+anonKey},
+      body:JSON.stringify({
+        mode:'supplemental_only',
+        client_name:p?p.name:'',
+        client_email:(customers[pid]||{}).email||'',
+        client_address:p?(p.address||''):'',
+        client_city:p?(p.city||''):'',
+        prospect_id:pid||'',
+      }),
+    });
+    var data=await resp.json();
+    if(data.error)throw new Error(data.error);
+    if(!data.url)throw new Error('No checkout URL returned');
+    if(pid){
+      if(!customers[pid])customers[pid]={};
+      customers[pid]._pending_supplemental=true;
+      custSave();
+    }
+    return data.url;
+  }catch(err){
+    console.error('Supplemental checkout error:',err);
+    if(errEl){errEl.textContent='Error: '+err.message;errEl.style.display='block';}
+    return null;
+  }finally{
+    if(loadingEl)loadingEl.style.display='none';
+    if(suppBtn)suppBtn.disabled=false;
+  }
+}
+
+async function coChargeSupplemental(){
+  var win=window.open('','_blank');
+  var url=await generateSupplementalCheckout();
+  if(!url){if(win)win.close();return;}
+  if(win&&!win.closed){win.location.href=url;}
+  else{window.location.href=url;}
 }
 
 async function coSendToClient(){
@@ -4399,10 +4472,62 @@ function checkStripeReturn(){
         if(_priAmt>0){customers[pid].monthly=(customers[pid].monthly||0)+_priAmt;}
         custSave();
       }
+      var _psi=(customers[pid]||{})._pending_supplemental_reach_in===true;
+      if(_psi){
+        if(!customers[pid])customers[pid]={};
+        var _psiNd=new Date();_psiNd.setDate(_psiNd.getDate()+QUARTERLY_INTERVAL_DAYS);
+        var _psiNext=_psiNd.getFullYear()+'-'+String(_psiNd.getMonth()+1).padStart(2,'0')+'-'+String(_psiNd.getDate()).padStart(2,'0');
+        customers[pid].supplemental_reach_in=true;
+        customers[pid].supplemental_package=true;
+        customers[pid].supplemental_price=79;
+        customers[pid].supplemental_payment_method='stripe';
+        customers[pid].supplemental_next_service=_psiNext;
+        custSave();
+      }
       toast('Payment confirmed — '+(p.name||'client')+' moved to Won');
     }else if(p&&alreadyWon){
       toast('Payment confirmed — '+(p.name||'client')+' is already a client');
       setTimeout(function(){sw('customers');},800);
+    }
+  }
+  if(stripeStatus==='supplemental_success'&&pid){
+    history.replaceState({},'',window.location.pathname);
+    var _sP=P.find(function(x){return String(x.id)===String(pid);});
+    if(_sP){
+      var _sNow=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+      var _sPrev=customers[pid]||{};
+      var _sNd=new Date();_sNd.setDate(_sNd.getDate()+QUARTERLY_INTERVAL_DAYS);
+      var _sNextISO=_sNd.getFullYear()+'-'+String(_sNd.getMonth()+1).padStart(2,'0')+'-'+String(_sNd.getDate()).padStart(2,'0');
+      customers[pid]={
+        notes:'',last_service:'',next_service:'',hubspot_url:'',square_url:'',
+        machine_brand:'',machine_model:'',machine_type:'',filter_type:'',filter_installed:'',
+        contract_start:'',contract_term:6,contract_renewal:'',service_history:[],atp_history:[],
+        ..._sPrev,
+        status:'customer_supplemental_only',
+        supplemental_package:true,
+        supplemental_price:79,
+        supplemental_payment_method:'stripe',
+        supplemental_reach_in:true,
+        supplemental_won_date:_sNow,
+        won_date:_sNow,
+        service_type:'supplemental',
+        supplemental_start_date:_sNow,
+        supplemental_next_service:_sNextISO,
+        next_service:_sNextISO,
+        machines:_sP.machines,
+        name:_sP.name,
+        address:_sP.address,
+        city:_sP.city,
+        phone:_sP.phone||_sPrev.phone||'',
+      };
+      _sP.status='customer_supplemental_only';
+      custSave();
+      if(!log[pid])log[pid]=[];
+      log[pid].push({outcome:'customer_supplemental_only',date:_sNow,notes:'Supplemental Package &#x2014; Stripe checkout'});
+      lSave();
+      pushCustomerToSupabase(pid);
+      toast('Payment confirmed &#x2014; Supplemental Package activated for '+(_sP.name||'client'));
+      sw('customers');
     }
   }
   if(stripeStatus==='cancel'){
@@ -7514,6 +7639,7 @@ function markSupplementalWon(){
     supplemental_reach_in:true,
     supplemental_won_date:now,
     supplemental_price:79,
+    supplemental_payment_method:'manual',
     supplemental_next_service:nextISO,
     next_service:nextISO,
     machines:p.machines,
@@ -7801,8 +7927,8 @@ function rCust(){
           +'<div style="font-size:9px;font-weight:700;color:'+col+';margin-top:2px">'+lbl+'</div>'
         +'</div>'
         +'<div style="text-align:right;flex-shrink:0;margin-left:10px">'
-          +(rev?'<div style="font-size:13px;font-weight:800;color:'+(p.status==='customer_supplemental_only'?'#7c3aed':'var(--grn)')+'">'+rev+'</div>'+(p.status==='customer_supplemental_only'?'<div style="font-size:8px;color:#9ca3af;margin-top:1px">Billed manually</div>':''):'')
-          // Temporary: remove Billed manually note once Stripe checkout for supplemental package is live
+          +(rev?'<div style="font-size:13px;font-weight:800;color:'+(p.status==='customer_supplemental_only'?'#7c3aed':'var(--grn)')+'">'+rev+'</div>'+(p.status==='customer_supplemental_only'&&(c.supplemental_payment_method||'manual')==='manual'?'<div style="font-size:8px;color:#9ca3af;margin-top:1px">Billed manually</div>':''):'')
+
           +(c.won_date?'<div style="font-size:9px;color:var(--sub)">Since '+c.won_date+'</div>':'')
         +'</div>'
       +'</div>'
