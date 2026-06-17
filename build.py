@@ -3320,7 +3320,7 @@ header{background:var(--navy);
         <div style="display:flex;flex-wrap:wrap;gap:4px" id="reason-grid"></div>
       </div>
 
-      class="ntxt" id="mnotes" rows="2" placeholder="Notes&#x2026;"></textarea>
+      <textarea class="ntxt" id="mnotes" rows="2" placeholder="Notes&#x2026;"></textarea>
       <div style="display:flex;gap:6px;align-items:center;margin-top:6px;padding:6px 8px;background:#f5f8fa;border-radius:7px">
         <span style="font-size:9px;color:var(--sub);white-space:nowrap;font-weight:600">&#x1F4C5; Follow-up date:</span>
         <input type="date" id="mfollowup" style="flex:1;padding:4px;border:1px solid var(--brd);border-radius:6px;font-size:11px;font-family:inherit;background:#fff;color:var(--txt);outline:none">
