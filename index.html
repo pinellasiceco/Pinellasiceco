@@ -5462,6 +5462,8 @@ function logSupplementalService(id){
   custSave();
   renderServiceCal();
   toast('Supplemental visit logged. Next: '+nextISO);
+  var _suppP=P.find(function(x){return x.id==id;});
+  if(_suppP){setTimeout(function(){scSupplementalReport(_suppP,{notes:''});},300);}
 }
 
 function getProspectStage(p){
@@ -9111,6 +9113,160 @@ function srSendEmail(p,atpVal,emailTo,notes){
     +'(727) 855-6873</a></div>'
     +'</div></body></html>';
   return sendEmailViaProxy(emailTo,'Ice Machine Status Report — '+p.name,html);
+}
+// ── SUPPLEMENTAL SERVICE REPORT ───────────────────────────────────────────────
+function scSupplementalReport(p,prefill){
+  var suppBg=document.createElement('div');
+  suppBg.id='supp-bg';
+  suppBg.style.cssText='position:fixed;inset:0;z-index:600;background:rgba(15,31,56,.88);display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box';
+  var box=document.createElement('div');
+  box.style.cssText='background:#fff;border-radius:16px;padding:24px;width:100%;max-width:340px';
+  box.innerHTML=
+    '<div style="font-size:14px;font-weight:800;color:#7c3aed;margin-bottom:4px">&#x1F9FC; Supplemental Service Report</div>'
+    +'<div style="font-size:11px;color:#64748b;margin-bottom:16px">Add an email to send the visit record to your client, or print for your files.</div>'
+    +'<input id="supp-email-inp" type="email" placeholder="Email to (optional)" '
+    +'style="width:100%;padding:10px;border:2px solid #e2e8f0;border-radius:10px;font-size:14px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:8px;color:#0f1f38">'
+    +'<textarea id="supp-notes-inp" placeholder="Technician notes (optional)" rows="2" '
+    +'style="width:100%;padding:10px;border:2px solid #e2e8f0;border-radius:10px;font-size:13px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:12px;color:#0f1f38;resize:none"></textarea>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">'
+    +'<button id="supp-cancel" style="padding:10px;border:1px solid #e2e8f0;border-radius:9px;background:#f8fafc;color:#64748b;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
+    +'<button id="supp-email" style="padding:10px;border:1px solid #7c3aed;border-radius:9px;background:#f5f3ff;color:#7c3aed;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E7; Email</button>'
+    +'<button id="supp-print" style="padding:10px;border:none;border-radius:9px;background:#7c3aed;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Print</button>'
+    +'</div>';
+  suppBg.appendChild(box);
+  document.body.appendChild(suppBg);
+  if(prefill&&prefill.notes){var ni=document.getElementById('supp-notes-inp');if(ni)ni.value=prefill.notes;}
+  setTimeout(function(){var ei=document.getElementById('supp-email-inp');if(ei)ei.focus();},120);
+  var _lt=0;
+  function suppHandle(e){
+    if(e.type==='click'&&Date.now()-_lt<350)return;
+    if(e.type==='touchend')_lt=Date.now();
+    if(e.target===suppBg){suppBg.remove();return;}
+    var btn=e.target.closest('#supp-cancel,#supp-email,#supp-print');
+    if(!btn)return;
+    if(e.type==='touchend')e.preventDefault();
+    if(btn.id==='supp-cancel'){suppBg.remove();return;}
+    var emailTo=((document.getElementById('supp-email-inp')||{}).value||'').trim();
+    var notes=((document.getElementById('supp-notes-inp')||{}).value||'').trim();
+    if(btn.id==='supp-email'){
+      if(!emailTo){toast('Enter an email address first');return;}
+      var _suppBtn=document.getElementById('supp-email');
+      sendWithConfirmation(_suppBtn,function(){return srSendEmailSupplemental(p,emailTo,notes);}).then(function(){
+        setTimeout(function(){if(document.getElementById('supp-bg'))suppBg.remove();},1600);
+      });
+      return;
+    }
+    if(btn.id==='supp-print'){
+      suppBg.remove();
+      srGenerateSupplemental(p,notes);
+    }
+  }
+  suppBg.addEventListener('click',suppHandle);
+  suppBg.addEventListener('touchend',suppHandle);
+}
+function srGenerateSupplemental(p,notes){
+  var c=customers[p.id]||{};
+  var dateStr=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  var nextRaw=c.supplemental_next_service||c.next_service;
+  var nextStr=nextRaw?new Date(nextRaw.replace(/-/g,'/')).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}):'Contact us to schedule';
+  var services=['Soda lines &amp; nozzle cleaning','Exterior ice machine &amp; splash zone wipe-down','Reach-in cooler gasket &amp; seal inspection and cleaning'];
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8">'
+    +'<meta name="viewport" content="width=device-width,initial-scale=1">'
+    +'<title>Supplemental Service Report</title>'
+    +'<style>'
+    +'*{box-sizing:border-box}body{margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;background:#fff;color:#0f172a}'
+    +'@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}button{display:none}.page{zoom:0.92;padding:0}.rpt-bar{display:none}}'
+    +'@page{size:letter portrait;margin:0.3in}'
+    +'.page{max-width:680px;margin:0 auto;padding:16px}'
+    +'.rpt-bar{position:sticky;top:0;z-index:99;background:#0f1f38;display:flex;gap:8px;align-items:center;padding:10px 16px}'
+    +'</style></head><body>'
+    +'<div class="rpt-bar">'
+    +'<button onclick="if(window.opener)window.opener.focus();window.close()" style="flex:1;padding:10px;background:#1e3a5f;color:#e2e8f0;border:1px solid #334155;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">&#x2190; Back to App</button>'
+    +'<button onclick="window.print()" style="flex:1;padding:10px;background:#7c3aed;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">&#x1F5A8; Print</button>'
+    +'</div>'
+    +'<div class="page">'
+    +'<table style="width:100%;border-collapse:collapse;margin-bottom:20px"><tr>'
+    +'<td style="vertical-align:middle"><img src="logo_for_pdf.png" onerror="this.remove()" style="height:42px;display:block"></td>'
+    +'<td style="text-align:right;vertical-align:middle">'
+    +'<div style="font-size:17px;font-weight:900;color:#7c3aed;letter-spacing:-.01em">SUPPLEMENTAL SERVICE REPORT</div>'
+    +'<div style="font-size:11px;color:#64748b;margin-top:2px">pinellasiceco.com &nbsp;&middot;&nbsp; '+dateStr+'</div>'
+    +'</td></tr></table>'
+    +'<div style="border-top:2px solid #7c3aed;margin-bottom:10px"></div>'
+    +'<div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:10px">'
+    +'<div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:6px">Establishment</div>'
+    +'<div style="font-size:14px;font-weight:800;color:#0f1f38;margin-bottom:4px">'+p.name+'</div>'
+    +'<div style="font-size:11px;color:#475569">'+p.address+'</div>'
+    +'<div style="font-size:11px;color:#475569">'+p.city+', FL '+p.zip+'</div>'
+    +'</div>'
+    +'<div style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:10px">'
+    +'<div style="background:#7c3aed;padding:10px 14px;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#f5f3ff">Services Performed This Visit</div>'
+    +'<div style="padding:12px 14px">'
+    +services.map(function(s){return '<div style="font-size:11px;color:#334155;padding:3px 0;display:flex;gap:8px"><span style="color:#7c3aed;font-weight:700;flex-shrink:0">&#x2713;</span><span>'+s+'</span></div>';}).join('')
+    +'</div></div>'
+    +'<div style="background:#0f1f38;border-radius:10px;padding:12px;text-align:center;margin-bottom:10px">'
+    +'<div style="font-size:8px;color:#94a3b8;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">Next Scheduled Service</div>'
+    +'<div style="font-size:22px;font-weight:900;color:#f97316;margin-bottom:4px">'+nextStr+'</div>'
+    +'<div style="font-size:11px;color:#e2e8f0;margin-bottom:8px">Thank you for choosing Pinellas Ice Co</div>'
+    +'<div style="font-size:16px;font-weight:800;color:#fff">Call&nbsp;/&nbsp;Text:&nbsp;&nbsp;(727)&nbsp;855-6873</div>'
+    +'<div style="font-size:10px;color:#94a3b8;margin-top:4px">pinellasiceco.com</div>'
+    +'</div>'
+    +(notes?('<div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:10px">'
+      +'<div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:6px">Technician Notes</div>'
+      +'<div style="font-size:11px;color:#334155;line-height:1.6">'+notes+'</div>'
+      +'</div>'):'')
+    +'<div style="text-align:center;font-size:9px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:10px;margin-top:14px">'
+    +'Pinellas Ice Co &nbsp;&middot;&nbsp; pinellasiceco.com &nbsp;&middot;&nbsp; (727) 855-6873'
+    +'</div>'
+    +'</div></body></html>';
+  var w=window.open('','_blank');
+  if(!w){toast('Pop-up blocked — allow pop-ups and try again');return;}
+  w.document.write(html);
+  w.document.close();
+  setTimeout(function(){w.print();},600);
+}
+function srSendEmailSupplemental(p,emailTo,notes){
+  var c=customers[p.id]||{};
+  var now=new Date();
+  var dateStr=now.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  var nextRaw=c.supplemental_next_service||c.next_service;
+  var nextStr=nextRaw?new Date(nextRaw.replace(/-/g,'/')).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}):'Contact us to schedule';
+  var services=['Soda lines &amp; nozzle cleaning','Exterior ice machine &amp; splash zone wipe-down','Reach-in cooler gasket &amp; seal inspection and cleaning'];
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>'
+    +'<body style="margin:0;padding:0;background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,Helvetica Neue,sans-serif">'
+    +'<div style="max-width:600px;margin:0 auto;padding:20px">'
+    +'<table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:12px"><tr>'
+    +'<td><div style="font-size:18px;font-weight:900;color:#0f1f38;letter-spacing:-.01em">PINELLAS ICE CO</div></td>'
+    +'<td align="right"><div style="font-size:11px;color:#64748b">'+dateStr+'</div></td>'
+    +'</tr></table>'
+    +'<div style="font-size:15px;font-weight:800;color:#7c3aed;margin-bottom:10px">SUPPLEMENTAL SERVICE REPORT</div>'
+    +'<div style="border-top:2px solid #7c3aed;margin-bottom:14px"></div>'
+    +'<div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:14px">'
+    +'<div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:6px">Establishment</div>'
+    +'<div style="font-size:14px;font-weight:800;color:#0f1f38;margin-bottom:4px">'+p.name+'</div>'
+    +'<div style="font-size:11px;color:#475569">'+p.address+'</div>'
+    +'<div style="font-size:11px;color:#475569">'+p.city+', FL '+p.zip+'</div>'
+    +'</div>'
+    +'<div style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:14px">'
+    +'<div style="background:#7c3aed;padding:10px 14px;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#f5f3ff">Services Performed This Visit</div>'
+    +'<div style="padding:12px 14px">'
+    +services.map(function(s){return '<div style="font-size:11px;color:#334155;padding:3px 0"><span style="color:#7c3aed;font-weight:700">&#x2713;</span>&nbsp;&nbsp;'+s+'</div>';}).join('')
+    +'</div></div>'
+    +'<div style="background:#0f1f38;border-radius:10px;padding:14px;text-align:center;margin-bottom:14px">'
+    +'<div style="font-size:8px;color:#94a3b8;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">Next Scheduled Service</div>'
+    +'<div style="font-size:18px;font-weight:900;color:#f97316;margin-bottom:4px">'+nextStr+'</div>'
+    +'<div style="font-size:11px;color:#e2e8f0;margin-bottom:8px">Thank you for choosing Pinellas Ice Co</div>'
+    +'<div style="font-size:16px;font-weight:800;color:#fff">Call&nbsp;/&nbsp;Text:&nbsp;&nbsp;(727)&nbsp;855-6873</div>'
+    +'<div style="font-size:10px;color:#94a3b8;margin-top:4px">pinellasiceco.com</div>'
+    +'</div>'
+    +(notes?('<div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:14px">'
+      +'<div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:6px">Technician Notes</div>'
+      +'<div style="font-size:11px;color:#334155;line-height:1.6">'+notes+'</div>'
+      +'</div>'):'')
+    +'<div style="text-align:center;font-size:9px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:10px;margin-top:14px">'
+    +'Pinellas Ice Co &nbsp;&middot;&nbsp; pinellasiceco.com &nbsp;&middot;&nbsp; (727) 855-6873'
+    +'</div>'
+    +'</div></body></html>';
+  return sendEmailViaProxy(emailTo,'Supplemental Service Report — '+p.name,html);
 }
 function toggleReportEmailRow(){
   var row=document.getElementById('report-email-row');
