@@ -7513,6 +7513,7 @@ function markSupplementalWon(){
     service_type:'supplemental',
     supplemental_reach_in:true,
     supplemental_won_date:now,
+    supplemental_price:79,
     supplemental_next_service:nextISO,
     next_service:nextISO,
     machines:p.machines,
@@ -7739,8 +7740,8 @@ function rCust(){
   const shown=filter?allCusts.filter(p=>((customers[p.id]||{}).status||p.status)===filter):allCusts;
 
   // MRR calculation — prefer customers[] record (actual closed price) over P[] estimate
-  const recurring=allCusts.filter(p=>{const st=(customers[p.id]||{}).status||p.status;return st==='customer_recurring'||st==='customer_quarterly';});
-  const mrr=recurring.reduce((s,p)=>s+((customers[p.id]||{}).monthly||p.monthly||149),0);
+  const recurring=allCusts.filter(p=>{const st=(customers[p.id]||{}).status||p.status;return st==='customer_recurring'||st==='customer_quarterly'||st==='customer_supplemental_only';});
+  const mrr=recurring.reduce((s,p)=>{const c=customers[p.id]||{};const st=c.status||p.status;if(st==='customer_supplemental_only')return s+(c.supplemental_price||79);return s+(c.monthly||p.monthly||149)+(c.supplemental_reach_in?(c.supplemental_price||79):0);},0);
   document.getElementById('mrr-val').textContent='$'+mrr.toLocaleString();
   document.getElementById('cust-count').textContent=recurring.length;
   document.getElementById('arr-val').textContent='$'+(mrr*12).toLocaleString();
@@ -7800,7 +7801,8 @@ function rCust(){
           +'<div style="font-size:9px;font-weight:700;color:'+col+';margin-top:2px">'+lbl+'</div>'
         +'</div>'
         +'<div style="text-align:right;flex-shrink:0;margin-left:10px">'
-          +(rev?'<div style="font-size:13px;font-weight:800;color:'+(p.status==='customer_supplemental_only'?'#7c3aed':'var(--grn)')+'">'+rev+'</div>'+(p.status==='customer_supplemental_only'?'<div style="font-size:8px;color:#9ca3af;margin-top:1px">Manual billing &#x2014; not in MRR</div>':''):'')
+          +(rev?'<div style="font-size:13px;font-weight:800;color:'+(p.status==='customer_supplemental_only'?'#7c3aed':'var(--grn)')+'">'+rev+'</div>'+(p.status==='customer_supplemental_only'?'<div style="font-size:8px;color:#9ca3af;margin-top:1px">Billed manually</div>':''):'')
+          // Temporary: remove Billed manually note once Stripe checkout for supplemental package is live
           +(c.won_date?'<div style="font-size:9px;color:var(--sub)">Since '+c.won_date+'</div>':'')
         +'</div>'
       +'</div>'
@@ -8328,9 +8330,9 @@ function renderBriefing(){
 
   // ── KPI ROW ───────────────────────────────────────────────────────────
   const recurring=P.filter(p=>
-    p.status==='customer_recurring'||p.status==='customer_quarterly'
+    p.status==='customer_recurring'||p.status==='customer_quarterly'||p.status==='customer_supplemental_only'
   );
-  const mrr=recurring.reduce((s,p)=>s+((customers[p.id]||{}).monthly||p.monthly||149),0);
+  const mrr=recurring.reduce((s,p)=>{const c=customers[p.id]||{};const st=c.status||p.status;if(st==='customer_supplemental_only')return s+(c.supplemental_price||79);return s+(c.monthly||p.monthly||149)+(c.supplemental_reach_in?(c.supplemental_price||79):0);},0);
   const clientCount=recurring.length;
 
   // Pipeline = intro_set + in_play prospects
@@ -8547,8 +8549,8 @@ function renderKPIs(){
   // Fast-path: just update the 4 KPI numbers without re-rendering cards
   const now=new Date();
   const weekAgo=new Date(now-7*864e5);
-  const recurring=P.filter(p=>p.status==='customer_recurring'||p.status==='customer_quarterly');
-  const mrr=recurring.reduce((s,p)=>s+((customers[p.id]||{}).monthly||p.monthly||149),0);
+  const recurring=P.filter(p=>p.status==='customer_recurring'||p.status==='customer_quarterly'||p.status==='customer_supplemental_only');
+  const mrr=recurring.reduce((s,p)=>{const c=customers[p.id]||{};const st=c.status||p.status;if(st==='customer_supplemental_only')return s+(c.supplemental_price||79);return s+(c.monthly||p.monthly||149)+(c.supplemental_reach_in?(c.supplemental_price||79):0);},0);
   const pipeCount=Object.keys(log).filter(id=>{const lc=getLC(parseInt(id));return lc&&['in_play','intro_set','follow_up','interested','scheduled','quoted'].includes(lc.outcome);}).length;
   const weekEntries=[];
   Object.values(log).forEach(entries=>entries.forEach(e=>{const d=new Date(e.date);if(d>=weekAgo)weekEntries.push(e);}));
