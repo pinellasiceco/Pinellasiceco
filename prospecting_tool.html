@@ -3226,8 +3226,8 @@ function cardHTML(p){
     +'</div>'
     +lastH
     +'<div class="cacts">'
-      +'<button class="btn blog" class="log-call-btn" data-id="'+p.id+'" data-action="showCard" onclick="event.stopPropagation();showCard('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();showCard('+p.id+')" style="touch-action:manipulation">Log Call</button>'
-      +'<button class="btn" data-id="'+p.id+'" data-action="showCard" onclick="event.stopPropagation();showCard('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();showCard('+p.id+')" style="background:#0f1f38;color:#fff;border-color:#0f1f38;touch-action:manipulation">Details</button>'
+      +'<button class="btn blog" class="log-call-btn" data-id="'+p.id+'" data-action="showCard" onclick="event.stopPropagation();showCard(&#39;'+p.id+'&#39;)" ontouchend="event.stopPropagation();event.preventDefault();showCard(&#39;'+p.id+'&#39;)" style="touch-action:manipulation">Log Call</button>'
+      +'<button class="btn" data-id="'+p.id+'" data-action="showCard" onclick="event.stopPropagation();showCard(&#39;'+p.id+'&#39;)" ontouchend="event.stopPropagation();event.preventDefault();showCard(&#39;'+p.id+'&#39;)" style="background:#0f1f38;color:#fff;border-color:#0f1f38;touch-action:manipulation">Details</button>'
       +(last&&last.notes==='Skipped'
         ?'<button class="btn bskip" class="skip-btn" data-id="'+p.id+'" data-action="unskip" style="background:#ecfdf5;color:#059669;border-color:#6ee7b7">Unskip</button>'
         :'<button class="btn bskip" class="skip-btn" data-id="'+p.id+'" data-action="skip">Skip</button>')
@@ -3827,8 +3827,8 @@ function renderRList(){
       +'</div>'
       +'<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">'
         +(distTxt?'<div class="rdist">'+distTxt+'</div>':'')
-        +'<button data-action="route" data-id="'+p.id+'" ontouchend="event.stopPropagation();event.preventDefault();addToRoute('+p.id+')" onclick="event.stopPropagation();addToRoute('+p.id+')" style="'+addBtnStyle+'">'+(inR?'&#x2713; Added':'&#x2795; Add')+'</button>'
-        +'<button data-action="start" data-id="'+p.id+'" ontouchend="event.stopPropagation();event.preventDefault();setRouteAnchor('+p.id+')" onclick="event.stopPropagation();setRouteAnchor('+p.id+')" style="font-size:8px;padding:2px 5px;border:1px solid #7c3aed;border-radius:4px;background:#f5f3ff;color:#7c3aed;cursor:pointer;font-family:inherit">Start &#x1F4CD;</button>'
+        +'<button data-action="route" data-id="'+p.id+'" ontouchend="event.stopPropagation();event.preventDefault();addToRoute(&#39;'+p.id+'&#39;)" onclick="event.stopPropagation();addToRoute(&#39;'+p.id+'&#39;)" style="'+addBtnStyle+'">'+(inR?'&#x2713; Added':'&#x2795; Add')+'</button>'
+        +'<button data-action="start" data-id="'+p.id+'" ontouchend="event.stopPropagation();event.preventDefault();setRouteAnchor(&#39;'+p.id+'&#39;)" onclick="event.stopPropagation();setRouteAnchor(&#39;'+p.id+'&#39;)" style="font-size:8px;padding:2px 5px;border:1px solid #7c3aed;border-radius:4px;background:#f5f3ff;color:#7c3aed;cursor:pointer;font-family:inherit">Start &#x1F4CD;</button>'
       +'</div>'
       +'</div>';
   }).join('');
@@ -3872,10 +3872,10 @@ function renderMap(){
       '<b>'+p.name+'</b><br>'+p.city+' &bull; '+p.priority+'<br>'+dL(p.days_until)+
       (p.seats?' &bull; '+p.seats+' seats':'')+
       (p.monthly?' &bull; $'+p.monthly+'/mo':'')+
-      '<br><button onclick="addToRoute('+p.id+')" '+
+      '<br><button onclick="addToRoute(&#39;'+p.id+'&#39;)" '+
       'style="margin-top:4px;padding:3px 8px;border:none;border-radius:5px;background:'+col+';color:'+(p.priority==='WARM'?'#000':'#fff')+';font-size:10px;font-weight:700;cursor:pointer">'+
       (routeSet.has(p.id)?'Remove from Route':'+Route')+'</button> '+
-      '<button onclick="showCard('+p.id+')" '+
+      '<button onclick="showCard(&#39;'+p.id+'&#39;)" '+
       'style="margin-top:3px;padding:3px 8px;border:1px solid #333;border-radius:5px;background:#111;color:#fff;font-size:10px;cursor:pointer">Details</button>',
       {maxWidth:220}
     );
@@ -3917,7 +3917,7 @@ function renderDayRoute(){
             +'<div style="font-size:11px;font-weight:700;color:#065f46;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+p.name+'</div>'
             +'<div style="font-size:9px;color:#047857">'+p.city+' &bull; <span style="font-weight:700">'+p.priority+'</span></div>'
           +'</div>'
-          +'<button ontouchend="event.preventDefault();removeStop('+p.id+')" onclick="removeStop('+p.id+')" '
+          +'<button ontouchend="event.preventDefault();removeStop(&#39;'+p.id+'&#39;)" onclick="removeStop(&#39;'+p.id+'&#39;)" '
             +'style="font-size:14px;color:#dc2626;border:none;background:transparent;cursor:pointer;padding:0 4px;font-family:inherit;touch-action:manipulation;line-height:1">&#x2715;</button>'
           +'</div>';
       }).join('');
@@ -3977,8 +3977,8 @@ function renderDayRoute(){
         +'</div>'
       +'</div>'
       +'<div style="display:flex;flex-direction:column;gap:3px;flex-shrink:0">'
-        +'<button onclick="showCard('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();showCard('+p.id+')" style="font-size:9px;padding:3px 6px;border:1px solid var(--ora);border-radius:5px;background:#fff7f5;color:var(--ora);cursor:pointer;font-family:inherit;touch-action:manipulation">Details</button>'
-        +'<button onclick="removeStop('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();removeStop('+p.id+')" style="font-size:9px;padding:3px 6px;border:1px solid var(--brd);border-radius:5px;background:transparent;color:var(--sub);cursor:pointer;font-family:inherit;touch-action:manipulation">Remove</button>'
+        +'<button onclick="showCard(&#39;'+p.id+'&#39;)" ontouchend="event.stopPropagation();event.preventDefault();showCard(&#39;'+p.id+'&#39;)" style="font-size:9px;padding:3px 6px;border:1px solid var(--ora);border-radius:5px;background:#fff7f5;color:var(--ora);cursor:pointer;font-family:inherit;touch-action:manipulation">Details</button>'
+        +'<button onclick="removeStop(&#39;'+p.id+'&#39;)" ontouchend="event.stopPropagation();event.preventDefault();removeStop(&#39;'+p.id+'&#39;)" style="font-size:9px;padding:3px 6px;border:1px solid var(--brd);border-radius:5px;background:transparent;color:var(--sub);cursor:pointer;font-family:inherit;touch-action:manipulation">Remove</button>'
       +'</div>'
 
       // Machine profile + contract
@@ -5581,7 +5581,7 @@ function renderPipeline(){
       const oLabel=lc?(OI[normO(lc.outcome)]||OI[lc.outcome]||lc.outcome):(pipeStage==='won'?'Customer':'Lost');
       const notes=lc&&lc.notes?'<div style="font-size:9px;color:var(--sub);margin-top:2px">'+lc.notes.slice(0,60)+(lc.notes.length>60?'…':'')+'</div>':'';
       const dateStr=lc?'<span style="font-size:9px;color:var(--sub)">'+lc.date+'</span>':'';
-      html+='<div class="dc" data-id="'+p.id+'" style="padding:10px 12px;margin-bottom:6px;cursor:pointer" onclick="showCard('+p.id+')" ontouchend="event.preventDefault();showCard('+p.id+')">'
+      html+='<div class="dc" data-id="'+p.id+'" style="padding:10px 12px;margin-bottom:6px;cursor:pointer" onclick="showCard(&#39;'+p.id+'&#39;)" ontouchend="event.preventDefault();showCard(&#39;'+p.id+'&#39;)">'
         +'<div style="display:flex;justify-content:space-between;align-items:flex-start">'
         +'<div style="font-weight:700;font-size:12px;color:var(--navy);flex:1;margin-right:8px">'+p.name+'</div>'
         +'<span style="font-size:9px;padding:2px 7px;border-radius:20px;font-weight:700;white-space:nowrap;background:'+oColor+'18;color:'+oColor+'">'+oLabel+'</span>'
@@ -5630,7 +5630,7 @@ function renderPipeline(){
         :p.ice_risk_level==='Medium'
         ?'<span style="font-size:8px;padding:1px 5px;border-radius:8px;background:#fff7ed;color:#c2410c;margin-left:4px;font-weight:700">&#x1F9CA; Med</span>'
         :'';
-      html+='<div class="dc" data-id="'+p.id+'" style="padding:10px 12px;margin-bottom:6px;cursor:pointer" onclick="showCard('+p.id+')" ontouchend="event.preventDefault();showCard('+p.id+')">'
+      html+='<div class="dc" data-id="'+p.id+'" style="padding:10px 12px;margin-bottom:6px;cursor:pointer" onclick="showCard(&#39;'+p.id+'&#39;)" ontouchend="event.preventDefault();showCard(&#39;'+p.id+'&#39;)">'
         +'<div style="display:flex;justify-content:space-between;align-items:flex-start">'
         +'<div style="font-weight:700;font-size:12px;color:var(--navy);flex:1;margin-right:8px">'+p.name+riskBadge+'</div>'
         +'<span style="font-size:9px;padding:2px 7px;border-radius:20px;font-weight:700;white-space:nowrap;background:'+oColor+'18;color:'+oColor+'">'+oLabel+'</span>'
@@ -5726,8 +5726,8 @@ function rCust(){
         +'</div>'
         +serviceDueH
         +'<div style="display:flex;gap:5px;margin-top:3px">'
-          +'<button onclick="event.stopPropagation();emailComplianceReport('+p.id+',this)" ontouchend="event.stopPropagation();event.preventDefault();emailComplianceReport('+p.id+',this)" style="flex:1;font-size:9px;padding:5px;border:1px solid #0a84ff;border-radius:6px;background:#eff6ff;color:#0a84ff;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E7; Email Report</button>'
-          +(c.annual_schedule&&c.annual_schedule.length?'<button onclick="event.stopPropagation();generateICS('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();generateICS('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:1px solid #059669;border-radius:6px;background:#ecfdf5;color:#059669;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4C5; Export Schedule</button>':'')
+          +'<button onclick="event.stopPropagation();emailComplianceReport(&#39;'+p.id+'&#39;,this)" ontouchend="event.stopPropagation();event.preventDefault();emailComplianceReport(&#39;'+p.id+'&#39;,this)" style="flex:1;font-size:9px;padding:5px;border:1px solid #0a84ff;border-radius:6px;background:#eff6ff;color:#0a84ff;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E7; Email Report</button>'
+          +(c.annual_schedule&&c.annual_schedule.length?'<button onclick="event.stopPropagation();generateICS(&#39;'+p.id+'&#39;)" ontouchend="event.stopPropagation();event.preventDefault();generateICS(&#39;'+p.id+'&#39;)" style="flex:1;font-size:9px;padding:5px;border:1px solid #059669;border-radius:6px;background:#ecfdf5;color:#059669;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4C5; Export Schedule</button>':'')
         +'</div>'
       +'</div>'
       // Action buttons
@@ -5740,7 +5740,7 @@ function rCust(){
           ?'<a href="'+c.square_url+'" target="_blank" onclick="event.stopPropagation()" style="flex:1;font-size:9px;padding:5px;border:1px solid #00c058;border-radius:6px;background:#f0fff4;color:#00c058;cursor:pointer;font-family:inherit;text-decoration:none;text-align:center;display:flex;align-items:center;justify-content:center">Square &#x2197;</a>'
           :'')
         +(c.status!=='churned'
-          ?'<button onclick="event.stopPropagation();if(confirm(\'Mark as churned?\'))churnClient('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();if(confirm(\'Mark as churned?\'))churnClient('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:1px solid #dc2626;border-radius:6px;background:#fef2f2;color:#dc2626;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x274C; Churn</button>'
+          ?'<button onclick="event.stopPropagation();if(confirm(\'Mark as churned?\'))churnClient(&#39;'+p.id+'&#39;)" ontouchend="event.stopPropagation();event.preventDefault();if(confirm(\'Mark as churned?\'))churnClient(&#39;'+p.id+'&#39;)" style="flex:1;font-size:9px;padding:5px;border:1px solid #dc2626;border-radius:6px;background:#fef2f2;color:#dc2626;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x274C; Churn</button>'
           :'<div style="flex:1;font-size:9px;padding:5px;border:1px solid #dc2626;border-radius:6px;background:#fef2f2;color:#dc2626;text-align:center">Churned'+(c.churn_date?' '+c.churn_date.slice(0,10):'')+'</div>')
       +'</div>'
       // URL link fields
@@ -6055,7 +6055,7 @@ function renderTodaysPlan(){
     var col=PRI_COL[p.priority]||'#64748b';
     var riskH=p.ice_confirmed_dbpr?'<span style="font-size:9px;color:#6d28d9"> &#x1F575;&#xFE0F; CONF</span>':p.ice_risk_level==='High'?'<span style="font-size:9px;color:#dc2626"> &#x1F9CA; H</span>':p.ice_risk_level==='Medium'?'<span style="font-size:9px;color:#d97706"> &#x1F9CA; M</span>':'';
     var daysH=p._daysSince<999?'<span style="font-size:9px;color:#94a3b8"> &#x2022; '+p._daysSince+'d ago</span>':'';
-    return '<div onclick="showCard('+p.id+')" ontouchend="event.preventDefault();showCard('+p.id+')" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid #e2e8f0;cursor:pointer;touch-action:manipulation">'
+    return '<div onclick="showCard(&#39;'+p.id+'&#39;)" ontouchend="event.preventDefault();showCard(&#39;'+p.id+'&#39;)" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid #e2e8f0;cursor:pointer;touch-action:manipulation">'
       +'<div style="font-size:11px;font-weight:800;color:#94a3b8;width:16px;flex-shrink:0">'+(i+1)+'.</div>'
       +'<div style="flex:1;min-width:0">'
         +'<div style="font-size:11px;font-weight:700;color:#0f1f38;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+p.name+'</div>'
@@ -6887,7 +6887,7 @@ function exportSchedulePDF(id){
     +'Service complies with FDA Food Code 3-502.12</div>'
     +'<br><div style="display:flex;gap:8px;margin-top:8px">'
     +'<button onclick="window.print()" style="padding:10px 20px;background:#1e3a5f;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px">Print / Save PDF</button>'
-    +'<button onclick="window.opener&&window.opener.emailServiceSchedule&&window.opener.emailServiceSchedule('+id+')" style="padding:10px 20px;background:#eff6ff;color:#0a84ff;border:2px solid #0a84ff;border-radius:6px;cursor:pointer;font-size:12px">&#x1F4E7; Email to Client</button>'
+    +'<button onclick="window.opener&&window.opener.emailServiceSchedule&&window.opener.emailServiceSchedule(&#39;'+id+'&#39;)" style="padding:10px 20px;background:#eff6ff;color:#0a84ff;border:2px solid #0a84ff;border-radius:6px;cursor:pointer;font-size:12px">&#x1F4E7; Email to Client</button>'
     +'<button onclick="window.close()" style="padding:10px 20px;background:#fff;color:#1e3a5f;border:2px solid #1e3a5f;border-radius:6px;cursor:pointer;font-size:12px">&#x2190; Close</button>'
     +'</div>'
     +'</body></html>');
@@ -7213,7 +7213,7 @@ function renderAtRisk(){
       return '<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-top:1px solid #fca5a5;font-size:10px">'
         +'<div><div style="font-weight:600;color:var(--navy)">'+p.name+'</div>'
         +'<div style="color:#dc2626;font-size:9px">'+msg+'</div></div>'
-        +'<button onclick="navigateToClientService('+p.id+')" ontouchend="event.preventDefault();navigateToClientService('+p.id+')" style="font-size:9px;padding:3px 7px;border:1px solid #dc2626;border-radius:5px;background:#fef2f2;color:#dc2626;cursor:pointer;font-family:inherit;touch-action:manipulation">Fix</button>'
+        +'<button onclick="navigateToClientService(&#39;'+p.id+'&#39;)" ontouchend="event.preventDefault();navigateToClientService(&#39;'+p.id+'&#39;)" style="font-size:9px;padding:3px 7px;border:1px solid #dc2626;border-radius:5px;background:#fef2f2;color:#dc2626;cursor:pointer;font-family:inherit;touch-action:manipulation">Fix</button>'
         +'</div>';
     }).join('')
     +'</div>';
@@ -7301,12 +7301,12 @@ function renderServiceCal(){
       // Actions
       +'<div style="display:flex;gap:5px;flex-wrap:wrap">'
         +(c.status==='customer_supplemental_only'
-          ?'<button onclick="logSupplementalService('+p.id+')" ontouchend="event.preventDefault();logSupplementalService('+p.id+')" style="flex:2;min-width:120px;padding:7px;border:none;border-radius:7px;background:#7c3aed;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Log Supplemental Visit</button>'
-          :'<button onclick="openServiceLog('+p.id+')" ontouchend="event.preventDefault();openServiceLog('+p.id+')" style="flex:2;min-width:120px;padding:7px;border:none;border-radius:7px;background:#059669;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Log Service Visit</button>')
-        +'<button onclick="openEscalation('+p.id+')" ontouchend="event.preventDefault();openEscalation('+p.id+')" style="flex:1;min-width:80px;padding:7px;border:1px solid #d97706;border-radius:7px;background:#fffbeb;color:#d97706;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x26A0; Escalate</button>'
-        +'<button onclick="reschedule('+p.id+')" style="flex:1;padding:7px;border:1px solid var(--brd);border-radius:7px;background:var(--surf);color:var(--sub);font-size:10px;cursor:pointer;font-family:inherit">Reschedule</button>'
-        +(c.annual_schedule?'<button onclick="exportSchedulePDF('+p.id+')" style="flex:1;padding:7px;border:1px solid var(--blu);border-radius:7px;background:#eff6ff;color:var(--blu);font-size:10px;cursor:pointer;font-family:inherit">&#x1F4C5; Schedule</button>':'')
-        +(c.annual_schedule&&c.annual_schedule.length?'<button onclick="emailServiceSchedule('+p.id+')" style="flex:1;padding:7px;border:1px solid #7c3aed;border-radius:7px;background:#f5f3ff;color:#7c3aed;font-size:10px;cursor:pointer;font-family:inherit">&#x1F4C5; Email Schedule</button>':'')
+          ?'<button onclick="logSupplementalService(&#39;'+p.id+'&#39;)" ontouchend="event.preventDefault();logSupplementalService(&#39;'+p.id+'&#39;)" style="flex:2;min-width:120px;padding:7px;border:none;border-radius:7px;background:#7c3aed;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Log Supplemental Visit</button>'
+          :'<button onclick="openServiceLog(&#39;'+p.id+'&#39;)" ontouchend="event.preventDefault();openServiceLog(&#39;'+p.id+'&#39;)" style="flex:2;min-width:120px;padding:7px;border:none;border-radius:7px;background:#059669;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Log Service Visit</button>')
+        +'<button onclick="openEscalation(&#39;'+p.id+'&#39;)" ontouchend="event.preventDefault();openEscalation(&#39;'+p.id+'&#39;)" style="flex:1;min-width:80px;padding:7px;border:1px solid #d97706;border-radius:7px;background:#fffbeb;color:#d97706;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x26A0; Escalate</button>'
+        +'<button onclick="reschedule(&#39;'+p.id+'&#39;)" style="flex:1;padding:7px;border:1px solid var(--brd);border-radius:7px;background:var(--surf);color:var(--sub);font-size:10px;cursor:pointer;font-family:inherit">Reschedule</button>'
+        +(c.annual_schedule?'<button onclick="exportSchedulePDF(&#39;'+p.id+'&#39;)" style="flex:1;padding:7px;border:1px solid var(--blu);border-radius:7px;background:#eff6ff;color:var(--blu);font-size:10px;cursor:pointer;font-family:inherit">&#x1F4C5; Schedule</button>':'')
+        +(c.annual_schedule&&c.annual_schedule.length?'<button onclick="emailServiceSchedule(&#39;'+p.id+'&#39;)" style="flex:1;padding:7px;border:1px solid #7c3aed;border-radius:7px;background:#f5f3ff;color:#7c3aed;font-size:10px;cursor:pointer;font-family:inherit">&#x1F4C5; Email Schedule</button>':'')
         +(p.phone?'<a href="tel:'+p.phone.replace(/\s/g,'')+'" style="flex:1;padding:7px;border:1px solid var(--blu);border-radius:7px;background:#eff6ff;color:var(--blu);font-size:10px;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;font-family:inherit">Call</a>':'')
       +'</div>'
       +buildRecentServiceHistory(p,c)
@@ -7536,7 +7536,7 @@ function openServiceLog(id){
 
     // Buttons
     +'<div style="display:flex;gap:6px">'
-      +'<button onclick="submitServiceLog('+id+')" ontouchend="event.preventDefault();submitServiceLog('+id+')" style="flex:2;padding:10px;border:none;border-radius:8px;background:#059669;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Save Service Visit</button>'
+      +'<button onclick="submitServiceLog(&#39;'+id+'&#39;)" ontouchend="event.preventDefault();submitServiceLog(&#39;'+id+'&#39;)" style="flex:2;padding:10px;border:none;border-radius:8px;background:#059669;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Save Service Visit</button>'
       +'<button onclick="closeSvcLog()" ontouchend="event.preventDefault();closeSvcLog()" style="flex:1;padding:10px;border:1px solid var(--brd);border-radius:8px;background:var(--surf);color:var(--sub);font-size:11px;cursor:pointer;font-family:inherit">Cancel</button>'
     +'</div>'
     +'</div>';
@@ -8314,7 +8314,7 @@ function buildServiceRoute(){
           +'<div style="font-size:9px;color:#d97706">Next due: '+(c.next_service||'not set')+'</div>'
           +(p.phone?'<a href="tel:'+p.phone.replace(/\s/g,'')+'" style="font-size:9px;color:var(--blu)">'+p.phone+'</a>':'')
         +'</div>'
-        +'<button onclick="logServiceFromCal('+p.id+')" style="font-size:9px;padding:4px 7px;border:none;border-radius:6px;background:#059669;color:#fff;cursor:pointer;font-family:inherit;flex-shrink:0">Done</button>'
+        +'<button onclick="logServiceFromCal(&#39;'+p.id+'&#39;)" style="font-size:9px;padding:4px 7px;border:none;border-radius:6px;background:#059669;color:#fff;cursor:pointer;font-family:inherit;flex-shrink:0">Done</button>'
         +'</div>';
     }).join('');
 
@@ -9387,7 +9387,7 @@ function renderContacts(id){
       +'<div style="font-size:9px;color:var(--sub)">'+( ROLE_LABELS[c.role]||c.role)+(c.phone?' &bull; '+c.phone:'')+'</div>'
     +'</div>'
     +(c.phone?'<a href="tel:'+c.phone.replace(/\s/g,'')+'" style="font-size:9px;padding:3px 7px;border:1px solid var(--blu);border-radius:5px;color:var(--blu);text-decoration:none" onclick="event.stopPropagation()">Call</a>':'')
-    +'<button onclick="deleteContact('+id+','+i+')" style="font-size:9px;padding:3px 6px;border:1px solid var(--brd);border-radius:5px;background:transparent;color:var(--sub);cursor:pointer">✕</button>'
+    +'<button onclick="deleteContact(&#39;'+id+'&#39;,'+i+')" style="font-size:9px;padding:3px 6px;border:1px solid var(--brd);border-radius:5px;background:transparent;color:var(--sub);cursor:pointer">✕</button>'
     +'</div>'
   ).join('');
 }
