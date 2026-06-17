@@ -79,7 +79,7 @@ Deno.serve(async (req) => {
             currency: 'usd',
             product_data: {
               name: 'Supplemental Services Package',
-              description: 'Quarterly reach-in inspection, compliance support',
+              description: 'Soda lines & nozzle cleaning, exterior & splash zone wipe-down, reach-in gaskets & door seals — quarterly',
             },
             unit_amount: 79 * 100,
             recurring: { interval: 'month' },
@@ -252,7 +252,7 @@ Deno.serve(async (req) => {
             currency: 'usd',
             product_data: {
               name: 'Supplemental Services Package',
-              description: 'Quarterly reach-in inspection, compliance support',
+              description: 'Soda lines & nozzle cleaning, exterior & splash zone wipe-down, reach-in gaskets & door seals — quarterly',
             },
             unit_amount: 79 * 100,
             recurring: { interval: 'month' },
