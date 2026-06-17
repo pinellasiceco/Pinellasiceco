@@ -1905,6 +1905,9 @@ function scOpenClose(p,bg){
     +'<div style="text-align:center;margin-bottom:4px">'
     +'<button id="co-onetime-link" onclick="coUseOnetime()" ontouchend="event.preventDefault();coUseOnetime()" style="border:none;background:transparent;font-size:10px;color:#94a3b8;cursor:pointer;font-family:inherit;text-decoration:underline;touch-action:manipulation">Use $'+onetimePrice+' one-time deep clean instead</button>'
     +'</div>'
+    +'<div style="text-align:center;margin-bottom:4px">'
+    +'<button onclick="markSupplementalWon()" ontouchend="event.preventDefault();markSupplementalWon()" style="border:none;background:transparent;font-size:10px;color:#7c3aed;cursor:pointer;font-family:inherit;text-decoration:underline;touch-action:manipulation">&#x1F4CB; Supplemental Package instead ($79/mo &#x2014; no ice machine clean)</button>'
+    +'</div>'
     +'<button id="co-cancel" onclick="closeOverlayById(\'close-overlay\')" ontouchend="event.preventDefault();closeOverlayById(\'close-overlay\')" style="width:100%;padding:8px;border:none;border-radius:8px;background:transparent;color:#94a3b8;font-size:11px;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
     +'</div>';
   document.body.appendChild(el);
@@ -5316,6 +5319,7 @@ function markSupplementalWon(){
     if(chk.error||!chk.data){toast('&#x26A0; Cloud save may not have gone through &#x2014; tap sync dot to retry');}
   },2500);
   toast('Supplemental Package won! First service in 90 days.');
+  var _co=document.getElementById('close-overlay');if(_co)_co.remove();
   document.getElementById('mbg').classList.remove('on');
   sw('customers');
 }
