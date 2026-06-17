@@ -6713,7 +6713,7 @@ function showCard(id){
       +'<div style="display:flex;gap:6px;align-items:center;flex-shrink:0;margin-left:10px">'
     +(function(){var _ir=routeSet.has(parseInt(p.id));return '<button id="sc-route-btn" style="border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;font-family:inherit;-webkit-tap-highlight-color:transparent;'+(_ir?'background:#ecfdf5;color:#059669;border:1px solid #6ee7b7':'background:#f0fdf4;color:#059669;border:none')+'">'+(_ir?'&#x2713; On Route':'&#x1F4CD; Route')+'</button>';})()
 
-    +'<button id="sc-report-btn" style="border:none;background:#fff7ed;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:#ea580c;cursor:pointer;touch-action:manipulation;font-family:inherit;-webkit-tap-highlight-color:transparent">&#x1F4CB; Report</button>'
+    +(p.status!=='customer_supplemental_only'?'<button id="sc-report-btn" style="border:none;background:#fff7ed;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:#ea580c;cursor:pointer;touch-action:manipulation;font-family:inherit;-webkit-tap-highlight-color:transparent">&#x1F4CB; Report</button>':'')
     +'<button id="sc-close" style="border:none;background:#f1f5f9;border-radius:50%;width:34px;height:34px;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;touch-action:manipulation;color:#475569;font-family:inherit">&#x2715;</button>'
     +'</div>'
     +'</div>'
@@ -7939,7 +7939,7 @@ function rCust(){
         +'</div>'
         +serviceDueH
         +'<div style="display:flex;gap:5px;margin-top:3px">'
-          +'<button onclick="event.stopPropagation();emailComplianceReport(&#39;'+p.id+'&#39;,this)" ontouchend="event.stopPropagation();event.preventDefault();emailComplianceReport(&#39;'+p.id+'&#39;,this)" style="flex:1;font-size:9px;padding:5px;border:1px solid #0a84ff;border-radius:6px;background:#eff6ff;color:#0a84ff;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E7; Email Report</button>'
+          +(p.status!=='customer_supplemental_only'?'<button onclick="event.stopPropagation();emailComplianceReport(&#39;'+p.id+'&#39;,this)" ontouchend="event.stopPropagation();event.preventDefault();emailComplianceReport(&#39;'+p.id+'&#39;,this)" style="flex:1;font-size:9px;padding:5px;border:1px solid #0a84ff;border-radius:6px;background:#eff6ff;color:#0a84ff;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E7; Email Report</button>':'')
           +(c.annual_schedule&&c.annual_schedule.length?'<button onclick="event.stopPropagation();generateICS(&#39;'+p.id+'&#39;)" ontouchend="event.stopPropagation();event.preventDefault();generateICS(&#39;'+p.id+'&#39;)" style="flex:1;font-size:9px;padding:5px;border:1px solid #059669;border-radius:6px;background:#ecfdf5;color:#059669;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4C5; Export Schedule</button>':'')
         +'</div>'
       +'</div>'
@@ -9336,6 +9336,7 @@ function openVisitReport(pid,visitIndex){
   var p=P.find(function(x){return x.id==pid;});
   var c=customers[pid]||{};
   if(!p){toast('Client not found');return;}
+  if(p.status==='customer_supplemental_only'){toast('Ice machine report not available for supplemental-only customers');return;}
   var history=(c.service_history||[]).slice().sort(function(a,b){return new Date(b.date)-new Date(a.date);});
   var visit=history[visitIndex];
   if(!visit){toast('Visit data not found');return;}
@@ -11356,6 +11357,7 @@ async function emailServiceReport(id){
 function emailComplianceReport(id,btn){
   var p=P.find(function(x){return x.id===id;});
   if(!p){toast('Prospect not found');return;}
+  if(p.status==='customer_supplemental_only'){toast('Ice machine report not available for supplemental-only customers');return;}
   var c=customers[id]||{};
   var to=(c.email||'').trim();
   if(!to){toast('No email saved for this client — add it in Link Records');return;}
