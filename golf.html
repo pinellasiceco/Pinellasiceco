@@ -33,21 +33,122 @@ body {
 .hero-content { padding: 0 24px; margin-top: -18px; position: relative; z-index: 2; }
 .hero-eyebrow { font-family: 'Syne Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ice-light); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
 .hero-eyebrow::before { content: ''; width: 16px; height: 1px; background: var(--gold); }
-.hero-headline { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(26px, 6vw, 40px); color: #fff; line-height: 1.08; margin-bottom: 16px; max-width: 480px; }
+.hero-headline { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(28px, 6vw, 40px); color: #fff; line-height: 1.22; letter-spacing: 0.005em; margin-bottom: 16px; max-width: 480px; }
 .hero-headline em { font-style: normal; background: linear-gradient(90deg, var(--gold-light), var(--gold)); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .hero-sub { font-size: 14.5px; color: rgba(255,255,255,0.62); line-height: 1.65; max-width: 440px; margin-bottom: 24px; }
 .hero-proof { display: inline-flex; align-items: center; gap: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 14px 20px; }
-.hero-proof-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 34px; color: var(--gold-light); line-height: 1; }
+.hero-proof-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 34px; color: var(--gold-light); line-height: 1.1; letter-spacing: 0.01em; }
 .hero-proof-text { font-size: 11.5px; color: rgba(255,255,255,0.55); line-height: 1.45; max-width: 160px; }
 .hero-proof-text strong { color: rgba(255,255,255,0.85); font-weight: 600; }
 main { max-width: 660px; margin: 0 auto; padding: 36px 22px 60px; }
 .section-label { font-family: 'Syne Mono', monospace; font-size: 9.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink2); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
 .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.nineteenth {
+  background: linear-gradient(150deg, #16321f 0%, #1f4628 45%, #2c5236 100%);
+  border-radius: 18px;
+  padding: 30px 24px 26px;
+  margin-bottom: 36px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 18px 40px -16px rgba(26,46,30,0.5);
+}
+.nineteenth::before {
+  content: '';
+  position: absolute;
+  top: -70px; right: -50px;
+  width: 240px; height: 240px;
+  background: radial-gradient(circle, rgba(224,181,99,0.18), transparent 70%);
+}
+.nineteenth-flagmark {
+  position: absolute;
+  right: 14px;
+  bottom: 8px;
+  width: 92px;
+  height: 92px;
+  opacity: 0.1;
+}
+.nineteenth-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: 'Syne Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  margin-bottom: 12px;
+  position: relative;
+}
+.nineteenth-eyebrow svg { width: 14px; height: 14px; flex-shrink: 0; }
+.nineteenth h2 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(26px, 5.5vw, 32px);
+  color: #fff;
+  line-height: 1.25;
+  letter-spacing: 0.005em;
+  margin-bottom: 12px;
+  position: relative;
+}
+.nineteenth-tag {
+  font-size: 14px;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.6;
+  max-width: 480px;
+  margin-bottom: 24px;
+  position: relative;
+}
+.nineteenth-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 18px;
+  position: relative;
+}
+.nineteenth-stat {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 12px;
+  padding: 16px 10px 14px;
+  text-align: center;
+}
+.nineteenth-stat .n {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(22px, 5.5vw, 30px);
+  color: var(--gold-light);
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  display: block;
+}
+.nineteenth-stat .u {
+  font-family: 'Syne Mono', monospace;
+  font-size: 8.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  margin-top: 6px;
+  display: block;
+  line-height: 1.3;
+}
+.nineteenth-footnote {
+  font-size: 11px;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.55;
+  position: relative;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+@media (max-width: 420px) {
+  .nineteenth-stats { grid-template-columns: 1fr; gap: 8px; }
+  .nineteenth-stat { display: flex; align-items: baseline; gap: 10px; text-align: left; padding: 12px 16px; }
+  .nineteenth-stat .u { margin-top: 0; }
+}
 .problem-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 36px; }
 .problem-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px; position: relative; overflow: hidden; }
 .problem-card.red::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #9b1c1c; }
 .problem-card.gold::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--gold); }
-.problem-card .num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 30px; color: var(--navy); line-height: 1; margin: 6px 0 8px; }
+.problem-card .num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 30px; color: var(--navy); line-height: 1.1; letter-spacing: 0.01em; margin: 6px 0 8px; }
 .problem-card .num.red { color: #9b1c1c; }
 .problem-card .num.gold { color: var(--gold); }
 .problem-card .lbl { font-family: 'Syne Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink2); }
@@ -78,7 +179,7 @@ main { max-width: 660px; margin: 0 auto; padding: 36px 22px 60px; }
 .pricing-header { background: var(--navy); padding: 22px 24px; position: relative; overflow: hidden; }
 .pricing-header::before { content: ''; position: absolute; top: -40px; right: -20px; width: 140px; height: 140px; background: radial-gradient(circle, rgba(200,151,58,0.14), transparent 70%); }
 .pricing-header-top { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; position: relative; }
-.pricing-header .price { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 32px; color: #fff; }
+.pricing-header .price { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 32px; color: #fff; line-height: 1.1; letter-spacing: 0.01em; }
 .pricing-header .price-detail { font-size: 13px; color: rgba(255,255,255,0.55); }
 .pricing-header-sub { font-size: 11.5px; color: rgba(255,255,255,0.45); position: relative; }
 .pricing-body { padding: 18px 24px 22px; }
@@ -105,6 +206,9 @@ main { max-width: 660px; margin: 0 auto; padding: 36px 22px 60px; }
 .btn-secondary { background: transparent; color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.25); }
 footer { text-align: center; padding: 24px 20px 40px; font-family: 'Syne Mono', monospace; font-size: 9px; color: var(--ink2); letter-spacing: 0.06em; }
 @media (max-width: 420px) { .problem-row { grid-template-columns: 1fr; } .deliverables { grid-template-columns: 1fr; } }
+.deliverables.three { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 640px) { .deliverables.three { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 420px) { .deliverables.three { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -157,6 +261,35 @@ footer { text-align: center; padding: 24px 20px 40px; font-family: 'Syne Mono', 
 </div>
 
 <main>
+
+  <div class="nineteenth">
+    <svg class="nineteenth-flagmark" viewBox="0 0 92 92" xmlns="http://www.w3.org/2000/svg">
+      <line x1="26" y1="10" x2="26" y2="82" stroke="#e0b563" stroke-width="3"/>
+      <path d="M26,10 L26,32 L66,21 Z" fill="#e0b563"/>
+      <ellipse cx="26" cy="84" rx="22" ry="5" fill="#e0b563" opacity="0.4"/>
+    </svg>
+    <div class="nineteenth-eyebrow">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" fill="#e0b563"/><circle cx="9" cy="9" r="1" fill="#1f4628"/><circle cx="14" cy="8" r="1" fill="#1f4628"/><circle cx="16" cy="13" r="1" fill="#1f4628"/><circle cx="11" cy="14" r="1" fill="#1f4628"/><circle cx="8" cy="13" r="1" fill="#1f4628"/></svg>
+      19th Hole Insurance
+    </div>
+    <h2>The 19th hole never runs dry.</h2>
+    <p class="nineteenth-tag">A clubhouse with an empty ice well on a Saturday tournament is a problem your members remember. If your machine goes down, we&#39;re already on the way &mdash; before the front nine is finished.</p>
+    <div class="nineteenth-stats">
+      <div class="nineteenth-stat">
+        <span class="n">2 HR</span>
+        <span class="u">Response Time</span>
+      </div>
+      <div class="nineteenth-stat">
+        <span class="n">120 LB</span>
+        <span class="u">Delivered Daily</span>
+      </div>
+      <div class="nineteenth-stat">
+        <span class="n">3 DAY</span>
+        <span class="u">Covered, No Charge</span>
+      </div>
+    </div>
+    <p class="nineteenth-footnote">Included with every plan, no separate enrollment. Covers up to 2 breakdown incidents per 365 days &mdash; full terms available on request.</p>
+  </div>
 
   <div class="section-label">Why this matters at your club</div>
   <div class="problem-row">
@@ -221,7 +354,7 @@ footer { text-align: center; padding: 24px 20px 40px; font-family: 'Syne Mono', 
   </div>
 
   <div class="section-label">What you receive every visit</div>
-  <div class="deliverables">
+  <div class="deliverables three">
     <div class="deliverable">
       <div class="deliverable-icon">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 3h9l5 5v13a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="#3a8ec9" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 12h6M9 16h6M9 8h2" stroke="#3a8ec9" stroke-width="1.7" stroke-linecap="round"/></svg>
@@ -242,13 +375,6 @@ footer { text-align: center; padding: 24px 20px 40px; font-family: 'Syne Mono', 
       </div>
       <h3>Inspection history</h3>
       <p>We review your DBPR record before every visit &mdash; no surprises at your next inspection.</p>
-    </div>
-    <div class="deliverable">
-      <div class="deliverable-icon">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L12 14M12 14C9.5 14 8 16 8 18.5V22H16V18.5C16 16 14.5 14 12 14Z" stroke="#3a8ec9" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="6" r="2.2" stroke="#3a8ec9" stroke-width="1.7"/></svg>
-      </div>
-      <h3>Emergency ice delivery</h3>
-      <p>Machine breaks down? We deliver up to 120 lbs/day for 3 days, within 2 hours of your call &mdash; at no charge.</p>
     </div>
   </div>
 
