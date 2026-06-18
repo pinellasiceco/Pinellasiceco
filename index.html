@@ -3226,8 +3226,8 @@ function cardHTML(p){
     +'</div>'
     +lastH
     +'<div class="cacts">'
-      +'<button class="btn blog" class="log-call-btn" data-id="'+p.id+'" data-action="showCard" onclick="event.stopPropagation();showCard('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();showCard('+p.id+')" style="touch-action:manipulation">Log Call</button>'
-      +'<button class="btn" data-id="'+p.id+'" data-action="showCard" onclick="event.stopPropagation();showCard('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();showCard('+p.id+')" style="background:#0f1f38;color:#fff;border-color:#0f1f38;touch-action:manipulation">Details</button>'
+      +'<button class="btn blog" class="log-call-btn" data-id="'+p.id+'" data-action="showCard" onclick="event.stopPropagation();showCard(&#39;'+p.id+'&#39;)" ontouchend="event.stopPropagation();event.preventDefault();showCard(&#39;'+p.id+'&#39;)" style="touch-action:manipulation">Log Call</button>'
+      +'<button class="btn" data-id="'+p.id+'" data-action="showCard" onclick="event.stopPropagation();showCard(&#39;'+p.id+'&#39;)" ontouchend="event.stopPropagation();event.preventDefault();showCard(&#39;'+p.id+'&#39;)" style="background:#0f1f38;color:#fff;border-color:#0f1f38;touch-action:manipulation">Details</button>'
       +(last&&last.notes==='Skipped'
         ?'<button class="btn bskip" class="skip-btn" data-id="'+p.id+'" data-action="unskip" style="background:#ecfdf5;color:#059669;border-color:#6ee7b7">Unskip</button>'
         :'<button class="btn bskip" class="skip-btn" data-id="'+p.id+'" data-action="skip">Skip</button>')
@@ -3287,7 +3287,7 @@ function attachGridListeners(grid){
     const card=e.target.closest('[data-id]');
     if(card&&!e.target.closest('a')&&!e.target.closest('input')){
       e.preventDefault();
-      const id=parseInt(card.dataset.id||'0');
+      const id=card.dataset.id;
       if(id)openM(id);
     }
   },false);
@@ -3827,8 +3827,8 @@ function renderRList(){
       +'</div>'
       +'<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">'
         +(distTxt?'<div class="rdist">'+distTxt+'</div>':'')
-        +'<button data-action="route" data-id="'+p.id+'" ontouchend="event.stopPropagation();event.preventDefault();addToRoute('+p.id+')" onclick="event.stopPropagation();addToRoute('+p.id+')" style="'+addBtnStyle+'">'+(inR?'&#x2713; Added':'&#x2795; Add')+'</button>'
-        +'<button data-action="start" data-id="'+p.id+'" ontouchend="event.stopPropagation();event.preventDefault();setRouteAnchor('+p.id+')" onclick="event.stopPropagation();setRouteAnchor('+p.id+')" style="font-size:8px;padding:2px 5px;border:1px solid #7c3aed;border-radius:4px;background:#f5f3ff;color:#7c3aed;cursor:pointer;font-family:inherit">Start &#x1F4CD;</button>'
+        +'<button data-action="route" data-id="'+p.id+'" ontouchend="event.stopPropagation();event.preventDefault();addToRoute(&#39;'+p.id+'&#39;)" onclick="event.stopPropagation();addToRoute(&#39;'+p.id+'&#39;)" style="'+addBtnStyle+'">'+(inR?'&#x2713; Added':'&#x2795; Add')+'</button>'
+        +'<button data-action="start" data-id="'+p.id+'" ontouchend="event.stopPropagation();event.preventDefault();setRouteAnchor(&#39;'+p.id+'&#39;)" onclick="event.stopPropagation();setRouteAnchor(&#39;'+p.id+'&#39;)" style="font-size:8px;padding:2px 5px;border:1px solid #7c3aed;border-radius:4px;background:#f5f3ff;color:#7c3aed;cursor:pointer;font-family:inherit">Start &#x1F4CD;</button>'
       +'</div>'
       +'</div>';
   }).join('');
@@ -3872,10 +3872,10 @@ function renderMap(){
       '<b>'+p.name+'</b><br>'+p.city+' &bull; '+p.priority+'<br>'+dL(p.days_until)+
       (p.seats?' &bull; '+p.seats+' seats':'')+
       (p.monthly?' &bull; $'+p.monthly+'/mo':'')+
-      '<br><button onclick="addToRoute('+p.id+')" '+
+      '<br><button onclick="addToRoute(&#39;'+p.id+'&#39;)" '+
       'style="margin-top:4px;padding:3px 8px;border:none;border-radius:5px;background:'+col+';color:'+(p.priority==='WARM'?'#000':'#fff')+';font-size:10px;font-weight:700;cursor:pointer">'+
       (routeSet.has(p.id)?'Remove from Route':'+Route')+'</button> '+
-      '<button onclick="showCard('+p.id+')" '+
+      '<button onclick="showCard(&#39;'+p.id+'&#39;)" '+
       'style="margin-top:3px;padding:3px 8px;border:1px solid #333;border-radius:5px;background:#111;color:#fff;font-size:10px;cursor:pointer">Details</button>',
       {maxWidth:220}
     );
@@ -3917,7 +3917,7 @@ function renderDayRoute(){
             +'<div style="font-size:11px;font-weight:700;color:#065f46;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+p.name+'</div>'
             +'<div style="font-size:9px;color:#047857">'+p.city+' &bull; <span style="font-weight:700">'+p.priority+'</span></div>'
           +'</div>'
-          +'<button ontouchend="event.preventDefault();removeStop('+p.id+')" onclick="removeStop('+p.id+')" '
+          +'<button ontouchend="event.preventDefault();removeStop(&#39;'+p.id+'&#39;)" onclick="removeStop(&#39;'+p.id+'&#39;)" '
             +'style="font-size:14px;color:#dc2626;border:none;background:transparent;cursor:pointer;padding:0 4px;font-family:inherit;touch-action:manipulation;line-height:1">&#x2715;</button>'
           +'</div>';
       }).join('');
@@ -3977,8 +3977,8 @@ function renderDayRoute(){
         +'</div>'
       +'</div>'
       +'<div style="display:flex;flex-direction:column;gap:3px;flex-shrink:0">'
-        +'<button onclick="showCard('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();showCard('+p.id+')" style="font-size:9px;padding:3px 6px;border:1px solid var(--ora);border-radius:5px;background:#fff7f5;color:var(--ora);cursor:pointer;font-family:inherit;touch-action:manipulation">Details</button>'
-        +'<button onclick="removeStop('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();removeStop('+p.id+')" style="font-size:9px;padding:3px 6px;border:1px solid var(--brd);border-radius:5px;background:transparent;color:var(--sub);cursor:pointer;font-family:inherit;touch-action:manipulation">Remove</button>'
+        +'<button onclick="showCard(&#39;'+p.id+'&#39;)" ontouchend="event.stopPropagation();event.preventDefault();showCard(&#39;'+p.id+'&#39;)" style="font-size:9px;padding:3px 6px;border:1px solid var(--ora);border-radius:5px;background:#fff7f5;color:var(--ora);cursor:pointer;font-family:inherit;touch-action:manipulation">Details</button>'
+        +'<button onclick="removeStop(&#39;'+p.id+'&#39;)" ontouchend="event.stopPropagation();event.preventDefault();removeStop(&#39;'+p.id+'&#39;)" style="font-size:9px;padding:3px 6px;border:1px solid var(--brd);border-radius:5px;background:transparent;color:var(--sub);cursor:pointer;font-family:inherit;touch-action:manipulation">Remove</button>'
       +'</div>'
 
       // Machine profile + contract
@@ -4500,7 +4500,7 @@ function showCard(id){
       +'<div style="display:flex;gap:6px;align-items:center;flex-shrink:0;margin-left:10px">'
     +(function(){var _ir=routeSet.has(parseInt(p.id));return '<button id="sc-route-btn" style="border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;touch-action:manipulation;font-family:inherit;-webkit-tap-highlight-color:transparent;'+(_ir?'background:#ecfdf5;color:#059669;border:1px solid #6ee7b7':'background:#f0fdf4;color:#059669;border:none')+'">'+(_ir?'&#x2713; On Route':'&#x1F4CD; Route')+'</button>';})()
 
-    +'<button id="sc-report-btn" style="border:none;background:#fff7ed;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:#ea580c;cursor:pointer;touch-action:manipulation;font-family:inherit;-webkit-tap-highlight-color:transparent">&#x1F4CB; Report</button>'
+    +(p.status!=='customer_supplemental_only'?'<button id="sc-report-btn" style="border:none;background:#fff7ed;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:#ea580c;cursor:pointer;touch-action:manipulation;font-family:inherit;-webkit-tap-highlight-color:transparent">&#x1F4CB; Report</button>':'')
     +'<button id="sc-close" style="border:none;background:#f1f5f9;border-radius:50%;width:34px;height:34px;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;touch-action:manipulation;color:#475569;font-family:inherit">&#x2715;</button>'
     +'</div>'
     +'</div>'
@@ -5302,7 +5302,6 @@ function custSave(){
   if(_sb&&_userId){
     Object.keys(customers).forEach(function(pid){sbUpsert('pic_customers',pid,customers[pid]);});
   }
-  Object.keys(customers).forEach(function(pid){pushCustomerToSupabase(pid);});
 }
 function picSupabaseUrl(){
   return 'https://kbyqatbkqqhuasbjlcwe.supabase.co/rest/v1';
@@ -5463,6 +5462,8 @@ function logSupplementalService(id){
   custSave();
   renderServiceCal();
   toast('Supplemental visit logged. Next: '+nextISO);
+  var _suppP=P.find(function(x){return x.id==id;});
+  if(_suppP){setTimeout(function(){scSupplementalReport(_suppP,{notes:''});},300);}
 }
 
 function getProspectStage(p){
@@ -5582,7 +5583,7 @@ function renderPipeline(){
       const oLabel=lc?(OI[normO(lc.outcome)]||OI[lc.outcome]||lc.outcome):(pipeStage==='won'?'Customer':'Lost');
       const notes=lc&&lc.notes?'<div style="font-size:9px;color:var(--sub);margin-top:2px">'+lc.notes.slice(0,60)+(lc.notes.length>60?'…':'')+'</div>':'';
       const dateStr=lc?'<span style="font-size:9px;color:var(--sub)">'+lc.date+'</span>':'';
-      html+='<div class="dc" data-id="'+p.id+'" style="padding:10px 12px;margin-bottom:6px;cursor:pointer" onclick="showCard('+p.id+')" ontouchend="event.preventDefault();showCard('+p.id+')">'
+      html+='<div class="dc" data-id="'+p.id+'" style="padding:10px 12px;margin-bottom:6px;cursor:pointer" onclick="showCard(&#39;'+p.id+'&#39;)" ontouchend="event.preventDefault();showCard(&#39;'+p.id+'&#39;)">'
         +'<div style="display:flex;justify-content:space-between;align-items:flex-start">'
         +'<div style="font-weight:700;font-size:12px;color:var(--navy);flex:1;margin-right:8px">'+p.name+'</div>'
         +'<span style="font-size:9px;padding:2px 7px;border-radius:20px;font-weight:700;white-space:nowrap;background:'+oColor+'18;color:'+oColor+'">'+oLabel+'</span>'
@@ -5631,7 +5632,7 @@ function renderPipeline(){
         :p.ice_risk_level==='Medium'
         ?'<span style="font-size:8px;padding:1px 5px;border-radius:8px;background:#fff7ed;color:#c2410c;margin-left:4px;font-weight:700">&#x1F9CA; Med</span>'
         :'';
-      html+='<div class="dc" data-id="'+p.id+'" style="padding:10px 12px;margin-bottom:6px;cursor:pointer" onclick="showCard('+p.id+')" ontouchend="event.preventDefault();showCard('+p.id+')">'
+      html+='<div class="dc" data-id="'+p.id+'" style="padding:10px 12px;margin-bottom:6px;cursor:pointer" onclick="showCard(&#39;'+p.id+'&#39;)" ontouchend="event.preventDefault();showCard(&#39;'+p.id+'&#39;)">'
         +'<div style="display:flex;justify-content:space-between;align-items:flex-start">'
         +'<div style="font-weight:700;font-size:12px;color:var(--navy);flex:1;margin-right:8px">'+p.name+riskBadge+'</div>'
         +'<span style="font-size:9px;padding:2px 7px;border-radius:20px;font-weight:700;white-space:nowrap;background:'+oColor+'18;color:'+oColor+'">'+oLabel+'</span>'
@@ -5727,13 +5728,13 @@ function rCust(){
         +'</div>'
         +serviceDueH
         +'<div style="display:flex;gap:5px;margin-top:3px">'
-          +'<button onclick="event.stopPropagation();emailComplianceReport('+p.id+',this)" ontouchend="event.stopPropagation();event.preventDefault();emailComplianceReport('+p.id+',this)" style="flex:1;font-size:9px;padding:5px;border:1px solid #0a84ff;border-radius:6px;background:#eff6ff;color:#0a84ff;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E7; Email Report</button>'
-          +(c.annual_schedule&&c.annual_schedule.length?'<button onclick="event.stopPropagation();generateICS('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();generateICS('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:1px solid #059669;border-radius:6px;background:#ecfdf5;color:#059669;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4C5; Export Schedule</button>':'')
+          +(p.status!=='customer_supplemental_only'?'<button onclick="event.stopPropagation();emailComplianceReport(&#39;'+p.id+'&#39;,this)" ontouchend="event.stopPropagation();event.preventDefault();emailComplianceReport(&#39;'+p.id+'&#39;,this)" style="flex:1;font-size:9px;padding:5px;border:1px solid #0a84ff;border-radius:6px;background:#eff6ff;color:#0a84ff;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E7; Email Report</button>':'')
+          +(c.annual_schedule&&c.annual_schedule.length?'<button onclick="event.stopPropagation();generateICS(&#39;'+p.id+'&#39;)" ontouchend="event.stopPropagation();event.preventDefault();generateICS(&#39;'+p.id+'&#39;)" style="flex:1;font-size:9px;padding:5px;border:1px solid #059669;border-radius:6px;background:#ecfdf5;color:#059669;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4C5; Export Schedule</button>':'')
         +'</div>'
       +'</div>'
       // Action buttons
       +'<div style="display:flex;gap:5px;flex-wrap:wrap">'
-        +'<button onclick="event.stopPropagation();openM('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();openM('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:1px solid var(--brd);border-radius:6px;background:var(--surf);color:var(--navy);cursor:pointer;font-family:inherit;touch-action:manipulation">Details</button>'
+        +'<button onclick="event.stopPropagation();openM(&#39;'+p.id+'&#39;)" ontouchend="event.stopPropagation();event.preventDefault();openM(&#39;'+p.id+'&#39;)" style="flex:1;font-size:9px;padding:5px;border:1px solid var(--brd);border-radius:6px;background:var(--surf);color:var(--navy);cursor:pointer;font-family:inherit;touch-action:manipulation">Details</button>'
         +(c.hubspot_url
           ?'<a href="'+c.hubspot_url+'" target="_blank" onclick="event.stopPropagation()" style="flex:1;font-size:9px;padding:5px;border:1px solid #ff7a59;border-radius:6px;background:#fff7f5;color:#ff7a59;cursor:pointer;font-family:inherit;text-decoration:none;text-align:center;display:flex;align-items:center;justify-content:center">HubSpot &#x2197;</a>'
           :'<a href="'+hsUrl+'" target="_blank" onclick="event.stopPropagation()" style="flex:1;font-size:9px;padding:5px;border:1px solid #ff7a59;border-radius:6px;background:#fff7f5;color:#ff7a59;cursor:pointer;font-family:inherit;text-decoration:none;text-align:center;display:flex;align-items:center;justify-content:center">+ HubSpot</a>')
@@ -5741,7 +5742,7 @@ function rCust(){
           ?'<a href="'+c.square_url+'" target="_blank" onclick="event.stopPropagation()" style="flex:1;font-size:9px;padding:5px;border:1px solid #00c058;border-radius:6px;background:#f0fff4;color:#00c058;cursor:pointer;font-family:inherit;text-decoration:none;text-align:center;display:flex;align-items:center;justify-content:center">Square &#x2197;</a>'
           :'')
         +(c.status!=='churned'
-          ?'<button onclick="event.stopPropagation();if(confirm(\'Mark as churned?\'))churnClient('+p.id+')" ontouchend="event.stopPropagation();event.preventDefault();if(confirm(\'Mark as churned?\'))churnClient('+p.id+')" style="flex:1;font-size:9px;padding:5px;border:1px solid #dc2626;border-radius:6px;background:#fef2f2;color:#dc2626;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x274C; Churn</button>'
+          ?'<button onclick="event.stopPropagation();if(confirm(\'Mark as churned?\'))churnClient(&#39;'+p.id+'&#39;)" ontouchend="event.stopPropagation();event.preventDefault();if(confirm(\'Mark as churned?\'))churnClient(&#39;'+p.id+'&#39;)" style="flex:1;font-size:9px;padding:5px;border:1px solid #dc2626;border-radius:6px;background:#fef2f2;color:#dc2626;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x274C; Churn</button>'
           :'<div style="flex:1;font-size:9px;padding:5px;border:1px solid #dc2626;border-radius:6px;background:#fef2f2;color:#dc2626;text-align:center">Churned'+(c.churn_date?' '+c.churn_date.slice(0,10):'')+'</div>')
       +'</div>'
       // URL link fields
@@ -6056,7 +6057,7 @@ function renderTodaysPlan(){
     var col=PRI_COL[p.priority]||'#64748b';
     var riskH=p.ice_confirmed_dbpr?'<span style="font-size:9px;color:#6d28d9"> &#x1F575;&#xFE0F; CONF</span>':p.ice_risk_level==='High'?'<span style="font-size:9px;color:#dc2626"> &#x1F9CA; H</span>':p.ice_risk_level==='Medium'?'<span style="font-size:9px;color:#d97706"> &#x1F9CA; M</span>':'';
     var daysH=p._daysSince<999?'<span style="font-size:9px;color:#94a3b8"> &#x2022; '+p._daysSince+'d ago</span>':'';
-    return '<div onclick="showCard('+p.id+')" ontouchend="event.preventDefault();showCard('+p.id+')" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid #e2e8f0;cursor:pointer;touch-action:manipulation">'
+    return '<div onclick="showCard(&#39;'+p.id+'&#39;)" ontouchend="event.preventDefault();showCard(&#39;'+p.id+'&#39;)" style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid #e2e8f0;cursor:pointer;touch-action:manipulation">'
       +'<div style="font-size:11px;font-weight:800;color:#94a3b8;width:16px;flex-shrink:0">'+(i+1)+'.</div>'
       +'<div style="flex:1;min-width:0">'
         +'<div style="font-size:11px;font-weight:700;color:#0f1f38;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+p.name+'</div>'
@@ -6888,7 +6889,7 @@ function exportSchedulePDF(id){
     +'Service complies with FDA Food Code 3-502.12</div>'
     +'<br><div style="display:flex;gap:8px;margin-top:8px">'
     +'<button onclick="window.print()" style="padding:10px 20px;background:#1e3a5f;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px">Print / Save PDF</button>'
-    +'<button onclick="window.opener&&window.opener.emailServiceSchedule&&window.opener.emailServiceSchedule('+id+')" style="padding:10px 20px;background:#eff6ff;color:#0a84ff;border:2px solid #0a84ff;border-radius:6px;cursor:pointer;font-size:12px">&#x1F4E7; Email to Client</button>'
+    +'<button onclick="window.opener&&window.opener.emailServiceSchedule&&window.opener.emailServiceSchedule(&#39;'+id+'&#39;)" style="padding:10px 20px;background:#eff6ff;color:#0a84ff;border:2px solid #0a84ff;border-radius:6px;cursor:pointer;font-size:12px">&#x1F4E7; Email to Client</button>'
     +'<button onclick="window.close()" style="padding:10px 20px;background:#fff;color:#1e3a5f;border:2px solid #1e3a5f;border-radius:6px;cursor:pointer;font-size:12px">&#x2190; Close</button>'
     +'</div>'
     +'</body></html>');
@@ -7124,6 +7125,7 @@ function openVisitReport(pid,visitIndex){
   var p=P.find(function(x){return x.id==pid;});
   var c=customers[pid]||{};
   if(!p){toast('Client not found');return;}
+  if(p.status==='customer_supplemental_only'){toast('Ice machine report not available for supplemental-only customers');return;}
   var history=(c.service_history||[]).slice().sort(function(a,b){return new Date(b.date)-new Date(a.date);});
   var visit=history[visitIndex];
   if(!visit){toast('Visit data not found');return;}
@@ -7214,7 +7216,7 @@ function renderAtRisk(){
       return '<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-top:1px solid #fca5a5;font-size:10px">'
         +'<div><div style="font-weight:600;color:var(--navy)">'+p.name+'</div>'
         +'<div style="color:#dc2626;font-size:9px">'+msg+'</div></div>'
-        +'<button onclick="navigateToClientService('+p.id+')" ontouchend="event.preventDefault();navigateToClientService('+p.id+')" style="font-size:9px;padding:3px 7px;border:1px solid #dc2626;border-radius:5px;background:#fef2f2;color:#dc2626;cursor:pointer;font-family:inherit;touch-action:manipulation">Fix</button>'
+        +'<button onclick="navigateToClientService(&#39;'+p.id+'&#39;)" ontouchend="event.preventDefault();navigateToClientService(&#39;'+p.id+'&#39;)" style="font-size:9px;padding:3px 7px;border:1px solid #dc2626;border-radius:5px;background:#fef2f2;color:#dc2626;cursor:pointer;font-family:inherit;touch-action:manipulation">Fix</button>'
         +'</div>';
     }).join('')
     +'</div>';
@@ -7302,12 +7304,12 @@ function renderServiceCal(){
       // Actions
       +'<div style="display:flex;gap:5px;flex-wrap:wrap">'
         +(c.status==='customer_supplemental_only'
-          ?'<button onclick="logSupplementalService('+p.id+')" ontouchend="event.preventDefault();logSupplementalService('+p.id+')" style="flex:2;min-width:120px;padding:7px;border:none;border-radius:7px;background:#7c3aed;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Log Supplemental Visit</button>'
-          :'<button onclick="openServiceLog('+p.id+')" ontouchend="event.preventDefault();openServiceLog('+p.id+')" style="flex:2;min-width:120px;padding:7px;border:none;border-radius:7px;background:#059669;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Log Service Visit</button>')
-        +'<button onclick="openEscalation('+p.id+')" ontouchend="event.preventDefault();openEscalation('+p.id+')" style="flex:1;min-width:80px;padding:7px;border:1px solid #d97706;border-radius:7px;background:#fffbeb;color:#d97706;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x26A0; Escalate</button>'
-        +'<button onclick="reschedule('+p.id+')" style="flex:1;padding:7px;border:1px solid var(--brd);border-radius:7px;background:var(--surf);color:var(--sub);font-size:10px;cursor:pointer;font-family:inherit">Reschedule</button>'
-        +(c.annual_schedule?'<button onclick="exportSchedulePDF('+p.id+')" style="flex:1;padding:7px;border:1px solid var(--blu);border-radius:7px;background:#eff6ff;color:var(--blu);font-size:10px;cursor:pointer;font-family:inherit">&#x1F4C5; Schedule</button>':'')
-        +(c.annual_schedule&&c.annual_schedule.length?'<button onclick="emailServiceSchedule('+p.id+')" style="flex:1;padding:7px;border:1px solid #7c3aed;border-radius:7px;background:#f5f3ff;color:#7c3aed;font-size:10px;cursor:pointer;font-family:inherit">&#x1F4C5; Email Schedule</button>':'')
+          ?'<button onclick="logSupplementalService(&#39;'+p.id+'&#39;)" ontouchend="event.preventDefault();logSupplementalService(&#39;'+p.id+'&#39;)" style="flex:2;min-width:120px;padding:7px;border:none;border-radius:7px;background:#7c3aed;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Log Supplemental Visit</button>'
+          :'<button onclick="openServiceLog(&#39;'+p.id+'&#39;)" ontouchend="event.preventDefault();openServiceLog(&#39;'+p.id+'&#39;)" style="flex:2;min-width:120px;padding:7px;border:none;border-radius:7px;background:#059669;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Log Service Visit</button>')
+        +'<button onclick="openEscalation(&#39;'+p.id+'&#39;)" ontouchend="event.preventDefault();openEscalation(&#39;'+p.id+'&#39;)" style="flex:1;min-width:80px;padding:7px;border:1px solid #d97706;border-radius:7px;background:#fffbeb;color:#d97706;font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x26A0; Escalate</button>'
+        +'<button onclick="reschedule(&#39;'+p.id+'&#39;)" style="flex:1;padding:7px;border:1px solid var(--brd);border-radius:7px;background:var(--surf);color:var(--sub);font-size:10px;cursor:pointer;font-family:inherit">Reschedule</button>'
+        +(c.annual_schedule?'<button onclick="exportSchedulePDF(&#39;'+p.id+'&#39;)" style="flex:1;padding:7px;border:1px solid var(--blu);border-radius:7px;background:#eff6ff;color:var(--blu);font-size:10px;cursor:pointer;font-family:inherit">&#x1F4C5; Schedule</button>':'')
+        +(c.annual_schedule&&c.annual_schedule.length?'<button onclick="emailServiceSchedule(&#39;'+p.id+'&#39;)" style="flex:1;padding:7px;border:1px solid #7c3aed;border-radius:7px;background:#f5f3ff;color:#7c3aed;font-size:10px;cursor:pointer;font-family:inherit">&#x1F4C5; Email Schedule</button>':'')
         +(p.phone?'<a href="tel:'+p.phone.replace(/\s/g,'')+'" style="flex:1;padding:7px;border:1px solid var(--blu);border-radius:7px;background:#eff6ff;color:var(--blu);font-size:10px;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;font-family:inherit">Call</a>':'')
       +'</div>'
       +buildRecentServiceHistory(p,c)
@@ -7399,9 +7401,10 @@ function logServiceFromCal(id,opts){
   c.last_service=todayStr;
   c.last_service_iso=localISO(today);
 
-  // Next service: 60 days for maintenance, but auto-schedule deep clean at 6 months
+  // Next service: quarterly customers use 90-day interval, others use 60-day
   const next=new Date(today);
-  next.setDate(next.getDate()+60);
+  const _logNextDays=(c.status==='customer_quarterly'||c.service_type==='quarterly')?QUARTERLY_INTERVAL_DAYS:60;
+  next.setDate(next.getDate()+_logNextDays);
   c.next_service=localISO(next);
 
   // Flag 6-month deep clean if approaching
@@ -7536,7 +7539,7 @@ function openServiceLog(id){
 
     // Buttons
     +'<div style="display:flex;gap:6px">'
-      +'<button onclick="submitServiceLog('+id+')" ontouchend="event.preventDefault();submitServiceLog('+id+')" style="flex:2;padding:10px;border:none;border-radius:8px;background:#059669;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Save Service Visit</button>'
+      +'<button onclick="submitServiceLog(&#39;'+id+'&#39;)" ontouchend="event.preventDefault();submitServiceLog(&#39;'+id+'&#39;)" style="flex:2;padding:10px;border:none;border-radius:8px;background:#059669;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x2713; Save Service Visit</button>'
       +'<button onclick="closeSvcLog()" ontouchend="event.preventDefault();closeSvcLog()" style="flex:1;padding:10px;border:1px solid var(--brd);border-radius:8px;background:var(--surf);color:var(--sub);font-size:11px;cursor:pointer;font-family:inherit">Cancel</button>'
     +'</div>'
     +'</div>';
@@ -8314,7 +8317,7 @@ function buildServiceRoute(){
           +'<div style="font-size:9px;color:#d97706">Next due: '+(c.next_service||'not set')+'</div>'
           +(p.phone?'<a href="tel:'+p.phone.replace(/\s/g,'')+'" style="font-size:9px;color:var(--blu)">'+p.phone+'</a>':'')
         +'</div>'
-        +'<button onclick="logServiceFromCal('+p.id+')" style="font-size:9px;padding:4px 7px;border:none;border-radius:6px;background:#059669;color:#fff;cursor:pointer;font-family:inherit;flex-shrink:0">Done</button>'
+        +'<button onclick="logServiceFromCal(&#39;'+p.id+'&#39;)" style="font-size:9px;padding:4px 7px;border:none;border-radius:6px;background:#059669;color:#fff;cursor:pointer;font-family:inherit;flex-shrink:0">Done</button>'
         +'</div>';
     }).join('');
 
@@ -9111,6 +9114,160 @@ function srSendEmail(p,atpVal,emailTo,notes){
     +'</div></body></html>';
   return sendEmailViaProxy(emailTo,'Ice Machine Status Report — '+p.name,html);
 }
+// ── SUPPLEMENTAL SERVICE REPORT ───────────────────────────────────────────────
+function scSupplementalReport(p,prefill){
+  var suppBg=document.createElement('div');
+  suppBg.id='supp-bg';
+  suppBg.style.cssText='position:fixed;inset:0;z-index:600;background:rgba(15,31,56,.88);display:flex;align-items:center;justify-content:center;padding:20px;box-sizing:border-box';
+  var box=document.createElement('div');
+  box.style.cssText='background:#fff;border-radius:16px;padding:24px;width:100%;max-width:340px';
+  box.innerHTML=
+    '<div style="font-size:14px;font-weight:800;color:#7c3aed;margin-bottom:4px">&#x1F9FC; Supplemental Service Report</div>'
+    +'<div style="font-size:11px;color:#64748b;margin-bottom:16px">Add an email to send the visit record to your client, or print for your files.</div>'
+    +'<input id="supp-email-inp" type="email" placeholder="Email to (optional)" '
+    +'style="width:100%;padding:10px;border:2px solid #e2e8f0;border-radius:10px;font-size:14px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:8px;color:#0f1f38">'
+    +'<textarea id="supp-notes-inp" placeholder="Technician notes (optional)" rows="2" '
+    +'style="width:100%;padding:10px;border:2px solid #e2e8f0;border-radius:10px;font-size:13px;font-family:inherit;outline:none;box-sizing:border-box;margin-bottom:12px;color:#0f1f38;resize:none"></textarea>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">'
+    +'<button id="supp-cancel" style="padding:10px;border:1px solid #e2e8f0;border-radius:9px;background:#f8fafc;color:#64748b;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Cancel</button>'
+    +'<button id="supp-email" style="padding:10px;border:1px solid #7c3aed;border-radius:9px;background:#f5f3ff;color:#7c3aed;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E7; Email</button>'
+    +'<button id="supp-print" style="padding:10px;border:none;border-radius:9px;background:#7c3aed;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">Print</button>'
+    +'</div>';
+  suppBg.appendChild(box);
+  document.body.appendChild(suppBg);
+  if(prefill&&prefill.notes){var ni=document.getElementById('supp-notes-inp');if(ni)ni.value=prefill.notes;}
+  setTimeout(function(){var ei=document.getElementById('supp-email-inp');if(ei)ei.focus();},120);
+  var _lt=0;
+  function suppHandle(e){
+    if(e.type==='click'&&Date.now()-_lt<350)return;
+    if(e.type==='touchend')_lt=Date.now();
+    if(e.target===suppBg){suppBg.remove();return;}
+    var btn=e.target.closest('#supp-cancel,#supp-email,#supp-print');
+    if(!btn)return;
+    if(e.type==='touchend')e.preventDefault();
+    if(btn.id==='supp-cancel'){suppBg.remove();return;}
+    var emailTo=((document.getElementById('supp-email-inp')||{}).value||'').trim();
+    var notes=((document.getElementById('supp-notes-inp')||{}).value||'').trim();
+    if(btn.id==='supp-email'){
+      if(!emailTo){toast('Enter an email address first');return;}
+      var _suppBtn=document.getElementById('supp-email');
+      sendWithConfirmation(_suppBtn,function(){return srSendEmailSupplemental(p,emailTo,notes);}).then(function(){
+        setTimeout(function(){if(document.getElementById('supp-bg'))suppBg.remove();},1600);
+      });
+      return;
+    }
+    if(btn.id==='supp-print'){
+      suppBg.remove();
+      srGenerateSupplemental(p,notes);
+    }
+  }
+  suppBg.addEventListener('click',suppHandle);
+  suppBg.addEventListener('touchend',suppHandle);
+}
+function srGenerateSupplemental(p,notes){
+  var c=customers[p.id]||{};
+  var dateStr=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  var nextRaw=c.supplemental_next_service||c.next_service;
+  var nextStr=nextRaw?new Date(nextRaw.replace(/-/g,'/')).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}):'Contact us to schedule';
+  var services=['Soda lines &amp; nozzle cleaning','Exterior ice machine &amp; splash zone wipe-down','Reach-in cooler gasket &amp; seal inspection and cleaning'];
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8">'
+    +'<meta name="viewport" content="width=device-width,initial-scale=1">'
+    +'<title>Supplemental Service Report</title>'
+    +'<style>'
+    +'*{box-sizing:border-box}body{margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;background:#fff;color:#0f172a}'
+    +'@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}button{display:none}.page{zoom:0.92;padding:0}.rpt-bar{display:none}}'
+    +'@page{size:letter portrait;margin:0.3in}'
+    +'.page{max-width:680px;margin:0 auto;padding:16px}'
+    +'.rpt-bar{position:sticky;top:0;z-index:99;background:#0f1f38;display:flex;gap:8px;align-items:center;padding:10px 16px}'
+    +'</style></head><body>'
+    +'<div class="rpt-bar">'
+    +'<button onclick="if(window.opener)window.opener.focus();window.close()" style="flex:1;padding:10px;background:#1e3a5f;color:#e2e8f0;border:1px solid #334155;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">&#x2190; Back to App</button>'
+    +'<button onclick="window.print()" style="flex:1;padding:10px;background:#7c3aed;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">&#x1F5A8; Print</button>'
+    +'</div>'
+    +'<div class="page">'
+    +'<table style="width:100%;border-collapse:collapse;margin-bottom:20px"><tr>'
+    +'<td style="vertical-align:middle"><img src="logo_for_pdf.png" onerror="this.remove()" style="height:42px;display:block"></td>'
+    +'<td style="text-align:right;vertical-align:middle">'
+    +'<div style="font-size:17px;font-weight:900;color:#7c3aed;letter-spacing:-.01em">SUPPLEMENTAL SERVICE REPORT</div>'
+    +'<div style="font-size:11px;color:#64748b;margin-top:2px">pinellasiceco.com &nbsp;&middot;&nbsp; '+dateStr+'</div>'
+    +'</td></tr></table>'
+    +'<div style="border-top:2px solid #7c3aed;margin-bottom:10px"></div>'
+    +'<div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:10px">'
+    +'<div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:6px">Establishment</div>'
+    +'<div style="font-size:14px;font-weight:800;color:#0f1f38;margin-bottom:4px">'+p.name+'</div>'
+    +'<div style="font-size:11px;color:#475569">'+p.address+'</div>'
+    +'<div style="font-size:11px;color:#475569">'+p.city+', FL '+p.zip+'</div>'
+    +'</div>'
+    +'<div style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:10px">'
+    +'<div style="background:#7c3aed;padding:10px 14px;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#f5f3ff">Services Performed This Visit</div>'
+    +'<div style="padding:12px 14px">'
+    +services.map(function(s){return '<div style="font-size:11px;color:#334155;padding:3px 0;display:flex;gap:8px"><span style="color:#7c3aed;font-weight:700;flex-shrink:0">&#x2713;</span><span>'+s+'</span></div>';}).join('')
+    +'</div></div>'
+    +'<div style="background:#0f1f38;border-radius:10px;padding:12px;text-align:center;margin-bottom:10px">'
+    +'<div style="font-size:8px;color:#94a3b8;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">Next Scheduled Service</div>'
+    +'<div style="font-size:22px;font-weight:900;color:#f97316;margin-bottom:4px">'+nextStr+'</div>'
+    +'<div style="font-size:11px;color:#e2e8f0;margin-bottom:8px">Thank you for choosing Pinellas Ice Co</div>'
+    +'<div style="font-size:16px;font-weight:800;color:#fff">Call&nbsp;/&nbsp;Text:&nbsp;&nbsp;(727)&nbsp;855-6873</div>'
+    +'<div style="font-size:10px;color:#94a3b8;margin-top:4px">pinellasiceco.com</div>'
+    +'</div>'
+    +(notes?('<div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:10px">'
+      +'<div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:6px">Technician Notes</div>'
+      +'<div style="font-size:11px;color:#334155;line-height:1.6">'+notes+'</div>'
+      +'</div>'):'')
+    +'<div style="text-align:center;font-size:9px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:10px;margin-top:14px">'
+    +'Pinellas Ice Co &nbsp;&middot;&nbsp; pinellasiceco.com &nbsp;&middot;&nbsp; (727) 855-6873'
+    +'</div>'
+    +'</div></body></html>';
+  var w=window.open('','_blank');
+  if(!w){toast('Pop-up blocked — allow pop-ups and try again');return;}
+  w.document.write(html);
+  w.document.close();
+  setTimeout(function(){w.print();},600);
+}
+function srSendEmailSupplemental(p,emailTo,notes){
+  var c=customers[p.id]||{};
+  var now=new Date();
+  var dateStr=now.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  var nextRaw=c.supplemental_next_service||c.next_service;
+  var nextStr=nextRaw?new Date(nextRaw.replace(/-/g,'/')).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}):'Contact us to schedule';
+  var services=['Soda lines &amp; nozzle cleaning','Exterior ice machine &amp; splash zone wipe-down','Reach-in cooler gasket &amp; seal inspection and cleaning'];
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>'
+    +'<body style="margin:0;padding:0;background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,Helvetica Neue,sans-serif">'
+    +'<div style="max-width:600px;margin:0 auto;padding:20px">'
+    +'<table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:12px"><tr>'
+    +'<td><div style="font-size:18px;font-weight:900;color:#0f1f38;letter-spacing:-.01em">PINELLAS ICE CO</div></td>'
+    +'<td align="right"><div style="font-size:11px;color:#64748b">'+dateStr+'</div></td>'
+    +'</tr></table>'
+    +'<div style="font-size:15px;font-weight:800;color:#7c3aed;margin-bottom:10px">SUPPLEMENTAL SERVICE REPORT</div>'
+    +'<div style="border-top:2px solid #7c3aed;margin-bottom:14px"></div>'
+    +'<div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:14px">'
+    +'<div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:6px">Establishment</div>'
+    +'<div style="font-size:14px;font-weight:800;color:#0f1f38;margin-bottom:4px">'+p.name+'</div>'
+    +'<div style="font-size:11px;color:#475569">'+p.address+'</div>'
+    +'<div style="font-size:11px;color:#475569">'+p.city+', FL '+p.zip+'</div>'
+    +'</div>'
+    +'<div style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:14px">'
+    +'<div style="background:#7c3aed;padding:10px 14px;font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#f5f3ff">Services Performed This Visit</div>'
+    +'<div style="padding:12px 14px">'
+    +services.map(function(s){return '<div style="font-size:11px;color:#334155;padding:3px 0"><span style="color:#7c3aed;font-weight:700">&#x2713;</span>&nbsp;&nbsp;'+s+'</div>';}).join('')
+    +'</div></div>'
+    +'<div style="background:#0f1f38;border-radius:10px;padding:14px;text-align:center;margin-bottom:14px">'
+    +'<div style="font-size:8px;color:#94a3b8;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px">Next Scheduled Service</div>'
+    +'<div style="font-size:18px;font-weight:900;color:#f97316;margin-bottom:4px">'+nextStr+'</div>'
+    +'<div style="font-size:11px;color:#e2e8f0;margin-bottom:8px">Thank you for choosing Pinellas Ice Co</div>'
+    +'<div style="font-size:16px;font-weight:800;color:#fff">Call&nbsp;/&nbsp;Text:&nbsp;&nbsp;(727)&nbsp;855-6873</div>'
+    +'<div style="font-size:10px;color:#94a3b8;margin-top:4px">pinellasiceco.com</div>'
+    +'</div>'
+    +(notes?('<div style="border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:14px">'
+      +'<div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:6px">Technician Notes</div>'
+      +'<div style="font-size:11px;color:#334155;line-height:1.6">'+notes+'</div>'
+      +'</div>'):'')
+    +'<div style="text-align:center;font-size:9px;color:#94a3b8;border-top:1px solid #e2e8f0;padding-top:10px;margin-top:14px">'
+    +'Pinellas Ice Co &nbsp;&middot;&nbsp; pinellasiceco.com &nbsp;&middot;&nbsp; (727) 855-6873'
+    +'</div>'
+    +'</div></body></html>';
+  return sendEmailViaProxy(emailTo,'Supplemental Service Report — '+p.name,html);
+}
 function toggleReportEmailRow(){
   var row=document.getElementById('report-email-row');
   if(!row)return;
@@ -9146,6 +9303,7 @@ async function emailServiceReport(id){
 function emailComplianceReport(id,btn){
   var p=P.find(function(x){return x.id===id;});
   if(!p){toast('Prospect not found');return;}
+  if(p.status==='customer_supplemental_only'){toast('Ice machine report not available for supplemental-only customers');return;}
   var c=customers[id]||{};
   var to=(c.email||'').trim();
   if(!to){toast('No email saved for this client — add it in Link Records');return;}
@@ -9387,7 +9545,7 @@ function renderContacts(id){
       +'<div style="font-size:9px;color:var(--sub)">'+( ROLE_LABELS[c.role]||c.role)+(c.phone?' &bull; '+c.phone:'')+'</div>'
     +'</div>'
     +(c.phone?'<a href="tel:'+c.phone.replace(/\s/g,'')+'" style="font-size:9px;padding:3px 7px;border:1px solid var(--blu);border-radius:5px;color:var(--blu);text-decoration:none" onclick="event.stopPropagation()">Call</a>':'')
-    +'<button onclick="deleteContact('+id+','+i+')" style="font-size:9px;padding:3px 6px;border:1px solid var(--brd);border-radius:5px;background:transparent;color:var(--sub);cursor:pointer">✕</button>'
+    +'<button onclick="deleteContact(&#39;'+id+'&#39;,'+i+')" style="font-size:9px;padding:3px 6px;border:1px solid var(--brd);border-radius:5px;background:transparent;color:var(--sub);cursor:pointer">✕</button>'
     +'</div>'
   ).join('');
 }
