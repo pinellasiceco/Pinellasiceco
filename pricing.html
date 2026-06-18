@@ -332,6 +332,81 @@ footer {
   margin-top: 28px;
 }
 
+/* ADD-ON CARDS */
+.addon-card {
+  background: #f4f6f9;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--navy);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.addon-eyebrow {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--navy);
+  margin-bottom: 10px;
+}
+.addon-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  margin-bottom: 3px;
+}
+.addon-price-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--navy);
+  line-height: 1;
+}
+.addon-price-per {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--gray);
+}
+.addon-price-sub {
+  font-size: 12px;
+  color: var(--gray);
+  margin-bottom: 14px;
+  line-height: 1.4;
+}
+.addon-items {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 0;
+}
+.addon-items li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--gray);
+  line-height: 1.4;
+}
+.addon-check { color: var(--navy); font-weight: 800; flex-shrink: 0; }
+.addon-divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+.addon-note {
+  font-size: 12px;
+  color: var(--gray);
+  font-style: italic;
+  line-height: 1.5;
+}
+.addon-link {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--navy);
+  text-decoration: none;
+}
+
 @media (max-width: 400px) {
   .terms-grid { grid-template-columns: 1fr; }
 }
@@ -358,7 +433,7 @@ footer {
       <div class="price-num">$129</div>
       <div class="price-per">/month</div>
     </div>
-    <div class="price-annual">$1,548/year &nbsp;·&nbsp; 4 certified visits &nbsp;·&nbsp; cancel anytime</div>
+    <div class="price-annual" style="color:rgba(255,255,255,.7);">First invoice: <strong style="color:white;">$228</strong> &nbsp;&middot;&nbsp; $99 one-time setup + $129/month &nbsp;&middot;&nbsp; 4 visits/year &nbsp;&middot;&nbsp; cancel anytime</div>
     <div class="price-divider"></div>
     <div class="price-includes-label">Everything included</div>
     <ul class="price-items">
@@ -374,6 +449,42 @@ footer {
     </ul>
   </div>
 
+  <!-- REACH-IN COOLER ADD-ON -->
+  <div class="addon-card">
+    <div class="addon-eyebrow">Add-On &middot; Reach-In Cooler Service</div>
+    <div class="addon-price-row">
+      <div class="addon-price-num">+$40</div>
+      <div class="addon-price-per">/month</div>
+    </div>
+    <div class="addon-price-sub">Add to base plan &rarr; <strong>$169/month total</strong></div>
+    <ul class="addon-items">
+      <li><span class="addon-check">&#10003;</span> ATP-tested cleaning of up to 3 reach-in cooler units per visit</li>
+      <li><span class="addon-check">&#10003;</span> Gasket and interior surface cleaning</li>
+      <li><span class="addon-check">&#10003;</span> ATP test target: below 100 RLU &mdash; same documented standard as the ice machine</li>
+      <li><span class="addon-check">&#10003;</span> Completed same visit as ice machine service &mdash; no separate scheduling</li>
+    </ul>
+    <hr class="addon-divider">
+    <div class="addon-note">Add-on to the $129/month base plan. Requires active ice machine service.</div>
+  </div>
+
+  <!-- SUPPLEMENTAL SERVICES PACKAGE -->
+  <div class="addon-card">
+    <div class="addon-eyebrow">Add-On &middot; Supplemental Services Package</div>
+    <div class="addon-price-row">
+      <div class="addon-price-num">$79</div>
+      <div class="addon-price-per">/month</div>
+    </div>
+    <div class="addon-price-sub">Available standalone or stacked on the base plan</div>
+    <ul class="addon-items">
+      <li><span class="addon-check">&#10003;</span> Soda lines &amp; nozzle cleaning</li>
+      <li><span class="addon-check">&#10003;</span> Exterior ice machine &amp; splash zone wipe-down</li>
+      <li><span class="addon-check">&#10003;</span> Reach-in cooler gaskets &amp; door seals &mdash; visual inspection, no ATP testing</li>
+    </ul>
+    <hr class="addon-divider">
+    <div class="addon-note">The reach-in component here covers gaskets and seals only &mdash; lighter scope, no ATP testing. It is not the same as the Reach-In Cooler add-on (+$40/month) above, which includes full ATP-tested cleaning of up to 3 units.</div>
+    <a class="addon-link" href="supplemental.html">Full details on the Supplemental Package &#8594;</a>
+  </div>
+
   <!-- NOT INCLUDED -->
   <div class="not-included">
     <div class="ni-title">Not Included — Billed Separately if Needed</div>
@@ -386,7 +497,7 @@ footer {
 
   <div class="info-box green">
     <div class="info-label">No Surprises</div>
-    <div class="info-text">We tell you what we find before we charge for anything extra. <strong>Cleaning visits are always $129/month flat.</strong> If we notice something mechanical during a visit, we tell you — and you decide whether to address it. No upselling, no bundled repair packages.</div>
+    <div class="info-text">We tell you what we find before we charge for anything extra. <strong>$99 one-time setup, then $129/month — those are the only recurring charges.</strong> If we notice something mechanical during a visit, we tell you — and you decide whether to address it. No upselling, no bundled repair packages.</div>
   </div>
 
   <hr class="sec-divider">
@@ -400,9 +511,9 @@ footer {
       <div class="term-desc">No annual contract. No multi-year commitment. Pay monthly, stop anytime.</div>
     </div>
     <div class="term-card">
-      <div class="term-icon">🚫</div>
-      <div class="term-title">No Setup Fee</div>
-      <div class="term-desc">No upfront cost, no installation charge, no onboarding fee.</div>
+      <div class="term-icon">🔧</div>
+      <div class="term-title">One-Time Setup</div>
+      <div class="term-desc">$99 first visit — covers the initial deep clean and ATP baseline. No recurring setup charge after that.</div>
     </div>
     <div class="term-card">
       <div class="term-icon">❌</div>
