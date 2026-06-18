@@ -4247,6 +4247,11 @@ function showCard(id){
       +'</div>';
   }
 
+  // CleanScore public inspection record (only for businesses with a confirmed DBPR ice citation)
+  var cleanScoreH=p.confirmed
+    ?'<a href="https://pinellasiceco.github.io/cleanscore/?id='+p.id+'" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:6px;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;padding:9px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;margin-bottom:10px;touch-action:manipulation">&#x1F50D; View CleanScore Record &#x2197;</a>'
+    :'';
+
   // Chips
   var pBg={CALLBACK:'#fef2f2',HOT:'#fff7ed',WARM:'#fefce8',COOL:'#f8fafc'};
   var pCl={CALLBACK:'#dc2626',HOT:'#f97316',WARM:'#ca8a04',COOL:'#64748b'};
@@ -4512,7 +4517,7 @@ function showCard(id){
     +'</div>'
     +'<div style="padding:16px">'
       +'<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px">'+chips+'</div>'
-      +intelWhyH+phoneH+phoneSaveH+iceH+intelH+histH+svcHistH+logH+closeH+contactsH
+      +intelWhyH+phoneH+phoneSaveH+cleanScoreH+iceH+intelH+histH+svcHistH+logH+closeH+contactsH
     +'</div></div>';
 
   document.body.appendChild(bg);
