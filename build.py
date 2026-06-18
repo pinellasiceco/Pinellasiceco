@@ -2923,6 +2923,7 @@ header{background:var(--navy);
           <option value="">All Customers</option>
           <option value="customer_recurring">Recurring</option>
           <option value="customer_quarterly">Quarterly</option>
+          <option value="customer_supplemental_only">Supplemental</option>
           <option value="customer_intro">Intro ($99 first visit)</option>
           <option value="customer_once">One-Time ($349)</option>
           <option value="quoted">Quoted - Pending</option>
@@ -9371,8 +9372,8 @@ function renderForecast(){
   const el=document.getElementById('svc-forecast');
   if(!el)return;
 
-  const recurring=P.filter(p=>p.status==='customer_recurring'||p.status==='customer_quarterly');
-  const mrr=recurring.reduce((s,p)=>s+(customers[p.id]?.monthly||p.monthly||149),0);
+  const recurring=P.filter(p=>p.status==='customer_recurring'||p.status==='customer_quarterly'||p.status==='customer_supplemental_only');
+  const mrr=recurring.reduce((s,p)=>{const c=customers[p.id]||{};const st=c.status||p.status;if(st==='customer_supplemental_only')return s+(c.supplemental_price||79);return s+(c.monthly||p.monthly||149)+(c.supplemental_reach_in?(c.supplemental_price||79):0);},0);
   const arr=mrr*12;
 
   // Churn assumption: 5% monthly = industry avg for small service biz
@@ -10548,7 +10549,7 @@ function openServiceMaps(){
 function renderReports(){
   const sel=document.getElementById('svc-report-client');
   if(!sel)return;
-  const recurring=P.filter(p=>{const st=(customers[p.id]||{}).status||p.status;return st==='customer_recurring'||st==='customer_once'||st==='customer_intro'||st==='customer_quarterly';});
+  const recurring=P.filter(p=>{const st=(customers[p.id]||{}).status||p.status;return st==='customer_recurring'||st==='customer_once'||st==='customer_intro'||st==='customer_quarterly'||st==='customer_supplemental_only';});
   sel.innerHTML='<option value="">Select a client...</option>'
     +recurring.map(p=>'<option value="'+p.id+'">'+p.name+' — '+p.city+'</option>').join('');
   document.getElementById('svc-report-preview').innerHTML='';
@@ -11347,6 +11348,31 @@ function scSupplementalReport(p,prefill){
   document.body.appendChild(suppBg);
   if(prefill&&prefill.notes){var ni=document.getElementById('supp-notes-inp');if(ni)ni.value=prefill.notes;}
   setTimeout(function(){var ei=document.getElementById('supp-email-inp');if(ei)ei.focus();},120);
+  function _suppLogHistory(noteTxt){
+    var c=customers[p.id];
+    if(!c)c=customers[p.id]={};
+    if(!c.service_history)c.service_history=[];
+    var _n=new Date();
+    c.service_history.push({
+      date: localISO(_n),
+      date_display: _n.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
+      time: _n.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}),
+      type: 'supplemental_service',
+      atp_pre: '',
+      atp: '',
+      filter_replaced: false,
+      filter_type: '',
+      machine_brand: '',
+      machine_model: '',
+      machine_serial: '',
+      units: 1,
+      notes: noteTxt||'',
+      photo_urls: [],
+      reach_in: null,
+      tech: 'Pinellas Ice Co',
+    });
+    custSave();
+  }
   var _lt=0;
   function suppHandle(e){
     if(e.type==='click'&&Date.now()-_lt<350)return;
@@ -11362,11 +11388,13 @@ function scSupplementalReport(p,prefill){
       if(!emailTo){toast('Enter an email address first');return;}
       var _suppBtn=document.getElementById('supp-email');
       sendWithConfirmation(_suppBtn,function(){return srSendEmailSupplemental(p,emailTo,notes);}).then(function(){
+        _suppLogHistory(notes);
         setTimeout(function(){if(document.getElementById('supp-bg'))suppBg.remove();},1600);
       });
       return;
     }
     if(btn.id==='supp-print'){
+      _suppLogHistory(notes);
       suppBg.remove();
       srGenerateSupplemental(p,notes);
     }
