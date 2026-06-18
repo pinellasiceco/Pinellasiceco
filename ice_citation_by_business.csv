@@ -803,7 +803,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 5668929,HOPS & PROPS,335 2 AVE NE,ST. PETERSBURG,2021-04-07,4,Call Back - Complied,True,False,,
 5672261,JACKS LONDON GRILL,1050 62 AVE N,ST. PETERSBURG,2021-01-06,2,Inspection Completed - No Further Action,True,False,,
 5672315,CLEAR DRAUGHT HAUS,680 MAIN ST,DUNEDIN,2026-04-07,3,Inspection Completed - No Further Action,True,False,,
-5673668,NICK'S CAFE,18167 US HWY 19 N STE 130,CLEARWATER,2026-04-16,4,Inspection Completed - No Further Action,True,False,,
+5673668,NICK'S CAFE,18167 US HWY 19 N STE 130,CLEARWATER,2026-06-17,5,Inspection Completed - No Further Action,True,False,,
 5679553,SEA DOG CANTINA CLEARWATER,26200 US HIGHWAY 19 N,CLEARWATER,2021-04-13,2,Warning Issued,True,False,,
 5682293,SUSHI INC,270 1ST AVE N,ST. PETERSBURG,2026-03-27,5,Warning Issued,True,False,- From initial inspection : Basic - Ice buildup in reach-in freezer and/or walk-in freezer.,2025-11-13
 5684809,SIDS CARIBBEAN  GRILL,2623 CENTRAL AVE,ST. PETERSBURG,2021-06-17,1,Warning Issued,False,False,,
@@ -884,7 +884,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 5951191,ANOTHER BROKEN EGG CAFE,2554 N MCMULLEN BOOTH RD,CLEARWATER,2020-12-30,1,Inspection Completed - No Further Action,False,False,,
 5951836,GRILL & CAFE LUNA LLC,8421 49 ST N,PINELLAS PARK,2021-04-15,2,Inspection Completed - No Further Action,True,False,,
 5952275,CARMELITA'S MEXICAN GRILL & CANTINA,1280 MAIN ST,DUNEDIN,2026-04-23,4,Warning Issued,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior and lid of ice bin in server wait station soiled with black mold like substance.,2026-01-05
-5952488,RUTH'S CHRIS STEAK HOUSE,131 2 AVE N,ST. PETERSBURG,2025-12-11,2,Inspection Completed - No Further Action,True,False,,
+5952488,RUTH'S CHRIS STEAK HOUSE,131 2 AVE N,ST. PETERSBURG,2026-06-17,3,Inspection Completed - No Further Action,True,False,,
 5955051,RED MESA MERCADO,1100 1ST AVENUE NORTH,ST. PETERSBURG,2026-01-15,3,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine next to hand wash sink in kitchen with red/black mold-like substance along ceiling of unit.,2026-01-15
 5955649,KOOKY COCONUT CAFÉ,760 GULF BLVD,INDIAN ROCKS BEACH,2021-01-05,1,Inspection Completed - No Further Action,False,False,Ice cream cones stored on floor.,
 5960230,SURFSIDE TAP HOUSE,395 MANDALAY AVE,CLEARWATER,2026-04-15,3,Inspection Completed - No Further Action,True,False,Ice buckets not inverted.,
@@ -903,7 +903,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 6008041,THE BROWN BOXER PUB & GRILLE,731 BAYWAY BLVD,CLEARWATER BEACH,2020-07-17,2,Warning Issued,True,False,,
 6012756,AL & STELLA RISTORANTE PIZZERIA,1261 GULF BLVD #110,CLEARWATER,2025-12-01,3,Inspection Completed - No Further Action,True,False,,
 6014682,HAPPYS BAYOU BITES,431 SKINNER BLVD,DUNEDIN,2020-07-09,1,Inspection Completed - No Further Action,False,False,,
-6021805,BRICK & MORTAR,539 CENTRAL AVE,ST. PETERSBURG,2026-04-07,5,Call Back - Complied,True,False,,
+6021805,BRICK & MORTAR,539 CENTRAL AVE,ST. PETERSBURG,2026-06-17,6,Call Back - Complied,True,False,,
 6023045,PITA'S REPUBLIC,10454 ROOSEVELT BLVD N,ST. PETERSBURG,2020-08-07,1,Warning Issued,False,False,,
 6024068,LUCKY LOBSTER,941 HUNTLEY AVE,DUNEDIN,2021-02-22,2,Inspection Completed - No Further Action,True,False,,
 6026880,DRAGON PHOENIX USA INC,9621 BAY PINES BLVD,ST. PETERSBURG,2021-04-30,1,Administrative complaint recommended,False,False,,
@@ -2321,7 +2321,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 8677010,I THAI AND SUSHI,11002 SEMINOLE BLVD,LARGO,2026-01-28,2,Inspection Completed - No Further Action,True,False,,
 8677873,TRIP'S DINER,2339 DR  MARTIN LUTHER KING JR ST N,SAINT PETERSBURG,2025-10-28,2,Inspection Completed - No Further Action,True,False,Ice buildup in white reach-in freezer located in prep area.,2025-08-18
 8679086,HACIENDA CORRALEJO,459 ATHENS ST,TARPON SPRINGS,2026-04-08,3,Emergency order recommended,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Inside of ice machine on sides,2026-04-08
-8680863,K-POT KOREAN BBQ & HOT POT,6901 22 AVE STE 520 & 522,ST PETERSBURG,2025-12-08,1,Inspection Completed - No Further Action,False,False,,
+8680863,K-POT KOREAN BBQ & HOT POT,6901 22 AVE STE 520 & 522,ST PETERSBURG,2026-06-17,2,Inspection Completed - No Further Action,True,False,,
 8686532,NEW CHINA,5448 58 ST N,KENNETH CITY,2026-06-16,3,Inspection Completed - No Further Action,True,False,,
 8688255,LAKAZBA CAFE,300 STATE ST E STE 110,OLDSMAR,2026-01-06,1,Inspection Completed - No Further Action,False,False,,
 8690364,SLICE OF GULFPORT,1414 58 ST S,GULFPORT,2026-05-20,2,Inspection Completed - No Further Action,True,False,,
@@ -2757,6 +2757,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 9812681,TWO BUKS SALOON,1915 N HERCULES AVE,CLEARWATER,2026-03-04,1,Inspection Completed - No Further Action,False,False,,
 9812784,RUMFIRE,917 11 ST,PALM HARBOR,2026-01-08,1,Inspection Completed - No Further Action,False,False,,
 9825187,BEARDED TURTLE,847 ROOSEVELT BLVD,TARPON SPRINGS,2026-06-04,1,Warning Issued,False,False,,
+9828446,SCHOONERS WEST BAY,2441 W BAY DR,LARGO,2026-06-17,1,Warning Issued,False,False,Basic - Ice buildup in walk-in freezer.,
 9830775,MELT N DIP ,221 1 ST NE,ST. PETERSBURG,2026-02-10,1,Inspection Completed - No Further Action,False,False,Ice scoop handle in contact with ice. Scooper handle touching ice inside ice machine in front counter. Removed handle from ice.,2026-02-10
 9831548,HIBACHI EXPRESS,3605 49 ST N,ST. PETERSBURG,2026-01-14,1,Inspection Completed - No Further Action,False,False,,
 9833178,BEACH BURGER SHACK,45 PAPAYA ST,CLEARWATER,2026-01-21,1,Inspection Completed - No Further Action,False,False,Ice buildup in reach-in freezer across from there comp sink.,2026-01-21
