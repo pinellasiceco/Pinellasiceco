@@ -407,6 +407,64 @@ footer {
   text-decoration: none;
 }
 
+/* EMERGENCY GUARANTEE CARD */
+.emergency-card {
+  background: var(--amber-bg);
+  border: 1px solid #e6d08c;
+  border-left: 3px solid var(--amber);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.emergency-eyebrow {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 8px;
+}
+.emergency-headline {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+.emergency-sub {
+  font-size: 13px;
+  color: var(--gray);
+  margin-bottom: 14px;
+  line-height: 1.4;
+}
+.emergency-items {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.emergency-items li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.4;
+}
+.emergency-check { color: var(--amber); font-weight: 800; flex-shrink: 0; }
+.emergency-fine {
+  border-top: 1px solid #e6d08c;
+  padding-top: 10px;
+  font-size: 11px;
+  color: var(--gray);
+  line-height: 1.55;
+  font-style: italic;
+}
+.emergency-fine a { color: var(--amber); font-weight: 600; text-decoration: none; }
+
 @media (max-width: 400px) {
   .terms-grid { grid-template-columns: 1fr; }
 }
@@ -505,13 +563,25 @@ footer {
     <a class="addon-link" href="supplemental.html">Full details on the Supplemental Package &#8594;</a>
   </div>
 
+  <!-- EMERGENCY ICE DELIVERY -->
+  <div class="emergency-card">
+    <div class="emergency-eyebrow">Included &middot; Emergency Ice Delivery</div>
+    <div class="emergency-headline">2-Hour Response. Free Ice While You&#39;re Down.</div>
+    <div class="emergency-sub">If your machine breaks down between service visits, we deliver ice to keep your operation running &mdash; no extra charge.</div>
+    <ul class="emergency-items">
+      <li><span class="emergency-check">&#10003;</span> <span><strong>2-hour response window</strong> from your initial call</span></li>
+      <li><span class="emergency-check">&#10003;</span> <span><strong>Up to 120 lbs of ice per day</strong> at no additional charge</span></li>
+      <li><span class="emergency-check">&#10003;</span> <span><strong>Up to 3 consecutive days</strong> per breakdown incident</span></li>
+    </ul>
+    <div class="emergency-fine">Requests after 8&nbsp;pm may be fulfilled the following day at the earliest time your location accepts delivery. Additional ice beyond 120&nbsp;lbs/day, or beyond 3 days, billed at $10/bag. Maximum 2 incidents per 365-day period. <a href="https://www.pinellasiceco.com/terms">Full Terms &amp; Conditions &#8594;</a></div>
+  </div>
+
   <!-- NOT INCLUDED -->
   <div class="not-included">
     <div class="ni-title">Not Included — Billed Separately if Needed</div>
     <ul class="ni-items">
       <li><span class="ni-dash">—</span> Mechanical repairs (compressor, valves, board replacement)</li>
       <li><span class="ni-dash">—</span> Water filter replacement (if needed, billed at cost)</li>
-      <li><span class="ni-dash">—</span> Emergency after-hours response (available on request)</li>
     </ul>
   </div>
 
