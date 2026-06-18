@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ice Machine Compliance — Pinellas Ice Co.</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&family=Syne+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0d1b2a;
+  --ice: #3a8ec9;
+  --gold: #c8973a;
+  --green: #1a6b3a;
+  --green-bg: #e8f5ee;
+  --bg: #f7f6f3;
+  --card: #ffffff;
+  --border: #e4e2dc;
+  --ink: #1c1c1a;
+  --ink2: #5a5855;
+  --fairway: #2c5f3a;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  font-family: 'DM Sans', sans-serif;
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* HERO */
+.hero {
+  background: var(--navy);
+  padding: 36px 24px 40px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 280px; height: 280px;
+  background: radial-gradient(circle, rgba(58,142,201,0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-eyebrow {
+  font-family: 'Syne Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ice);
+  margin-bottom: 20px;
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: start;
+}
+.hero-headline {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(22px, 5vw, 34px);
+  color: #fff;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+.hero-headline em {
+  font-style: normal;
+  color: var(--gold);
+}
+.hero-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.6;
+  max-width: 420px;
+}
+.atp-badge {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 10px;
+  padding: 16px 18px;
+  text-align: center;
+  min-width: 100px;
+  flex-shrink: 0;
+}
+.atp-num {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 36px;
+  color: var(--gold);
+  line-height: 1;
+  display: block;
+}
+.atp-label {
+  font-family: 'Syne Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  margin-top: 4px;
+  display: block;
+}
+.atp-standard {
+  font-size: 10px;
+  color: rgba(255,255,255,0.35);
+  margin-top: 6px;
+  display: block;
+}
+
+/* MAIN */
+main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 28px 20px 56px;
+}
+
+.section-label {
+  font-family: 'Syne Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink2);
+  margin-bottom: 12px;
+}
+
+/* THE PROBLEM */
+.problem-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.problem-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.problem-card .num {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 26px;
+  color: var(--navy);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.problem-card .num.red { color: #9b1c1c; }
+.problem-card p {
+  font-size: 12px;
+  color: var(--ink2);
+  line-height: 1.5;
+}
+
+/* WHAT WE DO */
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 28px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.step:last-child { border-bottom: none; }
+.step-num {
+  font-family: 'Syne Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.9);
+  background: var(--navy);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.step-body h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.step-body p {
+  font-size: 12px;
+  color: var(--ink2);
+  line-height: 1.5;
+}
+.step-body .atp-result {
+  font-family: 'Syne Mono', monospace;
+  font-size: 10px;
+  color: var(--green);
+  font-weight: 600;
+  margin-top: 3px;
+  display: inline-block;
+}
+
+/* WHY IT MATTERS TO YOUR CLUB */
+.club-callout {
+  background: linear-gradient(135deg, #0d1b2a 0%, #1a3050 100%);
+  border-radius: 10px;
+  padding: 20px 20px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+}
+.club-callout::after {
+  content: '⛳';
+  position: absolute;
+  right: 16px;
+  bottom: 12px;
+  font-size: 40px;
+  opacity: 0.08;
+}
+.club-callout .section-label { color: var(--ice); margin-bottom: 10px; }
+.club-callout ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.club-callout li {
+  font-size: 13px;
+  color: rgba(255,255,255,0.82);
+  line-height: 1.5;
+  padding-left: 18px;
+  position: relative;
+}
+.club-callout li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+  font-weight: 700;
+}
+
+/* WHAT YOU GET */
+.deliverables {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.deliverable {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 14px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.deliverable-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  line-height: 1;
+  margin-top: 1px;
+}
+.deliverable h3 {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.deliverable p {
+  font-size: 11px;
+  color: var(--ink2);
+  line-height: 1.4;
+}
+
+/* PRICING */
+.pricing-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 28px;
+}
+.pricing-header {
+  background: var(--navy);
+  padding: 14px 18px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.pricing-header .price {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 28px;
+  color: #fff;
+}
+.pricing-header .price-detail {
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+}
+.pricing-body {
+  padding: 14px 18px;
+}
+.pricing-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 12.5px;
+}
+.pricing-row:last-child { border-bottom: none; }
+.pricing-row .label { color: var(--ink2); }
+.pricing-row .val { font-weight: 600; color: var(--ink); }
+.pricing-row .val.gold { color: var(--gold); }
+.pricing-note {
+  font-size: 11px;
+  color: var(--ink2);
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  line-height: 1.5;
+}
+.multi-machine {
+  background: rgba(200,151,58,0.08);
+  border: 1px solid rgba(200,151,58,0.25);
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-top: 10px;
+  font-size: 11px;
+  color: var(--ink2);
+  line-height: 1.5;
+}
+.multi-machine strong { color: #7a5100; font-weight: 600; }
+
+/* GUARANTEE */
+.guarantee {
+  background: var(--green-bg);
+  border-left: 3px solid var(--green);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 16px;
+  margin-bottom: 28px;
+}
+.guarantee .section-label { color: var(--green); margin-bottom: 6px; }
+.guarantee p { font-size: 12.5px; color: var(--green); line-height: 1.6; }
+.guarantee strong { font-weight: 700; }
+
+/* CONTACT */
+.contact {
+  background: var(--navy);
+  border-radius: 10px;
+  padding: 22px 20px;
+  text-align: center;
+}
+.contact h2 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 17px;
+  color: #fff;
+  margin-bottom: 6px;
+}
+.contact p {
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+.contact-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn {
+  display: inline-block;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 11px 20px;
+  border-radius: 7px;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+.btn-primary { background: var(--gold); color: var(--navy); }
+.btn-secondary {
+  background: transparent;
+  color: rgba(255,255,255,0.8);
+  border: 1px solid rgba(255,255,255,0.25);
+}
+
+footer {
+  text-align: center;
+  padding: 20px 20px 36px;
+  font-family: 'Syne Mono', monospace;
+  font-size: 9px;
+  color: var(--ink2);
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 420px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .atp-badge { display: none; }
+  .problem-row { grid-template-columns: 1fr; }
+  .deliverables { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">Pinellas Ice Co. — For Golf &amp; Country Clubs</div>
+  <div class="hero-grid">
+    <div>
+      <h1 class="hero-headline">Your ice machine<br>is tested. <em>Documented.<br>Certified.</em></h1>
+      <p class="hero-sub">ATP bioluminescence testing measures exactly what&#39;s in your ice machine — before and after every cleaning. Your members and your health inspector see a number, not just a claim.</p>
+    </div>
+    <div class="atp-badge">
+      <span class="atp-num">8</span>
+      <span class="atp-label">RLU Post-Clean</span>
+      <span class="atp-standard">FDA standard: &#60;10</span>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <div class="section-label">Why This Matters at Your Club</div>
+  <div class="problem-row">
+    <div class="problem-card">
+      <div class="num red">312</div>
+      <p>Typical pre-clean RLU reading on an unserviced machine. The FDA standard is 10. Most clubs have no idea what their number is.</p>
+    </div>
+    <div class="problem-card">
+      <div class="num">$500+</div>
+      <p>A single DBPR health citation at your facility. Beyond the fine, it&#39;s a reputation event your members notice.</p>
+    </div>
+  </div>
+
+  <div class="section-label">What a Visit Looks Like</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Pre-clean ATP Test</h3>
+        <p>We swab and measure contamination levels before touching anything. You see the baseline number.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>Full Deep Clean &amp; Sanitization</h3>
+        <p>Complete disassembly of water-contact surfaces, bin, water lines, and distribution system. Scale and mineral removal included.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>Post-clean ATP Verification</h3>
+        <p>We test again. Certificate is only issued when the machine scores below 10 RLU.</p>
+        <span class="atp-result">✓ Verified: 8 RLU — PASS</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h3>Certified &amp; Documented</h3>
+        <p>CleanScore certificate issued with a unique cert ID. QR sticker placed on the machine — scannable by health inspectors to verify status.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="club-callout">
+    <div class="section-label">The Club-Specific Case</div>
+    <ul>
+      <li>Members expect a higher standard than they hold a casual restaurant to — ice quality is part of that expectation.</li>
+      <li>A DBPR citation at a club dining room or 19th hole bar is a member-facing event, not just a regulatory matter.</li>
+      <li>Independent ATP documentation gives your F&amp;B director something concrete to show the board or GM — a number, not just a vendor relationship.</li>
+      <li>Quarterly scheduling means this is handled before inspection season, not scrambled after a notice.</li>
+    </ul>
+  </div>
+
+  <div class="section-label">What You Receive Every Visit</div>
+  <div class="deliverables">
+    <div class="deliverable">
+      <div class="deliverable-icon">📋</div>
+      <div>
+        <h3>Written ATP Report</h3>
+        <p>Pre and post RLU scores, date, technician notes — on file for your records.</p>
+      </div>
+    </div>
+    <div class="deliverable">
+      <div class="deliverable-icon">🛡️</div>
+      <div>
+        <h3>CleanScore Certificate</h3>
+        <p>Unique cert ID, scannable QR code. Inspector verifies status directly.</p>
+      </div>
+    </div>
+    <div class="deliverable">
+      <div class="deliverable-icon">📅</div>
+      <div>
+        <h3>Inspection History</h3>
+        <p>We review your DBPR record before every visit — no surprises at your next inspection.</p>
+      </div>
+    </div>
+    <div class="deliverable">
+      <div class="deliverable-icon">🧊</div>
+      <div>
+        <h3>Ice Guarantee</h3>
+        <p>If the machine fails mechanically, we deliver up to 120 lbs/day for 3 days at no charge.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Pricing</div>
+  <div class="pricing-card">
+    <div class="pricing-header">
+      <span class="price">$228</span>
+      <span class="price-detail">first invoice, then $129/month</span>
+    </div>
+    <div class="pricing-body">
+      <div class="pricing-row">
+        <span class="label">Initial Setup &amp; First Deep Clean</span>
+        <span class="val">$99 one-time</span>
+      </div>
+      <div class="pricing-row">
+        <span class="label">Quarterly Recurring Service</span>
+        <span class="val">$129/month</span>
+      </div>
+      <div class="pricing-row">
+        <span class="label">Visits per Year</span>
+        <span class="val">4 certified visits</span>
+      </div>
+      <div class="pricing-row">
+        <span class="label">Contract Required</span>
+        <span class="val gold">None — cancel anytime</span>
+      </div>
+      <div class="pricing-row">
+        <span class="label">ATP Testing &amp; Documentation</span>
+        <span class="val gold">Included every visit</span>
+      </div>
+      <div class="pricing-note">
+        Free on-site ATP inspection available before commitment — we&#39;ll test your machine and show you the score at no charge.
+      </div>
+      <div class="multi-machine">
+        <strong>Multiple machines?</strong> Additional machines on the same property are $69/month each — serviced on the same visit.
+      </div>
+    </div>
+  </div>
+
+  <div class="guarantee">
+    <div class="section-label">30-Day Inspection Protection Guarantee</div>
+    <p>If your ice machine is specifically cited in a DBPR health inspection within 30 days of our service, <strong>we refund your most recent service charge in full.</strong> No questions. We stand behind the ATP number we document.</p>
+  </div>
+
+  <div class="contact">
+    <h2>Schedule the Free Inspection</h2>
+    <p>We&#39;ll visit, test the machine, and show you the score.<br>No charge. No obligation. Most machines fail.</p>
+    <div class="contact-row">
+      <a class="btn btn-primary" href="tel:7278556873">(727) 855-6873</a>
+      <a class="btn btn-secondary" href="https://www.pinellasiceco.com">PinellasIceCo.com</a>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  Pinellas Ice Co. &nbsp;·&nbsp; Tarpon Springs, FL &nbsp;·&nbsp; ATP-Verified Ice Machine Cleaning &nbsp;·&nbsp; Pinellas County
+</footer>
+
+</body>
+</html>
