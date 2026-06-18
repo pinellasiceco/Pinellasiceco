@@ -6682,6 +6682,12 @@ async function loadCloudData(){
         if(!row.data)return;
         customers[row.prospect_id]=row.data;
         var p=P.find(function(x){return String(x.id)===String(row.prospect_id);});
+        if(!p&&row.data._manual_rec){
+          P.push(row.data._manual_rec);p=P[P.length-1];
+          try{var _ms=JSON.parse(localStorage.getItem('pic_manual_prospects')||'[]');
+            if(!_ms.find(function(x){return String(x.id)===row.prospect_id;})){_ms.push(row.data._manual_rec);localStorage.setItem('pic_manual_prospects',JSON.stringify(_ms));}
+          }catch(e){}
+        }
         if(p){
           if(row.data.status){
             p.status=row.data.status;
@@ -6756,6 +6762,12 @@ function subscribeRealtime(){
         customers[row.prospect_id]=row.data;
         try{localStorage.setItem('pic_customers',JSON.stringify(customers));}catch(e){}
         var p=P.find(function(x){return String(x.id)===row.prospect_id;});
+        if(!p&&row.data._manual_rec){
+          P.push(row.data._manual_rec);p=P[P.length-1];
+          try{var _ms=JSON.parse(localStorage.getItem('pic_manual_prospects')||'[]');
+            if(!_ms.find(function(x){return String(x.id)===row.prospect_id;})){_ms.push(row.data._manual_rec);localStorage.setItem('pic_manual_prospects',JSON.stringify(_ms));}
+          }catch(e){}
+        }
         if(p){
           if(row.data.status){
             p.status=row.data.status;
@@ -9783,7 +9795,7 @@ function saveNewBusiness(){
     cit_latest:'',cit_earliest:'',cit_days_since:0,cit_observation:'',cit_observation_date:'',cit_codes:[],
     cit_repeat:0,cit_mold_black:0,cit_mold_pink:0,cit_scoop:0,ice_confirmed_dbpr:false,ice_gold:false,
     premium_score:0,manual_entry:true};
-  if(notes){if(!customers[newId])customers[newId]={};customers[newId].notes=notes;custSave();}
+  if(!customers[newId])customers[newId]={};customers[newId].notes=notes;customers[newId]._manual_rec=rec;custSave();
   var stored=[];try{stored=JSON.parse(localStorage.getItem('pic_manual_prospects')||'[]');}catch(e){}
   stored.push(rec);
   localStorage.setItem('pic_manual_prospects',JSON.stringify(stored));
