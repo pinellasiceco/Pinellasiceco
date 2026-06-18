@@ -3500,6 +3500,7 @@ const OI={
   customer_recurring:'Signed ✓', customer_once:'Signed ✓', customer_intro:'Intro Set',
   follow_up:'In Play', interested:'In Play', scheduled:'Intro Set',
   not_interested:'Not Now', no_answer:'No Contact', churned:'Dead',
+  customer_supplemental_only:'Supplemental ✓',
 };
 const OI_COLOR={
   signed:'#059669', intro_set:'#0891b2', in_play:'#d97706',
@@ -3508,6 +3509,7 @@ const OI_COLOR={
   customer_recurring:'#059669', customer_once:'#059669', customer_intro:'#0891b2',
   follow_up:'#d97706', interested:'#d97706', scheduled:'#0891b2',
   not_interested:'#dc2626', no_answer:'#64748b', churned:'#374151',
+  customer_supplemental_only:'#7c3aed',
 };
 // Normalize legacy outcomes to new system for filtering
 function normO(o){
@@ -12185,7 +12187,7 @@ function _activeClients(){
     var c=customers[pid];
     if(!c)continue;
     var st=c.status||\'\';\
-    if(st===\'customer_recurring\'||st===\'customer_quarterly\'||st===\'customer_once\'||st===\'customer_intro\'){
+    if(st===\'customer_recurring\'||st===\'customer_quarterly\'||st===\'customer_once\'||st===\'customer_intro\'||st===\'customer_supplemental_only\'){
       result.push({pid:pid,cust:c});
     }
   }
@@ -12207,7 +12209,9 @@ function _num(val){
 
 function _custMRR(c){
   if(!c)return 0;
-  return _num(c.monthly);
+  var st=c.status||'';
+  if(st==='customer_supplemental_only')return _num(c.supplemental_price||79);
+  return _num(c.monthly)+(c.supplemental_reach_in?_num(c.supplemental_price||79):0);
 }
 
 function calcOneTimeRevenue(sinceDate){
