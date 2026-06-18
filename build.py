@@ -2717,7 +2717,7 @@ header{background:var(--navy);
         <option value="signed">Signed</option>
         <option value="dead">Dead</option>
       </select>
-      <select id="adt" onchange="dRa()" class="flt-sel"><option value="">All Timing</option><option value="0-30">Due &lt; 30 days</option><option value="30-60">30&#x2013;60 days</option><option value="60-90">60&#x2013;90 days</option><option value="90+">90+ days</option></select>
+      <select id="adt" onchange="dRa()" class="flt-sel"><option value="">All Timing</option><option value="overdue">Overdue</option><option value="0-30">Due &lt; 30 days</option><option value="30-60">30&#x2013;60 days</option><option value="60-90">60&#x2013;90 days</option><option value="90+">90+ days</option></select>
       <button onclick="enterQueueMode()" ontouchend="event.preventDefault();enterQueueMode()" style="font-size:10px;padding:5px 10px;border:1px solid var(--blu);border-radius:6px;background:#0a84ff22;color:var(--blu);cursor:pointer;font-family:inherit;font-weight:700;flex-shrink:0">&#x25B6; Queue</button>
       <button onclick="clearFilters()" ontouchend="event.preventDefault();clearFilters()" style="font-size:10px;padding:5px 8px;border:1px solid var(--brd);border-radius:6px;background:transparent;color:var(--sub);cursor:pointer;font-family:inherit;flex-shrink:0">Clear</button>
       <button id="btn-show-dead" onclick="toggleShowDead()" style="font-size:10px;padding:5px 8px;border:1px solid #94a3b8;border-radius:6px;background:transparent;color:#94a3b8;cursor:pointer;font-family:inherit;flex-shrink:0">&#x26AB; Show Lost</button>
@@ -5556,7 +5556,7 @@ function rA(){
       if(st==='not_contacted'){if(isC(p.id))return false;}
       else if(norm!==st)return false;
     }
-    if(dt){var _du=p.days_until??999;if(_du===999)return false;if(dt==='0-30'&&!(_du<30))return false;if(dt==='30-60'&&!(_du>=30&&_du<60))return false;if(dt==='60-90'&&!(_du>=60&&_du<90))return false;if(dt==='90+'&&!(_du>=90))return false;}
+    if(dt){var _du=p.days_until??999;if(_du===999)return false;if(dt==='overdue'&&!(_du<0))return false;if(dt==='0-30'&&!(_du>=0&&_du<30))return false;if(dt==='30-60'&&!(_du>=30&&_du<60))return false;if(dt==='60-90'&&!(_du>=60&&_du<90))return false;if(dt==='90+'&&!(_du>=90))return false;}
     // Hide dead prospects unless _showDead is toggled on
     if(!_showDead&&!st){
       const lc=getLC(p.id);
