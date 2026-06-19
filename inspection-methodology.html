@@ -25,12 +25,9 @@ html{scroll-behavior:smooth}
 body{background:var(--surf);color:var(--ink);font-family:'DM Sans',sans-serif;min-height:100vh}
 
 /* ── TOPBAR ─── */
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;border-bottom:1px solid var(--brd);background:#fff;position:sticky;top:0;z-index:50}
-.tb-brand{display:flex;align-items:center;gap:10px;min-width:0}
-.topbar img{height:28px;width:28px;object-fit:contain;border-radius:4px;flex-shrink:0}
-.topbar-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--navy2);letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tb-btn{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;color:var(--sub);background:#f8fafc;border:1px solid var(--brd);border-radius:7px;padding:6px 10px;cursor:pointer;white-space:nowrap;flex-shrink:0;-webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:color .2s,border-color .2s}
-.tb-btn:hover{color:var(--navy2);border-color:var(--gold)}
+.topbar{display:flex;align-items:center;gap:10px;padding:14px 20px;border-bottom:1px solid var(--brd);background:#fff;position:sticky;top:0;z-index:50}
+.topbar img{height:28px;width:28px;object-fit:contain;border-radius:4px}
+.topbar-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--navy2);letter-spacing:.04em}
 
 /* ── HEADER / SEAL ─── */
 .doc-header{background:linear-gradient(165deg,var(--navy2) 0%,#0d2a42 100%);padding:40px 24px 36px;text-align:center;position:relative;overflow:hidden}
@@ -38,7 +35,7 @@ body{background:var(--surf);color:var(--ink);font-family:'DM Sans',sans-serif;mi
 
 /* SVG SEAL */
 .seal-wrap{display:flex;justify-content:center;margin-bottom:24px}
-.doc-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#f0f4f8;line-height:1.2;letter-spacing:.01em;margin-bottom:8px}
+.doc-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#f0f4f8;letter-spacing:.01em;margin-bottom:8px}
 .doc-sub{font-size:13px;color:rgba(240,244,248,0.6);letter-spacing:.04em;line-height:1.5}
 
 /* ── BODY ─── */
@@ -90,16 +87,11 @@ body{background:var(--surf);color:var(--ink);font-family:'DM Sans',sans-serif;mi
 <body>
 
 <div class="topbar">
-  <button class="tb-btn" id="tb-back" onclick="history.back()" aria-label="Go back">&#x2190; Back</button>
-  <div class="tb-brand">
-    <img src="https://raw.githubusercontent.com/pinellasiceco/Pinellasiceco/main/pic_logo.png"
-         alt="Pinellas Ice Co."
-         onerror="this.style.display='none'">
-    <div class="topbar-name">Pinellas Ice Co.</div>
-  </div>
-  <button class="tb-btn" onclick="window.open(window.location.href,'_blank','noopener')" aria-label="Open in browser">Browser &#x2197;</button>
+  <img src="https://raw.githubusercontent.com/pinellasiceco/Pinellasiceco/main/pic_logo.png"
+       alt="Pinellas Ice Co."
+       onerror="this.style.display='none'">
+  <div class="topbar-name">Pinellas Ice Co.</div>
 </div>
-<script>if(history.length<=1){var _b=document.getElementById('tb-back');if(_b)_b.style.visibility='hidden';}</script>
 
 <!-- DOCUMENT HEADER -->
 <div class="doc-header">
