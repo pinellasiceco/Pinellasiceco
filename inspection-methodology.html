@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Forecast Methodology &middot; Pinellas Ice Co.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&family=Syne+Mono&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0d1b2a;
+  --navy2:#0f1f38;
+  --gold:#c8973a;
+  --gold2:#e8b84b;
+  --ice:#3a8ec9;
+  --ink:#1a2535;
+  --sub:#64748b;
+  --surf:#f8fafc;
+  --brd:#e2e8f0;
+  --navy-ink:#0d1b2a;
+}
+html{scroll-behavior:smooth}
+body{background:var(--surf);color:var(--ink);font-family:'DM Sans',sans-serif;min-height:100vh}
+
+/* ── TOPBAR ─── */
+.topbar{display:flex;align-items:center;gap:10px;padding:14px 20px;border-bottom:1px solid var(--brd);background:#fff;position:sticky;top:0;z-index:50}
+.topbar img{height:28px;width:28px;object-fit:contain;border-radius:4px}
+.topbar-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--navy2);letter-spacing:.04em}
+
+/* ── HEADER / SEAL ─── */
+.doc-header{background:linear-gradient(165deg,var(--navy2) 0%,#0d2a42 100%);padding:40px 24px 36px;text-align:center;position:relative;overflow:hidden}
+.doc-header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(200,151,58,0.12) 0%,transparent 65%);pointer-events:none}
+
+/* SVG SEAL */
+.seal-wrap{display:flex;justify-content:center;margin-bottom:24px}
+.doc-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#f0f4f8;letter-spacing:.01em;margin-bottom:8px}
+.doc-sub{font-size:13px;color:rgba(240,244,248,0.6);letter-spacing:.04em;line-height:1.5}
+
+/* ── BODY ─── */
+.doc-body{max-width:640px;margin:0 auto;padding:0 20px 60px}
+
+/* CERT STRIP */
+.cert-strip{background:#fff;border:1px solid var(--brd);border-top:4px solid var(--gold);border-radius:0 0 10px 10px;padding:14px 20px;margin-bottom:28px;display:flex;align-items:center;gap:12px}
+.cert-strip-icon{font-size:20px;flex-shrink:0}
+.cert-strip-text{font-size:12px;color:var(--sub);line-height:1.6}
+.cert-strip-text strong{color:var(--ink);font-weight:600}
+
+/* SECTION */
+.method-section{margin-bottom:28px}
+.method-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--gold);color:#0a1628;font-family:'Syne',sans-serif;font-size:11px;font-weight:800;flex-shrink:0;margin-right:10px}
+.method-heading{display:flex;align-items:center;margin-bottom:12px}
+.method-heading h2{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--navy2);letter-spacing:.01em}
+.method-body{font-size:14px;color:#334155;line-height:1.75;padding-left:34px}
+.method-body p{margin-bottom:10px}
+.method-body p:last-child{margin-bottom:0}
+.method-body strong{color:var(--ink);font-weight:600}
+
+/* divider */
+.rule{border:none;border-top:1px solid var(--brd);margin:6px 0 28px}
+
+/* compare block */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.cmp-card{border-radius:8px;padding:14px 14px}
+.cmp-card.generic{background:#f1f5f9;border:1px solid #e2e8f0}
+.cmp-card.personal{background:#eff8ff;border:1px solid #bae6fd}
+.cmp-label{font-family:'Syne Mono',monospace;font-size:8px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px}
+.cmp-card.generic .cmp-label{color:#94a3b8}
+.cmp-card.personal .cmp-label{color:var(--ice)}
+.cmp-text{font-size:12px;color:#334155;line-height:1.6}
+
+/* caveat */
+.caveat{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #f59e0b;border-radius:8px;padding:16px;margin-top:28px}
+.caveat-label{font-family:'Syne Mono',monospace;font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:#b45309;margin-bottom:6px}
+.caveat p{font-size:13px;color:#78350f;line-height:1.65}
+
+/* back link */
+.back-link{display:inline-flex;align-items:center;gap:6px;margin-top:32px;font-size:12px;color:var(--sub);text-decoration:none;border-bottom:1px solid var(--brd);padding-bottom:2px}
+.back-link:hover{color:var(--navy2);border-color:var(--navy2)}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <img src="https://raw.githubusercontent.com/pinellasiceco/Pinellasiceco/main/pic_logo.png"
+       alt="Pinellas Ice Co."
+       onerror="this.style.display='none'">
+  <div class="topbar-name">Pinellas Ice Co.</div>
+</div>
+
+<!-- DOCUMENT HEADER -->
+<div class="doc-header">
+  <div class="seal-wrap">
+    <!-- Custom SVG seal — navy/gold/ice brand palette, no reused assets -->
+    <svg width="90" height="90" viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pinellas Ice Co. forecast seal">
+      <!-- outer ring -->
+      <circle cx="45" cy="45" r="43" stroke="#c8973a" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <!-- inner fill -->
+      <circle cx="45" cy="45" r="36" fill="rgba(15,31,56,0.85)" stroke="#c8973a" stroke-width="1"/>
+      <!-- ice crystal arms -->
+      <g stroke="#3a8ec9" stroke-width="1.2" stroke-linecap="round">
+        <line x1="45" y1="18" x2="45" y2="72"/>
+        <line x1="21" y1="31.5" x2="69" y2="58.5"/>
+        <line x1="21" y1="58.5" x2="69" y2="31.5"/>
+        <!-- branch ticks -->
+        <line x1="45" y1="27" x2="40" y2="22"/><line x1="45" y1="27" x2="50" y2="22"/>
+        <line x1="45" y1="63" x2="40" y2="68"/><line x1="45" y1="63" x2="50" y2="68"/>
+        <line x1="30.5" y1="36.2" x2="25.5" y2="34.7"/><line x1="30.5" y1="36.2" x2="29" y2="41.5"/>
+        <line x1="59.5" y1="53.8" x2="64.5" y2="55.3"/><line x1="59.5" y1="53.8" x2="61" y2="48.5"/>
+        <line x1="30.5" y1="53.8" x2="25.5" y2="55.3"/><line x1="30.5" y1="53.8" x2="29" y2="48.5"/>
+        <line x1="59.5" y1="36.2" x2="64.5" y2="34.7"/><line x1="59.5" y1="36.2" x2="61" y2="41.5"/>
+      </g>
+      <!-- center dot -->
+      <circle cx="45" cy="45" r="4" fill="#c8973a"/>
+      <!-- text arc (top) -->
+      <path id="arc-top" d="M 15,45 A 30,30 0 0,1 75,45" fill="none"/>
+      <text font-family="'Syne Mono',monospace" font-size="6.5" letter-spacing="2" fill="rgba(200,151,58,0.85)" text-anchor="middle">
+        <textPath href="#arc-top" startOffset="50%">PINELLAS ICE CO.</textPath>
+      </text>
+      <!-- text arc (bottom) -->
+      <path id="arc-bot" d="M 16,47 A 30,30 0 0,0 74,47" fill="none"/>
+      <text font-family="'Syne Mono',monospace" font-size="6" letter-spacing="1.5" fill="rgba(200,151,58,0.7)" text-anchor="middle">
+        <textPath href="#arc-bot" startOffset="50%">FORECAST METHODOLOGY</textPath>
+      </text>
+    </svg>
+  </div>
+  <div class="doc-title">Inspection Forecast Methodology</div>
+  <div class="doc-sub">How Pinellas Ice Co. calculates predicted inspection dates<br>for each business in Pinellas County</div>
+</div>
+
+<!-- CERT STRIP -->
+<div class="doc-body">
+<div class="cert-strip">
+  <div class="cert-strip-icon">&#x1F4CB;</div>
+  <div class="cert-strip-text">
+    <strong>This forecast is specific to your location.</strong>
+    It is generated from the DBPR inspection history on file for this business &mdash; not a county-wide average or a generic estimate.
+  </div>
+</div>
+
+<!-- SECTION 1 -->
+<div class="method-section">
+  <div class="method-heading">
+    <span class="method-num">1</span>
+    <h2>We start with this specific business&#39;s own inspection history</h2>
+  </div>
+  <div class="method-body">
+    <p>Every Florida food service establishment has a publicly available inspection record maintained by the <strong>Division of Hotels and Restaurants (DBPR)</strong>. That record includes the date of every past inspection, the outcome, and any violations cited.</p>
+    <p>We analyze <em>this business&#39;s own</em> pattern of past visits &mdash; how long it was between each inspection, what violations were found, and how the inspector assessed the risk level &mdash; to build a model of how this specific location tends to be re-inspected over time.</p>
+  </div>
+</div>
+
+<hr class="rule">
+
+<!-- SECTION 2 -->
+<div class="method-section">
+  <div class="method-heading">
+    <span class="method-num">2</span>
+    <h2>Why that&#39;s more useful than a county-wide average</h2>
+  </div>
+  <div class="method-body">
+    <p>The obvious approach &mdash; <em>&ldquo;Florida restaurants get inspected roughly every four months&rdquo;</em> &mdash; is true in aggregate but nearly useless for any specific location. In practice, inspection cadence varies significantly by risk profile, violation history, and prior outcomes.</p>
+    <div class="compare">
+      <div class="cmp-card generic">
+        <div class="cmp-label">Generic estimate</div>
+        <div class="cmp-text">&#x201C;The average Pinellas restaurant is inspected about every 120 days.&#x201D;<br><br>Applied equally to every business regardless of their actual history.</div>
+      </div>
+      <div class="cmp-card personal">
+        <div class="cmp-label">This forecast</div>
+        <div class="cmp-text">&#x201C;Based on <em>your</em> past inspection dates and outcomes, your next visit is most likely within this specific window.&#x201D;</div>
+      </div>
+    </div>
+    <p>Businesses with a history of ice machine violations are typically re-inspected on a tighter schedule. Businesses with consistently clean records may go longer between visits. Our model accounts for those differences.</p>
+  </div>
+</div>
+
+<hr class="rule">
+
+<!-- SECTION 3 -->
+<div class="method-section">
+  <div class="method-heading">
+    <span class="method-num">3</span>
+    <h2>The prediction is anchored to the most recent inspection on record</h2>
+  </div>
+  <div class="method-body">
+    <p>The predicted date is calculated forward from the <strong>most recent confirmed inspection</strong> we have on file for this business from the DBPR public records. If a callback or follow-up visit occurred after the original inspection, the prediction is anchored to that more recent date &mdash; not the earlier one.</p>
+    <p>Inspection data is updated regularly from DBPR&#39;s public database. If a very recent inspection has not yet propagated through the system, our most recent date on file may lag by a few days.</p>
+  </div>
+</div>
+
+<hr class="rule">
+
+<!-- SECTION 4 -->
+<div class="method-section">
+  <div class="method-heading">
+    <span class="method-num">4</span>
+    <h2>What the predicted interval is based on</h2>
+  </div>
+  <div class="method-body">
+    <p>The model considers several signals from this business&#39;s history: the typical gap between its past inspections, the number of violations found, the severity of those violations, and the inspector&#39;s outcome (whether re-inspection was required, whether corrections were made on-site, and whether the matter was fully resolved).</p>
+    <p>Businesses where a callback was required and has since been cleared &mdash; &#x201C;Call Back &mdash; Complied&#x201D; &mdash; are treated as returning to a normal re-inspection cadence rather than being locked into the short callback cycle. Once the original finding is resolved, the next visit is expected to follow the routine schedule.</p>
+  </div>
+</div>
+
+<hr class="rule">
+
+<!-- CAVEAT -->
+<div class="caveat">
+  <div class="caveat-label">Important Caveat</div>
+  <p>This is a <strong>prediction based on historical patterns</strong>, not a guarantee of when DBPR will actually inspect this location. Inspectors operate on schedules that may be affected by staffing, complaints received, or district priorities that are not reflected in the public record. The predicted date should be read as a <em>likely window</em>, not a certain date.</p>
+</div>
+
+<a class="back-link" href="javascript:history.back()">
+  &#x2190; Back to Inspection Forecast
+</a>
+
+</div><!-- /doc-body -->
+</body>
+</html>

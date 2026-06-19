@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Inspection Forecast &middot; Pinellas Ice Co.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&family=Syne+Mono&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0d1b2a;
+  --navy2:#0f1f38;
+  --gold:#c8973a;
+  --gold2:#e8b84b;
+  --ice:#3a8ec9;
+  --ink:#f0f4f8;
+  --sub:rgba(240,244,248,0.65);
+  --card:rgba(255,255,255,0.055);
+  --brd:rgba(255,255,255,0.1);
+}
+html{scroll-behavior:smooth}
+body{background:var(--navy);color:var(--ink);font-family:'DM Sans',sans-serif;min-height:100vh;padding-bottom:120px}
+
+/* ── TOPBAR ─── */
+.topbar{display:flex;align-items:center;gap:10px;padding:14px 20px;border-bottom:1px solid var(--brd);background:rgba(13,27,42,0.9);backdrop-filter:blur(12px);position:sticky;top:0;z-index:50}
+.topbar img{height:28px;width:28px;object-fit:contain;border-radius:4px}
+.topbar-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--gold);letter-spacing:.04em}
+
+/* ── STATES ─── */
+.state{display:none;min-height:60vh;align-items:center;justify-content:center;padding:40px 20px;text-align:center;flex-direction:column;gap:16px}
+.state.active{display:flex}
+.state-icon{font-size:48px;line-height:1}
+.state h2{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--ink)}
+.state p{color:var(--sub);font-size:14px;max-width:320px;line-height:1.6}
+.spinner{width:36px;height:36px;border:3px solid var(--brd);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── MAIN CONTENT ─── */
+#state-main{display:none;flex-direction:column}
+#state-main.active{display:flex}
+
+/* ── HERO ─── */
+.hero{background:linear-gradient(160deg,#0f1f38 0%,#0d2a42 55%,#091e35 100%);padding:36px 24px 40px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 20%,rgba(58,142,201,0.18) 0%,transparent 70%);pointer-events:none}
+.hero-eyebrow{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--ice);margin-bottom:18px;opacity:.85}
+.biz-name{font-family:'Syne',sans-serif;font-size:clamp(18px,5vw,26px);font-weight:800;color:var(--ink);line-height:1.15;margin-bottom:6px}
+.biz-addr{font-size:12px;color:var(--sub);letter-spacing:.04em;margin-bottom:32px}
+
+/* THE NUMBER */
+.days-wrap{display:flex;flex-direction:column;align-items:center;gap:0;margin-bottom:6px;position:relative}
+.days-glow{position:absolute;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(58,142,201,0.22) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.days-num{font-family:'Syne',sans-serif;font-size:clamp(88px,22vw,140px);font-weight:800;line-height:1;color:#fff;position:relative;z-index:1;text-shadow:0 0 60px rgba(58,142,201,0.5),0 0 120px rgba(58,142,201,0.2)}
+.days-label{font-family:'Syne Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--ice);position:relative;z-index:1;margin-top:2px}
+.days-overdue .days-num{color:#f87171;text-shadow:0 0 60px rgba(248,113,113,0.4),0 0 120px rgba(248,113,113,0.15)}
+.days-overdue .days-glow{background:radial-gradient(circle,rgba(248,113,113,0.18) 0%,transparent 70%)}
+.days-overdue .days-label{color:#f87171}
+
+.pred-date{font-size:15px;font-weight:600;color:rgba(240,244,248,0.9);margin-top:14px;position:relative;z-index:1}
+.pred-date span{color:var(--gold)}
+
+/* ── METHODOLOGY LINK ─── */
+.meth-link{display:inline-flex;align-items:center;gap:6px;margin-top:22px;font-size:11px;color:rgba(240,244,248,0.5);text-decoration:none;border-bottom:1px solid rgba(240,244,248,0.15);padding-bottom:2px;transition:color .2s,border-color .2s;position:relative;z-index:1}
+.meth-link:hover{color:var(--gold);border-color:var(--gold)}
+.meth-link svg{flex-shrink:0;opacity:.6}
+
+/* ── DIVIDER ─── */
+.sec-divider{border:none;border-top:1px solid var(--brd);margin:0}
+
+/* ── CARDS ─── */
+.section{padding:24px 20px}
+.section-label{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;opacity:.8}
+.info-card{background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:16px;margin-bottom:12px}
+.info-card:last-child{margin-bottom:0}
+.ic-label{font-size:10px;color:var(--sub);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.ic-val{font-size:15px;font-weight:600;color:var(--ink);line-height:1.35}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* risk context block */
+.risk-block{background:rgba(58,142,201,0.07);border:1px solid rgba(58,142,201,0.2);border-left:3px solid var(--ice);border-radius:10px;padding:16px;margin-top:0}
+.risk-block p{font-size:13px;color:rgba(240,244,248,0.8);line-height:1.65}
+.risk-block strong{color:var(--ink)}
+
+/* ── STICKY BAR ─── */
+#sticky-bar{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:520px;z-index:100;background:rgba(10,22,40,0.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(201,151,58,0.35);padding:12px 20px max(16px,env(safe-area-inset-bottom,16px));opacity:0;transition:opacity .4s ease,transform .4s ease;pointer-events:none}
+#sticky-bar.visible{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:all}
+.sb-inner{display:flex;align-items:center;gap:10px}
+.sb-call{display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.sb-call-text-top{color:rgba(255,255,255,0.45);font-size:9px;letter-spacing:.12em;font-family:'DM Sans',sans-serif;text-transform:uppercase}
+.sb-call-text-num{color:#f8fafc;font-size:14px;font-weight:600;font-family:'DM Sans',sans-serif;letter-spacing:.02em}
+.sb-divider{width:1px;height:34px;background:rgba(201,151,58,0.28);flex-shrink:0}
+.sb-book{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#c9973a,#e8b84b);border-radius:10px;padding:10px 16px;text-decoration:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent;box-shadow:0 0 24px rgba(201,151,58,0.3)}
+.sb-book-main{color:#0a1628;font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif;line-height:1.2}
+.sb-book-sub{color:rgba(10,22,40,0.6);font-size:10px;font-family:'DM Sans',sans-serif}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <img src="https://raw.githubusercontent.com/pinellasiceco/Pinellasiceco/main/pic_logo.png"
+       alt="Pinellas Ice Co."
+       onerror="this.style.display='none'">
+  <div class="topbar-name">Pinellas Ice Co.</div>
+</div>
+
+<!-- LOADING -->
+<div id="state-loading" class="state active">
+  <div class="spinner"></div>
+  <p>Loading inspection data&hellip;</p>
+</div>
+
+<!-- NOT FOUND -->
+<div id="state-notfound" class="state">
+  <div class="state-icon">&#x1F50D;</div>
+  <h2>Business Not Found</h2>
+  <p>No inspection forecast is available for this business ID. If you received this link from Pinellas Ice Co., contact us directly.</p>
+  <a href="tel:+17278556873" style="margin-top:8px;display:inline-block;padding:10px 24px;background:var(--gold);color:#0a1628;border-radius:8px;font-weight:700;text-decoration:none;font-size:13px">Call (727) 855-6873</a>
+</div>
+
+<!-- ERROR -->
+<div id="state-error" class="state">
+  <div class="state-icon">&#x26A0;&#xFE0F;</div>
+  <h2>Could Not Load Data</h2>
+  <p>Please check your connection and try again.</p>
+</div>
+
+<!-- MAIN -->
+<div id="state-main" class="state">
+
+  <!-- HERO -->
+  <div class="hero" id="hero-section">
+    <div class="hero-eyebrow">Inspection Forecast &middot; Pinellas Ice Co.</div>
+    <div class="biz-name" id="biz-name"></div>
+    <div class="biz-addr" id="biz-addr"></div>
+    <div class="days-wrap" id="days-wrap">
+      <div class="days-glow"></div>
+      <div class="days-num" id="days-num"></div>
+      <div class="days-label" id="days-label">Days Until Predicted Inspection</div>
+    </div>
+    <div class="pred-date" id="pred-date"></div>
+    <a class="meth-link" href="inspection-methodology.html">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5.25" stroke="currentColor" stroke-width="1.5"/><rect x="5.25" y="5" width="1.5" height="4" rx=".75" fill="currentColor"/><circle cx="6" cy="3.5" r=".75" fill="currentColor"/></svg>
+      How we calculate this
+    </a>
+  </div>
+
+  <hr class="sec-divider">
+
+  <!-- INSPECTION RECORD -->
+  <div class="section">
+    <div class="section-label">Inspection Record</div>
+    <div class="two-col">
+      <div class="info-card">
+        <div class="ic-label">Last Inspected</div>
+        <div class="ic-val" id="last-insp-val"></div>
+      </div>
+      <div class="info-card">
+        <div class="ic-label">Outcome</div>
+        <div class="ic-val" id="last-disp-val"></div>
+      </div>
+    </div>
+    <div id="obs-block" style="display:none;margin-top:10px">
+      <div class="info-card">
+        <div class="ic-label">Inspector&#39;s Notes (Ice Machine)</div>
+        <div class="ic-val" id="obs-val" style="font-size:13px;font-weight:400;line-height:1.6;color:rgba(240,244,248,0.75)"></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="sec-divider">
+
+  <!-- CONTEXT -->
+  <div class="section">
+    <div class="section-label">Why This Matters</div>
+    <div class="risk-block">
+      <p id="context-text"></p>
+    </div>
+  </div>
+
+</div><!-- /state-main -->
+
+<!-- STICKY BAR -->
+<div id="sticky-bar">
+  <div class="sb-inner">
+    <a href="tel:+17278556873" class="sb-call">
+      <span style="font-size:22px">&#x260E;&#xFE0F;</span>
+      <div>
+        <div class="sb-call-text-top">Call Now</div>
+        <div class="sb-call-text-num">(727) 855-6873</div>
+      </div>
+    </a>
+    <div class="sb-divider"></div>
+    <a href="https://meetings-na2.hubspot.com/stripe/ice-machine-on-site?uuid=9a40fc22-dce2-4258-8e4f-28aa75c892da"
+       class="sb-book"
+       target="_blank" rel="noopener">
+      <span style="font-size:18px">&#x1F4C5;</span>
+      <div>
+        <div class="sb-book-main">Book Free ATP Test</div>
+        <div class="sb-book-sub">2 min &middot; Free &middot; No obligation</div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<script>
+var FORECAST_URL='https://pinellasiceco.github.io/Pinellasiceco/forecast.json';
+
+function show(id){
+  document.querySelectorAll('.state').forEach(function(el){el.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+}
+
+function fmtDate(iso){
+  if(!iso)return'—';
+  try{
+    var d=new Date(iso+'T12:00:00');
+    return d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  }catch(e){return iso;}
+}
+
+function fmtDisp(d){
+  if(!d)return'—';
+  if(d==='Inspection Completed - No Further Action')return'No Further Action';
+  if(d.indexOf('Call Back')!==-1&&d.indexOf('Complied')!==-1)return'Callback — Complied';
+  if(d.indexOf('Call Back')!==-1&&d.indexOf('Admin')!==-1)return'Callback — Admin. Complaint';
+  if(d.indexOf('Call Back')!==-1&&d.indexOf('Extension')!==-1)return'Callback — Extension Pending';
+  if(d.indexOf('Warning')!==-1)return'Warning Issued';
+  if(d.indexOf('Emergency')!==-1&&d.indexOf('Complied')!==-1)return'Emergency Order — Complied';
+  if(d.indexOf('Emergency')!==-1&&d.indexOf('Not Complied')!==-1)return'Emergency Order — Not Complied';
+  if(d.indexOf('Administrative')!==-1)return'Administrative Action';
+  return d;
+}
+
+function countUp(el, target){
+  var duration=1200;
+  var start=performance.now();
+  function update(now){
+    var p=Math.min((now-start)/duration,1);
+    var eased=1-Math.pow(1-p,3);
+    el.textContent=Math.round(eased*target);
+    if(p<1)requestAnimationFrame(update);
+    else el.textContent=target;
+  }
+  requestAnimationFrame(update);
+}
+
+function render(rec){
+  document.getElementById('biz-name').textContent=rec.name;
+  document.getElementById('biz-addr').textContent=rec.address+', '+rec.city+', FL '+rec.zip;
+
+  var du=rec.days_until;
+  var wrap=document.getElementById('days-wrap');
+  var numEl=document.getElementById('days-num');
+  if(du<0){
+    wrap.classList.add('days-overdue');
+    numEl.textContent=Math.abs(du);
+    document.getElementById('days-label').textContent='Days Past Predicted';
+    document.getElementById('pred-date').innerHTML='Predicted date: <span>'+fmtDate(rec.pred_next)+'</span> &mdash; already passed';
+  } else {
+    countUp(numEl, du);
+    document.getElementById('pred-date').innerHTML='Predicted: <span>'+fmtDate(rec.pred_next)+'</span>';
+  }
+
+  document.getElementById('last-insp-val').textContent=fmtDate(rec.last_insp)+(rec.days_since?' ('+rec.days_since+' days ago)':'');
+  document.getElementById('last-disp-val').textContent=fmtDisp(rec.last_disp);
+
+  var obs=rec.cit_observation;
+  if(obs&&obs.length>10){
+    var short=obs.length>220?obs.slice(0,220).replace(/\s\S*$/,'')+'…':obs;
+    document.getElementById('obs-val').textContent=short;
+    document.getElementById('obs-block').style.display='block';
+  }
+
+  var ctx='';
+  if(du<0){
+    ctx='Based on this business&#39;s own DBPR inspection history, the predicted next inspection date has already passed. '
+       +'Florida inspectors re-check locations with open issues on a compressed schedule. '
+       +'Having your ice machine independently certified and cleaned before that visit demonstrates proactive compliance.';
+  } else if(du<30){
+    ctx='Based on this business&#39;s own DBPR inspection history, an inspection may be coming within the next 30 days. '
+       +'A documented, third-party deep clean before that visit is one of the clearest signals of proactive food-safety compliance.';
+  } else if(du<60){
+    ctx='Based on this business&#39;s own DBPR inspection history, an inspection is likely within the next 60 days — '
+       +'enough lead time to schedule a full ATP-tested deep clean and have the certification on record before the inspector arrives.';
+  } else {
+    ctx='Based on this business&#39;s own DBPR inspection history, an inspection is expected later this year. '
+       +'Scheduling a proactive deep clean now means the ATP results are already on file when the inspector visits — '
+       +'a concrete demonstration that food-safety compliance is actively managed.';
+  }
+  document.getElementById('context-text').innerHTML=ctx;
+
+  show('state-main');
+
+  // Sticky bar on scroll
+  var barShown=false;
+  var bar=document.getElementById('sticky-bar');
+  window.addEventListener('scroll',function(){
+    if(window.scrollY>260&&!barShown){bar.classList.add('visible');barShown=true;}
+  },{passive:true});
+  // Show bar immediately if short page
+  setTimeout(function(){
+    if(document.body.scrollHeight<=window.innerHeight+80&&!barShown){bar.classList.add('visible');barShown=true;}
+  },400);
+}
+
+(function(){
+  var params=new URLSearchParams(window.location.search);
+  var id=(params.get('id')||'').trim();
+  if(!id){show('state-notfound');return;}
+  fetch(FORECAST_URL+'?v='+Date.now())
+    .then(function(r){if(!r.ok)throw new Error('fail');return r.json();})
+    .then(function(data){
+      var rec=data[id];
+      if(!rec){show('state-notfound');return;}
+      render(rec);
+    })
+    .catch(function(){show('state-error');});
+})();
+</script>
+</body>
+</html>

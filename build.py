@@ -6486,8 +6486,11 @@ function showCard(id){
 
   // CleanScore public inspection record (only for businesses with a confirmed DBPR ice citation)
   var cleanScoreH=p.confirmed
-    ?'<a href="https://pinellasiceco.github.io/cleanscore/?id='+p.id+'" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:6px;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;padding:9px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;margin-bottom:10px;touch-action:manipulation">&#x1F50D; View CleanScore Record &#x2197;</a>'
+    ?'<a href="https://pinellasiceco.github.io/cleanscore/?id='+p.id+'" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:6px;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;padding:9px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;margin-bottom:6px;touch-action:manipulation">&#x1F50D; View CleanScore Record &#x2197;</a>'
     :'';
+
+  // Inspection Forecast page link
+  var forecastH='<a href="https://pinellasiceco.github.io/Pinellasiceco/inspection-forecast.html?id='+p.id+'" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:6px;background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0;padding:9px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;margin-bottom:10px;touch-action:manipulation">&#x1F4C5; View Inspection Forecast &#x2197;</a>';
 
   // Chips
   var pBg={CALLBACK:'#fef2f2',HOT:'#fff7ed',WARM:'#fefce8',COOL:'#f8fafc'};
@@ -6754,7 +6757,7 @@ function showCard(id){
     +'</div>'
     +'<div style="padding:16px">'
       +'<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px">'+chips+'</div>'
-      +intelWhyH+phoneH+phoneSaveH+cleanScoreH+iceH+intelH+histH+svcHistH+logH+closeH+contactsH
+      +intelWhyH+phoneH+phoneSaveH+cleanScoreH+forecastH+iceH+intelH+histH+svcHistH+logH+closeH+contactsH
     +'</div></div>';
 
   document.body.appendChild(bg);
@@ -12941,6 +12944,29 @@ def main():
     _map_tmp.write_text(_json.dumps(map_points), encoding='utf-8')
     _os.replace(_map_tmp, _map_path)
     print(f'  Map: {len(map_points)} citation points exported → docs/map/data.json')
+
+    # Export inspection-forecast lookup for inspection-forecast.html
+    _forecast = {}
+    for r in records:
+        _forecast[str(r['id'])] = {
+            'name':       r['name'],
+            'address':    r['address'],
+            'city':       r['city'],
+            'zip':        r.get('zip',''),
+            'last_insp':  r['last_insp'],
+            'last_disp':  r['last_disp'],
+            'pred_next':  r['pred_next'],
+            'days_until': r['days_until'],
+            'days_since': r['days_since'],
+            'n_insp':     r['n_insp'],
+            'confirmed':  r.get('confirmed', False),
+            'cit_observation': r.get('cit_observation',''),
+        }
+    _fc_path = OUTPUT_FILE.parent / 'forecast.json'
+    _fc_tmp  = _fc_path.with_suffix('.tmp')
+    _fc_tmp.write_text(_json.dumps(_forecast), encoding='utf-8')
+    _os.replace(_fc_tmp, _fc_path)
+    print(f'  Forecast: {len(_forecast)} records exported → forecast.json')
 
     # Push to Supabase (CI only — skipped when env vars not set)
     print(f"\nPushing data to Supabase...")
