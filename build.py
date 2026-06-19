@@ -1610,6 +1610,25 @@ def run(csv_paths):
     latest['month'] = latest['inspection_date'].dt.month
     Xp = pd.DataFrame({f: latest.get(f, 0) for f in FEATS}).fillna(0)
     latest['pred_days']  = np.clip(rf.predict(Xp).round().astype(int), 7, 730) if rf is not None else MED
+
+    # Floor compressed callback-cycle predictions for resolved-matter businesses.
+    # Their DBPR history is dominated by short callback-to-callback intervals
+    # (~3 weeks apart), which compresses the model's prev feature and yields an
+    # artificially short pred_days. Once the matter is resolved, the next visit
+    # is a fresh routine inspection on the normal cadence — so floor pred_days
+    # at the dataset-wide median for these businesses only. This is a post-
+    # prediction correction; the RF model and its features are unchanged.
+    RESOLVED_DISPS = {
+        'Inspection Completed - No Further Action',
+        'Call Back - Complied',
+        'Emergency Order Callback Complied',
+    }
+    med_pred_days = int(round(float(np.median(latest['pred_days']))))
+    if 'disp_raw' in latest.columns:
+        resolved_mask = latest['disp_raw'].isin(RESOLVED_DISPS)
+        latest.loc[resolved_mask, 'pred_days'] = latest.loc[resolved_mask, 'pred_days'].clip(lower=med_pred_days)
+        print(f"  Resolved-disposition floor (median={med_pred_days}d) applied to {int(resolved_mask.sum()):,} businesses")
+
     latest['pred_next']  = latest['inspection_date'] + pd.to_timedelta(latest['pred_days'], unit='d')
     latest['days_until'] = (latest['pred_next'] - pd.Timestamp(TODAY)).dt.days.fillna(999).astype(int)
 
