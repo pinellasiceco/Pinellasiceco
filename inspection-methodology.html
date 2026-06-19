@@ -31,6 +31,7 @@ body{background:var(--surf);color:var(--ink);font-family:'DM Sans',sans-serif;mi
 .topbar-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--navy2);letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tb-btn{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;color:var(--sub);background:#f8fafc;border:1px solid var(--brd);border-radius:7px;padding:6px 10px;cursor:pointer;white-space:nowrap;flex-shrink:0;-webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:color .2s,border-color .2s}
 .tb-btn:hover{color:var(--navy2);border-color:var(--gold)}
+.tb-close{font-size:16px;font-weight:400;padding:4px 10px;line-height:1}
 
 /* ── HEADER / SEAL ─── */
 .doc-header{background:linear-gradient(165deg,var(--navy2) 0%,#0d2a42 100%);padding:40px 24px 36px;text-align:center;position:relative;overflow:hidden}
@@ -90,7 +91,7 @@ body{background:var(--surf);color:var(--ink);font-family:'DM Sans',sans-serif;mi
 <body>
 
 <div class="topbar">
-  <button class="tb-btn" id="tb-back" onclick="history.back()" aria-label="Go back">&#x2190; Back</button>
+  <button class="tb-btn tb-close" id="tb-back" onclick="try{window.close();}catch(e){history.back();}" aria-label="Close">&#x2715;</button>
   <div class="tb-brand">
     <img src="https://raw.githubusercontent.com/pinellasiceco/Pinellasiceco/main/pic_logo.png"
          alt="Pinellas Ice Co."
@@ -99,7 +100,6 @@ body{background:var(--surf);color:var(--ink);font-family:'DM Sans',sans-serif;mi
   </div>
   <button class="tb-btn" onclick="window.open(window.location.href,'_blank','noopener')" aria-label="Open in browser">Browser &#x2197;</button>
 </div>
-<script>if(history.length<=1){var _b=document.getElementById('tb-back');if(_b)_b.style.visibility='hidden';}</script>
 
 <!-- DOCUMENT HEADER -->
 <div class="doc-header">
@@ -229,7 +229,7 @@ body{background:var(--surf);color:var(--ink);font-family:'DM Sans',sans-serif;mi
   <p>This is a <strong>prediction based on historical patterns</strong>, not a guarantee of when DBPR will actually inspect this location. Inspectors operate on schedules that may be affected by staffing, complaints received, or district priorities that are not reflected in the public record. The predicted date should be read as a <em>likely window</em>, not a certain date.</p>
 </div>
 
-<a class="back-link" href="javascript:history.back()">
+<a class="back-link" href="javascript:void(0)" onclick="try{window.close();}catch(e){history.back();}">
   &#x2190; Back to Inspection Forecast
 </a>
 
