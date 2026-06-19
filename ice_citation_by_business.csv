@@ -2755,7 +2755,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 9802896,SEVEN DIAMOND KITCHEN,"11141 US HWY 19 N UNIT 120, BOOTH K1,2 &3",CLEARWATER,2026-03-06,1,Inspection Completed - No Further Action,False,False,,
 9806949,YUMLETTE BREAKFAST & LUNCH,1458 ALT 19 N,PALM HARBOR,2026-02-18,2,"Call Back - Extension given, pending",True,False,,
 9812681,TWO BUKS SALOON,1915 N HERCULES AVE,CLEARWATER,2026-03-04,1,Inspection Completed - No Further Action,False,False,,
-9812784,RUMFIRE,917 11 ST,PALM HARBOR,2026-01-08,1,Inspection Completed - No Further Action,False,False,,
+9812784,RUMFIRE,917 11 ST,PALM HARBOR,2026-06-18,2,Administrative complaint recommended,True,False,,
 9825187,BEARDED TURTLE,847 ROOSEVELT BLVD,TARPON SPRINGS,2026-06-04,1,Warning Issued,False,False,,
 9828446,SCHOONERS WEST BAY,2441 W BAY DR,LARGO,2026-06-17,1,Warning Issued,False,False,Basic - Ice buildup in walk-in freezer.,
 9830775,MELT N DIP ,221 1 ST NE,ST. PETERSBURG,2026-02-10,1,Inspection Completed - No Further Action,False,False,Ice scoop handle in contact with ice. Scooper handle touching ice inside ice machine in front counter. Removed handle from ice.,2026-02-10
@@ -2788,3 +2788,4 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 9928337,NEW BEACH PIZZA,5411 SEMINOLE BLVD,SEMINOLE,2026-04-27,1,Inspection Completed - No Further Action,False,False,,
 9938798,BURGER MONGER,1530 PASADENA AVE S STE 207,PASADENA,2026-05-07,1,Inspection Completed - No Further Action,False,False,,
 9963380,DAIRY RICH,3109 ALT 19,PALM HARBOR,2026-06-04,1,Inspection Completed - No Further Action,False,False,,
+9977408,PHO 97 - CLEARWATER,30113 US HWY 19 N,CLEARWATER,2026-06-17,1,Warning Issued,False,False,,
