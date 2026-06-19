@@ -32,7 +32,7 @@ body{background:var(--navy);color:var(--ink);font-family:'DM Sans',sans-serif;mi
 .state{display:none;min-height:60vh;align-items:center;justify-content:center;padding:40px 20px;text-align:center;flex-direction:column;gap:16px}
 .state.active{display:flex}
 .state-icon{font-size:48px;line-height:1}
-.state h2{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--ink)}
+.state h2{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--ink);line-height:1.2;letter-spacing:0.01em}
 .state p{color:var(--sub);font-size:14px;max-width:320px;line-height:1.6}
 .spinner{width:36px;height:36px;border:3px solid var(--brd);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -45,7 +45,7 @@ body{background:var(--navy);color:var(--ink);font-family:'DM Sans',sans-serif;mi
 .hero{background:linear-gradient(160deg,#0f1f38 0%,#0d2a42 55%,#091e35 100%);padding:36px 24px 40px;text-align:center;position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 25%,rgba(58,142,201,0.18) 0%,transparent 70%);pointer-events:none}
 .hero-eyebrow{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--ice);margin-bottom:18px;opacity:.85}
-.biz-name{font-family:'Syne',sans-serif;font-size:clamp(18px,5vw,26px);font-weight:800;color:var(--ink);line-height:1.15;margin-bottom:6px}
+.biz-name{font-family:'Syne',sans-serif;font-size:clamp(18px,5vw,26px);font-weight:800;color:var(--ink);line-height:1.15;letter-spacing:0.01em;margin-bottom:6px}
 .biz-addr{font-size:12px;color:var(--sub);letter-spacing:.04em;margin-bottom:30px}
 
 /* THE RANGE */
@@ -53,7 +53,7 @@ body{background:var(--navy);color:var(--ink);font-family:'DM Sans',sans-serif;mi
 .range-wrap.in{opacity:1;transform:translateY(0)}
 .range-glow{position:absolute;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(58,142,201,0.22) 0%,transparent 70%);top:46%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
 .range-label{font-family:'Syne Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ice);position:relative;z-index:1;margin-bottom:6px}
-.range-num{font-family:'Syne',sans-serif;font-size:clamp(58px,16vw,108px);font-weight:800;line-height:1;color:#fff;position:relative;z-index:1;text-shadow:0 0 60px rgba(58,142,201,0.5),0 0 120px rgba(58,142,201,0.2);letter-spacing:-.01em}
+.range-num{font-family:'Syne',sans-serif;font-size:clamp(58px,16vw,108px);font-weight:800;line-height:1.1;color:#fff;position:relative;z-index:1;text-shadow:0 0 60px rgba(58,142,201,0.5),0 0 120px rgba(58,142,201,0.2);letter-spacing:0.01em}
 .range-num.text-mode{font-size:clamp(40px,11vw,72px)}
 .range-unit{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;letter-spacing:.16em;color:rgba(240,244,248,0.85);position:relative;z-index:1;margin-top:6px}
 .range-wrap.due-now .range-num{color:var(--gold2);text-shadow:0 0 60px rgba(232,184,75,0.4),0 0 120px rgba(232,184,75,0.18)}
