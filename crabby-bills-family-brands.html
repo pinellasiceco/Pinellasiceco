@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ice Machine Cleaning &amp; ATP Verification — Crabby Bill's Family Brands — Pinellas Ice Co.</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600;700&family=Syne+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0d1b2a;
+  --navy2: #15273c;
+  --ice: #3a8ec9;
+  --ice-light: #7ec1eb;
+  --gold: #c8973a;
+  --gold-light: #e0b563;
+  --green: #1a6b3a;
+  --green-bg: #e8f5ee;
+  --bg: #f7f6f3;
+  --card: #ffffff;
+  --border: #e4e2dc;
+  --ink: #1c1c1a;
+  --ink2: #5a5855;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); font-family: 'DM Sans', sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; padding-bottom: 84px; }
+.hero { background: linear-gradient(180deg, #0a1521 0%, var(--navy) 55%, var(--navy2) 100%); position: relative; overflow: hidden; padding: 40px 24px 44px; }
+.hero::before { content: ''; position: absolute; top: -90px; right: -70px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(58,142,201,0.16), transparent 70%); }
+.hero::after { content: ''; position: absolute; bottom: -100px; left: -60px; width: 260px; height: 260px; background: radial-gradient(circle, rgba(200,151,58,0.1), transparent 70%); }
+.hero-eyebrow { font-family: 'Syne Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ice-light); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; position: relative; }
+.hero-eyebrow::before { content: ''; width: 16px; height: 1px; background: var(--gold); }
+.hero-headline { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(26px, 6vw, 38px); color: #fff; line-height: 1.4; letter-spacing: 0.01em; margin-bottom: 16px; max-width: 540px; position: relative; }
+.hero-headline em { font-style: normal; background: linear-gradient(90deg, var(--gold-light), var(--gold)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero-sub { font-size: 14.5px; color: rgba(255,255,255,0.65); line-height: 1.7; max-width: 500px; position: relative; margin-bottom: 22px; }
+.hero-footprint { display: inline-flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); border-radius: 100px; padding: 9px 18px 9px 14px; position: relative; }
+.hero-footprint .count { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px; color: var(--gold-light); line-height: 1.2; letter-spacing: 0.01em; }
+.hero-footprint .label { font-size: 11.5px; color: rgba(255,255,255,0.7); }
+main { max-width: 700px; margin: 0 auto; padding: 36px 22px 0; }
+.section-label { font-family: 'Syne Mono', monospace; font-size: 9.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink2); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.positioning { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 32px; }
+.positioning h2 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 19px; color: var(--navy); line-height: 1.5; letter-spacing: 0.01em; margin-bottom: 12px; }
+.positioning p { font-size: 13.5px; color: var(--ink2); line-height: 1.65; }
+.positioning p + p { margin-top: 10px; }
+.positioning strong { color: var(--ink); font-weight: 700; }
+.diffs { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+.diff-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; display: flex; gap: 16px; align-items: flex-start; }
+.diff-icon { width: 42px; height: 42px; border-radius: 10px; background: rgba(58,142,201,0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.diff-icon svg { width: 21px; height: 21px; }
+.diff-body h3 { font-size: 14.5px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+.diff-body p { font-size: 12.5px; color: var(--ink2); line-height: 1.55; }
+.locations { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 32px; }
+.location-row { display: flex; align-items: center; gap: 14px; padding: 14px 20px; border-bottom: 1px solid var(--border); }
+.location-row:last-child { border-bottom: none; }
+.location-num { font-family: 'Syne Mono', monospace; font-size: 10px; font-weight: 700; color: var(--ice); background: rgba(58,142,201,0.1); width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.location-name { font-size: 13.5px; font-weight: 700; color: var(--ink); }
+.location-addr { font-size: 11.5px; color: var(--ink2); margin-top: 1px; }
+.steps { display: flex; flex-direction: column; margin-bottom: 32px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.step { display: flex; align-items: flex-start; gap: 16px; padding: 17px 20px; border-bottom: 1px solid var(--border); position: relative; }
+.step:last-child { border-bottom: none; }
+.step:not(:last-child)::after { content: ''; position: absolute; left: 31px; top: 48px; bottom: -1px; width: 1px; background: var(--border); }
+.step-num { font-family: 'Syne Mono', monospace; font-size: 11px; font-weight: 600; color: var(--navy); background: var(--card); border: 1.5px solid var(--navy); width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; z-index: 1; }
+.step-body { padding-top: 2px; }
+.step-body h3 { font-size: 13.5px; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
+.step-body p { font-size: 12.5px; color: var(--ink2); line-height: 1.55; }
+.step-body .atp-result { font-family: 'Syne Mono', monospace; font-size: 10.5px; color: var(--green); font-weight: 600; margin-top: 6px; display: inline-flex; align-items: center; gap: 5px; background: var(--green-bg); padding: 4px 10px; border-radius: 5px; }
+.pricing-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 32px; }
+.pricing-header { background: var(--navy); padding: 24px; position: relative; overflow: hidden; }
+.pricing-header::before { content: ''; position: absolute; top: -40px; right: -20px; width: 160px; height: 160px; background: radial-gradient(circle, rgba(200,151,58,0.16), transparent 70%); }
+.pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; position: relative; }
+.pricing-stat .n { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(22px, 5.5vw, 28px); color: #fff; line-height: 1.4; letter-spacing: 0.015em; display: block; }
+.pricing-stat .u { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 3px; display: block; }
+.pricing-body { padding: 18px 24px 22px; }
+.pricing-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.pricing-row:last-child { border-bottom: none; }
+.pricing-row .label { color: var(--ink2); }
+.pricing-row .val { font-weight: 700; color: var(--ink); }
+.pricing-row .val.gold { color: var(--gold); }
+.pricing-note { font-size: 11.5px; color: var(--ink2); margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); line-height: 1.6; }
+.machine-callout { background: rgba(200,151,58,0.07); border: 1px solid rgba(200,151,58,0.25); border-radius: 10px; padding: 14px 16px; margin-top: 14px; display: flex; gap: 12px; align-items: flex-start; }
+.machine-callout-icon { width: 30px; height: 30px; border-radius: 7px; background: rgba(200,151,58,0.16); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.machine-callout-icon svg { width: 15px; height: 15px; }
+.machine-callout-text { font-size: 12px; color: #7a5100; line-height: 1.55; }
+.machine-callout-text strong { font-weight: 700; }
+.guarantee { background: var(--green-bg); border-left: 3px solid var(--green); border-radius: 0 10px 10px 0; padding: 18px 20px; margin-bottom: 32px; }
+.guarantee .section-label { color: var(--green); margin-bottom: 8px; }
+.guarantee .section-label::after { background: rgba(26,107,58,0.18); }
+.guarantee p { font-size: 13px; color: var(--green); line-height: 1.6; }
+.guarantee strong { font-weight: 700; }
+.contact { background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%); border-radius: 14px; padding: 28px 24px; text-align: center; position: relative; overflow: hidden; margin-bottom: 32px; }
+.contact::before { content: ''; position: absolute; bottom: -60px; left: 50%; transform: translateX(-50%); width: 220px; height: 220px; background: radial-gradient(circle, rgba(58,142,201,0.12), transparent 70%); }
+.contact h2 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px; color: #fff; line-height: 1.5; letter-spacing: 0.01em; margin-bottom: 8px; position: relative; }
+.contact p { font-size: 12.5px; color: rgba(255,255,255,0.62); line-height: 1.55; position: relative; }
+footer { text-align: center; padding: 22px 20px 30px; font-family: 'Syne Mono', monospace; font-size: 8.5px; color: var(--ink2); letter-spacing: 0.06em; }
+.fixed-cta { position: fixed; bottom: 0; left: 0; right: 0; background: var(--navy); border-top: 1px solid rgba(255,255,255,0.1); padding: 12px 16px; display: flex; gap: 10px; z-index: 50; box-shadow: 0 -8px 24px rgba(0,0,0,0.2); }
+.fixed-cta .btn { flex: 1; text-align: center; justify-content: center; }
+.btn { display: inline-flex; align-items: center; gap: 8px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13.5px; padding: 13px 20px; border-radius: 8px; text-decoration: none; letter-spacing: 0.01em; }
+.btn-primary { background: linear-gradient(135deg, var(--gold-light), var(--gold)); color: var(--navy); }
+.btn-secondary { background: rgba(255,255,255,0.08); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+@media (max-width: 420px) { .pricing-grid { grid-template-columns: 1fr; gap: 10px; } .location-row { flex-wrap: wrap; } }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">Prepared for Crabby Bill&#39;s Family Brands</div>
+  <h1 class="hero-headline">Full-service ice machine cleaning for <em>all ten Pinellas County locations.</em></h1>
+  <p class="hero-sub">Full-service ice machine cleaning and sanitization, backed by ATP-verified results &mdash; a different scope than mechanical maintenance or repair, and a fit alongside whatever contract you have in place today.</p>
+  <div class="hero-footprint">
+    <span class="count">10</span>
+    <span class="label">locations across Pinellas County</span>
+  </div>
+</div>
+
+<main>
+
+  <div class="positioning">
+    <h2>Cleaning and verification. Not maintenance or repair.</h2>
+    <p>If your current provider&#39;s contract covers mechanical service &mdash; repairs, parts, diagnostics &mdash; that&#39;s not something we do, and not something we&#39;re asking you to change. <strong>What we provide is different in scope:</strong> full deep cleaning and sanitization of ice-contact surfaces, with ATP bioluminescence testing before and after every visit to prove the result. Two different jobs, not a competing bid for the same one.</p>
+    <p>For a brand with the reputation Crabby Bill&#39;s has built over 40 years, that means you can keep the mechanical relationship you already trust, while adding a dedicated, documented cleaning standard &mdash; consistent across all ten properties &mdash; that most provider contracts don&#39;t specifically guarantee.</p>
+  </div>
+
+  <div class="section-label">What sets the service apart</div>
+  <div class="diffs">
+    <div class="diff-card">
+      <div class="diff-icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L4 6v6c0 5 3.5 8.5 8 10 4.5-1.5 8-5 8-10V6l-8-4z" stroke="#3a8ec9" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="#3a8ec9" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="diff-body">
+        <h3>Full deep clean, every visit</h3>
+        <p>Complete disassembly and sanitization of water-contact surfaces, bin, water lines, and distribution system &mdash; not a wipe-down, a real service.</p>
+      </div>
+    </div>
+    <div class="diff-card">
+      <div class="diff-icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4" width="18" height="14" rx="2" stroke="#3a8ec9" stroke-width="1.7"/><path d="M3 9h18M8 4v14" stroke="#3a8ec9" stroke-width="1.7"/></svg>
+      </div>
+      <div class="diff-body">
+        <h3>A scope your current contract may not cover</h3>
+        <p>Mechanical maintenance and repair contracts rarely guarantee a cleaning standard &mdash; this fills that specific gap, consistently, across all ten properties.</p>
+      </div>
+    </div>
+    <div class="diff-card">
+      <div class="diff-icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="#3a8ec9" stroke-width="1.7"/><path d="M12 7v5l3.5 2" stroke="#3a8ec9" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="diff-body">
+        <h3>Proof the clean worked</h3>
+        <p>Every visit includes an ATP test before and after &mdash; a documented number, not just an assumption that the cleaning did its job.</p>
+      </div>
+    </div>
+    <div class="diff-card">
+      <div class="diff-icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 22s8-5.5 8-12V5l-8-3-8 3v5c0 6.5 8 12 8 12z" stroke="#3a8ec9" stroke-width="1.7" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="diff-body">
+        <h3>Reputation-grade, not minimum-grade</h3>
+        <p>Built for operators who care about getting it right, not just passing &mdash; service and documentation that back up the standard your guests already expect from the Crabby Bill&#39;s name.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Your ten Pinellas County locations</div>
+  <div class="locations">
+    <div class="location-row">
+      <div class="location-num">1</div>
+      <div><div class="location-name">Crabby Bill&#39;s</div><div class="location-addr">401 Gulf Blvd, Indian Rocks Beach, FL 33785</div></div>
+    </div>
+    <div class="location-row">
+      <div class="location-num">2</div>
+      <div><div class="location-name">Cabanas Coastal Grill</div><div class="location-addr">655 South Gulfview Blvd, Clearwater, FL 33767</div></div>
+    </div>
+    <div class="location-row">
+      <div class="location-num">3</div>
+      <div><div class="location-name">Evy&#39;s Terrace Bar &amp; Bistro</div><div class="location-addr">635 South Gulfview Blvd, Clearwater Beach, FL 33767</div></div>
+    </div>
+    <div class="location-row">
+      <div class="location-num">4</div>
+      <div><div class="location-name">Pipo N Betty&#39;s</div><div class="location-addr">435 Gulf Blvd, Indian Rocks Beach, FL 33785</div></div>
+    </div>
+    <div class="location-row">
+      <div class="location-num">5</div>
+      <div><div class="location-name">Monstah Lobstah</div><div class="location-addr">125 Gulf Blvd, Indian Rocks Beach, FL 33785</div></div>
+    </div>
+    <div class="location-row">
+      <div class="location-num">6</div>
+      <div><div class="location-name">Jake&#39;s Coastal Cantina</div><div class="location-addr">500 1st Street North, Indian Rocks Beach, FL 33785</div></div>
+    </div>
+    <div class="location-row">
+      <div class="location-num">7</div>
+      <div><div class="location-name">Guilty Sea Sports Pub</div><div class="location-addr">301 Gulf Blvd, Indian Rocks Beach, FL 33785</div></div>
+    </div>
+    <div class="location-row">
+      <div class="location-num">8</div>
+      <div><div class="location-name">Crabby Bill&#39;s St. Pete Beach</div><div class="location-addr">5100 Gulf Blvd, St. Pete Beach, FL 33706</div></div>
+    </div>
+    <div class="location-row">
+      <div class="location-num">9</div>
+      <div><div class="location-name">Crabby Bill&#39;s Palm Harbor</div><div class="location-addr">1114 Florida Ave, Palm Harbor, FL 34683</div></div>
+    </div>
+    <div class="location-row">
+      <div class="location-num">10</div>
+      <div><div class="location-name">Bon Appetit</div><div class="location-addr">148 Marina Plaza, Dunedin, FL 34698</div></div>
+    </div>
+  </div>
+
+  <div class="section-label">What a service visit looks like, at every property</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Pre-test ATP swab</h3>
+        <p>Ice-contact surfaces tested before anything else happens &mdash; a real baseline number, on record.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>Full deep clean</h3>
+        <p>Complete disassembly and sanitization of the ice machine and surrounding equipment &mdash; documented, photographed, dated.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>Certified result</h3>
+        <p>A clear pass/fail against the FDA standard of under 10 RLU &mdash; not an opinion, a number.</p>
+        <span class="atp-result">&#10003; Cleaned &amp; verified &mdash; consistent at every location</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h3>Portfolio-level reporting</h3>
+        <p>One consolidated view across all ten properties, so your team sees the full picture at a glance, not ten separate folders.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">Pricing across your portfolio</div>
+  <div class="pricing-card">
+    <div class="pricing-header">
+      <div class="pricing-grid">
+        <div class="pricing-stat">
+          <span class="n">$1,290</span>
+          <span class="u">per month, all 10 locations</span>
+        </div>
+        <div class="pricing-stat">
+          <span class="n">$2,280</span>
+          <span class="u">combined first invoice (setup + month 1)</span>
+        </div>
+      </div>
+    </div>
+    <div class="pricing-body">
+      <div class="pricing-row">
+        <span class="label">Per-location rate</span>
+        <span class="val">$129/month</span>
+      </div>
+      <div class="pricing-row">
+        <span class="label">Per-location setup &amp; first deep clean</span>
+        <span class="val">$99 one-time</span>
+      </div>
+      <div class="pricing-row">
+        <span class="label">Visits per location, per year</span>
+        <span class="val">4 certified visits</span>
+      </div>
+      <div class="pricing-row">
+        <span class="label">Contract required</span>
+        <span class="val gold">None &mdash; cancel anytime, any location</span>
+      </div>
+      <div class="pricing-row">
+        <span class="label">ATP testing &amp; documentation</span>
+        <span class="val gold">Included every visit, every location</span>
+      </div>
+      <div class="pricing-note">
+        Portfolio-level scheduling can be coordinated across all ten properties on a consistent cadence.
+      </div>
+      <div class="machine-callout">
+        <div class="machine-callout-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="3" width="16" height="18" rx="1.5" stroke="#7a5100" stroke-width="1.7"/><path d="M4 12H20" stroke="#7a5100" stroke-width="1.7"/><path d="M8 3V21M16 3V21" stroke="#7a5100" stroke-width="1.3" stroke-dasharray="2 2"/></svg>
+        </div>
+        <div class="machine-callout-text">
+          <strong>Pricing above assumes one ice machine per location.</strong> Additional machines are $69/month per machine, per location, serviced on the same visit. Final pricing confirmed per site after a quick walkthrough.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="guarantee">
+    <div class="section-label">30-day inspection protection guarantee</div>
+    <p>If an ice machine we&#39;ve verified is specifically cited in a DBPR health inspection within 30 days of our service, <strong>we refund that location&#39;s most recent service charge in full.</strong> No questions, at any of the ten properties. We stand behind the number we document.</p>
+  </div>
+
+  <div class="contact">
+    <h2>Let&#39;s find 15 minutes to talk it through</h2>
+    <p>Happy to walk through pricing, answer questions, or run a live ATP test at one location so you can see the numbers firsthand. If it&#39;s easier to pilot one property before rolling out portfolio-wide, that works too &mdash; no pressure to commit to all ten on day one.</p>
+    <a class="btn btn-primary" href="https://meetings-na2.hubspot.com/stripe/ice-machine-on-site" style="margin-top:18px;display:inline-flex;position:relative;">Book a Time on My Calendar</a>
+  </div>
+
+</main>
+
+<div class="fixed-cta">
+  <a class="btn btn-primary" href="https://meetings-na2.hubspot.com/stripe/ice-machine-on-site">Book a Time</a>
+  <a class="btn btn-secondary" href="tel:7278556873">Call (727) 855-6873</a>
+</div>
+
+<footer>
+  Pinellas Ice Co. &nbsp;&middot;&nbsp; Tarpon Springs, FL &nbsp;&middot;&nbsp; ATP-Verified Ice Machine Compliance &nbsp;&middot;&nbsp; Pinellas County
+</footer>
+
+</body>
+</html>
