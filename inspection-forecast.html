@@ -43,25 +43,30 @@ body{background:var(--navy);color:var(--ink);font-family:'DM Sans',sans-serif;mi
 
 /* ── HERO ─── */
 .hero{background:linear-gradient(160deg,#0f1f38 0%,#0d2a42 55%,#091e35 100%);padding:36px 24px 40px;text-align:center;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 20%,rgba(58,142,201,0.18) 0%,transparent 70%);pointer-events:none}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 25%,rgba(58,142,201,0.18) 0%,transparent 70%);pointer-events:none}
 .hero-eyebrow{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--ice);margin-bottom:18px;opacity:.85}
 .biz-name{font-family:'Syne',sans-serif;font-size:clamp(18px,5vw,26px);font-weight:800;color:var(--ink);line-height:1.15;margin-bottom:6px}
-.biz-addr{font-size:12px;color:var(--sub);letter-spacing:.04em;margin-bottom:32px}
+.biz-addr{font-size:12px;color:var(--sub);letter-spacing:.04em;margin-bottom:30px}
 
-/* THE NUMBER */
-.days-wrap{display:flex;flex-direction:column;align-items:center;gap:0;margin-bottom:6px;position:relative}
-.days-glow{position:absolute;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(58,142,201,0.22) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
-.days-num{font-family:'Syne',sans-serif;font-size:clamp(88px,22vw,140px);font-weight:800;line-height:1;color:#fff;position:relative;z-index:1;text-shadow:0 0 60px rgba(58,142,201,0.5),0 0 120px rgba(58,142,201,0.2)}
-.days-label{font-family:'Syne Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--ice);position:relative;z-index:1;margin-top:2px}
-.days-overdue .days-num{color:#f87171;text-shadow:0 0 60px rgba(248,113,113,0.4),0 0 120px rgba(248,113,113,0.15)}
-.days-overdue .days-glow{background:radial-gradient(circle,rgba(248,113,113,0.18) 0%,transparent 70%)}
-.days-overdue .days-label{color:#f87171}
+/* THE RANGE */
+.range-wrap{display:flex;flex-direction:column;align-items:center;gap:0;position:relative;opacity:0;transform:translateY(12px);transition:opacity .6s ease,transform .6s ease}
+.range-wrap.in{opacity:1;transform:translateY(0)}
+.range-glow{position:absolute;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(58,142,201,0.22) 0%,transparent 70%);top:46%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.range-label{font-family:'Syne Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ice);position:relative;z-index:1;margin-bottom:6px}
+.range-num{font-family:'Syne',sans-serif;font-size:clamp(58px,16vw,108px);font-weight:800;line-height:1;color:#fff;position:relative;z-index:1;text-shadow:0 0 60px rgba(58,142,201,0.5),0 0 120px rgba(58,142,201,0.2);letter-spacing:-.01em}
+.range-num.text-mode{font-size:clamp(40px,11vw,72px)}
+.range-unit{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;letter-spacing:.16em;color:rgba(240,244,248,0.85);position:relative;z-index:1;margin-top:6px}
+.range-wrap.due-now .range-num{color:var(--gold2);text-shadow:0 0 60px rgba(232,184,75,0.4),0 0 120px rgba(232,184,75,0.18)}
+.range-wrap.due-now .range-glow{background:radial-gradient(circle,rgba(232,184,75,0.2) 0%,transparent 70%)}
+.range-wrap.due-now .range-label{color:var(--gold2)}
 
-.pred-date{font-size:15px;font-weight:600;color:rgba(240,244,248,0.9);margin-top:14px;position:relative;z-index:1}
-.pred-date span{color:var(--gold)}
+.window-date{font-size:14px;font-weight:500;color:rgba(240,244,248,0.85);margin-top:18px;position:relative;z-index:1;line-height:1.5}
+.window-date span{color:var(--gold);font-weight:600}
+
+.hero-caveat{font-size:11px;color:rgba(240,244,248,0.45);margin-top:14px;position:relative;z-index:1;line-height:1.5;max-width:340px;margin-left:auto;margin-right:auto}
 
 /* ── METHODOLOGY LINK ─── */
-.meth-link{display:inline-flex;align-items:center;gap:6px;margin-top:22px;font-size:11px;color:rgba(240,244,248,0.5);text-decoration:none;border-bottom:1px solid rgba(240,244,248,0.15);padding-bottom:2px;transition:color .2s,border-color .2s;position:relative;z-index:1}
+.meth-link{display:inline-flex;align-items:center;gap:6px;margin-top:20px;font-size:11px;color:rgba(240,244,248,0.55);text-decoration:none;border-bottom:1px solid rgba(240,244,248,0.18);padding-bottom:2px;transition:color .2s,border-color .2s;position:relative;z-index:1}
 .meth-link:hover{color:var(--gold);border-color:var(--gold)}
 .meth-link svg{flex-shrink:0;opacity:.6}
 
@@ -77,8 +82,8 @@ body{background:var(--navy);color:var(--ink);font-family:'DM Sans',sans-serif;mi
 .ic-val{font-size:15px;font-weight:600;color:var(--ink);line-height:1.35}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
-/* risk context block */
-.risk-block{background:rgba(58,142,201,0.07);border:1px solid rgba(58,142,201,0.2);border-left:3px solid var(--ice);border-radius:10px;padding:16px;margin-top:0}
+/* context block */
+.risk-block{background:rgba(58,142,201,0.07);border:1px solid rgba(58,142,201,0.2);border-left:3px solid var(--ice);border-radius:10px;padding:16px}
 .risk-block p{font-size:13px;color:rgba(240,244,248,0.8);line-height:1.65}
 .risk-block strong{color:var(--ink)}
 
@@ -114,7 +119,7 @@ body{background:var(--navy);color:var(--ink);font-family:'DM Sans',sans-serif;mi
 <div id="state-notfound" class="state">
   <div class="state-icon">&#x1F50D;</div>
   <h2>Business Not Found</h2>
-  <p>No inspection forecast is available for this business ID. If you received this link from Pinellas Ice Co., contact us directly.</p>
+  <p>No inspection estimate is available for this business ID. If you received this link from Pinellas Ice Co., contact us directly.</p>
   <a href="tel:+17278556873" style="margin-top:8px;display:inline-block;padding:10px 24px;background:var(--gold);color:#0a1628;border-radius:8px;font-weight:700;text-decoration:none;font-size:13px">Call (727) 855-6873</a>
 </div>
 
@@ -130,15 +135,17 @@ body{background:var(--navy);color:var(--ink);font-family:'DM Sans',sans-serif;mi
 
   <!-- HERO -->
   <div class="hero" id="hero-section">
-    <div class="hero-eyebrow">Inspection Forecast &middot; Pinellas Ice Co.</div>
+    <div class="hero-eyebrow">Inspection Estimate &middot; Pinellas Ice Co.</div>
     <div class="biz-name" id="biz-name"></div>
     <div class="biz-addr" id="biz-addr"></div>
-    <div class="days-wrap" id="days-wrap">
-      <div class="days-glow"></div>
-      <div class="days-num" id="days-num"></div>
-      <div class="days-label" id="days-label">Days Until Predicted Inspection</div>
+    <div class="range-wrap" id="range-wrap">
+      <div class="range-glow"></div>
+      <div class="range-label" id="range-label">Estimated Inspection Window</div>
+      <div class="range-num" id="range-num"></div>
+      <div class="range-unit" id="range-unit">DAYS</div>
     </div>
-    <div class="pred-date" id="pred-date"></div>
+    <div class="window-date" id="window-date"></div>
+    <div class="hero-caveat">A likely window based on this location&#39;s own inspection history &mdash; not a guaranteed or exact date.</div>
     <a class="meth-link" href="inspection-methodology.html">
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5.25" stroke="currentColor" stroke-width="1.5"/><rect x="5.25" y="5" width="1.5" height="4" rx=".75" fill="currentColor"/><circle cx="6" cy="3.5" r=".75" fill="currentColor"/></svg>
       How we calculate this
@@ -149,7 +156,7 @@ body{background:var(--navy);color:var(--ink);font-family:'DM Sans',sans-serif;mi
 
   <!-- INSPECTION RECORD -->
   <div class="section">
-    <div class="section-label">Inspection Record</div>
+    <div class="section-label">On Record</div>
     <div class="two-col">
       <div class="info-card">
         <div class="ic-label">Last Inspected</div>
@@ -205,65 +212,79 @@ body{background:var(--navy);color:var(--ink);font-family:'DM Sans',sans-serif;mi
 
 <script>
 var FORECAST_URL='https://pinellasiceco.github.io/Pinellasiceco/forecast.json';
+var MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 function show(id){
   document.querySelectorAll('.state').forEach(function(el){el.classList.remove('active');});
   document.getElementById(id).classList.add('active');
 }
 
-function fmtDate(iso){
-  if(!iso)return'—';
+function fmtLong(iso){
+  if(!iso)return'&mdash;';
   try{
     var d=new Date(iso+'T12:00:00');
     return d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
   }catch(e){return iso;}
 }
 
+function fmtShort(d){
+  return MONTHS[d.getMonth()]+' '+d.getDate();
+}
+
 function fmtDisp(d){
-  if(!d)return'—';
+  if(!d)return'&mdash;';
   if(d==='Inspection Completed - No Further Action')return'No Further Action';
-  if(d.indexOf('Call Back')!==-1&&d.indexOf('Complied')!==-1)return'Callback — Complied';
-  if(d.indexOf('Call Back')!==-1&&d.indexOf('Admin')!==-1)return'Callback — Admin. Complaint';
-  if(d.indexOf('Call Back')!==-1&&d.indexOf('Extension')!==-1)return'Callback — Extension Pending';
+  if(d.indexOf('Call Back')!==-1&&d.indexOf('Complied')!==-1)return'Callback &mdash; Complied';
+  if(d.indexOf('Call Back')!==-1&&d.indexOf('Admin')!==-1)return'Callback &mdash; Admin. Complaint';
+  if(d.indexOf('Call Back')!==-1&&d.indexOf('Extension')!==-1)return'Callback &mdash; Extension Pending';
   if(d.indexOf('Warning')!==-1)return'Warning Issued';
-  if(d.indexOf('Emergency')!==-1&&d.indexOf('Complied')!==-1)return'Emergency Order — Complied';
-  if(d.indexOf('Emergency')!==-1&&d.indexOf('Not Complied')!==-1)return'Emergency Order — Not Complied';
+  if(d.indexOf('Emergency')!==-1&&d.indexOf('Not Complied')!==-1)return'Emergency Order &mdash; Not Complied';
+  if(d.indexOf('Emergency')!==-1&&d.indexOf('Complied')!==-1)return'Emergency Order &mdash; Complied';
   if(d.indexOf('Administrative')!==-1)return'Administrative Action';
   return d;
 }
 
-function countUp(el, target){
-  var duration=1200;
-  var start=performance.now();
-  function update(now){
-    var p=Math.min((now-start)/duration,1);
-    var eased=1-Math.pow(1-p,3);
-    el.textContent=Math.round(eased*target);
-    if(p<1)requestAnimationFrame(update);
-    else el.textContent=target;
-  }
-  requestAnimationFrame(update);
-}
+function round15(x){return Math.round(x/15)*15;}
 
 function render(rec){
   document.getElementById('biz-name').textContent=rec.name;
   document.getElementById('biz-addr').textContent=rec.address+', '+rec.city+', FL '+rec.zip;
 
-  var du=rec.days_until;
-  var wrap=document.getElementById('days-wrap');
-  var numEl=document.getElementById('days-num');
+  // Recompute days fresh from the predicted date so the window stays honest
+  // even if the page is opened days after the build.
+  var predDate=null;
+  try{predDate=new Date(rec.pred_next+'T12:00:00');}catch(e){}
+  var today=new Date();today.setHours(12,0,0,0);
+  var du=(predDate&&!isNaN(predDate))?Math.round((predDate-today)/86400000):rec.days_until;
+
+  var wrap=document.getElementById('range-wrap');
+  var rn=document.getElementById('range-num');
+  var ru=document.getElementById('range-unit');
+  var dateLine=document.getElementById('window-date');
+
   if(du<0){
-    wrap.classList.add('days-overdue');
-    numEl.textContent=Math.abs(du);
-    document.getElementById('days-label').textContent='Days Past Predicted';
-    document.getElementById('pred-date').innerHTML='Predicted date: <span>'+fmtDate(rec.pred_next)+'</span> &mdash; already passed';
+    // Predicted window has passed — frame as due, not a precise count.
+    wrap.classList.add('due-now');
+    rn.textContent='Due Now';
+    rn.classList.add('text-mode');
+    ru.style.display='none';
+    document.getElementById('range-label').textContent='Inspection Likely Due';
+    dateLine.innerHTML='Based on this location&#39;s history, a routine inspection may occur <span>at any time</span>.';
   } else {
-    countUp(numEl, du);
-    document.getElementById('pred-date').innerHTML='Predicted: <span>'+fmtDate(rec.pred_next)+'</span>';
+    var lo=Math.max(0,round15(du-30));
+    var hi=round15(du+30);
+    if(hi<=lo)hi=lo+15;
+    rn.textContent=(lo===0)?('0–'+hi):(lo+'–'+hi);
+    ru.textContent='DAYS';
+    // Absolute calendar window anchored on the predicted date
+    var d1=new Date(today.getTime()+lo*86400000);
+    var d2=new Date(today.getTime()+hi*86400000);
+    var yr=(d1.getFullYear()===d2.getFullYear())?(', '+d2.getFullYear()):(', '+d1.getFullYear()+'–'+d2.getFullYear());
+    dateLine.innerHTML='Estimated window: <span>'+fmtShort(d1)+' – '+fmtShort(d2)+yr+'</span>';
   }
 
-  document.getElementById('last-insp-val').textContent=fmtDate(rec.last_insp)+(rec.days_since?' ('+rec.days_since+' days ago)':'');
-  document.getElementById('last-disp-val').textContent=fmtDisp(rec.last_disp);
+  document.getElementById('last-insp-val').innerHTML=fmtLong(rec.last_insp)+(rec.days_since?(' <span style="color:rgba(240,244,248,0.5);font-weight:400">('+rec.days_since+' days ago)</span>'):'');
+  document.getElementById('last-disp-val').innerHTML=fmtDisp(rec.last_disp);
 
   var obs=rec.cit_observation;
   if(obs&&obs.length>10){
@@ -274,34 +295,29 @@ function render(rec){
 
   var ctx='';
   if(du<0){
-    ctx='Based on this business&#39;s own DBPR inspection history, the predicted next inspection date has already passed. '
-       +'Florida inspectors re-check locations with open issues on a compressed schedule. '
-       +'Having your ice machine independently certified and cleaned before that visit demonstrates proactive compliance.';
-  } else if(du<30){
-    ctx='Based on this business&#39;s own DBPR inspection history, an inspection may be coming within the next 30 days. '
-       +'A documented, third-party deep clean before that visit is one of the clearest signals of proactive food-safety compliance.';
-  } else if(du<60){
-    ctx='Based on this business&#39;s own DBPR inspection history, an inspection is likely within the next 60 days — '
-       +'enough lead time to schedule a full ATP-tested deep clean and have the certification on record before the inspector arrives.';
+    ctx='Based on this location&#39;s own inspection history, it is at or near the point where a routine re-inspection typically occurs. '
+       +'A documented, third-party deep clean &mdash; with ATP test results on file &mdash; is one of the clearest ways to show proactive food-safety compliance before an inspector arrives.';
+  } else if(du<45){
+    ctx='Based on this location&#39;s own inspection history, an inspection is likely in the relatively near term. '
+       +'Scheduling a deep clean now means the ATP results are already on record when the inspector visits.';
   } else {
-    ctx='Based on this business&#39;s own DBPR inspection history, an inspection is expected later this year. '
-       +'Scheduling a proactive deep clean now means the ATP results are already on file when the inspector visits — '
-       +'a concrete demonstration that food-safety compliance is actively managed.';
+    ctx='Based on this location&#39;s own inspection history, an inspection is likely within this window. '
+       +'A proactive deep clean &mdash; with ATP results on file &mdash; is a concrete demonstration that food-safety compliance is actively managed.';
   }
   document.getElementById('context-text').innerHTML=ctx;
 
   show('state-main');
+  setTimeout(function(){wrap.classList.add('in');},80);
 
-  // Sticky bar on scroll
+  // Sticky bar
   var barShown=false;
   var bar=document.getElementById('sticky-bar');
   window.addEventListener('scroll',function(){
     if(window.scrollY>260&&!barShown){bar.classList.add('visible');barShown=true;}
   },{passive:true});
-  // Show bar immediately if short page
   setTimeout(function(){
     if(document.body.scrollHeight<=window.innerHeight+80&&!barShown){bar.classList.add('visible');barShown=true;}
-  },400);
+  },500);
 }
 
 (function(){

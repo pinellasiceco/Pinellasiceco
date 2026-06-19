@@ -42,7 +42,11 @@ body{background:var(--surf);color:var(--ink);font-family:'DM Sans',sans-serif;mi
 .doc-body{max-width:640px;margin:0 auto;padding:0 20px 60px}
 
 /* CERT STRIP */
-.cert-strip{background:#fff;border:1px solid var(--brd);border-top:4px solid var(--gold);border-radius:0 0 10px 10px;padding:14px 20px;margin-bottom:28px;display:flex;align-items:center;gap:12px}
+.lead-note{background:#fff;border:1px solid var(--brd);border-left:4px solid var(--ice);border-radius:10px;padding:18px 20px;margin-top:-18px;margin-bottom:16px;box-shadow:0 8px 24px rgba(13,27,42,0.08)}
+.lead-note p{font-size:13.5px;color:#334155;line-height:1.65;margin-bottom:8px}
+.lead-note p:last-child{margin-bottom:0}
+.lead-note strong{color:var(--navy2);font-weight:700}
+.cert-strip{background:#fff;border:1px solid var(--brd);border-top:4px solid var(--gold);border-radius:10px;padding:14px 20px;margin-bottom:28px;display:flex;align-items:center;gap:12px}
 .cert-strip-icon{font-size:20px;flex-shrink:0}
 .cert-strip-text{font-size:12px;color:var(--sub);line-height:1.6}
 .cert-strip-text strong{color:var(--ink);font-weight:600}
@@ -125,16 +129,22 @@ body{background:var(--surf);color:var(--ink);font-family:'DM Sans',sans-serif;mi
       </text>
     </svg>
   </div>
-  <div class="doc-title">Inspection Forecast Methodology</div>
-  <div class="doc-sub">How Pinellas Ice Co. calculates predicted inspection dates<br>for each business in Pinellas County</div>
+  <div class="doc-title">Inspection Estimate Methodology</div>
+  <div class="doc-sub">How Pinellas Ice Co. estimates the likely inspection window<br>for each business in Pinellas County</div>
+</div>
+
+<!-- LEAD STATEMENT (honest framing, stated up front) -->
+<div class="doc-body">
+<div class="lead-note">
+  <p><strong>What this is:</strong> a <em>likely window</em> for when this location may next be inspected &mdash; based on its own historical pattern.</p>
+  <p><strong>What this is not:</strong> a guaranteed or exact date. DBPR inspection timing has real, unavoidable variability, and our goal is an honest, useful estimate rather than false precision.</p>
 </div>
 
 <!-- CERT STRIP -->
-<div class="doc-body">
 <div class="cert-strip">
   <div class="cert-strip-icon">&#x1F4CB;</div>
   <div class="cert-strip-text">
-    <strong>This forecast is specific to your location.</strong>
+    <strong>This estimate is specific to your location.</strong>
     It is generated from the DBPR inspection history on file for this business &mdash; not a county-wide average or a generic estimate.
   </div>
 </div>
@@ -181,10 +191,10 @@ body{background:var(--surf);color:var(--ink);font-family:'DM Sans',sans-serif;mi
 <div class="method-section">
   <div class="method-heading">
     <span class="method-num">3</span>
-    <h2>The prediction is anchored to the most recent inspection on record</h2>
+    <h2>The estimate is anchored to the most recent inspection on record</h2>
   </div>
   <div class="method-body">
-    <p>The predicted date is calculated forward from the <strong>most recent confirmed inspection</strong> we have on file for this business from the DBPR public records. If a callback or follow-up visit occurred after the original inspection, the prediction is anchored to that more recent date &mdash; not the earlier one.</p>
+    <p>The window is projected forward from the <strong>most recent confirmed inspection</strong> we have on file for this business from the DBPR public records. If a callback or follow-up visit occurred after the original inspection, the estimate is anchored to that more recent date &mdash; not the earlier one.</p>
     <p>Inspection data is updated regularly from DBPR&#39;s public database. If a very recent inspection has not yet propagated through the system, our most recent date on file may lag by a few days.</p>
   </div>
 </div>
@@ -198,8 +208,8 @@ body{background:var(--surf);color:var(--ink);font-family:'DM Sans',sans-serif;mi
     <h2>What the predicted interval is based on</h2>
   </div>
   <div class="method-body">
-    <p>The model considers several signals from this business&#39;s history: the typical gap between its past inspections, the number of violations found, the severity of those violations, and the inspector&#39;s outcome (whether re-inspection was required, whether corrections were made on-site, and whether the matter was fully resolved).</p>
-    <p>Businesses where a callback was required and has since been cleared &mdash; &#x201C;Call Back &mdash; Complied&#x201D; &mdash; are treated as returning to a normal re-inspection cadence rather than being locked into the short callback cycle. Once the original finding is resolved, the next visit is expected to follow the routine schedule.</p>
+    <p>The estimate considers several signals from this business&#39;s history: the typical gap between its past routine inspections, the kinds of violations found, and how those visits were resolved.</p>
+    <p>Because cadence shifts as a location&#39;s compliance history changes, we weight the pattern of routine inspections to reflect how this specific business tends to be visited over time &mdash; rather than applying one fixed interval to everyone.</p>
   </div>
 </div>
 
