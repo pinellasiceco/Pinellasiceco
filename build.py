@@ -1623,11 +1623,16 @@ def run(csv_paths):
         'Call Back - Complied',
         'Emergency Order Callback Complied',
     }
+    # Gate on avg_visit > 1.1: only businesses with a genuine callback-cycle
+    # fingerprint (multiple visits within an inspection episode) get the floor.
+    # A single clean visit (avg_visit == 1.0) is not callback-compressed and
+    # keeps its real prediction. avg_visit is bimodal (1.0 vs 1.2+), so 1.1
+    # sits in the empty gap and cleanly separates the two populations.
     med_pred_days = int(round(float(np.median(latest['pred_days']))))
-    if 'disp_raw' in latest.columns:
-        resolved_mask = latest['disp_raw'].isin(RESOLVED_DISPS)
+    if 'disp_raw' in latest.columns and 'avg_visit' in latest.columns:
+        resolved_mask = latest['disp_raw'].isin(RESOLVED_DISPS) & (latest['avg_visit'] > 1.1)
         latest.loc[resolved_mask, 'pred_days'] = latest.loc[resolved_mask, 'pred_days'].clip(lower=med_pred_days)
-        print(f"  Resolved-disposition floor (median={med_pred_days}d) applied to {int(resolved_mask.sum()):,} businesses")
+        print(f"  Resolved-disposition floor (median={med_pred_days}d) applied to {int(resolved_mask.sum()):,} callback-cycle businesses")
 
     latest['pred_next']  = latest['inspection_date'] + pd.to_timedelta(latest['pred_days'], unit='d')
     latest['days_until'] = (latest['pred_next'] - pd.Timestamp(TODAY)).dt.days.fillna(999).astype(int)
