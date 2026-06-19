@@ -114,8 +114,9 @@ body{background:var(--navy);color:var(--ink);font-family:'DM Sans',sans-serif;mi
          onerror="this.style.display='none'">
     <div class="topbar-name">Pinellas Ice Co.</div>
   </div>
-  <button class="tb-btn" onclick="window.open(window.location.href,'_blank','noopener')" aria-label="Open in browser">Browser &#x2197;</button>
+  <a class="tb-btn" id="tb-browser" href="#" target="_blank" rel="noopener noreferrer" aria-label="Open in browser">Browser &#x2197;</a>
 </div>
+<script>document.getElementById('tb-browser').href=window.location.href;</script>
 
 <!-- LOADING -->
 <div id="state-loading" class="state active">
