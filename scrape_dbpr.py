@@ -402,6 +402,9 @@ def run_full_violations_scrape():
     print("=== DBPR Full Violations Scraper ===")
     print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
+    # build_violations_list.py writes rows sorted by inspection_date DESC,
+    # so the most-recently-inspected businesses appear first and get priority
+    # within the MAX_RECORDS cap — no separate priority queue is needed.
     records = []
     with open(ALL_VIOLATIONS_INPUT, newline='', encoding='utf-8') as f:
         reader = csv.DictReader(f)
@@ -427,6 +430,8 @@ def run_full_violations_scrape():
         if isinstance(val, dict):
             if val.get('status') == 'DBPR_ERROR':
                 try:
+                    # <7  → True  (in cooldown, skip this run)
+                    # >=7 → False (cooldown expired, retry eligible — indefinite weekly retry)
                     return (date.today() - date.fromisoformat(val['date'])).days < 7
                 except (ValueError, TypeError, KeyError):
                     return False
@@ -443,6 +448,22 @@ def run_full_violations_scrape():
                      str(r.get('Visit ID', '')).strip()
                  )]
     print(f"Cached with data: {len(cache_keys)} | Progress entries: {len(done)} | Remaining: {len(remaining)}")
+    _old_fmt_count = sum(1 for v in cache.values() if isinstance(v, list))
+    _err_cooldown = 0
+    _err_retryable = 0
+    for _v in cache.values():
+        if isinstance(_v, dict) and _v.get('status') == 'DBPR_ERROR':
+            try:
+                _days = (date.today() - date.fromisoformat(_v['date'])).days
+                if _days < 7:
+                    _err_cooldown += 1
+                else:
+                    _err_retryable += 1
+            except (ValueError, TypeError, KeyError):
+                _err_retryable += 1
+    print(f"  Old-format (list) entries pending re-scrape:    {_old_fmt_count}")
+    print(f"  DBPR_ERROR in 7-day cooldown (skipped):         {_err_cooldown}")
+    print(f"  DBPR_ERROR retryable (>=7 days, in queue):      {_err_retryable}")
 
     max_records = int(os.environ.get('MAX_RECORDS', '0') or 0)
     if max_records > 0:
@@ -538,6 +559,22 @@ def run_full_violations_scrape():
     print(f"Finished: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"Successfully scraped: {success_count} | Failed: {fail_count}")
     print(f"Cache size: {len(cache)} licenses")
+    _old_fmt_end = sum(1 for v in cache.values() if isinstance(v, list))
+    _err_cd_end = 0
+    _err_rt_end = 0
+    for _v in cache.values():
+        if isinstance(_v, dict) and _v.get('status') == 'DBPR_ERROR':
+            try:
+                _days = (date.today() - date.fromisoformat(_v['date'])).days
+                if _days < 7:
+                    _err_cd_end += 1
+                else:
+                    _err_rt_end += 1
+            except (ValueError, TypeError, KeyError):
+                _err_rt_end += 1
+    print(f"Old-format list entries still pending re-scrape: {_old_fmt_end}")
+    print(f"DBPR_ERROR in cooldown (end of run):             {_err_cd_end}")
+    print(f"DBPR_ERROR retryable next run (end of run):      {_err_rt_end}")
 
 
 # ── Main ──────────────────────────────────────────────────────────────────
