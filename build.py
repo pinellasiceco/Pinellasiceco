@@ -2675,6 +2675,7 @@ header{background:var(--navy);
     <div class="tab"     onclick="sw('clients')"   ><span class="tab-icon">&#x1F91D;</span><span class="tab-lbl">Clients</span></div>
     <div class="tab"     onclick="sw('partners')"  ><span class="tab-icon">&#x1F91D;</span><span class="tab-lbl">Partners</span></div>
     %%REPORTS_TAB%%
+    <div class="tab" id="tab-groups" onclick="sw(&#39;groups&#39;)" ontouchend="event.preventDefault();sw(&#39;groups&#39;)"><span class="tab-icon">&#x1F517;</span><span class="tab-lbl">Groups</span></div>
     <button id="gear-btn" onclick="sw('data')" title="Settings" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:16px;cursor:pointer;padding:4px;color:var(--sub);line-height:1">&#x2699;&#xFE0F;</button>
   </nav>
 
@@ -3110,6 +3111,28 @@ header{background:var(--navy);
     </div>
     <div id="partner-top"></div>
     <div id="partner-list"></div>
+  </div>
+
+  <!-- ACCOUNT GROUPS -->
+  <div class="panel" id="p-groups">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div style="font-size:15px;font-weight:800;color:var(--navy)">&#x1F517; Account Groups</div>
+      <div style="display:flex;gap:6px">
+        <button onclick="openAGImport()" ontouchend="event.preventDefault();openAGImport()" style="padding:6px 12px;border:1px solid var(--navy);border-radius:8px;background:#fff;color:var(--navy);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F4E5; Import CSV</button>
+        <button onclick="openAGNew()" ontouchend="event.preventDefault();openAGNew()" style="padding:6px 12px;border:none;border-radius:8px;background:var(--navy);color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">+ New Group</button>
+      </div>
+    </div>
+    <div id="ag-kpi-bar" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px"></div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px" id="ag-status-filters">
+      <button class="agstatus-chip on" data-agstatus="all"             onclick="setAGStatusFilter('all')"             ontouchend="event.preventDefault();setAGStatusFilter('all')"             style="font-size:9px;padding:4px 9px;border-radius:12px;border:1px solid var(--navy);background:var(--navy);color:#fff;cursor:pointer;font-family:inherit;touch-action:manipulation">All</button>
+      <button class="agstatus-chip"    data-agstatus="candidate"       onclick="setAGStatusFilter('candidate')"       ontouchend="event.preventDefault();setAGStatusFilter('candidate')"       style="font-size:9px;padding:4px 9px;border-radius:12px;border:1px solid #e2e8f0;background:#f8fafc;color:#475569;cursor:pointer;font-family:inherit;touch-action:manipulation">Candidate</button>
+      <button class="agstatus-chip"    data-agstatus="verified"        onclick="setAGStatusFilter('verified')"        ontouchend="event.preventDefault();setAGStatusFilter('verified')"        style="font-size:9px;padding:4px 9px;border-radius:12px;border:1px solid #e2e8f0;background:#f8fafc;color:#475569;cursor:pointer;font-family:inherit;touch-action:manipulation">Verified</button>
+      <button class="agstatus-chip"    data-agstatus="in_conversation" onclick="setAGStatusFilter('in_conversation')" ontouchend="event.preventDefault();setAGStatusFilter('in_conversation')" style="font-size:9px;padding:4px 9px;border-radius:12px;border:1px solid #e2e8f0;background:#f8fafc;color:#475569;cursor:pointer;font-family:inherit;touch-action:manipulation">In Conversation</button>
+      <button class="agstatus-chip"    data-agstatus="partial_won"     onclick="setAGStatusFilter('partial_won')"     ontouchend="event.preventDefault();setAGStatusFilter('partial_won')"     style="font-size:9px;padding:4px 9px;border-radius:12px;border:1px solid #e2e8f0;background:#f8fafc;color:#475569;cursor:pointer;font-family:inherit;touch-action:manipulation">Partial Won</button>
+      <button class="agstatus-chip"    data-agstatus="won"             onclick="setAGStatusFilter('won')"             ontouchend="event.preventDefault();setAGStatusFilter('won')"             style="font-size:9px;padding:4px 9px;border-radius:12px;border:1px solid #e2e8f0;background:#f8fafc;color:#475569;cursor:pointer;font-family:inherit;touch-action:manipulation">Won</button>
+      <button class="agstatus-chip"    data-agstatus="lost"            onclick="setAGStatusFilter('lost')"            ontouchend="event.preventDefault();setAGStatusFilter('lost')"            style="font-size:9px;padding:4px 9px;border-radius:12px;border:1px solid #e2e8f0;background:#f8fafc;color:#475569;cursor:pointer;font-family:inherit;touch-action:manipulation">Lost</button>
+    </div>
+    <div id="ag-list"></div>
   </div>
 
   %%REPORTS_PANEL%%
@@ -5348,7 +5371,7 @@ function sw(t){
   if(t==='customers'){t='clients';}
   else if(t==='service'){setClientTab('service');t='clients';}
   tab=t;
-  const tabNames=['today','all','pipeline','route','clients','partners','reports'];
+  const tabNames=['today','all','pipeline','route','clients','partners','reports','groups'];
   document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('on',tabNames[i]===t));
   document.querySelectorAll('.panel').forEach(el=>el.classList.remove('on'));
   // panel ID mapping: clients → p-customers, data → p-data, others → p-{t}
@@ -5361,6 +5384,7 @@ function sw(t){
   else if(t==='route'){rRoute();}
   else if(t==='clients'){if(clientTab==='service')rService();else rCust();}
   else if(t==='partners'){renderPartners();}
+  else if(t==='groups'){renderAccountGroups();}
   else if(t==='data'){initSettings();}
   else if(t==='reports'){if(!REPORTS_TAB_ENABLED)return;renderSalesReports();}
   if(t==='route'&&typeof L==='undefined')loadLeaflet();
@@ -6734,6 +6758,31 @@ function showCard(id){
     +'<button id="sc-add-contact" style="width:100%;padding:7px;border:1px dashed #e2e8f0;border-radius:7px;background:transparent;color:#64748b;font-size:10px;cursor:pointer;font-family:inherit;touch-action:manipulation;margin-top:4px">+ Add Contact</button>'
     +'</div>';
 
+  // Account Group banner — shown between chips row and intel panel when this
+  // business belongs to an account group. Candidate groups use a purple border.
+  var groupBannerH=\'\';
+  (function(){
+    var g=agGroupForPid(p.id);
+    if(!g)return;
+    var isCand=g.status===\'candidate\';
+    var c=AG_STATUS_COLORS[g.status]||\'#94a3b8\';
+    var bgc=AG_STATUS_BG[g.status]||\'#f8fafc\';
+    var brd=isCand?\'#c4b5fd\':c;
+    var title=g.name||g.apparent_owner||\'(unnamed group)\';
+    groupBannerH=\'<div data-gid="\'+g.id+\'" ontouchend="event.preventDefault();event.stopPropagation();agOpenFromCard(this.dataset.gid)" onclick="event.stopPropagation();agOpenFromCard(this.dataset.gid)" \'
+      +\'style="background:\'+bgc+\';border:1px solid \'+brd+\';\'+( isCand?\'border-left:4px solid #7c3aed;\':\'border-left:4px solid \'+c+\';\' )+\'border-radius:10px;padding:10px 12px;margin-bottom:12px;cursor:pointer;touch-action:manipulation">\'
+      +\'<div style="display:flex;justify-content:space-between;align-items:center;gap:8px">\'
+        +\'<div style="font-size:9px;font-weight:700;color:\'+c+\';text-transform:uppercase;letter-spacing:.06em">&#x1F517; Account Group\'+(isCand?\' &middot; UNCONFIRMED CANDIDATE\':\'\')+\'</div>\'
+        +agStatusBadge(g.status)
+      +\'</div>\'
+      +\'<div style="font-size:14px;font-weight:800;color:#1e293b;margin-top:3px">\'+escH(title)+\'</div>\'
+      +\'<div style="display:flex;gap:6px;align-items:center;margin-top:4px">\'+agSourceBadge(g.source)
+        +\'<span style="font-size:10px;color:#475569">\'+(g.members||[]).length+\' linked</span>\'
+        +\'<span style="font-size:10px;color:\'+c+\';font-weight:700;margin-left:auto">View group &#8250;</span>\'
+      +\'</div>\'
+    +\'</div>\';
+  })();
+
   // Build overlay
   var bg=document.createElement('div');
   bg.id='sc-bg';
@@ -6757,7 +6806,7 @@ function showCard(id){
     +'</div>'
     +'<div style="padding:16px">'
       +'<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px">'+chips+'</div>'
-      +intelWhyH+phoneH+phoneSaveH+cleanScoreH+forecastH+iceH+intelH+histH+svcHistH+logH+closeH+contactsH
+      +groupBannerH+intelWhyH+phoneH+phoneSaveH+cleanScoreH+forecastH+iceH+intelH+histH+svcHistH+logH+closeH+contactsH
     +'</div></div>';
 
   document.body.appendChild(bg);
@@ -7554,6 +7603,413 @@ function custSave(){
     Object.keys(customers).forEach(function(pid){sbUpsert('pic_customers',pid,customers[pid]);});
   }
 }
+// ── Account Groups module ─────────────────────────────────────────────────
+var AG_STORAGE_KEY='pic_account_groups_v1';
+var accountGroups={};            // { gid: {group object} }
+var _agPidIndex={};              // { pid(String): gid }  reverse lookup
+var _agStatusFilter='all';
+var _openGroupId=null;
+
+var AG_STATUS=['candidate','verified','in_conversation','partial_won','won','lost'];
+var AG_STATUS_LABELS={candidate:'Candidate (unconfirmed)',verified:'Verified',in_conversation:'In Conversation',partial_won:'Partial Won',won:'Won',lost:'Lost'};
+var AG_STATUS_COLORS={candidate:'#7c3aed',verified:'#059669',in_conversation:'#0891b2',partial_won:'#d97706',won:'#059669',lost:'#94a3b8'};
+var AG_STATUS_BG={candidate:'#f5f3ff',verified:'#ecfdf5',in_conversation:'#ecfeff',partial_won:'#fffbeb',won:'#ecfdf5',lost:'#f8fafc'};
+var AG_SOURCE_LABELS={dbpr_mailing_match:'DBPR mailing match',field_confirmed:'Field confirmed'};
+
+function escH(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\'/g,'&#39;');}
+
+function agId(){return 'g'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function agNow(){return localISO(new Date());}
+
+function agBuildIndex(){
+  _agPidIndex={};
+  Object.keys(accountGroups).forEach(function(gid){
+    var g=accountGroups[gid];
+    (g.members||[]).forEach(function(pid){_agPidIndex[String(pid)]=gid;});
+  });
+}
+function agLoad(){
+  try{accountGroups=JSON.parse(localStorage.getItem(AG_STORAGE_KEY)||\'{}\')||{};}catch(e){accountGroups={};}
+  agBuildIndex();
+}
+function agSave(){
+  try{localStorage.setItem(AG_STORAGE_KEY,JSON.stringify(accountGroups));}catch(e){}
+  agBuildIndex();
+  if(_sb&&_userId){Object.keys(accountGroups).forEach(function(gid){sbUpsert(AG_STORAGE_KEY,gid,accountGroups[gid]);});}
+}
+function agGroupForPid(pid){var gid=_agPidIndex[String(pid)];return gid?accountGroups[gid]:null;}
+
+function agNewGroup(o){
+  o=o||{};
+  var gid=agId();
+  accountGroups[gid]={
+    id:gid,
+    name:o.name||\'\'
+    ,apparent_owner:o.apparent_owner||\'\'
+    ,status:\'candidate\'
+    ,source:o.source===\'field_confirmed\'?\'field_confirmed\':\'dbpr_mailing_match\'
+    ,notes:o.notes||\'\'
+    ,corporate_contact:{name:\'\',role:\'\',phone:\'\',email:\'\'}
+    ,created_date:agNow()
+    ,last_updated_date:agNow()
+    ,members:Array.isArray(o.members)?o.members.slice():[]
+    ,unmatched:Array.isArray(o.unmatched)?o.unmatched.slice():[]
+  };
+  return gid;
+}
+function agSetField(gid,key,val){
+  var g=accountGroups[gid];if(!g)return;
+  if(key===\'corporate_contact\'){return;}
+  g[key]=val;g.last_updated_date=agNow();agSave();
+}
+function agSetContact(gid,key,val){
+  var g=accountGroups[gid];if(!g)return;
+  if(!g.corporate_contact)g.corporate_contact={name:\'\',role:\'\',phone:\'\',email:\'\'};
+  g.corporate_contact[key]=val;g.last_updated_date=agNow();agSave();
+}
+function agAddMember(gid,pid){
+  var g=accountGroups[gid];if(!g)return;
+  pid=parseInt(pid)||pid;
+  if(!g.members)g.members=[];
+  if(g.members.some(function(m){return m===pid||String(m)===String(pid);})){toast(\'Already in this group\');return;}
+  var prev=_agPidIndex[String(pid)];
+  if(prev&&prev!==gid&&accountGroups[prev]){accountGroups[prev].members=(accountGroups[prev].members||[]).filter(function(m){return String(m)!==String(pid);});accountGroups[prev].last_updated_date=agNow();}
+  g.members.push(pid);g.last_updated_date=agNow();agSave();
+}
+function agRemoveMember(gid,pid){
+  var g=accountGroups[gid];if(!g)return;
+  g.members=(g.members||[]).filter(function(m){return String(m)!==String(pid);});
+  g.last_updated_date=agNow();agSave();
+  agRenderDetailBody(gid);renderAccountGroups();
+}
+function agDeleteGroup(gid){
+  if(!accountGroups[gid])return;
+  delete accountGroups[gid];agSave();
+  var bg=document.getElementById(\'ag-detail-bg\');if(bg)bg.remove();
+  renderAccountGroups();toast(\'Group deleted\');
+}
+
+function agNormAddr(a){
+  var s=String(a==null?\'\'  :a).toUpperCase();
+  s=s.replace(/[.,#]/g,\' \');
+  s=s.replace(/\\b(SUITE|STE|UNIT|APT|BLDG|FL|FLOOR|RM|ROOM|LOT|SPC|SPACE)\\b/g,\' \');
+  s=s.replace(/\\bSTREET\\b/g,\'ST\').replace(/\\bBOULEVARD\\b/g,\'BLVD\').replace(/\\bAVENUE\\b/g,\'AVE\')
+     .replace(/\\bDRIVE\\b/g,\'DR\').replace(/\\bROAD\\b/g,\'RD\').replace(/\\bHIGHWAY\\b/g,\'HWY\')
+     .replace(/\\bLANE\\b/g,\'LN\').replace(/\\bCOURT\\b/g,\'CT\').replace(/\\bPLACE\\b/g,\'PL\')
+     .replace(/\\bTERRACE\\b/g,\'TER\').replace(/\\bPARKWAY\\b/g,\'PKWY\').replace(/\\bCIRCLE\\b/g,\'CIR\')
+     .replace(/\\bTRAIL\\b/g,\'TRL\').replace(/\\bNORTH\\b/g,\'N\').replace(/\\bSOUTH\\b/g,\'S\')
+     .replace(/\\bEAST\\b/g,\'E\').replace(/\\bWEST\\b/g,\'W\');
+  s=s.replace(/([A-Z])(\\d)/g,\'$1 $2\');
+  s=s.replace(/\\s+/g,\' \').trim();
+  return s;
+}
+function agMatchPid(addr){
+  var n=agNormAddr(addr);
+  var num=(n.match(/^(\\d+)\\b/)||[])[1];
+  if(!num)return null;
+  var t1=n.split(\' \')[1]||\'\';
+  if(!t1)return null;
+  for(var i=0;i<P.length;i++){
+    var pn=agNormAddr(P[i].address);
+    var pnum=(pn.match(/^(\\d+)\\b/)||[])[1];
+    if(pnum!==num)continue;
+    var t2=pn.split(\' \')[1]||\'\';
+    if(t1&&t1===t2)return P[i].id;
+  }
+  return null;
+}
+
+function agParseCSV(text){
+  var rows=[],field=\'\',row=[],inQ=false,i;
+  text=String(text||\'\'  ).replace(/\\r\\n/g,\'\\n\').replace(/\\r/g,\'\\n\');
+  for(i=0;i<text.length;i++){
+    var c=text[i];
+    if(inQ){
+      if(c===\'"\'){if(text[i+1]===\'"\'){field+=\'"\';i++;}else inQ=false;}
+      else field+=c;
+    }else{
+      if(c===\'"\')inQ=true;
+      else if(c===\',\'){row.push(field);field=\'\';}
+      else if(c===\'\\n\'){row.push(field);rows.push(row);row=[];field=\'\';}
+      else field+=c;
+    }
+  }
+  if(field.length||row.length){row.push(field);rows.push(row);}
+  return rows;
+}
+function agRunImport(){
+  var ta=document.getElementById(\'ag-csv-text\');
+  var text=ta?ta.value:\'\';
+  if(!text.trim()){toast(\'Paste CSV or choose a file first\');return;}
+  var rows=agParseCSV(text);
+  if(!rows.length){toast(\'No rows found\');return;}
+  var start=0;
+  var h0=(rows[0][0]||\'\'  ).toLowerCase();
+  if(h0===\'locations\'||h0.indexOf(\'location\')===0||(rows[0].join(\',\').toLowerCase().indexOf(\'apparent_owner\')>=0))start=1;
+  var groupsCreated=0, matchedClean=0, unmatchedTotal=0, bizTotal=0;
+  for(var r=start;r<rows.length;r++){
+    var cols=rows[r];
+    if(!cols||!cols.join(\'\').trim())continue;
+    var apparent=(cols[1]||\'\'  ).trim();
+    var bizRaw=(cols[3]||\'\'  ).trim();
+    var nm=(apparent&&apparent.toLowerCase().indexOf(\'see business\')<0)?apparent:\'\';
+    var members=[], unmatched=[];
+    bizRaw.split(\';\').forEach(function(part){
+      part=part.trim();if(!part)return;
+      bizTotal++;
+      var at=part.indexOf(\'@\');
+      var bname=(at>=0?part.slice(0,at):part).trim();
+      var baddr=(at>=0?part.slice(at+1):\'\').trim();
+      var pid=baddr?agMatchPid(baddr):null;
+      if(pid!=null){members.push(pid);matchedClean++;}
+      else{unmatched.push({name:bname,address:baddr});unmatchedTotal++;}
+    });
+    if(!members.length&&!unmatched.length)continue;
+    agNewGroup({name:nm,apparent_owner:apparent,source:\'dbpr_mailing_match\',members:members,unmatched:unmatched});
+    groupsCreated++;
+  }
+  agSave();
+  var bg=document.getElementById(\'ag-import-bg\');if(bg)bg.remove();
+  agShowImportSummary(groupsCreated,bizTotal,matchedClean,unmatchedTotal);
+  renderAccountGroups();
+}
+function agShowImportSummary(groups,biz,matched,unmatched){
+  var html=\'<div id="ag-summary-bg" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;display:flex;align-items:flex-end;justify-content:center" ontouchend="event.preventDefault();document.getElementById(&#39;ag-summary-bg&#39;).remove()" onclick="document.getElementById(&#39;ag-summary-bg&#39;).remove()">\'
+    +\'<div ontouchend="event.stopPropagation()" onclick="event.stopPropagation()" style="background:#fff;border-radius:20px 20px 0 0;padding:20px;width:100%;max-width:520px">\'
+    +\'<div style="font-weight:800;font-size:16px;color:#1e293b;margin-bottom:12px">Import Complete</div>\'
+    +\'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">\'
+    +\'<div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:10px;padding:12px"><div style="font-size:22px;font-weight:900;color:#7c3aed">\'+groups+\'</div><div style="font-size:10px;color:#6d28d9">candidate groups created</div></div>\'
+    +\'<div style="background:#ecfdf5;border:1px solid #6ee7b7;border-radius:10px;padding:12px"><div style="font-size:22px;font-weight:900;color:#059669">\'+matched+\'</div><div style="font-size:10px;color:#047857">businesses matched cleanly</div></div>\'
+    +\'<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:12px"><div style="font-size:22px;font-weight:900;color:#d97706">\'+unmatched+\'</div><div style="font-size:10px;color:#92400e">unmatched (kept as text, not linked)</div></div>\'
+    +\'<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px"><div style="font-size:22px;font-weight:900;color:#475569">\'+biz+\'</div><div style="font-size:10px;color:#64748b">businesses in file</div></div>\'
+    +\'</div>\'
+    +\'<div style="font-size:11px;color:#64748b;line-height:1.5;margin-bottom:12px">Every imported group is a <b style="color:#7c3aed">candidate</b> from <b>DBPR mailing match</b> and must be verified manually. Unmatched businesses are stored on their group flagged &#8220;unmatched &#8212; not linked&#8221; so nothing is lost.</div>\'
+    +\'<button ontouchend="event.preventDefault();document.getElementById(&#39;ag-summary-bg&#39;).remove()" onclick="document.getElementById(&#39;ag-summary-bg&#39;).remove()" style="width:100%;padding:12px;border:none;border-radius:10px;background:var(--navy);color:#fff;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit">Done</button>\'
+    +\'</div></div>\';
+  document.body.insertAdjacentHTML(\'beforeend\',html);
+}
+function openAGImport(){
+  var ex=document.getElementById(\'ag-import-bg\');if(ex)ex.remove();
+  var html=\'<div id="ag-import-bg" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:900;display:flex;align-items:flex-end;justify-content:center" ontouchend="event.preventDefault();if(event.target===this)this.remove()" onclick="if(event.target===this)this.remove()">\'
+    +\'<div ontouchend="event.stopPropagation()" onclick="event.stopPropagation()" style="background:#fff;border-radius:20px 20px 0 0;padding:20px;width:100%;max-width:560px;max-height:88vh;overflow-y:auto">\'
+    +\'<div style="font-weight:800;font-size:16px;color:#1e293b;margin-bottom:6px">Bulk Import Account Groups</div>\'
+    +\'<div style="font-size:11px;color:#64748b;margin-bottom:12px;line-height:1.5">CSV columns: <code>Locations, Apparent_Owner, Mailing_Address, Businesses</code>. The Businesses cell is semicolon-separated <code>NAME @ ADDRESS</code> pairs. All imported groups become <b style="color:#7c3aed">candidates</b>.</div>\'
+    +\'<input id="ag-csv-file" type="file" accept=".csv,text/csv" onchange="agLoadFileToText(this)" style="font-size:12px;margin-bottom:10px;width:100%">\'
+    +\'<textarea id="ag-csv-text" rows="8" placeholder="...or paste CSV here" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;font-size:12px;font-family:monospace;box-sizing:border-box;margin-bottom:12px;resize:vertical"></textarea>\'
+    +\'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">\'
+    +\'<button ontouchend="event.preventDefault();document.getElementById(&#39;ag-import-bg&#39;).remove()" onclick="document.getElementById(&#39;ag-import-bg&#39;).remove()" style="padding:12px;border:1px solid #e2e8f0;border-radius:10px;background:#fff;color:#64748b;font-weight:600;font-size:13px;cursor:pointer;font-family:inherit">Cancel</button>\'
+    +\'<button ontouchend="event.preventDefault();agRunImport()" onclick="agRunImport()" style="padding:12px;border:none;border-radius:10px;background:var(--navy);color:#fff;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit">Import</button>\'
+    +\'</div></div></div>\';
+  document.body.insertAdjacentHTML(\'beforeend\',html);
+}
+function agLoadFileToText(input){
+  var f=input&&input.files&&input.files[0];if(!f)return;
+  var rd=new FileReader();
+  rd.onload=function(){var ta=document.getElementById(\'ag-csv-text\');if(ta)ta.value=rd.result;};
+  rd.readAsText(f);
+}
+
+function setAGStatusFilter(s){
+  _agStatusFilter=s;
+  document.querySelectorAll(\'.agstatus-chip\').forEach(function(b){var on=b.dataset.agstatus===s;b.style.background=on?\'var(--navy)\':\'#f8fafc\';b.style.color=on?\'#fff\':\'#475569\';b.style.borderColor=on?\'var(--navy)\':\'#e2e8f0\';});
+  renderAccountGroups();
+}
+function agStatusBadge(status){
+  var c=AG_STATUS_COLORS[status]||\'#94a3b8\', bg=AG_STATUS_BG[status]||\'#f8fafc\';
+  var border=status===\'candidate\'?\';border:1px solid #c4b5fd\':\'\';
+  return \'<span style="font-size:9px;font-weight:700;padding:3px 8px;border-radius:5px;background:\'+bg+\';color:\'+c+border+\'">\'+escH(AG_STATUS_LABELS[status]||status)+\'</span>\';
+}
+function agSourceBadge(source){
+  return \'<span style="font-size:9px;font-weight:600;padding:3px 7px;border-radius:5px;background:#f1f5f9;color:#475569">\'+escH(AG_SOURCE_LABELS[source]||source)+\'</span>\';
+}
+function renderAccountGroups(){
+  var list=document.getElementById(\'ag-list\');if(!list)return;
+  var all=Object.keys(accountGroups).map(function(k){return accountGroups[k];});
+  var kpi=document.getElementById(\'ag-kpi-bar\');
+  if(kpi){
+    var cCand=all.filter(function(g){return g.status===\'candidate\';}).length;
+    var cVer=all.filter(function(g){return g.status===\'verified\';}).length;
+    var cWon=all.filter(function(g){return g.status===\'won\'||g.status===\'partial_won\';}).length;
+    kpi.innerHTML=\'\'
+      +\'<div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:900;color:var(--navy)">\'+all.length+\'</div><div style="font-size:9px;color:#64748b">Groups</div></div>\'
+      +\'<div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:900;color:#7c3aed">\'+cCand+\'</div><div style="font-size:9px;color:#64748b">Candidates</div></div>\'
+      +\'<div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:900;color:#059669">\'+cVer+\'</div><div style="font-size:9px;color:#64748b">Verified</div></div>\'
+      +\'<div style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:900;color:#d97706">\'+cWon+\'</div><div style="font-size:9px;color:#64748b">Won</div></div>\';
+  }
+  var groups=all;
+  if(_agStatusFilter!==\'all\')groups=groups.filter(function(g){return g.status===_agStatusFilter;});
+  groups.sort(function(a,b){return(b.last_updated_date||\'\'  ).localeCompare(a.last_updated_date||\'\'  );});
+  if(!groups.length){
+    list.innerHTML=\'<div style="color:#94a3b8;text-align:center;padding:32px;font-size:13px">\'+(all.length?\'No groups match this filter\':\'No account groups yet. Use &#8220;+ New Group&#8221; or &#8220;Import CSV&#8221; to get started.\')+\'</div>\';
+    return;
+  }
+  list.innerHTML=groups.map(function(g){
+    var title=g.name||g.apparent_owner||\'(unnamed group)\';
+    var memberCount=(g.members||[]).length;
+    var unCount=(g.unmatched||[]).length;
+    var candEdge=g.status===\'candidate\'?\'border-left:4px solid #7c3aed\':\'border-left:4px solid \'+(AG_STATUS_COLORS[g.status]||\'#e2e8f0\');
+    return \'<div data-gid="\'+g.id+\'" ontouchend="event.preventDefault();openAccountGroup(this.dataset.gid)" onclick="openAccountGroup(this.dataset.gid)" \'
+      +\'style="background:#fff;border:1px solid #e2e8f0;\'+candEdge+\';border-radius:10px;padding:12px;margin-bottom:8px;cursor:pointer;touch-action:manipulation">\'
+      +\'<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px">\'
+        +\'<div style="font-weight:700;font-size:14px;color:#1e293b;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis">\'+escH(title)+\'</div>\'
+        +agStatusBadge(g.status)
+      +\'</div>\'
+      +(g.apparent_owner?\'<div style="font-size:11px;color:#64748b;margin-bottom:6px">Owner: \'+escH(g.apparent_owner)+\'</div>\':\'\')
+      +\'<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">\'
+        +agSourceBadge(g.source)
+        +\'<span style="font-size:10px;color:#475569">\'+memberCount+\' linked</span>\'
+        +(unCount?\'<span style="font-size:10px;color:#d97706">\'+unCount+\' unmatched</span>\':\'\')
+        +\'<span style="font-size:9px;color:#94a3b8;margin-left:auto">updated \'+escH(g.last_updated_date||\'\'  )+\'</span>\'
+      +\'</div>\'
+    +\'</div>\';
+  }).join(\'\');
+}
+
+function openAGNew(){
+  var ex=document.getElementById(\'ag-new-bg\');if(ex)ex.remove();
+  var html=\'<div id="ag-new-bg" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:900;display:flex;align-items:flex-end;justify-content:center" ontouchend="event.preventDefault();if(event.target===this)this.remove()" onclick="if(event.target===this)this.remove()">\'
+    +\'<div ontouchend="event.stopPropagation()" onclick="event.stopPropagation()" style="background:#fff;border-radius:20px 20px 0 0;padding:20px;width:100%;max-width:520px">\'
+    +\'<div style="font-weight:800;font-size:16px;color:#1e293b;margin-bottom:6px">New Account Group</div>\'
+    +\'<div style="font-size:11px;color:#64748b;margin-bottom:14px">Created from scratch &#8594; source <b>field confirmed</b>. Starts as a <b style="color:#7c3aed">candidate</b> until you mark it verified.</div>\'
+    +\'<input id="ag-new-name" placeholder="Group name (e.g. Crabby Bill&#39;s Family Brands)" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;margin-bottom:8px;box-sizing:border-box;font-family:inherit">\'
+    +\'<input id="ag-new-owner" placeholder="Apparent owner (optional)" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;margin-bottom:14px;box-sizing:border-box;font-family:inherit">\'
+    +\'<button ontouchend="event.preventDefault();saveNewAG()" onclick="saveNewAG()" style="width:100%;padding:12px;border:none;border-radius:10px;background:var(--navy);color:#fff;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit">Create Group</button>\'
+    +\'</div></div>\';
+  document.body.insertAdjacentHTML(\'beforeend\',html);
+}
+function saveNewAG(){
+  var name=(document.getElementById(\'ag-new-name\')||{}).value||\'\'  ;
+  var owner=(document.getElementById(\'ag-new-owner\')||{}).value||\'\'  ;
+  if(!name.trim()&&!owner.trim()){toast(\'Enter a group name\');return;}
+  var gid=agNewGroup({name:name.trim(),apparent_owner:owner.trim(),source:\'field_confirmed\'});
+  agSave();
+  var bg=document.getElementById(\'ag-new-bg\');if(bg)bg.remove();
+  renderAccountGroups();
+  openAccountGroup(gid);
+}
+
+function openAccountGroup(gid){
+  var g=accountGroups[gid];if(!g)return;
+  _openGroupId=gid;
+  var ex=document.getElementById(\'ag-detail-bg\');if(ex)ex.remove();
+  var html=\'<div id="ag-detail-bg" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:900;display:flex;align-items:flex-end;justify-content:center" ontouchend="event.preventDefault();if(event.target===this)this.remove()" onclick="if(event.target===this)this.remove()">\'
+    +\'<div ontouchend="event.stopPropagation()" onclick="event.stopPropagation()" style="background:#fff;border-radius:20px 20px 0 0;padding:20px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto">\'
+    +\'<div id="ag-detail-body"></div>\'
+    +\'</div></div>\';
+  document.body.insertAdjacentHTML(\'beforeend\',html);
+  agRenderDetailBody(gid);
+}
+function agMemberStatusLabel(pid){
+  var c=customers[pid];
+  if(c&&[\'customer_recurring\',\'customer_once\',\'customer_quarterly\',\'customer_intro\'].indexOf(c.status)>=0)return [\'Client\',\'#059669\',\'#ecfdf5\'];
+  if(c&&c.status===\'customer_supplemental_only\')return [\'Supplemental\',\'#7c3aed\',\'#f5f3ff\'];
+  var lc=getLC(pid);
+  if(lc&&lc.outcome)return [(OI[normO(lc.outcome)]||lc.outcome),\'#475569\',\'#f1f5f9\'];
+  return [\'Prospect\',\'#64748b\',\'#f8fafc\'];
+}
+function agRenderDetailBody(gid){
+  var g=accountGroups[gid];if(!g)return;
+  var body=document.getElementById(\'ag-detail-body\');if(!body)return;
+  var statusOpts=AG_STATUS.map(function(s){return \'<option value="\'+s+\'"\'+(s===g.status?\' selected\':\'\')+\'>\'+escH(AG_STATUS_LABELS[s])+\'</option>\';}).join(\'\');
+  var cc=g.corporate_contact||{name:\'\',role:\'\',phone:\'\',email:\'\'};
+  var membersH=(g.members||[]).length?(g.members||[]).map(function(pid){
+    var p=P.find(function(x){return x.id===pid||String(x.id)===String(pid);});
+    var nm=p?p.name:(\'#\'+pid+\' (not in current data)\');
+    var ad=p?(p.address+\', \'+p.city):\'\';
+    var st=agMemberStatusLabel(pid);
+    return \'<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f1f5f9">\'
+      +\'<div data-pid="\'+escH(pid)+\'" ontouchend="event.preventDefault();agOpenMember(this.dataset.pid)" onclick="agOpenMember(this.dataset.pid)" style="flex:1;min-width:0;cursor:pointer;touch-action:manipulation">\'
+        +\'<div style="font-size:12px;font-weight:600;color:#1e293b;overflow:hidden;text-overflow:ellipsis">\'+escH(nm)+\'</div>\'
+        +(ad?\'<div style="font-size:10px;color:#94a3b8;overflow:hidden;text-overflow:ellipsis">\'+escH(ad)+\'</div>\':\'\')
+      +\'</div>\'
+      +\'<span style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:5px;background:\'+st[2]+\';color:\'+st[1]+\'">\'+escH(st[0])+\'</span>\'
+      +\'<button data-gid="\'+gid+\'" data-pid="\'+escH(pid)+\'" ontouchend="event.preventDefault();agRemoveMember(this.dataset.gid,this.dataset.pid)" onclick="agRemoveMember(this.dataset.gid,this.dataset.pid)" style="border:none;background:transparent;color:#dc2626;font-size:13px;cursor:pointer;touch-action:manipulation;flex-shrink:0">&#x2715;</button>\'
+    +\'</div>\';
+  }).join(\'\'):\'<div style="font-size:11px;color:#94a3b8;padding:6px 0">No linked businesses yet</div>\';
+  var unmatchedH=(g.unmatched||[]).length?\'<div style="margin-top:10px;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px">\'
+    +\'<div style="font-size:10px;font-weight:700;color:#92400e;margin-bottom:6px">&#9888; Unmatched &#8212; not linked (\'+(g.unmatched||[]).length+\')</div>\'
+    +(g.unmatched||[]).map(function(u,i){
+      return \'<div style="display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid #fef3c7">\'
+        +\'<div style="flex:1;min-width:0"><div style="font-size:11px;color:#78350f;font-weight:600">\'+escH(u.name||\'(no name)\')+\'</div><div style="font-size:10px;color:#a16207">\'+escH(u.address||\'\'  )+\'</div></div>\'
+        +\'<button data-gid="\'+gid+\'" data-uidx="\'+i+\'" ontouchend="event.preventDefault();agRetryUnmatched(this.dataset.gid,parseInt(this.dataset.uidx))" onclick="agRetryUnmatched(this.dataset.gid,parseInt(this.dataset.uidx))" style="font-size:9px;border:1px solid #d97706;color:#92400e;background:#fffbeb;border-radius:6px;padding:3px 7px;cursor:pointer;font-family:inherit;touch-action:manipulation">Re-match</button>\'
+      +\'</div>\';
+    }).join(\'\')
+    +\'</div>\':\'\';
+  var candNote=g.status===\'candidate\'?\'<div style="background:#f5f3ff;border:1px solid #c4b5fd;border-radius:8px;padding:8px 10px;margin-bottom:12px;font-size:11px;color:#6d28d9">This is an <b>unconfirmed candidate</b>. Promotion to verified is always a manual decision &#8212; use the button below once you confirm ownership.</div>\':\'\';
+  var promoteBtn=g.status===\'candidate\'?\'<button data-gid="\'+gid+\'" ontouchend="event.preventDefault();agPromote(this.dataset.gid)" onclick="agPromote(this.dataset.gid)" style="width:100%;padding:10px;border:2px solid #059669;border-radius:10px;background:#ecfdf5;color:#059669;font-weight:800;font-size:13px;cursor:pointer;font-family:inherit;touch-action:manipulation;margin-bottom:10px">&#x2713; Mark Verified (manual confirmation)</button>\':\'\';
+  body.innerHTML=\'\'
+    +\'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">\'
+      +\'<div style="flex:1;min-width:0"><div style="font-weight:800;font-size:16px;color:#1e293b">\'+escH(g.name||g.apparent_owner||\'(unnamed group)\')+\'</div>\'
+      +\'<div style="display:flex;gap:6px;align-items:center;margin-top:4px">\'+agStatusBadge(g.status)+agSourceBadge(g.source)+\'</div></div>\'
+      +\'<button ontouchend="event.preventDefault();document.getElementById(&#39;ag-detail-bg&#39;).remove()" onclick="document.getElementById(&#39;ag-detail-bg&#39;).remove()" style="font-size:20px;background:none;border:none;cursor:pointer;color:#64748b;padding:0;flex-shrink:0;margin-left:10px">&#x2715;</button>\'
+    +\'</div>\'
+    +candNote
+    +promoteBtn
+    +\'<label style="font-size:11px;font-weight:600;color:#475569">Group name</label>\'
+    +\'<input id="ag-f-name" value="\'+escH(g.name)+\'" onchange="agSetField(_openGroupId,&#39;name&#39;,this.value);renderAccountGroups()" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;margin:4px 0 10px;box-sizing:border-box;font-family:inherit">\'
+    +\'<label style="font-size:11px;font-weight:600;color:#475569">Apparent owner</label>\'
+    +\'<input id="ag-f-owner" value="\'+escH(g.apparent_owner)+\'" onchange="agSetField(_openGroupId,&#39;apparent_owner&#39;,this.value);renderAccountGroups()" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;margin:4px 0 10px;box-sizing:border-box;font-family:inherit">\'
+    +\'<label style="font-size:11px;font-weight:600;color:#475569">Status</label>\'
+    +\'<select id="ag-f-status" onchange="agSetField(_openGroupId,&#39;status&#39;,this.value);agRenderDetailBody(_openGroupId);renderAccountGroups()" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;margin:4px 0 10px;box-sizing:border-box;font-family:inherit">\'+statusOpts+\'</select>\'
+    +\'<label style="font-size:11px;font-weight:600;color:#475569">Notes</label>\'
+    +\'<textarea id="ag-f-notes" rows="2" onchange="agSetField(_openGroupId,&#39;notes&#39;,this.value)" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;margin:4px 0 12px;box-sizing:border-box;font-family:inherit;resize:vertical">\'+escH(g.notes)+\'</textarea>\'
+    +\'<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px;margin-bottom:12px">\'
+      +\'<div style="font-size:11px;font-weight:700;color:#475569;margin-bottom:8px">&#x1F454; Corporate Contact (optional)</div>\'
+      +\'<input id="ag-c-name" placeholder="Name" value="\'+escH(cc.name)+\'" onchange="agSetContact(_openGroupId,&#39;name&#39;,this.value)" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:7px;font-size:12px;margin-bottom:6px;box-sizing:border-box;font-family:inherit">\'
+      +\'<input id="ag-c-role" placeholder="Role / title" value="\'+escH(cc.role)+\'" onchange="agSetContact(_openGroupId,&#39;role&#39;,this.value)" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:7px;font-size:12px;margin-bottom:6px;box-sizing:border-box;font-family:inherit">\'
+      +\'<input id="ag-c-phone" type="tel" placeholder="Phone" value="\'+escH(cc.phone)+\'" onchange="agSetContact(_openGroupId,&#39;phone&#39;,this.value)" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:7px;font-size:12px;margin-bottom:6px;box-sizing:border-box;font-family:inherit">\'
+      +\'<input id="ag-c-email" type="email" placeholder="Email" value="\'+escH(cc.email)+\'" onchange="agSetContact(_openGroupId,&#39;email&#39;,this.value)" style="width:100%;padding:7px;border:1px solid #e2e8f0;border-radius:7px;font-size:12px;box-sizing:border-box;font-family:inherit">\'
+    +\'</div>\'
+    +\'<div style="font-weight:700;font-size:13px;color:#1e293b;margin-bottom:4px">Linked Businesses (\'+(g.members||[]).length+\')</div>\'
+    +membersH
+    +unmatchedH
+    +\'<div style="margin-top:12px">\'
+      +\'<input id="ag-member-search" placeholder="Search businesses to add..." oninput="agMemberSearch(_openGroupId,this.value)" style="width:100%;padding:8px;border:1px solid #e2e8f0;border-radius:8px;font-size:12px;box-sizing:border-box;font-family:inherit">\'
+      +\'<div id="ag-member-results" style="margin-top:6px"></div>\'
+    +\'</div>\'
+    +\'<button data-gid="\'+gid+\'" ontouchend="event.preventDefault();agConfirmDelete(this.dataset.gid)" onclick="agConfirmDelete(this.dataset.gid)" style="width:100%;margin-top:14px;padding:9px;border:1px solid #fecaca;border-radius:8px;background:#fef2f2;color:#dc2626;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F5D1; Delete Group</button>\';
+}
+function agPromote(gid){var g=accountGroups[gid];if(!g)return;g.status=\'verified\';g.last_updated_date=agNow();agSave();agRenderDetailBody(gid);renderAccountGroups();toast(\'Marked verified\');}
+function agConfirmDelete(gid){if(confirm(\'Delete this account group? Linked businesses are not affected.\'))agDeleteGroup(gid);}
+function agOpenMember(pid){
+  var bg=document.getElementById(\'ag-detail-bg\');if(bg)bg.remove();
+  showCard(pid);
+}
+function agOpenFromCard(gid){
+  var sc=document.getElementById(\'sc-bg\');if(sc)sc.remove();
+  openAccountGroup(gid);
+}
+function agRetryUnmatched(gid,idx){
+  var g=accountGroups[gid];if(!g||!g.unmatched||!g.unmatched[idx])return;
+  var u=g.unmatched[idx];
+  var pid=u.address?agMatchPid(u.address):null;
+  if(pid==null){toast(\'Still no match in current data\');return;}
+  g.unmatched.splice(idx,1);
+  if(!g.members)g.members=[];
+  if(!g.members.some(function(m){return String(m)===String(pid);}))g.members.push(pid);
+  g.last_updated_date=agNow();agSave();
+  agRenderDetailBody(gid);renderAccountGroups();toast(\'Matched and linked\');
+}
+function agMemberSearch(gid,q){
+  var box=document.getElementById(\'ag-member-results\');if(!box)return;
+  q=(q||\'\'  ).toLowerCase().trim();
+  if(q.length<2){box.innerHTML=\'\';return;}
+  var hits=P.filter(function(p){return (p.name||\'\'  ).toLowerCase().indexOf(q)>=0||(p.address||\'\'  ).toLowerCase().indexOf(q)>=0;}).slice(0,8);
+  if(!hits.length){box.innerHTML=\'<div style="font-size:11px;color:#94a3b8;padding:4px 0">No matches</div>\';return;}
+  box.innerHTML=hits.map(function(p){
+    return \'<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #f1f5f9">\'
+      +\'<div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600;color:#1e293b;overflow:hidden;text-overflow:ellipsis">\'+escH(p.name)+\'</div><div style="font-size:10px;color:#94a3b8">\'+escH((p.address||\'\'  )+\', \'+(p.city||\'\'  ))+\'</div></div>\'
+      +\'<button data-gid="\'+gid+\'" data-pid="\'+escH(p.id)+\'" ontouchend="event.preventDefault();agAddMemberAndRefresh(this.dataset.gid,this.dataset.pid)" onclick="agAddMemberAndRefresh(this.dataset.gid,this.dataset.pid)" style="font-size:10px;border:none;background:var(--navy);color:#fff;border-radius:6px;padding:5px 10px;cursor:pointer;font-family:inherit;touch-action:manipulation;flex-shrink:0">+ Add</button>\'
+    +\'</div>\';
+  }).join(\'\');
+}
+function agAddMemberAndRefresh(gid,pid){
+  agAddMember(gid,pid);
+  var s=document.getElementById(\'ag-member-search\');if(s)s.value=\'\';
+  var box=document.getElementById(\'ag-member-results\');if(box)box.innerHTML=\'\';
+  agRenderDetailBody(gid);renderAccountGroups();
+}
+
 function picSupabaseUrl(){
   return 'https://kbyqatbkqqhuasbjlcwe.supabase.co/rest/v1';
 }
@@ -12062,7 +12518,7 @@ async function init(){
   initSupabase();
 
   // Always render app immediately from local cache so UI is never blocked
-  lLoad();custLoad();
+  lLoad();custLoad();agLoad();
   mergeManualProspects();
   pullCustomersFromSupabase();
   _renderApp();
