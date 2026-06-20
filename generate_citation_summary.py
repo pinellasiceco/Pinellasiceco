@@ -195,7 +195,56 @@ def main():
     corrected.columns = ['license', 'cit_corrected_on_site']
     summary = summary.merge(corrected, on='license', how='left')
 
-    # Best-effort: merge observation text from scraper narratives if available
+    # Observation text — two sources, explicit priority order:
+    #
+    # PRIMARY:  full_inspection_narratives.json — populated by the full violations
+    #           scraper, which now stores visit_id in each entry. After the cache
+    #           fix in scrape_dbpr.py, this always corresponds to the business's
+    #           current most-recent inspection. Checked FIRST for all rows.
+    #
+    # FALLBACK: pinellas_v22_narratives.csv — the older V22-only scrape. Used only
+    #           for rows where the full narratives cache has no ice-language match.
+    #           Still carries inspection_date, so cit_observation_date is set here.
+    #
+    # This order is critical: without it, the stale V22 CSV entry (e.g. Massimo's
+    # 7/9/2025 snippet) would overwrite a fresh full-narratives entry even after
+    # the cache has been updated with the current visit's narrative.
+
+    summary['best_observation'] = ''
+    summary['cit_observation_date'] = ''
+
+    # PRIMARY: full_inspection_narratives.json
+    _full_nar_path = 'full_inspection_narratives.json'
+    if os.path.exists(_full_nar_path):
+        try:
+            with open(_full_nar_path) as _f:
+                _full_cache = json.load(_f)
+            _primary_count = 0
+            for _idx, _row in summary.iterrows():
+                _cached = _full_cache.get(str(_row['license']))
+                if not _cached:
+                    continue
+                if isinstance(_cached, list):
+                    _obs_parts = [e.get('observation', '') for e in _cached if e.get('observation')]
+                elif isinstance(_cached, dict) and 'violations' in _cached:
+                    _obs_parts = [e.get('observation', '') for e in _cached['violations'] if e.get('observation')]
+                else:
+                    continue
+                _obs_text = ' '.join(_obs_parts)
+                if not _obs_text or not _ICE_KEYWORDS.search(_obs_text):
+                    continue
+                _snippet = extract_ice_snippet(_obs_text)
+                if _snippet:
+                    summary.at[_idx, 'best_observation'] = _snippet
+                    # Observation is from the current visit — leave date blank so
+                    # build.py does not show a stale-observation warning.
+                    summary.at[_idx, 'cit_observation_date'] = ''
+                    _primary_count += 1
+            print(f'  Full narratives (primary): {_primary_count}/{len(summary)} licenses matched')
+        except Exception as _e:
+            print(f'  Full narratives load skipped: {_e}')
+
+    # FALLBACK: V22 CSV — fills rows the full narratives cache didn't cover.
     narratives_path = next(
         (p for p in ['pinellas_v22_narratives.csv', 'data/pinellas_v22_narratives.csv']
          if os.path.exists(p)), None,
@@ -242,53 +291,20 @@ def main():
                         ))
                     )
                     date_map = pd.Series(dtype=str)
-                summary['best_observation'] = summary['license'].map(obs_map).fillna('')
-                summary['cit_observation_date'] = summary['license'].map(date_map).fillna('')
-                n_matched = int((summary['best_observation'] != '').sum())
+                # Only fill rows the full narratives cache didn't already cover.
+                _v22_blank = summary['best_observation'] == ''
+                if _v22_blank.any():
+                    summary.loc[_v22_blank, 'best_observation'] = (
+                        summary.loc[_v22_blank, 'license'].map(obs_map).fillna('')
+                    )
+                    summary.loc[_v22_blank, 'cit_observation_date'] = (
+                        summary.loc[_v22_blank, 'license'].map(date_map).fillna('')
+                    )
+                n_matched_v22 = int((summary['best_observation'] != '').sum())
                 n_nar = int(nar['_key'].nunique())
-                print(f'  Narratives: {n_nar} unique licenses, {n_matched}/{len(summary)} businesses matched (key: {key_col})')
-            else:
-                summary['best_observation'] = ''
-                summary['cit_observation_date'] = ''
+                print(f'  V22 narratives (fallback): {n_nar} unique licenses, {n_matched_v22} total matched after both sources (key: {key_col})')
         except Exception as e:
-            print(f'  Narratives merge skipped: {e}')
-            summary['best_observation'] = ''
-            summary['cit_observation_date'] = ''
-    else:
-        summary['best_observation'] = ''
-        summary['cit_observation_date'] = ''
-
-    # Fallback: fill remaining blanks from full_inspection_narratives.json.
-    # Covers licenses the V22 file never scraped (newer inspections, April 2026+).
-    # Applies the same _ICE_KEYWORDS filter and extract_ice_snippet() as V22 pipeline.
-    _full_nar_path = 'full_inspection_narratives.json'
-    if os.path.exists(_full_nar_path):
-        try:
-            with open(_full_nar_path) as _f:
-                _full_cache = json.load(_f)
-            _fallback_count = 0
-            _blank_mask = summary['best_observation'] == ''
-            for _idx, _row in summary[_blank_mask].iterrows():
-                _cached = _full_cache.get(str(_row['license']))
-                if not _cached:
-                    continue
-                if isinstance(_cached, list):
-                    _obs_parts = [e.get('observation', '') for e in _cached if e.get('observation')]
-                elif isinstance(_cached, dict) and 'violations' in _cached:
-                    _obs_parts = [e.get('observation', '') for e in _cached['violations'] if e.get('observation')]
-                else:
-                    continue
-                _obs_text = ' '.join(_obs_parts)
-                if not _obs_text or not _ICE_KEYWORDS.search(_obs_text):
-                    continue
-                _snippet = extract_ice_snippet(_obs_text)
-                if _snippet:
-                    summary.at[_idx, 'best_observation'] = _snippet
-                    summary.at[_idx, 'cit_observation_date'] = ''
-                    _fallback_count += 1
-            print(f'  Full narratives fallback: {_fallback_count} additional licenses matched')
-        except Exception as _e:
-            print(f'  Full narratives fallback skipped: {_e}')
+            print(f'  V22 narratives fallback skipped: {e}')
 
     today     = date.today()
     week_ago  = str(today - timedelta(days=7))

@@ -416,20 +416,32 @@ def run_full_violations_scrape():
     # This self-heals any records permanently locked by old code.
     cache_keys = set(str(k) for k in cache.keys())
 
-    def _is_done(lic):
+    def _is_done(lic, current_vid):
         if lic not in done or lic not in cache_keys:
             return False
         val = cache.get(lic)
-        if isinstance(val, dict) and val.get('status') == 'DBPR_ERROR':
-            try:
-                return (date.today() - date.fromisoformat(val['date'])).days < 7
-            except (ValueError, TypeError, KeyError):
+        # Old list format — cached without a visit_id so we cannot tell whether
+        # it covers the current inspection. Always re-scrape these entries.
+        if isinstance(val, list):
+            return False
+        if isinstance(val, dict):
+            if val.get('status') == 'DBPR_ERROR':
+                try:
+                    return (date.today() - date.fromisoformat(val['date'])).days < 7
+                except (ValueError, TypeError, KeyError):
+                    return False
+            # If the cached visit_id differs from the current most-recent visit,
+            # a newer inspection has occurred — re-scrape to refresh the narrative.
+            if val.get('visit_id') and str(val.get('visit_id')) != str(current_vid):
                 return False
         return True
 
     # Key by numeric License ID so cache keys match export_cleanscore.py lookup (str(r['id']))
     remaining = [r for r in records
-                 if not _is_done(str(r.get('License ID', r.get('license_id', r['License Number']))).strip())]
+                 if not _is_done(
+                     str(r.get('License ID', r.get('license_id', r['License Number']))).strip(),
+                     str(r.get('Visit ID', '')).strip()
+                 )]
     print(f"Cached with data: {len(cache_keys)} | Progress entries: {len(done)} | Remaining: {len(remaining)}")
 
     max_records = int(os.environ.get('MAX_RECORDS', '0') or 0)
@@ -512,9 +524,9 @@ def run_full_violations_scrape():
             ]
             _scrape_date = date.today().isoformat()
             if inspector_name:
-                cache[lic] = {'violations': viols_list, 'inspector_name': inspector_name, 'scrape_date': _scrape_date}
+                cache[lic] = {'violations': viols_list, 'visit_id': vid, 'inspector_name': inspector_name, 'scrape_date': _scrape_date}
             else:
-                cache[lic] = {'violations': viols_list, 'scrape_date': _scrape_date}
+                cache[lic] = {'violations': viols_list, 'visit_id': vid, 'scrape_date': _scrape_date}
             success_count += 1
 
         save_full_narratives_cache(cache)
