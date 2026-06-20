@@ -1,7 +1,7 @@
 license,business_name,address,city,cit_latest_date,cit_ice_count,last_disposition,cit_repeat,cit_corrected_on_site,best_observation,cit_observation_date
 0,DUNKIN DONUTS,10454 N 66 ST,ST. PETERSBURG,2025-06-30,2212,Call Back - Complied,True,False,,
 2233783,LITTLE ITALY PIZZA SHOP,3523 N 49 ST,ST PETERSBURG,2025-10-03,4,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Black mold like debris interior of ice machine.,2025-07-10
-2233839,CHATTAWAY DRIVE INN,358 S 22 AVE,ST PETERSBURG,2026-02-20,5,Inspection Completed - No Further Action,True,False,Basic - - From initial inspection : Basic - Ice buildup in reach-in freezer and/or walk-in freezer.,
+2233839,CHATTAWAY DRIVE INN,358 S 22 AVE,ST PETERSBURG,2026-02-20,5,Inspection Completed - No Further Action,True,False,Ice scoop handle in contact with ice in ice machine located at rear kitchen exit. Employee removed ice scoop from ice.,2025-07-21
 2233932,GIGIS RESTAURANT,105 107 AVE,TREASURE ISLAND,2026-04-27,4,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-12-08
 2233978,TEDS LUNCHEONETTE,1201 CLEARWATER LARGO RD,LARGO,2026-02-10,5,Call Back - Complied,True,False,Ice buildup in reach-in freezer.,2025-08-26
 2233983,WEST 201,10490 GANDY BLVD,ST PETERSBURG,2020-11-20,1,Inspection Completed - No Further Action,False,False,,
@@ -50,12 +50,12 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 2235569,GIANNI'S,936 N 58 ST,ST PETERSBURG,2026-04-24,4,Inspection Completed - No Further Action,True,False,,
 2235592,MIXED GRILLE,3001 COUNTRYSIDE BLVD,CLEARWATER,2021-02-24,2,Warning Issued,True,False,,
 2235598,COUNTRYSIDE CO CLUB (MAIN KIT),3001 COUNTRYSIDE BLVD,CLEARWATER,2025-12-09,4,Call Back - Complied,True,False,,
-2235627,SEMINOLE LANES INC,8668 PARK BLVD,SEMINOLE,2021-02-22,2,Inspection Completed - No Further Action,True,False,Under cook line Basic - Ice scoop handle in contact with ice. Drink ice well at pizza counter Basic - In-use utensil stored in standing water less than 135 degrees Fahrenheit. Ice cream scoops stored in soiled standing water at pizza counter Basic - Single-service articles not stored inverted or…,
+2235627,SEMINOLE LANES INC,8668 PARK BLVD,SEMINOLE,2021-02-22,2,Inspection Completed - No Further Action,True,False,,
 2235634,THE COMPASS GRILL,1055 E LAKE WOODLANDS PKWY,OLDSMAR,2026-01-14,3,Inspection Completed - No Further Action,True,False,,
 2235659,KOPPER KITCHEN,5562 CENTRAL AVE,ST PETERSBURG,2020-10-20,1,Warning Issued,False,False,,
 2235668,COUNTRY CLUB,1 COUNTRY CLUB LN,BELLEAIR,2025-12-11,3,Inspection Completed - No Further Action,True,False,,
 2235669,COUNTRY CLUB DINING,1 COUNTRY CLUB LN,BELLEAIR,2021-01-14,2,Warning Issued,True,False,,
-2235698,CLEARWATER YACHT CLUB,830 BAYWAY BLVD,CLEARWATER BCH,2026-01-14,2,Warning Issued,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Ice cream tub not covered.,
+2235698,CLEARWATER YACHT CLUB,830 BAYWAY BLVD,CLEARWATER BCH,2026-01-14,2,Warning Issued,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2026-01-14
 2235699,HURRICANE SEAFOOD RESTAURANT,809 GULF WAY,ST PETE BCH,2021-05-21,2,Inspection Completed - No Further Action,True,False,,
 2235706,PASADENA BAR & GRILL,796 S PASADENA AVE,S PASADENA,2021-02-04,2,Warning Issued,True,False,,
 2235707,COLONIAL CORNER,7201 N 49 ST,PINELLAS PARK,2021-03-31,2,Administrative complaint recommended,True,False,,
@@ -86,11 +86,11 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 2235975,CHUCK E CHEESE PIZZA TIME,1024 N 58 ST,ST PETERSBURG,2020-09-28,1,Inspection Completed - No Further Action,False,False,,
 2235984,E & E STAKEOUT GRILL,100 INDIAN ROCKS RD,BELLEAIR BLUFFS,2025-08-20,3,Warning Issued,True,False,,
 2235994,TIFFANY'S FAMILY RESTAURANT,35000 N US HWY 19,PALM HARBOR,2021-01-26,5,Call Back - Complied,True,False,,
-2235999,CARMELITAS MEXICAN REST,5211 PARK ST,ST PETERSBURG,2026-02-02,6,Warning Issued,True,False,- From initial inspection : Basic - Accumulation of black/pink mold-like substance in the interior of the ice machine.,
+2235999,CARMELITAS MEXICAN REST,5211 PARK ST,ST PETERSBURG,2026-02-02,6,Warning Issued,True,False,- From initial inspection : Basic - Accumulation of black/pink mold-like substance in the interior of the ice machine.,2026-02-02
 2236037,HUNGRY HOWIES,4690 N 49 ST,ST PETERSBURG,2026-02-23,1,Inspection Completed - No Further Action,False,False,,
 2236066,CHILI'S #124,25987 US HWY 19 N,CLEARWATER,2026-02-06,2,Inspection Completed - No Further Action,True,False,,
 2236075,HUNGRY HOWIE'S,6328 PARK BLVD,PINELLAS PARK,2021-02-15,1,Inspection Completed - No Further Action,False,False,,
-2236125,TACO BELL #2448,5225 E BAY DR,LARGO,2026-01-15,3,Inspection Completed - No Further Action,True,False,Ice shoot on self service beverage station has green build up.,
+2236125,TACO BELL #2448,5225 E BAY DR,LARGO,2026-01-15,3,Inspection Completed - No Further Action,True,False,Ice shoot on self service beverage station has green build up.,2026-01-15
 2236133,HUNGRY HOWIE'S PIZZA&SUBS #N,1550 E BAY DR,LARGO,2026-04-03,1,Inspection Completed - No Further Action,False,False,,
 2236170,AVIATOR & SPORTS PUB AND RESTAURANT,3535 ULMERTON ROAD,CLEARWATER,2021-05-17,1,Inspection Completed - No Further Action,False,False,,
 2236175,HUNGRY HOWIES PIZZA & SUBS,6989 SEMINOLE BLVD,SEMINOLE,2026-03-30,3,Warning Issued,True,False,,
@@ -105,7 +105,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 2236476,JIMMY GUANA'S BAR & GRILL,401 E 2 ST,INDIAN ROCKS BCH,2026-03-23,5,Warning Issued,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-10-07
 2236494,ZOM HEE RESTAURANT,9015 PARK BLVD,SEMINOLE,2025-11-12,5,Warning Issued,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Soda lines soiled going though ice bin behind bar,2025-08-07
 2236505,WOK OUT CHINESE RESTAURANT,1444 S BELCHER RD,CLEARWATER,2020-11-13,2,Inspection Completed - No Further Action,True,False,,
-2236527,SIAM GARDEN THAI RESTAURANT,3125 N 9 ST,ST PETERSBURG,2026-01-20,9,Emergency Order Callback Time Extension,True,False,Basic - Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup up in reach-in freezer located at server station.,
+2236527,SIAM GARDEN THAI RESTAURANT,3125 N 9 ST,ST PETERSBURG,2026-01-20,9,Emergency Order Callback Time Extension,True,False,"At front prep reach-in coolers, taken at 11:35 AM, across the cook-line: cut tomato (49F - Cold Holding) tofu (49F - Cold Holding) sprouts (50F - Cold Holding) Manager placed items on ice.",2025-07-31
 2236533,ATHENIANS FAMOUS GYROS&CHICKEN,5320 PARK BLVD,PINELLAS PARK,2021-03-31,2,Inspection Completed - No Further Action,True,False,,
 2236541,HUNGRY HOWIES,3780 TAMPA RD,OLDSMAR,2020-09-11,1,Inspection Completed - No Further Action,False,False,,
 2236551,HUNGRY HOWIES PIZZA & SUBS 144,14100 S US HWY 19 #STE 110,CLEARWATER,2020-07-24,2,Emergency order recommended,True,False,,
@@ -113,10 +113,10 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 2236577,N REDINGTON BEACH ASSOC LTD,17120 GULF BLVD,N REDINGTON BCH,2021-03-08,1,Inspection Completed - No Further Action,False,False,,
 2236592,FRENCHYS SALTWATER CAFE,416 E SHORE DR,CLEARWATER BCH,2026-02-17,3,Inspection Completed - No Further Action,True,False,,
 2236598,JOTO'S PIZZA PUB,8080 N 49 ST,PINELLAS PARK,2020-12-29,1,Inspection Completed - No Further Action,False,False,,
-2236655,CHILI'S BAR & GRILL #105,5430 E BAY DR,CLEARWATER,2026-02-12,4,Inspection Completed - No Further Action,True,False,Basic - Ice buildup in walk-in freezer around frame of door.,
+2236655,CHILI'S BAR & GRILL #105,5430 E BAY DR,CLEARWATER,2026-02-12,4,Inspection Completed - No Further Action,True,False,Ice buildup in walk-in freezer around frame of door.,2026-02-12
 2236722,HAMPTON AT CLW DINING RM (THE),1099 MCMULLEN BOOTH RD,CLEARWATER,2025-07-10,2,Inspection Completed - No Further Action,True,False,-Accumulation of black mold-like substance in the interior of the ice machine. Manager protected ice and cleaned drop plate - soiled ice chute at soda dispenser . Employee cleaned ice chute,2025-07-10
 2236759,SUBWAY #3956,1895 N HIGHLAND AVE STE 14,CLEARWATER,2021-03-23,1,Inspection Completed - No Further Action,False,False,,
-2236770,BEACH SHANTY CAFE,397 MANDALAY AVE,CLEARWATER BCH,2025-07-08,2,Warning Issued,True,False,Ice scoop stored on towel when not in use.,
+2236770,BEACH SHANTY CAFE,397 MANDALAY AVE,CLEARWATER BCH,2025-07-08,2,Warning Issued,True,False,,
 2236814,LARRY'S ICE CREAM & GELATO,6595 GULF BLVD,ST PETE BCH,2026-03-27,2,Inspection Completed - No Further Action,True,False,Employee handles ice cream cone with bare hands.,2026-03-27
 2236835,BEACH PIZZA PLUS,18117 GULF BLVD,REDINGTON SHORES,2020-10-14,1,Inspection Completed - No Further Action,False,False,,
 2236868,ATHENIAN GARDEN,6940 22 AVE N,ST PETERSBURG,2025-10-03,6,Inspection Completed - No Further Action,True,False,Ice dumped into hand wash sink in kitchen and dirty rag being stored on top of sink.,2025-10-01
@@ -138,7 +138,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 2237213,WATER COLOUR STEAK HOUSE AND GRILL,1201 GULF BLVD,CLEARWATER BEACH,2026-03-31,4,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. White ice plate inside machine soiled.,2026-03-31
 2237222,COLUMBIA RESTAURANT,1241 GULF BLVD,CLEARWATER BCH,2026-02-11,3,Warning Issued,True,False,Floor around bar ice machine soiled.,2026-02-11
 2237226,PARKSIDE CAFE,8180 N 49 ST,PINELLAS PARK,2021-01-25,2,Inspection Completed - No Further Action,True,False,,
-2237246,SANDBAR BILLS,4350 GULF BLVD,ST PETE BCH,2025-09-24,1,Warning Issued,False,False,Clorox spray bottle stored on ice machine.,
+2237246,SANDBAR BILLS,4350 GULF BLVD,ST PETE BCH,2025-09-24,1,Warning Issued,False,False,,
 2237273,GONDOLIER PIZZA,674 S GULFVIEW BLVD,CLEARWATER BCH,2026-03-02,2,Inspection Completed - No Further Action,True,False,,
 2237286,O'MADDYS BAR & GRILLE,5405 SHORE BLVD S,GULFPORT,2026-05-12,6,Emergency order recommended,True,False,"Live, small flying insects found 2 live flies behind bar near register area 1 live fly in ice machine area next to soda machines Operator cleaned area, killed all flies",2025-12-10
 2237313,DIAMOND DOLLS,16361 N US HWY 19,CLEARWATER,2021-02-24,1,Inspection Completed - No Further Action,False,False,,
@@ -156,7 +156,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 2237812,HARVEY'S SANDWICH & SALADS,33839 N US HWY 19,PALM HARBOR,2026-05-22,3,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine has accumulation of mold like substance.,2026-03-13
 2237829,MIKE'S PIZZA DELI STATION,13560 N 49 ST,CLEARWATER,2026-01-07,2,Administrative complaint recommended,True,False,,
 2237869,KAYS FAMILY RESTAURANT INC,6475 CENTRAL AVE,ST PETERSBURG,2021-02-12,2,Inspection Completed - No Further Action,True,False,,
-2237879,CLUBHOUSE RESTAURANT,10801 STARKEY RD  STE 24,LARGO,2026-01-27,3,Inspection Completed - No Further Action,True,False,"Customers must be escorted to restroom through food storage areas Basic - Unprotected ice machine in a customer/nonsecure area. Reach in cooler/freezers and ice machine in hallway leading to customer restrooms High Priority - Food-contact surfaces not sanitized after cleaning, before use.",
+2237879,CLUBHOUSE RESTAURANT,10801 STARKEY RD  STE 24,LARGO,2026-01-27,3,Inspection Completed - No Further Action,True,False,Unprotected ice machine in a customer/nonsecure area. Reach in cooler/freezers and ice machine in hallway leading to customer restrooms,2025-09-11
 2237882,CHINA WOK,3433 N 49 ST,ST PETERSBURG,2020-09-29,2,Emergency order recommended,True,False,,
 2237931,MCDONALD'S RESTAURANT #1939,40728 N 19 US HWY,TARPON SPGS,2020-09-11,1,Inspection Completed - No Further Action,False,False,,
 2237936,HUNGRY HOWIES #174,620 US ALT 19,PALM HARBOR,2025-12-22,1,Inspection Completed - No Further Action,False,False,,
@@ -167,7 +167,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 2237987,SKIDDERS RESTAURANT,5799 GULF BLVD,ST PETE BCH,2021-03-15,2,Inspection Completed - No Further Action,True,False,,
 2238032,BOSTON MARKET #101,1847 ENTERPRISE RD,SAFETY HARBOR,2020-11-30,2,Inspection Completed - No Further Action,True,False,,
 2238044,BOSTON MARKET #97,2300 GULF TO BAY BLVD,CLEARWATER,2020-08-28,1,Inspection Completed - No Further Action,False,False,,
-2238099,FLORIDIAN (THE),230 107 AVE,TREASURE ISLAND,2026-01-26,3,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,
+2238099,FLORIDIAN (THE),230 107 AVE,TREASURE ISLAND,2026-01-26,3,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2026-01-26
 2238109,9 BANGKOK THAI RESTAURANT INC,571 CENTRAL AVE,ST PETERSBURG,2026-01-06,3,Emergency order recommended,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine soiled with pink mold like substance.,
 2238189,BOSTON MARKET #196,33163 N US HWY 19,PALM HARBOR,2021-02-15,4,Warning Issued,True,False,,
 2238222,CAFE DE FRANCE,15225 GULF BLVD,MADEIRA BCH,2021-01-20,1,Inspection Completed - No Further Action,False,False,,
@@ -175,7 +175,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 2238252,THE BELMARK/FAT FRED'S BBQ/CREATIVE CATERING/CAFE 1001,1001 N 1 AVE,ST PETERSBURG,2025-12-29,1,Inspection Completed - No Further Action,False,False,,
 2238258,WESTSHORE PIZZA VIII,1346 TAMPA RD #302,PALM HARBOR,2020-11-03,2,Inspection Completed - No Further Action,True,False,,
 2238263,CHILI'S GRILL & BAR #349,40584 N U S HWY 19,TARPON SPRINGS,2026-02-02,2,Inspection Completed - No Further Action,True,False,,
-2238304,GOOSES SPORTS BAR,11988 INDIAN ROCKS RD,LARGO,2026-02-03,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,
+2238304,GOOSES SPORTS BAR,11988 INDIAN ROCKS RD,LARGO,2026-02-03,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-09-15
 2238350,CHECKERS #660,100 S 34 ST,ST PETERSBURG,2025-09-16,2,Inspection Completed - No Further Action,True,False,Ice buildup in reach-in freezer and/or walk-in freezer across from grill flat top grill,2025-09-16
 2238356,LOON FONG RESTAURANT,8150 N 49 STREET,PINELLAS PARK,2021-01-25,3,Inspection Completed - No Further Action,True,False,,
 2238394,LA TERESITA,7101 N 66 ST,PINELLAS PARK,2026-04-01,3,Inspection Completed - No Further Action,True,False,Clean ice bucket at service station not stored inverted or in a protected manner.,2026-04-01
@@ -251,10 +251,10 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 2239896,CITY OF ST PETERSBURG COLISEUM,535 N 4 AVE,ST PETERSBURG,2025-11-07,2,Inspection Completed - No Further Action,True,False,Ice buildup in reach-in freezer and/or walk-in freezer. At the bottom of stand alone single door freezer next to ice machine.,2025-11-07
 2239949,THIRSTY MARLIN GRILL & BAR,1023 FLORIDA AVE,PALM HARBOR,2025-07-14,3,Inspection Completed - No Further Action,True,False,,
 2239955,EINSTEIN BROS BAGELS 3662,2519 N MCMULLEN BOOTH RD,CLEARWATER,2026-03-04,4,Inspection Completed - No Further Action,True,False,,
-2239956,EINSTEIN BROS BAGELS 1288,33127 N US HWY 19,PALM HARBOR,2026-02-03,4,Inspection Completed - No Further Action,True,False,Ice bin cracked on ice machine .,
+2239956,EINSTEIN BROS BAGELS 1288,33127 N US HWY 19,PALM HARBOR,2026-02-03,4,Inspection Completed - No Further Action,True,False,Ice bin cracked on ice machine .,2026-02-03
 2239957,EINSTEIN BROS BAGELS 1473,1900 GULF TO BAY,CLEARWATER,2020-12-18,2,Inspection Completed - No Further Action,True,False,,
 2239958,EINSTEIN BROS BAGELS 2084,9346 N 4 ST,ST PETERSBURG,2020-12-02,2,Inspection Completed - No Further Action,True,False,,
-2239959,EINSTEIN BROS BAGELS 1219,11234 PARK BLVD,SEMINOLE,2025-09-10,2,Inspection Completed - No Further Action,True,False,Walk in freezer Basic - Ice buildup in reach-in freezer and/or walk-in freezer.,
+2239959,EINSTEIN BROS BAGELS 1219,11234 PARK BLVD,SEMINOLE,2025-09-10,2,Inspection Completed - No Further Action,True,False,"Food-contact surface soiled with food debris, mold-like substance or slime.ice dispenser on soda machine soiled",2025-09-10
 2240006,RUBY TUESDAY # 7129,3138 TAMPA RD,OLDSMAR,2021-01-11,1,Inspection Completed - No Further Action,False,False,,
 2240014,CRABBY'S DOCKSIDE,37 CAUSEWAY BLVD,CLEARWATER BEACH,2026-03-23,4,Inspection Completed - No Further Action,True,False,"Alfredo 51f, cooked pasta 50f, raw shrimp 48f, line drawer, closed lid and added ice.",2025-07-31
 2240019,PANERA BREAD #3341,2285 ULMERTON RD,CLEARWATER,2025-07-29,3,Inspection Completed - No Further Action,True,False,,
@@ -268,7 +268,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 2240115,SONNY'S REAL PIT BBQ,3650 TYRONE BLVD,ST PETERSBURG,2020-09-22,2,Inspection Completed - No Further Action,True,False,,
 2240120,KRISTINA'S CAFE,3590 N 34 ST,ST PETERSBURG,2025-10-16,7,Warning Issued,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine in front of outer produce walk-in coolers with visible black mold-like substance.,2025-08-05
 2240156,MIRAGE RESTAURANT,2284 GULF TO BAY BLVD,CLEARWATER,2026-01-13,3,Inspection Completed - No Further Action,True,False,,
-2240167,CRACKER BARREL #481,2151 54 AVE N,ST. PETERSBURG,2025-07-30,3,Inspection Completed - No Further Action,True,False,Basic - Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup in multiple reach-in freezers on cook-line.,
+2240167,CRACKER BARREL #481,2151 54 AVE N,ST. PETERSBURG,2025-07-30,3,Inspection Completed - No Further Action,True,False,Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup in reach-in freezer across from cook-line used to hold ice cream.,2025-07-30
 2240176,FAIRFIELD INN & SUITES,3070 GULF TO BAY BLVD,CLEARWATER,2026-03-02,2,"Call Back - Extension given, pending",True,False,,
 2240213,SONNY'S REAL PIT BBQ,4385 PARK BLVD,PINELLAS PARK,2025-12-18,2,Inspection Completed - No Further Action,True,False,,
 2240236,BASCOM'S CHOP HOUSE,3665 ULMERTON RD,CLEARWATER,2025-09-23,1,Inspection Completed - No Further Action,False,False,,
@@ -297,7 +297,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 2426310,UNDERTOW BEACH BAR,3850 GULF BLVD,ST.PETE BEACH,2020-08-10,1,Inspection Completed - No Further Action,False,False,,
 2430692,CALIFORNIA CICCIO,190 NORTH 37TH AVENUE,ST. PETERSBURG,2025-07-22,4,Warning Issued,True,False,Items are being held on ice at the top section of the reach-in cooler.,2025-07-22
 2430809,CERTEGY CAFE,11601 ROOSEVELT BLVD,ST. PETERSBURG,2021-02-03,2,Inspection Completed - No Further Action,True,False,,
-2431997,FRENCHY'S SOUTH BEACH CAFE,351 GULFVIEW BLVD,CLEARWATER BEACH,2026-02-24,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,
+2431997,FRENCHY'S SOUTH BEACH CAFE,351 GULFVIEW BLVD,CLEARWATER BEACH,2026-02-24,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2026-02-24
 2432550,PANERA BREAD #3347,2926 W BAY DR,LARGO,2020-07-09,1,Inspection Completed - No Further Action,False,False,,
 2433306,PANERA BREAD,3181 CURLEW ROAD,OLDSMAR,2020-11-09,1,Inspection Completed - No Further Action,False,False,,
 2442356,FIRE HOUSE SUBS,4394 PARK BLVD,PINELLAS PARK,2025-11-21,2,Inspection Completed - No Further Action,True,False,,
@@ -326,23 +326,23 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 2554581,DELOSA'S PIZZERIA  AND RESTAURANT,12800 VILLAGE BLVD,MADEIRA BEACH,2026-02-20,6,Call Back - Complied,True,False,,
 2569770,TIJUANA FLATS #114,2117 66TH STREET NORTH,ST. PETERSBURG,2026-02-23,5,Warning Issued,True,False,Cojita cheese (46F - Cold Holding); salsa (44F - Cold Holding); cut tomatoes (45F - Cold Holding); shredded lettuce (45F - Cold Holding); shredded cheese (44F - Cold Holding); Operator placed items in walk in to cool and on ice Retemped at Salsa (39F - Cold Holding); cojita cheese (36F - Cold…,2025-09-05
 2575721,CHICK - FIL - A #668,3423 ULMERTON RD,CLEARWATER,2021-02-01,1,Warning Issued,False,False,,
-2578118,LIBERTY LANES,11401 STARKEY RD,LARGO,2026-01-13,3,Administrative complaint recommended,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,
+2578118,LIBERTY LANES,11401 STARKEY RD,LARGO,2026-01-13,3,Administrative complaint recommended,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2026-01-13
 2586068,SUBWAY #25866,11180 N 66 ST,PINELLAS PARK,2020-08-13,1,Inspection Completed - No Further Action,False,False,,
 2591187,CELEBRATION STATION,24546 N US HWY 19,CLEARWATER,2021-04-15,2,Call Back - Complied,True,False,,
 2598022,CHINA WOK,35611 US HWY 19 N,PALM HARBOR,2025-12-10,2,Inspection Completed - No Further Action,True,False,,
-2617762,LEFT FIELD/TIKI BAR,601 OLD COACHMAN RD,CLEARWATER,2026-02-26,1,Inspection Completed - No Further Action,False,False,"Ice bucket stored on the floor near ice machine . Manager relocated ice bucket Basic - Employee personal items stored in or above a food preparation area, food, clean equipment and utensils, or single-service items. Manager added ice to cold holding unit High Priority - Vacuum breaker missing at…",
+2617762,LEFT FIELD/TIKI BAR,601 OLD COACHMAN RD,CLEARWATER,2026-02-26,1,Inspection Completed - No Further Action,False,False,Ice bucket stored on the floor near ice machine . Manager relocated ice bucket,2026-02-26
 2617778,PIZZA VENDOR,601 OLD COACHMAN RD,CLEARWATER,2021-03-10,1,Inspection Completed - No Further Action,False,False,,
-2617781,RIGHT FIELD/RECEIVING,601 OLD COACHMAN RD,CLEARWATER,2021-03-10,1,Inspection Completed - No Further Action,False,False,"Ice buckets not inverted near ice machines in receiving area . Manager inverted ice buckets Basic - Employee personal items ( backpacks and jackets) stored in or above a food preparation area, food, clean equipment and utensils, or single-service items in receiving area .",
+2617781,RIGHT FIELD/RECEIVING,601 OLD COACHMAN RD,CLEARWATER,2021-03-10,1,Inspection Completed - No Further Action,False,False,,
 2617882,CHILI'S GRILL & BAR,3701 TAMPA RD,OLDSMAR,2021-04-27,2,Inspection Completed - No Further Action,True,False,,
 2621739,NIAGARA TAP,11950 SEMINOLE BLVD,LARGO,2021-04-22,2,Inspection Completed - No Further Action,True,False,,
 2629896,COURTSIDE GRILLE,110 FOUNTAIN PKWY N,ST PETERSBURG,2026-03-02,6,"Call Back - Extension given, pending",True,False,Accumulation of black mold-like substance in the interior of the ice machine.,2026-03-02
 2631831,DUNEDIN BREWERY,937 DOUGLAS AVE,DUNEDIN,2025-12-19,3,"Call Back - Extension given, pending",True,False,,
 2725158,MASSIMO'S,31876 N. US . HWY 19,PALM HARBOR,2026-06-10,4,Inspection Completed - No Further Action,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Side walls of ice machine behind bar.,2025-07-09
 2766268,DAIRY INN,1201 9 ST N,ST. PETERSBURG,2021-01-12,2,Inspection Completed - No Further Action,True,False,,
-2773537,EL TENAMPA,1800 16 ST N,ST. PETERSBURG,2026-01-13,12,Call Back - Complied,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine on South end of server station with black mold like substance.,
+2773537,EL TENAMPA,1800 16 ST N,ST. PETERSBURG,2026-01-13,12,Call Back - Complied,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin. - From follow-up inspection 2025-07-10: Condition of ice machine improved however requires additional cleaning.,2025-07-10
 2790571,VICTORS KITCHEN FAMILY RESTAURANT,5571 PARK BLVD,PINELLAS PARK,2021-02-24,2,Inspection Completed - No Further Action,True,False,,
 2795353,BLUE FUGU,4615 GULF BLVD,ST.PETE BEACH,2020-12-17,1,Inspection Completed - No Further Action,False,False,,
-2808249,ABE'S PLACE TAP & GRILL,1250 S MISSOURI AVE,CLEARWATER,2026-02-20,1,Inspection Completed - No Further Action,False,False,Basic - Ice buildup in walk-in freezer near condenser and on floor.,
+2808249,ABE'S PLACE TAP & GRILL,1250 S MISSOURI AVE,CLEARWATER,2026-02-20,1,Inspection Completed - No Further Action,False,False,Ice buildup in walk-in freezer near condenser and on floor.,2026-02-20
 2820888,NATURE'S TABLE,900 CARILLON PARKWAY,ST. PETERSBURG,2021-01-15,3,Warning Issued,True,False,,
 2836835,BREAD AND BUTTER DELI,1880 ALT 19 S,TARPON SPRINGS,2021-01-05,3,Inspection Completed - No Further Action,True,False,,
 2852223,SUNSET SUPER SUB,23688 N US HWY 19,CLEARWATER,2025-07-11,3,Inspection Completed - No Further Action,True,False,- ice chute at self service station soiled Reviewed with manager,2025-07-11
@@ -377,10 +377,10 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 3138607,PIEROGI GRILL & STEAKHOUSE,1535 GULF TO BAY BLVD,CLEARWATER,2026-05-18,9,Warning Issued,True,False,- From initial inspection : Basic - Ice buildup in doorway of walk-in freezer.,2026-02-12
 3140899,JET'S PIZZA,1350 MAIN ST,DUNEDIN,2020-10-13,1,Inspection Completed - No Further Action,False,False,,
 3157735,THE PEARL RESTAURANT,163 107 AVE,TREASURE ISLAND,2020-12-22,1,Inspection Completed - No Further Action,False,False,,
-3168823,PIZZA SHACK,11963 INDIAN ROCKS RD,LARGO,2026-02-03,3,Inspection Completed - No Further Action,True,False,Drink ice well at entrance to bar adjacent to customer walking path not protected High Priority - Employee touching ready-to-eat food with their bare hands - food was not being heated as a sole ingredient to 145 degrees F or immediately added to other ingredients to be cooked/heated to the minimum…,
+3168823,PIZZA SHACK,11963 INDIAN ROCKS RD,LARGO,2026-02-03,3,Inspection Completed - No Further Action,True,False,Drink ice well at entrance to bar adjacent to customer walking path not protected,2026-02-03
 3172921,THE ORIGINAL MAMA MARIA'S GREEK CUISINE,503 N PINELLAS AVE,TARPON SPRINGS,2020-08-31,2,Call Back - Complied,True,False,,
 3179678,MOE'S SOUTHWEST GRILL #434,2683 ROOSEVELT BLVD,CLEARWATER,2021-01-14,1,Inspection Completed - No Further Action,False,False,,
-3182236,WESTSHORE PIZZA XXXIII,7651 STARKEY RD,LARGO,2026-02-26,3,Inspection Completed - No Further Action,True,False,Ice chute on soda machine soiled Intermediate - No paper towels or mechanical hand drying device provided at handwash sink.,
+3182236,WESTSHORE PIZZA XXXIII,7651 STARKEY RD,LARGO,2026-02-26,3,Inspection Completed - No Further Action,True,False,Stained cutting board on pizza prep cooler Ice chute on soda machine soiled,2025-09-24
 3182386,COURIGAN'S,1 BEACH DR SE #41,ST. PETERSBURG,2021-01-05,4,"Call Back - Extension given, pending",True,False,,
 3187326,BELLA VINO,100 INDIAN ROCKS RD STE F,BELLEAIR BLUFFS,2021-03-19,1,Inspection Completed - No Further Action,False,False,,
 3201919,SUBWAY #38887,41220 US HWY 19 N,TARPON SPRINGS,2020-11-19,1,Warning Issued,False,False,,
@@ -409,7 +409,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 3373345,BROS PIZZA,547 S FT HARRISON AVE,CLEARWATER,2021-04-02,3,Call Back - Complied,True,False,,
 3378601,SUNSET CAFE AND BEACH BAR,12000 GULF BLVD,TREASURE ISLAND,2021-01-08,2,Inspection Completed - No Further Action,True,False,,
 3383988,SNEAKY'S SPORTS BAR & GRILL,7500 ULMERTON RD STE 31,LARGO,2021-04-28,1,Inspection Completed - No Further Action,False,False,,
-3385750,MARISCOS EL PULPO II,8740 SEMINOLE BLVD,SEMINOLE,2026-01-14,3,Inspection Completed - No Further Action,True,False,"Ice in kitchen hand sink, used as dump sink Use of cooking equipment producing grease laden vapors/smoke with no hood suppression system installed.",
+3385750,MARISCOS EL PULPO II,8740 SEMINOLE BLVD,SEMINOLE,2026-01-14,3,Inspection Completed - No Further Action,True,False,"Ice in kitchen hand sink, used as dump sink",2026-01-14
 3404140,LAGERHAUS BREWERY & GRILL,3438 EAST LAKE RD,PALM HARBOR,2021-06-04,3,Warning Issued,True,False,,
 3404803,GULF PIER (2),3500 PINELLAS BAYWAY S,TIERRA VERDE,2021-05-25,2,Inspection Completed - No Further Action,True,False,,
 3404822,FORT GIFT SHOP (3),3500 PINELLAS BAYWAY S,TIERRA VERDE,2021-05-07,2,Warning Issued,True,False,,
@@ -428,7 +428,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 3518330,DUNKIN DONUTS / BASKIN ROBBINS,3515 E BAY DR,LARGO,2021-05-05,3,Warning Issued,True,False,,
 3518574,COSTAS RESTAURANT,521 ATHENS STREET,TARPON SPRINGS,2026-01-08,4,Call Back - Complied,True,False,"Walk in cooler - shrimp (44F - Cold Holding); raw chicken (45F - Cold Holding); mousala (44F - Cold Holding); spanakopita (44F - Cold Holding); raw lamb (45F - Cold Holding); dolmades (43F - Cold Holding); stuffed peppers (44F - Cold Holding) temperatures not taken today , operator adjusted…",2026-01-08
 3524296,CARMELITAS MEXICAN RESTAURANT,7705 ULMERTON ROAD,LARGO,2026-04-07,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green in the interior of the ice machine/bin located near walk-in freezer.,2025-12-29
-3539261,BARDMOOR GOLF & TENNIS CLUB,8001 CUMBERLAND DR,LARGO,2021-02-16,2,Inspection Completed - No Further Action,True,False,"Boxes of fries on floor in walk in freezer, staff relocated Basic - Ice buildup in or walk-in freezer.",
+3539261,BARDMOOR GOLF & TENNIS CLUB,8001 CUMBERLAND DR,LARGO,2021-02-16,2,Inspection Completed - No Further Action,True,False,,
 3539283,BAYOU CLUB,7979 BAYOU CLUB BLVD,LARGO,2025-11-07,4,Inspection Completed - No Further Action,True,False,,
 3541371,THE FROG POND,7390 GULF BLVD,ST.PETE BEACH,2021-01-06,2,Inspection Completed - No Further Action,True,False,,
 3550236,CHINA CITY,603 S FORT HARRISON AVENUE,CLEARWATER,2026-04-21,3,Inspection Completed - No Further Action,True,False,,
@@ -444,7 +444,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 3644989,DUNKIN DONUTS/BASKIN ROBBINS,33240 US HWY 19 N,PALM HARBOR,2021-04-28,3,Warning Issued,True,False,,
 3645043,FAMOUS GREEK SALADS & SANDWICHES,2508 A MCMULLEN BOOTH RD,CLEARWATER,2025-07-14,2,Inspection Completed - No Further Action,True,False,Staff placing food on ice.,2025-07-14
 3652597,CODY'S ORIGINAL ROADHOUSE,2890 WEST BAY DR,BELLEAIR BLUFFS,2021-03-01,1,Inspection Completed - No Further Action,False,False,,
-3654896,INTERNATIONAL HOUSE OF PANCAKES 36-189,4199 34 ST S,ST. PETERSBURG,2025-07-29,6,Warning Issued,True,False,Basic - Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup inside reach-in freezer across from cook-line.,
+3654896,INTERNATIONAL HOUSE OF PANCAKES 36-189,4199 34 ST S,ST. PETERSBURG,2025-07-29,6,Warning Issued,True,False,Ice buildup in reach-in freezer and/or walk-in freezer at front wait station.,2025-07-29
 3654902,INTERNATIONAL HOUSE OF PANCAKES 36-190,7800 ULMERTON RD,LARGO,2025-09-16,3,Inspection Completed - No Further Action,True,False,- From initial inspection : Basic - Ice buildup in reach-in freezer on the cook line. - From follow-up inspection 2025-09-16: Ice build up still built up,2025-09-16
 3656733,KOBE JAPANESE STEAK HOUSE OF CLEARWATER LLC,28775 N US 19,CLEARWATER,2021-05-26,2,Inspection Completed - No Further Action,True,False,,
 3666940,CAPPYS PIZZERIA,2900 1 AVE N,ST. PETERSBURG,2026-05-06,2,Inspection Completed - No Further Action,True,False,,
@@ -452,12 +452,12 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 3674274,TIJUANA FLATS BURRITO CO,3687 TAMPA RD #203,OLDSMAR,2026-02-10,3,Call Back - Complied,True,False,,
 3676725,CASA TINA MEXICAN GRILL,365 MAIN ST,DUNEDIN,2026-04-28,7,Call Back - Admin. complaint recommended,True,False,,
 3687368,FLAMESTONE AMERICAN GRILL,4009 TAMPA RD #4,OLDSMAR,2025-08-18,1,Warning Issued,False,False,,
-3688269,THE BOARDWALK GRILL,205 BOARDWALK PL E,MADEIRA BEACH,2020-10-13,1,Inspection Completed - No Further Action,False,False,"Ice in hand sink on cook line, used as dump sink",
+3688269,THE BOARDWALK GRILL,205 BOARDWALK PL E,MADEIRA BEACH,2020-10-13,1,Inspection Completed - No Further Action,False,False,,
 3695840,EINSTEIN BROS BAGELS #3452,5395 E BAY DR STE 104,CLEARWATER,2025-08-28,4,Inspection Completed - No Further Action,True,False,,
 3697387,RESIDENCE INN BY MARRIOTT,11908 GULF BLVD,TREASURE ISLAND,2026-03-31,2,Inspection Completed - No Further Action,True,False,,
 3706447,HALONG BAY VIETNAMESE CUISINE,5944 34 ST N. STE 39-43,ST. PETERSBURG,2025-09-30,6,Warning Issued,True,False,Temperature taken at 1:30 PM cut lettuce (55F - Cold Holding) cut tomato (55F - Cold Holding) sprouts (55F - Cold Holding) Manager placed items on ice.,2025-07-29
 3717503,OLYMPIA BAKERY INCORPORATED,255 BEACH DR NE,ST. PETERSBURG,2021-05-11,1,Administrative complaint recommended,False,False,,
-3718379,DAIRY QUEEN,3101 N 66 ST,ST. PETERSBURG,2026-01-12,1,Inspection Completed - No Further Action,False,False,-paper bagged garbage and empty buckets on ground outside dumpster Basic - Ice buckets not stored inverted to allow for drainage. Basic - Ice buildup -in reach-in freezers in kitchen next to fryers. Basic - In-use ice scoop stored on soiled surface between uses. -ice scoops stored in bucket with…,
+3718379,DAIRY QUEEN,3101 N 66 ST,ST. PETERSBURG,2026-01-12,1,Inspection Completed - No Further Action,False,False,In-use ice scoop stored on soiled surface between uses. -ice scoops stored in bucket with standing dirty water about an inch deep in the bottom of it making contact with the scoops.,2026-01-12
 3725057,CLEAR SKYZ CAFE,490 MANDALAY AVE,CLEARWATER BEACH,2025-07-21,1,Warning Issued,False,False,Ice cube for bar use not covered in walk in freezer.,2025-07-21
 3726284,SEMINOLE SUBS & GYROS III,1001 S MISSOURI AVE,CLEARWATER,2021-02-09,1,Inspection Completed - No Further Action,False,False,,
 3735238,BUBBA GUMP SHRIMP CO,185 BOARDWALK PL W,MADEIRA BEACH,2025-09-16,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-09-16
@@ -485,8 +485,8 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 3825276,PAISANO'S PIZZA 'N PASTA,6000 4 ST N,ST. PETERSBURG,2025-10-13,3,Inspection Completed - No Further Action,True,False,,
 3826126,D'LITES OF ST PETE BEACH LLC,3629 49 STREET NORTH,ST. PETERSBURG,2020-10-01,1,Inspection Completed - No Further Action,False,False,-packaged on site ice cream products for self service in reach in coolers in dining area only lane.ed with name of product.,
 3828059,CESARE AT THE BEACH,794 S GULFVIEW BLVD,CLEARWATER BEACH,2026-05-15,5,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-09-22
-3840898,SALEM'S FRESH EATS,880 34TH ST N,ST. PETERSBURG,2025-09-15,1,Inspection Completed - No Further Action,False,False,"Basic - Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup in walk-in freezer Basic - Nonfood-contact surface soiled with grease, food debris, dirt, slime or dust.",
-3843163,SWEET SAGE CAFE LLC,16725 GULF BLVD,REDINGTON BEACH,2020-10-15,1,Inspection Completed - No Further Action,False,False,Accumulation of grease under cook line Basic - Ice buildup in reach-in freezer and/or walk-in freezer.,
+3840898,SALEM'S FRESH EATS,880 34TH ST N,ST. PETERSBURG,2025-09-15,1,Inspection Completed - No Further Action,False,False,,
+3843163,SWEET SAGE CAFE LLC,16725 GULF BLVD,REDINGTON BEACH,2020-10-15,1,Inspection Completed - No Further Action,False,False,,
 3844917,SUBWAY,35404 US HWY 19,PALM HARBOR,2025-07-14,1,Inspection Completed - No Further Action,False,False,,
 3845605,JUAN'S MEXICAN GRILL,1409 MAIN STREET,DUNEDIN,2026-03-26,4,Inspection Completed - No Further Action,True,False,,
 3849293,JIMMY JOHNS,1410 66 ST,ST. PETERSBURG,2020-08-04,1,Inspection Completed - No Further Action,False,False,,
@@ -503,7 +503,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 3892175,PAPA JOHN'S PIZZA,1098 OVERCASH DR,DUNEDIN,2020-10-26,1,Inspection Completed - No Further Action,False,False,,
 3893534,LIL BIT KUNTRY RESTAURANT,4999 71 AVE N,PINELLAS PARK,2026-05-06,7,Call Back - Complied,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2026-03-06
 3895243,KEEGANS SEAFOOD GRILLE,1519 GULF BLVD,INDIAN ROCKS BEACH,2020-09-14,1,Inspection Completed - No Further Action,False,False,,
-3895857,THE DRUNKEN CLAM,46 46 AVE,ST.PETE BEACH,2026-01-21,3,Inspection Completed - No Further Action,True,False,Basic - Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup up in both walk-in freezer and reach-in freezer.,
+3895857,THE DRUNKEN CLAM,46 46 AVE,ST.PETE BEACH,2026-01-21,3,Inspection Completed - No Further Action,True,False,Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup up in both walk-in freezer and reach-in freezer.,2026-01-21
 3897967,CAPTAIN JACK'S WATERFRONT GRILLE,21 OSCAR HILL RD,TARPON SPRINGS,2026-02-12,5,Inspection Completed - No Further Action,True,False,,
 3899160,HORSE & JOCKEY BRITISH PUB AND RESTAURANT,1155 PASADENA AVE S,SOUTH PASADENA,2026-05-04,4,Inspection Completed - No Further Action,True,False,Food stored in undrained ice.,2025-12-01
 3906322,FAIRWAY PIZZA & SPORTS PAGE PUB,2901 ALT 19 NORTH,PALM HARBOR,2026-05-15,7,Inspection Completed - No Further Action,True,False,Ice buckets not inverted in ware washing area.,2025-11-03
@@ -548,7 +548,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 4046724,CARRABBA'S ITALIAN GRILL,3530 TYRONE BLVD,ST. PETERSBURG,2026-03-17,7,Inspection Completed - No Further Action,True,False,"2 live flies in dry storage room near office 2 live flies in hallway outside of office near exit 1 live fly near 3 comp sink next to ice machine 8 live flies in bin of onions in kitchen, onions are unpeeled, not yet ready to eat.",2026-01-12
 4046914,CARRABBA'S ITALIAN GRILL,33983 US HWY 19 N,PALM HARBOR,2026-04-22,4,Inspection Completed - No Further Action,True,False,,
 4046946,OUTBACK STEAKHOUSE,31988 US HWY 19,PALM HARBOR,2021-02-04,1,Inspection Completed - No Further Action,False,False,,
-4047219,OUTBACK STEAKHOUSE,1900 4 ST N,ST. PETERSBURG,2025-09-16,3,Inspection Completed - No Further Action,True,False,Manager placed shrimp into walk-in cooler and on ice.,
+4047219,OUTBACK STEAKHOUSE,1900 4 ST N,ST. PETERSBURG,2025-09-16,3,Inspection Completed - No Further Action,True,False,Ice buildup in reach-in freezer and/or walk-in freezer. Ice build up in walk-in freezer,2025-09-16
 4051813,CURRENTS,200 E TARPON AVE,TARPON SPRINGS,2026-05-05,4,Inspection Completed - No Further Action,True,False,,
 4061937,THREE BIRDS TAVERN,1492 4 ST NORTH,ST. PETERSBURG,2020-12-16,2,Inspection Completed - No Further Action,True,False,,
 4071177,ASIAN WOK TAKE-OUT RESTAURANT,202 37 AVE N,ST. PETERSBURG,2025-09-15,6,Call Back - Complied,True,False,,
@@ -562,7 +562,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 4084194,CHINA 1,4316 6TH STREET S,ST. PETERSBURG,2021-06-07,2,Inspection Completed - No Further Action,True,False,,
 4086408,BOARDWALK PIZZA AND GYROS,2547-1 COUNTRYSIDE BLVD,CLEARWATER,2021-02-02,2,Inspection Completed - No Further Action,True,False,,
 4086786,CHINA EXPRESS TAKE-OUT,1159 S PINELLAS AVENUE,TARPON SPRINGS,2026-03-12,3,Inspection Completed - No Further Action,True,False,Accumulation of black mold-like substance in the interior of the ice machine bin. Small ice machine by 3 compartment sink,2025-09-04
-4097467,CASSIS AMERICAN BRASSERIE,170 BEACH DR NE,ST. PETERSBURG,2026-02-12,6,Call Back - Complied,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,
+4097467,CASSIS AMERICAN BRASSERIE,170 BEACH DR NE,ST. PETERSBURG,2026-02-12,6,Call Back - Complied,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Both interior of ice machines soiled with black mold like substance.,2025-11-04
 4100424,LACKMANN CULINARY SERVICES,19387 US HWY 19 N,CLEARWATER,2026-04-17,3,Warning Issued,True,False,,
 4108312,FIVE GUYS BURGERS AND FRIES,2689 GULF TO BAY BLVD STE 1820,CLEARWATER,2020-12-01,1,Inspection Completed - No Further Action,False,False,,
 4115674,COLD STONE CREAMERY #1796,7220 US HWY 19 N,PINELLAS PARK,2020-07-15,1,Inspection Completed - No Further Action,False,False,,
@@ -572,19 +572,19 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 4126159,ANGRY PEPPER TAPHOUSE,9366 OAKHURST ROAD,SEMINOLE,2026-02-11,3,Inspection Completed - No Further Action,True,False,Unprotected ice machine in a customer/nonsecure area. Outdoor ice machine not secured by gate when not in use,2025-09-30
 4128066,LA ISLA BONITA INC,9150 49 ST NORTH UNIT G&H,PINELLAS PARK,2021-03-02,1,Inspection Completed - No Further Action,False,False,,
 4130348,JIMMY JOHNS,750 4TH STREET NORTH,ST. PETERSBURG,2026-03-18,3,Warning Issued,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine soiled with black mold like substance.,2026-03-18
-4135116,PIRATES PUB-N-GRUB,116 JOHNS PASS BOARDWALK,MADEIRA BEACH,2025-09-16,1,Inspection Completed - No Further Action,False,False,"Accumulation of grease under cook line Basic - Ice scoop handle in contact with ice. Drink ice well behind bar Basic - Nonfood-contact surface soiled with grease, food debris, dirt, slime or dust. Keg cooler behind bar High Priority - Food stored in ice used for drinks. Squeeze bottles in drink ice…",
+4135116,PIRATES PUB-N-GRUB,116 JOHNS PASS BOARDWALK,MADEIRA BEACH,2025-09-16,1,Inspection Completed - No Further Action,False,False,Ice scoop handle in contact with ice.,2025-09-16
 4140382,BEACH PIZZA PLUS,10500 ULMERTON ROAD 380,LARGO,2020-07-23,1,Inspection Completed - No Further Action,False,False,,
 4149047,MIWA HIBACHI & SUSHI EXPRESS,6901 TYRONE BLVD VC01,ST. PETERSBURG,2026-05-11,4,Inspection Completed - No Further Action,True,False,,
 4150089,ALESIA ON CENTRAL,7204 CENTRAL AVENUE,ST. PETERSBURG,2026-02-11,3,Inspection Completed - No Further Action,True,False,- From follow-up inspection 2026-02-11: Raw beef out of commercial packaging stored above ice cream in reach in freezer in main kitchen Operator moved beef below ice cream,2026-02-11
 4153844,DIMITRI'S ON THE WATER,698 DODECANESE BLVD,TARPON SPRINGS,2026-03-02,6,Warning Issued,True,False,Accumulation of black/pink mold-like substance in the interior of the ice machine/bin. Water dripping from black/ pink mold like substance onto ice.,2025-11-18
-4157206,MIKES PIZZA AND PUB,14479 WALSINGHAM RD,LARGO,2026-01-29,3,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Staff advised racks temporarily moved outside while rearranging walk in coolers Basic - Ice buildup in reach-in freezer and/or walk-in freezer. Basic - Ice scoop handle in contact with ice. Outdoor door ice…,
+4157206,MIKES PIZZA AND PUB,14479 WALSINGHAM RD,LARGO,2026-01-29,3,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-09-15
 4158322,GEORGE'S BREAKFAST STATION INC,600 SOUTH PINELLAS,TARPON SPRINGS,2021-01-12,3,Warning Issued,True,False,,
 4161961,WATERSIDE YACHT CLUB,5000 COQUINA KEY DRIVE S.E.,ST. PETERSBURG,2021-02-08,1,Inspection Completed - No Further Action,False,False,,
 4164834,SMOKIN J'S BBQ,5145 GULFPORT BLVD,GULFPORT,2021-01-21,2,Warning Issued,True,False,,
 4169685,QUICKIES BBQ,4351 4 ST N,ST. PETERSBURG,2021-03-19,4,Warning Issued,True,False,,
 4178777,GREEN MARKET CAFE / KIWI FROZEN YOGURT,3150 TAMPA RD #1A,OLDSMAR,2021-01-11,1,Inspection Completed - No Further Action,False,False,,
 4184341,HARVEY'S 4TH ST GRILL,3121 4 ST N,ST. PETERSBURG,2025-09-05,4,Warning Issued,True,False,Hand wash sink at front bar observed with drink ice inside basin.,
-4191778,THE CORNER POCKET,12686 STARKEY RD,LARGO,2026-02-26,2,Inspection Completed - No Further Action,True,False,Ice buildup in reach-in freezer and/or walk-in freezer.,
+4191778,THE CORNER POCKET,12686 STARKEY RD,LARGO,2026-02-26,2,Inspection Completed - No Further Action,True,False,Ice buildup in reach-in freezer and/or walk-in freezer.,2026-02-26
 4202214,AMY'S CHINA ONE,1537 S HIGHLAND AVENUE,CLEARWATER,2026-02-12,2,Inspection Completed - No Further Action,True,False,,
 4203735,SUBWAY #5298,3431 49 ST N,ST. PETERSBURG,2025-11-24,1,Inspection Completed - No Further Action,False,False,"Ice visible in cooler, some items in-temp, others at an elevated temp.",
 4206773,LISA'S CAFE,13331 GULF BLVD,MADEIRA BEACH,2021-04-19,1,Administrative complaint recommended,False,False,,
@@ -611,7 +611,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 4290063,THE CLEARWATER GOLF CLUB,525 N BETTY LANE,CLEARWATER,2021-03-12,2,Inspection Completed - No Further Action,True,False,,
 4290878,OLGA'S RESTAURANT,1449 S BELCHER RD,CLEARWATER,2025-12-22,4,Warning Issued,True,False,,
 4292937,POSITANO'S,3309 TAMPA RD,PALM HARBOR,2021-05-07,2,Warning Issued,True,False,,
-4295929,HOOTERS RESTAURANT,192 JOHN'S PASS BOARDWALK W,MADEIRA BEACH,2026-01-30,4,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,
+4295929,HOOTERS RESTAURANT,192 JOHN'S PASS BOARDWALK W,MADEIRA BEACH,2026-01-30,4,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2026-01-30
 4306121,NEPTUNE GRILL,5501 SHORE BLVD S,GULF PORT,2026-05-12,3,Inspection Completed - No Further Action,True,False,,
 4310747,GENNARO'S,2004 PASS A GRILLE WAY,ST.PETE BEACH,2021-06-22,2,Inspection Completed - No Further Action,True,False,,
 4314650,BURG BAR & GRILL (THE),1752 CENTRAL AVE,ST PETERSBURG,2026-03-25,4,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine soiled with black mold like debris exterior rear of kitchen.,2026-03-25
@@ -625,7 +625,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 4357799,DAIRY QUEEN GRILL & CHILL,10820 PARK BLVD,SEMINOLE,2021-02-25,2,Call Back - Complied,True,False,,
 4366185,CHINA MAX,6901 22ND AVENUE #VC05,ST. PETERSBURG,2021-02-15,2,Inspection Completed - No Further Action,True,False,,
 4371681,LARGO PIZZA LLC,11411 STARKEY DR #5,LARGO,2021-03-09,2,Warning Issued,True,False,,
-4371691,YOGURTOLOGY,3043 4TH ST N,ST. PETERSBURG,2020-07-10,1,Administrative complaint recommended,False,False,Floor soiled underneath reach-in cooler and reach-in freezers in rear prep area - From follow-up inspection 2026-01-13: Basic - - From initial inspection : Basic - Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup up in reach-in freezer at front counters - From follow-up…,
+4371691,YOGURTOLOGY,3043 4TH ST N,ST. PETERSBURG,2020-07-10,1,Administrative complaint recommended,False,False,,
 4383794,KFC,770 N 34 ST,ST. PETERSBURG,2026-01-06,4,Inspection Completed - No Further Action,True,False,Basic - Ice buildup in walk-in freezer.,
 4383814,KFC,6595 PARK BLVD,PINELLAS PARK,2020-08-31,1,Inspection Completed - No Further Action,False,False,,
 4383845,KFC,1960 GULF TO BAY BLVD,CLEARWATER,2020-12-01,2,Inspection Completed - No Further Action,True,False,,
@@ -670,7 +670,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 5248896,CARETTA ON THE GULF,500 MANDALAY AVE,CLEARWATER BEACH,2025-12-16,4,Inspection Completed - No Further Action,True,False,,
 5248905,TATE ISLAND GRILL,500 MANDALAY AVE,CLEARWATER BEACH,2026-04-27,3,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-08-05
 5255400,CA CAFE INC,420 22 ST S,ST. PETERSBURG,2021-01-27,1,Inspection Completed - No Further Action,False,False,,
-5271887,LA V,441 CENTRAL AVENUE,ST. PETERSBURG,2026-02-24,6,Call Back - Complied,True,False,"Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine soiled with black, pink, and yellow substance.",
+5271887,LA V,441 CENTRAL AVENUE,ST. PETERSBURG,2026-02-24,6,Call Back - Complied,True,False,"Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine soiled with black, pink, and yellow substance.",2026-02-24
 5272424,TRIP'S DINER,2339 DR MARTIN LUTHER KING JR DR N,ST. PETERSBURG,2020-12-09,2,Inspection Completed - No Further Action,True,False,,
 5274685,CHOPSTICK EXPRESS INC,3946 4 ST N,ST. PETERSBURG,2025-09-04,4,Warning Issued,True,False,,
 5274788,RAIN JAPANESE AND SUSHI BAR,5267 PARK ST N,ST. PETERSBURG,2026-04-27,5,Call Back - Complied,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-12-02
@@ -678,7 +678,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 5277788,RED ROBIN GOURMET BURGERS - COUNTRYSIDE MALL,27001 US HWY 19 N #1130,CLEARWATER,2026-05-05,4,Call Back - Complied,True,False,,
 5292902,ATHENIAN GARDEN,2220 4 ST N,ST. PETERSBURG,2026-02-23,5,Call Back - Admin. complaint recommended,True,False,Ice bin handle front service station.,2025-09-22
 5293295,TARPON TAVERN,21 N SAFFORD AVE,TARPON SPRINGS,2025-12-03,1,Inspection Completed - No Further Action,False,False,,
-5296245,HOOTERS OF CLEARWATER BEACH,381 MANDALAY AVE,CLEARWATER,2025-07-17,2,Inspection Completed - No Further Action,True,False,Ice buildup in reach-in glass freezer behind bar.,
+5296245,HOOTERS OF CLEARWATER BEACH,381 MANDALAY AVE,CLEARWATER,2025-07-17,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-07-17
 5300374,MACDINTONS IRISH PUB AT JANNUS,242 1 AVE N,ST. PETERSBURG,2025-12-22,6,Call Back - Complied,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-12-22
 5301930,COLD STONE CREAMERY,100 MAIN ST #102,SAFETY HARBOR,2025-09-04,1,Inspection Completed - No Further Action,False,False,Refrigerator that holds freshly made ice cream has a significant build up of soil residues and rust.,2025-09-04
 5311295,PEPOS CUBAN CAFE,9939 4 ST N,ST. PETERSBURG,2026-02-25,9,Warning Issued,True,False,Food stored in undrained ice.,2025-07-22
@@ -732,7 +732,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 5440024,DESI TADKA INDIAN CUISINE,3780 TAMPA RD #D2,OLDSMAR,2026-04-09,3,Warning Issued,True,False,,
 5441099,TASTY PHO,7430 49TH ST N,PINELLAS PARK,2026-01-21,4,Inspection Completed - No Further Action,True,False,,
 5441550,TAP ROOM,421 4 AVE N,ST. PETERSBURG,2026-03-26,4,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Soda machine dispenser ice bin soiled with black mold like substance.,2025-09-30
-5444555,STARLITE CRUISES,3400 PASADENA AVE S,SOUTH PASADENA,2026-02-11,10,Inspection Completed - No Further Action,True,False,-in bar area between ice machine and dish machine - From follow-up inspection 2026-02-11: Basic - - From initial inspection : Basic - Reach-in cooler interior/shelves have accumulation of soil residues.,
+5444555,STARLITE CRUISES,3400 PASADENA AVE S,SOUTH PASADENA,2026-02-11,10,Inspection Completed - No Further Action,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin. - ice machine behind bar on upper level - From follow-up inspection 2025-12-03: - From follow-up inspection 2025-12-03: - From follow-up inspection 2025-12-04: - From…,2025-12-05
 5461382,HOT TUNA SUSHI BAR AND GRILLE,3689 TAMPA RD STE 302B 303,OLDSMAR,2025-12-22,3,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Observed a mold like substance on white plastic shield in ice machine bin at time of inspection.,2025-12-22
 5462242,BURGER KING #95,7371 SEMINOLE BLVD,SEMINOLE,2021-04-21,2,Warning Issued,True,False,,
 5468296,BURGER KING 83,6760 22 AVE N,ST. PETERSBURG,2025-08-07,4,Inspection Completed - No Further Action,True,False,In-use ice scoop stored on soiled surface between uses. Ice scoop on top of ice machine.,2025-07-29
@@ -778,14 +778,14 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 5589376,TIJUANA FLATS BURRITO CO,2518 SR 580 STE A,CLEARWATER,2026-01-27,5,Inspection Completed - No Further Action,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine.,2025-09-22
 5598099,ZEKOS MEDITERRANEAN GRILL,4880 54 AVE N,ST. PETERSBURG,2020-11-06,3,Call Back - Complied,True,False,,
 5599953,SNAPPERS,36657 US HWY 19 N,PALM HARBOR,2020-12-21,2,Inspection Completed - No Further Action,True,False,,
-5608957,MCCALL & SON'S RESTAURANT,1828 49STREET SOUTH,ST. PETERSBURG,2026-01-29,4,Inspection Completed - No Further Action,True,False,- From initial inspection : Basic - Ice buildup in reach-in freezer.,
+5608957,MCCALL & SON'S RESTAURANT,1828 49STREET SOUTH,ST. PETERSBURG,2026-01-29,4,Inspection Completed - No Further Action,True,False,- From initial inspection : Basic - Ice buildup in reach-in freezer.,2026-01-29
 5614538,THE LEMON GRASS SUSHI THAI TAPAS INC,310 CENTRAL AVE,ST. PETERSBURG,2026-05-04,13,Emergency Order Callback Complied,True,False,Approximately a total of 178 rodent droppings: 20 rodent droppings observed on floor around and behind ice machine and water heater near dish machine area.,2026-02-24
 5628049,FRENCHY'S OUTPOST INC,466 CAUSEWAY BLVD,DUNEDIN,2026-05-20,3,Warning Issued,True,False,,
 5634865,LOS DOS PLEBES,14042 66TH ST STE A,LARGO,2025-11-25,1,Inspection Completed - No Further Action,False,False,,
 5638520,ROCOCO STEAK,655 2ND AVE,ST. PETERSBURG,2026-05-15,3,Inspection Completed - No Further Action,True,False,,
 5639181,BEACH FIRE BBQ GRILLE,608 MANDALAY AVE,CLEARWATER BEACH,2021-05-04,3,Inspection Completed - No Further Action,True,False,,
 5645032,HARDEE'S RESTAURANT #1500782,3795 34 ST N,ST. PETERSBURG,2025-11-19,2,Warning Issued,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine with black mold like substance,2025-11-19
-5647556,DOE DOES DINER,9395 BAY PINES BLVD,ST. PETERSBURG,2026-02-04,2,Inspection Completed - No Further Action,True,False,Basic - Unprotected ice machine in a customer/nonsecure area. Outside ice machine unlocked. Discussed with employee and ice machine was locked it.,
+5647556,DOE DOES DINER,9395 BAY PINES BLVD,ST. PETERSBURG,2026-02-04,2,Inspection Completed - No Further Action,True,False,Unprotected ice machine in a customer/nonsecure area. Outside ice machine unlocked. Discussed with employee and ice machine was locked it.,2026-02-04
 5653833,MARATHON GRILLE,33675 US HWY 19 N,PALM HARBOR,2021-02-24,3,Inspection Completed - No Further Action,True,False,,
 5654789,TACO BELL,3401 5TH AVE N,ST. PETERSBURG,2025-07-31,3,Inspection Completed - No Further Action,True,False,,
 5654826,TACO BELL #029579,3600 4 ST N,ST. PETERSBURG,2026-01-07,4,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice chute on drink dispenser with black/green and red mold like substance. Basic - Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup up in standing double door reach-in freezer…,
@@ -798,8 +798,8 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 5668566,TACO BELL #029569,4703 66 TH STREET N,KENNETH CITY,2026-03-10,5,Administrative complaint recommended,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. -Ice chute on machine at drive thru window soiled with mold/mildew like debris,2025-10-06
 5668605,TACO BELL #029565,9211 4TH STREET NORTH,ST. PETERSBURG,2020-10-26,2,Call Back - Complied,True,False,,
 5668639,TACO BELL #029566,2028 66TH STREET,SAINT PETERSBURG,2026-02-18,2,Inspection Completed - No Further Action,True,False,,
-5668694,TACO BELL #029567,1800 MAIN STREET,DUNEDIN,2026-02-02,4,Administrative complaint recommended,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Ice chute of soda machine in dining area has accumulation of mold like substance.,
-5668756,TACO BELL #029568,4599 PARK BOULEVARD,PINELLAS PARK,2021-01-11,2,Inspection Completed - No Further Action,True,False,Walk in freezer door heavy ice building around outside door frame. Basic - Heavy Ice buildup in walk-in freezer around door frame not allowing door to close Basic - In-use utensil not stored with handle above the top of time/temperature control for safety food and rim of the container.,
+5668694,TACO BELL #029567,1800 MAIN STREET,DUNEDIN,2026-02-02,4,Administrative complaint recommended,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Ice chute of soda machine in dining area has accumulation of mold like substance.,2026-02-02
+5668756,TACO BELL #029568,4599 PARK BOULEVARD,PINELLAS PARK,2021-01-11,2,Inspection Completed - No Further Action,True,False,,
 5668929,HOPS & PROPS,335 2 AVE NE,ST. PETERSBURG,2021-04-07,4,Call Back - Complied,True,False,,
 5672261,JACKS LONDON GRILL,1050 62 AVE N,ST. PETERSBURG,2021-01-06,2,Inspection Completed - No Further Action,True,False,,
 5672315,CLEAR DRAUGHT HAUS,680 MAIN ST,DUNEDIN,2026-04-07,3,Inspection Completed - No Further Action,True,False,,
@@ -807,7 +807,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 5679553,SEA DOG CANTINA CLEARWATER,26200 US HIGHWAY 19 N,CLEARWATER,2021-04-13,2,Warning Issued,True,False,,
 5682293,SUSHI INC,270 1ST AVE N,ST. PETERSBURG,2026-03-27,5,Warning Issued,True,False,- From initial inspection : Basic - Ice buildup in reach-in freezer and/or walk-in freezer.,2025-11-13
 5684809,SIDS CARIBBEAN  GRILL,2623 CENTRAL AVE,ST. PETERSBURG,2021-06-17,1,Warning Issued,False,False,,
-5688985,EL MAGUEY MEXICAN RESTAURANT,4327 66 ST N,KENNETH CITY,2026-01-28,2,Warning Issued,True,False,-ceiling in kitchen soiled with dust -wall behind ice machine soiled with dust Basic - Cold holding equipment not maintained in good repair.,
+5688985,EL MAGUEY MEXICAN RESTAURANT,4327 66 ST N,KENNETH CITY,2026-01-28,2,Warning Issued,True,False,-ceiling in kitchen soiled with dust -wall behind ice machine soiled with dust,2026-01-28
 5712885,MELLOW MUSHROOM PIZZA BAKERS,2630 GULF TO BAY BLVD,CLEARWATER,2020-12-01,3,Call Back - Complied,True,False,,
 5718332,EL HUARACHE AZTECA LLC,2908 ROOSEVELT BLVD,CLEARWATER,2020-12-11,1,Inspection Completed - No Further Action,False,False,,
 5728736,MINGMING TEA,7218 CENTRAL AVE,ST. PETERSBURG,2026-03-18,3,Inspection Completed - No Further Action,True,False,,
@@ -840,7 +840,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 5821763,TRIP'S DINER,10555 PARK BLVD N,SEMINOLE,2021-03-09,1,Warning Issued,False,False,,
 5834717,FRANK'S PIZZA,1600 VIRGINIA ST,DUNEDIN,2021-03-08,2,Warning Issued,True,False,,
 5835163,THE BAYOU CAFE,118 E TARPON AVE,TARPON SPRINGS,2026-04-02,14,Emergency Order Callback Not Complied,True,False,"Live, small flying insects found Approximately - 16 Small flies Under dish machine 2 small flies behind ice machine 1 on towel bucket at wait station",2025-12-04
-5840331,FEATHER SOUND COUNTRY CLUB,2201 FEATHER SOUND DR,CLEARWATER,2026-01-15,2,Inspection Completed - No Further Action,True,False,Accumulation of mold-like substance in the interior of the ice bin.,
+5840331,FEATHER SOUND COUNTRY CLUB,2201 FEATHER SOUND DR,CLEARWATER,2026-01-15,2,Inspection Completed - No Further Action,True,False,Accumulation of mold-like substance in the interior of the ice bin.,2026-01-15
 5840332,FEATHER SOUND COUNTRY CLUB,2201 FEATHER SOUND DR,CLEARWATER,2026-04-09,4,"Call Back - Extension given, pending",True,False,,
 5847627,JOES DELI,1710 N HERCULES AVE 114,CLEARWATER,2021-03-09,2,Inspection Completed - No Further Action,True,False,,
 5851256,YOUR WAY CAFE,17757 US 19 N STE 190,CLEARWATER,2026-02-09,3,Inspection Completed - No Further Action,True,False,,
@@ -857,7 +857,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 5883533,TIJUANA FLATS,13100 SEMINOLE BLVD SUITE 105,SEMINOLE,2021-01-22,1,Inspection Completed - No Further Action,False,False,,
 5886882,KREPELICIOUS,1255 CARACAS AVENUE,CLEARWATER,2021-02-22,1,Inspection Completed - No Further Action,False,False,,
 5887164,WAFFLE HOUSE,11403 ULMERTON ROAD,LARGO,2020-11-17,1,Inspection Completed - No Further Action,False,False,,
-5887289,WINDWARD BAR & GRILLE,282 WINDWARD PASSAGE,CLEARWATER,2026-01-23,1,Inspection Completed - No Further Action,False,False,Basic - Ice scoop handle in contact with ice.,
+5887289,WINDWARD BAR & GRILLE,282 WINDWARD PASSAGE,CLEARWATER,2026-01-23,1,Inspection Completed - No Further Action,False,False,Ice scoop handle in contact with ice.,2026-01-23
 5888264,TEXAS ROADHOUSE,10105 BAY PINES BLVD,ST. PETERSBURG,2020-09-16,1,Inspection Completed - No Further Action,False,False,,
 5888309,SNACK SHACK,15100 GULF BLVD,MADEIRA BEACH,2020-10-07,1,Warning Issued,False,False,,
 5890067,POPPA'S BARBQUE LLC,4890 122 AVE N SUITE 5,CLEARWATER,2021-01-28,1,Inspection Completed - No Further Action,False,False,,
@@ -865,7 +865,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 5892279,PJS OYSTER  BAR,415 2ND ST,INDIAN ROCKS BEACH,2025-07-30,2,Inspection Completed - No Further Action,True,False,,
 5894313,COMFORT INN NORTH,2260 54 AVE N,ST. PETERSBURG,2020-10-12,1,Inspection Completed - No Further Action,False,False,,
 5894603,JET'S PIZZA,9649 BAY PIINES BLVD,ST. PETERSBURG,2025-08-14,2,Inspection Completed - No Further Action,True,False,,
-5897573,TIME OUT SPORTS BAR,9009 OAKHURST RD,SEMINOLE,2026-02-11,1,Inspection Completed - No Further Action,False,False,Containers of cooking oil on floor next to freezer on cook line Basic - Ice bucket/shovel stored on floor between uses.,
+5897573,TIME OUT SPORTS BAR,9009 OAKHURST RD,SEMINOLE,2026-02-11,1,Inspection Completed - No Further Action,False,False,Ice bucket/shovel stored on floor between uses.,2026-02-11
 5900942,YAMA TAIYO RESTAURANT,660 ALDERMAN RD,PALM HARBOR,2026-03-10,7,Warning Issued,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine soiled with mold like substance.,2026-01-16
 5906463,ASIAN HOUSE RESTAURANT,6800 GULFPORT BL SUITE #105,SOUTH PASADENA,2021-04-01,1,Administrative complaint recommended,False,False,,
 5911196,RED LOBSTER #0019,6151 34 ST N,ST. PETERSBURG,2026-06-16,7,Inspection Completed - No Further Action,True,False,Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup up inside reach-in freezer across from cook-line.,2025-08-20
@@ -873,7 +873,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 5911457,OSAKA SUSHI & THAI RESTAURANT,13800 PARK BLVD N,SEMINOLE,2021-05-18,2,Inspection Completed - No Further Action,True,False,,
 5911542,RED LOBSTER #0454,10500 E ULMERTON RD #490,LARGO,2021-01-15,2,Warning Issued,True,False,,
 5912278,EMILY'S FAMILY RESTAURANT CLEARWATER,101 S GARDEN AVE,CLEARWATER,2021-02-02,2,Inspection Completed - No Further Action,True,False,,
-5916818,THAI STAR SUSHI BAR,15229 GULF BLVD,MADEIRA BEACH,2026-02-24,4,Inspection Completed - No Further Action,True,False,Hood filters removed from cook line Basic - Ice scoop handle in contact with ice.,
+5916818,THAI STAR SUSHI BAR,15229 GULF BLVD,MADEIRA BEACH,2026-02-24,4,Inspection Completed - No Further Action,True,False,Food stored in undrained ice. Raw shrimp in undrained ice in walk in cooler,2025-10-08
 5920003,THE GETAWAY,13090 GANDY BLVD,ST. PETERSBURG,2026-06-03,3,Emergency order recommended,True,False,,
 5920280,FERG'S SPORTS BAR,1320 CENTRAL AVENUE,ST. PETERSBURG,2021-02-08,2,Warning Issued,True,False,,
 5926189,THE BLACK PEARL RESTAURANT,315 MAIN ST,DUNEDIN,2020-11-30,1,Inspection Completed - No Further Action,False,False,,
@@ -885,7 +885,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 5951836,GRILL & CAFE LUNA LLC,8421 49 ST N,PINELLAS PARK,2021-04-15,2,Inspection Completed - No Further Action,True,False,,
 5952275,CARMELITA'S MEXICAN GRILL & CANTINA,1280 MAIN ST,DUNEDIN,2026-04-23,4,Warning Issued,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior and lid of ice bin in server wait station soiled with black mold like substance.,2026-01-05
 5952488,RUTH'S CHRIS STEAK HOUSE,131 2 AVE N,ST. PETERSBURG,2026-06-17,3,Inspection Completed - No Further Action,True,False,,
-5955051,RED MESA MERCADO,1100 1ST AVENUE NORTH,ST. PETERSBURG,2026-01-15,3,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine next to hand wash sink in kitchen with red/black mold-like substance along ceiling of unit.,
+5955051,RED MESA MERCADO,1100 1ST AVENUE NORTH,ST. PETERSBURG,2026-01-15,3,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine next to hand wash sink in kitchen with red/black mold-like substance along ceiling of unit.,2026-01-15
 5955649,KOOKY COCONUT CAFÉ,760 GULF BLVD,INDIAN ROCKS BEACH,2021-01-05,1,Inspection Completed - No Further Action,False,False,,
 5960230,SURFSIDE TAP HOUSE,395 MANDALAY AVE,CLEARWATER,2026-04-15,3,Inspection Completed - No Further Action,True,False,,
 5962528,FAT CAT TAVERN,3665 EAST BAY DR SUITE 100,LARGO,2021-05-04,2,Inspection Completed - No Further Action,True,False,,
@@ -908,15 +908,15 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 6024068,LUCKY LOBSTER,941 HUNTLEY AVE,DUNEDIN,2021-02-22,2,Inspection Completed - No Further Action,True,False,,
 6026880,DRAGON PHOENIX USA INC,9621 BAY PINES BLVD,ST. PETERSBURG,2021-04-30,1,Administrative complaint recommended,False,False,,
 6028636,DUNKIN DONUTS,9991 BAY PINES BLVD,ST. PETERSBURG,2020-09-28,1,Warning Issued,False,False,,
-6029810,LA QUINTA INN & SUITES CLEARWATER CENTRAL,21338 US 19 N,CLEARWATER,2026-02-03,1,Inspection Completed - No Further Action,False,False,High Priority - Ice chute soiled with mold-like substance/slime/dry debris near main laundry room . Employee cleaned ice chute .,
+6029810,LA QUINTA INN & SUITES CLEARWATER CENTRAL,21338 US 19 N,CLEARWATER,2026-02-03,1,Inspection Completed - No Further Action,False,False,Ice chute soiled with mold-like substance/slime/dry debris near main laundry room . Employee cleaned ice chute .,2026-02-03
 6032372,SUBWAY #336,3355 5 AVE N,ST. PETERSBURG,2021-05-11,2,Warning Issued,True,False,,
 6035548,REAL DEL MONTE PASTES Y MAS,1417 CLEVELAND ST,CLEARWATER,2020-10-22,1,Inspection Completed - No Further Action,False,False,,
 6037249,COSMOS3 CAFE,13336 66 ST N,LARGO,2021-01-07,2,Inspection Completed - No Further Action,True,False,,
 6039625,KEBABLICIOUS LLC,24862 US 19 N #504,CLEARWATER,2020-09-03,1,Call Back - Complied,False,False,,
 6040818,CHICK FIL A AT ST PETE BEACH,4623 GULF BLVD,ST. PETERSBURG,2021-04-12,2,Inspection Completed - No Further Action,True,False,,
 6041676,SIP 85,4940 RIDGEMOOR BLVD,PALM HARBOR,2021-03-26,2,Warning Issued,True,False,,
-6042225,SPRING GARDEN FAMILY RESTAURANT,1018 62 AVE N,ST. PETERSBURG,2026-02-25,2,Inspection Completed - No Further Action,True,False,Basic - Ice buildup in reach-in freezer and/or walk-in freezer.,
-6045326,CARAMBOLA,400 MANDALAY AVE,CLEARWATER,2026-02-04,3,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,
+6042225,SPRING GARDEN FAMILY RESTAURANT,1018 62 AVE N,ST. PETERSBURG,2026-02-25,2,Inspection Completed - No Further Action,True,False,Ice buildup in reach-in freezer and/or walk-in freezer.,2026-02-25
+6045326,CARAMBOLA,400 MANDALAY AVE,CLEARWATER,2026-02-04,3,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2026-02-04
 6045349,SAND BAR & GRILL,400 MANDALAY AVE,CLEARWATER,2026-04-15,1,Warning Issued,False,False,,
 6047165,CICI'S PIZZA 180,4743 66 ST N,KENNETH CITY,2020-08-24,1,Inspection Completed - No Further Action,False,False,,
 6047192,RAWK STAR CAFE & SUPERFOOD MARKETPLACE,4011 TAMPA RD #11-12,OLDSMAR,2021-01-07,1,Inspection Completed - No Further Action,False,False,,
@@ -928,7 +928,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 6054419,TWO COUSINS PIZZERIA,9277 SEMINOLE BLVD,SEMINOLE,2021-04-14,2,Inspection Completed - No Further Action,True,False,,
 6054514,POM POM'S TEAHOUSE AND SANDWICHERIA ST PETE,2950 CENTRAL AVENUE NORTH,ST. PETERSBURG,2020-09-24,1,Inspection Completed - No Further Action,False,False,,
 6065952,ATHENS RESTAURANT,226 MAIN ST,SAFETY HARBOR,2021-02-09,2,Warning Issued,True,False,,
-6070205,CASITA TAQUERIA 2 INC,2701 4 ST NORTH,ST. PETERSBURG,2026-01-14,7,Call Back - Complied,True,False,Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup up in reach-in freezer along South wall of kitchen.,
+6070205,CASITA TAQUERIA 2 INC,2701 4 ST NORTH,ST. PETERSBURG,2026-01-14,7,Call Back - Complied,True,False,Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup up in reach-in freezer along South wall of kitchen.,2026-01-14
 6070483,CRAFT KAFE,6653 CENTRAL AVE,ST. PETERSBURG,2020-08-14,1,Inspection Completed - No Further Action,False,False,,
 6072118,WAREHOUSE DELI,141 STEVENS AVE STE 8,OLDSMAR,2026-03-16,2,Inspection Completed - No Further Action,True,False,,
 6077346,WABI SABI,35583 US 19 N,PALM HARBOR,2020-11-30,1,Inspection Completed - No Further Action,False,False,,
@@ -950,7 +950,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 6110170,VILLAGE INN,10155 BAY PINES BLVD,SEMINOLE,2021-04-08,1,Inspection Completed - No Further Action,False,False,,
 6112638,DUNKIN DONUTS,2663 E LAKE RD,PALM HARBOR,2020-09-22,1,Warning Issued,False,False,,
 6112791,EAST LAKE WOODLANDS COUNTRY CLUB UPSTAIRS,1055 E LAKE WOODSLANDS PARKWAY,OLDSMAR,2021-02-12,1,Inspection Completed - No Further Action,False,False,,
-6117621,LITTLE GREEK ST PETERSBURG LLC,1052 4 ST N,ST. PETERSBURG,2026-01-21,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Soda machine ice chute soiled with black mold like substance.,
+6117621,LITTLE GREEK ST PETERSBURG LLC,1052 4 ST N,ST. PETERSBURG,2026-01-21,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Soda machine ice chute soiled with black mold like substance.,2026-01-21
 6119243,CUBAN & MEXICAN RESTAURANT,4016 ULMERTON RD,CLEARWATER,2025-09-24,2,Inspection Completed - No Further Action,True,False,,
 6119278,CADDY'S ON THE BEACH,9000 W GULF BLVD,TREASURE ISLAND,2021-06-04,6,Emergency Order Callback Complied,True,False,,
 6122145,LITTLE GREEK CUISINE,2245 GULF TO BAY BLVD,CLEARWATER,2026-05-06,3,Inspection Completed - No Further Action,True,False,,
@@ -980,11 +980,11 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 6174807,WENDY'S OLD FASHIONED HAMBURGERS,2290 GULF TO BAY BLVD,CLEARWATER,2021-01-22,1,Inspection Completed - No Further Action,False,False,,
 6174870,WENDY'S OLD FASHIONED HAMBURGERS,912 E TARPON AVE,TARPON SPRINGS,2020-08-26,1,Inspection Completed - No Further Action,False,False,,
 6178072,ZAYTOON GRILL,1618 CENTRAL AVE,ST. PETERSBURG,2025-08-11,2,Warning Issued,True,False,,
-6179027,TACO BELL #31793,2990 GULF TO BAY BLVD,CLEARWATER,2026-02-06,4,Inspection Completed - No Further Action,True,False,-Reach-in hot holding unit interior/shelves have accumulation of soil residues near walkway to office - employee in process of cleaning the hot holding unit at end of inspection -Accumulation of black/green mold-like substance in the interior of the ice chute in the customer self service area -…,
+6179027,TACO BELL #31793,2990 GULF TO BAY BLVD,CLEARWATER,2026-02-06,4,Inspection Completed - No Further Action,True,False,-Reach-in hot holding unit interior/shelves have accumulation of soil residues near walkway to office - employee in process of cleaning the hot holding unit at end of inspection -Accumulation of black/green mold-like substance in the interior of the ice chute in the customer self service area -…,2026-02-06
 6184020,CHINA KING,6816 22 AVE N,ST. PETERSBURG,2021-02-22,1,Inspection Completed - No Further Action,False,False,,
 6198141,SKYLINE CHILI II,"2045 GULF TO BAY BLVD, UNIT A",CLEARWATER,2020-09-25,1,Inspection Completed - No Further Action,False,False,,
 6200606,WESTSHORE PIZZA,9388 OAKHURST RD,SEMINOLE,2026-01-28,3,Inspection Completed - No Further Action,True,False,,
-6200672,THE WOODEN ROOSTER,104 2 AVE NE,ST. PETERSBURG,2026-01-21,3,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,
+6200672,THE WOODEN ROOSTER,104 2 AVE NE,ST. PETERSBURG,2026-01-21,3,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2026-01-21
 6201504,THE CIDER PRESS CAFÉ,601 CENTRAL AVENUE,ST. PETERSBURG,2021-03-25,2,Inspection Completed - No Further Action,True,False,,
 6203463,HELLAS BAKERY,785 DODECANESE BLVD,TARPON SPRINGS,2026-01-27,2,Inspection Completed - No Further Action,True,False,,
 6203504,PARTHENON RESTAURANT & BAKERY,751 DODECANESE BLVD,TARPON SPRINGS,2021-05-07,1,Inspection Completed - No Further Action,False,False,,
@@ -1004,7 +1004,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 6231933,NEWK'S EATERY,2613 GULF TO BAY BLVD #1650,CLEARWATER,2020-09-22,2,Warning Issued,True,False,,
 6236618,SANDBAR - TIKI BAR @ OPAL SANDS RESORT,430 SOUTH GULFVIEW BLVD,CLEARWATER,2026-04-01,3,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2026-04-01
 6236635,BANQUET KITCHEN @ OPAL SANDS RESORT,430 SOUTH GULFVIEW BLVD,CLEARWATER,2026-04-01,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-09-09
-6237446,MAD BEACH CRAFT BREWING COMPANY,12945 VILLAGE BLVD,MADEIRA BEACH,2026-02-23,3,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,
+6237446,MAD BEACH CRAFT BREWING COMPANY,12945 VILLAGE BLVD,MADEIRA BEACH,2026-02-23,3,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-10-13
 6242078,MADE IN AMERICA LLC,937 CENTRAL AVE,ST. PETERSBURG,2021-06-10,4,Call Back - Admin. complaint recommended,True,False,,
 6242890,BAVAROS PIZZA NAPOLETANA & PASTARIA ST PETE,945 CENTRAL AVE,ST. PETERSBURG,2025-10-01,5,Inspection Completed - No Further Action,True,False,Ice scoop handle in contact with ice in ice machine bin located in kitchen.,2025-08-01
 6244438,OUR PLACE,1617 MAIN ST,DUNEDIN,2021-01-21,3,Warning Issued,True,False,,
@@ -1038,7 +1038,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 6298918,SAUCED,1250 SEMINOLE BLVD,LARGO,2021-02-18,2,Inspection Completed - No Further Action,True,False,,
 6301397,THE BRASS TAP,2438 TYRONE BLVD N,ST. PETERSBURG,2020-11-16,1,Warning Issued,False,False,,
 6304288,MCDONALD'S #5704,7480 STARKEY RD,SEMINOLE,2020-10-02,1,Inspection Completed - No Further Action,False,False,,
-6304301,MCDONALDS #5587,5464 66 ST N,ST. PETERSBURG,2025-07-31,2,Warning Issued,True,False,Basic - Ice buildup in doorway of walk-in freezer.,
+6304301,MCDONALDS #5587,5464 66 ST N,ST. PETERSBURG,2025-07-31,2,Warning Issued,True,False,By dishwash area and behind soda machine by drive thru window Ice,2025-07-31
 6305986,BETTER BYRD,4447 4TH ST N,ST. PETERSBURG,2020-12-09,2,Warning Issued,True,False,,
 6306014,FRESH KITCHEN ST PETERSBURG,4447 4TH ST N STE A,ST. PETERSBURG,2025-10-14,3,Inspection Completed - No Further Action,True,False,,
 6311159,VANCHETTA,2001 1 AVE S,ST. PETERSBURG,2020-12-30,1,Inspection Completed - No Further Action,False,False,,
@@ -1072,7 +1072,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 6350154,STARLITE CAFE,1336 MAIN ST,DUNEDIN,2026-04-14,4,Inspection Completed - No Further Action,True,False,,
 6351541,TAQUERIA Y PANEDERIA LA CHIQUITA,1907 DREW ST STE A,CLEARWATER,2025-09-03,1,Emergency order recommended,False,False,,
 6351808,POLLO TROPICAL 205,2140  GULF TO BAY BLVD.,CLEARWATER,2020-09-29,1,Inspection Completed - No Further Action,False,False,,
-6352408,SALT CRACKER FISH CAMP,25 CAUSEWAY BLVD #105,CLEARWATER,2021-04-05,2,Warning Issued,True,False,Torn gasket on lid for ice cream freezer.,
+6352408,SALT CRACKER FISH CAMP,25 CAUSEWAY BLVD #105,CLEARWATER,2021-04-05,2,Warning Issued,True,False,,
 6352426,MARINA CANTINA,25 CAUSEWAY BLVD #201,CLEARWATER,2026-04-07,3,Inspection Completed - No Further Action,True,False,Ice buckets.,2025-09-04
 6352960,HUARACHE AZTECA 3,22097 US 19 N,CLEARWATER,2020-11-02,2,Inspection Completed - No Further Action,True,False,,
 6355897,BONNIES BREAKFAST AND LUNCH,1714 COUNTY RD 1  UNIT 16,DUNEDIN,2020-12-09,2,Call Back - Complied,True,False,,
@@ -1089,8 +1089,8 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 6385725,THE ISLAND GRILLE & RAW BAR,210 MADONNA BLVD,TIERRA VERDE,2021-04-22,1,Warning Issued,False,False,,
 6388246,WENDY'S PROPERTIES LLC,4840 PARK ST,ST. PETERSBURG,2026-03-11,3,Warning Issued,True,False,,
 6388286,WENDY'S PROPERTIES LLC,900 S MISSOURI AVE,CLEARWATER,2020-12-21,1,Inspection Completed - No Further Action,False,False,,
-6388298,WAFFLE HOUSE #2275,1718 S MISSOURI AVE,CLEARWATER,2026-02-04,1,Inspection Completed - No Further Action,False,False,Ice machine accumulated with pink substance in corner.,
-6388351,WENDY'S PROPERTIES LLC,8770 ULMERTON RD,LARGO,2025-07-28,1,Inspection Completed - No Further Action,False,False,Basic - Ice buildup in walk-in freezer.,
+6388298,WAFFLE HOUSE #2275,1718 S MISSOURI AVE,CLEARWATER,2026-02-04,1,Inspection Completed - No Further Action,False,False,Ice machine accumulated with pink substance in corner.,2026-02-04
+6388351,WENDY'S PROPERTIES LLC,8770 ULMERTON RD,LARGO,2025-07-28,1,Inspection Completed - No Further Action,False,False,,
 6388368,WENDY'S PROPERTIES LLC,1115 34 ST N,ST. PETERSBURG,2025-10-20,2,Inspection Completed - No Further Action,True,False,Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup up in standing reach-in freezer.,2025-10-20
 6388378,WENDY'S,4960 E BAY DR,CLEARWATER,2026-03-04,3,Call Back - Complied,True,False,Broken ice cream machine in dumpster area.,2026-02-24
 6388380,WENDY'S #969,34092 N US 19,PALM HARBOR,2021-01-07,1,Warning Issued,False,False,,
@@ -1138,7 +1138,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 6481337,BUYA,911 CENTRAL AVE,ST. PETERSBURG,2021-02-15,3,Warning Issued,True,False,,
 6484495,MUGS N JUGS,2480 EASTBAY DR,LARGO,2021-01-06,2,Inspection Completed - No Further Action,True,False,,
 6484552,SEABREEZE LOUNGE,30625 US 19 N,PALM HARBOR,2026-05-07,3,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine has black and green mold like substances.,2026-02-24
-6485169,PAPA'S NY DINER INC,1764 GULF TO BAY BLVD,CLEARWATER,2026-02-11,5,Inspection Completed - No Further Action,True,False,Ice bucket not stored inverted. Ice cream scoops stored in standing water.,
+6485169,PAPA'S NY DINER INC,1764 GULF TO BAY BLVD,CLEARWATER,2026-02-11,5,Inspection Completed - No Further Action,True,False,Recheck 38 F at 11:37 am Reviewed with manager proper handling and storage of of butter packets -Pooled eggs 52 F on ice at cook line - employee added ice to container .,2025-09-15
 6486878,KEKE'S BREAKFAST CAFÉ,10500 ULMERTON RD STE 760,LARGO,2020-07-15,1,Administrative complaint recommended,False,False,,
 6488126,GRASSROOTS KAVA HOUSE,957 CENTRAL AVE,SAINT PETERSBURG,2025-09-08,1,Inspection Completed - No Further Action,False,False,,
 6488216,CHIPOTLE MEXICAN GRILL OF COLORADO,11241 PARK BLVD N STE C,SEMINOLE,2021-01-07,1,Warning Issued,False,False,,
@@ -1156,7 +1156,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 6505440,THIRSTY FIRST,119 1ST AVE N,ST. PETERSBURG,2021-01-21,3,Call Back - Complied,True,False,,
 6509363,DUNKIN DONUTS,1200 PASADENA AVENUE S,PASADENA,2020-10-29,2,Warning Issued,True,False,,
 6510231,JOEYS NEW YORK PIZZA III LLC,30681 US HWY 19 N,PALM HARBOR,2021-05-28,3,Inspection Completed - No Further Action,True,False,,
-6510605,SLOPPY JOE'S,10650 GULF BLVD,TREASURE ISLAND,2026-01-22,4,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,
+6510605,SLOPPY JOE'S,10650 GULF BLVD,TREASURE ISLAND,2026-01-22,4,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2026-01-22
 6510624,BAZZIE'S BEACH BAR,10650 GULF BLVD,TREASURE ISLAND,2021-03-05,2,Inspection Completed - No Further Action,True,False,,
 6510641,CRYSTAL SANDS,10650 GULF BLVD,TREASURE ISLAND,2021-03-30,2,Inspection Completed - No Further Action,True,False,,
 6519677,OISHI SUSHI & JAPANESE STEAKHOUSE,5800 34 ST N,ST. PETERSBURG,2021-03-29,2,Inspection Completed - No Further Action,True,False,,
@@ -1168,7 +1168,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 6528540,NICKEL CITY RESTAURANT & BAR LLC,7658 PARK BLVD,PINELLAS PARK,2025-10-09,5,Inspection Completed - No Further Action,True,False,Above ice machine near back door,2025-10-09
 6528646,KING'S FRIED CHICKEN,2216 34 ST S,ST. PETERSBURG,2021-06-16,8,Emergency Order Callback Not Complied,True,False,,
 6529429,CHINA KITCHEN,268 3 ST S,ST. PETERSBURG,2025-12-03,3,Inspection Completed - No Further Action,True,False,,
-6529666,CHICK FIL A PALM HARBOR,32800 US HWY 19 N,PALM HARBOR,2026-01-22,1,Inspection Completed - No Further Action,False,False,"Wet nesting containers in drying rack outside ware washing area, Basic - Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup in rear of walk in freezer.",
+6529666,CHICK FIL A PALM HARBOR,32800 US HWY 19 N,PALM HARBOR,2026-01-22,1,Inspection Completed - No Further Action,False,False,Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup in rear of walk in freezer.,2026-01-22
 6531090,PASADENA YACHT & COUNTRY CLUB DINING,6300 PASADENA POINT BLVD,GULFPORT,2026-05-07,5,Warning Issued,True,False,Ice buildup in walk-in freezer on coils of cooling unit.,2026-03-06
 6531107,PASADENA YACHT & COUNTRY CLUB BAYSIDE GRILL,6300 PASADENA POINT BLVD,GULFPORT,2026-03-06,2,Inspection Completed - No Further Action,True,False,,
 6531124,PASADENA YACHT & COUNTRY CLUB,6300 PASADENA POINT BLVD,GULFPORT,2025-10-23,3,Inspection Completed - No Further Action,True,False,Accumulation of black mold-like substance in the interior of the ice machine.,2025-10-23
@@ -1186,7 +1186,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 6568628,JIMMY HULAS,454 MANDALAY AVE,CLEARWATER,2021-04-15,1,Administrative complaint recommended,False,False,,
 6569619,BELLISSIMO ITALIAN EATERY,13220 S BELCHER RD #19,LARGO,2021-04-07,3,Call Back - Admin. complaint recommended,True,False,,
 6571083,CHINA GARDEN,2154 E BAY DR STE 17,LARGO,2021-04-06,2,Inspection Completed - No Further Action,True,False,,
-6571599,MILLER'S ALE HOUSE INC,7695 113 ST N,SEMINOLE,2025-09-29,5,Inspection Completed - No Further Action,True,False,"Under ice machine Basic - Floor soiled/has accumulation of debris. Raw beef thawing at room temp on cart next to ice machine, moved to sink with running water High Priority - Employee failed to wash hands before putting on gloves to initiate a task working with food.",
+6571599,MILLER'S ALE HOUSE INC,7695 113 ST N,SEMINOLE,2025-09-29,5,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-09-29
 6572260,ARBY'S #156,40972 US 19 N,TARPON SPRINGS,2021-06-01,2,Inspection Completed - No Further Action,True,False,,
 6572265,ARBY'S #487,12260 SEMINOLE BLVD,LARGO,2020-07-09,1,Inspection Completed - No Further Action,False,False,,
 6572275,ARBY'S #1499,30263 US 19 N,CLEARWATER,2020-12-28,1,Warning Issued,False,False,,
@@ -1210,8 +1210,8 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 6608143,DON CESAR - SOCIETY TABLE,3400 GULF BLVD,ST.PETE BEACH,2026-03-10,1,Inspection Completed - No Further Action,False,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2026-03-10
 6608164,DON CESAR BANQUET KITCHEN,3400 GULF BLVD,ST.PETE BEACH,2021-04-15,1,Inspection Completed - No Further Action,False,False,,
 6608938,DONCHOS LATIN BISTRO,299 69 ST,CLEARWATER,2020-12-07,1,Inspection Completed - No Further Action,False,False,,
-6609265,MI CARRETA RESTAURANT & BAKERY,2705 54 AVE N,ST. PETERSBURG,2026-02-26,4,Call Back - Complied,True,False,Plastic cup used to scoop ice at rear wait station ice machine.,
-6610686,SLYCE,662 150TH AVENUE,MADEIRA BEACH,2026-02-05,2,Inspection Completed - No Further Action,True,False,"Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Pizza prep cooler not properly holding temp, items being held in ice bath until repairs are made Basic - Plumbing system in disrepair. Pizza prep cooler - bbq chicken (50F - Cold Holding); roasted peppers (49F -…",
+6609265,MI CARRETA RESTAURANT & BAKERY,2705 54 AVE N,ST. PETERSBURG,2026-02-26,4,Call Back - Complied,True,False,"Ceiling tile in wait station area, located at the rear of the establishment, tiles not smooth and easily cleanable.employee observed cutting produce and preparing ice.",2025-09-11
+6610686,SLYCE,662 150TH AVENUE,MADEIRA BEACH,2026-02-05,2,Inspection Completed - No Further Action,True,False,"Pizza prep cooler - bbq chicken (50F - Cold Holding); roasted peppers (49F - Cold Holding), staff added ice",2026-02-05
 6611005,I THAI & SUSHI,11002 SEMINOLE BLVD,LARGO,2021-04-26,5,Emergency Order Callback Complied,True,False,,
 6611461,THE GALLEY,27 4 ST N,ST. PETERSBURG,2026-01-22,4,Inspection Completed - No Further Action,True,False,Food items in pullout drawers above flat: raw grouper (46F - Cold Holding); raw steak (46F - Cold Holding); raw ground beef patty (45F - Cold Holding) Bags of ice were placed on top of food items to bring the temperatures down.,2025-09-29
 6612599,ACQUA ALTA,2454 N MCMULLEN BOOTH RD  STE 205,CLEARWATER,2020-10-22,1,Inspection Completed - No Further Action,False,False,,
@@ -1241,7 +1241,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 6640817,BEST WESTERN PLUS YACHT HARBOR INN #10226,150 MARINA PLAZA,DUNEDIN,2026-02-09,1,Warning Issued,False,False,,
 6646310,KARMA JUICE BAR & EATERY,2095 DREW ST,CLEARWATER,2020-12-10,1,Inspection Completed - No Further Action,False,False,,
 6647026,BRAVO NY PIZZERIA,100 MAIN STREET SUITE 104,SAFETY HARBOR,2020-12-22,2,Administrative complaint recommended,True,False,,
-6647442,ANNEX 400 BEACH,400 BEACH DRIVE NE # 130,ST. PETERSBURG,2026-02-11,4,Warning Issued,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine soiled with pink substance.,
+6647442,ANNEX 400 BEACH,400 BEACH DRIVE NE # 130,ST. PETERSBURG,2026-02-11,4,Warning Issued,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Ice machine interior soiled with pink mold like substance and lime scale build up in front counter area.,2025-08-14
 6648729,DUNKIN DONUTS,3920 ULMERTON ROAD,CLEARWATER,2021-03-10,1,Inspection Completed - No Further Action,False,False,,
 6652120,BUONA RISTORANTE,4705 GULF BLVD,ST.PETE BEACH,2025-11-20,3,Inspection Completed - No Further Action,True,False,,
 6652326,DECCAN SPICE TAMPA BAY,2325 ULMERTON RD STE 28,CLEARWATER,2021-03-12,11,Emergency Order Callback Time Extension,True,False,,
@@ -1249,7 +1249,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 6653018,FLAPJACKS,3101 SR 580 STE G,SAFETY HARBOR,2021-02-16,1,Inspection Completed - No Further Action,False,False,,
 6660678,CULVER'S OF PINELLAS PARK,4702 PARK BLVD,PINELLAS PARK,2021-05-19,5,Warning Issued,True,False,,
 6662177,SQUARE PLATE RESTAURANT,9131 US HWY 19 N,PINELLAS PARK,2020-09-02,1,Inspection Completed - No Further Action,False,False,,
-6663699,DUNKIN DONUTS,8650 49TH ST N,PINELLAS PARK,2020-10-02,2,Warning Issued,True,False,Ice scoop handle in contact with ice. Ice well at front counter Basic - Single-service articles not stored inverted or protected from contamination.,
+6663699,DUNKIN DONUTS,8650 49TH ST N,PINELLAS PARK,2020-10-02,2,Warning Issued,True,False,,
 6664128,WENDY'S PROPERTIES LLC,3335 ULMERTON RD,CLEARWATER,2021-01-04,2,Inspection Completed - No Further Action,True,False,,
 6664982,SIAM THAI & SUSHI,5460 EAST BAY DR SUITE 100,CLEARWATER,2026-05-01,3,Administrative complaint recommended,True,False,,
 6665559,BLINKERS BEACHSIDE,476-478 MANDALAY AVE,CLEARWATER,2021-05-04,2,Inspection Completed - No Further Action,True,False,,
@@ -1279,7 +1279,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 6720333,WESTSHORE PIZZA,2989 W BAY DR,BELLEAIR BLUFFS,2020-10-28,1,Inspection Completed - No Further Action,False,False,,
 6721477,GOLDEN WOK CHINA BUFFET,1410 N MISSOURI AVE,LARGO,2020-12-16,1,Inspection Completed - No Further Action,False,False,,
 6722457,SEIKAKU,1269 BAYSHORE BLVD,DUNEDIN,2021-06-11,2,Inspection Completed - No Further Action,True,False,,
-6722523,SEA DOG BREWING COMPANY,9610 GULF BLVD,TREASURE ISLAND,2026-01-26,6,"Call Back - Extension given, pending",True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Downstairs ice bin next to walk in beer cooler. Upstairs ice bin in server station.,
+6722523,SEA DOG BREWING COMPANY,9610 GULF BLVD,TREASURE ISLAND,2026-01-26,6,"Call Back - Extension given, pending",True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Downstairs ice bin next to walk in beer cooler. Upstairs ice bin in server station.,2026-01-26
 6724459,GRACE ST PETE,120 8 AVE,ST.PETE BEACH,2021-06-25,2,Inspection Completed - No Further Action,True,False,,
 6729016,WESTSHORE PIZZA,2824 54 AVE S,ST. PETERSBURG,2020-08-24,1,Administrative complaint recommended,False,False,,
 6730940,PHO BOWL EXPRESS,1550 N MCMULLEN BOOTH RD STE F4,CLEARWATER,2026-04-01,3,Inspection Completed - No Further Action,True,False,Ice buildup in reach-in freezer and/or walk-in freezer. Heavy ice buildup on speed reach in walk-in freezer,2025-09-22
@@ -1301,7 +1301,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 6767021,DUNKIN DONUTS,3934 49 STREET NORTH,ST. PETERSBURG,2025-10-21,1,Inspection Completed - No Further Action,False,False,,
 6767085,DUNKIN DONUTS,13050 WALSINGHAM ROAD,LARGO,2020-07-30,1,Inspection Completed - No Further Action,False,False,,
 6768070,MAGGIE ON THE MOVE,7101 BURLINGTON AVE N,ST. PETERSBURG,2021-02-17,1,Inspection Completed - No Further Action,False,False,,
-6768124,WAFFLE HOUSE,2510 SUNSET POINT,CLEARWATER,2026-02-10,2,Inspection Completed - No Further Action,True,False,Accumulation of black mold-like substance in the interior of the ice bin in the back corner area .,
+6768124,WAFFLE HOUSE,2510 SUNSET POINT,CLEARWATER,2026-02-10,2,Inspection Completed - No Further Action,True,False,Accumulation of black mold-like substance in the interior of the ice bin in the back corner area .,2026-02-10
 6771181,MOONLIGHT TEAHOUSE,6129 PARK BLVD,PINELLAS PARK,2020-10-15,1,Inspection Completed - No Further Action,False,False,,
 6772214,PHO KIEN GIANG ,8730 49 ST N UNIT 13,PINELLAS PARK,2021-03-08,2,Inspection Completed - No Further Action,True,False,,
 6772955,LONGHORN STEAKHOUSE # 5576,2400 TYRONE BLVD,ST. PETERSBURG,2026-04-14,3,Emergency order recommended,True,False,,
@@ -1331,7 +1331,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 6814683,CHICKEN SALAD CHICK,7839 113TH STREET NORTH STE A&B,SEMINOLE,2020-11-16,1,Inspection Completed - No Further Action,False,False,,
 6815251,OZONA PIZZA,404 ORANGE ST,PALM HARBOR,2026-06-04,1,Inspection Completed - No Further Action,False,False,,
 6815978,PHO HA TIEN,6139 PARK BLVD,PINELLAS PARK,2021-03-24,2,Inspection Completed - No Further Action,True,False,,
-6816352,JIMMYS SUSHI BAR JAPANESE LLC,5731 SEMINOLE BLVD,SEMINOLE,2026-01-27,5,Call Back - Complied,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,
+6816352,JIMMYS SUSHI BAR JAPANESE LLC,5731 SEMINOLE BLVD,SEMINOLE,2026-01-27,5,Call Back - Complied,True,False,"In-use ice scoop stored on soiled surface between uses. Ice scoop by ice machine stored on dirty nonfood contact surfaces, on top of an inverted bucket touching a fan",2025-09-09
 6818789,OEC SUSHI & HIBACHI,13847 WALSINGHAM RD  UNIT G,LARGO,2021-02-04,1,Inspection Completed - No Further Action,False,False,,
 6821975,BAR 23FIFTY,2350 CURLEW RD,PALM HARBOR,2025-10-22,6,Inspection Completed - No Further Action,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-10-21
 6825867,"BOATHOUSE RESTAURANT, P S GRIND COFFEE SHOP, STAMPS INTERIOR BAR",6300 GULF BLVD,ST.PETE BEACH,2021-03-12,2,Inspection Completed - No Further Action,True,False,,
@@ -1346,7 +1346,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 6837737,LA GLORIA RESTAURANT,8232 ULMERTON RD,LARGO,2020-11-20,2,Warning Issued,True,False,,
 6839728,OLDE BAY CAFE & DUNEDIN FISH MARKET,51 MAIN ST,DUNEDIN,2020-12-15,2,Inspection Completed - No Further Action,True,False,,
 6840994,PAULS CHICAGO PIZZA,11002 4 ST N,ST. PETERSBURG,2020-12-11,2,Inspection Completed - No Further Action,True,False,,
-6845160,BOB EVANS RESTAURANT 158,2410 66 ST N,ST. PETERSBURG,2026-02-04,3,Inspection Completed - No Further Action,True,False,- From follow-up inspection 2026-02-09: - From follow-up inspection 2026-02-10: Basic - - From initial inspection : Basic - Ice buildup on floor in walk-in freezer.,
+6845160,BOB EVANS RESTAURANT 158,2410 66 ST N,ST. PETERSBURG,2026-02-04,3,Inspection Completed - No Further Action,True,False,Ice buildup on floor in walk-in freezer.,2026-02-04
 6848600,BOB EVANS RESTAURANT 582,2183 GULF TO BAY BLVD,CLEARWATER,2026-03-16,4,Inspection Completed - No Further Action,True,False,Cold holding equipment( cold well between grills - no ice inside unit as usual ) not maintained in good repair.,2025-08-05
 6854310,SMUGGLER'S ISLAND PUB,1101 NEBRASK AVE,PALM HARBOR,2021-02-02,1,Inspection Completed - No Further Action,False,False,,
 6855505,CARVEL,33223 US 19 N,PALM HARBOR,2020-09-08,2,Warning Issued,True,False,,
@@ -1436,7 +1436,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 6994309,PERKINS,2626 GULF TO BAY BLVD,CLEARWATER,2026-03-27,3,Warning Issued,True,False,,
 6996553,CONNIES BAR B Q,3065 18 AVE S,ST. PETERSBURG,2026-05-18,1,Inspection Completed - No Further Action,False,False,,
 6997508,CHEDDAR'S SCRATCH KITCHEN,2655 ROOSEVELT BLVD,CLEARWATER,2021-06-18,5,Inspection Completed - No Further Action,True,False,,
-6998375,STONE SOUP CAFE & PUB,4122 16 ST N,ST. PETERSBURG,2020-11-10,2,Inspection Completed - No Further Action,True,False,Items stored in hand wash sink located at ice machine. Hand wash sink located at ice machine used to store pesticide sprays.,
+6998375,STONE SOUP CAFE & PUB,4122 16 ST N,ST. PETERSBURG,2020-11-10,2,Inspection Completed - No Further Action,True,False,,
 7002002,CHEN'S CHINA KING,10439 ULMERTON RD,LARGO,2025-11-06,4,Call Back - Complied,True,False,,
 7007345,CARVOR'S FISH HOUSE,907 DOUGLAS AVE,DUNEDIN,2020-10-07,1,Inspection Completed - No Further Action,False,False,,
 7008977,FENWAY HOTEL,453 EDGEWATER DR,DUNEDIN,2026-04-16,4,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine soiled of black mold like substance.,2025-12-18
@@ -1465,13 +1465,13 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7038684,BANELLY TIENDA Y TAQUERIA,"901 S MISSOURI AVE, SUITE B",CLEARWATER,2025-12-16,1,Inspection Completed - No Further Action,False,False,,
 7043639,SHOGUN JAPANESE INC,34980 US 19 N,PALM HARBOR,2026-04-23,6,Inspection Completed - No Further Action,True,False,,
 7043713,SALT PUBLIC HOUSE,1309 GULF BLVD,INDIAN ROCKS BEACH,2021-03-31,5,Call Back - Complied,True,False,,
-7047853,TOP SLICE,21 3 ST N,ST. PETERSBURG,2026-01-28,5,Inspection Completed - No Further Action,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,
+7047853,TOP SLICE,21 3 ST N,ST. PETERSBURG,2026-01-28,5,Inspection Completed - No Further Action,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2026-01-28
 7053195,CHINA WOK MAXIMO INC,5055 34 ST S,ST. PETERSBURG,2025-10-27,4,Warning Issued,True,False,Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup up in reach-in freezer behind front counter,2025-10-27
 7053950,FLIPPERS PIZZERIA #20 LLC,1054 4 ST,ST PETERSBURG,2025-09-03,3,Warning Issued,True,False,Observed food debris inside hand sink next to pizza oven on cook line and ice in the hand sink across from display cooler with bottled sodas.,2025-09-03
 7053984,FRESHII,1737 MAIN ST,DUNEDIN,2020-09-02,1,Inspection Completed - No Further Action,False,False,,
-7056596,OUTBACK STEAKHOUSE,7885 113TH STREET,SEMINOLE,2026-01-14,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,
+7056596,OUTBACK STEAKHOUSE,7885 113TH STREET,SEMINOLE,2026-01-14,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2026-01-14
 7056677,BROS PIZZERIA AND BAR,2535 E BAY DR,LARGO,2026-03-31,4,Warning Issued,True,False,,
-7057348,BENEDICT'S,2632 BAYSHORE BLVD,DUNEDIN,2026-02-11,6,Administrative complaint recommended,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Observed a mold like substance inside small ice machine in server area at time of inspection Basic - Old labels stuck to food containers after cleaning.,
+7057348,BENEDICT'S,2632 BAYSHORE BLVD,DUNEDIN,2026-02-11,6,Administrative complaint recommended,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Observed a mold like substance inside small ice machine in server area at time of inspection,2026-02-11
 7058287,IKIGAI SUSHI TAKE OUT,4195 54 AVE N  UNIT E,ST. PETERSBURG,2026-02-25,1,Inspection Completed - No Further Action,False,False,,
 7060885,GOLDEN DINOSAURS VEGAN DELI,2930 BEACH BLVD S,GULFPORT,2021-01-25,2,Warning Issued,True,False,,
 7061049,POMPEY SEAFOOD,1760 DREW ST,CLEARWATER,2021-05-24,1,Inspection Completed - No Further Action,False,False,,
@@ -1584,7 +1584,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7235911,WINGSTOP,2090 GULF TO BAY BLVD,CLEARWATER,2026-03-04,4,Warning Issued,True,False,- soiled ice chute at self service soda dispenser,2026-03-04
 7237362,JASON'S DELI,25801 US 19 N #1110,CLEARWATER,2021-01-22,1,Inspection Completed - No Further Action,False,False,,
 7238229,SENOR SUBS & GYROS,1364 CLEVELAND ST,CLEARWATER,2026-01-09,3,Inspection Completed - No Further Action,True,False,Manager labeled milk Intermediate - Food-contact surface ( ice chute ) soiled with food debris or mold-like substance at customer beverage station .,
-7242365,OYSTER SHUCKER INC,650 COREY AVE,ST.PETE BEACH,2026-01-23,5,Warning Issued,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine soiled with black and red mold like substance.,
+7242365,OYSTER SHUCKER INC,650 COREY AVE,ST.PETE BEACH,2026-01-23,5,Warning Issued,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine soiled with black and red mold like substance.,2026-01-23
 7243839,CHICK-FIL-A TYRONE BOULEVARD,2471 TYRONE BLVD N,ST. PETERSBURG,2020-08-18,2,"Call Back - Extension given, pending",True,False,,
 7244758,CHARLEY'S PHILLY STEAKS,9080 ULMERTON RD,LARGO,2025-07-01,1,Inspection Completed - No Further Action,False,False,sliced provolone cheese (60F - Cold Holding) Operator placed item in ice bath.,2025-07-01
 7245036,PHO BOWL EXPRESS,600 ALT 19 N,PALM HARBOR,2020-12-23,2,Inspection Completed - No Further Action,True,False,,
@@ -1642,7 +1642,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7323444,PARADISE GRILLE,900 GULF WAY,ST.PETE BEACH,2025-07-01,4,Warning Issued,True,False,,
 7323448,PARADISE GRILLE,6850 BEACH PLAZA DR,ST.PETE BEACH,2026-04-08,4,Administrative complaint recommended,True,False,"Pooled eggs 48f, egg wash 46f, ice added to container.",2026-04-08
 7323811,LIL NET'¿S,1500 16 ST S,ST. PETERSBURG,2020-09-30,1,Inspection Completed - No Further Action,False,False,,
-7330096,FISH BOWL,2882 US ALT 19 N,PALM HARBOR,2026-02-17,4,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice chute has accumulation of mold like substance.,
+7330096,FISH BOWL,2882 US ALT 19 N,PALM HARBOR,2026-02-17,4,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice chute has accumulation of mold like substance.,2026-02-17
 7333091,TEQUILA MEXICAN GRILL & CANTINA ,422 CLEVELAND  STREET,CLEARWATER,2026-05-07,4,Inspection Completed - No Further Action,True,False,,
 7335443,THE BIG CATCH AT SALT CREEK,1500 2 ST S,ST. PETERSBURG,2026-05-06,7,"Call Back - Extension given, pending",True,False,"Hand sink next to ice machine, water temporarily shut off due to previous repairs, manager turns water on",2025-07-07
 7340677,GLORY DAYS GRILL,4088 PARK ST NORTH,ST. PETERSBURG,2025-12-31,10,Warning Issued,True,False,"-Walk in freezer door cannot close, causing ice buildup further inhibiting it from closing. - From follow-up inspection 2025-12-31: Basic - - From initial inspection : Basic - Ice buildup in walk-in freezer not allowing freezer door to shut - From follow-up inspection 2025-12-31: Basic - - From…",
@@ -1671,7 +1671,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7371204,POPPO'S TAQUERIA,1033 CENTRAL AVE,ST. PETERSBURG,2025-07-25,4,Warning Issued,True,False,,
 7371600,SOCIAL ROOST,"150 1 AVE N, ONE TOWER",ST. PETERSBURG,2021-06-02,2,Administrative complaint recommended,True,False,,
 7372403,WHISKEY WINGS,10400 ROOSEVELT BLVD,ST. PETERSBURG,2026-03-26,6,Emergency order recommended,True,False,Walk in freezer stored bucket of ice cream on self of reach in cooler not covered.,2026-03-26
-7376337,MIO'S GRILL AND CAFE,119 2 ST N,ST. PETERSBURG,2026-02-17,4,Warning Issued,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Basic - Ice buildup in reach-in freezer and/or walk-in freezer.,
+7376337,MIO'S GRILL AND CAFE,119 2 ST N,ST. PETERSBURG,2026-02-17,4,Warning Issued,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Ice machine interior soiled with yellow substance.,2025-10-14
 7381232,COCO CORONADO,317 CORONADO DR,CLEARWATER BEACH,2025-11-24,3,Warning Issued,True,False,Ice machines missing outer doors specified by approved plan review.,2025-11-24
 7383433,KIMS FAMILY RESTAURANT,2101 STARKEY RD L4 L5,LARGO,2026-04-03,3,Inspection Completed - No Further Action,True,False,,
 7383587,PHILA DELI,1120 PINELLAS BAYWAY S STE 106,TIERRA VERDE,2021-02-26,4,Call Back - Complied,True,False,,
@@ -1738,7 +1738,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7450414,CHECKERS,3501 34 ST N,ST. PETERSBURG,2021-04-29,1,Inspection Completed - No Further Action,False,False,,
 7450656,RUMFISH GRILL,6000 GULF BLVD,ST.PETE BEACH,2026-04-14,4,Inspection Completed - No Further Action,True,False,,
 7451720,BARFLY - FISH SHACK BAR & GRILL,1026 NEBRASKA AVE,PALM HARBOR,2021-02-02,2,Inspection Completed - No Further Action,True,False,,
-7451976,BOOK + BOTTLE,17 6TH ST N,ST. PETERSBURG,2026-01-21,1,Inspection Completed - No Further Action,False,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,
+7451976,BOOK + BOTTLE,17 6TH ST N,ST. PETERSBURG,2026-01-21,1,Inspection Completed - No Further Action,False,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2026-01-21
 7452034,TRADEWINDS RESORT TROPIC TREATS,5700 GULF BLVD,ST.PETE BEACH,2021-02-16,2,Inspection Completed - No Further Action,True,False,,
 7452087,BERMUDA'S,5700 GULF BLVD,ST.PETE BEACH,2021-03-10,2,Inspection Completed - No Further Action,True,False,,
 7453435,THE CHEFS TABLE CAFE,1258 S HIGHLAND AVE ,CLEARWATER,2021-01-20,1,Inspection Completed - No Further Action,False,False,,
@@ -1768,7 +1768,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7522446,WATER OAK GRILL,201 MAIN ST #100,SAFETY HARBOR,2025-12-19,2,Inspection Completed - No Further Action,True,False,,
 7522863,THE TIKI BAR @ 56TH AND SHORE,5519 SHORE BLVD S,GULFPORT,2021-03-24,1,Inspection Completed - No Further Action,False,False,,
 7523623,HOMEWOOD SUITES ST PETERSBURG CLEARWATER,2293 ULMERTON RD,CLEARWATER,2021-06-24,1,Warning Issued,False,False,,
-7523809,SAUVIGNON,241 CENTRAL AVE,ST. PETERSBURG,2026-02-24,3,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Ice machine interior soiled with brown colored substance. Hand handsink next to ice machine.,
+7523809,SAUVIGNON,241 CENTRAL AVE,ST. PETERSBURG,2026-02-24,3,Inspection Completed - No Further Action,True,False,Food items in reach in cooler across from cook line: cooked potatoes (48F - Cold Holding); butter (46F - Cold Holding); raw chicken (44F - Cold Holding) Employee put ice on food items to bring down the temperatures.,2025-09-24
 7524128,THE DUKE OF RIBS LLC,6657 49TH ST N,PINELLAS PARK,2020-12-30,1,Inspection Completed - No Further Action,False,False,,
 7524284,WOK N ROLL,4725 66 ST N,KENNETH CITY,2026-04-23,7,Inspection Completed - No Further Action,True,False,Ice buildup in reach-in freezer behind cook line.,2025-11-07
 7524719,KEKE'S BREAKFAST CAFE,6862 GULFPORT BLVD S,SOUTH PASADENA,2025-12-05,2,Inspection Completed - No Further Action,True,False,Accumulation of black/pink mold-like substance in the interior of the ice machine.,
@@ -1808,14 +1808,14 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7561807,SPORTS SHACK,999 MISSOURI AVE N,LARGO,2020-07-06,1,Inspection Completed - No Further Action,False,False,,
 7562590,LONNI'S SANDWICHES,429 CENTRAL AVE,ST. PETERSBURG,2021-01-20,2,Inspection Completed - No Further Action,True,False,,
 7565672,JOHNS PASS GRILLE,111 BOARDWALK PLACE WEST STE 203,MADEIRA BEACH,2021-04-14,1,Warning Issued,False,False,,
-7565780,NEW HONG KONG LARGO INC,10801 STARKEY RD STE 5,LARGO,2026-01-13,3,Inspection Completed - No Further Action,True,False,Basic - Ice buildup in reach-in freezer and/or walk-in freezer.,
+7565780,NEW HONG KONG LARGO INC,10801 STARKEY RD STE 5,LARGO,2026-01-13,3,Inspection Completed - No Further Action,True,False,Ice buildup in reach-in freezer and/or walk-in freezer.,2025-08-06
 7565860,NAKED FARMER,200 CENTRAL AVE #150,ST. PETERSBURG,2021-03-31,1,Inspection Completed - No Further Action,False,False,,
 7566208,TASTY WINGS,2960 54TH AVE S,ST. PETERSBURG,2025-07-21,2,Warning Issued,True,False,,
 7566485,PARLOR HOUSE RESTAURANT,1757 MAIN ST,DUNEDIN,2026-05-20,4,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2026-03-25
 7567985,BUOYS BAR AND GRILL,678 75 AVE,ST PETE BEACH,2020-07-21,2,Warning Issued,True,False,,
 7568199,BASCETTIS ITALIAN GRILLE,1568 MAIN ST,DUNEDIN,2021-06-15,3,Inspection Completed - No Further Action,True,False,,
 7568904,CADDY'S ST PETE BEACH,5501 GULF BLVD UNIT 113,ST PETE BEACH,2021-04-22,3,Warning Issued,True,False,,
-7569482,CONCH REPUBLIC GRILL AND RAW BAR,16699 GULF BLVD,NORTH REDINGTON BEAC,2026-02-24,2,Inspection Completed - No Further Action,True,False,Walk in beer cooler Basic - Ice buildup in reach-in freezer and/or walk-in freezer. Basic - In-use ice scoop for ice machine located outside not stored in a protected manner between uses.,
+7569482,CONCH REPUBLIC GRILL AND RAW BAR,16699 GULF BLVD,NORTH REDINGTON BEAC,2026-02-24,2,Inspection Completed - No Further Action,True,False,"shredded cheddar (53F - Cold Holding) ice bath at service window, moved to cooler, staff added ice",2025-10-08
 7569971,THE SWEET SPOT,2609 ALT 19 STE A,PALM HARBOR,2020-11-30,2,Call Back - Admin. complaint recommended,True,False,,
 7570976,3 DAUGHTERS BREWING,14700 TERMINAL BLVD,CLEARWATER,2026-02-04,1,Inspection Completed - No Further Action,False,False,,
 7571974,WORLD BURGER,25778 US 19 N,CLEARWATER,2021-06-11,1,Inspection Completed - No Further Action,False,False,,
@@ -1837,7 +1837,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7584942,THE FORGE WOOD FIRED PIZZA,205  DEMPSEY RD,PALM HARBOR,2021-01-21,2,"Call Back - Extension given, pending",True,False,,
 7586715,NACHO DADDY,3390 GANDY BLVD,ST. PETERSBURG,2021-06-24,1,Administrative complaint recommended,False,False,,
 7588351,MADELINES FALAFEL AND SHAWARMA INC,13 N PINELLAS AVE,TARPON SPRINGS,2026-04-22,3,Emergency order recommended,True,False,,
-7589502,MORI SUSHI,1136 94 AVE N,ST. PETERSBURG,2026-02-11,16,Emergency Order Callback Not Complied,True,False,- From follow-up inspection 2026-02-11: Basic - - From initial inspection : Basic - Small Ice buildup in reach-in freezer left side.,
+7589502,MORI SUSHI,1136 94 AVE N,ST. PETERSBURG,2026-02-11,16,Emergency Order Callback Not Complied,True,False,- From initial inspection : Basic - Small Ice buildup in reach-in freezer left side.,2026-02-11
 7589951,THE URBAN STILLHOUSE,2232 5 AVE S,ST. PETERSBURG,2026-06-19,5,Inspection Completed - No Further Action,True,False,,
 7590162,FIREHOUSE SUBS,1547 MAIN ST,DUNEDIN,2020-12-08,2,Inspection Completed - No Further Action,True,False,,
 7591178,WRAPS & KABOBS,40715 US 19 ,TARPON SPRINGS,2025-10-06,2,Inspection Completed - No Further Action,True,False,,
@@ -1851,7 +1851,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7595800,WINGSTOP,10125 ULMERTON RD,LARGO,2020-09-08,1,Inspection Completed - No Further Action,False,False,,
 7598450,LARGO FAMILY DINER,11335 STARKEY RD,LARGO,2021-01-19,5,Call Back - Admin. complaint recommended,True,False,,
 7598860,KARMA JUICE BAR & EATERY,1113 CENTRAL AVE,ST. PETERSBURG,2020-09-15,2,Inspection Completed - No Further Action,True,False,,
-7599612,MR & MRS CRAB,6798 CROSSWINDS DR N,ST. PETERSBURG,2026-01-26,3,Warning Issued,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine.,
+7599612,MR & MRS CRAB,6798 CROSSWINDS DR N,ST. PETERSBURG,2026-01-26,3,Warning Issued,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-07-21
 7600923,ORANGE BLOSSOM CAFE,2101 MULTREES XING UNIT 101,DUNEDIN,2020-10-07,1,Inspection Completed - No Further Action,False,False,,
 7604801,WEPA LATIN FUSION,2149 3 AVE S UNIT 6,ST. PETERSBURG,2021-04-15,2,Inspection Completed - No Further Action,True,False,,
 7605907,CHARLEY'S PHILLY STEAKS,27001 US HWY 19 STE 2085,CLEARWATER,2021-01-14,1,Inspection Completed - No Further Action,False,False,,
@@ -1865,7 +1865,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7612423,LITTLE GREEK FRESH GRILL,320 E  LAKE RD,PALM HARBOR,2025-12-17,4,Warning Issued,True,False,,
 7613262,SOFIAS GREEK CAFE,1446 S BELCHER RD,CLEARWATER,2020-12-07,2,Warning Issued,True,False,,
 7618899,THE WHISKEY EXCHANGE,540 CENTRAL AVE,ST. PETERSBURG,2021-03-03,2,Administrative complaint recommended,True,False,,
-7619296,CHILE VERDE,2801 22 AVE N,ST. PETERSBURG,2025-12-11,5,Emergency order recommended,True,False,- From follow-up inspection 2025-12-11: - From follow-up inspection 2026-02-10: Basic - - From initial inspection : Basic - Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup up inside white reach-in chest freezers in rear prep area.,
+7619296,CHILE VERDE,2801 22 AVE N,ST. PETERSBURG,2025-12-11,5,Emergency order recommended,True,False,"Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine with black and red mold like substance. Operator directed employee to cover and protect ice, and instructed to clean.",2025-12-10
 7619357,CHECKERS 5998,33225 US HWY 19 N,PALM HARBOR,2020-07-21,1,Emergency order recommended,False,False,,
 7619391,GIOVANNI'S FRESH EXPRESS,34940 US HWY 19 N,PALM HABOR,2020-09-29,1,Warning Issued,False,False,,
 7620339,GRANT'S CRAB & SEAFOOD MOBILE,13030 STARKEY RD 3,LARGO,2025-10-24,1,Inspection Completed - No Further Action,False,False,,
@@ -1888,7 +1888,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7634217,RIZZOLIS,"2340  STATE ROAD 580, SUITE#H",CLEARWATER,2026-03-19,4,Warning Issued,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Observed a mold like substance on white plastic shield inside ice machine bin at time of inspection.,2025-12-16
 7634411,ALINA CAFE LLC,9721 66TH ST 66TH STREET NORTH,PINELLAS,2020-09-16,4,Warning Issued,True,False,,
 7635272,MOES SOUTHWEST GRILL #135,4011 TAMPA RD  UNIT 14,OLDSMAR,2021-02-05,2,Inspection Completed - No Further Action,True,False,,
-7635472,MOES SOUTHWEST GRILL #204,2679 GULF TO BAY BLVD STE 590,CLEARWATER,2026-02-18,2,Warning Issued,True,False,Ice bucket not inverted on ice machine in back kitchen Basic - Current Hotel and Restaurant license not displayed.,
+7635472,MOES SOUTHWEST GRILL #204,2679 GULF TO BAY BLVD STE 590,CLEARWATER,2026-02-18,2,Warning Issued,True,False,Ice bucket not inverted on ice machine in back kitchen,2026-02-18
 7635671,BELLA'S RISTORANTE PIZZERIA AND BAR INC,7141 GULF BLVD,ST PETE BEACH,2020-12-09,1,Warning Issued,False,False,,
 7637812,CLUB 201 AT THE DETROIT,201 CENTRAL  CENTRAL AVE,SAINT PETERSBURG,2021-01-12,1,Warning Issued,False,False,,
 7638163,LITTLE INDIA,25000 US HWY 19 N,CLEARWATER,2021-03-22,2,Inspection Completed - No Further Action,True,False,,
@@ -1906,7 +1906,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7656857,LOADED,1901 DREW STREET,CLEARWATER,2025-09-10,1,Inspection Completed - No Further Action,False,False,,
 7657809,BURGERFI ST PETE,875 CENTRAL AVE,ST. PETERSBURG,2021-03-30,1,Inspection Completed - No Further Action,False,False,,
 7657824,THE PELICAN CLUB,1501 INDIAN ROCKS ROAD,BELLEAIR,2020-11-06,1,Inspection Completed - No Further Action,False,False,,
-7658195,BODEGA ON CENTRAL,1180 CENTRAL AVE,ST. PETERSBURG,2025-07-31,2,Inspection Completed - No Further Action,True,False,Hand wash sink at front counter used for dumping drink ice and waste.,
+7658195,BODEGA ON CENTRAL,1180 CENTRAL AVE,ST. PETERSBURG,2025-07-31,2,Inspection Completed - No Further Action,True,False,Ice scoop handle in contact with ice located in ice machine bin in kitchen.,2025-07-31
 7658585,VINNY'S PIZZERIA I,312 W BAY DR,LARGO,2021-03-01,1,Warning Issued,False,False,,
 7658797,VERDUCCI,7800 BLIND PASS RD,ST PETE BEACH,2020-12-18,1,Inspection Completed - No Further Action,False,False,,
 7663715,SHELL SHACK CLEARWATER,27001 US 19 N,CLEARWATER,2021-03-18,2,Call Back - Complied,True,False,,
@@ -1952,7 +1952,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7723407,GIUSEPPE'S PIZZERIA,6690 GULF BLVD,ST.PETE BEACH,2021-02-16,2,Inspection Completed - No Further Action,True,False,,
 7723497,RED TIKI BAR,7361 46 AVE N,ST. PETERSBURG,2026-01-14,6,Administrative complaint recommended,True,False,,
 7724638,JERMAINE C PHILLIPS,5155 HAINES RD,ST. PETERSBURG,2020-12-17,1,Inspection Completed - No Further Action,False,False,,
-7725265,V9 EATS,5800 9 AVE N,ST. PETERSBURG,2026-02-09,1,Inspection Completed - No Further Action,False,False,Accumulation of black mold-like substance in the interior of the ice machine.,
+7725265,V9 EATS,5800 9 AVE N,ST. PETERSBURG,2026-02-09,1,Inspection Completed - No Further Action,False,False,Accumulation of black mold-like substance in the interior of the ice machine.,2026-02-09
 7725308,SHISO CRISPY,874 N TAMPA ST,TAMPA,2026-04-15,1,Inspection Completed - No Further Action,False,False,,
 7725334,STICK IT STREET KITCHEN,"3993 TYRONE BLVD N STE 304, SUITE 304",SAINT PETERSBURG,2021-02-09,1,Inspection Completed - No Further Action,False,False,,
 7725934,SOUTHERN EXPOSURE PUB & GRUB,326 1 AVE N,ST. PETERSBURG,2020-08-07,2,Call Back - Complied,True,False,,
@@ -2005,17 +2005,17 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7761805,SWINGERS,2501 CENTRAL AVE,ST. PETERSBURG,2021-05-12,2,Warning Issued,True,False,,
 7762587,SONIC DRIVE-IN #5021,7725 49TH STREET N,PINELLAS PARK,2026-04-06,5,Inspection Completed - No Further Action,True,False,Not using time as a public health control shredded cheddar cheese (64F - Cold Holding) Added more ice to holder.,2026-04-06
 7764076,JOE WHISKEYS SPORTS BAR,27417 WESLEY CHAPEL BLVD,WESLEY CHAPEL ,2025-08-22,1,Call Back - Admin. complaint recommended,False,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine - From follow-up inspection 2025-08-22:,2025-08-22
-7764537,HUNGRY CRAB,13101 SEMINOLE BLVD,LARGO,2026-02-17,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,
+7764537,HUNGRY CRAB,13101 SEMINOLE BLVD,LARGO,2026-02-17,2,Inspection Completed - No Further Action,True,False,"Staff observed eating next to ice machine, then proceeded to to put on gloves and handle food with no hand wash, discussed proper hand washing procedures",2025-09-29
 7767313,VINO SIMPATICO,722 PASADENA AVE S,SOUTH PASADENA,2026-03-09,1,Warning Issued,False,False,,
 7769069,REC DEC ST PETE,380 105 TERRACE NE,ST. PETERSBURG,2021-01-05,1,Inspection Completed - No Further Action,False,False,,
 7770950,KEKE'S BREAKFAST CAFE,10500 ULMERTON RD STE 760,LARGO,2021-03-12,1,Inspection Completed - No Further Action,False,False,,
 7771021,TROPICUBAN CAFE ,5772 54 AVE N,KENNETH CITY,2021-02-24,1,Inspection Completed - No Further Action,False,False,,
-7773652,BENEDICTS RESTAURANT,9342 OAKHURST RD,SEMINOLE,2026-01-26,4,Inspection Completed - No Further Action,True,False,"Grease accumulation under cook line Basic - In-use ice scoop stored on soiled surface between uses. Ice scoop stored directly on top of ice machine, manager removed and placed in clean container Basic - In-use knife/knives stored in cracks between pieces of equipment.",
+7773652,BENEDICTS RESTAURANT,9342 OAKHURST RD,SEMINOLE,2026-01-26,4,Inspection Completed - No Further Action,True,False,"In-use ice scoop stored on soiled surface between uses. Ice scoop stored directly on top of ice machine, manager removed and placed in clean container",2026-01-26
 7774687,STEAK N SHAKE,10555  ULMERTON RD,LARGO,2020-12-21,1,Inspection Completed - No Further Action,False,False,,
 7775293,COCONUT CHARLIE'S GRILL,6110 GULF BLVD,ST.PETE BEACH,2026-05-04,3,Inspection Completed - No Further Action,True,False,,
 7775936,TARA'S KITCHEN,833 22ND STREET S,ST. PETERSBURG,2026-06-16,1,Warning Issued,False,False,,
 7778784,GRILL FRESH,2485 NEBRASKA AVE,PALM HARBOR,2020-10-28,1,Inspection Completed - No Further Action,False,False,,
-7781998,SALEM'S FRESH EATS,1701 34 ST S,ST. PETERSBURG,2026-01-29,1,Inspection Completed - No Further Action,False,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice chute at customer drink fountain with black/green mold like substance.,
+7781998,SALEM'S FRESH EATS,1701 34 ST S,ST. PETERSBURG,2026-01-29,1,Inspection Completed - No Further Action,False,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice chute at customer drink fountain with black/green mold like substance.,2026-01-29
 7784557,ZAXBY'S,8585 ULMERTON RD,LARGO,2021-03-18,1,Inspection Completed - No Further Action,False,False,,
 7784608,ZAXBY'S,7520 BELCHER RD,PINELLAS PARK,2025-07-16,2,Inspection Completed - No Further Action,True,False,,
 7784930,SILKS,37100 US HWY 19,PALM HARBOR,2026-05-05,2,Inspection Completed - No Further Action,True,False,,
@@ -2032,9 +2032,9 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7824319,CAMPANELLA'S RESTAURANT & PIZZERIA,7420 49 ST N,PINELLAS PARK,2021-04-28,2,Administrative complaint recommended,True,False,,
 7825471,THE CAMPUS GRIND LLC,121 7 AVE S STE 1,ST. PETERSBURG,2020-12-10,2,Call Back - Complied,True,False,,
 7825624,THE STUDIO PUBLIC HOUSE,2950 CENTRAL AVE,ST. PETERSBURG,2021-02-05,1,Inspection Completed - No Further Action,False,False,,
-7828692,MAPLE STREET BISCUIT COMPANY,662 CENTRAL AVE,ST. PETERSBURG,2026-02-20,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,
+7828692,MAPLE STREET BISCUIT COMPANY,662 CENTRAL AVE,ST. PETERSBURG,2026-02-20,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Ice machine interior soiled with black mold like substance.,2025-07-25
 7828718,MAPLE STREET BISCUIT COMPANY,7756 113 ST N STE E,SEMINOLE,2025-07-14,2,Inspection Completed - No Further Action,True,False,Ice chute soiled on soda machine,2025-07-14
-7831118,PARADECO COFFEE ROASTERS,111 2 AVE NE SUITE 101,ST. PETERSBURG,2026-02-11,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine soiled with yellow and black substance.,
+7831118,PARADECO COFFEE ROASTERS,111 2 AVE NE SUITE 101,ST. PETERSBURG,2026-02-11,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine soiled with yellow and black substance.,2026-02-11
 7831694,FORTUNATOS PIZZA STATION,4687 PARK BLVD N,PINELLAS PARK,2021-02-17,2,Warning Issued,True,False,,
 7832343,HAROLD SELTZER'S STEAKHOUSE,2930  GULF TO BAY BOULEVARD,CLEARWATER,2021-06-09,3,Warning Issued,True,False,,
 7832632,THE GREAT AMERICAN QUESADILLA COMPANY,6862  GULFPORT BLVD S,SOUTH PASADENA,2025-12-05,1,Inspection Completed - No Further Action,False,False,,
@@ -2044,7 +2044,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7836750,FLORIDA BEACH BANQUETS,5501 GULF BLVD STE 110,ST.PETE BEACH,2021-04-29,1,Inspection Completed - No Further Action,False,False,,
 7836855,CHILL RESTAURANT,363 COREY AVE,ST. PETE BEACH,2025-10-28,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-10-28
 7842774,LA GLORIA COCINA MEXICANA,4505 PARK BLVD STE 2,PINELLAS PARK,2026-04-13,4,Call Back - Admin. complaint recommended,True,False,,
-7842896,PHOLICIOUS,7839 113 ST STE D,SEMINOLE,2026-01-20,2,Inspection Completed - No Further Action,True,False,Basic - Food stored in undrained ice. Shrimp in undrained ice in deli cooler Basic - Ice scoop handle in contact with ice. Ice machine at front counter Basic - In-use utensil in non-time/temperature control for safety food not stored with handle above top of food within a closed container.,
+7842896,PHOLICIOUS,7839 113 ST STE D,SEMINOLE,2026-01-20,2,Inspection Completed - No Further Action,True,False,Food stored in undrained ice. Shrimp in undrained ice in deli cooler,2026-01-20
 7842999,THE NOSH PIT,4040  PARK ST N,ST PETERSBURG,2026-04-07,2,Inspection Completed - No Further Action,True,False,,
 7847841,NOVU AT PONCE,95 CENTRAL AVE,ST. PETERSBURG,2026-06-16,5,Warning Issued,True,False,No employee training could be provided for the employee present engaging in making scoping ice and making drinks for customers at the bar.,2026-04-07
 7848158,PLAZA MEXICO RESTAURANT BAR GRILL,34726 US 19 N,PALM HARBOR,2026-03-24,3,Inspection Completed - No Further Action,True,False,,
@@ -2067,7 +2067,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7899726,BREW GARDEN TAPHOUSE & EATERY,2241  NURSERY RD,CLEARWATER,2026-01-21,2,Inspection Completed - No Further Action,True,False,,
 7901665,HIBACHI EXPRESS,41260 US HWY 19 N,TARPON SPRINGS,2025-07-28,1,Warning Issued,False,False,,
 7906159,EL TORO NEGRO MEXICAN GRILL CANTINA CORP,5780 54  AVE N,KENNETH CITY,2026-05-07,4,Warning Issued,True,False,,
-7910474,LONNI'S SANDWICHES,429 CENTRAL AVE,SAINT PETERSBURG,2026-02-24,1,Inspection Completed - No Further Action,False,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,
+7910474,LONNI'S SANDWICHES,429 CENTRAL AVE,SAINT PETERSBURG,2026-02-24,1,Inspection Completed - No Further Action,False,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2026-02-24
 7910508,COLONY GRILL,670 CENTRAL AVE,ST. PETERSBURG,2025-10-15,1,Inspection Completed - No Further Action,False,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-10-15
 7912264,NEW HOTEL COLLECTION DOWNTOWN ST PETE,253 2 AVE N,ST. PETERSBURG,2025-10-23,2,Call Back - Complied,True,False,,
 7916695,COASTAL TACO,14601 GULF BLVD,MADEIRA BEACH,2021-03-29,1,Inspection Completed - No Further Action,False,False,,
@@ -2097,7 +2097,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7963376,FOOD STATION,472 DOUGLAS RD  E,OLDSMAR,2021-04-14,1,Warning Issued,False,False,,
 7964510,HERO KABAB AND  SHAWARMA,5281 PARK ST N,SAINT PETERSBURG ,2021-04-05,1,Inspection Completed - No Further Action,False,False,,
 7973056,POKE ISLAND PLUS,4058 TAMPA RD STE 4,OLDSMAR,2025-12-22,1,Inspection Completed - No Further Action,False,False,,
-7974156,STEAK N SHAKE,2490 SR 580,CLEARWATER,2026-01-26,2,Inspection Completed - No Further Action,True,False,"Shake mixer, ice cream machine",
+7974156,STEAK N SHAKE,2490 SR 580,CLEARWATER,2026-01-26,2,Inspection Completed - No Further Action,True,False,"Shake mixer, ice cream machine",2026-01-26
 7978218,LOS HOMIES,6351 49 ST NORTH,PINELLAS PARK,2026-01-12,1,Inspection Completed - No Further Action,False,False,,
 7983507,THAI 5 LARGO FOOD TRAILER,"13320 BELCHER RD S, UNIT 19",LARGO,2026-04-20,1,Inspection Completed - No Further Action,False,False,,
 7987599,PARADISE SWEETS,709 GULF WAY 100,ST.PETE BEACH,2021-05-10,1,Warning Issued,False,False,,
@@ -2140,20 +2140,20 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 8110927,CULVERS OF PINELLAS PARK,4702 PARK BLVD,PINELLAS PARK,2025-10-08,1,Inspection Completed - No Further Action,False,False,,
 8114409,NINE SPICES HOT POT,2543 COUNTRYSIDE BLVD STE 1,CLEARWATER,2026-01-27,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-07-14
 8118420,PALM CAFE,1143 MICHIGAN BLVD,DUNEDIN,2026-04-29,2,Inspection Completed - No Further Action,True,False,,
-8122484,FLAP JACKS,36287 US 19,PALM HARBOR,2026-02-10,2,Inspection Completed - No Further Action,True,False,Ice bucket not stored inverted.,
+8122484,FLAP JACKS,36287 US 19,PALM HARBOR,2026-02-10,2,Inspection Completed - No Further Action,True,False,"sliced pepper cheese (56F - Cold Holding) in container on cook line sitting on top of ice, coleslaw (47F - Cold Holding) in top rail of reach in cooler",2025-09-24
 8125216,MANGOS AND MARLEY CAFE,506 MAIN ST,DUNEDIN,2026-01-05,1,Inspection Completed - No Further Action,False,False,,
 8127462,MUGS JR DRIVE THRU GRILL,1972 GULF TO BAY BLVD,CLEARWATER,2025-12-22,2,Inspection Completed - No Further Action,True,False,Observed: Accumulation of black mold-like substance in the interior of the ice bin.,
-8137585,LITTLE ANTHONY'S ITALIAN PIZZERIA,407 MANDALAY AVE,CLEARWATER,2026-02-04,3,Inspection Completed - No Further Action,True,False,Dawn dish soap stored on ice machine.,
+8137585,LITTLE ANTHONY'S ITALIAN PIZZERIA,407 MANDALAY AVE,CLEARWATER,2026-02-04,3,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Clear plastic doors soiled on ice machine.,2025-07-08
 8149019,ROAM,3405 34 STREET N,ST. PETERSBURG,2025-12-10,1,Inspection Completed - No Further Action,False,False,,
 8154961,BEN AND JERRYS,409 MANDALAY AVE,CLEARWATER,2025-11-24,1,Warning Issued,False,False,Ice buildup in reach-in freezer in side room next to mop sink.,
-8157222,PORTILLO'S ,2302 TYRONE BLVD N,ST. PETERSBURG,2026-02-12,2,Administrative complaint recommended,True,False,Accumulation of black mold-like substance in the interior of the ice machine.,
+8157222,PORTILLO'S ,2302 TYRONE BLVD N,ST. PETERSBURG,2026-02-12,2,Administrative complaint recommended,True,False,Accumulation of black/pink mold-like substance in the interior of the ice machine/bin.,2025-08-11
 8160251,OLDE BAY CAFE,51 MAIN ST UNIT 1,DUNEDIN,2025-12-16,1,Inspection Completed - No Further Action,False,False,,
 8165541,FIREHOUSE SUBS,4949 4  ST N,ST. PETERSBURG,2026-03-25,1,Inspection Completed - No Further Action,False,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine soiled with black mold like debris.,2026-03-25
 8170310,AMEENAHS CATERING & EVENT DESIGN,2213 6 AVENUE SOUTH,SAINT PETERSBURG,2026-05-19,1,Inspection Completed - No Further Action,False,False,,
 8175827,COOKING WITH A PASSION,1245 18TH AVE S,ST. PETERSBURG,2026-05-26,1,Warning Issued,False,False,,
 8182267,LA SEGUNDA BAKERY,2424 4 STREET N,ST. PETERSBURG,2026-01-21,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Ice chute at drink dispenser with black and green mold-like substance.,2025-08-14
 8195092,EARLY BIRD,9131 US HWY 19 N,PINELLAS PARK,2026-03-30,2,Administrative complaint recommended,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-10-15
-8203335,RESIDENCE INN & SPRINGHILL SUITES,309 CORONADO DR,CLEARWATER,2026-02-23,2,Inspection Completed - No Further Action,True,False,Ice buckets at bar not inverted. Ice buckets stored on floor. Basic - Ice buildup in walk-in freezer at threshold.,
+8203335,RESIDENCE INN & SPRINGHILL SUITES,309 CORONADO DR,CLEARWATER,2026-02-23,2,Inspection Completed - No Further Action,True,False,Ice buildup in walk-in freezer at threshold. Ice buildup up in white chest freezer.,2025-07-15
 8214338,ALOHA TO GO,33135 US HWY 19 N,PALM HARBOR,2026-05-22,2,Inspection Completed - No Further Action,True,False,,
 8223289,THE LOCAL DRAUGHT HOUSE,1580 E CENTRAL AVE,ST PETERSBURG ,2026-04-08,2,Call Back - Admin. complaint recommended,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine located in rear room with black mold like substance. - From follow-up inspection 2026-04-08: Ice machine requires further cleaning.,2026-04-08
 8224024,BIG APPLE'S FRIED & FRESH LLC,202 BELCHER RD N,LARGO,2026-04-03,1,Inspection Completed - No Further Action,False,False,,
@@ -2165,7 +2165,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 8252489,BACKWATERS,1261 GULF BLVD 129 AND 130,CLEARWATER,2025-07-14,1,Warning Issued,False,False,Basic - - From initial inspection : Basic - Outdoor ice machine with no overhead protection. - From follow-up inspection 2025-12-29: Establishment has attempted to cover ice machine by utilizing sunshade/tarp. Ice machine and chest freezer missing cover due to hurricanes.,
 8256328,CITY'S BISTRO,3451 4TH ST N,SAINT PETERSBURG,2025-09-11,1,Inspection Completed - No Further Action,False,False,Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup up inside reach-in freezers in dry storage room.,2025-09-11
 8257709,URBAN GROUNDS,150 E TARPON AVE,TARPON SPRINGS,2025-12-10,2,Call Back - Complied,True,False,,
-8260711,BERLINS DOENER,4195 34 ST S,ST PETERSBURG,2026-01-22,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine with build up on black mold like substance.,
+8260711,BERLINS DOENER,4195 34 ST S,ST PETERSBURG,2026-01-22,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine with build up on black mold like substance.,2026-01-22
 8265313,SANDCASTLE,325 S GULFVIEW BLVD,CLEARWATER BEACH,2025-07-09,1,Inspection Completed - No Further Action,False,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-07-09
 8271676,ANTOJITOS MEXICANOS OF FLORIDA CORP,1417 CLEVELAND ST UNIT 1417,CLEARWATER,2026-03-23,2,Call Back - Complied,True,False,,
 8271930,SCULLEY'S,190 JOHN'S PASS BOARDWALK,MADEIRA BEACH,2026-03-09,2,Inspection Completed - No Further Action,True,False,"In-use ice scoop for ice machine located outside not stored in a protected manner between uses. Ice scoop and ice buckets stored outside, removed",2026-03-09
@@ -2183,11 +2183,11 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 8311637,WESTMINSTER SHORES,5560 BAHAMA SHORES DR S,ST. PETERSBURG,2025-10-06,1,Inspection Completed - No Further Action,False,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-10-06
 8312970,FIVE BUCKS DRINKERY,7498 SEMINOLE BLVD,SEMINOLE,2026-03-16,2,Inspection Completed - No Further Action,True,False,"Cook line heavily soiled- chicken dredge (63F - Cold Holding), added ice to ice bath",2026-03-16
 8320790,THE AGING STILL,11561 WALSINGHAM RD,LARGO,2025-10-21,1,Inspection Completed - No Further Action,False,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-10-21
-8320799,EDDIES'S BAR AND GRILL,9685  BAY PINES BLVD,ST PETERSBURG,2025-09-23,1,Inspection Completed - No Further Action,False,False,"Ice bucket on hand sink in kitchen, removed",
+8320799,EDDIES'S BAR AND GRILL,9685  BAY PINES BLVD,ST PETERSBURG,2025-09-23,1,Inspection Completed - No Further Action,False,False,"Ice bucket in hand sink, removed",2025-09-23
 8324057,PIA'S #2,3038 BEACH BLVD S,GULFPORT,2026-05-27,2,Inspection Completed - No Further Action,True,False,-hand wash sink by ice machine out back is missing knob on hot side Operator fixed during inspection.,2025-12-05
 8324554,CHARLEYS CHEESESTEAKS AND WINGS,5021 PARK BLVD N,PINELLAS PARK,2025-10-03,1,Administrative complaint recommended,False,False,Ice for customers inside.,2025-10-03
 8326138,RED MESA,4912 4 ST  N,ST. PETERSBURG,2025-11-04,2,Inspection Completed - No Further Action,True,False,Accumulation of brown substance in the interior of the ice machine/bin.,2025-11-04
-8334178,CHINA ONE,3665 E BAY DR STE 244,LARGO,2026-01-15,2,Inspection Completed - No Further Action,True,False,Basic - Ice buildup in reach-in freezer next to handwash sink.,
+8334178,CHINA ONE,3665 E BAY DR STE 244,LARGO,2026-01-15,2,Inspection Completed - No Further Action,True,False,Ice buildup in reach-in freezer next to handwash sink.,2026-01-15
 8340565,GREEN MARKET CAFE,7839 113 ST STE C,SEMINOLE,2025-07-02,1,Inspection Completed - No Further Action,False,False,Ice buildup in reach-in freezer and/or walk-in freezer.,2025-07-02
 8346187,THE WHARF,2001 PASS A GRILLE WAY,ST.PETE BEACH,2026-04-21,1,Inspection Completed - No Further Action,False,False,,
 8349358,HUEY MAGOOS PINELLAS PARK,4590 PARK BLVD,PINELLAS PARK,2025-10-07,1,Warning Issued,False,False,,
@@ -2195,7 +2195,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 8357622,THE FROG POND,890 3  AVE S,SAINT PETERSBURG,2026-01-13,2,Warning Issued,True,False,Container on end of cook line line: eggwash (50F - Cold Holding) Employee place container of egg wash into it a deeper container with ice all around to maintain all parts of the product at 41 degrees or below.,2026-01-13
 8359785,TASTE OF PUNJAB INDIAN CUISINE,10625 117  DR  N,LARGO,2026-03-25,1,Inspection Completed - No Further Action,False,False,,
 8360613,DOC FORD'S RUM BAR & GRILLE,8790 BAY PINES BLVD,ST. PETERSBURG,2026-04-27,2,"Call Back - Extension given, pending",True,False,,
-8362700,ST PETE BREWING COMPANY LLC,538-544 1 AVE N,ST. PETERSBURG,2026-02-02,1,Inspection Completed - No Further Action,False,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine in bar soiled with yellow substance.,
+8362700,ST PETE BREWING COMPANY LLC,538-544 1 AVE N,ST. PETERSBURG,2026-02-02,1,Inspection Completed - No Further Action,False,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine in bar soiled with yellow substance.,2026-02-02
 8371828,BONU TAVERNA,601 CENTRAL AVENUE,ST. PETERSBURG,2026-04-28,2,Inspection Completed - No Further Action,True,False,,
 8372434,KEEGAN'S SEAFOOD GRILLE,1519 GULF BLVD,INDIAN ROCKS BEACH,2025-08-28,1,Inspection Completed - No Further Action,False,False,,
 8372573,GUILTY SEA PUB AND SPORTS BAR,301 GULF BLVD,INDIAN ROCKS BEACH,2026-05-04,2,Inspection Completed - No Further Action,True,False,,
@@ -2213,13 +2213,13 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 8393834,WENDY'S OLD FASHIONED HAMBURGERS,2290 GULF TO BAY,CLEARWATER,2025-08-18,1,Administrative complaint recommended,False,False,,
 8393849,WENDY'S OLD FASHIONED HAMBURGERS,1452 PASADENA AVE S,SOUTH PASADENA,2025-08-08,2,Call Back - Admin. complaint recommended,True,False,"- From initial inspection : Basic - Ice buildup in reach-in freezer by drive thru window. Ice buildup in walk in freezer accumulating on floor, door, and making it difficult to fully shut freezer door.",2025-08-08
 8395808,LEONARDO'S PIZZERIA,31808 US HWY 19 N,PALM HARBOR,2026-05-13,2,Inspection Completed - No Further Action,True,False,,
-8396690,"ST PETE BEEFS, LLC BEEF O BRADYS",4775 34 ST S,ST. PETERSBURG,2026-01-14,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine at server wait station with black mold-like substance.,
+8396690,"ST PETE BEEFS, LLC BEEF O BRADYS",4775 34 ST S,ST. PETERSBURG,2026-01-14,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine at server wait station with black mold-like substance.,2026-01-14
 8399096,SUBWAY 3956,1895 N HIGHLAND AVE,CLEARWATER,2026-01-09,1,Inspection Completed - No Further Action,False,False,,
-8400423,MONSTAH LOBSTAH IRB,125 GULF BLVD,INDIAN ROCKS BEACH,2026-01-28,2,Warning Issued,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,
-8400493,MAIN KITCHEN AND LOBBY BAR,100 CORONADO DR,CLEARWATER,2025-07-10,1,Warning Issued,False,False,Ice cubes not covered in both bar glass chillers.,
+8400423,MONSTAH LOBSTAH IRB,125 GULF BLVD,INDIAN ROCKS BEACH,2026-01-28,2,Warning Issued,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2026-01-28
+8400493,MAIN KITCHEN AND LOBBY BAR,100 CORONADO DR,CLEARWATER,2025-07-10,1,Warning Issued,False,False,,
 8409596,MACHI BOBA,1219 S MISSOURI AVE,CLEARWATER,2026-05-05,1,Inspection Completed - No Further Action,False,False,,
 8410310,INDIAN BISTRO,2613 GULF TO BAY BLVD UNIT 1680,CLEARWATER,2026-04-20,3,Inspection Completed - No Further Action,True,False,The establishment does not have ice or room in the reach in freezers.,2025-09-09
-8413321,COCO WOOD GRILL,17814 GULF BLVD,REDINGTON SHORES,2025-10-28,1,Inspection Completed - No Further Action,False,False,"Cook line - cream (48F - Cold Holding), added ice to ice well Intermediate - No measuring device available for measuring utensil surface temperature when using hot water as sanitizer in a dishmachine.",
+8413321,COCO WOOD GRILL,17814 GULF BLVD,REDINGTON SHORES,2025-10-28,1,Inspection Completed - No Further Action,False,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-10-28
 8414393,PAJANO'S PIZZA AND SUBS,1305 GULF BLVD,INDIAN ROCKS BEACH,2026-04-17,2,Administrative complaint recommended,True,False,,
 8416498,CHINA WOK,3433 49 ST N,ST. PETERSBURG,2025-10-31,1,Inspection Completed - No Further Action,False,False,,
 8416568,GOOD INTENTIONS,1900 1 AVE S,ST. PETERSBURG,2026-05-08,1,Inspection Completed - No Further Action,False,False,,
@@ -2245,7 +2245,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 8464950,SONNYS BBQ 32,30503 US HWY 19 N,PALM HARBOR,2026-04-20,2,Inspection Completed - No Further Action,True,False,Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup in walk in freezer,2025-12-18
 8469913,KELLIS CATERING & EVENTS,1421 S MISSOURI AVE,CLEARWATER,2025-12-29,1,Inspection Completed - No Further Action,False,False,,
 8471547,TOWNEPLACE SUITES BY MARRIOTT TAMPA CLEARWATER,21090 US HWY 19 N,CLEARWATER,2026-04-13,1,Inspection Completed - No Further Action,False,False,,
-8471849,CENTRAL COFFEE SHOP,530 CENTRAL AVE,ST. PETERSBURG,2026-02-20,3,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,
+8471849,CENTRAL COFFEE SHOP,530 CENTRAL AVE,ST. PETERSBURG,2026-02-20,3,Inspection Completed - No Further Action,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-09-18
 8478406,OISHI SUSHI,498 ATHENS ST UNIT A&B,TARPON SPRINGS,2026-05-06,1,Warning Issued,False,False,,
 8484698,TACO BUS,9641 GULF BLVD,TREASURE ISLAND,2026-02-02,1,Inspection Completed - No Further Action,False,False,,
 8493908,CORVO BIANCO,901 CURLEW RD,DUNEDIN,2026-04-16,1,Warning Issued,False,False,,
@@ -2283,7 +2283,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 8562403,JEROME'S CAFE & BAKERY,2475 N MCMULLEN BOOTH RD STE D,CLEARWATER,2026-03-09,1,Inspection Completed - No Further Action,False,False,Toxic substance/chemical ( Lysol spray ) improperly stored on top of ice machine next to container with ice scoop) .,2026-03-09
 8570920,THE PEARL RESTAURANT,5802 28 AVE  S,GULFPORT,2026-05-20,3,Call Back - Admin. complaint recommended,True,False,,
 8576299,MARCO'S PIZZA,1360 34 ST N,ST. PETERSBURG,2026-03-17,1,Inspection Completed - No Further Action,False,False,,
-8577272,CANE & BARREL,110 2 ST N,ST. PETERSBURG,2026-02-17,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior soiled with pink and black mold like substance in all ice machines throughout both kitchens. Missing at hand handsink next to ice machine on 8th floor kitchen.,
+8577272,CANE & BARREL,110 2 ST N,ST. PETERSBURG,2026-02-17,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior soiled with pink and black mold like substance in all ice machines throughout both kitchens.,2026-02-17
 8582501,AZURA COASTAL KITCHEN,3701 GULF BLVD,ST.PETE BEACH,2025-09-17,1,Inspection Completed - No Further Action,False,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-09-17
 8588050,BREAKFAST AT MIRA'S,2475 N MCMULLEN BOOTH RD STE F,CLEARWATER,2025-09-25,1,Warning Issued,False,False,"Wait station used for drink preparation and ice scooping, no hand wash sink available in this area.",2025-09-25
 8597256,COURTYARD BY MARRIOTT ST PETERSBURG MARRIOTT,300 4 ST N,ST. PETERSBURG,2025-08-18,1,Warning Issued,False,False,,
@@ -2297,9 +2297,9 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 8620406,GRAZE CRAZE ST PETE,2220 CENTRAL AVE UNIT A,ST PETERSBURG,2026-03-25,1,Inspection Completed - No Further Action,False,False,,
 8626124,COUNTRYSIDE02,27001 US HWY 19,CLEARWATER,2026-04-07,1,Inspection Completed - No Further Action,False,False,,
 8635466,ROYAL PALM ROOM,5300 GULF BLVD,ST.PETE BEACH,2025-10-20,1,Inspection Completed - No Further Action,False,False,Ice buildup in walk-in freezer.,2025-10-20
-8635486,RUM RUNNERS,5300 GULF BLVD,ST.PETE BEACH,2025-08-12,1,Inspection Completed - No Further Action,False,False,Basic - Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup up inside white reach-in chest freezer Basic - In-use tongs stored on equipment door handle between uses.,
-8635953,RUMBA ISLAND BAR & GRILL,6445 4 ST N,ST. PETERSBURG,2026-02-03,4,Inspection Completed - No Further Action,True,False,muffin mix (51F - Cold Holding) Added new ice to bottom Intermediate - Non-pitting surface rust on food-contact equipment.,
-8645437,BUTTERMILK EATERY,10316 ROOSEVELT BLVD N,ST. PETERSBURG,2026-01-12,1,Inspection Completed - No Further Action,False,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Employee moved to shelf Basic - Ice buildup in walk-in freezer.,
+8635486,RUM RUNNERS,5300 GULF BLVD,ST.PETE BEACH,2025-08-12,1,Inspection Completed - No Further Action,False,False,,
+8635953,RUMBA ISLAND BAR & GRILL,6445 4 ST N,ST. PETERSBURG,2026-02-03,4,Inspection Completed - No Further Action,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-07-23
+8645437,BUTTERMILK EATERY,10316 ROOSEVELT BLVD N,ST. PETERSBURG,2026-01-12,1,Inspection Completed - No Further Action,False,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2026-01-12
 8646214,FATTY'S FISH SHACK LLC,1026 NEBRASKA  AVE,PALM HARBOR,2026-01-08,1,Inspection Completed - No Further Action,False,False,Raw beef over ready to eat ice cream in reach in freezer.,
 8646485,MR SUSHI,1310 34 ST N,ST. PETERSBURG,2025-09-30,1,Inspection Completed - No Further Action,False,False,Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup up in white reach-in freezer at rear of kitchen.,2025-09-30
 8647050,FORTU,97 CENTRAL AVE,ST PETERSBURG,2026-01-06,3,Warning Issued,True,False,,
@@ -2385,7 +2385,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 8859562,PRELUDE SPORTS BAR,528 CLEVELAND ST,CLEARWATER,2025-10-01,1,Administrative complaint recommended,False,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Ice bin located near walk-in cooler soiled with brown substance.,2025-10-01
 8862986,LOLITAS  WINE MARKET,420 22 ST S,ST PETERSBURG,2025-10-06,1,Inspection Completed - No Further Action,False,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-10-06
 8863030,NY EASTLAKE PIZZA,2525 E LAKE RD S,PALM HARBOR,2026-01-23,2,Call Back - Admin. complaint recommended,True,False,,
-8876886,LUCKY 9 JUICE BAR,6901 22  AVE N VOC3,ST PETERSBURG,2026-01-14,1,Warning Issued,False,False,"- From follow-up inspection 2026-01-15: -Operator used gloved hands to handle dirty dishes, fill out paperwork, and then to clean inside of ice machine.",
+8876886,LUCKY 9 JUICE BAR,6901 22  AVE N VOC3,ST PETERSBURG,2026-01-14,1,Warning Issued,False,False,,
 8877065,FRESH START OF TAMPA BAY,2350 CURLEW RD,PALM HARBOR,2026-05-29,1,Warning Issued,False,False,,
 8880510,CHICK FIL A TYRONE BOULEVARD #04908,2190 TYRONE BLVD N,ST. PETERSBURG,2025-11-24,1,Inspection Completed - No Further Action,False,False,,
 8881751,TUTTOROSSO,7863 BLIND PASS RD,ST.PETE BEACH,2026-04-16,2,Inspection Completed - No Further Action,True,False,Ice buildup in reach-in freezer and/or walk-in freezer.,2025-12-08
@@ -2422,7 +2422,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 8943842,LA PASADITA AUTHENTIC MEXICAN RESTAURANT,14100 US HWY 19 N STE 117-118,CLEARWATER,2025-12-01,1,Warning Issued,False,False,,
 8947425,LA REINA DE MEXICO VEMEX LLC,1413 CLEVELAND ST,CLEARWATER,2026-05-18,3,Call Back - Complied,True,False,,
 8947697,ASIAN HOUSE,6800 GULFPORT BLVD S STE 105,SOUTH PASADENA,2026-04-20,2,Inspection Completed - No Further Action,True,False,,
-8947770,COUNTRY PIZZA ITALIAN GRILL,14820 US HWY 19 N,CLEARWATER,2026-01-15,2,Inspection Completed - No Further Action,True,False,Basic - Unprotected ice machine in a customer/nonsecure area. Ice machine outside unprotected by unlocked gate.,
+8947770,COUNTRY PIZZA ITALIAN GRILL,14820 US HWY 19 N,CLEARWATER,2026-01-15,2,Inspection Completed - No Further Action,True,False,"Unprotected ice machine in a customer/nonsecure area. Outdoor ice machine in a customer accessible area, gate not locked",2025-09-02
 8952108,POUR AND DECOR,2210 CENTRAL AVE,ST. PETERSBURG,2026-03-17,1,Inspection Completed - No Further Action,False,False,,
 8958770,POTBELLY SANDWICH WORKS,13100 SEMINOLE BLVD STE 104,LARGO,2025-07-15,1,Inspection Completed - No Further Action,False,False,,
 8965316,LUCKY DILL,33180 US HWY 19 N,PALM HARBOR,2025-12-05,1,Warning Issued,False,False,,
@@ -2464,9 +2464,9 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 9067483,TROPICAL SMOOTHIE CAFE,1101 34  ST N STE A,ST PETERSBURG,2025-09-10,1,Inspection Completed - No Further Action,False,False,,
 9067729,BUTTERMILK EATERY,7054 US HWY 19 N,PINELLAS PARK,2025-07-08,1,Warning Issued,False,False,Ice bucket top of ice machine.,2025-07-08
 9068286,YVONNES CARIBBEAN RESTAURANT INC,2231 34  ST S,ST PETERSBURG,2026-03-18,2,Inspection Completed - No Further Action,True,False,Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup in chest freezers located in Northwest section of establishment.,2025-10-27
-9072639,TREVISO PIZZA & GRILL,10801 STARKEY RD STE 7,SEMINOLE,2026-01-28,2,Inspection Completed - No Further Action,True,False,"Boxes of food on floor in walk in cooler Basic - Ice scoop handle in contact with ice. Ice well at front counter, removed Basic - In-use utensil in non-time/temperature control for safety food not stored with handle above top of food within a closed container. Ice bath not effective. Staff added…",
+9072639,TREVISO PIZZA & GRILL,10801 STARKEY RD STE 7,SEMINOLE,2026-01-28,2,Inspection Completed - No Further Action,True,False,"Kitchen prep table: butter (45F - Cold Holding); garlic in oil (61F - Cold Holding); shredded mozzarella (64F - Cold Holding), held in ice bath less than 4 hours, moved to freezer.",2025-08-25
 9073268,CHARLIE'S SUSHI JAPANESE RESTAURANT,1200 CLEVELAND ST,CLEARWATER,2026-03-04,3,Call Back - Complied,True,False,,
-9075298,VOODOO BREWING CO,220 4 ST N,ST. PETERSBURG,2026-02-02,4,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine in bar soiled with black and pink mold like substance. Clear pitcher stored inside hand handsink across from ice machine in dry storage area.,
+9075298,VOODOO BREWING CO,220 4 ST N,ST. PETERSBURG,2026-02-02,4,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Ice machine interior soiled with lime scale build up. Ice machine interior in bar area soiled with black and pink mold like substance.,2025-09-24
 9076195,DON PANCHO RESTAURANT,21561 US HWY 19 N,CLEARWATER,2025-11-19,1,Inspection Completed - No Further Action,False,False,,
 9079378,QUEENS PIZZA  AND RESTAURANT,1834 N  BELCHER RD,CLEARWATER,2026-01-26,2,Call Back - Complied,True,False,- From initial inspection : Basic - Ice buildup in walk-in freezer.,2026-01-26
 9079601,POTBELLY SANDWICH SHOP,5004 4 ST N,ST. PETERSBURG,2025-08-13,1,Inspection Completed - No Further Action,False,False,Bags of ice stored on floor in walk-in freezer.,2025-08-13
@@ -2483,7 +2483,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 9096963,WILLIAMS SUBMARINE SHOP,3801 TYRONE BLVD N ST,ST. PETERSBURG,2025-11-17,1,Inspection Completed - No Further Action,False,False,,
 9099757,LIBRARY JV MANAGEMENT LLC & FOR ALL KIDS LLC,600 5 ST S,ST. PETERSBURG,2026-06-19,4,"Call Back - Extension given, pending",True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-10-06
 9100451,NEIGHBORHOOD JOE,2325 DR MLK JR ST N,ST. PETERSBURG,2025-12-17,3,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of Euhomy ice machine with brown mold like substance at front counter.,
-9103382,BIG MOMMAS HICKORY SMOKED BBQ,35220 US HWY 19 N,PALM HARBOR,2026-01-13,2,Call Back - Admin. complaint recommended,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Mold like substance in interior of ice machine in back room.,
+9103382,BIG MOMMAS HICKORY SMOKED BBQ,35220 US HWY 19 N,PALM HARBOR,2026-01-13,2,Call Back - Admin. complaint recommended,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Mold like substance in interior of ice machine in back room.,2026-01-13
 9103469,WHITE IGLOO,30575 US HWY 19 N,PALM HARBOR,2026-05-05,2,Call Back - Complied,True,False,Operator added more food prep area by adding additional ice cream coolers which requires the ice cream to be scooped. Ice machine 1 was moved from its location on the plans. Ice bin in back has been moved. Ice machine location in back room moved.,2026-02-24
 9103599,POSITANO'S,3309 TAMPA RD,PALM HARBOR,2026-02-20,2,Call Back - Admin. complaint recommended,True,False,Standing water on floor outside ice machine and walk in cooler.,2025-12-11
 9106029,CARIBBEAN CAFE,4801 CENTRAL AVE,ST. PETERSBURG,2025-10-27,1,Inspection Completed - No Further Action,False,False,Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup inside reach-in freezer in outside shed.,2025-10-27
@@ -2492,13 +2492,13 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 9112060,DOMOISHI,35236 US HWY 19 N,PALM HARBOR,2026-03-30,2,Inspection Completed - No Further Action,True,False,Accumulation of mold-like substance in the interior of the ice machine/bin. Accumulation of yellow slime like substance in ice machine. Water dripping from substance onto ice.,2025-11-13
 9114036,BROKE N BOARD,35 182 AVE W,REDINGTON SHORES,2025-07-07,1,Administrative complaint recommended,False,False,In-use ice scoop for ice machine located outside not stored in a protected manner between uses.,2025-07-07
 9118889,TIKI TIM'S PUB AND GRILL,923 72 ST N,ST PETERSBURG,2026-01-29,3,Inspection Completed - No Further Action,True,False,,
-9120671,OSTERIA BRICCO,7839F 113 ST STE F,SEMINOLE,2026-01-23,2,Administrative complaint recommended,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Cocktail shaker left in ice bin at bar Basic - Carbon dioxide/helium tanks not adequately secured. Glasses on cart next to ice machine Basic - Floor soiled/has accumulation of debris. Accumulation of grease…,
+9120671,OSTERIA BRICCO,7839F 113 ST STE F,SEMINOLE,2026-01-23,2,Administrative complaint recommended,True,False,"Cook line - butter (61F - Cold Holding); cooked pasta (57F - Cold Holding), items in shallow ice bath. Discussed with kitchen staff to use a shallower pan, increase level of ice or place on time as a public health control.",2026-01-23
 9121669,STORMRUNNERS TAVERN,3128 BEACH BLVD S,GULFPORT,2026-02-10,5,Inspection Completed - No Further Action,True,False,- From initial inspection : Basic - Accumulation of black/green/pink mold-like substance in the interior of the ice machines. Accumulation of debris in ice bin behind bar - From follow-up inspection 2025-12-09: - From follow-up inspection 2025-12-09: - From follow-up inspection 2025-12-10:,2025-12-10
 9128943,WHISKEY WINGS,2480 E BAY DR,LARGO,2026-03-11,2,Call Back - Complied,True,False,Accumulation of pink substance on inside of ice machine to the left of the cookline.,2026-03-03
 9140116,EL LUNCH LATINO,1898 DREW ST ,CLEARWATER,2026-06-05,5,Emergency Order Callback Complied,True,False,,
 9140766,THE IRONS CLUB,2140 CENTRAL AVE,SAINT PETERSBURG,2025-10-16,1,Inspection Completed - No Further Action,False,False,,
 9141757,THE MELTING POT,699 CENTRAL AVE,ST. PETERSBURG,2026-03-18,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Soda dispenser ice bin interior soiled with black substance.,2026-03-18
-9142300,EGG HAVEN CAFE,3601 66ST N,ST. PETERSBURG,2026-01-12,4,Inspection Completed - No Further Action,True,False,- From initial inspection : Basic - Accumulation of black/pink mold-like substance in the interior of the ice machine.,
+9142300,EGG HAVEN CAFE,3601 66ST N,ST. PETERSBURG,2026-01-12,4,Inspection Completed - No Further Action,True,False,- From initial inspection : Basic - Accumulation of black/pink mold-like substance in the interior of the ice machine.,2026-01-09
 9142728,SPARTA SEAFOOD & GRILL,3157 CURLEW RD,OLDSMAR,2026-03-16,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Observed a mold like substance in the ice machine bin at time of inspection.,2025-12-11
 9144789,WEIRDO'S CUBE JR,6103 126 AVE N,LARGO,2026-06-16,1,Inspection Completed - No Further Action,False,False,,
 9150673,SHISO CRISPY,1431 CENTRAL AVE N,ST. PETERSBURG,2026-03-16,1,Inspection Completed - No Further Action,False,False,Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup observed inside outside reach in freezer chests.,2026-03-16
@@ -2529,8 +2529,8 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 9206421,82 DEGREES,7203 SUNSET WAY,ST.PETE BEACH,2025-11-20,2,Warning Issued,True,False,- From initial inspection : Basic - Ice buildup in reach-in freezer and/or walk-in freezer. Build up of ice in walk in freezer on floor.,2025-08-08
 9206874,CAVA,33163 US HWY 19 N,PALM HARBOR,2026-02-02,1,Inspection Completed - No Further Action,False,False,,
 9209543,HOGGDADDYS BEACH BAR AND GRILL,752 S GULFVIEW BLVD,CLEARWATER BEACH,2026-04-02,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Large ice bin.,2025-09-25
-9212423,LINKING HEIGHTS ,3001 28 ST N,ST. PETERSBURG,2026-01-21,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine next to beer walk-in cooler with black mold like substance. Basic - Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup in freezer chest in rear prep area.,
-9214088,LAJAWAB INDIAN CUISINE,2705 54 AVE N STE 3,ST. PETERSBURG,2026-01-15,2,Inspection Completed - No Further Action,True,False,Basic - Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup in all reach-in freezers Basic - In-use utensil stored in standing water less than 135 degrees Fahrenheit.,
+9212423,LINKING HEIGHTS ,3001 28 ST N,ST. PETERSBURG,2026-01-21,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine next to beer walk-in cooler with black mold like substance.,2026-01-21
+9214088,LAJAWAB INDIAN CUISINE,2705 54 AVE N STE 3,ST. PETERSBURG,2026-01-15,2,Inspection Completed - No Further Action,True,False,Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup up in reach in freezer located in dry storage room.,2025-08-18
 9214122,MR AND MRS EATZ,1836 49 ST S,GULF PORT,2025-12-01,1,Inspection Completed - No Further Action,False,False,,
 9219073,YIANNIS GREEK CUISINE DBA ACROPOLIS GREEK TAVERNA TARPON SPRINGS,514 DODECANESE,TARPON SPRINGS,2026-03-02,2,Inspection Completed - No Further Action,True,False,"Unprotected ice machine in a customer/nonsecure area. Ice machine on back porch, no lock on machine, no lock on gate, no gate on parking lot side.",2026-03-02
 9233315,LITTLE GYRO,1606 ACHIEVA WAY,DUNEDIN,2026-03-26,1,Administrative complaint recommended,False,False,,
@@ -2540,10 +2540,10 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 9237157,NUEVA CANTINA,1625 4 ST S,ST. PETERSBURG,2026-01-21,5,Inspection Completed - No Further Action,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Ice machine interior soiled with black mold like substance.,2025-08-08
 9238202,LOBSTAH DAZE,7097 30 AVE N,ST. PETERSBURG,2025-11-12,1,Inspection Completed - No Further Action,False,False,,
 9239466,NIKO'S GRILL HOUSE,614 ATHENS ST,TARPON SPRINGS,2026-01-22,1,Inspection Completed - No Further Action,False,False,,
-9241632,DICK'S LAST RESORT,111 BOARDWALK PL W STE 203,MADEIRA BEACH,2026-02-23,1,Inspection Completed - No Further Action,False,False,Cutting boards stained on cook line Soda gun nozzles and ice chute at wait station soiled Intermediate - Paper towel dispenser at handwash sink not working/unable to dispense paper towels.,
+9241632,DICK'S LAST RESORT,111 BOARDWALK PL W STE 203,MADEIRA BEACH,2026-02-23,1,Inspection Completed - No Further Action,False,False,Cutting boards stained on cook line Soda gun nozzles and ice chute at wait station soiled,2026-02-23
 9244974,THAI TOWN,1342 MAIN ST,DUNEDIN,2026-05-18,2,Warning Issued,True,False,Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup in reach in freezer on cook line.,2026-02-23
 9245496,JANA'S CAFE,120 COMMERCE BLVD STE 1,OLDSMAR,2025-12-16,1,Inspection Completed - No Further Action,False,False,,
-9246183,WHO'S ON FIRST,119 1 AVE N,ST. PETERSBURG,2026-02-20,5,"Call Back - Extension given, pending",True,False,Observed stainless steel baskets with ice stored inside both hand handsink in the bar area.,
+9246183,WHO'S ON FIRST,119 1 AVE N,ST. PETERSBURG,2026-02-20,5,"Call Back - Extension given, pending",True,False,Observed stainless steel baskets with ice stored inside both hand handsink in the bar area.,2026-02-11
 9253738,JAMADI CORP,2152  DREW ST ,CLEARWATER,2026-03-27,1,Warning Issued,False,False,"Mop sink removed from kitchen area to storage area unconnected from plumbing , hand wash sink relocated next to triple sink , ice machine added, microwave added on top of the ice machine , table top single burner stove added next to ice machine , table top smart cook system added next to single…",2026-03-27
 9256830,RED CHILLEZ,13680 WALSINGHAM RD,LARGO,2025-08-01,1,Warning Issued,False,False,,
 9257518,BLIND SHARK TAVERN,11301 STARKEY RD,LARGO,2025-11-19,1,Inspection Completed - No Further Action,False,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-11-19
@@ -2555,7 +2555,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 9278633,RED THREAD,300 1 AVE N,ST. PETERSBURG,2026-06-16,2,Inspection Completed - No Further Action,True,False,,
 9280446,SUNSET GRILL,2328 SUNSET POINT ROAD,CLEARWATER,2026-02-09,1,Warning Issued,False,False,Compressor has ice accumulation.,2026-02-09
 9281821,RISING SUN TACOS,7097 30 AVE N,ST. PETERSBURG,2025-09-13,1,Inspection Completed - No Further Action,False,False,,
-9285270,SLIPP'S CREAMERY,509 ALTERNATE 19,PALM HARBOR,2026-01-22,1,Administrative complaint recommended,False,False,Employee beverage on countertop next to ice cream toppings. Employee phone next to ice cream toppings.,
+9285270,SLIPP'S CREAMERY,509 ALTERNATE 19,PALM HARBOR,2026-01-22,1,Administrative complaint recommended,False,False,Employee beverage on countertop next to ice cream toppings.,2026-01-22
 9286029,DAGGS SANDWICH CO,11130 SEMINOLE BLVD,SEMINOLE,2026-01-28,1,Inspection Completed - No Further Action,False,False,,
 9286733,EXQUISITE BISTRO,397 FIFTH ST S,ST. PETERSBURG,2026-03-25,2,Call Back - Complied,True,False,,
 9287760,GULFSIDE PIZZA AND SUBS,11703 HAMLIN BLVD,LARGO,2026-01-29,2,Inspection Completed - No Further Action,True,False,,
@@ -2564,13 +2564,13 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 9293758,PALETERIA SANTA CRUZ,1385  S BELCHER RD UNIT G,LARGO ,2026-04-14,1,Inspection Completed - No Further Action,False,False,,
 9294971,ANTICO FORNAIO,2647 ULMERTON RD,CLEARWATER,2025-07-29,1,Warning Issued,False,False,,
 9295059,BROOKLYN SOUTH,1437 CENTRAL AVE,ST. PETERSBURG,2026-03-25,2,Inspection Completed - No Further Action,True,False,,
-9296161,BUFFET CITY,1030 58  ST N,ST PETERSBURG,2026-02-20,3,Inspection Completed - No Further Action,True,False,-floors soiled throughout kitchen -floors and walls soiled in walk in coolers and freezers - From follow-up inspection 2026-02-20: Basic - - From initial inspection : Basic - Ice buildup on floors and walls of walk-in freezer.,
+9296161,BUFFET CITY,1030 58  ST N,ST PETERSBURG,2026-02-20,3,Inspection Completed - No Further Action,True,False,- From initial inspection : Basic - Ice buildup on floors and walls of walk-in freezer.,2026-02-20
 9296738,THE CRANE,575 CENTRAL  AVE,ST PETERSBURG,2026-05-27,3,Inspection Completed - No Further Action,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Ice machine interior soiled with black and pink mold like substance.,2026-01-28
 9297393,VOILA MERCI,19525 GULF BLVD,INDIAN SHORES,2025-08-25,1,Warning Issued,False,False,,
 9302333,TURTLE ISLAND BAR & GRILL,847 ROOSEVELT BLVD,TARPON SPRINGS,2025-07-02,1,Call Back - Complied,False,False,,
 9302426,TRAILER DADDY,217 CENTRAL AVE,ST. PETERSBURG,2026-04-15,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Ice machine interior soiled with black mold like substance.,2025-09-23
 9302926,GUAC N CHEESE ST PETE,15 8 ST N,ST. PETERSBURG,2026-05-27,3,Call Back - Complied,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-10-31
-9312044,HURRICANE EDDIES,483 MANDALAY AVE UNIT 100,CLEARWATER BEACH,2026-02-17,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Ice buckets stored on floor in upstairs kitchen.,
+9312044,HURRICANE EDDIES,483 MANDALAY AVE UNIT 100,CLEARWATER BEACH,2026-02-17,2,Inspection Completed - No Further Action,True,False,In-use ice scoop stored on soiled surface between uses. Ice scoop stored on soiled surface on top of ice machine.,2025-07-08
 9317331,HIGHLAND HOUSE,1050 PALM BLVD,DUNEDIN,2025-10-06,2,Administrative complaint recommended,True,False,,
 9324222,HYATT REGENCY CLEARWATER BEACH RESORT AND SPA,301 GULFVIEW BLVD ,CLEARWATER ,2026-03-06,2,Inspection Completed - No Further Action,True,False,Ice buckets.,2025-07-31
 9324769,DOG PUB SOCIAL,1260 MAIN ST,DUNEDIN,2026-03-25,1,Inspection Completed - No Further Action,False,False,,
@@ -2578,7 +2578,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 9329738,SAKURA SUSHI HIBACHI,926 CURLEW RD,DUNEDIN,2026-05-06,2,Inspection Completed - No Further Action,True,False,,
 9330914,MELLOW MUSHROOM,2630 GULF TO BAY BLVD,CLEARWATER,2025-10-10,2,Call Back - Complied,True,False,,
 9332941,STEAK N SHAKE,10555 ULMERTON RD,LARGO,2025-11-10,1,Administrative complaint recommended,False,False,Gaskets in reach in freezer cooler near ice cream machine soiled with food debris.,2025-11-10
-9333041,SOCIAL ROOST,150 1ST AVE N,ST. PETERSBURG,2026-02-11,4,Call Back - Complied,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,
+9333041,SOCIAL ROOST,150 1ST AVE N,ST. PETERSBURG,2026-02-11,4,Call Back - Complied,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2026-02-11
 9333147,OFFSET SANDWICH EXCHANGE,689 MARTIN LUTHER KING DR N STE D,ST. PETERSBURG,2025-11-06,1,Inspection Completed - No Further Action,False,False,,
 9341663,AROMA & SABOR,34720 US HWY 19 N,PALM HARBOR,2026-05-04,1,Warning Issued,False,False,,
 9342280,MALAI INDIAN CUISINE,437 CENTRAL AVE,ST PETERSBURG,2026-04-07,2,Inspection Completed - No Further Action,True,False,Hanging from ceiling above floor mixer next to ice machine.,2026-04-07
@@ -2588,7 +2588,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 9358777,CHINA STAR,916 PATRICIA AVE UNIT C,DUNEDIN,2026-06-04,1,Inspection Completed - No Further Action,False,False,,
 9360888,CHINA KING,3163 CURLEW RD STE 3,OLDSMAR,2025-12-10,1,Inspection Completed - No Further Action,False,False,,
 9361280,BRUNOS PIZZERIA,7815 38  AVE N,SAINT PETERSBURG,2025-07-14,1,Warning Issued,False,False,Torn gasket in reach in cooler near ice machine and bathrooms.,2025-07-14
-9366486,SUSHI AND SOY,11220 PARK BLVD,SEMINOLE,2026-02-26,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Accumulation of grease under cook line Basic - Ice buildup in reach-in freezer and/or walk-in freezer. Basic - In-use ice scoop stored on soiled surface between uses. Stored on top of ice machine Basic - In-use…,
+9366486,SUSHI AND SOY,11220 PARK BLVD,SEMINOLE,2026-02-26,2,Inspection Completed - No Further Action,True,False,"In-use ice scoop stored on soiled surface between uses. Ice scoops stored on top of exterior of ice machine, removed for cleaning",2025-10-14
 9373351,THE BOXER,454 MANDALAY AVE,CLEARWATER BEACH,2026-01-06,2,Warning Issued,True,False,Ice machine area. - From follow-up inspection 2026-01-08: Basic - - From initial inspection : Basic - Ice buildup in walk-in freezer. Ice machine area.,
 9385402,REFINED ROOTS,121 E TARPON AVE ,TARPON SPRINGS,2026-04-09,1,Inspection Completed - No Further Action,False,False,,
 9387214,AVILA RESTAURANT,36609 US HWY 19 N,PALM HARBOR,2026-03-18,1,Inspection Completed - No Further Action,False,False,,
@@ -2600,9 +2600,9 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 9402917,BRAVO NY PIZZERIA,764 EAST LAKE RD,PALM HARBOR,2025-10-14,1,Warning Issued,False,False,,
 9405725,PERRY'S PORCH,335 2 AVE NE,ST PETERSBURG,2026-04-01,3,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice bin and ice machine interior soiled with black substance.,2026-04-01
 9409022,KHAO NEOW SUSHI THAI LAO,17307 GULF BLVD STE B101,NORTH REDINGTON BEAC,2026-01-15,1,Inspection Completed - No Further Action,False,False,,
-9414798,RIZO'S CUISINE,2745  E BAY DR,LARGO,2026-01-21,3,Inspection Completed - No Further Action,True,False,Basic - In-use ice scoop stored on soiled surface between uses. Operator placed ice scoop in bucket.,
+9414798,RIZO'S CUISINE,2745  E BAY DR,LARGO,2026-01-21,3,Inspection Completed - No Further Action,True,False,In-use ice scoop stored on soiled surface between uses. Operator placed ice scoop in bucket.,2026-01-21
 9419963,DOWNTOWN PIZZA SPORTS BAR AND GRILL,428 CLEVELAND ST,CLEARWATER,2026-05-19,3,Warning Issued,True,False,Garlic and oil 51 F n counter at cook line - ice bath melted - employee placed garlic and oil on ice .,2026-03-11
-9420105,BACKWATERS N REDINGTON BEACH,17307 GULF BLVD UNIT A103,NORTH REDINGTON BEAC,2026-01-15,3,Inspection Completed - No Further Action,True,False,"Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Employee beverage on cutting board on cook line, removed Basic - Ice scoop handle in contact with ice.",
+9420105,BACKWATERS N REDINGTON BEACH,17307 GULF BLVD UNIT A103,NORTH REDINGTON BEAC,2026-01-15,3,Inspection Completed - No Further Action,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-08-21
 9428740,WOOD SHED GRILL,6340 49  ST  N,PINELLAS PARK,2026-03-06,1,Inspection Completed - No Further Action,False,False,,
 9431290,MARTINS ITALIAN,3689 TAMPA RD 301,OLDSMAR,2026-05-19,1,Inspection Completed - No Further Action,False,False,,
 9433569,CAJUN CAFE ON THE BAYOU,8260 66 ST N,PINELLAS PARK,2026-03-27,1,Warning Issued,False,False,,
@@ -2613,7 +2613,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 9441677,THE GARDEN GNOME,809 GULF WAY,ST. PETERSBURG,2026-04-03,1,Inspection Completed - No Further Action,False,False,,
 9441962,FRESCA ITALIAN KITCHEN,2570 GULF TO BAY BLVD,CLEARWATER,2026-05-01,3,Inspection Completed - No Further Action,True,False,- cutting boards soiled in cut areas of cutting board at cook line - soiled ice chute at self service station - From follow-up inspection 2026-02-04: -Cutting boards soiled in cut areas - soiled ice cute at self service station,2026-02-04
 9451744,LOCO TACO TRUCK,1760 DREW ST,CLEARWATER,2026-05-18,3,Call Back - Admin. complaint recommended,True,False,,
-9452778,CHARLEY'S PHILLY STEAKS,6901 22ND AVE N FC #04,ST PETERSBURG,2026-01-15,1,Inspection Completed - No Further Action,False,False,Accumulation of slime/mold-like substance in the interior of the ice machine. -ice bucket store upright above ice machine Operator moved to 3 compartment sink sink to clean Basic - Green cutting board has cut marks and is no longer cleanable. -ice tea nozzles soiled with slime,
+9452778,CHARLEY'S PHILLY STEAKS,6901 22ND AVE N FC #04,ST PETERSBURG,2026-01-15,1,Inspection Completed - No Further Action,False,False,-ice bucket store upright above ice machine Operator moved to 3 compartment sink sink to clean,2026-01-15
 9453052,CHINA GATE,12919 WALSINGHAM RD,LARGO,2026-03-27,2,Inspection Completed - No Further Action,True,False,,
 9453440,TURTLE ISLAND BAR AND GRILL,847 ROOSEVELT BLVD,TARPON SPRINGS,2025-10-24,2,Warning Issued,True,False,,
 9454821,DICKEYS BBQ PIT,2119 TYRONE BLVD N,SAINT PETERSBURG,2026-05-18,2,Inspection Completed - No Further Action,True,False,Ice cream cone dispenser next to ice cream machine has ice cream cones either no paper wrapping to protect from it being touched.,2026-02-11
@@ -2643,10 +2643,10 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 9479319,THE BLU HALO,211 MAIN ST N,ST. PETERSBURG,2025-12-16,1,Inspection Completed - No Further Action,False,False,,
 9480211,SUSHI KABUKI,10801 STARKEY RD UNIT 18,SEMINOLE,2025-10-31,2,Inspection Completed - No Further Action,True,False,,
 9482290,MAMA ROSE PIZZERIA,13355 BLECHER RD S STE G,LARGO,2026-03-02,1,Inspection Completed - No Further Action,False,False,,
-9483425,GINGER&LIME CAFE,30617  US HWY 19 N,PALM HARBOR,2026-02-24,1,Administrative complaint recommended,False,False,Exterior of ice machine soiled - From follow-up inspection 2026-02-25:,
+9483425,GINGER&LIME CAFE,30617  US HWY 19 N,PALM HARBOR,2026-02-24,1,Administrative complaint recommended,False,False,7 rodent droppings near ice machine by dry storage.,2026-02-24
 9484357,BEACH HOUSE SUITES BY DON CESAR,3860 GULF BLVD,ST PETE BEACH,2026-04-08,2,Inspection Completed - No Further Action,True,False,,
 9486934,ANTHONY & LUCA'S PIZZA KITCHEN,4687 PARK BLVD,PINELLAS PARK,2026-01-07,2,Inspection Completed - No Further Action,True,False,,
-9487402,VICTORY TAVERN ,36221  E LAKE RD S,PALM HARBOR,2025-08-14,1,Inspection Completed - No Further Action,False,False,Hand wash sink next to ice machine is blocked by several blue buckets.,
+9487402,VICTORY TAVERN ,36221  E LAKE RD S,PALM HARBOR,2025-08-14,1,Inspection Completed - No Further Action,False,False,,
 9488383,THE BREAKROOM BAR & GRILL,13575 58TH ST N,CLEARWATER,2026-04-16,1,Inspection Completed - No Further Action,False,False,,
 9490738,PIPOS CAFE,9531 BAY PINES BLVD,ST PETERSBURG,2026-02-11,2,Inspection Completed - No Further Action,True,False,Ice buildup in reach-in freezer and/or walk-in freezer.,2025-10-13
 9499620,GULFSIDE TAP ROOM PIZZA  AND WINGS,1719 DREW ST,CLEARWATER,2025-12-17,1,Inspection Completed - No Further Action,False,False,,
@@ -2666,7 +2666,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 9529718,LAZY JERK CARIBBEAN EATS,1011 CLEVELAND ST UNIT 3,CLEARWATER,2026-04-02,1,Warning Issued,False,False,,
 9531476,MANGAL TURKISH GRILL,11681 49 N STE 1,CLEARWATER,2025-08-22,1,Warning Issued,False,False,,
 9532166,THAI-AM RESTAURANT,6040 4TH ST N ,ST. PETERSBURG,2025-08-22,1,Inspection Completed - No Further Action,False,False,,
-9532179,TERIYAKI MADNESS,2657  ULMERTON RD,CLEARWATER,2025-07-29,1,Administrative complaint recommended,False,False,2 live flying insect soda and ice tea dispenser self service area.,
+9532179,TERIYAKI MADNESS,2657  ULMERTON RD,CLEARWATER,2025-07-29,1,Administrative complaint recommended,False,False,During inspection observed chef took ice stick out at raw chicken container rinse with water at prep sink then begin to put it inside reach in freezer.,2025-07-29
 9539594,AMICIS CATERING,501 BROOKER CREEK BLVD,OLDSMAR,2026-01-15,1,Inspection Completed - No Further Action,False,False,,
 9544266,HEAVENLY DONUTS SWEETS & EATS,2025 49TH ST S,GULFPORT,2026-03-17,3,Call Back - Complied,True,False,- From initial inspection : Basic - Accumulation of pink mold-like substance in the interior of the ice machine.,2026-03-17
 9544790,CHINA KING,6816 22ND AVE N,ST. PETERSBURG,2026-04-28,3,Administrative complaint recommended,True,False,,
@@ -2685,11 +2685,11 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 9575799,DELHI PALACE,25000 US HWY 19 N,CLEARWATER,2026-05-20,3,Warning Issued,True,False,,
 9577395,DEAD BOBS,6475 CENTRAL AVE ,ST. PETERSBURG ,2026-05-26,3,Inspection Completed - No Further Action,True,False,"On prep table on cook line- raw chicken (44F - Cold Holding, retemped at 43F) being kept on ice but ice wasn't high enough to keep chicken cold.",2026-03-17
 9577606,ARBYS 156,40972 US HIGHWAY 19 N,TARPON SPRINGS,2026-02-03,1,Inspection Completed - No Further Action,False,False,,
-9577759,ARBYS 1699,6640 ULMERTON RD,LARGO,2026-01-12,2,Inspection Completed - No Further Action,True,False,Basic - Ice buildup in walk-in freezer behind fans and around doors. Ice buildup up reach in reach in freezer.,
+9577759,ARBYS 1699,6640 ULMERTON RD,LARGO,2026-01-12,2,Inspection Completed - No Further Action,True,False,Ice buildup in walk-in freezer behind fans and around doors. Ice buildup up reach in reach in freezer.,2026-01-12
 9577936,SIRENS PUB N GRUB,13800 PARK BLVD STE #100,SEMINOLE,2026-03-05,1,Inspection Completed - No Further Action,False,False,Food stored in ice used for drinks. Plastic cup of lemons stored in drink ice well in servers station,2026-03-05
 9579311,CHICK-FIL-A TYRONE SQAURE MALL,2257 TYRONE SQ,ST. PETERSBURG,2026-04-08,2,Inspection Completed - No Further Action,True,False,,
 9579322,FUNKY SWEETS,11024 4 ST N,ST. PETERSBURG,2026-03-19,1,Warning Issued,False,False,Ice cream scoop no water on during inspection.,2026-03-19
-9581919,IRISH 31 PUB HOUSE & EATERY,7724 113TH ST,SEMINOLE,2026-01-26,3,Inspection Completed - No Further Action,True,False,"High Priority - Live, small flying insects found 1 live fly around bar 1 live fly next to ice machine Not landing on food contact surfaces Intermediate - Food-contact surface soiled with food debris, mold-like substance or slime.",
+9581919,IRISH 31 PUB HOUSE & EATERY,7724 113TH ST,SEMINOLE,2026-01-26,3,Inspection Completed - No Further Action,True,False,"Live, small flying insects found 1 live fly around bar 1 live fly next to ice machine Not landing on food contact surfaces",2026-01-26
 9583234,STEAK N SHAKE,8101 DR MARTIN LUTHER KING ST N,ST. PETERSBURG,2026-02-24,2,Administrative complaint recommended,True,False,,
 9591674,DA SESTO ITALIANO RISTORANTE VINO,7201 66TH ST N,PINELLAS PARK,2025-10-07,1,Inspection Completed - No Further Action,False,False,,
 9594987,THE FROG POND,16909 GULF BLVD,NORTH REDINGTON BEAC,2025-08-26,1,Inspection Completed - No Further Action,False,False,,
@@ -2715,7 +2715,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 9648088,Q SOUTHERN BBQ,3780 TAMPA RD C5/6,OLDSMAR,2026-03-20,1,Inspection Completed - No Further Action,False,False,,
 9648644,MAMI MIA COFFEE,2070 BAYSHORE BLVD ,DUNEDIN,2026-04-03,1,Warning Issued,False,False,,
 9649291,CHIPOTLE 5497,1688 MAIN ST,DUNEDIN,2026-05-26,1,Inspection Completed - No Further Action,False,False,,
-9649607,PETES SUSHI&POKE,14995 GULF BLVD STE J,MADEIRA BEACH,2026-02-05,1,Inspection Completed - No Further Action,False,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,
+9649607,PETES SUSHI&POKE,14995 GULF BLVD STE J,MADEIRA BEACH,2026-02-05,1,Inspection Completed - No Further Action,False,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2026-02-05
 9650220,SAM'S GYROS & SEAFOOF,3501 34TH ST N,ST. PETERSBURG,2025-09-09,1,Inspection Completed - No Further Action,False,False,Observed employee not change gloves after cooking at fryer with raw proteins and begin to retrieve ice.,2025-09-09
 9652931,METRO DINER PALM HARBOR,35000 US HWY 19 N,PALM HARBOR,2026-03-17,2,Call Back - Complied,True,False,- From initial inspection : Basic - Accumulation of pink mold-like substance in the interior of the ice machine/bin.,2026-03-17
 9655160,THE VIOLET STONE,2607 9 ST N,ST PETERSBURG,2025-08-12,1,Warning Issued,False,False,,
@@ -2723,7 +2723,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 9659334,KOPPER KITCHEN,5562 CENTRAL AVE,ST. PETERSBURG,2026-04-15,3,Administrative complaint recommended,True,False,-on prep table and small wait station next to ice machine.,2025-11-03
 9660116,ISLAND TIMEZ CARIBBEAN RESTAURANT & LOUNGE INC,9291 DR MARTIN LUTHER KING JR ST N,ST. PETERSBURG,2026-02-03,1,Warning Issued,False,False,,
 9662894,MIXERS BAR AND GRILLE,3430 E LAKE RD STE 1,PALM HARBOR,2026-03-02,1,Emergency order recommended,False,False,,
-9666862,LA DOLCE VITA TRATTORIA CLEARWATER,2649 ULMERTON RD,CLEARWATER,2026-02-18,1,Inspection Completed - No Further Action,False,False,"Bread for breadcrumbs top of ice machine no cover, employee covered High Priority - Dented/rusted cans present.",
+9666862,LA DOLCE VITA TRATTORIA CLEARWATER,2649 ULMERTON RD,CLEARWATER,2026-02-18,1,Inspection Completed - No Further Action,False,False,"Bread for breadcrumbs top of ice machine no cover, employee covered",2026-02-18
 9667044,GREEN LIGHT LOUNGE + KITCHEN,225 2ND AVE N,ST. PETERSBURG,2026-04-23,1,Warning Issued,False,False,,
 9668285,PHO KIEN GIANG,8150 49 ST N,PINELLAS PARK,2026-03-31,2,Administrative complaint recommended,True,False,Food stored in undrained ice.,2025-09-16
 9670945,ON THE FLY,7097 30 AVE N,ST. PETERSBURG,2025-08-29,1,Inspection Completed - No Further Action,False,False,,
@@ -2758,7 +2758,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 9812784,RUMFIRE,917 11 ST,PALM HARBOR,2026-06-18,2,Administrative complaint recommended,True,False,,
 9825187,BEARDED TURTLE,847 ROOSEVELT BLVD,TARPON SPRINGS,2026-06-04,1,Warning Issued,False,False,,
 9828446,SCHOONERS WEST BAY,2441 W BAY DR,LARGO,2026-06-17,1,Warning Issued,False,False,,
-9830775,MELT N DIP ,221 1 ST NE,ST. PETERSBURG,2026-02-10,1,Inspection Completed - No Further Action,False,False,Basic - Ice scoop handle in contact with ice. Scooper handle touching ice inside ice machine in front counter. Removed handle from ice.,
+9830775,MELT N DIP ,221 1 ST NE,ST. PETERSBURG,2026-02-10,1,Inspection Completed - No Further Action,False,False,Ice scoop handle in contact with ice. Scooper handle touching ice inside ice machine in front counter. Removed handle from ice.,2026-02-10
 9831548,HIBACHI EXPRESS,3605 49 ST N,ST. PETERSBURG,2026-01-14,1,Inspection Completed - No Further Action,False,False,,
 9833178,BEACH BURGER SHACK,45 PAPAYA ST,CLEARWATER,2026-01-21,1,Inspection Completed - No Further Action,False,False,Ice buildup in reach-in freezer across from there comp sink.,2026-01-21
 9835018,STIR FRY 88,6901 22 AVE N VC0-5,ST. PETERSBURG,2026-04-13,2,Call Back - Complied,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine.,2026-04-08
