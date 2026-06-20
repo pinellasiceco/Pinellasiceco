@@ -42,6 +42,12 @@ jobs:
         run: |
           if [ -f build_violations_list.py ]; then
             python build_violations_list.py
+            if [ -f data/pinellas_all_violations_to_scrape.csv ]; then
+              ROWS=$(( $(wc -l < data/pinellas_all_violations_to_scrape.csv) - 1 ))
+              echo "Violations list generated: ${ROWS} businesses queued for scrape"
+            else
+              echo "WARNING: build_violations_list.py ran but did not produce data/pinellas_all_violations_to_scrape.csv"
+            fi
           fi
 
       - name: Pick up atp/ landing page from feature branch
@@ -63,11 +69,15 @@ jobs:
 
       - name: Run DBPR scraper (all Pinellas violations)
         run: |
-          if [ -f scrape_dbpr.py ]; then
-            MAX_RECORDS=500 python scrape_dbpr.py
-          else
+          if [ ! -f scrape_dbpr.py ]; then
             echo "scrape_dbpr.py not found — skipping"
+            exit 0
           fi
+          if [ ! -f data/pinellas_all_violations_to_scrape.csv ] || [ "$(wc -l < data/pinellas_all_violations_to_scrape.csv)" -le 1 ]; then
+            echo "::warning::data/pinellas_all_violations_to_scrape.csv is missing or empty — build_violations_list.py failed. Skipping scraper to avoid legacy V22-only mode."
+            exit 0
+          fi
+          MAX_RECORDS=500 python scrape_dbpr.py
 
       - name: Aggregate citation data
         continue-on-error: true
