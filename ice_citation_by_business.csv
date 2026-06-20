@@ -65,7 +65,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 2235731,CAFE LARGO,12551 INDIAN ROCKS RD,LARGO,2021-06-23,1,Inspection Completed - No Further Action,False,False,,
 2235741,ASTRO SKATING CENTER P P,10001 66 ST N,PINELLAS PARK,2021-06-08,2,Administrative complaint recommended,True,False,,
 2235794,ACROPOL INN REST,2552 SUNSET POINT RD,CLEARWATER,2020-09-02,2,Warning Issued,True,False,,
-2235800,CRABBY BILLS,401 GULF BLVD,INDIAN ROCKS BEACH,2025-12-22,3,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-12-22
+2235800,CRABBY BILLS,401 GULF BLVD,INDIAN ROCKS BEACH,2026-06-19,4,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-12-22
 2235824,JOTO'S PIZZA,13050 PARK BLVD,SEMINOLE,2025-08-13,2,Inspection Completed - No Further Action,True,False,Plastic cups above ice machine,2025-08-13
 2235834,BANYAN TREE DELI,6800 SUNSHINE SKYWAY LN S,ST PETERSBURG,2021-04-12,1,Inspection Completed - No Further Action,False,False,,
 2235837,ASTRO SKATING RINK,875 CYPRESS ST,TARPON SPGS,2026-06-04,2,Inspection Completed - No Further Action,True,False,,
@@ -1838,7 +1838,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 7586715,NACHO DADDY,3390 GANDY BLVD,ST. PETERSBURG,2021-06-24,1,Administrative complaint recommended,False,False,,
 7588351,MADELINES FALAFEL AND SHAWARMA INC,13 N PINELLAS AVE,TARPON SPRINGS,2026-04-22,3,Emergency order recommended,True,False,,
 7589502,MORI SUSHI,1136 94 AVE N,ST. PETERSBURG,2026-02-11,16,Emergency Order Callback Not Complied,True,False,- From initial inspection : Basic - Small Ice buildup in reach-in freezer left side.,2026-02-11
-7589951,THE URBAN STILLHOUSE,2232 5 AVE S,ST. PETERSBURG,2026-06-02,4,Inspection Completed - No Further Action,True,False,,
+7589951,THE URBAN STILLHOUSE,2232 5 AVE S,ST. PETERSBURG,2026-06-19,5,Inspection Completed - No Further Action,True,False,,
 7590162,FIREHOUSE SUBS,1547 MAIN ST,DUNEDIN,2020-12-08,2,Inspection Completed - No Further Action,True,False,,
 7591178,WRAPS & KABOBS,40715 US 19 ,TARPON SPRINGS,2025-10-06,2,Inspection Completed - No Further Action,True,False,,
 7591819,D TOWN BAR AND GRILL,1056 MAIN ST,DUNEDIN,2021-05-27,3,Inspection Completed - No Further Action,True,False,,
@@ -2481,7 +2481,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 9093015,MAPLE STREET BISCUIT,2233 GULF TO BAY BLVD,CLEARWATER,2025-08-05,1,Inspection Completed - No Further Action,False,False,"Ceiling/ceiling tiles/vents soiled with accumulated dust, or mold-like substance in dry storage area near ice machine",2025-08-05
 9093143,JB'S SEAFOOD TAKE OUT,6657 49 ST N,PINELLAS PARK,2026-06-15,1,Inspection Completed - No Further Action,False,False,,
 9096963,WILLIAMS SUBMARINE SHOP,3801 TYRONE BLVD N ST,ST. PETERSBURG,2025-11-17,1,Inspection Completed - No Further Action,False,False,,
-9099757,LIBRARY JV MANAGEMENT LLC & FOR ALL KIDS LLC,600 5 ST S,ST. PETERSBURG,2026-04-22,3,"Call Back - Extension given, pending",True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-10-06
+9099757,LIBRARY JV MANAGEMENT LLC & FOR ALL KIDS LLC,600 5 ST S,ST. PETERSBURG,2026-06-19,4,"Call Back - Extension given, pending",True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin.,2025-10-06
 9100451,NEIGHBORHOOD JOE,2325 DR MLK JR ST N,ST. PETERSBURG,2025-12-17,3,Inspection Completed - No Further Action,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin at front counter ice machine next to handwash sink.,2025-08-15
 9103382,BIG MOMMAS HICKORY SMOKED BBQ,35220 US HWY 19 N,PALM HARBOR,2026-01-13,2,Call Back - Admin. complaint recommended,True,False,- From initial inspection : Basic - Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Mold like substance in interior of ice machine in back room.,2026-01-13
 9103469,WHITE IGLOO,30575 US HWY 19 N,PALM HARBOR,2026-05-05,2,Call Back - Complied,True,False,Operator added more food prep area by adding additional ice cream coolers which requires the ice cream to be scooped. Ice machine 1 was moved from its location on the plans. Ice bin in back has been moved. Ice machine location in back room moved.,2026-02-24
