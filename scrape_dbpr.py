@@ -18,7 +18,7 @@ from urllib.error import URLError, HTTPError
 from html.parser import HTMLParser
 
 # ── Config ────────────────────────────────────────────────────────────────
-BASE_URL = "https://www.myfloridalicense.com/inspectionDetail.asp?InspVisitID={vid}"
+BASE_URL = "https://www.myfloridalicense.com/inspectionDetail.asp?InspVisitID={vid}&id={lic}"
 TERMS_URL = "https://www.myfloridalicense.com/insptermsofuse.asp"
 # Output at repo root — data/ is gitignored so results would never be committed
 OUTPUT_CSV    = "pinellas_v22_narratives.csv"
@@ -491,7 +491,9 @@ def run_full_violations_scrape():
 
         print(f"  [{i+1}] {biz[:40]} | Lic {lic}", end='', flush=True)
 
-        url = BASE_URL.format(vid=vid)
+        # &id= must carry the numeric License ID (matches the working browser URL).
+        # `lic` here is the License ID (falls back to License Number only if ID absent).
+        url = BASE_URL.format(vid=vid, lic=lic)
         html, new_cookie = fetch_page(url, session_cookie)
         if new_cookie:
             session_cookie = new_cookie
@@ -659,7 +661,9 @@ def main():
         lic = record.get('License Number', '').strip()
         lid = record.get('License ID', '').strip()
 
-        url = BASE_URL.format(vid=vid)
+        # &id= must carry the numeric License ID (lid); fall back to License
+        # Number only if the License ID column is missing in this row.
+        url = BASE_URL.format(vid=vid, lic=(lid or lic))
 
         if i % 50 == 0:
             print(f"\n[{i+1}/{len(remaining)}] Progress — "
