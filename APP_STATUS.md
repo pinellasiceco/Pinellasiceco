@@ -1,13 +1,41 @@
 # Pinellas Ice Co — App Status
-*Last updated: 2026-06-20 (sessions 63–65 — Account Groups module, scraper stale-cache fix, citation summary priority fix, backlog visibility logging) by Claude Code*
+*Last updated: 2026-06-21 (sessions 66–67 — bar-type filter + late-opener tag, AG_SEED first-load seed, scraper &id= URL fix + cache wipe, test-record reset, several read-only diagnostics) by Claude Code*
 
 ## Live App
 - URL: https://pinellasiceco.github.io/Pinellasiceco
-- Last deployed: 2026-06-20 (Account Groups module + scraper stale-cache + citation priority fixes)
+- Last deployed: 2026-06-21 (bar filter + late-opener tag via rebuild #575; earlier same-day: AG_SEED + scraper URL fix)
 - Build script: `build.py` (repo root) → outputs `index.html` directly
 - `index.html` regenerated from `build.py` using existing P[] data — fully in sync
 
 ## What's Working ✅
+
+### Late-Opening Calling List: Bar Filter + Late-Opener Tag (session 67)
+Built to support the pre-open calling workflow (calling late-opening venues the day before for a next-day appointment, since they can&#39;t be reached on normal 2–4pm walk-ins). The OSM `hours` field was rejected as the basis (see Diagnostics below) in favor of the 100%-classified `venue_type` proxy.
+- **Venue filter dropdown** (`#alo`, Prospects tab, beside the timing filter): three independently reachable states — **Bars Only** (`venue_type==='bar'`, ~725 records), **Late Openers Only** (`late_opener===true`, user-built list), **Bars or Late Openers** (union). Uses `venue_type==='bar'` as the single field (mutually exclusive with golf; matches the existing golf preset convention). Counts confirmed 2026-06-21: 725 bars / 8,822 restaurants / 110 golf / 9,658 total (`is_bar=true` = 734, the 9 extra are golf-bars).
+- **Combination logic**: across filter categories (county/city/status/timing + venue) it is **AND**; the **OR** lives only inside the "Bars or Late Openers" option. Added to `clearFilters()` reset list.
+- **Manual `late_opener` tag**: single-tap toggle button (`#mlate-btn`) on the business detail modal; `toggleLateOpener()` flips `customers[id].late_opener`, persisted via existing `custSave()` (localStorage `pic_customers` + Supabase sync). Toggle preserves existing status first so `custLoad()` (`p.status=c.status`) never clobbers `p.status` with undefined. Available on **any** venue_type, not just bars. Button state rendered by `renderLateOpenerBtn(p)` in `openM()`.
+- **Zero-state**: "Late Openers Only" with no tags shows "No late openers tagged yet — tag businesses from their detail page as you confirm them in the field" instead of a blank list; other empty filters keep the default message.
+- **Safety**: additive only — no existing filter, the OSM `hours` field, or the unused `ph-hrs` field touched. No business-name interpolation introduced (no apostrophe risk); `py_compile` + `node --check` both pass.
+
+### AG_SEED: Account Groups First-Load Seed (session 66)
+- `account_groups_seed.json` (repo root): 50 groups, 136 matched P[] member pids, 9 unmatched text entries — all `status:'candidate'`, `source:'dbpr_mailing_match'`, stable IDs (`gs`+md5 hash).
+- `build_html()` reads the seed file and injects it as `AG_SEED=%%AG_SEED%%;` in the HTML_TEMPLATE (null if file absent).
+- `agLoad()` seeds `accountGroups` from `AG_SEED` and calls `agSave()` only when `pic_account_groups_v1` is absent/empty — so the Groups tab is populated on first load and never overwrites user edits afterward. No auto-promotion: all seeded groups remain `candidate`.
+
+### DBPR Scraper: Missing `&id=` URL Parameter Fix (session 66)
+- **Root cause**: `BASE_URL` was `inspectionDetail.asp?InspVisitID={vid}` with **no** `&id=` — the bare URL fails/redirects on DBPR. Correct form is `...InspVisitID={vid}&id={lic}` where `lic` is the numeric **License ID** (not License Number). Confirmed by manual browser test. Fixed both call sites in `scrape_dbpr.py` (primary `run_full_violations_scrape` and legacy V22 `main()`; the latter falls back to License Number if License ID absent). `TERMS_URL` left unchanged (session-init, needs no params).
+- **Cache wiped** to force a clean re-scrape with the correct URL: `full_inspection_narratives.json` → `{}` (was 3,228 entries) and `full_scraper_progress.txt` → empty (was 5,611 lines). ~2,100+ records re-queued; drains over several daily runs at MAX_RECORDS=500.
+- **Massimo&#39;s stale snippet** resolves once the DBPR_ERROR 7-day cooldown expires (~2026-06-27) and the re-scrape succeeds; `generate_citation_summary.py` PRIMARY (JSON) path then overrides the stale V22 CSV fallback. Does NOT change the session-64 Visit-ID comparison logic.
+
+### Operational: Test-Record Reset + Churn Audit (session 67)
+- **Novu At Ponce (prospect_id 7847841)**: confirmed test data (won status set during testing, never sold; three contradictory same-day log entries). Deleted from Supabase `pic_customers` + `pic_log` via a one-time read-only-then-delete admin workflow (since removed). Now excluded from MRR totals, client counts, and Sales-Reports metrics. Only that one record was touched.
+- **Churned records audit (read-only, zero changes)**: WHISKEY WINGS (6137830) and CYPRESS RUN GOLF CLUB (7190648) = genuine lost deals (real call notes, on-site ATP reading); POSITANO&#39;S (9103599) = unclear (supplemental won then churned same day, Easy Ice incumbent) — left as-is per user.
+- **Supabase tables confirmed 2026-06-21** (keyed by `device_id`+`prospect_id`): `pic_prospects` (9,658 rows), `pic_customers`, `pic_log`, `pic_phones` (445 rows). NOTE: this supersedes the session-61 reference to a `public.customers` pid-keyed table — the live sync uses `pic_*` tables via `sbUpsert()`.
+
+### Diagnostics — Investigated, No Code Change (sessions 66–67)
+- **newfood.csv (DBPR new-application extract): REJECTED.** Gating test showed approval date == first inspection date (0-day lead) across all sampled businesses — provides no pre-opening lead time. Do not integrate. (The separate `chgownr_food` extract is the owner-change file.)
+- **New-business visibility lag**: measured across 52 builds — genuinely new businesses (license absent from prior build) appear in-pipeline exactly **1 day** after first DBPR inspection, zero variance. The lag is DBPR-side; pipeline already near-optimal. `n_insp` is current-fiscal-year-scoped, NOT a lifetime "newly opened" signal.
+- **Hours-of-operation field**: already integrated (OSM `opening_hours` → `hours` on P[]; plus the unused free-text `ph-hrs`). Coverage ~6% (63 of a 1,000-row sample), worst-covered for late-openers specifically; manual `ph-hrs` has **0 entries across 445 phone records**. Too sparse to filter on — this finding drove the bar-filter approach above instead. OSM format is clean/parseable (`Mo-Fr 11:00-21:00`), but coverage, not parseability, is the blocker.
 
 ### Deployment
 - Daily cron: `0 13 * * *` (9am ET) in `rebuild.yml` — runs ~2h after DBPR publishes (~6:48am ET confirmed via Last-Modified header)
