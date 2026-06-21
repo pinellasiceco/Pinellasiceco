@@ -2184,6 +2184,8 @@ def build_html(records, partners=None):
         separators=(',',':')
     )
     zip_js = json.dumps({z: list(c) for z,c in ZIP_COORDS.items()}, separators=(',',':'))
+    _seed_path = Path(__file__).parent / 'account_groups_seed.json'
+    ag_seed_js = json.dumps(json.loads(_seed_path.read_text(encoding='utf-8')), separators=(',',':')) if _seed_path.exists() else 'null'
 
     n_cb    = sum(1 for r in records if r['priority']=='CALLBACK')
     n_hot   = sum(1 for r in records if r['priority']=='HOT')
@@ -2225,7 +2227,8 @@ def build_html(records, partners=None):
                             '</div></div>'
                         ) if REPORTS_TAB_ENABLED else '')\
                         .replace('%%SIG_BLOCK%%', SIG_HTML)\
-                        .replace('%%SIG_BLOCK_EMAIL%%', SIG_HTML_EMAIL)
+                        .replace('%%SIG_BLOCK_EMAIL%%', SIG_HTML_EMAIL)\
+                        .replace('%%AG_SEED%%', ag_seed_js)
 
 # ──────────────────────────────────────────────────────────────────────────────
 # HTML TEMPLATE  (everything between the triple-quotes)
@@ -7605,6 +7608,7 @@ function custSave(){
 }
 // ── Account Groups module ─────────────────────────────────────────────────
 var AG_STORAGE_KEY='pic_account_groups_v1';
+var AG_SEED=%%AG_SEED%%;
 var accountGroups={};            // { gid: {group object} }
 var _agPidIndex={};              // { pid(String): gid }  reverse lookup
 var _agStatusFilter='all';
@@ -7630,6 +7634,9 @@ function agBuildIndex(){
 }
 function agLoad(){
   try{accountGroups=JSON.parse(localStorage.getItem(AG_STORAGE_KEY)||\'{}\')||{};}catch(e){accountGroups={};}
+  if(!Object.keys(accountGroups).length&&typeof AG_SEED!==\'undefined\'&&AG_SEED&&Object.keys(AG_SEED).length){
+    accountGroups=AG_SEED;agSave();
+  }
   agBuildIndex();
 }
 function agSave(){
