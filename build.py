@@ -2746,6 +2746,7 @@ header{background:var(--navy);
         <option value="dead">Dead</option>
       </select>
       <select id="adt" onchange="dRa()" class="flt-sel"><option value="">All Timing</option><option value="overdue">Overdue</option><option value="0-30">Due &lt; 30 days</option><option value="30-60">30&#x2013;60 days</option><option value="60-90">60&#x2013;90 days</option><option value="90+">90+ days</option></select>
+      <select id="alo" onchange="dRa()" class="flt-sel"><option value="">All Venues</option><option value="bar">&#x1F37A; Bars Only</option><option value="late">&#x1F319; Late Openers Only</option><option value="barlate">Bars or Late Openers</option></select>
       <button onclick="enterQueueMode()" ontouchend="event.preventDefault();enterQueueMode()" style="font-size:10px;padding:5px 10px;border:1px solid var(--blu);border-radius:6px;background:#0a84ff22;color:var(--blu);cursor:pointer;font-family:inherit;font-weight:700;flex-shrink:0">&#x25B6; Queue</button>
       <button onclick="clearFilters()" ontouchend="event.preventDefault();clearFilters()" style="font-size:10px;padding:5px 8px;border:1px solid var(--brd);border-radius:6px;background:transparent;color:var(--sub);cursor:pointer;font-family:inherit;flex-shrink:0">Clear</button>
       <button id="btn-show-dead" onclick="toggleShowDead()" style="font-size:10px;padding:5px 8px;border:1px solid #94a3b8;border-radius:6px;background:transparent;color:#94a3b8;cursor:pointer;font-family:inherit;flex-shrink:0">&#x26AB; Show Lost</button>
@@ -3321,6 +3322,9 @@ header{background:var(--navy);
       <div class="mphacts" id="mpa"></div>
       <div id="mhrs" class="mhours"></div>
       <div id="mrat" style="font-size:9px;color:#555;margin-top:3px"></div>
+    </div>
+    <div style="margin-bottom:10px">
+      <button id="mlate-btn" type="button" onclick="toggleLateOpener()" ontouchend="event.preventDefault();toggleLateOpener()" style="width:100%;padding:8px;border-radius:8px;border:1px solid var(--brd);background:transparent;color:#64748b;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation">&#x1F319; Mark Late Opener</button>
     </div>
     <div id="mice" style="margin-bottom:10px"></div>
     <div style="margin-bottom:10px">
@@ -5595,6 +5599,7 @@ function rA(){
   const st      = document.getElementById('as_')?.value||'';
   const conf    = parseInt(document.getElementById('aconf')?.value||'0');
   const dt      = document.getElementById('adt')?.value||'';
+  const venl    = document.getElementById('alo')?.value||'';
 
   let list=P.filter(p=>{
     if(Q&&!p.name.toLowerCase().includes(Q)&&!p.city.toLowerCase().includes(Q))return false;
@@ -5608,6 +5613,7 @@ function rA(){
       else if(norm!==st)return false;
     }
     if(dt){var _du=p.days_until??999;if(_du===999)return false;if(dt==='overdue'&&!(_du<0))return false;if(dt==='0-30'&&!(_du>=0&&_du<30))return false;if(dt==='30-60'&&!(_du>=30&&_du<60))return false;if(dt==='60-90'&&!(_du>=60&&_du<90))return false;if(dt==='90+'&&!(_du>=90))return false;}
+    if(venl){var _isBar=(p.venue_type==='bar');var _isLate=!!(customers[p.id]||{}).late_opener;if(venl==='bar'){if(!_isBar)return false;}else if(venl==='late'){if(!_isLate)return false;}else if(venl==='barlate'){if(!(_isBar||_isLate))return false;}}
     // Hide dead prospects unless _showDead is toggled on
     if(!_showDead&&!st){
       const lc=getLC(p.id);
@@ -5708,7 +5714,7 @@ function rA(){
   const g=document.getElementById('agrid');
   const empty=document.getElementById('a-empty');
   if(!g)return;
-  if(list.length===0){g.innerHTML='';if(empty)empty.style.display='flex';return;}
+  if(list.length===0){g.innerHTML='';if(empty){var _em=empty.lastElementChild;if(_em){_em.textContent=(venl==='late')?'No late openers tagged yet — tag businesses from their detail page as you confirm them in the field':'No prospects match these filters';}empty.style.display='flex';}return;}
   if(empty)empty.style.display='none';
   const visible=list.slice(0,50);
   const cards=visible.map(p=>{try{return cardHTML(p);}catch(e){console.warn('card err',p.id,e);return'';}}).join('');
@@ -5819,7 +5825,7 @@ function updateDbprChipCounts(){
 }
 
 function clearFilters(){
-  ['ac','ac-city','ap','as_','adt'].forEach(id=>{
+  ['ac','ac-city','ap','as_','adt','alo'].forEach(id=>{
     const el=document.getElementById(id);if(el)el.value='';
   });
   document.getElementById('queue-bg')?.classList.remove('on');
@@ -7093,6 +7099,7 @@ function openM(id){
   }
   document.getElementById('mhrs').textContent=p.hours?'Hours: '+p.hours:'';
   document.getElementById('mrat').textContent=p.rating>0?stars(p.rating):'';
+  renderLateOpenerBtn(p);
   const iceEl=document.getElementById('mice');
   if(p.confirmed||p.chronic){
     const codes=(p.codes||[]).map(c=>ICN[c]||c).join(', ');
@@ -7605,6 +7612,29 @@ function custSave(){
   if(_sb&&_userId){
     Object.keys(customers).forEach(function(pid){sbUpsert('pic_customers',pid,customers[pid]);});
   }
+}
+// ── LATE-OPENER TAG (manual field-confirmed flag, independent of venue_type) ──
+function renderLateOpenerBtn(p){
+  var btn=document.getElementById('mlate-btn');
+  if(!btn||!p)return;
+  var on=!!(customers[p.id]||{}).late_opener;
+  btn.innerHTML=on?'&#x1F319; Late Opener &#x2713;':'&#x1F319; Mark Late Opener';
+  btn.style.background=on?'#fef3c7':'transparent';
+  btn.style.color=on?'#92400e':'#64748b';
+  btn.style.borderColor=on?'#f59e0b':'var(--brd)';
+}
+function toggleLateOpener(){
+  if(!cur)return;
+  var id=cur.id;
+  var p=P.find(function(x){return x.id===id||x.id==id;});
+  if(!customers[id])customers[id]={};
+  // Preserve existing status so custLoad (p.status=c.status) never clobbers it with undefined
+  if(customers[id].status===undefined)customers[id].status=(p&&p.status)?p.status:'prospect';
+  customers[id].late_opener=!customers[id].late_opener;
+  custSave();
+  renderLateOpenerBtn(p||cur);
+  toast(customers[id].late_opener?'✅ Tagged as late opener':'Late-opener tag removed');
+  if(tab==='all')dRa();
 }
 // ── Account Groups module ─────────────────────────────────────────────────
 var AG_STORAGE_KEY='pic_account_groups_v1';
