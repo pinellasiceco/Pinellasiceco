@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Own vs. Lease Calculator — Pinellas Ice Co.</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600;700&family=Syne+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0d1b2a;
+  --navy2: #15273c;
+  --ice: #3a8ec9;
+  --ice-light: #7ec1eb;
+  --gold: #c8973a;
+  --gold-light: #e0b563;
+  --green: #1a6b3a;
+  --green-bg: #e8f5ee;
+  --red: #9b1c1c;
+  --red-bg: #fdecea;
+  --amber: #8a5c00;
+  --amber-bg: #fdf3dc;
+  --bg: #f7f6f3;
+  --card: #ffffff;
+  --border: #e4e2dc;
+  --ink: #1c1c1a;
+  --ink2: #5a5855;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  font-family: 'DM Sans', sans-serif;
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: 80px;
+}
+
+.hero {
+  background: linear-gradient(180deg, #0a1521 0%, var(--navy) 100%);
+  padding: 40px 24px 36px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 260px; height: 260px;
+  background: radial-gradient(circle, rgba(58,142,201,0.14), transparent 70%);
+}
+.hero-eyebrow {
+  font-family: 'Syne Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ice-light);
+  margin-bottom: 14px;
+  position: relative;
+}
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(24px, 6vw, 36px);
+  color: #fff;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+  margin-bottom: 12px;
+  position: relative;
+}
+.hero h1 em {
+  font-style: normal;
+  background: linear-gradient(90deg, var(--gold-light), var(--gold));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.hero-sub {
+  font-size: 14px;
+  color: rgba(255,255,255,0.6);
+  max-width: 440px;
+  margin: 0 auto;
+  line-height: 1.65;
+  position: relative;
+}
+
+main { max-width: 640px; margin: 0 auto; padding: 32px 20px 0; }
+
+.section-label {
+  font-family: 'Syne Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink2);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.inputs-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px;
+  margin-bottom: 20px;
+}
+.inputs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+label {
+  display: block;
+  font-size: 12.5px;
+  color: var(--ink2);
+  margin-bottom: 7px;
+}
+.input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0 12px;
+  background: var(--bg);
+  transition: border-color 0.15s;
+}
+.input-wrap:focus-within { border-color: var(--ice); }
+.input-wrap span { font-size: 15px; color: var(--ink2); }
+.input-wrap input {
+  border: none;
+  background: transparent;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink);
+  padding: 10px 0;
+  width: 100%;
+  outline: none;
+}
+select {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: var(--bg);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--ink);
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+select:focus { border-color: var(--ice); }
+
+.compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.compare-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+}
+.compare-card.winner {
+  border-color: var(--ice);
+  border-width: 2px;
+}
+.compare-label {
+  font-family: 'Syne Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink2);
+  margin-bottom: 12px;
+}
+.compare-card.winner .compare-label { color: var(--ice); }
+.five-yr-label {
+  font-size: 12px;
+  color: var(--ink2);
+  margin-bottom: 3px;
+}
+.five-yr-total {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 28px;
+  letter-spacing: 0.01em;
+  margin-bottom: 14px;
+}
+.five-yr-total.bad { color: var(--red); }
+.five-yr-total.good { color: var(--green); }
+.compare-rows { border-top: 1px solid var(--border); padding-top: 12px; }
+.compare-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  padding: 4px 0;
+}
+.compare-row .cr-label { color: var(--ink2); }
+.compare-row .cr-val { font-weight: 600; color: var(--ink); }
+.cr-val.good { color: var(--green); }
+.cr-val.bad { color: var(--red); }
+
+.result-banner {
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.result-banner.positive { background: var(--green-bg); }
+.result-banner.negative { background: var(--amber-bg); }
+.result-stat {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 36px;
+  letter-spacing: 0.01em;
+  margin-bottom: 4px;
+}
+.result-banner.positive .result-stat { color: var(--green); }
+.result-banner.negative .result-stat { color: var(--amber); }
+.result-label {
+  font-size: 13px;
+  line-height: 1.6;
+}
+.result-banner.positive .result-label { color: var(--green); }
+.result-banner.negative .result-label { color: var(--amber); }
+
+.warranty { margin-bottom: 24px; }
+.warranty-item {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 14px 18px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+}
+.warranty-item:last-child { margin-bottom: 0; }
+.warranty-item.w-full { background: var(--green-bg); }
+.warranty-item.w-comp { background: rgba(58,142,201,0.08); }
+.warranty-item.w-maint { background: var(--bg); border: 1px solid var(--border); }
+.warranty-item.w-note { background: var(--amber-bg); }
+.w-badge {
+  font-family: 'Syne Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  padding-top: 1px;
+  min-width: 68px;
+}
+.warranty-item.w-full .w-badge { color: var(--green); }
+.warranty-item.w-comp .w-badge { color: var(--ice); }
+.warranty-item.w-maint .w-badge { color: var(--ink2); }
+.warranty-item.w-note .w-badge { color: var(--amber); }
+.w-body h3 {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 3px;
+}
+.w-body p {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--ink2);
+}
+
+.cta-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 13.5px;
+  padding: 13px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  border: none;
+  cursor: pointer;
+}
+.btn-primary {
+  flex: 1;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold));
+  color: var(--navy);
+}
+.btn-secondary {
+  flex: 1;
+  background: var(--navy);
+  color: #fff;
+}
+
+footer {
+  text-align: center;
+  padding: 24px 20px;
+  font-family: 'Syne Mono', monospace;
+  font-size: 8.5px;
+  color: var(--ink2);
+  letter-spacing: 0.06em;
+}
+
+@media (max-width: 480px) {
+  .inputs-grid { grid-template-columns: 1fr; }
+  .compare { grid-template-columns: 1fr; }
+  .cta-row { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">Pinellas Ice Co.</div>
+  <h1>Your lease is costing you more than <em>you think.</em></h1>
+  <p class="hero-sub">Enter what you pay today. See the real 5-year picture &mdash; including what you own at the end.</p>
+</div>
+
+<main>
+
+  <div class="section-label">What you pay now</div>
+  <div class="inputs-card">
+    <div class="inputs-grid">
+      <div>
+        <label for="lease-rate">Monthly lease payment</label>
+        <div class="input-wrap">
+          <span>$</span>
+          <input type="number" id="lease-rate" value="225" min="100" max="600" step="5" oninput="calc()">
+          <span style="font-size:13px;">/mo</span>
+        </div>
+      </div>
+      <div>
+        <label for="machine-size">Machine size</label>
+        <select id="machine-size" onchange="calc()">
+          <option value="3500">Small (100-200 lb/day)</option>
+          <option value="5000">Compact (250-350 lb/day)</option>
+          <option value="7200" selected>Mid-size (400-500 lb/day)</option>
+          <option value="9500">Large (500-750 lb/day)</option>
+          <option value="12500">High volume (750-1000 lb/day)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">5-year comparison</div>
+  <div class="compare">
+    <div class="compare-card">
+      <div class="compare-label">Keep leasing</div>
+      <div class="five-yr-label">Total paid over 5 years</div>
+      <div class="five-yr-total bad" id="lease-5yr">—</div>
+      <div class="compare-rows">
+        <div class="compare-row">
+          <span class="cr-label">You own at month 60</span>
+          <span class="cr-val bad">Nothing</span>
+        </div>
+        <div class="compare-row">
+          <span class="cr-label">Month 61 payment</span>
+          <span class="cr-val" id="lease-m61">—</span>
+        </div>
+        <div class="compare-row">
+          <span class="cr-label">Cleaning included</span>
+          <span class="cr-val">Bi-annual</span>
+        </div>
+        <div class="compare-row">
+          <span class="cr-label">ATP verified</span>
+          <span class="cr-val bad">No</span>
+        </div>
+        <div class="compare-row">
+          <span class="cr-label">DBPR monitoring</span>
+          <span class="cr-val bad">No</span>
+        </div>
+      </div>
+    </div>
+    <div class="compare-card winner">
+      <div class="compare-label">Own + Pinellas Ice Co.</div>
+      <div class="five-yr-label">Total paid over 5 years</div>
+      <div class="five-yr-total good" id="own-5yr">—</div>
+      <div class="compare-rows">
+        <div class="compare-row">
+          <span class="cr-label">You own at month 60</span>
+          <span class="cr-val good" id="residual">—</span>
+        </div>
+        <div class="compare-row">
+          <span class="cr-label">Month 61 payment</span>
+          <span class="cr-val good">$129/mo only</span>
+        </div>
+        <div class="compare-row">
+          <span class="cr-label">Cleaning included</span>
+          <span class="cr-val good">Quarterly ATP</span>
+        </div>
+        <div class="compare-row">
+          <span class="cr-label">ATP verified</span>
+          <span class="cr-val good">Every visit</span>
+        </div>
+        <div class="compare-row">
+          <span class="cr-label">DBPR monitoring</span>
+          <span class="cr-val good">Included</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="result-banner positive" id="result-banner">
+    <div class="result-stat" id="result-number">—</div>
+    <div class="result-label" id="result-text">—</div>
+  </div>
+
+  <div class="section-label">What a new machine&#39;s warranty covers</div>
+  <div class="warranty">
+
+    <div class="warranty-item w-comp">
+      <div class="w-badge">5 YEARS</div>
+      <div class="w-body">
+        <h3>Compressor &amp; evaporator &mdash; parts and labor</h3>
+        <p>The two most expensive failure points. A compressor replacement runs $600&ndash;1,200; an evaporator $400&ndash;800. Both fully covered for 5 years on a new Hoshizaki or Manitowoc &mdash; the same brands Als and Easy Ice place.</p>
+      </div>
+    </div>
+
+    <div class="warranty-item w-full">
+      <div class="w-badge">3 YEARS</div>
+      <div class="w-body">
+        <h3>All parts and labor &mdash; entire machine</h3>
+        <p>Control boards ($300&ndash;600), pumps ($200&ndash;400), sensors, and fans. Covered in full for the first 3 years &mdash; the period when install issues and early component failures are most likely.</p>
+      </div>
+    </div>
+
+    <div class="warranty-item w-maint">
+      <div class="w-badge">ONGOING</div>
+      <div class="w-body">
+        <h3>What isn&#39;t covered &mdash; filters and cleaning</h3>
+        <p>Water filter replacements (~$75&ndash;150/year) and routine cleaning are maintenance items. This is exactly what our quarterly plan handles &mdash; keeping the machine clean so warranty claims stay valid.</p>
+      </div>
+    </div>
+
+    <div class="warranty-item w-note">
+      <div class="w-badge">IMPORTANT</div>
+      <div class="w-body">
+        <h3>Warranty requires documented professional cleaning</h3>
+        <p>Most manufacturer warranties require proof of regular professional maintenance to honor repair claims. Our quarterly CleanScore report is that documentation &mdash; dated, signed, and on file after every visit.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="cta-row">
+    <a class="btn btn-primary" href="tel:7278556873">Call (727) 855-6873</a>
+    <a class="btn btn-secondary" href="https://meetings-na2.hubspot.com/stripe/ice-machine-on-site">Book a Free ATP Test</a>
+  </div>
+
+</main>
+
+<footer>
+  Pinellas Ice Co. &nbsp;&middot;&nbsp; Tarpon Springs, FL &nbsp;&middot;&nbsp; ATP-Verified Ice Machine Cleaning &nbsp;&middot;&nbsp; Pinellas County &nbsp;&middot;&nbsp;
+  Ownership cost assumes new machine purchase + $129/mo quarterly cleaning plan. Residual value estimated at 30% of purchase price after 5 years.
+</footer>
+
+<script>
+function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
+
+function calc() {
+  var leaseRate = parseFloat(document.getElementById('lease-rate').value) || 225;
+  var machinePrice = parseFloat(document.getElementById('machine-size').value) || 7200;
+
+  var leaseFiveYr = leaseRate * 60;
+  var cleanRate = 129;
+  var ownFiveYr = machinePrice + (cleanRate * 60);
+  var residual = Math.round(machinePrice * 0.30);
+  var savings = leaseFiveYr - ownFiveYr;
+
+  document.getElementById('lease-5yr').textContent = fmt(leaseFiveYr);
+  document.getElementById('lease-m61').textContent = fmt(leaseRate) + '/mo still';
+  document.getElementById('own-5yr').textContent = fmt(ownFiveYr);
+  document.getElementById('residual').textContent = '~' + fmt(residual) + ' asset';
+
+  var banner = document.getElementById('result-banner');
+  var num = document.getElementById('result-number');
+  var txt = document.getElementById('result-text');
+
+  if (savings > 0) {
+    banner.className = 'result-banner positive';
+    num.textContent = fmt(savings) + ' saved';
+    txt.textContent = 'Owning your machine and using Pinellas Ice Co. for quarterly ATP-verified cleaning saves you ' + fmt(savings) + ' over 5 years — and at the end you own a machine worth roughly ' + fmt(residual) + ' instead of handing it back.';
+  } else {
+    banner.className = 'result-banner negative';
+    num.textContent = fmt(Math.abs(savings)) + ' more';
+    txt.textContent = 'At your current lease rate, ownership costs about ' + fmt(Math.abs(savings)) + ' more over 5 years — though you walk away owning a machine worth roughly ' + fmt(residual) + '. The longer you operate, the more ownership wins.';
+  }
+}
+
+calc();
+</script>
+</body>
+</html>
