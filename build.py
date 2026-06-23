@@ -13312,7 +13312,7 @@ if('serviceWorker' in navigator){
 # ENTRY POINT
 # ──────────────────────────────────────────────────────────────────────────────
 SW_JS = """const CACHE_NAME='pic-BUILD_TS';
-const ASSETS=['./','/Pinellasiceco/index.html'];
+const ASSETS=[new Request('./',{cache:'no-cache'}),new Request('/Pinellasiceco/index.html',{cache:'no-cache'})];
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(ASSETS).catch(()=>{})));
   self.skipWaiting();
@@ -13330,7 +13330,7 @@ self.addEventListener('fetch',e=>{
   const isHTML=e.request.mode==='navigate'||url.pathname.endsWith('.html')||url.pathname==='/Pinellasiceco/'||url.pathname==='/Pinellasiceco';
   if(isHTML){
     e.respondWith(
-      fetch(e.request).then(res=>{
+      fetch(new Request(e.request,{cache:'no-cache'})).then(res=>{
         if(res&&res.status===200){const copy=res.clone();caches.open(CACHE_NAME).then(c=>c.put(e.request,copy));}
         return res;
       }).catch(()=>caches.match(e.request))
