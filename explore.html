@@ -1,875 +1,570 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Pinellas Ice Co — Ice Machine Compliance</title>
-  <meta name="description" content="The data behind ice machine compliance in Pinellas County. 7 years of Florida DBPR inspection records. Free ATP test available.">
-  <meta property="og:title" content="Pinellas Ice Co">
-  <meta property="og:description" content="Most Pinellas restaurants don&#39;t know what&#39;s in their ice machine. We do.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧊</text></svg>">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="ATP-verified ice machine cleaning for Pinellas County restaurants. $129/month. Quarterly service. No contract.">
+<title>Pinellas Ice Co. — Ice Machine Compliance</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&family=Syne+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0d1b2a;
+  --navy2: #15273c;
+  --ice: #3a8ec9;
+  --ice-light: #7ec1eb;
+  --gold: #c8973a;
+  --gold-light: #e0b563;
+  --green: #1a6b3a;
+  --green-bg: #e8f5ee;
+  --red: #9b1c1c;
+  --red-bg: #fdecea;
+  --amber: #8a5c00;
+  --bg: #f7f6f3;
+  --card: #ffffff;
+  --border: #e4e2dc;
+  --ink: #1c1c1a;
+  --ink2: #5a5855;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  font-family: 'DM Sans', sans-serif;
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: 60px;
+}
 
-    :root {
-      --navy:      #0a1628;
-      --navy-2:    #0f1f38;
-      --gold:      #c9973a;
-      --gold-light:#e8b84b;
-      --red:       #ef4444;
-      --red-dim:   #7f1d1d;
-      --green:     #10b981;
-      --green-dim: #064e3b;
-      --white:     #f8fafc;
-      --gray:      #94a3b8;
-      --gray-dim:  #334155;
-    }
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(170deg, #060f1a 0%, var(--navy) 60%, var(--navy2) 100%);
+  padding: 48px 24px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -80px; right: -80px;
+  width: 280px; height: 280px;
+  background: radial-gradient(circle, rgba(58,142,201,0.12), transparent 65%);
+  pointer-events: none;
+}
+.logo-line {
+  font-family: 'Syne Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ice-light);
+  margin-bottom: 20px;
+}
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(26px, 7vw, 38px);
+  color: #fff;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+  margin-bottom: 14px;
+}
+.hero-sub {
+  font-size: 15px;
+  color: rgba(255,255,255,0.62);
+  line-height: 1.65;
+  max-width: 380px;
+  margin: 0 auto 22px;
+}
+.price-pill {
+  display: inline-block;
+  background: rgba(200,151,58,0.15);
+  border: 1px solid rgba(200,151,58,0.35);
+  border-radius: 100px;
+  padding: 7px 18px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--gold-light);
+  letter-spacing: 0.02em;
+  margin-bottom: 24px;
+}
+.hero-cta {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold));
+  color: var(--navy);
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 14px;
+  padding: 13px 28px;
+  border-radius: 8px;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+}
 
-    html { scroll-behavior: smooth; }
+/* ── THE NUMBER ── */
+.number-moment {
+  background: var(--navy);
+  padding: 32px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+}
+.num-block { text-align: center; flex: 1; }
+.num-val {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(36px, 10vw, 52px);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.num-val.bad { color: #e57373; }
+.num-val.good { color: var(--gold-light); }
+.num-label {
+  font-family: 'Syne Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  margin-top: 5px;
+  line-height: 1.5;
+}
+.num-divider {
+  width: 1px;
+  height: 60px;
+  background: rgba(255,255,255,0.1);
+  margin: 0 16px;
+  flex-shrink: 0;
+}
+.num-context {
+  text-align: center;
+  padding: 0 24px 24px;
+  background: var(--navy);
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  font-style: italic;
+}
 
-    body {
-      font-family: 'DM Sans', system-ui, sans-serif;
-      background: var(--navy);
-      color: var(--white);
-      overflow-x: hidden;
-    }
+main { max-width: 580px; margin: 0 auto; padding: 0 20px; }
 
-    /* ── NOISE TEXTURE ───────────────────────────────────── */
-    .dark-section {
-      position: relative;
-    }
-    .dark-section::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-    }
-    .dark-section > * { position: relative; z-index: 1; }
+/* ── SECTION LABEL ── */
+.slabel {
+  font-family: 'Syne Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink2);
+  margin: 32px 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.slabel::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-    /* ── REVEAL ANIMATIONS ───────────────────────────────── */
-    .reveal {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .reveal-child { transition-delay: 0ms; }
-    .reveal-child:nth-child(1) { transition-delay: 0ms; }
-    .reveal-child:nth-child(2) { transition-delay: 150ms; }
-    .reveal-child:nth-child(3) { transition-delay: 300ms; }
+/* ── VALUE PROPS ── */
+.props { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 4px; }
+.prop {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 14px;
+}
+.prop-icon { font-size: 20px; margin-bottom: 8px; }
+.prop-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 3px;
+  line-height: 1.3;
+}
+.prop-desc { font-size: 11.5px; color: var(--ink2); line-height: 1.5; }
 
-    @keyframes pulse-opacity {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.3; }
-    }
-    .scroll-hint { animation: pulse-opacity 2s ease infinite; }
+/* ── PROCESS ── */
+.process { display: flex; flex-direction: column; gap: 0; margin-bottom: 4px; }
+.proc-step {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 14px 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  border-bottom: none;
+}
+.proc-step:first-child { border-radius: 10px 10px 0 0; }
+.proc-step:last-child { border-radius: 0 0 10px 10px; border-bottom: 1px solid var(--border); }
+.proc-n {
+  font-family: 'Syne Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--navy);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.proc-title { font-size: 13.5px; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+.proc-desc { font-size: 12px; color: var(--ink2); line-height: 1.5; }
 
-    @media (prefers-reduced-motion: reduce) {
-      * { animation: none !important; transition: none !important; }
-      .reveal { opacity: 1; transform: none; }
-    }
+/* ── GUARANTEE ── */
+.guarantees { display: flex; flex-direction: column; gap: 10px; margin: 24px 0; }
+.guarantee {
+  background: var(--green-bg);
+  border-left: 3px solid var(--green);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  font-size: 13px;
+  color: var(--green);
+  line-height: 1.6;
+}
+.guarantee.emergency {
+  background: rgba(58,142,201,0.07);
+  border-left-color: var(--ice);
+  color: #1a3a5c;
+}
+.guarantee strong { font-weight: 700; }
 
-    /* ── EYEBROW LABEL ───────────────────────────────────── */
-    .eyebrow {
-      font-family: 'DM Sans', system-ui, sans-serif;
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gold);
-    }
+/* ── OWN VS LEASE ── */
+.own-lease {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);
+  border-radius: 12px;
+  padding: 22px 20px;
+  margin: 4px 0 24px;
+}
+.own-lease-label {
+  font-family: 'Syne Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ice-light);
+  margin-bottom: 10px;
+}
+.own-lease h3 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 17px;
+  color: #fff;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+.own-lease p {
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.65;
+  margin-bottom: 14px;
+}
+.own-lease a {
+  display: inline-block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--gold-light);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(200,151,58,0.35);
+  padding-bottom: 1px;
+}
 
-    /* ═══════════════════════════════════════════════════════
-       ACT 1: HERO
-    ═══════════════════════════════════════════════════════ */
-    #act1 {
-      min-height: 100svh;
-      background: var(--navy);
-      display: flex;
-      align-items: center;
-      padding: 0 24px;
-    }
-    .hero-inner {
-      max-width: 380px;
-      margin: 0 auto;
-      padding-top: 28vh;
-      padding-bottom: 48px;
-      width: 100%;
-    }
-    .hero-eyebrow {
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 36px;
-    }
-    .hero-headline {
-      font-family: 'DM Sans', system-ui, sans-serif;
-      font-size: clamp(34px, 9vw, 46px);
-      font-weight: 300;
-      line-height: 1.15;
-      color: var(--white);
-      margin-bottom: 0;
-    }
-    .hero-headline-bold {
-      font-family: 'DM Sans', system-ui, sans-serif;
-      font-size: clamp(34px, 9vw, 46px);
-      font-weight: 600;
-      font-style: italic;
-      line-height: 1.15;
-      color: var(--gold);
-      margin-top: 4px;
-      margin-bottom: 60px;
-    }
-    .hero-scroll {
-      font-size: 12px;
-      font-weight: 300;
-      color: var(--gray);
-      letter-spacing: 0.04em;
-    }
+/* ── PATH CARDS ── */
+.paths { display: flex; flex-direction: column; gap: 10px; margin-bottom: 4px; }
+.path-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
+  text-decoration: none;
+  transition: border-color 0.15s;
+}
+.path-card:hover { border-color: var(--ice); }
+.path-card.urgent { border-color: rgba(155,28,28,0.2); background: var(--red-bg); }
+.path-icon { font-size: 22px; flex-shrink: 0; }
+.path-text .pt { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+.path-text .pd { font-size: 12px; color: var(--ink2); line-height: 1.4; }
+.path-card.urgent .pt { color: var(--red); }
+.path-arrow { margin-left: auto; font-size: 16px; color: var(--ink2); flex-shrink: 0; }
 
-    /* ═══════════════════════════════════════════════════════
-       ACT 2: THE CONTRAST MOMENT
-    ═══════════════════════════════════════════════════════ */
-    #act2 {
-      min-height: 100svh;
-      background: var(--navy);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 48px 16px;
-    }
-    .contrast-numbers {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      max-width: 420px;
-      gap: 0;
-      margin-bottom: 40px;
-    }
-    .contrast-half {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      padding: 0 12px;
-    }
-    .contrast-divider {
-      width: 1px;
-      height: 120px;
-      background: var(--gold);
-      opacity: 0.5;
-      flex-shrink: 0;
-    }
-    .number-bad {
-      font-family: 'Bebas Neue', system-ui, sans-serif;
-      font-size: clamp(96px, 24vw, 130px);
-      line-height: 1;
-      color: var(--red);
-      text-shadow: 0 0 60px rgba(239, 68, 68, 0.3);
-    }
-    .number-good {
-      font-family: 'Bebas Neue', system-ui, sans-serif;
-      font-size: clamp(96px, 24vw, 130px);
-      line-height: 1;
-      color: var(--green);
-      text-shadow: 0 0 60px rgba(16, 185, 129, 0.2);
-    }
-    .contrast-label {
-      font-size: 11px;
-      font-weight: 400;
-      color: var(--gray);
-      line-height: 1.5;
-      margin-top: 10px;
-      max-width: 130px;
-    }
-    .contrast-unit {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--gray);
-      margin-bottom: 4px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-    .contrast-footer {
-      text-align: center;
-      max-width: 340px;
-    }
-    .contrast-22x {
-      font-size: 16px;
-      font-weight: 500;
-      color: var(--white);
-      margin-bottom: 10px;
-      line-height: 1.45;
-    }
-    .contrast-caveat {
-      font-size: 10px;
-      font-weight: 300;
-      color: var(--gray);
-      line-height: 1.6;
-    }
+/* ── CONTACT BLOCK ── */
+.contact {
+  background: var(--navy);
+  border-radius: 12px;
+  padding: 22px 20px;
+  margin: 24px 0;
+  text-align: center;
+}
+.contact-name {
+  font-family: 'Syne Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ice-light);
+  margin-bottom: 12px;
+}
+.contact-links { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+.contact-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+}
+.contact-link span { font-size: 16px; }
+.contact-book {
+  display: block;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold));
+  color: var(--navy);
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 13.5px;
+  padding: 12px 20px;
+  border-radius: 7px;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+}
 
-    /* ═══════════════════════════════════════════════════════
-       ACT 3: THE DATA
-    ═══════════════════════════════════════════════════════ */
-    #act3 {
-      background: var(--white);
-      padding: 72px 24px 64px;
-    }
-    .act3-inner {
-      max-width: 380px;
-      margin: 0 auto;
-    }
-    .data-header {
-      margin-bottom: 40px;
-    }
-    .data-eyebrow {
-      color: var(--gold);
-      margin-bottom: 18px;
-    }
-    .data-headline {
-      font-size: clamp(22px, 5.5vw, 30px);
-      font-weight: 300;
-      color: var(--navy-2);
-      line-height: 1.3;
-      margin-bottom: 2px;
-    }
-    .data-headline-bold {
-      font-size: clamp(22px, 5.5vw, 30px);
-      font-weight: 600;
-      color: var(--navy-2);
-      line-height: 1.3;
-    }
-    /* Stat cards */
-    .stat-cards { display: flex; flex-direction: column; gap: 0; }
-    .stat-card {
-      background: #fff;
-      border: 1px solid #e2e8f0;
-      border-left: 3px solid var(--gold);
-      border-radius: 16px;
-      padding: 24px 22px;
-      margin-bottom: 14px;
-    }
-    .stat-card-num {
-      font-family: 'Bebas Neue', system-ui, sans-serif;
-      font-size: 72px;
-      line-height: 1;
-      color: var(--navy-2);
-      margin-bottom: 6px;
-    }
-    .stat-card-desc {
-      font-size: 13px;
-      font-weight: 400;
-      color: var(--gray);
-      line-height: 1.55;
-      margin-bottom: 6px;
-    }
-    .stat-card-source {
-      font-size: 10px;
-      font-weight: 400;
-      color: var(--gray-dim);
-      letter-spacing: 0.02em;
-    }
-    .data-link {
-      margin-top: 6px;
-      display: inline-block;
-    }
-    .data-link a {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--gold);
-      text-decoration: none;
-      border-bottom: 1px solid rgba(201,151,58,0.4);
-      padding-bottom: 1px;
-      -webkit-tap-highlight-color: transparent;
-    }
+/* ── EVIDENCE ROW ── */
+.evidence {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 4px 0 24px;
+}
+.ev-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 11px 12px;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.ev-link:hover { border-color: var(--ice); color: var(--ice); }
+.ev-link span { font-size: 14px; }
 
-    /* ═══════════════════════════════════════════════════════
-       ACT 4: THE GUARANTEE
-    ═══════════════════════════════════════════════════════ */
-    #act4 {
-      background: var(--navy-2);
-      padding: 80px 24px;
-    }
-    .guarantee-inner {
-      max-width: 340px;
-      margin: 0 auto;
-      text-align: center;
-    }
-    .guarantee-icon {
-      font-size: 48px;
-      line-height: 1;
-      margin-bottom: 24px;
-      display: block;
-    }
-    .guarantee-title {
-      font-size: 22px;
-      font-weight: 600;
-      color: var(--gold);
-      margin-bottom: 20px;
-    }
-    .guarantee-body {
-      font-size: 20px;
-      font-weight: 300;
-      line-height: 1.5;
-      color: var(--white);
-      margin-bottom: 16px;
-    }
-    .guarantee-punch {
-      font-size: 16px;
-      font-weight: 500;
-      font-style: italic;
-      color: var(--gold);
-      margin-bottom: 32px;
-    }
-    .guarantee-fine {
-      font-size: 11px;
-      font-weight: 300;
-      color: var(--gray);
-    }
+/* ── EASTER EGG ── */
+.easter {
+  text-align: center;
+  padding: 20px 0 0;
+}
+.easter a {
+  font-family: 'Syne Mono', monospace;
+  font-size: 8.5px;
+  color: var(--border);
+  text-decoration: none;
+  letter-spacing: 0.08em;
+}
+.easter a:hover { color: var(--ink2); }
 
-    /* ═══════════════════════════════════════════════════════
-       ACT 5: WHAT CLIENTS RECEIVE
-    ═══════════════════════════════════════════════════════ */
-    #act5 {
-      background: var(--white);
-      padding: 72px 24px 64px;
-    }
-    .act5-inner {
-      max-width: 380px;
-      margin: 0 auto;
-    }
-    .receive-header {
-      margin-bottom: 36px;
-    }
-    .receive-title {
-      font-size: clamp(20px, 5vw, 26px);
-      font-weight: 300;
-      color: var(--navy-2);
-      line-height: 1.35;
-      margin-top: 14px;
-    }
-    .feature-rows { display: flex; flex-direction: column; }
-    .feature-row {
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
-      padding: 22px 0;
-      border-top: 1px solid #e2e8f0;
-    }
-    .feature-row:last-child { border-bottom: 1px solid #e2e8f0; }
-    .feature-icon {
-      font-size: 24px;
-      line-height: 1;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-    .feature-text {}
-    .feature-title {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--navy-2);
-      margin-bottom: 4px;
-    }
-    .feature-desc {
-      font-size: 13px;
-      font-weight: 300;
-      color: var(--gray);
-      line-height: 1.55;
-    }
+/* ── STICKY CTA BAR ── */
+.sticky-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--navy);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding: 10px 20px;
+  display: flex;
+  gap: 10px;
+  z-index: 100;
+}
+.sticky-call {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px;
+  border-radius: 7px;
+  text-decoration: none;
+}
+.sticky-book {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold));
+  color: var(--navy);
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  padding: 10px;
+  border-radius: 7px;
+  text-decoration: none;
+}
 
-    /* ═══════════════════════════════════════════════════════
-       ACT 6: THREE PATHS
-    ═══════════════════════════════════════════════════════ */
-    #act6 {
-      background: var(--navy);
-      padding: 72px 24px calc(96px + env(safe-area-inset-bottom, 0px));
-    }
-    .act6-inner {
-      max-width: 380px;
-      margin: 0 auto;
-    }
-    .paths-eyebrow {
-      color: var(--gold);
-      text-align: center;
-      margin-bottom: 32px;
-    }
-    .path-cards { display: flex; flex-direction: column; gap: 12px; margin-bottom: 48px; }
-
-    /* Primary CTA */
-    .path-primary {
-      display: block;
-      background: var(--gold);
-      color: var(--navy);
-      border-radius: 14px;
-      padding: 22px 20px;
-      text-decoration: none;
-      min-height: 72px;
-      touch-action: manipulation;
-      -webkit-tap-highlight-color: transparent;
-      box-shadow: 0 0 30px rgba(201, 151, 58, 0.3);
-      transition: box-shadow 0.3s ease, transform 0.1s ease;
-    }
-    .path-primary:active {
-      box-shadow: 0 0 50px rgba(201, 151, 58, 0.5);
-      transform: scale(0.99);
-    }
-    .path-primary-title {
-      font-size: 20px;
-      font-weight: 600;
-      line-height: 1.2;
-      margin-bottom: 5px;
-    }
-    .path-primary-sub {
-      font-size: 13px;
-      font-weight: 300;
-      color: rgba(10,22,40,0.65);
-      line-height: 1.4;
-    }
-
-    /* Secondary CTA cards */
-    .path-secondary {
-      display: block;
-      background: transparent;
-      border: 1px solid rgba(201,151,58,0.4);
-      border-radius: 14px;
-      padding: 20px 20px;
-      text-decoration: none;
-      min-height: 72px;
-      touch-action: manipulation;
-      -webkit-tap-highlight-color: transparent;
-      transition: border-color 0.2s ease, transform 0.1s ease;
-    }
-    .path-secondary:active {
-      border-color: var(--gold);
-      transform: scale(0.99);
-    }
-    .path-secondary-title {
-      font-size: 18px;
-      font-weight: 500;
-      color: var(--white);
-      line-height: 1.2;
-      margin-bottom: 5px;
-    }
-    .path-secondary-sub {
-      font-size: 13px;
-      font-weight: 300;
-      color: var(--gray);
-      line-height: 1.4;
-    }
-
-    /* Footer */
-    .explore-footer {
-      text-align: center;
-      font-size: 11px;
-      font-weight: 300;
-      color: var(--gray-dim);
-      line-height: 1.8;
-    }
-    .explore-footer a {
-      color: var(--gray);
-      text-decoration: none;
-    }
-
-    /* ── STICKY BOTTOM BAR ───────────────────────────────── */
-    #sticky-bar {
-      position: fixed;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%) translateY(100%);
-      width: 100%;
-      max-width: 480px;
-      z-index: 100;
-      background: rgba(10, 22, 40, 0.82);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-top: 1px solid rgba(201, 151, 58, 0.4);
-      padding: 10px 20px max(14px, env(safe-area-inset-bottom, 14px));
-      opacity: 0;
-      transition: opacity 0.4s ease, transform 0.4s ease;
-      pointer-events: none;
-    }
-    #sticky-bar.visible {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-      pointer-events: all;
-    }
-    .phone-icon-wrap {
-      position: relative;
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .signal-ring {
-      position: absolute;
-      border-radius: 50%;
-      border: 1.5px solid rgba(201, 151, 58, 0.5);
-      animation: signal-pulse 2.5s ease-out infinite;
-    }
-    .ring-1 { width: 28px; height: 28px; animation-delay: 0ms; }
-    .ring-2 { width: 40px; height: 40px; animation-delay: 600ms; }
-    @keyframes signal-pulse {
-      0%   { transform: scale(0.8); opacity: 0.8; }
-      100% { transform: scale(1.6); opacity: 0; }
-    }
-    .book-btn:active {
-      transform: scale(0.97) !important;
-      box-shadow: 0 0 30px rgba(201,151,58,0.5), 0 0 80px rgba(201,151,58,0.2) !important;
-    }
-
-    /* ── DATA DRAWER ─────────────────────────────────────── */
-    .data-drawer { display: block; }
-    .data-drawer > summary {
-      display: block;
-      background: transparent;
-      border: 1px solid rgba(201,151,58,0.4);
-      border-radius: 14px;
-      padding: 20px 20px;
-      min-height: 72px;
-      touch-action: manipulation;
-      -webkit-tap-highlight-color: transparent;
-      transition: border-color 0.2s ease, transform 0.1s ease;
-      cursor: pointer;
-      list-style: none;
-      position: relative;
-    }
-    .data-drawer > summary::-webkit-details-marker { display: none; }
-    .data-drawer > summary:active {
-      border-color: var(--gold);
-      transform: scale(0.99);
-    }
-    .data-drawer-title {
-      font-size: 18px;
-      font-weight: 500;
-      color: var(--white);
-      line-height: 1.2;
-      margin-bottom: 5px;
-      padding-right: 28px;
-    }
-    .data-drawer-hint {
-      font-size: 13px;
-      font-weight: 300;
-      color: var(--gray);
-      line-height: 1.4;
-      padding-right: 28px;
-    }
-    .data-drawer-chevron {
-      position: absolute;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 20px;
-      color: var(--gold);
-      transition: transform 0.25s ease;
-      line-height: 1;
-    }
-    .data-drawer[open] > summary .data-drawer-chevron {
-      transform: translateY(-50%) rotate(90deg);
-    }
-    .data-drawer-body {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 12px;
-    }
-  </style>
+@media (max-width: 380px) {
+  .props { grid-template-columns: 1fr; }
+  .evidence { grid-template-columns: 1fr; }
+}
+</style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════════════════
-     ACT 1: HERO
-═══════════════════════════════════════════════════════ -->
-<section id="act1" class="dark-section">
-  <div class="hero-inner">
-    <p class="hero-eyebrow reveal">Pinellas County &middot; Ice Machine Compliance</p>
-    <p class="hero-headline reveal">Most Pinellas restaurants<br>don&#39;t know what&#39;s in<br>their ice machine.</p>
-    <p class="hero-headline-bold reveal">We do.</p>
-    <p class="hero-scroll scroll-hint">&#x2193;&nbsp; scroll to see the data</p>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════
-     ACT 2: THE CONTRAST MOMENT
-═══════════════════════════════════════════════════════ -->
-<section id="act2" class="dark-section">
-  <div class="contrast-numbers reveal">
-    <div class="contrast-half">
-      <div class="contrast-unit">RLU</div>
-      <div class="number-bad" data-count="215" data-color="bad">0</div>
-      <div class="contrast-label">avg unserviced<br>Pinellas machine</div>
-    </div>
-    <div class="contrast-divider"></div>
-    <div class="contrast-half">
-      <div class="contrast-unit">RLU</div>
-      <div class="number-good" data-count="10" data-color="good">0</div>
-      <div class="contrast-label">FDA food contact<br>standard</div>
-    </div>
-  </div>
-  <div class="contrast-footer reveal">
-    <p class="contrast-22x">10&times; higher contamination than a toilet seat</p>
-    <p class="contrast-caveat">ATP measures organic contamination &middot; not direct bacterial count</p>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════
-     ACT 3: THE DATA
-═══════════════════════════════════════════════════════ -->
-<section id="act3">
-  <div class="act3-inner">
-    <div class="data-header reveal">
-      <p class="eyebrow data-eyebrow">The Research</p>
-      <p class="data-headline">We analyzed 13,691 Pinellas County<br>health inspections going back to 2018.</p>
-      <p class="data-headline-bold">The violation rate hasn&#39;t moved in 7 years.</p>
-    </div>
-    <div class="stat-cards">
-      <div class="stat-card reveal reveal-child">
-        <div class="stat-card-num" data-count="71" data-color="navy">0</div>
-        <div class="stat-card-desc">new ice machine citations in Pinellas County every month on average</div>
-        <div class="stat-card-source">FL DBPR &middot; 2025&ndash;2026</div>
-      </div>
-      <div class="stat-card reveal reveal-child">
-        <div class="stat-card-num" data-count-decimal="46.8" data-color="navy">0</div>
-        <div class="stat-card-desc">of warned restaurants get cited again &mdash; the problem doesn&#39;t self-correct</div>
-        <div class="stat-card-source">FL DBPR &middot; 2025&ndash;2026</div>
-      </div>
-      <div class="stat-card reveal reveal-child">
-        <div class="stat-card-num" data-count-decimal="2.1" data-color="navy">0</div>
-        <div class="stat-card-desc">more customer complaint inspections at restaurants with violations vs clean ones</div>
-        <div class="stat-card-source">FL DBPR &middot; 2018&ndash;2026</div>
-      </div>
-    </div>
-    <div class="data-link reveal">
-      <a href="docs/data/">&#x2192; See the full 7-year analysis</a>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════
-     ACT 4: THE GUARANTEE
-═══════════════════════════════════════════════════════ -->
-<section id="act4" class="dark-section">
-  <div class="guarantee-inner reveal">
-    <span class="guarantee-icon">&#x1F6E1;&#xFE0F;</span>
-    <p class="guarantee-title">Inspection Protection Guarantee</p>
-    <p class="guarantee-body">If your machine is cited within 30 days of our service, we refund the visit.</p>
-    <p class="guarantee-punch">No runaround. Just show us the report.</p>
-    <p class="guarantee-fine">Full terms apply &middot; covers the serviced machine only</p>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════
-     ACT 5: WHAT CLIENTS RECEIVE
-═══════════════════════════════════════════════════════ -->
-<section id="act5">
-  <div class="act5-inner">
-    <div class="receive-header reveal">
-      <p class="eyebrow">What You Get</p>
-      <p class="receive-title">After every service visit, you receive:</p>
-    </div>
-    <div class="feature-rows">
-      <div class="feature-row reveal">
-        <div class="feature-icon">&#x1F4CB;</div>
-        <div class="feature-text">
-          <p class="feature-title">Dated ATP Compliance Report</p>
-          <p class="feature-desc">Before and after readings, signed and dated. The same documentation format health inspectors reference.</p>
-        </div>
-      </div>
-      <div class="feature-row reveal">
-        <div class="feature-icon">&#x1F4C5;</div>
-        <div class="feature-text">
-          <p class="feature-title">Documented Service Schedule</p>
-          <p class="feature-desc">Your annual service calendar with every visit date. Sent to your email immediately after close.</p>
-        </div>
-      </div>
-      <div class="feature-row reveal">
-        <div class="feature-icon">&#x1F9CA;</div>
-        <div class="feature-text">
-          <p class="feature-title">Inspection Protection</p>
-          <p class="feature-desc">Cited within 30 days? Full refund. No questions, no runaround.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════════════════════════
-     ACT 6: THREE PATHS
-═══════════════════════════════════════════════════════ -->
-<section id="act6" class="dark-section">
-  <div class="act6-inner">
-    <p class="eyebrow paths-eyebrow reveal">Where Do You Want to Start?</p>
-    <div class="path-cards">
-      <a class="path-primary reveal"
-         href="https://meetings-na2.hubspot.com/stripe/ice-machine-on-site?uuid=9a40fc22-dce2-4258-8e4f-28aa75c892da"
-         touch-action="manipulation">
-        <div class="path-primary-title">&#x1F4C5; Book Your Free ATP Test</div>
-        <div class="path-primary-sub">Two minutes &middot; Free &middot; At your location &middot; No obligation</div>
-      </a>
-      <a class="path-secondary reveal" href="dbpr-citation.html" touch-action="manipulation" style="-webkit-tap-highlight-color:transparent">
-        <div class="path-secondary-title">&#x26A0;&#xFE0F; You&#39;ve Been Cited</div>
-        <div class="path-secondary-sub">DBPR cited your machine &#x2014; what it means, what happens next, and how to stay clean through re-inspection</div>
-      </a>
-      <a class="path-secondary reveal" href="atp-explainer.html" touch-action="manipulation" style="-webkit-tap-highlight-color:transparent">
-        <div class="path-secondary-title">&#x1F52C; What Does ATP Testing Prove</div>
-        <div class="path-secondary-sub">How ATP measures contamination and why it&#39;s the industry standard for compliance documentation</div>
-      </a>
-      <a class="path-secondary reveal" href="process.html" touch-action="manipulation" style="-webkit-tap-highlight-color:transparent">
-        <div class="path-secondary-title">&#x1F4CD; What a Visit Looks Like</div>
-        <div class="path-secondary-sub">What to expect during a service appointment &#x2014; from first contact to the compliance report you receive</div>
-      </a>
-      <a class="path-secondary reveal" href="pricing.html" touch-action="manipulation" style="-webkit-tap-highlight-color:transparent">
-        <div class="path-secondary-title">&#x1F4B0; Pricing</div>
-        <div class="path-secondary-sub">Per-visit and recurring service rates &#x2014; transparent pricing, no hidden fees</div>
-      </a>
-      <details class="data-drawer reveal">
-        <summary>
-          <div class="data-drawer-title">&#x1F4CA; See the Data</div>
-          <div class="data-drawer-hint">Protocol, map, gallery, report &mdash; 7 years of evidence</div>
-          <span class="data-drawer-chevron">&#x203A;</span>
-        </summary>
-        <div class="data-drawer-body">
-          <a class="path-secondary" href="docs/data/" touch-action="manipulation">
-            <div class="path-secondary-title">&#x1F4CA; See the 7-Year Data</div>
-            <div class="path-secondary-sub">Full analysis of Pinellas County inspection records 2018&ndash;2026</div>
-          </a>
-          <a class="path-secondary" href="docs/report/" touch-action="manipulation">
-            <div class="path-secondary-title">&#x1F4CB; View a Sample Report</div>
-            <div class="path-secondary-sub">See exactly what clients receive after every service visit</div>
-          </a>
-          <a class="path-secondary" href="docs/before-after/" touch-action="manipulation" style="-webkit-tap-highlight-color:transparent">
-            <div class="path-secondary-title">&#x1F4F8; Before &amp; After Gallery</div>
-            <div class="path-secondary-sub">ATP-verified results from 10 real commercial kitchens</div>
-          </a>
-          <a class="path-secondary" href="docs/protocol/" touch-action="manipulation" style="-webkit-tap-highlight-color:transparent">
-            <div style="font-family:'DM Sans',sans-serif;font-size:9px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:rgba(148,163,184,0.8);margin-bottom:3px">Methodology</div>
-            <div class="path-secondary-title">&#x1F9EA; ATP Testing Protocol</div>
-            <div class="path-secondary-sub">How we measure what others miss &mdash; full SOP &amp; standards</div>
-          </a>
-          <a class="path-secondary" href="docs/map/" touch-action="manipulation" style="-webkit-tap-highlight-color:transparent">
-            <div style="font-family:'DM Sans',sans-serif;font-size:9px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:rgba(148,163,184,0.8);margin-bottom:3px">Data</div>
-            <div class="path-secondary-title">&#x1F5FA; The Dirty Ice Map</div>
-            <div class="path-secondary-sub">Live heatmap of ice machine citations across Pinellas County &mdash; source: FL DBPR public records</div>
-          </a>
-        </div>
-      </details>
-    </div>
-    <div style="border-top:1px solid rgba(201,151,58,0.2);padding-top:20px;margin-top:4px">
-      <p style="font-size:9px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:rgba(148,163,184,0.7);margin-bottom:12px;text-align:center;font-family:'DM Sans',sans-serif">Other Services</p>
-      <a class="path-secondary reveal" href="supplemental.html" touch-action="manipulation" style="-webkit-tap-highlight-color:transparent">
-        <div class="path-secondary-title">&#x1F9FC; Supplemental Services Package</div>
-        <div class="path-secondary-sub">Monthly soda-line cleaning, exterior wipe-down, and reach-in cooler inspection &#x2014; add-on service separate from ice machine maintenance</div>
-      </a>
-    </div>
-    <!-- Easter egg — ice history link -->
-    <div style="text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid rgba(201,151,58,0.2)">
-      <a href="docs/history/" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;padding:12px 20px;border:1px solid rgba(201,151,58,0.35);border-radius:10px;background:rgba(201,151,58,0.06);touch-action:manipulation;-webkit-tap-highlight-color:transparent">
-        <span style="font-size:20px">🧊</span>
-        <div style="text-align:left">
-          <div style="color:#c9973a;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;letter-spacing:0.05em">EXPLORE THE ARCHIVE</div>
-          <div style="color:rgba(255,255,255,0.7);font-size:13px;font-family:'DM Sans',sans-serif">The Complete History of Ice &#x2192;</div>
-        </div>
-      </a>
-    </div>
-    <footer class="explore-footer">
-      Pinellas Ice Co<br>
-      <a href="tel:+17278556873">(727) 855-6873</a> &middot; <a href="https://www.pinellasiceco.com">pinellasiceco.com</a><br>
-      Serving Pinellas County, FL<br><br>
-      Data: FL DBPR public inspection records 2018&ndash;2026.<br>
-      ATP comparison: published Hygiena monitoring system research.<br>
-      ATP measures organic contamination broadly, not bacterial count.
-    </footer>
-  </div>
-</section>
-
-<!-- STICKY BOTTOM BAR -->
-<div id="sticky-bar">
-  <div style="display:flex;align-items:center;gap:12px">
-    <a href="tel:+17278556873"
-       style="display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;touch-action:manipulation;-webkit-tap-highlight-color:transparent">
-      <div class="phone-icon-wrap">
-        <div class="signal-ring ring-1"></div>
-        <div class="signal-ring ring-2"></div>
-        <span style="font-size:18px;position:relative;z-index:1">📞</span>
-      </div>
-      <div>
-        <div style="color:rgba(255,255,255,0.5);font-size:9px;letter-spacing:0.12em;font-family:'DM Sans',sans-serif;text-transform:uppercase">Call Now</div>
-        <div style="color:#f8fafc;font-size:14px;font-weight:600;font-family:'DM Sans',sans-serif;letter-spacing:0.02em">(727) 855-6873</div>
-      </div>
-    </a>
-    <div style="width:1px;height:32px;background:rgba(201,151,58,0.3);flex-shrink:0"></div>
-    <a href="https://meetings-na2.hubspot.com/stripe/ice-machine-on-site?uuid=9a40fc22-dce2-4258-8e4f-28aa75c892da"
-       class="book-btn"
-       style="flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#c9973a,#e8b84b);border-radius:10px;padding:10px 16px;text-decoration:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent;box-shadow:0 0 20px rgba(201,151,58,0.35),0 0 60px rgba(201,151,58,0.15);transition:box-shadow 0.2s ease,transform 0.15s ease">
-      <span style="font-size:16px">📅</span>
-      <div>
-        <div style="color:#0a1628;font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif;line-height:1.2">Book Free ATP Test</div>
-        <div style="color:rgba(10,22,40,0.6);font-size:10px;font-family:'DM Sans',sans-serif">2 min &middot; Free &middot; No obligation</div>
-      </div>
-    </a>
-  </div>
+<!-- HERO -->
+<div class="hero">
+  <div class="logo-line">Pinellas Ice Co. &nbsp;&middot;&nbsp; Pinellas County, FL</div>
+  <h1>Your ice machine will be on your next inspection.<br>Is it ready?</h1>
+  <p class="hero-sub">Most machines we test in Pinellas fail on the first reading. We clean, test, and certify &mdash; with a number you can show your inspector.</p>
+  <a class="hero-cta" href="https://meetings-na2.hubspot.com/stripe/ice-machine-on-site">Book a Free ATP Test &rarr;</a>
 </div>
 
-<script>
-  // ── COUNT-UP ─────────────────────────────────────────────
-  function countUp(el, target, isDecimal) {
-    var duration = target > 100 ? 1500 : 800;
-    var start = performance.now();
-    function update(now) {
-      var elapsed = now - start;
-      var progress = Math.min(elapsed / duration, 1);
-      var eased = 1 - Math.pow(1 - progress, 3);
-      var current = eased * target;
-      el.textContent = isDecimal ? current.toFixed(1) : Math.round(current).toLocaleString();
-      if (progress < 1) {
-        requestAnimationFrame(update);
-      } else {
-        el.textContent = isDecimal ? target.toFixed(1) : target.toLocaleString();
-      }
-    }
-    requestAnimationFrame(update);
-  }
+<!-- THE NUMBER -->
+<div class="number-moment">
+  <div class="num-block">
+    <div class="num-val bad">281</div>
+    <div class="num-label">Typical unserviced<br>Pinellas machine</div>
+  </div>
+  <div class="num-divider"></div>
+  <div class="num-block">
+    <div class="num-val good">10</div>
+    <div class="num-label">FDA food contact<br>standard (max)</div>
+  </div>
+</div>
+<div class="num-context">We measure contamination the same way a lab does &mdash; before and after every visit, on the machine producing your ice right now.</div>
 
-  // ── INTERSECTION OBSERVER ────────────────────────────────
-  var observer = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      if (!entry.isIntersecting) return;
-      entry.target.classList.add("visible");
-      var intTarget = entry.target.dataset.count;
-      var decTarget = entry.target.dataset.countDecimal;
-      if (intTarget) countUp(entry.target, parseInt(intTarget, 10), false);
-      if (decTarget) countUp(entry.target, parseFloat(decTarget), true);
-      observer.unobserve(entry.target);
-    });
-  }, { threshold: 0.2 });
+<main>
 
-  document.querySelectorAll(".reveal, [data-count], [data-count-decimal]").forEach(function(el) {
-    observer.observe(el);
-  });
+  <div class="slabel">What you get</div>
+  <div class="props">
+    <div class="prop">
+      <div class="prop-icon">📋</div>
+      <div class="prop-title">Documented proof every visit</div>
+      <div class="prop-desc">Before and after ATP readings, signed and dated. Ready to show an inspector.</div>
+    </div>
+    <div class="prop">
+      <div class="prop-icon">🛡️</div>
+      <div class="prop-title">30-day inspection guarantee</div>
+      <div class="prop-desc">Cited within 30 days of our service? Full refund. No runaround.</div>
+    </div>
+    <div class="prop">
+      <div class="prop-icon">💰</div>
+      <div class="prop-title">No surprise bills</div>
+      <div class="prop-desc">Flat rate, no hidden fees, no contract. Cancel anytime.</div>
+    </div>
+    <div class="prop">
+      <div class="prop-icon">🔍</div>
+      <div class="prop-title">We know your inspection history</div>
+      <div class="prop-desc">We pull your DBPR record before every visit. You get context no other cleaner has.</div>
+    </div>
+  </div>
 
-  // ── STICKY BAR ───────────────────────────────────────────
-  var stickyShown = false;
-  var stickyBar = document.getElementById("sticky-bar");
-  window.addEventListener("scroll", function() {
-    if (window.scrollY > 300 && !stickyShown) {
-      stickyBar.classList.add("visible");
-      stickyShown = true;
-    }
-  }, { passive: true });
-</script>
+  <div class="slabel">How it works</div>
+  <div class="process">
+    <div class="proc-step">
+      <div class="proc-n">1</div>
+      <div>
+        <div class="proc-title">ATP test before we touch anything</div>
+        <div class="proc-desc">You see the real number. No guessing.</div>
+      </div>
+    </div>
+    <div class="proc-step">
+      <div class="proc-n">2</div>
+      <div>
+        <div class="proc-title">Full deep clean and sanitize</div>
+        <div class="proc-desc">Complete disassembly of water-contact surfaces, bin, lines, and distribution system.</div>
+      </div>
+    </div>
+    <div class="proc-step">
+      <div class="proc-n">3</div>
+      <div>
+        <div class="proc-title">Retest and certify</div>
+        <div class="proc-desc">We only certify when the machine scores under 10. You get a dated CleanScore certificate after every visit.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="guarantees">
+    <div class="guarantee">
+      <strong>🛡️ Inspection Protection Guarantee.</strong> If your machine is cited within 30 days of our service, we refund that visit in full. No questions. We stand behind the number we document.
+    </div>
+    <div class="guarantee emergency">
+      <strong>🧊 Emergency Ice Guarantee.</strong> If your machine goes down after a service visit, we deliver up to 120 lbs of ice per day for up to 3 days at no charge. You never have to shut down the bar.
+    </div>
+  </div>
+
+  <div class="slabel">Own your machine?</div>
+  <div class="own-lease">
+    <div class="own-lease-label">Own &amp; Service Model</div>
+    <h3>Own it. We keep it clean, certified, and compliant.</h3>
+    <p>If you own your machine, your manufacturer warranty requires documented professional cleaning to stay valid. Our quarterly CleanScore report is that documentation &mdash; on file after every visit, ready for any inspector or claim. Currently leasing? Run the 5-year numbers to see if owning makes more financial sense.</p>
+    <a href="https://pinellasiceco.github.io/Pinellasiceco/own-vs-lease.html">See the own vs. lease comparison &rarr;</a>
+  </div>
+
+  <div class="slabel">Where to start</div>
+  <div class="paths">
+    <a class="path-card" href="https://meetings-na2.hubspot.com/stripe/ice-machine-on-site">
+      <div class="path-icon">📅</div>
+      <div class="path-text">
+        <div class="pt">Book a free ATP test</div>
+        <div class="pd">We come to you. Results in 15 seconds. No obligation.</div>
+      </div>
+      <div class="path-arrow">&rarr;</div>
+    </a>
+    <a class="path-card urgent" href="https://pinellasiceco.github.io/Pinellasiceco/dbpr-citation.html">
+      <div class="path-icon">⚠️</div>
+      <div class="path-text">
+        <div class="pt">You&#39;ve been cited</div>
+        <div class="pd">What a DBPR citation means and what to do before your re-inspection.</div>
+      </div>
+      <div class="path-arrow">&rarr;</div>
+    </a>
+    <a class="path-card" href="https://pinellasiceco.github.io/Pinellasiceco/own-vs-lease.html">
+      <div class="path-icon">📊</div>
+      <div class="path-text">
+        <div class="pt">Own vs. lease calculator</div>
+        <div class="pd">See the 5-year cost comparison for your specific machine and rate.</div>
+      </div>
+      <div class="path-arrow">&rarr;</div>
+    </a>
+  </div>
+
+  <div class="slabel">Get in touch</div>
+  <div class="contact">
+    <div class="contact-name">Pinellas Ice Co. &nbsp;&middot;&nbsp; Tarpon Springs, FL</div>
+    <div style="font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:14px;font-family:'Syne Mono',monospace;letter-spacing:0.06em;">Founded 2026 &nbsp;&middot;&nbsp; Bringing transparency to ice machine compliance</div>
+    <div class="contact-links">
+      <a class="contact-link" href="tel:7278556873"><span>📞</span>(727) 855-6873</a>
+      <a class="contact-link" href="mailto:john@pinellasiceco.com"><span>✉️</span>john@pinellasiceco.com</a>
+    </div>
+    <a class="contact-book" href="https://meetings-na2.hubspot.com/stripe/ice-machine-on-site">Book a Free ATP Test &rarr;</a>
+  </div>
+
+  <div class="slabel">The evidence</div>
+  <div class="evidence">
+    <a class="ev-link" href="https://pinellasiceco.github.io/Pinellasiceco/docs/data/"><span>📊</span>7-Year DBPR Analysis</a>
+    <a class="ev-link" href="https://pinellasiceco.github.io/Pinellasiceco/docs/map/"><span>🗺️</span>Dirty Ice Map</a>
+    <a class="ev-link" href="https://pinellasiceco.github.io/Pinellasiceco/docs/protocol/"><span>🧪</span>ATP Protocol</a>
+    <a class="ev-link" href="https://pinellasiceco.github.io/Pinellasiceco/docs/before-after/"><span>📸</span>Before &amp; After</a>
+    <a class="ev-link" href="https://pinellasiceco.github.io/Pinellasiceco/atp-explainer.html"><span>🔬</span>What ATP Testing Proves</a>
+    <a class="ev-link" href="https://pinellasiceco.github.io/Pinellasiceco/verify.html?id=PIC-0001"><span>📋</span>Sample CleanScore Cert</a>
+  </div>
+
+  <div class="easter">
+    <a href="https://pinellasiceco.github.io/Pinellasiceco/docs/history/">❄ the complete history of ice &rarr;</a>
+  </div>
+
+</main>
+
+<!-- STICKY BAR -->
+<div class="sticky-bar">
+  <a class="sticky-call" href="tel:7278556873">📞 Call</a>
+  <a class="sticky-book" href="https://meetings-na2.hubspot.com/stripe/ice-machine-on-site">Schedule a Visit &rarr;</a>
+</div>
+
 </body>
 </html>
