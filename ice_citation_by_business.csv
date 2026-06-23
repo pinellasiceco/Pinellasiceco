@@ -260,7 +260,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 2240019,PANERA BREAD #3341,2285 ULMERTON RD,CLEARWATER,2025-07-29,3,Inspection Completed - No Further Action,True,False,,
 2240035,CHINA GATE,12919 WALSINGHAM RD,LARGO,2020-09-24,1,Inspection Completed - No Further Action,False,False,,
 2240056,PANERA BREAD #3342,10801 STARKEY RD UNIT 16A,LARGO,2020-10-05,1,Inspection Completed - No Further Action,False,False,,
-2240058,ISLAND WAY GRILL,20 ISLAND WAY,CLEARWATER BCH,2025-10-14,3,Inspection Completed - No Further Action,True,False,Ice cream tubs.,2025-10-14
+2240058,ISLAND WAY GRILL,20 ISLAND WAY,CLEARWATER BCH,2026-06-22,4,Inspection Completed - No Further Action,True,False,Ice cream tubs.,2025-10-14
 2240068,VARSITY CLUB,36355 E LAKE RD,PALM HARBOR,2021-02-08,2,Inspection Completed - No Further Action,True,False,,
 2240094,FLORIDA FISHERMAN II BOAT,150 JOHNS PASS BOARDWALK,MADEIRA BCH,2021-04-19,1,Inspection Completed - No Further Action,False,False,,
 2240108,MR SOUVLAKI RESTAURANT,802 N PINELLAS AVE,TARPON SPGS,2020-12-18,2,Inspection Completed - No Further Action,True,False,,
@@ -718,7 +718,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 5423733,BURGER KING #2972,2765 GULF TO BAY BLVD,CLEARWATER,2026-02-20,2,Emergency order recommended,True,False,,
 5423735,BURGER KING #3006,3575 E BAY DR,LARGO,2020-12-14,1,Inspection Completed - No Further Action,False,False,,
 5423741,BURGER KING #3131,3701 34 ST N,ST. PETERSBURG,2021-03-16,1,Inspection Completed - No Further Action,False,False,,
-5423755,BURGER KING #3403,4570 34 ST S,ST. PETERSBURG,2025-07-29,1,Inspection Completed - No Further Action,False,False,Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup up in reach-in freezer holding beef patties.,2025-07-29
+5423755,BURGER KING #3403,4570 34 ST S,ST. PETERSBURG,2026-06-22,2,Inspection Completed - No Further Action,True,False,Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup up in reach-in freezer holding beef patties.,2025-07-29
 5423760,BURGER KING #4010,32375 US HWY 19 N,PALM HARBOR,2021-01-25,2,Inspection Completed - No Further Action,True,False,,
 5423782,BURGER KING #4101,13238 66 ST,LARGO,2020-11-18,1,Inspection Completed - No Further Action,False,False,,
 5423868,BURGER KING #16796,7930 US 19 N,PINELLAS PARK,2021-02-15,1,Inspection Completed - No Further Action,False,False,,
@@ -2526,7 +2526,7 @@ license,business_name,address,city,cit_latest_date,cit_ice_count,last_dispositio
 9196182,THE LAST SLICE,5281 PARK ST N,ST. PETERSBURG,2026-05-14,2,Inspection Completed - No Further Action,True,False,Black mold-like substance in the interior of the ice machine. Not observed in areas making contact with ice.,
 9199929,MR D'S BREAKFAST AND LUNCH,13220 BELCHER RD S UNIT 10,LARGO,2026-03-20,1,Inspection Completed - No Further Action,False,False,,
 9201831,LARGO BISTRO,7887 BRYAN DAIRY RD STE 110,LARGO,2025-08-21,1,Warning Issued,False,False,,
-9206421,82 DEGREES,7203 SUNSET WAY,ST.PETE BEACH,2025-11-20,2,Warning Issued,True,False,Basic - Ice buildup in walk-in freezer.,
+9206421,82 DEGREES,7203 SUNSET WAY,ST.PETE BEACH,2025-11-20,2,Warning Issued,True,False,Basic - - From initial inspection : Basic - Ice buildup in walk-in freezer.,
 9206874,CAVA,33163 US HWY 19 N,PALM HARBOR,2026-02-02,1,Inspection Completed - No Further Action,False,False,,
 9209543,HOGGDADDYS BEACH BAR AND GRILL,752 S GULFVIEW BLVD,CLEARWATER BEACH,2026-04-02,2,Inspection Completed - No Further Action,True,False,In front of ice machine. Basic - Ice buildup in reach-in freezer in bar. Ice cubes in bar freezer. Cracked ice bucket.,
 9212423,LINKING HEIGHTS ,3001 28 ST N,ST. PETERSBURG,2026-01-21,2,Inspection Completed - No Further Action,True,False,Accumulation of black/green mold-like substance in the interior of the ice machine/bin. Interior of ice machine next to beer walk-in cooler with black mold like substance. Basic - Ice buildup in reach-in freezer and/or walk-in freezer. Ice buildup in freezer chest in rear prep area.,
