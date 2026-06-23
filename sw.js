@@ -1,5 +1,5 @@
-const CACHE_NAME='pic-202606231559';
-const ASSETS=['./','/Pinellasiceco/index.html'];
+const CACHE_NAME='pic-202606231733';
+const ASSETS=[new Request('./',{cache:'no-cache'}),new Request('/Pinellasiceco/index.html',{cache:'no-cache'})];
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(ASSETS).catch(()=>{})));
   self.skipWaiting();
@@ -17,7 +17,7 @@ self.addEventListener('fetch',e=>{
   const isHTML=e.request.mode==='navigate'||url.pathname.endsWith('.html')||url.pathname==='/Pinellasiceco/'||url.pathname==='/Pinellasiceco';
   if(isHTML){
     e.respondWith(
-      fetch(e.request).then(res=>{
+      fetch(new Request(e.request,{cache:'no-cache'})).then(res=>{
         if(res&&res.status===200){const copy=res.clone();caches.open(CACHE_NAME).then(c=>c.put(e.request,copy));}
         return res;
       }).catch(()=>caches.match(e.request))
