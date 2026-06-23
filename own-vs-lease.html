@@ -338,7 +338,7 @@ footer {
         <label for="lease-rate">Monthly lease payment</label>
         <div class="input-wrap">
           <span>$</span>
-          <input type="number" id="lease-rate" value="225" min="100" max="600" step="5" oninput="calc()">
+          <input type="number" id="lease-rate" value="300" min="100" max="600" step="5" oninput="calc()">
           <span style="font-size:13px;">/mo</span>
         </div>
       </div>
@@ -479,7 +479,7 @@ footer {
 function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
 
 function calc() {
-  var leaseRate = parseFloat(document.getElementById('lease-rate').value) || 225;
+  var leaseRate = parseFloat(document.getElementById('lease-rate').value) || 300;
   var machinePrice = parseFloat(document.getElementById('machine-size').value) || 7200;
 
   var leaseFiveYr = leaseRate * 60;
