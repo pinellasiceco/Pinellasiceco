@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case Study — EzHire Cannabis: Two-Sided Marketplace Onboarding</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #FAFBFC;
+  --surface:  #FFFFFF;
+  --slate:    #0F1923;
+  --ink:      #1E293B;
+  --ink2:     #475569;
+  --ink3:     #94A3B8;
+  --border:   #E2E8F0;
+  --blue:     #2563EB;
+  --blue-lt:  #EFF6FF;
+  --blue-mid: #BFDBFE;
+  --green:    #059669;
+  --green-lt: #ECFDF5;
+  --amber:    #D97706;
+  --amber-lt: #FFFBEB;
+  --purple:   #7C3AED;
+  --purple-lt:#F5F3FF;
+  --purple-md:#DDD6FE;
+  --code-bg:  #F1F5F9;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color: var(--ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 820px; margin: 0 auto; padding: 0 28px; }
+
+.doc-header {
+  border-bottom: 1px solid var(--border);
+  padding: 32px 0 24px;
+  margin-bottom: 48px;
+}
+.doc-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--purple);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.doc-eyebrow::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.doc-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 700;
+  color: var(--slate);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin-bottom: 14px;
+}
+.doc-subtitle {
+  font-size: 16px;
+  color: var(--ink2);
+  line-height: 1.6;
+  max-width: 620px;
+  margin-bottom: 20px;
+}
+.doc-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.meta-item { display: flex; flex-direction: column; gap: 2px; }
+.meta-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink3);
+}
+.meta-value {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.section { margin-bottom: 48px; }
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-label::before { content: '//'; color: var(--purple); font-weight: 500; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--slate);
+  letter-spacing: -0.01em;
+  margin-bottom: 10px;
+}
+p { margin-bottom: 12px; color: var(--ink2); }
+p:last-child { margin-bottom: 0; }
+
+.context-strip {
+  background: var(--purple-lt);
+  border: 1px solid var(--purple-md);
+  border-left: 3px solid var(--purple);
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.context-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--purple);
+  font-weight: 700;
+  white-space: nowrap;
+  padding-top: 2px;
+}
+.context-text { font-size: 13.5px; color: var(--ink2); line-height: 1.55; }
+.context-text strong { color: var(--ink); font-weight: 600; }
+
+.two-flow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+.flow-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.flow-header {
+  padding: 12px 16px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.flow-header.candidate {
+  background: var(--blue-lt);
+  color: var(--blue);
+  border-bottom: 1px solid var(--blue-mid);
+}
+.flow-header.employer {
+  background: var(--green-lt);
+  color: var(--green);
+  border-bottom: 1px solid #A7F3D0;
+}
+.flow-steps { padding: 12px 16px; background: var(--surface); }
+.flow-step {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+}
+.flow-step:last-child { border-bottom: none; }
+.step-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ink3);
+  width: 18px;
+  flex-shrink: 0;
+  padding-top: 1px;
+}
+.step-text { font-size: 12.5px; color: var(--ink2); line-height: 1.5; }
+.step-text strong { color: var(--ink); font-weight: 600; }
+
+.discovery-block {
+  background: var(--slate);
+  border-radius: 10px;
+  padding: 24px;
+  margin-top: 16px;
+}
+.discovery-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+.discovery-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: #F8FAFC;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+.discovery-body {
+  font-size: 13.5px;
+  color: #94A3B8;
+  line-height: 1.65;
+  margin-bottom: 16px;
+}
+.discovery-body strong { color: #E2E8F0; }
+.discovery-solution {
+  background: rgba(37,99,235,0.12);
+  border-left: 3px solid var(--blue);
+  border-radius: 0 6px 6px 0;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #BFDBFE;
+  line-height: 1.6;
+}
+.discovery-solution strong { color: #E0F2FE; }
+
+.built-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+.built-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+.built-icon { font-size: 20px; margin-bottom: 8px; display: block; }
+.built-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 5px;
+}
+.built-desc { font-size: 12.5px; color: var(--ink2); line-height: 1.55; margin: 0; }
+
+.client-strip {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.client-badge {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 7px 16px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--ink);
+}
+.client-badge.featured {
+  background: var(--slate);
+  color: #E2E8F0;
+  border-color: var(--slate);
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 16px;
+}
+.result-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 18px 14px;
+  text-align: center;
+}
+.result-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 5px;
+}
+.result-num.blue  { color: var(--blue); }
+.result-num.green { color: var(--green); }
+.result-num.purple{ color: var(--purple); }
+.result-num.amber { color: var(--amber); }
+.result-label { font-size: 12px; color: var(--ink3); line-height: 1.4; }
+
+.stack-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+.stack-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  padding: 5px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--ink2);
+}
+.stack-tag.primary { background: var(--slate); color: #E2E8F0; border-color: var(--slate); }
+.stack-tag.highlight { background: var(--purple-lt); color: var(--purple); border-color: var(--purple-md); }
+
+.callout {
+  background: var(--code-bg);
+  border-left: 3px solid var(--purple);
+  border-radius: 0 6px 6px 0;
+  padding: 14px 18px;
+  margin-top: 16px;
+  font-size: 13.5px;
+  color: var(--ink2);
+  line-height: 1.6;
+}
+.callout strong { color: var(--ink); }
+
+.doc-footer {
+  border-top: 1px solid var(--border);
+  padding: 24px 0 40px;
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.footer-note {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--ink3);
+  letter-spacing: 0.06em;
+}
+.footer-avail {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--green);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.footer-avail::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  background: var(--green);
+  border-radius: 50%;
+}
+
+@media (max-width: 580px) {
+  .two-flow, .built-grid, .results-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="doc-header">
+    <div class="doc-eyebrow">Case Study &nbsp;·&nbsp; Onboarding & Conversion &nbsp;·&nbsp; 2020</div>
+    <h1 class="doc-title">Two-Sided Marketplace<br>Onboarding at Scale</h1>
+    <p class="doc-subtitle">Built candidate and employer onboarding flows from scratch for a cannabis recruiting platform — automated candidate acquisition to 500+ enrollments per day, achieved 15% employer trial-to-paid conversion in a new vertical with no playbook.</p>
+    <div class="doc-meta">
+      <div class="meta-item">
+        <span class="meta-label">Company</span>
+        <span class="meta-value">EzHire Cannabis</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Role</span>
+        <span class="meta-value">Co-Founder, Operations & Onboarding</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Industry rank</span>
+        <span class="meta-value">#3 Cannabis Recruiting Platform</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Build type</span>
+        <span class="meta-value">Greenfield — from scratch</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="section">
+    <div class="section-label">Context</div>
+    <h2>A two-sided marketplace in a regulated industry with no existing playbook</h2>
+    <p>EzHire launched in March 2020 into the cannabis industry — a sector with no established recruiting infrastructure, significant regulatory variability by state, and enterprise clients (multi-state operators) who needed a real hiring workflow, not a job board. The product was a full recruitment-as-a-service platform: a custom app with video interviewing, candidate profile management, and employer workflow tools built from scratch.</p>
+
+    <div class="context-strip">
+      <div class="context-badge">The challenge</div>
+      <div class="context-text">A two-sided marketplace only works when both sides are active. Candidates won't complete profiles if there are no employers. Employers won't subscribe if there are no candidates. The onboarding problem was really two separate problems that had to be solved simultaneously — with no existing user base, no brand recognition, and no template from a comparable industry.</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">The Two Flows</div>
+    <h2>Candidate onboarding and employer conversion — separate problems, interdependent outcomes</h2>
+
+    <div class="two-flow">
+      <div class="flow-card">
+        <div class="flow-header candidate">
+          👤 Candidate flow
+        </div>
+        <div class="flow-steps">
+          <div class="flow-step">
+            <div class="step-num">01</div>
+            <div class="step-text">Sign up via <strong>automated Indeed job posting</strong> — jobs auto-posted, candidates routed directly to the EzHire platform</div>
+          </div>
+          <div class="flow-step">
+            <div class="step-num">02</div>
+            <div class="step-text"><strong>Resume build</strong> — guided profile completion on the custom platform</div>
+          </div>
+          <div class="flow-step">
+            <div class="step-num">03</div>
+            <div class="step-text"><strong>Video interview recorded</strong> — standard intro or employer-specific questions via custom video platform</div>
+          </div>
+          <div class="flow-step">
+            <div class="step-num">04</div>
+            <div class="step-text">Profile and video <strong>stored and searchable</strong> by employers in the candidate pool</div>
+          </div>
+          <div class="flow-step">
+            <div class="step-num">05</div>
+            <div class="step-text"><strong>Apply to jobs</strong> — use standard video or record custom responses to employer questions</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-card">
+        <div class="flow-header employer">
+          🏢 Employer flow
+        </div>
+        <div class="flow-steps">
+          <div class="flow-step">
+            <div class="step-num">01</div>
+            <div class="step-text"><strong>Sign up</strong> — free trial access to the platform and candidate pool</div>
+          </div>
+          <div class="flow-step">
+            <div class="step-num">02</div>
+            <div class="step-text"><strong>Browse candidates</strong> — limited preview of profiles and video interviews</div>
+          </div>
+          <div class="flow-step">
+            <div class="step-num">03</div>
+            <div class="step-text">Convert to <strong>monthly subscription or credit purchase</strong> to unlock full candidate access</div>
+          </div>
+          <div class="flow-step">
+            <div class="step-num">04</div>
+            <div class="step-text">Optional: <strong>full managed service</strong> — EzHire handles screening, interviews, and hiring recommendation end to end</div>
+          </div>
+          <div class="flow-step">
+            <div class="step-num">05</div>
+            <div class="step-text"><strong>HubSpot-automated</strong> candidate delivery and pipeline updates throughout</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">The Critical Discovery</div>
+    <h2>Profile completion had a 24-hour window — after that, the candidate was gone</h2>
+
+    <div class="discovery-block">
+      <div class="discovery-label">The problem we found</div>
+      <div class="discovery-title">Candidate drop-off was happening between signup and profile completion</div>
+      <div class="discovery-body">
+        At peak, <strong>500+ candidates were enrolling daily</strong> via the automated Indeed pipeline. But a large portion were signing up and not completing their profiles — rendering them invisible to employers and worthless to the marketplace. The data showed a clear pattern: <strong>if a candidate didn't complete their profile within the first 24 hours, they almost never came back.</strong> Every day of drop-off at that volume was hundreds of incomplete profiles and lost marketplace liquidity.
+      </div>
+      <div class="discovery-solution">
+        <strong>What we built to fix it:</strong> A time-triggered nudge sequence — SMS outreach via Twilio fired within the first few hours of signup, then again before the 24-hour window closed. HubSpot automations tracked completion status in real time and suppressed the sequence once the profile was finished. Incomplete profiles got escalating urgency. Completed profiles got routed immediately into the employer-facing candidate pool. The sequence reduced early drop-off and dramatically improved the ratio of enrolled-to-available candidates in the marketplace.
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">What Was Built</div>
+    <h2>End-to-end platform built from scratch</h2>
+
+    <div class="built-grid">
+      <div class="built-card">
+        <span class="built-icon">🤖</span>
+        <div class="built-title">Automated candidate acquisition pipeline</div>
+        <p class="built-desc">Jobs auto-posted to Indeed via integration, candidates routed directly to the EzHire platform on application. 500+ daily enrollments at peak with no manual sourcing effort — the pipeline ran itself.</p>
+      </div>
+      <div class="built-card">
+        <span class="built-icon">🎥</span>
+        <div class="built-title">Custom video interview platform</div>
+        <p class="built-desc">Candidates recorded standardized intro interviews or answered employer-specific questions on a custom-built video platform. Video profiles stored alongside resumes, searchable and reviewable by subscribing employers.</p>
+      </div>
+      <div class="built-card">
+        <span class="built-icon">⚡</span>
+        <div class="built-title">HubSpot-powered onboarding automation</div>
+        <p class="built-desc">Deep HubSpot integration tracked both candidate and employer lifecycle states. Automated sequences nudged candidates to complete profiles, delivered candidates to employers at conversion, and managed the hiring workflow for managed-service accounts.</p>
+      </div>
+      <div class="built-card">
+        <span class="built-icon">📱</span>
+        <div class="built-title">24-hour SMS completion sequence</div>
+        <p class="built-desc">Twilio-powered SMS sequence triggered at signup, timed to catch candidates before the 24-hour drop-off window. HubSpot suppression logic stopped messages once the profile was completed — no over-messaging active users.</p>
+      </div>
+      <div class="built-card">
+        <span class="built-icon">💳</span>
+        <div class="built-title">Credit-based employer conversion model</div>
+        <p class="built-desc">Employers could subscribe monthly for unlimited candidate access or purchase credits to unlock individual profiles. Both paths were tracked in HubSpot with automated employer-side nurture sequences driving trial-to-paid conversion.</p>
+      </div>
+      <div class="built-card">
+        <span class="built-icon">🏢</span>
+        <div class="built-title">Managed hiring service tier</div>
+        <p class="built-desc">Full-service option where EzHire handled the entire hiring process — candidate screening, video interview review, shortlisting, and hiring recommendation — for enterprise operators who wanted a hands-off experience.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Enterprise Clients</div>
+    <h2>Three multi-state operators — the largest players in the industry</h2>
+    <p>EzHire reached #3 in the cannabis recruiting space and worked with enterprise multi-state operators who needed compliant, scalable hiring infrastructure across multiple states. Clients included two of the largest publicly traded cannabis companies in North America.</p>
+    <div class="client-strip">
+      <div class="client-badge featured">CuraLeaf</div>
+      <div class="client-badge featured">MedMen</div>
+      <div class="client-badge">+ 1 additional MSO</div>
+      <div class="client-badge">#3 cannabis recruiting platform</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Outcomes</div>
+    <h2>What the flows produced</h2>
+    <div class="results-grid">
+      <div class="result-card">
+        <div class="result-num purple">500+</div>
+        <div class="result-label">Candidate enrollments per day at peak — fully automated</div>
+      </div>
+      <div class="result-card">
+        <div class="result-num green">15%</div>
+        <div class="result-label">Employer trial-to-paid conversion rate over 6 months</div>
+      </div>
+      <div class="result-card">
+        <div class="result-num blue">2 weeks</div>
+        <div class="result-label">Average time from employer signup to paid conversion</div>
+      </div>
+      <div class="result-card">
+        <div class="result-num amber">200</div>
+        <div class="result-label">Employers through the conversion flow in the first 6 months</div>
+      </div>
+      <div class="result-card">
+        <div class="result-num purple">24 hrs</div>
+        <div class="result-label">Critical completion window — identified and addressed via SMS automation</div>
+      </div>
+      <div class="result-card">
+        <div class="result-num green">#3</div>
+        <div class="result-label">Industry ranking in cannabis recruiting, achieved in the first year</div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>The onboarding insight that mattered most:</strong> In a two-sided marketplace, completion rate on the supply side (candidates) directly determines conversion rate on the demand side (employers). Every candidate who dropped off before completing their profile was a piece of inventory that employers couldn't see — which made the platform feel thin and slowed employer conversion. Solving the 24-hour completion problem wasn't a UX fix, it was a business model fix.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Stack</div>
+    <h2>Tools and technologies</h2>
+    <div class="stack-grid">
+      <span class="stack-tag primary">HubSpot (deep integration)</span>
+      <span class="stack-tag primary">Twilio SMS</span>
+      <span class="stack-tag primary">Indeed API (auto-posting)</span>
+      <span class="stack-tag highlight">Custom video interview platform</span>
+      <span class="stack-tag highlight">JumpStart (app framework)</span>
+      <span class="stack-tag">Lifecycle automation</span>
+      <span class="stack-tag">Credit-based billing</span>
+      <span class="stack-tag">Candidate pipeline management</span>
+      <span class="stack-tag">SMS nudge sequences</span>
+      <span class="stack-tag">Profile completion tracking</span>
+    </div>
+  </div>
+
+  <div class="doc-footer">
+    <div class="footer-note">JOHN S. &nbsp;·&nbsp; HUBSPOT EXPERT | CRM & AI-POWERED OPERATIONS &nbsp;·&nbsp; UPWORK</div>
+    <div class="footer-avail">Available for similar engagements</div>
+  </div>
+
+</div>
+</body>
+</html>
