@@ -1,0 +1,63 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import BlogCard from '../../components/ui/BlogCard.astro';
+import ConsultationCTA from '../../components/ui/ConsultationCTA.astro';
+
+const allPosts = await getCollection('blog');
+const posts = allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<BaseLayout
+  pageTitle="GRC Platform Migration Blog | Independent Compliance Advice"
+  metaDescription="Independent articles on GRC platform migration, selection, renewal negotiation, and compliance program scaling. No vendor bias."
+  canonicalURL="https://grcmigrate.com/blog"
+>
+
+<div class="blog-index-page">
+  <div class="container" style="padding-top:var(--space-12);padding-bottom:var(--space-16)">
+
+    <header class="blog-header">
+      <h1>GRC Platform Insights</h1>
+      <p>Independent articles on compliance platform migration, selection, renewal negotiation, and program scaling. No vendor bias — just useful information.</p>
+    </header>
+
+    {posts.length === 0 ? (
+      <p style="color:var(--color-text-muted)">No posts yet. Check back soon.</p>
+    ) : (
+      <div class="blog-grid">
+        {posts.map(post => (
+          <BlogCard
+            title={post.data.title}
+            description={post.data.description}
+            slug={post.id}
+            category={post.data.category}
+            readingTime={post.data.readingTime}
+            pubDate={post.data.pubDate}
+            featured={post.data.featured}
+          />
+        ))}
+      </div>
+    )}
+
+    <div style="margin-top:var(--space-12)">
+      <ConsultationCTA variant="inline" />
+    </div>
+
+  </div>
+</div>
+
+<ConsultationCTA variant="floating" />
+
+</BaseLayout>
+
+<style>
+  .blog-index-page { background-color: var(--color-surface); }
+  .blog-header { margin-bottom: var(--space-10); }
+  .blog-header h1 { font-size: var(--text-3xl); font-weight: 800; margin-bottom: var(--space-3); }
+  .blog-header p { font-size: var(--text-lg); color: var(--color-text-secondary); max-width: 600px; }
+  .blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
+  @media (max-width: 900px) { .blog-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .blog-grid { grid-template-columns: 1fr; } }
+  :root { --space-10: 2.5rem; }
+</style>

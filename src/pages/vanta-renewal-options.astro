@@ -1,0 +1,183 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import ConsultationCTA from '../components/ui/ConsultationCTA.astro';
+import FAQAccordion from '../components/ui/FAQAccordion.astro';
+
+const faqItems = [
+  {
+    question: "Can I negotiate after receiving the renewal quote?",
+    answer: "<p>Yes, and you should. Receiving a renewal quote is the opening position, not the final number. Vanta's account teams have flexibility — especially if you come prepared with a competing quote or a multi-year commitment offer. The window between receiving the renewal quote and the contract end date is your leverage window. Start the conversation at least 60 days before your renewal date to give both sides time to negotiate without artificial pressure.</p><p>The most common mistake is waiting until the last minute. Negotiating within 2 weeks of renewal gives Vanta's team less flexibility and gives you less time to credibly evaluate alternatives.</p>"
+  },
+  {
+    question: "How much notice do I need to give Vanta to cancel?",
+    answer: "<p>Most Vanta contracts require 30 to 60 days written notice before the renewal date to cancel or downgrade. Check your specific contract for the notice period — it's typically in the auto-renewal clause. If you miss the notice window, you may be automatically renewed at the new pricing.</p><p>Set a calendar reminder 90 days before your renewal date to review your options and 60 days before to submit any required notice if you plan to cancel or switch.</p>"
+  },
+  {
+    question: "Will Drata or Secureframe match Vanta's pricing?",
+    answer: "<p>Competing platforms will frequently offer promotional pricing to win your business — but matching pricing doesn't mean equivalent total cost. The real comparison is total cost of ownership including migration labor, integration rebuild time, and any temporary gap in compliance posture during the switch.</p><p>That said, a Drata or Secureframe quote is your single most effective negotiating lever with Vanta. A written competing quote — even one you're not seriously considering — gives Vanta's account team something concrete to respond to.</p>"
+  },
+  {
+    question: "How long does switching from Vanta actually take?",
+    answer: "<p>A simple migration — one framework, under 50 employees, 6+ months before your next audit — typically takes 3 to 4 weeks. Moderate complexity migrations (2 frameworks, 50–200 employees) take 5 to 8 weeks. Complex migrations with 3+ frameworks, large teams, or audit proximity take 10 to 14 weeks.</p><p>The biggest timeline factors are integration count, how your evidence is stored (files vs. URL links), and how close your next audit is. Use the <a href='/migration-assessment'>free migration assessment</a> to get a complexity score for your specific situation.</p>"
+  },
+  {
+    question: "What happens to my compliance data if I leave Vanta?",
+    answer: "<p>Your compliance data does not transfer to a new platform automatically. Before decommissioning your Vanta account, you should export all policy documents (as PDFs), download all uploaded evidence files, export your vendor and personnel records, and download your audit trail and change logs. This data needs to be archived somewhere accessible — your auditor may need to reference pre-migration records for several years.</p><p>Automated test history, integration-discovered state, and audit trail records from Vanta cannot be imported into a new platform. They exist only in your export archive.</p>"
+  },
+  {
+    question: "Is it worth switching for a 20% renewal increase?",
+    answer: "<p>At a 20% increase, the math often does not favor switching — but it depends on your absolute spend. A 20% increase on $10,000/year is $2,000 — unlikely to justify $15,000–$30,000 in migration labor. A 20% increase on $50,000/year is $10,000 — potentially worth the calculation.</p><p>The better question is: can you negotiate the 20% increase down? Most clients in this range can achieve a 10–15% reduction through a multi-year commitment or competing quote, bringing the actual increase to near-zero. A renewal increase under 25% is almost always better addressed through negotiation than migration.</p>"
+  }
+];
+
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqItems.map(item => ({
+      "@type": "Question",
+      "name": item.question,
+      "acceptedAnswer": { "@type": "Answer", "text": item.answer.replace(/<[^>]+>/g, '') }
+    }))
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://grcmigrate.com" },
+      { "@type": "ListItem", "position": 2, "name": "Vanta Renewal Options", "item": "https://grcmigrate.com/vanta-renewal-options" }
+    ]
+  }
+];
+---
+
+<BaseLayout
+  pageTitle="Vanta Renewal Price Increase? Your 3 Options"
+  metaDescription="Got a higher-than-expected Vanta renewal quote? Honest independent analysis of your three options: negotiate, stay, or switch — with guidance on which makes sense for your situation."
+  canonicalURL="https://grcmigrate.com/vanta-renewal-options"
+  schemaMarkup={schema}
+>
+
+<div class="renewal-page">
+  <div class="container">
+
+    <nav class="breadcrumb" aria-label="Breadcrumb" style="padding-top:var(--space-6)">
+      <a href="/">Home</a>
+      <span class="breadcrumb-sep" aria-hidden="true">›</span>
+      <span aria-current="page">Vanta Renewal Options</span>
+    </nav>
+
+    <div class="content-with-sidebar">
+      <article class="renewal-content">
+
+        <header style="padding:var(--space-8) 0 var(--space-6)">
+          <span class="badge badge-amber">Renewal Help</span>
+          <h1 style="font-size:clamp(1.75rem,4vw,var(--text-3xl));font-weight:800;line-height:1.2;margin-top:var(--space-4)">Vanta Renewal Increase: Your 3 Options (An Independent Take)</h1>
+        </header>
+
+        <div class="prose">
+
+          <p>If you're reading this, you've probably received a Vanta renewal quote that was higher than you expected. Renewal increases of 40–100% are common as headcount grows or frameworks are added — this is one of the most common triggers for platform re-evaluation in the security and compliance community.</p>
+
+          <p>Before you do anything else: you have three real options, and none of them is automatically wrong. The right path depends entirely on your specific situation — your audit timeline, how much the increase is in absolute terms, your team's bandwidth, and how much of the cost is negotiable. This is independent analysis. We are not affiliated with Vanta, Drata, or any other platform. We don't earn a commission if you switch.</p>
+
+          <h2>Why Vanta renewal increases happen</h2>
+
+          <p>Most Vanta customers experience their first renewal increase for one of four reasons:</p>
+
+          <p><strong>Introductory discounts expiring.</strong> Vanta's first-year pricing often includes a promotional discount that is not reflected in the standard renewal rate. The "price increase" you're seeing may partly be the expiration of a discount you were given to close the initial deal. This is the most common driver of Year 1 to Year 2 increases.</p>
+
+          <p><strong>Headcount growth triggering tier changes.</strong> Vanta's pricing is partially headcount-based. If your team grew from 40 to 80 employees, you may have crossed a pricing tier boundary that changes your renewal rate significantly — even if you didn't add any new features.</p>
+
+          <p><strong>Framework additions mid-contract.</strong> If you added ISO 27001, HIPAA, or another framework during your contract year, that cost may be billed at full list price at renewal rather than the original promotional rate. Each added framework is typically a separate line item.</p>
+
+          <p><strong>Add-on modules at full price.</strong> Trust Center, VRM (vendor risk management), and questionnaire automation features added during the contract year often show up at full list price at renewal. Vanta's median annual spend across verified purchases sits around $19,800 — first-year starter rates are frequently much lower than this, which means renewal surprises are structurally common.</p>
+
+          <h2>Option 1 — Negotiate your renewal</h2>
+
+          <p>This deserves first position because it's almost always the fastest path and the one most clients underutilize. Vanta's account team has room to negotiate — how much depends on your leverage and how you approach the conversation.</p>
+
+          <p><strong>What consistently works:</strong></p>
+
+          <p><em>Multi-year commitment.</em> Offering to sign a 2-year contract in exchange for a reduced rate typically yields 10–20% off the renewal number. This works because Vanta gets revenue predictability — it's a real trade, not just asking for a discount.</p>
+
+          <p><em>Written competing quote.</em> This is the single most effective lever available to you. A written quote from Drata, Secureframe, or another platform — even one you're not seriously considering — gives Vanta's account team concrete justification to go back to their pricing team and make a case for a counter-offer. The quote doesn't need to be your best deal; it needs to be written and credible.</p>
+
+          <p><em>Bundling frameworks upfront.</em> If you know you'll need additional frameworks over the contract term, negotiating them in at contract renewal — rather than adding them mid-contract at full list — often yields a meaningfully lower blended rate.</p>
+
+          <p><em>Quarter-end timing.</em> Vanta's sales team operates on quarterly quotas. Closing a renewal at the end of Q1, Q2, Q3, or Q4 (March, June, September, December) gives account teams more internal flexibility on pricing to hit quota numbers.</p>
+
+          <p><strong>The one clause to always ask for:</strong> A renewal cap clause. Ask Vanta to include language that limits future renewal increases to a specific percentage — for example, "increases capped at 10% per year regardless of headcount growth." This is much easier to negotiate in the current contract than at the next renewal. Most clients don't ask for this and end up in the same negotiation cycle two years later.</p>
+
+          <p><strong>What to say:</strong> Approach it as a business conversation, not a complaint. "We want to stay on Vanta but the renewal math doesn't work at this number. What can you do on a 2-year commitment?" This opens a negotiation without burning the relationship.</p>
+
+          <p><strong>Realistic outcome:</strong> A 15–30% reduction from the initial renewal quote is achievable in most cases with a competing quote and multi-year commitment offer. The floor depends on how much headcount-driven pricing increase is in the quote — that portion is harder to negotiate away entirely.</p>
+
+          <h2>Option 2 — Stay and optimize</h2>
+
+          <p>Staying isn't the same as accepting the renewal as-is. There's often room to reduce your Vanta cost without switching platforms or negotiating the base rate.</p>
+
+          <p><strong>When staying makes clear sense:</strong> You are within 90 days of your next compliance audit. You've built a strong auditor relationship on Vanta and switching would require your auditor to learn a new platform mid-cycle. You made a significant investment in custom integrations or configurations in the last 12 months. Your actual increase in absolute dollars is under $5,000 — not worth the disruption of migration.</p>
+
+          <p><strong>How to reduce cost without switching:</strong></p>
+
+          <p><em>Audit your active frameworks.</em> If you have SOC 2 and ISO 27001 active but your ISO 27001 program is dormant, removing it from your contract can reduce the renewal cost meaningfully. Check whether you're actively using and maintaining each active framework before the renewal conversation.</p>
+
+          <p><em>Remove add-on modules that aren't actively used.</em> Trust Center, VRM, and questionnaire automation modules add to the contract cost. If your team isn't actively using these features, removing them from the renewal is a legitimate cost reduction — not a service degradation.</p>
+
+          <p><em>Downgrade plan tier if usage supports it.</em> Vanta has different plan tiers with different feature sets. If your program doesn't require features exclusive to a higher tier, review whether your current tier is the minimum viable option for your compliance program's actual needs.</p>
+
+          <h2>Option 3 — Switch platforms</h2>
+
+          <p>Switching platforms is sometimes the right answer — but it's rarely the fastest one, and it comes with real costs that vendors don't emphasize in their sales process.</p>
+
+          <p><strong>When switching makes sense:</strong> Your renewal increase exceeds 30–40% and negotiation has genuinely not moved the number. You have persistent platform gaps — integrations Vanta doesn't support, frameworks you can't run, features your program requires — that affect your audit readiness. You've had a poor support experience over multiple cycles with no improvement. You have at least 6 months of runway before your next audit.</p>
+
+          <p><strong>What switching actually costs:</strong> Migration labor is typically 40–150 hours of internal team time, depending on program complexity. Integration reconnection — rebuilding every OAuth connection from scratch — typically takes half a day to a full day and is consistently underestimated. Evidence re-upload is 2–4 hours minimum for active programs. Auditor communication and onboarding adds another 5–10 hours over the first audit cycle. At $100–$150/hr fully loaded, the labor cost alone is $4,000–$22,500 before any external consulting.</p>
+
+          <p><strong>Why switching "to save money" sometimes costs more than the renewal:</strong> If your renewal increase is $8,000/year but your migration labor cost is $18,000, you're not ahead for more than two years. The break-even point on a migration is typically 6–12 months of savings to cover switching costs — and that's before accounting for the risk premium of compliance disruption near an audit.</p>
+
+          <p>Use the <a href="/migration-cost-calculator">migration cost calculator</a> to model the specific numbers for your situation. If switching does make sense, see the <a href="/vanta-to-drata-migration">Vanta to Drata migration guide</a> for the complete step-by-step process.</p>
+
+          <h2>The timing question — when switching is too risky</h2>
+
+          <p>Regardless of how compelling the switch looks on paper, timing determines whether it's executable without compliance risk.</p>
+
+          <p><strong>Hard guidance:</strong> Switching within 90 days of an audit without a documented migration plan almost always costs more — in time, risk, and team stress — than the renewal increase you're trying to avoid. The minimum safe runway for a simple migration (1 framework, small team) is 3 months. For moderate migrations, 4–6 months. For complex migrations with multiple frameworks and large teams, 6 months minimum.</p>
+
+          <p>If you're within 90 days of your next audit, the conversation changes: negotiate your renewal, complete the audit, and migrate afterward with proper runway. The few thousand dollars of renewal savings are not worth a compliance gap at audit.</p>
+
+          <h2>Common questions</h2>
+
+          <FAQAccordion items={faqItems} />
+
+        </div>
+
+        <ConsultationCTA variant="banner" />
+
+      </article>
+
+      <aside class="sidebar-sticky">
+        <ConsultationCTA variant="sidebar" />
+        <div class="sidebar-links" style="margin-top:var(--space-6)">
+          <h3 style="font-size:var(--text-sm);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-muted);margin-bottom:var(--space-3)">Related</h3>
+          <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:var(--space-2)">
+            <li><a href="/vanta-to-drata-migration" style="font-size:var(--text-sm)">Vanta → Drata Guide →</a></li>
+            <li><a href="/migration-assessment" style="font-size:var(--text-sm)">Migration Assessment →</a></li>
+            <li><a href="/migration-cost-calculator" style="font-size:var(--text-sm)">Cost Calculator →</a></li>
+            <li><a href="/drata-renewal-options" style="font-size:var(--text-sm)">Drata Renewal Options →</a></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+
+  </div>
+</div>
+
+<ConsultationCTA variant="floating" />
+
+</BaseLayout>
+
+<style>
+  .renewal-page { padding-bottom: var(--space-16); }
+</style>

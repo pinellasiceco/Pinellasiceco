@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import ConsultationCTA from '../components/ui/ConsultationCTA.astro';
+---
+
+<BaseLayout
+  pageTitle="Your Migration Report Is On Its Way"
+  metaDescription="Thank you for completing the GRC migration assessment."
+  canonicalURL="https://grcmigrate.com/thank-you"
+  noIndex={true}
+>
+
+<div class="ty-page">
+  <div class="container-narrow" style="padding-top:var(--space-16);padding-bottom:var(--space-16);text-align:center">
+
+    <div class="ty-icon" aria-hidden="true">✓</div>
+    <h1>Your migration report is on its way.</h1>
+    <p class="ty-body">Check your inbox — we've sent your full personalized migration report to the email you provided. We'll also review your assessment before any consultation call.</p>
+
+    <div class="ty-next">
+      <h2>While you wait — read the guide most relevant to your situation:</h2>
+      <div class="ty-links">
+        <a href="/vanta-to-drata-migration" class="card-hover ty-link-card">
+          <span class="badge badge-blue">Migration Guide</span>
+          <h3>Vanta → Drata Migration Guide</h3>
+          <p>Complete step-by-step guide with what transfers, what doesn't, and realistic timelines.</p>
+        </a>
+        <a href="/drata-to-vanta-migration" class="card-hover ty-link-card">
+          <span class="badge badge-blue">Migration Guide</span>
+          <h3>Drata → Vanta Migration Guide</h3>
+          <p>Including the device agent rollout, integration differences, and auditor communication plan.</p>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<ConsultationCTA variant="banner" />
+
+</BaseLayout>
+
+<style>
+  .ty-page { background-color: var(--color-surface); }
+  .ty-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 72px; height: 72px; border-radius: 50%;
+    background: rgba(16,185,129,0.1); color: var(--color-success);
+    font-size: 2rem; font-weight: 700; margin-bottom: var(--space-6);
+  }
+  .ty-page h1 { font-size: var(--text-2xl); font-weight: 800; margin-bottom: var(--space-4); }
+  .ty-body { font-size: var(--text-lg); color: var(--color-text-secondary); margin-bottom: var(--space-10); }
+  .ty-next h2 { font-size: var(--text-lg); font-weight: 700; margin-bottom: var(--space-6); }
+  .ty-links { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+  @media (max-width: 640px) { .ty-links { grid-template-columns: 1fr; } }
+  .ty-link-card {
+    display: flex; flex-direction: column; gap: var(--space-2); text-align: left; text-decoration: none;
+    background: white; border: 1px solid var(--color-border); border-radius: var(--radius-lg);
+    padding: var(--space-6); transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .ty-link-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  .ty-link-card h3 { font-size: var(--text-base); font-weight: 700; color: var(--color-text-primary); }
+  .ty-link-card p { font-size: var(--text-sm); color: var(--color-text-secondary); margin: 0; }
+  :root { --space-10: 2.5rem; }
+</style>

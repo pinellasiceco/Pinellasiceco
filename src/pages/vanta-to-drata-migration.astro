@@ -1,0 +1,340 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import ConsultationCTA from '../components/ui/ConsultationCTA.astro';
+
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Migrate from Vanta to Drata: A Complete Guide (2026)",
+    "description": "Step-by-step guide to migrating your compliance program from Vanta to Drata, including what data transfers, what requires manual work, realistic timeline, and common mistakes.",
+    "step": [
+      { "@type": "HowToStep", "position": 1, "name": "Export and archive everything from Vanta", "text": "Export policies (PDF), evidence files, vendor list, and control status report before starting. Do not decommission until migration is verified complete." },
+      { "@type": "HowToStep", "position": 2, "name": "Evaluate your Drata plan tier", "text": "API access requires Advanced tier ($15K+/yr). Confirm before signing." },
+      { "@type": "HowToStep", "position": 3, "name": "Sign Drata contract and request implementation support", "text": "Request CSV import templates from your CSM before onboarding call." },
+      { "@type": "HowToStep", "position": 4, "name": "Complete Drata onboarding", "text": "Framework selection, Drata Control Framework (DCF) setup, admin users invited." },
+      { "@type": "HowToStep", "position": 5, "name": "Reconnect all integrations in Drata", "text": "AWS, GCP, GitHub, Okta, and every connected tool. Budget half a day to a full day." },
+      { "@type": "HowToStep", "position": 6, "name": "Wait 24–48 hours for Drata's automated tests to stabilize", "text": "Expect initial failures — most resolve as integrations sync." },
+      { "@type": "HowToStep", "position": 7, "name": "Map your Vanta controls to the Drata Control Framework", "text": "Use Drata's Replace Policy feature where your policies match Drata templates." },
+      { "@type": "HowToStep", "position": 8, "name": "Upload policies", "text": "Use Replace Policy for template matches, custom upload for bespoke policies." },
+      { "@type": "HowToStep", "position": 9, "name": "Import vendors via Drata CSV template", "text": "Contact technical support to request templates before attempting manual entry." },
+      { "@type": "HowToStep", "position": 10, "name": "Import personnel records", "text": "Compliance tasks will auto-assign based on employment type. Expect status to show as pending for 1–2 weeks." },
+      { "@type": "HowToStep", "position": 11, "name": "Re-upload evidence files", "text": "Associate to correct controls. This is the most time-intensive manual step — plan for 2–4 hours minimum." },
+      { "@type": "HowToStep", "position": 12, "name": "Review all test results", "text": "Create a remediation plan for any legitimate failures (not just sync delays)." },
+      { "@type": "HowToStep", "position": 13, "name": "Notify your auditor", "text": "Provide timeline, evidence continuity plan, and access to Drata Audit Hub. Do this at least 60 days before next audit." },
+      { "@type": "HowToStep", "position": 14, "name": "Archive Vanta data and close account", "text": "Settle outstanding fees. Confirm account closure process with Vanta." }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://grcmigrate.com" },
+      { "@type": "ListItem", "position": 2, "name": "Migration Guides", "item": "https://grcmigrate.com/vanta-to-drata-migration" },
+      { "@type": "ListItem", "position": 3, "name": "Vanta to Drata", "item": "https://grcmigrate.com/vanta-to-drata-migration" }
+    ]
+  }
+];
+---
+
+<BaseLayout
+  pageTitle="How to Migrate from Vanta to Drata: Complete 2026 Guide"
+  metaDescription="Step-by-step guide to migrating your compliance program from Vanta to Drata. What data transfers, what requires manual work, realistic timeline, common mistakes, and what to ask Drata before signing."
+  canonicalURL="https://grcmigrate.com/vanta-to-drata-migration"
+  schemaMarkup={schema}
+>
+
+<div class="guide-page">
+  <div class="container">
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="Breadcrumb" style="padding-top:var(--space-6)">
+      <a href="/">Home</a>
+      <span class="breadcrumb-sep" aria-hidden="true">›</span>
+      <span>Migration Guides</span>
+      <span class="breadcrumb-sep" aria-hidden="true">›</span>
+      <span aria-current="page">Vanta to Drata</span>
+    </nav>
+
+    <div class="content-with-sidebar">
+      <article class="guide-content">
+
+        <!-- Header -->
+        <header class="guide-header">
+          <div class="page-meta">
+            <span class="badge badge-blue">Migration Guide</span>
+            <span>~12 min read</span>
+            <span>Updated June 2026</span>
+          </div>
+          <h1>How to Migrate from Vanta to Drata: A Complete Guide (2026)</h1>
+        </header>
+
+        <!-- TOC -->
+        <nav class="toc" aria-label="Table of contents">
+          <h2>In this guide</h2>
+          <ol>
+            <li><a href="#worth-it">Before you start — is the switch worth it?</a></li>
+            <li><a href="#what-migrates">What migrates from Vanta to Drata</a></li>
+            <li><a href="#step-by-step">Step-by-step migration process</a></li>
+            <li><a href="#stays-manual">What stays manual — permanently</a></li>
+            <li><a href="#timeline">Realistic timeline by complexity</a></li>
+            <li><a href="#questions-to-ask">Questions to ask Drata before you sign</a></li>
+            <li><a href="#common-mistakes">Common mistakes that derail migrations</a></li>
+          </ol>
+        </nav>
+
+        <div class="prose">
+
+          <p>This guide is for security managers, IT directors, and compliance leads who are actively evaluating or planning a move from Vanta to Drata. It covers everything from the initial go/no-go decision through decommissioning Vanta — including what data actually transfers, what you'll need to rebuild manually, and where migrations most commonly go wrong.</p>
+
+          <p>This is independent advice. GRC Migrate is not affiliated with Vanta, Drata, or any compliance platform. If you want a personalized complexity score before diving in, the <a href="/migration-assessment">free migration assessment</a> takes about 3 minutes.</p>
+
+          <h2 id="worth-it">Before you start — is the switch worth it?</h2>
+
+          <p>The honest answer is: it depends on your specific situation, and the answer isn't always yes. Before you start evaluating Drata features or getting demo'd by their sales team, you need to understand the real switching cost.</p>
+
+          <p>Migrating compliance platforms is not like switching project management tools. You're moving a live compliance program — one that your auditor depends on, your customers may have access to via trust center, and your team relies on for continuous monitoring. The switching cost includes internal labor (typically 40–150 hours depending on complexity), integration rebuild time, a 24–48 hour window where your automated test coverage is incomplete while Drata's tests re-run, and the overhead of communicating the change to your auditor.</p>
+
+          <p><strong>Migration makes sense when:</strong> You're in the window after a completed audit and at least 6 months before your next one. You have a clear feature or support gap that Drata specifically addresses. Your renewal increase from Vanta was significant and negotiation hasn't resolved it. You've done an honest cost comparison using real hours, not vendor estimates.</p>
+
+          <p><strong>Migration does not make sense when:</strong> You are within 90 days of your next audit. You completed a large custom integration investment in Vanta in the last 12 months that would need to be rebuilt. Your primary driver is a renewal increase under 20% — that's often negotiable without the disruption of a switch. Your auditor has a deep familiarity with how Vanta presents evidence and has no experience with Drata's Audit Hub.</p>
+
+          <p>The break-even point on a migration — where the savings from a lower Drata contract offset the switching costs — is typically 6 to 12 months. If you're saving $8,000/year on platform cost but spending $15,000 in internal labor to switch, you're not ahead for at least a year and a half.</p>
+
+        </div>
+
+        <ConsultationCTA variant="inline" heading="Want a personalized take on whether this switch makes sense for you?" />
+
+        <div class="prose">
+
+          <h2 id="what-migrates">What migrates from Vanta to Drata</h2>
+
+          <p>This is where most people underestimate the effort. The short answer: much less transfers than you expect, and what does transfer requires significant manual work.</p>
+
+          <h3>What migrates (with effort)</h3>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Data Type</th>
+                <th>Effort Level</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Controls and frameworks</td>
+                <td><span class="badge badge-red">High</span></td>
+                <td>Manual re-mapping to Drata Control Framework (DCF) required. Vanta and Drata use different control structures — this is not a 1:1 mapping exercise.</td>
+              </tr>
+              <tr>
+                <td>Policies and documents</td>
+                <td><span class="badge badge-amber">Medium</span></td>
+                <td>Re-upload required. Timestamps and approval history from Vanta are lost. If Drata has a matching template policy, use Replace Policy to preserve control and test mappings.</td>
+              </tr>
+              <tr>
+                <td>Vendor records</td>
+                <td><span class="badge badge-amber">Medium</span></td>
+                <td>Manual re-entry or CSV import via Drata support. Request the CSV template from your CSM before attempting import — the format is specific.</td>
+              </tr>
+              <tr>
+                <td>Personnel records</td>
+                <td><span class="badge badge-amber">Medium</span></td>
+                <td>CSV import available. Compliance status resets and must re-accumulate. Employees will need to re-complete assigned tasks.</td>
+              </tr>
+              <tr>
+                <td>Evidence files (uploaded)</td>
+                <td><span class="badge badge-red">High</span></td>
+                <td>Download from Vanta, re-upload to Drata, re-associate to the correct controls. This is the most time-intensive manual step for active programs.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>What does not migrate</h3>
+
+          <p><strong>Integration-discovered state.</strong> Every integration — AWS, GitHub, Google Workspace, Okta, and every other connected tool — must be reconnected from scratch in Drata. The OAuth permissions, configuration, and discovered data do not transfer. Budget at minimum a full business day for reconnection on a stack of 10+ integrations, and expect the reconnection to surface edge cases specific to your environment.</p>
+
+          <p><strong>Automated test history.</strong> Vanta's test results and pass/fail history don't transfer to Drata. Drata starts from zero. After reconnecting your integrations, Drata's tests will begin running against your environment — expect the first 24–48 hours to show failures that resolve as tests stabilize. Do not panic-remediate during this window.</p>
+
+          <p><strong>Evidence stored as URL links.</strong> If you stored evidence in Vanta as links pointing to external tools (a Confluence page, a Google Doc, a GitHub PR) rather than as uploaded files, those links have no file to transfer. You'll need to either re-submit the evidence as downloaded files in Drata, or re-link to the same external sources. For active programs with significant link-based evidence, this can add substantially to migration time.</p>
+
+          <p><strong>Audit trail and change logs.</strong> The historical record of who changed what, when, and which evidence was accepted by which auditor stays in Vanta. Export your complete audit trail before decommissioning your Vanta account. Archive it in a location your auditor and legal team can access — some compliance programs need this for 3–7 years.</p>
+
+          <p><strong>Custom integration configurations.</strong> If you built custom integrations using Vanta's API, those need to be rebuilt against Drata's API. Drata's API requires Advanced tier access. Confirm this before signing if API-based workflows are part of your program.</p>
+
+          <h2 id="step-by-step">Step-by-step migration process</h2>
+
+          <ol class="step-list">
+            <li>
+              <strong>Export and archive everything from Vanta.</strong> Before you do anything else: export your policies as PDFs, download all uploaded evidence files, export your vendor list, and generate a full control status report. Download or screenshot your audit trail. Do not decommission your Vanta account until the migration is verified complete and your auditor has confirmed they have everything they need.
+            </li>
+            <li>
+              <strong>Evaluate your Drata plan tier.</strong> API access in Drata requires the Advanced tier, which starts around $15,000/year. If your compliance program involves any API-based workflows or automations, confirm which plan tier includes that access before signing. Foundation tier does not include API access — this is a meaningful functional difference.
+            </li>
+            <li>
+              <strong>Sign the Drata contract and request implementation support before your onboarding call.</strong> Ask your CSM for the CSV import templates for vendor and personnel records during contract negotiation — not after you've started onboarding. Getting these templates upfront saves a support ticket cycle mid-migration.
+            </li>
+            <li>
+              <strong>Complete Drata onboarding.</strong> This includes framework selection, initial Drata Control Framework (DCF) setup, and inviting admin users. Drata's onboarding team typically walks through this in the first call. If you have a named CSM, this is the point to align on their availability for the migration phases.
+            </li>
+            <li>
+              <strong>Reconnect all integrations in Drata.</strong> Work through your full integration stack — AWS, GCP, GitHub, GitLab, Okta, Google Workspace, Slack, and every other connected tool. Budget half a day minimum; a full day if you have 15+ integrations or if any integrations require custom OAuth configuration. Flag any integrations that exist in your Vanta stack but may not have a native Drata connector — check Drata's integration library before starting.
+            </li>
+            <li>
+              <strong>Wait 24–48 hours before reviewing test results.</strong> After reconnecting integrations, Drata's automated tests begin running against your environment. The first 24–48 hours frequently show failures that resolve automatically as integrations sync and tests accumulate data. Reviewing results too early leads to false remediation work. Stabilize first, then assess.
+            </li>
+            <li>
+              <strong>Map your Vanta controls to the Drata Control Framework.</strong> This is the most intellectually demanding step. Vanta and Drata use different control structures — the mapping is not 1:1. Work through your active frameworks and identify which Vanta controls correspond to which DCF controls. Where your policies match Drata's template policies exactly, use the Replace Policy feature — this preserves the control and test associations. Where your policies are custom, you'll upload them separately.
+            </li>
+            <li>
+              <strong>Upload policies.</strong> Use Drata's Replace Policy function for policies that match Drata templates. Upload custom policies directly. All policies will lose their Vanta approval timestamps — this is expected and should be communicated to your auditor in advance.
+            </li>
+            <li>
+              <strong>Import vendor records via Drata's CSV template.</strong> Use the template your CSM provided during contract. Do not attempt manual entry for a vendor list longer than 10 vendors — the CSV import is significantly faster. If you encounter issues, Drata's technical support team handles import assistance.
+            </li>
+            <li>
+              <strong>Import personnel records.</strong> Compliance tasks auto-assign based on employment type once personnel are imported. Expect status to show as pending for 1–2 weeks as employees complete their assigned tasks. This is expected behavior, not a data problem.
+            </li>
+            <li>
+              <strong>Re-upload evidence files and associate to controls.</strong> This is the most time-intensive manual step for programs with significant uploaded evidence. Download files from Vanta (if not already archived), upload to Drata, and associate each file to the correct control. For active SOC 2 programs, plan 2–4 hours minimum. For multi-framework programs with extensive evidence libraries, plan a full day.
+            </li>
+            <li>
+              <strong>Review all test results and create a remediation plan.</strong> By this point, your integrations have stabilized. Review the full test dashboard. For each failing test, determine whether it's a legitimate finding (requires remediation) or a configuration issue (test setup problem). Don't conflate the two.
+            </li>
+            <li>
+              <strong>Notify your auditor of the platform change.</strong> Do this at least 60 days before your next audit. Provide: the migration timeline, an evidence continuity plan explaining how pre-migration evidence is archived and accessible, and access to Drata's Audit Hub so your auditor can begin familiarizing themselves with the interface. Some auditors have strong preferences about evidence format — getting them engaged early prevents surprises.
+            </li>
+            <li>
+              <strong>Archive Vanta data and initiate account closure.</strong> Settle any outstanding Vanta fees. Confirm the account closure process — Vanta typically requires notice and may have a wind-down period depending on your contract terms. Keep your archived export accessible; don't rely on continued Vanta access for records that may be needed later.
+            </li>
+          </ol>
+
+          <h2 id="stays-manual">What stays manual — permanently</h2>
+
+          <p>Some things about a Vanta-to-Drata migration are one-time manual effort. Others represent permanent differences in how your program operates. It's worth being clear on which is which before you commit.</p>
+
+          <p><strong>Integration reconnection is a one-time effort,</strong> but it's a full rebuild. Any custom logic you built around Vanta's integration data — reports, workflows, alerts — needs to be rebuilt against Drata's data model. This is especially relevant if your engineering team has built tooling that consumes Vanta's API output.</p>
+
+          <p><strong>The test re-validation window</strong> is unavoidable. For the first 2–4 weeks after migration, your automated test history in Drata will be sparse. This matters most if your audit is close. Auditors who are used to seeing months of continuous test pass history will see a gap at the point of migration. Have a clear explanation of the timeline prepared.</p>
+
+          <p><strong>Evidence stored as URL links</strong> remains a permanent workflow consideration in Drata. If your team's process is to submit evidence as links to external systems, you'll need to establish whether Drata's link-based evidence approach works for your auditor. Some auditors prefer uploaded files over links — if yours does, the migration is an opportunity to change the workflow, but it requires explicit team coordination.</p>
+
+          <p><strong>Audit history and change logs</strong> from Vanta are not recoverable in Drata. They exist only in your archived export. For programs that have been audited multiple times on Vanta, this means your Drata instance starts fresh — which can matter when auditors want to see historical evidence of consistent controls operation. Plan for this conversation with your auditor before the migration, not after.</p>
+
+          <p><strong>Framework customizations that don't map to DCF</strong> will need to be rebuilt. If you've made significant customizations to your control framework in Vanta — custom controls, modified test criteria, non-standard evidence requirements — assess how much of that maps to DCF before committing to the migration. Significant divergence from DCF means significant rebuild work.</p>
+
+          <h2 id="timeline">Realistic timeline by complexity</h2>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Complexity</th>
+                <th>Profile</th>
+                <th>Timeline</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Simple</strong></td>
+                <td>1 framework, under 50 employees, 6+ months to audit</td>
+                <td>3–4 weeks</td>
+              </tr>
+              <tr>
+                <td><strong>Moderate</strong></td>
+                <td>2 frameworks, 50–200 employees, 3–6 months to audit</td>
+                <td>5–8 weeks</td>
+              </tr>
+              <tr>
+                <td><strong>Complex</strong></td>
+                <td>3+ frameworks, 200+ employees, under 3 months to audit</td>
+                <td>10–14 weeks</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>These timelines assume a dedicated point person spending roughly 25–30% of their time on the migration during the active phases. If the migration is a secondary responsibility with frequent interruptions, add 50% to these estimates. Use the <a href="/migration-assessment">free assessment tool</a> to get your specific complexity tier, or the <a href="/migration-cost-calculator">cost calculator</a> to model the labor cost.</p>
+
+          <h2 id="questions-to-ask">Questions to ask Drata before you sign</h2>
+
+          <p>The sales process for compliance platforms is often heavily curated. These are the questions that reveal real-world operational fit — ask them before signing, not after.</p>
+
+          <ol>
+            <li><strong>What onboarding support is included and for how long?</strong> Is there a named implementation specialist, and when do they hand off to standard CSM support? What does the transition look like?</li>
+            <li><strong>Will I have a named CSM and what are their response time SLAs?</strong> What tier of support is included at my plan level, and what escalation path exists if my CSM is unavailable?</li>
+            <li><strong>Can your team assist with DCF mapping from our current Vanta control set?</strong> This is often not explicitly offered — ask if Drata will dedicate any support hours to the framework mapping exercise.</li>
+            <li><strong>Do you have a CSV import template for vendors and personnel?</strong> Ask them to send it during contract negotiations, not during onboarding. This surfaces the format early and eliminates a support cycle later.</li>
+            <li><strong>Which audit firms does your Audit Hub support, and will you work with our specific auditor?</strong> Drata's Audit Hub has relationships with certain firms. If your auditor is not on their list, get clarity on what the auditor collaboration process looks like.</li>
+            <li><strong>What is the API rate limit on the Advanced tier and what are the exact scope permissions?</strong> If you're on Advanced for API access, understand the rate limits (Drata's limit is around 500 req/min on Advanced) and whether the OAuth scopes cover your use cases before building against it.</li>
+            <li><strong>What is your standard renewal increase and can we cap it in the contract?</strong> This is the single most important clause to negotiate upfront. Ask for renewal increases to be capped at a specific percentage — 10% or CPI, for example — and get it in writing. It is much easier to negotiate this before signing than at renewal.</li>
+            <li><strong>Is there an implementation fee and what does it cover?</strong> Some Drata contracts include an implementation fee. Understand whether this is negotiable and what deliverables it covers.</li>
+          </ol>
+
+          <h2 id="common-mistakes">Common mistakes that derail migrations</h2>
+
+          <p>These are the patterns we've seen repeatedly in failed or problem migrations. They're almost entirely avoidable with planning.</p>
+
+          <ol>
+            <li><strong>Attempting migration within 90 days of an audit without a documented plan.</strong> This is the most common high-stakes mistake. If your next audit is under 90 days away, you do not have enough runway for even a simple migration. The stabilization window alone (24–48 hours for tests, plus 2–4 weeks for evidence re-accumulation) makes this timeline extremely risky. If you're in this situation, the right answer is almost always: negotiate your Vanta renewal, complete the audit, then migrate.</li>
+            <li><strong>Not exporting audit history from Vanta before decommissioning.</strong> Once your Vanta account is closed, that data is gone. Export everything — audit reports, evidence packages, change logs, vendor assessments — before initiating account closure. This is non-negotiable and often forgotten in the rush of the final migration phases.</li>
+            <li><strong>Underestimating integration reconnection time.</strong> The standard mistake is to estimate based on how many integrations you have, not on how complex the configuration is. Budget 2x your initial estimate for integration reconnection. Some integrations have edge cases that surface only during reconnection — network ACLs, scoped permissions, SAML configurations — that can add hours to a single integration.</li>
+            <li><strong>Discovering too late that large portions of evidence were stored as URL links.</strong> URL-linked evidence has no file to transfer. If 50% of your evidence library is links rather than uploaded files, you've essentially doubled your evidence migration effort. Audit how your evidence is stored in Vanta before committing to a migration timeline.</li>
+            <li><strong>Not giving your auditor advance notice.</strong> Some auditors need 60 or more days to adjust their process when a client changes compliance platforms. If your auditor has been using Vanta's report format to structure their testing, switching to Drata's Audit Hub mid-cycle creates real friction. Notify early, give them platform access, and let them ask questions before your next audit window.</li>
+          </ol>
+
+        </div>
+
+        <ConsultationCTA variant="inline" heading="Planning a Vanta to Drata migration?" />
+
+        <div class="prose">
+          <p>For the reverse migration — moving from Drata back to Vanta — see the <a href="/drata-to-vanta-migration">Drata to Vanta migration guide</a>. If you're not yet sure which direction makes sense, the <a href="/migration-cost-calculator">cost calculator</a> can model both scenarios side by side.</p>
+        </div>
+
+      </article>
+
+      <aside class="sidebar-sticky">
+        <ConsultationCTA variant="sidebar" />
+        <div class="sidebar-links" style="margin-top:var(--space-6)">
+          <h3 style="font-size:var(--text-sm);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-muted);margin-bottom:var(--space-3)">Related</h3>
+          <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:var(--space-2)">
+            <li><a href="/migration-assessment" style="font-size:var(--text-sm)">Migration Assessment →</a></li>
+            <li><a href="/migration-cost-calculator" style="font-size:var(--text-sm)">Cost Calculator →</a></li>
+            <li><a href="/drata-to-vanta-migration" style="font-size:var(--text-sm)">Drata → Vanta Guide →</a></li>
+            <li><a href="/vanta-renewal-options" style="font-size:var(--text-sm)">Vanta Renewal Options →</a></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+
+  </div>
+</div>
+
+<ConsultationCTA variant="floating" />
+
+</BaseLayout>
+
+<style>
+  .guide-page { padding-bottom: var(--space-16); }
+  .guide-header { padding: var(--space-8) 0 var(--space-6); }
+  .guide-header h1 {
+    font-size: clamp(1.75rem, 4vw, var(--text-3xl));
+    font-weight: 800;
+    line-height: 1.2;
+    margin-top: var(--space-4);
+    letter-spacing: -0.01em;
+  }
+  .step-list {
+    padding-left: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+  .step-list li {
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+  }
+  .step-list li strong {
+    color: var(--color-text-primary);
+    display: block;
+    margin-bottom: var(--space-1);
+  }
+</style>

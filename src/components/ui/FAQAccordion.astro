@@ -1,0 +1,132 @@
+---
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+interface Props {
+  items: FAQItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="faq-accordion">
+  {items.map((item, i) => (
+    <div class="faq-item">
+      <button
+        class="faq-question"
+        aria-expanded="false"
+        aria-controls={`faq-answer-${i}`}
+        id={`faq-btn-${i}`}
+      >
+        <span>{item.question}</span>
+        <svg class="faq-icon" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
+          <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="faq-answer" id={`faq-answer-${i}`} role="region" aria-labelledby={`faq-btn-${i}`} hidden>
+        <div class="faq-answer-inner" set:html={item.answer} />
+      </div>
+    </div>
+  ))}
+</div>
+
+<style>
+  .faq-accordion {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .faq-item {
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .faq-item:last-child {
+    border-bottom: none;
+  }
+
+  .faq-question {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: var(--space-6);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    transition: background-color 0.15s ease;
+  }
+
+  .faq-question:hover {
+    background-color: var(--color-surface);
+  }
+
+  .faq-question[aria-expanded="true"] {
+    background-color: var(--color-surface);
+    color: var(--color-primary);
+  }
+
+  .faq-icon {
+    flex-shrink: 0;
+    color: var(--color-text-muted);
+    transition: transform 0.2s ease;
+  }
+
+  .faq-question[aria-expanded="true"] .faq-icon {
+    transform: rotate(180deg);
+    color: var(--color-accent);
+  }
+
+  .faq-answer {
+    overflow: hidden;
+  }
+
+  .faq-answer-inner {
+    padding: 0 var(--space-6) var(--space-6);
+    color: var(--color-text-secondary);
+    line-height: 1.8;
+  }
+
+  .faq-answer-inner p {
+    margin-bottom: var(--space-3);
+  }
+
+  .faq-answer-inner p:last-child {
+    margin-bottom: 0;
+  }
+
+  .faq-answer-inner a {
+    color: var(--color-accent);
+  }
+</style>
+
+<script>
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      const answerId = btn.getAttribute('aria-controls');
+      const answer = answerId ? document.getElementById(answerId) : null;
+
+      // Close all others
+      document.querySelectorAll('.faq-question').forEach(other => {
+        if (other !== btn) {
+          other.setAttribute('aria-expanded', 'false');
+          const otherId = other.getAttribute('aria-controls');
+          const otherAnswer = otherId ? document.getElementById(otherId) : null;
+          if (otherAnswer) otherAnswer.hidden = true;
+        }
+      });
+
+      btn.setAttribute('aria-expanded', String(!expanded));
+      if (answer) answer.hidden = expanded;
+    });
+  });
+</script>

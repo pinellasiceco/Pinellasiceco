@@ -1,0 +1,321 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import ConsultationCTA from '../components/ui/ConsultationCTA.astro';
+
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Migrate from Drata to Vanta: A Complete Guide (2026)",
+    "description": "Step-by-step guide to migrating your compliance program from Drata to Vanta, including what transfers, what requires manual work, and how to manage the device agent rollout.",
+    "step": [
+      { "@type": "HowToStep", "position": 1, "name": "Export and archive everything from Drata", "text": "Contact Drata support for CSV export templates. Export policies, evidence, vendor list, and control status before initiating any decommission steps." },
+      { "@type": "HowToStep", "position": 2, "name": "Request an integration parity check from Vanta", "text": "Ask Vanta sales to confirm native integration coverage for every tool in your current Drata stack before signing." },
+      { "@type": "HowToStep", "position": 3, "name": "Sign the Vanta contract and plan the device agent rollout", "text": "Coordinate the employee device agent rollout with IT before onboarding. This is a required step with employee-facing impact." },
+      { "@type": "HowToStep", "position": 4, "name": "Complete Vanta onboarding", "text": "Framework setup, admin users invited, Vanta's control framework configured for your active compliance programs." },
+      { "@type": "HowToStep", "position": 5, "name": "Deploy the Vanta device agent to all monitored endpoints", "text": "Unlike Drata's MDM-based approach, Vanta installs its own agent. Coordinate with employees and IT for rollout." },
+      { "@type": "HowToStep", "position": 6, "name": "Reconnect all integrations in Vanta", "text": "Vanta uses OAuth client credentials. Budget a full day for reconnection on stacks of 10+ integrations." },
+      { "@type": "HowToStep", "position": 7, "name": "Wait 24–48 hours for Vanta's tests to stabilize", "text": "Vanta runs tests hourly. Expect initial failures as integrations sync — allow stabilization before assessing results." },
+      { "@type": "HowToStep", "position": 8, "name": "Map Drata controls to Vanta's control framework", "text": "Drata's DCF and Vanta's control structure differ. This mapping requires review of each active control." },
+      { "@type": "HowToStep", "position": 9, "name": "Upload policies and evidence", "text": "Re-upload all policy documents and evidence files. Associate evidence to the correct Vanta controls." },
+      { "@type": "HowToStep", "position": 10, "name": "Import vendor and personnel records", "text": "Use Vanta's import templates. Personnel will need to complete compliance tasks that re-accumulate over time." },
+      { "@type": "HowToStep", "position": 11, "name": "Notify your auditor and onboard them to Vanta's workflow", "text": "Auditors used to Drata's Audit Hub need onboarding to Vanta's auditor collaboration approach. Do this 60+ days before next audit." },
+      { "@type": "HowToStep", "position": 12, "name": "Archive Drata data and close account", "text": "Settle outstanding Drata fees. Keep your exported data accessible in long-term storage." }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://grcmigrate.com" },
+      { "@type": "ListItem", "position": 2, "name": "Migration Guides", "item": "https://grcmigrate.com/drata-to-vanta-migration" },
+      { "@type": "ListItem", "position": 3, "name": "Drata to Vanta", "item": "https://grcmigrate.com/drata-to-vanta-migration" }
+    ]
+  }
+];
+---
+
+<BaseLayout
+  pageTitle="How to Migrate from Drata to Vanta: Complete 2026 Guide"
+  metaDescription="Step-by-step guide to migrating from Drata to Vanta. What transfers, what requires manual work, realistic timeline, what to ask Vanta before signing, and how to protect your audit history."
+  canonicalURL="https://grcmigrate.com/drata-to-vanta-migration"
+  schemaMarkup={schema}
+>
+
+<div class="guide-page">
+  <div class="container">
+
+    <nav class="breadcrumb" aria-label="Breadcrumb" style="padding-top:var(--space-6)">
+      <a href="/">Home</a>
+      <span class="breadcrumb-sep" aria-hidden="true">›</span>
+      <span>Migration Guides</span>
+      <span class="breadcrumb-sep" aria-hidden="true">›</span>
+      <span aria-current="page">Drata to Vanta</span>
+    </nav>
+
+    <div class="content-with-sidebar">
+      <article class="guide-content">
+
+        <header class="guide-header">
+          <div class="page-meta">
+            <span class="badge badge-blue">Migration Guide</span>
+            <span>~12 min read</span>
+            <span>Updated June 2026</span>
+          </div>
+          <h1>How to Migrate from Drata to Vanta: A Complete Guide (2026)</h1>
+        </header>
+
+        <nav class="toc" aria-label="Table of contents">
+          <h2>In this guide</h2>
+          <ol>
+            <li><a href="#worth-it">Before you start — is the switch worth it?</a></li>
+            <li><a href="#what-migrates">What migrates from Drata to Vanta</a></li>
+            <li><a href="#step-by-step">Step-by-step migration process</a></li>
+            <li><a href="#stays-manual">What stays manual — permanently</a></li>
+            <li><a href="#timeline">Realistic timeline by complexity</a></li>
+            <li><a href="#questions-to-ask">Questions to ask Vanta before you sign</a></li>
+            <li><a href="#common-mistakes">Common mistakes that derail migrations</a></li>
+          </ol>
+        </nav>
+
+        <div class="prose">
+
+          <p>This guide is for security managers, IT directors, and compliance leads actively evaluating or planning a move from Drata to Vanta. It covers the go/no-go decision, what data actually transfers, the device agent rollout that distinguishes Vanta from Drata's approach, and the specific operational differences your team will encounter post-migration.</p>
+
+          <p>This is independent advice. GRC Migrate is not affiliated with Vanta, Drata, or any compliance platform vendor. For a personalized complexity score before reading, take the <a href="/migration-assessment">free migration assessment</a>.</p>
+
+          <h2 id="worth-it">Before you start — is the switch worth it?</h2>
+
+          <p>Moving from Drata to Vanta makes sense in a specific set of circumstances — and doesn't make sense in others. Understanding the real cost of switching is the first step before evaluating platform features.</p>
+
+          <p><strong>Migration from Drata to Vanta makes sense when:</strong> You're post-audit with at least 6 months before the next one. You've received a Drata renewal increase that negotiation hasn't resolved, and the math genuinely favors switching. You need integrations that Vanta supports natively but Drata does not (Vanta's integration library, at 400+, is meaningfully broader than Drata's ~200). Your auditor is flexible about platform changes and has worked with Vanta before.</p>
+
+          <p><strong>Migration does not make sense when:</strong> You're within 90 days of a compliance audit. You've built significant workflows or automations on Drata's API that would need to be rebuilt (Drata's API rate limits are 500 req/min on Advanced; Vanta's management endpoint limit is 50 req/min — a meaningful difference for high-frequency programmatic use). Your Drata renewal increase is under 20% and could be negotiated down with the right approach. Your auditor has deep familiarity with Drata's Audit Hub and would need to be onboarded to a new workflow mid-cycle.</p>
+
+          <p>The switching cost for a Drata-to-Vanta migration includes internal labor (40–150 hours depending on complexity), the device agent rollout overhead (a Vanta-specific requirement that Drata doesn't have), integration reconnection, and evidence re-upload. The device agent rollout in particular adds coordination overhead that doesn't exist in Drata-to-Drata scenarios — your IT team needs to deploy Vanta's agent to every monitored endpoint, which involves employee communication and scheduling.</p>
+
+        </div>
+
+        <ConsultationCTA variant="inline" heading="Want a personalized take on whether switching to Vanta makes sense?" />
+
+        <div class="prose">
+
+          <h2 id="what-migrates">What migrates from Drata to Vanta</h2>
+
+          <p>As with any platform migration, less transfers cleanly than you might expect. The data model differences between Drata and Vanta are real — Drata's Drata Control Framework (DCF) and Vanta's control structure are not 1:1 equivalents.</p>
+
+          <h3>What migrates (with effort)</h3>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Data Type</th>
+                <th>Effort Level</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Controls and frameworks</td>
+                <td><span class="badge badge-red">High</span></td>
+                <td>Drata's DCF structure does not map 1:1 to Vanta's control framework. Manual re-mapping required for each active control. Custom controls built on DCF require recreation in Vanta.</td>
+              </tr>
+              <tr>
+                <td>Policies and documents</td>
+                <td><span class="badge badge-amber">Medium</span></td>
+                <td>Re-upload to Vanta required. Drata approval history and timestamps do not transfer. Vanta has its own policy library — match where possible to preserve control associations.</td>
+              </tr>
+              <tr>
+                <td>Vendor records</td>
+                <td><span class="badge badge-amber">Medium</span></td>
+                <td>Manual re-entry or structured import. Contact Drata support for CSV export templates before decommissioning access — format matters for portability.</td>
+              </tr>
+              <tr>
+                <td>Personnel records</td>
+                <td><span class="badge badge-amber">Medium</span></td>
+                <td>Import via Vanta templates. Compliance status resets. Employees will be re-assigned tasks — budget 1–2 weeks for re-accumulation of compliance posture.</td>
+              </tr>
+              <tr>
+                <td>Evidence files (uploaded)</td>
+                <td><span class="badge badge-red">High</span></td>
+                <td>Download from Drata, re-upload to Vanta, re-associate to correct controls. Drata's evidence structure differs from Vanta's — associations are not portable.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>What does not migrate</h3>
+
+          <p><strong>Integration-discovered state.</strong> All integrations must be reconnected from scratch. Vanta uses OAuth client credentials rather than API keys for integration authentication — the setup flow differs from Drata's. Budget a full day for reconnection across a stack of 10+ integrations. One advantage: Vanta's integration library (400+ connectors) is broader than Drata's ~200, so you may find better native support for some tools you had to connect via custom integration in Drata.</p>
+
+          <p><strong>Automated test history.</strong> Drata's automated test results don't map to Vanta's control test structure — and even if they did, they don't transfer. Vanta starts from zero. After reconnecting integrations, Vanta's hourly tests begin running. Note that Vanta runs tests hourly vs Drata's daily cadence — this is a meaningful difference for auditors who are evaluating continuous monitoring evidence. For some auditors this is better; for those who are unfamiliar with Vanta, you'll need to explain the difference.</p>
+
+          <p><strong>Evidence stored as URL links.</strong> Link-based evidence has no file to transfer. If your Drata evidence library relies heavily on links to Confluence, Google Drive, or GitHub, you'll need to either download and re-upload as files or re-link in Vanta. Audit your evidence storage format before committing to a timeline.</p>
+
+          <p><strong>Drata Audit Hub access.</strong> Vanta does not have a direct equivalent to Drata's Audit Hub. Auditors who are accustomed to working inside Drata's auditor portal will need to adapt to Vanta's auditor collaboration approach. This is a real onboarding overhead item for your auditor — plan for it explicitly, especially if your auditor has been working in Drata's Audit Hub for multiple audit cycles.</p>
+
+          <p><strong>Audit trail and change logs.</strong> Historical records stay in Drata. Contact Drata support before decommissioning to request a full export of your audit trail, evidence history, and change logs. Export before your access expires. Archive this data in a location your auditor and legal team can access.</p>
+
+          <p><strong>Custom integration configurations.</strong> If you built workflows on Drata's API, note that Vanta's rate limits are much lower: 50 req/min on management endpoints vs Drata's 500 req/min. If you have high-frequency automations pulling from the compliance API, audit those workflows before migration — you may need to redesign them to work within Vanta's limits.</p>
+
+          <h2 id="step-by-step">Step-by-step migration process</h2>
+
+          <ol class="step-list">
+            <li>
+              <strong>Export and archive everything from Drata before you start.</strong> Contact Drata support to request CSV export templates for your vendor and personnel records. Export all policies as PDFs, download uploaded evidence files, and generate a full control status report. Download or screenshot your audit trail and change history. Do not initiate account decommissioning until your migration is verified complete.
+            </li>
+            <li>
+              <strong>Request an integration parity check from Vanta.</strong> Before signing, ask Vanta's sales team to confirm that every integration in your current Drata stack has a native Vanta connector. Vanta's integration library is broader than Drata's, but that doesn't mean every tool you use has equivalent native support. Get this confirmation in writing during contract negotiations.
+            </li>
+            <li>
+              <strong>Sign the Vanta contract and plan the device agent rollout.</strong> This is a Vanta-specific requirement that Drata didn't have. Vanta installs its own endpoint monitoring agent on company devices — unlike Drata, which relied on third-party MDM integrations for device monitoring. Your IT team will need to deploy this agent to every monitored endpoint. Plan the employee communication and rollout schedule before your onboarding call, not during it.
+            </li>
+            <li>
+              <strong>Complete Vanta onboarding.</strong> Framework selection, admin user setup, and Vanta's control framework configuration for your active compliance programs. If you're on SOC 2 and ISO 27001, discuss cross-framework mapping during onboarding — Vanta has its own approach to multi-framework coverage that differs from Drata's DCF.
+            </li>
+            <li>
+              <strong>Deploy the Vanta device agent to all monitored endpoints.</strong> This is a required step with employee-facing impact — employees will receive a notification and need to install the agent on their work devices. Coordinate with HR and IT to set expectations and handle any installation issues. Some MDM tools can push the agent silently; confirm this with Vanta's onboarding team if your MDM supports it.
+            </li>
+            <li>
+              <strong>Reconnect all integrations in Vanta.</strong> Work through your full integration stack using Vanta's OAuth client credential authentication. Note that Vanta's integration setup flow is different from Drata's — read the integration documentation for each connector before starting. Budget a full day for stacks of 10+ integrations, and flag any tools that are in your Drata stack but need verification of native Vanta support.
+            </li>
+            <li>
+              <strong>Allow 24–48 hours for Vanta's tests to stabilize.</strong> Vanta runs automated tests hourly. After connecting integrations, allow the first 24–48 hours for tests to accumulate data and stabilize before reviewing results. Don't remediate during this window — many initial failures are sync timing issues, not real findings.
+            </li>
+            <li>
+              <strong>Map Drata controls to Vanta's control framework.</strong> Drata's DCF and Vanta's native control structure are different frameworks with different control IDs and descriptions. Work through your active frameworks and map each Drata control to its Vanta equivalent. Where Vanta has matching policy templates, use them to preserve control-test associations. Document your mapping — your auditor will likely ask about the relationship between Drata controls and Vanta controls during your next audit.
+            </li>
+            <li>
+              <strong>Upload policies and re-associate evidence.</strong> Upload all policy documents to Vanta. Re-upload evidence files and associate them to the correct Vanta controls. This is the most time-intensive manual step. For active programs with extensive evidence libraries, plan a full day minimum.
+            </li>
+            <li>
+              <strong>Import vendor and personnel records.</strong> Use Vanta's import templates. Personnel compliance tasks will auto-assign once records are imported — expect 1–2 weeks for employees to complete tasks and compliance posture to stabilize.
+            </li>
+            <li>
+              <strong>Notify your auditor and onboard them to Vanta's workflow.</strong> Auditors who are familiar with Drata's Audit Hub need explicit onboarding to Vanta's auditor collaboration approach — it's a different workflow. Do this at least 60 days before your next audit. Provide your migration timeline, an evidence continuity plan, and access to Vanta's auditor view so they can begin familiarizing themselves.
+            </li>
+            <li>
+              <strong>Archive Drata data and initiate account closure.</strong> Settle outstanding Drata fees. Confirm the closure process and timeline with Drata — some contracts have notice periods. Keep your archived export in long-term accessible storage.
+            </li>
+          </ol>
+
+          <h2 id="stays-manual">What stays manual — permanently</h2>
+
+          <p><strong>The device agent is a permanent operational difference.</strong> Unlike Drata's MDM-based approach, Vanta's agent needs to be deployed to new employee devices as part of your IT onboarding process. This becomes a standard procedure — new hires need the Vanta agent installed. Build this into your IT onboarding checklist from day one.</p>
+
+          <p><strong>API rate limits remain lower in Vanta.</strong> If your team has API-based automations against your compliance platform, Vanta's 50 req/min management endpoint limit is significantly lower than Drata's 500 req/min Advanced tier. Automations designed for Drata's rate limit may need redesign for Vanta's environment. Audit this before migration.</p>
+
+          <p><strong>Auditor workflow transition is a one-time effort with ongoing implications.</strong> The first audit on Vanta after transitioning from Drata's Audit Hub will have friction. Your auditor will be less efficient in a new platform — plan for more communication overhead in the first audit cycle. This normalizes by the second audit.</p>
+
+          <p><strong>Test frequency is permanently higher.</strong> Vanta's hourly test execution vs Drata's daily cadence means more frequent test runs and more granular evidence of continuous monitoring. For most auditors this is a positive — more data points showing consistent control operation. Be prepared to explain the difference to your auditor if they've only seen daily test logs from Drata.</p>
+
+          <h2 id="timeline">Realistic timeline by complexity</h2>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Complexity</th>
+                <th>Profile</th>
+                <th>Timeline</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Simple</strong></td>
+                <td>1 framework, under 50 employees, 6+ months to audit</td>
+                <td>3–4 weeks (plus device agent rollout)</td>
+              </tr>
+              <tr>
+                <td><strong>Moderate</strong></td>
+                <td>2 frameworks, 50–200 employees, 3–6 months to audit</td>
+                <td>5–8 weeks</td>
+              </tr>
+              <tr>
+                <td><strong>Complex</strong></td>
+                <td>3+ frameworks, 200+ employees, under 3 months to audit</td>
+                <td>10–14 weeks</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p>The device agent rollout adds overhead that the Vanta-to-Drata direction doesn't have. For organizations over 100 employees, budget an extra week for agent rollout coordination. Use the <a href="/migration-assessment">assessment tool</a> to get a personalized complexity tier, or the <a href="/migration-cost-calculator">cost calculator</a> to model the full labor estimate.</p>
+
+          <h2 id="questions-to-ask">Questions to ask Vanta before you sign</h2>
+
+          <ol>
+            <li><strong>Does Vanta have a native integration for every tool currently connected in Drata?</strong> Request a formal integration parity check — ask your Vanta sales contact to review your current integration list and confirm native vs. custom coverage for each tool.</li>
+            <li><strong>How does the Vanta device agent rollout work, and what is the employee-facing process?</strong> Ask for documentation on the employee experience, MDM push compatibility, and what happens with employees who don't install the agent.</li>
+            <li><strong>What frameworks and cross-framework mapping are included at my plan tier?</strong> Confirm which frameworks are available at your contracted tier and whether cross-framework control mapping (e.g. SOC 2 mapped to ISO 27001) is included or requires a higher tier.</li>
+            <li><strong>How does Vanta's hourly monitoring differ from Drata's daily cadence — will my auditor notice or care?</strong> Ask Vanta to explain how they present this difference to auditors during audit cycles. Get a sample of what auditor-facing reporting looks like.</li>
+            <li><strong>What is the onboarding process and how long does it take to reach audit-ready state?</strong> Define "audit-ready" with Vanta specifically — not just account setup, but the point at which your auditor would be comfortable starting a review.</li>
+            <li><strong>Can Vanta work with my current auditor, and what is the auditor collaboration process?</strong> Ask whether your specific audit firm has worked with Vanta clients and what the evidence sharing workflow looks like. Drata's Audit Hub has a specific interface — Vanta's approach differs.</li>
+            <li><strong>What is your standard renewal increase and can we negotiate a cap upfront?</strong> As with any platform contract, negotiate renewal increase caps during the initial signing — not at renewal. Ask for a specific percentage cap in writing.</li>
+            <li><strong>Is there an implementation fee and what does it cover?</strong> Understand any onboarding or implementation fees, what deliverables they include, and whether they're negotiable.</li>
+          </ol>
+
+          <h2 id="common-mistakes">Common mistakes that derail migrations</h2>
+
+          <ol>
+            <li><strong>Underestimating device agent rollout time.</strong> The Vanta agent rollout is an IT coordination project, not a platform configuration task. For organizations over 50 employees, this involves employee communication, IT scheduling, MDM configuration (or manual install processes), and follow-up for stragglers. Companies routinely underestimate this by 2–3x.</li>
+            <li><strong>Not exporting from Drata before access expires.</strong> Contact Drata support for export templates and complete your full export before initiating account closure. Once your Drata access ends, that data is not recoverable. Audit trail, evidence history, change logs — all must be archived while you still have access.</li>
+            <li><strong>Assuming Vanta's broader integration library means an easy transition.</strong> A larger integration count doesn't mean your specific integration configuration will be simpler to set up. Some integrations that were straightforward in Drata require different configuration in Vanta. Do a pre-migration technical assessment of your 5 most complex integrations before finalizing the migration timeline.</li>
+            <li><strong>Not onboarding your auditor to Vanta's workflow early enough.</strong> Auditors who have been working in Drata's Audit Hub for multiple cycles have built their review process around that interface. Switching to Vanta mid-cycle — or even between cycles without advance notice — creates friction. 60 days minimum notice to your auditor is a baseline; 90 days is better if your next audit is complex.</li>
+            <li><strong>Ignoring API rate limit differences if you have programmatic integrations.</strong> If your team uses Drata's API for compliance reporting, data exports, or workflow automation, those integrations will hit Vanta's 50 req/min management endpoint limit much faster than Drata's 500 req/min Advanced tier limit. This is a technical architecture issue that needs evaluation before, not after, migration.</li>
+          </ol>
+
+        </div>
+
+        <ConsultationCTA variant="inline" heading="Planning a Drata to Vanta migration?" />
+
+        <div class="prose">
+          <p>For the reverse migration — moving from Vanta to Drata — see the <a href="/vanta-to-drata-migration">Vanta to Drata migration guide</a>. If you're evaluating your Drata renewal rather than ready to switch, see <a href="/drata-renewal-options">Drata renewal options</a>.</p>
+        </div>
+
+      </article>
+
+      <aside class="sidebar-sticky">
+        <ConsultationCTA variant="sidebar" />
+        <div class="sidebar-links" style="margin-top:var(--space-6)">
+          <h3 style="font-size:var(--text-sm);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-muted);margin-bottom:var(--space-3)">Related</h3>
+          <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:var(--space-2)">
+            <li><a href="/migration-assessment" style="font-size:var(--text-sm)">Migration Assessment →</a></li>
+            <li><a href="/migration-cost-calculator" style="font-size:var(--text-sm)">Cost Calculator →</a></li>
+            <li><a href="/vanta-to-drata-migration" style="font-size:var(--text-sm)">Vanta → Drata Guide →</a></li>
+            <li><a href="/drata-renewal-options" style="font-size:var(--text-sm)">Drata Renewal Options →</a></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+
+  </div>
+</div>
+
+<ConsultationCTA variant="floating" />
+
+</BaseLayout>
+
+<style>
+  .guide-page { padding-bottom: var(--space-16); }
+  .guide-header { padding: var(--space-8) 0 var(--space-6); }
+  .guide-header h1 {
+    font-size: clamp(1.75rem, 4vw, var(--text-3xl));
+    font-weight: 800;
+    line-height: 1.2;
+    margin-top: var(--space-4);
+    letter-spacing: -0.01em;
+  }
+  .step-list {
+    padding-left: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+  .step-list li {
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+  }
+  .step-list li strong {
+    color: var(--color-text-primary);
+    display: block;
+    margin-bottom: var(--space-1);
+  }
+</style>

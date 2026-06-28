@@ -1,0 +1,81 @@
+---
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import '../../styles/global.css';
+
+interface Props {
+  pageTitle: string;
+  metaDescription: string;
+  canonicalURL?: string;
+  ogImage?: string;
+  schemaMarkup?: object | object[];
+  noIndex?: boolean;
+}
+
+const {
+  pageTitle,
+  metaDescription,
+  canonicalURL,
+  ogImage = '/og-default.png',
+  schemaMarkup,
+  noIndex = false,
+} = Astro.props;
+
+const canonical = canonicalURL || Astro.url.href;
+const fullTitle = `${pageTitle} | GRC Migrate`;
+const ogImageFull = new URL(ogImage, Astro.site).href;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{fullTitle}</title>
+  <meta name="description" content={metaDescription} />
+  <link rel="canonical" href={canonical} />
+  <meta name="robots" content={noIndex ? 'noindex,nofollow' : 'index,follow'} />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content={fullTitle} />
+  <meta property="og:description" content={metaDescription} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={ogImageFull} />
+  <meta property="og:site_name" content="GRC Migrate" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={fullTitle} />
+  <meta name="twitter:description" content={metaDescription} />
+  <meta name="twitter:image" content={ogImageFull} />
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  {schemaMarkup && (
+    <script type="application/ld+json" set:html={JSON.stringify(Array.isArray(schemaMarkup) ? schemaMarkup : [schemaMarkup])} />
+  )}
+
+  <!-- GA4: Replace GA_MEASUREMENT_ID_PLACEHOLDER with your Measurement ID -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID_PLACEHOLDER"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'GA_MEASUREMENT_ID_PLACEHOLDER');
+  </script>
+
+  <style>
+    /* Critical above-fold CSS */
+    body { margin: 0; font-family: system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; }
+    .site-header { position: sticky; top: 0; z-index: 100; background: #fff; }
+  </style>
+</head>
+<body>
+  <Header />
+  <main>
+    <slot />
+  </main>
+  <Footer />
+</body>
+</html>

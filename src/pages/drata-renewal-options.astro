@@ -1,0 +1,183 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import ConsultationCTA from '../components/ui/ConsultationCTA.astro';
+import FAQAccordion from '../components/ui/FAQAccordion.astro';
+
+const faqItems = [
+  {
+    question: "What is the difference between Drata Foundation and Advanced?",
+    answer: "<p>The key functional difference is API access. Drata's Foundation tier does not include API access — if your compliance program requires programmatic integrations, automated data exports, or any API-based workflows, you're either on Advanced or you're working around the limitation. Advanced starts around $15,000/year and includes API access (500 req/min), additional integrations, and priority support.</p><p>Other differences include advanced reporting, additional control customization options, and dedicated CSM support. If you're on Foundation and hitting its limits, the question isn't whether to upgrade but whether Drata at Advanced pricing is the right choice compared to alternatives.</p>"
+  },
+  {
+    question: "Does Drata charge per framework?",
+    answer: "<p>Yes — frameworks beyond your initial SOC 2 or first framework are typically additional line items in the Drata contract. Each framework addition (ISO 27001, HIPAA, PCI DSS, etc.) adds cost. Mid-contract framework additions are typically billed at list price rather than the promotional rate you may have received on your initial contract.</p><p>One negotiation strategy: if you know you'll need additional frameworks during the contract term, negotiate them all in upfront during the initial signing or renewal conversation. A bundled rate for frameworks you'll need in year 2 is typically better than adding them mid-contract.</p>"
+  },
+  {
+    question: "Can I negotiate after receiving the Drata renewal quote?",
+    answer: "<p>Yes. Drata's renewal pricing is a starting position, not a final offer. Start the negotiation at least 60 days before your renewal date. The most effective levers are: a competing quote from Vanta or Secureframe, a multi-year commitment offer, and bundling any frameworks you'll need during the contract term. Quarter-end timing (March, June, September, December) also gives Drata's account team more internal flexibility.</p><p>The renewal cap clause is the most valuable long-term negotiation win — ask to cap future increases at a specific percentage per year, and negotiate this during the current renewal rather than waiting for the next one.</p>"
+  },
+  {
+    question: "How much notice do I need to give Drata to cancel?",
+    answer: "<p>Most Drata contracts require 30 to 60 days written notice before the renewal date. Check your specific contract for the notice period and auto-renewal clause. Set a calendar reminder at 90 days before renewal to review your options and 60 days before to submit notice if you plan to cancel or switch.</p><p>Missing the notice window typically results in automatic renewal at the new rate — which is exactly the situation most clients trying to negotiate are trying to avoid.</p>"
+  },
+  {
+    question: "How long does switching from Drata to Vanta take?",
+    answer: "<p>A simple migration (one framework, under 50 employees, 6+ months before your next audit) takes approximately 3–4 weeks plus the Vanta device agent rollout, which adds coordination overhead. Moderate complexity migrations take 5–8 weeks. Complex migrations with 3+ frameworks, large teams, or audit proximity take 10–14 weeks.</p><p>The device agent rollout is a Vanta-specific step that doesn't exist in Drata — budget extra time for this if you have more than 50 employees. Use the <a href='/migration-assessment'>migration assessment</a> to get a complexity score for your specific situation.</p>"
+  },
+  {
+    question: "Is the Drata SafeBase acquisition relevant to my renewal?",
+    answer: "<p>Potentially. Drata acquired SafeBase (a trust center product) and has integrated Trust Center Pro into its feature set. If you need a trust center and were previously paying for it separately, Drata's bundle pricing may now be more competitive. Conversely, if you don't need a trust center, ensure you're not being billed for it as a default add-on in your renewal quote.</p><p>Use the SafeBase integration as a negotiation chip during renewal — if you need trust center functionality and Drata is offering it bundled, ask what the bundle discount looks like vs. what you'd pay for Drata plus a standalone alternative.</p>"
+  }
+];
+
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqItems.map(item => ({
+      "@type": "Question",
+      "name": item.question,
+      "acceptedAnswer": { "@type": "Answer", "text": item.answer.replace(/<[^>]+>/g, '') }
+    }))
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://grcmigrate.com" },
+      { "@type": "ListItem", "position": 2, "name": "Drata Renewal Options", "item": "https://grcmigrate.com/drata-renewal-options" }
+    ]
+  }
+];
+---
+
+<BaseLayout
+  pageTitle="Drata Renewal Price Increase? Your 3 Options"
+  metaDescription="Received a higher-than-expected Drata renewal quote? Independent analysis of your options: negotiate, stay, or switch — with honest guidance on which path makes sense."
+  canonicalURL="https://grcmigrate.com/drata-renewal-options"
+  schemaMarkup={schema}
+>
+
+<div class="renewal-page">
+  <div class="container">
+
+    <nav class="breadcrumb" aria-label="Breadcrumb" style="padding-top:var(--space-6)">
+      <a href="/">Home</a>
+      <span class="breadcrumb-sep" aria-hidden="true">›</span>
+      <span aria-current="page">Drata Renewal Options</span>
+    </nav>
+
+    <div class="content-with-sidebar">
+      <article class="renewal-content">
+
+        <header style="padding:var(--space-8) 0 var(--space-6)">
+          <span class="badge badge-amber">Renewal Help</span>
+          <h1 style="font-size:clamp(1.75rem,4vw,var(--text-3xl));font-weight:800;line-height:1.2;margin-top:var(--space-4)">Drata Renewal Increase: Your 3 Options (An Independent Take)</h1>
+        </header>
+
+        <div class="prose">
+
+          <p>Drata renewal increases of 10–50% are standard across the customer base. Users have reported increases exceeding 150% when frameworks were added mid-contract and renewed at full list price. If you've received a renewal quote that surprised you, you're in good company — and you have real options.</p>
+
+          <p>This is independent analysis. GRC Migrate is not affiliated with Drata, Vanta, or any compliance platform. We don't earn a commission based on which direction you go. The right answer depends entirely on your situation.</p>
+
+          <h2>Why Drata renewal increases happen</h2>
+
+          <p>Drata's pricing model has a few structural features that drive renewal surprises:</p>
+
+          <p><strong>Introductory discounts expiring.</strong> First-year pricing often includes promotional discounts that don't carry forward. The "increase" you're seeing at renewal may be partly the return to list pricing after a Year 1 discount — which is structurally common and worth clarifying with your account team.</p>
+
+          <p><strong>Framework additions billed at full price.</strong> If you added ISO 27001, HIPAA, or another framework mid-contract, those additions were likely billed at list price. At renewal, those costs roll into the base and compound the total. Renewal increases exceeding 150% typically involve significant mid-contract framework additions.</p>
+
+          <p><strong>Foundation-to-Advanced tier pressure.</strong> If your compliance program has grown to require API access, more advanced reporting, or priority support, you may be facing pressure to upgrade from Foundation to Advanced tier — which starts around $15,000/year. If you're on Foundation and need API access for any reason, you're either upgrading or looking at alternatives.</p>
+
+          <p><strong>Compliance-as-Code and advanced features.</strong> Features like Compliance as Code (which allows programmatic control management via code) are Advanced-tier only. If your engineering team has started using or depending on these features, you're locked into Advanced pricing at renewal.</p>
+
+          <h2>Option 1 — Negotiate your renewal</h2>
+
+          <p>Negotiation is almost always worth attempting before making any other decision. Drata's account teams have pricing flexibility — the question is how much leverage you have and how you use it.</p>
+
+          <p><strong>The most important clause to negotiate:</strong> A renewal cap. If you're renewing now and don't ask for a renewal cap, you'll be in this same position in 12 months. Ask for language that limits future increases to a specific percentage — 10% per year, or CPI, or some fixed cap. This is infinitely easier to negotiate in the current renewal than at your next one, when the leverage dynamics are reset. Every Drata customer should ask for this clause. Most don't.</p>
+
+          <p><strong>Specific levers that work:</strong></p>
+
+          <p><em>Renewal cap upfront.</em> As above — this is the most valuable long-term win from any renewal negotiation.</p>
+
+          <p><em>Multi-year deal.</em> Signing a 2-year commitment in exchange for 10–20% off the renewal rate is a standard trade. You give revenue predictability; they give a price reduction. Both sides get something real.</p>
+
+          <p><em>Certified Drata partner pricing.</em> If you work with a Drata-certified consulting partner, partner-referred deals often carry 15–25% discounts off list. If you're working with a compliance consultant on your program, ask whether they're a Drata certified partner and whether pricing flows through their relationship.</p>
+
+          <p><em>Quarter-end timing.</em> Closing your renewal in March, June, September, or December gives Drata's account team more internal flexibility to meet quota-driven pricing targets.</p>
+
+          <p><em>Competing quote.</em> A written quote from Vanta or Secureframe is your strongest single leverage point. It doesn't need to be your preferred outcome — it needs to be a credible written offer that gives Drata's account team something concrete to respond to.</p>
+
+          <p><em>SafeBase bundle negotiation.</em> Drata's acquisition of SafeBase added Trust Center Pro to its feature set. If you need a trust center, this is a negotiation chip — ask what the bundle discount looks like versus paying for Drata without a trust center and a standalone alternative. If you don't need a trust center, ensure it's not a default add-on in your renewal quote that you're paying for unused.</p>
+
+          <p><strong>Realistic outcome:</strong> 15–30% reduction from the initial quote is achievable in most situations with a competing quote and multi-year offer. Framework-driven increases are harder to negotiate entirely away, but the base rate and add-on pricing typically have room to move.</p>
+
+          <h2>Option 2 — Stay and optimize</h2>
+
+          <p>Staying doesn't mean accepting the renewal number as-is. There are often cost reduction levers that don't require either switching platforms or a successful negotiation.</p>
+
+          <p><strong>When staying is clearly the right choice:</strong> You're within 90 days of your next compliance audit. Your auditor is deeply familiar with Drata's Audit Hub and switching would require platform onboarding mid-cycle. Your absolute renewal increase is under $5,000 — not worth migration labor. Your team has significant investment in Drata's Compliance as Code features that would require rebuild on another platform.</p>
+
+          <p><strong>How to reduce cost without switching:</strong></p>
+
+          <p>Audit your active frameworks. If you have frameworks active in Drata that your program isn't actively maintaining, removing them reduces the renewal cost. Confirm with your auditor which frameworks are required before removing any.</p>
+
+          <p>Review add-on modules. Trust Center, VRM, and additional integrations add cost. If you're not actively using these features, removing them from your renewal is a legitimate cost reduction — not a compliance risk.</p>
+
+          <p>Evaluate the Foundation vs. Advanced tier question honestly. If you're on Advanced but not using API access, Compliance as Code, or other Advanced-exclusive features, you may be able to downgrade at renewal — though check carefully which features your team actively depends on before committing.</p>
+
+          <h2>Option 3 — Switch platforms</h2>
+
+          <p>Switching is the right answer in specific situations — but it comes with real costs that need honest accounting before you make the decision.</p>
+
+          <p><strong>When switching makes sense:</strong> Your renewal increase exceeds 30–40% and negotiation has genuinely not moved the number. You're on Foundation and need API access, making the Advanced tier upgrade the primary driver — in which case the question is whether Drata Advanced at its price point competes with Vanta or another alternative. Your compliance program has grown to need integrations or frameworks that Drata's tier structure doesn't support at a price point that works for you.</p>
+
+          <p><strong>Drata-specific switching considerations:</strong> Migrating from Drata to Vanta involves the Vanta device agent rollout — a step that doesn't exist in a Drata-to-Drata upgrade scenario. Budget extra time for this if you have more than 50 employees. Additionally, auditors who are accustomed to Drata's Audit Hub will need to be onboarded to Vanta's collaboration approach — plan for this explicitly with your auditor 60+ days before your next audit.</p>
+
+          <p>The API rate limit difference is also meaningful: Drata's Advanced tier supports 500 req/min, while Vanta's management endpoints are limited to 50 req/min. If you have API-based automations built on Drata's rate limits, audit these workflows before migration.</p>
+
+          <p>Use the <a href="/migration-cost-calculator">migration cost calculator</a> to model the specific numbers. If switching makes sense, see the <a href="/drata-to-vanta-migration">Drata to Vanta migration guide</a> for the complete step-by-step process.</p>
+
+          <h2>The timing question — when switching is too risky</h2>
+
+          <p>Timing is the most underappreciated factor in the renewal decision. A switch that looks financially compelling can be operationally reckless depending on where you are in your audit cycle.</p>
+
+          <p>The minimum safe runway for a simple migration is 3 months. For moderate migrations, 4–6 months. For complex multi-framework migrations, 6 months minimum. If you're within 90 days of your next audit, the right answer in almost all situations is: negotiate the renewal, complete the audit, and switch afterward with proper runway. The compliance risk of a rushed migration near an audit almost always exceeds the financial cost of the renewal increase.</p>
+
+          <h2>Common questions</h2>
+
+          <FAQAccordion items={faqItems} />
+
+        </div>
+
+        <ConsultationCTA variant="banner" />
+
+      </article>
+
+      <aside class="sidebar-sticky">
+        <ConsultationCTA variant="sidebar" />
+        <div class="sidebar-links" style="margin-top:var(--space-6)">
+          <h3 style="font-size:var(--text-sm);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-muted);margin-bottom:var(--space-3)">Related</h3>
+          <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:var(--space-2)">
+            <li><a href="/drata-to-vanta-migration" style="font-size:var(--text-sm)">Drata → Vanta Guide →</a></li>
+            <li><a href="/migration-assessment" style="font-size:var(--text-sm)">Migration Assessment →</a></li>
+            <li><a href="/migration-cost-calculator" style="font-size:var(--text-sm)">Cost Calculator →</a></li>
+            <li><a href="/vanta-renewal-options" style="font-size:var(--text-sm)">Vanta Renewal Options →</a></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+
+  </div>
+</div>
+
+<ConsultationCTA variant="floating" />
+
+</BaseLayout>
+
+<style>
+  .renewal-page { padding-bottom: var(--space-16); }
+</style>

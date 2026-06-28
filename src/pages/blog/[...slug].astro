@@ -1,0 +1,117 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import ConsultationCTA from '../../components/ui/ConsultationCTA.astro';
+import BlogCard from '../../components/ui/BlogCard.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map(post => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const allPosts = await getCollection('blog');
+const related = allPosts
+  .filter(p => p.id !== post.id && p.data.category === post.data.category)
+  .slice(0, 2);
+
+const formattedDate = post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": post.data.title,
+  "description": post.data.description,
+  "datePublished": post.data.pubDate.toISOString(),
+  "author": { "@type": "Organization", "name": "GRC Migrate Team" },
+  "publisher": { "@type": "Organization", "name": "GRC Migrate", "url": "https://grcmigrate.com" }
+};
+---
+
+<BaseLayout
+  pageTitle={post.data.title}
+  metaDescription={post.data.description}
+  canonicalURL={`https://grcmigrate.com/blog/${post.id}`}
+  schemaMarkup={schema}
+>
+
+<div class="blog-post-page">
+  <div class="container">
+
+    <nav class="breadcrumb" aria-label="Breadcrumb" style="padding-top:var(--space-6)">
+      <a href="/">Home</a>
+      <span class="breadcrumb-sep" aria-hidden="true">›</span>
+      <a href="/blog">Blog</a>
+      <span class="breadcrumb-sep" aria-hidden="true">›</span>
+      <span aria-current="page">{post.data.title}</span>
+    </nav>
+
+    <div class="content-with-sidebar">
+      <article>
+        <header class="post-header">
+          <div class="page-meta">
+            <span class="badge badge-blue">{post.data.category}</span>
+            <span>{post.data.readingTime}</span>
+            <time datetime={post.data.pubDate.toISOString()}>{formattedDate}</time>
+          </div>
+          <h1 class="post-title">{post.data.title}</h1>
+          <p class="post-description">{post.data.description}</p>
+        </header>
+
+        <div class="prose">
+          <Content />
+        </div>
+
+        {related.length > 0 && (
+          <div class="related-posts">
+            <h2>Related articles</h2>
+            <div class="grid-2">
+              {related.map(p => (
+                <BlogCard
+                  title={p.data.title}
+                  description={p.data.description}
+                  slug={p.id}
+                  category={p.data.category}
+                  readingTime={p.data.readingTime}
+                  pubDate={p.data.pubDate}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        <ConsultationCTA variant="inline" />
+      </article>
+
+      <aside class="sidebar-sticky">
+        <ConsultationCTA variant="sidebar" />
+        <div style="margin-top:var(--space-6)">
+          <h3 style="font-size:var(--text-sm);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-muted);margin-bottom:var(--space-3)">Free tools</h3>
+          <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:var(--space-2)">
+            <li><a href="/migration-assessment" style="font-size:var(--text-sm)">Migration Assessment →</a></li>
+            <li><a href="/migration-cost-calculator" style="font-size:var(--text-sm)">Cost Calculator →</a></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+
+  </div>
+</div>
+
+<ConsultationCTA variant="floating" />
+
+</BaseLayout>
+
+<style>
+  .blog-post-page { padding-bottom: var(--space-16); }
+  .post-header { padding: var(--space-8) 0 var(--space-6); }
+  .post-title { font-size: clamp(1.75rem,4vw,var(--text-3xl)); font-weight: 800; line-height: 1.2; margin-top: var(--space-4); margin-bottom: var(--space-3); }
+  .post-description { font-size: var(--text-lg); color: var(--color-text-secondary); line-height: 1.6; margin: 0; }
+  .related-posts { margin-top: var(--space-12); padding-top: var(--space-8); border-top: 1px solid var(--color-border); }
+  .related-posts h2 { font-size: var(--text-xl); font-weight: 700; margin-bottom: var(--space-6); }
+</style>

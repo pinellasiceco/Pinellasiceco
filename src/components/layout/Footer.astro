@@ -1,0 +1,160 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <!-- Column 1: Brand -->
+      <div class="footer-col footer-brand">
+        <a href="/" class="footer-logo" aria-label="GRC Migrate home">
+          <svg width="24" height="24" viewBox="0 0 32 32" aria-hidden="true">
+            <rect width="32" height="32" rx="6" fill="#0F4C81"/>
+            <text x="16" y="22" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="700" font-size="13" fill="#FFFFFF">GM</text>
+          </svg>
+          <span class="footer-wordmark">GRC Migrate</span>
+        </a>
+        <p class="footer-tagline">Independent compliance platform advice. Migration, selection, and renewal — without vendor bias.</p>
+        <p class="footer-disclaimer">GRC Migrate is an independent consulting service. We are not affiliated with Vanta, Drata, Secureframe, Sprinto, or any compliance platform vendor. Our recommendations are based on your specific situation, not commercial relationships.</p>
+      </div>
+
+      <!-- Column 2: Migration -->
+      <div class="footer-col">
+        <h3 class="footer-heading">Migration</h3>
+        <ul class="footer-links" role="list">
+          <li><a href="/vanta-to-drata-migration">Vanta → Drata Migration Guide</a></li>
+          <li><a href="/drata-to-vanta-migration">Drata → Vanta Migration Guide</a></li>
+          <li><a href="/migration-assessment">Migration Assessment</a></li>
+          <li><a href="/migration-cost-calculator">Migration Cost Calculator</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 3: Platform Advice -->
+      <div class="footer-col">
+        <h3 class="footer-heading">Platform Advice</h3>
+        <ul class="footer-links" role="list">
+          <li><a href="/how-to-choose-grc-platform">How to Choose a GRC Platform</a></li>
+          <li><a href="/vanta-vs-drata-comparison">Vanta vs Drata Comparison</a></li>
+          <li><a href="/grc-platform-checklist">GRC Platform Selection Checklist</a></li>
+          <li><a href="/signs-your-grc-platform-isnt-scaling">Signs Your Platform Isn't Scaling</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 4: Renewal Help -->
+      <div class="footer-col">
+        <h3 class="footer-heading">Renewal Help</h3>
+        <ul class="footer-links" role="list">
+          <li><a href="/vanta-renewal-options">Vanta Renewal Options</a></li>
+          <li><a href="/drata-renewal-options">Drata Renewal Options</a></li>
+          <li><a href="https://CALENDLY_PLACEHOLDER" rel="noopener">Book a Consultation</a></li>
+          <li><a href="/blog">Blog</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>Copyright &copy; {year} GRC Migrate. All rights reserved. | Not affiliated with any platform vendor.</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background-color: var(--color-surface-dark);
+    color: var(--color-text-inverse);
+    padding: var(--space-16) 0 var(--space-8);
+    margin-top: auto;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: var(--space-12);
+    margin-bottom: var(--space-12);
+  }
+
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    text-decoration: none;
+    margin-bottom: var(--space-4);
+  }
+
+  .footer-wordmark {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: white;
+  }
+
+  .footer-tagline {
+    font-size: var(--text-sm);
+    color: rgba(255,255,255,0.7);
+    line-height: 1.6;
+    margin-bottom: var(--space-4);
+  }
+
+  .footer-disclaimer {
+    font-size: var(--text-xs);
+    color: rgba(255,255,255,0.4);
+    line-height: 1.6;
+  }
+
+  .footer-heading {
+    font-size: var(--text-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: var(--space-4);
+  }
+
+  .footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .footer-links a {
+    font-size: var(--text-sm);
+    color: rgba(255,255,255,0.65);
+    text-decoration: none;
+    transition: color 0.15s ease;
+    line-height: 1.4;
+  }
+
+  .footer-links a:hover {
+    color: white;
+  }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: var(--space-6);
+    text-align: center;
+  }
+
+  .footer-bottom p {
+    font-size: var(--text-xs);
+    color: rgba(255,255,255,0.35);
+  }
+
+  @media (max-width: 900px) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-8);
+    }
+
+    .footer-brand {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

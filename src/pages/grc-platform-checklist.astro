@@ -1,0 +1,207 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import ConsultationCTA from '../components/ui/ConsultationCTA.astro';
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "GRC Platform Selection Checklist",
+  "description": "35 questions to evaluate any GRC compliance platform before signing, covering integrations, audit support, pricing, renewal terms, and migration risk."
+};
+
+const categories = [
+  {
+    title: "Integration Coverage",
+    items: [
+      "Does the platform have a native integration for every tool in our current infrastructure stack?",
+      "For our top 5 integrations, what specific services or APIs are monitored (not just the integration name)?",
+      "Is the integration list publicly documented with specifics, or is it a marketing claim?",
+      "What is the process for requesting a new integration, and what is the typical delivery time?",
+      "Are there any integrations currently listed as 'beta' that we depend on?",
+      "Does the platform monitor cloud infrastructure at the resource level (individual buckets, instances) or only at the account level?"
+    ]
+  },
+  {
+    title: "Audit Experience",
+    items: [
+      "Has this platform been used in a completed SOC 2 Type II audit by our target auditor or audit firm?",
+      "Can the vendor provide a reference customer in our industry who has completed an audit on this platform?",
+      "What does the auditor-facing evidence package look like? (Request a redacted sample.)",
+      "How does the platform handle evidence requests that come up mid-audit?",
+      "Does the platform have a dedicated auditor portal or audit hub, and does our auditor use it?",
+      "What is the process for granting our auditor access to evidence?"
+    ]
+  },
+  {
+    title: "Control Framework",
+    items: [
+      "Are we required to use the platform's control framework, or can we bring our own controls?",
+      "How does cross-framework mapping work? Does evidence automatically satisfy controls in multiple frameworks?",
+      "Can we create custom controls or modify existing test criteria?",
+      "What happens to our controls and evidence if we add a new framework mid-contract?",
+      "How does the platform handle frameworks that are not listed in the standard library?",
+      "Is there a documented mapping between this platform's controls and the frameworks we're targeting?"
+    ]
+  },
+  {
+    title: "Support Model",
+    items: [
+      "Will we have a named CSM, and what is their response time SLA?",
+      "What tier of support is included at our plan level, and what does it cost to upgrade?",
+      "Is implementation support included, or is it a separate fee?",
+      "What is the process for urgent support issues during an active audit?",
+      "Can we speak with 2–3 reference customers who have been on the platform for more than 2 years?",
+      "What is the support handoff process when a CSM leaves or changes?"
+    ]
+  },
+  {
+    title: "Pricing and Renewal",
+    items: [
+      "What is the exact pricing model — is it per employee headcount, per framework, or a flat rate?",
+      "What happens to our price if we cross a headcount tier threshold mid-contract?",
+      "Can we see example renewal pricing for a comparable customer who has been on the platform for 2 years?",
+      "Will the vendor include a renewal cap clause (e.g. increases capped at 10% per year)?",
+      "Are there any add-on modules included in our quote that we can opt out of?",
+      "Is there an implementation fee, and is it negotiable?"
+    ]
+  },
+  {
+    title: "Migration Risk",
+    items: [
+      "What data can we export from this platform in machine-readable format if we ever decide to leave?",
+      "Is there a documented data export process, and how long does it take?",
+      "What happens to our compliance data after account cancellation?",
+      "What is the API access model — which plan tier includes API access, and what are the rate limits?",
+      "If we later need to migrate to a different platform, what will transfer and what won't?",
+      "What is the account cancellation notice period and process?"
+    ]
+  }
+];
+---
+
+<BaseLayout
+  pageTitle="GRC Platform Selection Checklist: 35 Questions Before You Sign"
+  metaDescription="A complete checklist of questions to evaluate any GRC compliance platform before signing. Covers integrations, audit support, pricing, renewal terms, and migration risk."
+  canonicalURL="https://grcmigrate.com/grc-platform-checklist"
+  schemaMarkup={schema}
+>
+
+<div class="checklist-page">
+  <div class="container" style="padding-top:var(--space-12);padding-bottom:var(--space-16)">
+
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="breadcrumb-sep" aria-hidden="true">›</span>
+      <span aria-current="page">Platform Selection Checklist</span>
+    </nav>
+
+    <div class="checklist-header">
+      <span class="badge badge-green">Platform Selection</span>
+      <h1>GRC Platform Selection Checklist: 35 Questions Before You Sign</h1>
+      <p>Use this checklist before signing any GRC platform contract. Each question is designed to surface real operational fit — not just feature marketing claims. Track your progress below.</p>
+      <div class="checklist-progress-bar">
+        <div class="progress-header">
+          <span id="checklist-count">0 of 35 completed</span>
+          <button class="btn btn-outline btn-sm" id="reset-btn" aria-label="Reset checklist">Reset</button>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="checklist-progress" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="checklist-categories" id="checklist-categories">
+      {categories.map((cat, ci) => (
+        <div class="checklist-category card">
+          <h2 class="category-title">{cat.title}</h2>
+          <ul class="checklist-items" role="list">
+            {cat.items.map((item, ii) => {
+              const id = `check-${ci}-${ii}`;
+              return (
+                <li class="checklist-item">
+                  <label class="check-label" for={id}>
+                    <input type="checkbox" id={id} class="check-input" />
+                    <span class="check-text">{item}</span>
+                  </label>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    <div class="checklist-footer">
+      <button class="btn btn-outline" id="print-btn">Print / Save as PDF</button>
+    </div>
+
+    <div style="margin-top:var(--space-12)">
+      <ConsultationCTA variant="inline" heading="Want help working through this checklist for a specific vendor?" />
+    </div>
+
+  </div>
+</div>
+
+<ConsultationCTA variant="floating" />
+
+</BaseLayout>
+
+<style>
+  .checklist-page { background-color: var(--color-surface); }
+  .checklist-header { margin: var(--space-6) 0 var(--space-8); }
+  .checklist-header h1 { font-size: clamp(1.5rem,4vw,var(--text-3xl)); font-weight: 800; margin: var(--space-3) 0; }
+  .checklist-header p { color: var(--color-text-secondary); margin-bottom: var(--space-6); }
+  .checklist-progress-bar { margin-top: var(--space-4); }
+  .progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2); }
+  #checklist-count { font-size: var(--text-sm); font-weight: 600; color: var(--color-text-primary); }
+  .btn-sm { padding: 0.25rem 0.75rem; font-size: var(--text-xs); }
+  .checklist-categories { display: flex; flex-direction: column; gap: var(--space-6); }
+  .checklist-category { padding: var(--space-6); }
+  .category-title { font-size: var(--text-lg); font-weight: 700; margin-bottom: var(--space-4); color: var(--color-primary); }
+  .checklist-items { list-style: none; padding: 0; display: flex; flex-direction: column; gap: var(--space-3); }
+  .checklist-item { border-bottom: 1px solid var(--color-border); padding-bottom: var(--space-3); }
+  .checklist-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .check-label { display: flex; align-items: flex-start; gap: var(--space-3); cursor: pointer; }
+  .check-input { width: 18px; height: 18px; accent-color: var(--color-accent); flex-shrink: 0; margin-top: 2px; cursor: pointer; }
+  .check-text { font-size: var(--text-sm); color: var(--color-text-secondary); line-height: 1.6; }
+  .check-label:has(.check-input:checked) .check-text { text-decoration: line-through; color: var(--color-text-muted); }
+  .checklist-footer { display: flex; justify-content: center; margin-top: var(--space-8); }
+  @media print {
+    .checklist-footer, .nav-hamburger, .site-header, .site-footer, .cta-floating { display: none; }
+  }
+</style>
+
+<script defer>
+(function() {
+  const total = 35;
+  const inputs = document.querySelectorAll('.check-input');
+  const countEl = document.getElementById('checklist-count');
+  const barEl = document.getElementById('checklist-progress');
+
+  function updateProgress() {
+    const checked = document.querySelectorAll('.check-input:checked').length;
+    countEl.textContent = `${checked} of ${total} completed`;
+    barEl.style.width = Math.round((checked / total) * 100) + '%';
+    // Persist
+    const state = Array.from(inputs).map(i => i.checked);
+    try { localStorage.setItem('grc-checklist', JSON.stringify(state)); } catch(e) {}
+  }
+
+  // Restore state
+  try {
+    const saved = JSON.parse(localStorage.getItem('grc-checklist') || '[]');
+    inputs.forEach((input, i) => { if (saved[i]) input.checked = true; });
+  } catch(e) {}
+
+  inputs.forEach(input => input.addEventListener('change', updateProgress));
+  updateProgress();
+
+  document.getElementById('reset-btn').addEventListener('click', () => {
+    inputs.forEach(i => i.checked = false);
+    try { localStorage.removeItem('grc-checklist'); } catch(e) {}
+    updateProgress();
+  });
+
+  document.getElementById('print-btn').addEventListener('click', () => window.print());
+})();
+</script>

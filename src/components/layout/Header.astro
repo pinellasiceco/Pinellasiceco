@@ -1,0 +1,383 @@
+---
+const currentPath = Astro.url.pathname;
+
+const isActive = (path: string) => currentPath === path || currentPath.startsWith(path + '/');
+---
+
+<!-- LOGO SWAP: Replace the wordmark below with your final SVG logo file when ready -->
+<header class="site-header" id="site-header">
+  <div class="container">
+    <nav class="nav-inner" aria-label="Main navigation">
+      <a href="/" class="nav-logo" aria-label="GRC Migrate home">
+        <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+          <rect width="32" height="32" rx="6" fill="#0F4C81"/>
+          <text x="16" y="22" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="700" font-size="13" fill="#FFFFFF">GM</text>
+        </svg>
+        <span class="nav-wordmark">GRC Migrate</span>
+      </a>
+
+      <!-- Desktop nav -->
+      <ul class="nav-links" role="list">
+        <li class="nav-item nav-dropdown">
+          <button
+            class={`nav-link nav-dropdown-toggle${isActive('/vanta-to-drata-migration') || isActive('/drata-to-vanta-migration') ? ' nav-link-active' : ''}`}
+            aria-expanded="false"
+            aria-haspopup="true"
+          >
+            Migration Guides
+            <svg width="12" height="8" viewBox="0 0 12 8" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <ul class="dropdown-menu" role="list">
+            <li><a href="/vanta-to-drata-migration" class="dropdown-link">Vanta → Drata</a></li>
+            <li><a href="/drata-to-vanta-migration" class="dropdown-link">Drata → Vanta</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item nav-dropdown">
+          <button
+            class={`nav-link nav-dropdown-toggle${isActive('/migration-assessment') || isActive('/migration-cost-calculator') || isActive('/vanta-vs-drata-comparison') || isActive('/grc-platform-checklist') ? ' nav-link-active' : ''}`}
+            aria-expanded="false"
+            aria-haspopup="true"
+          >
+            Platform Tools
+            <svg width="12" height="8" viewBox="0 0 12 8" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <ul class="dropdown-menu" role="list">
+            <li><a href="/migration-assessment" class="dropdown-link">Migration Assessment</a></li>
+            <li><a href="/migration-cost-calculator" class="dropdown-link">Cost Calculator</a></li>
+            <li><a href="/vanta-vs-drata-comparison" class="dropdown-link">Platform Comparison</a></li>
+            <li><a href="/grc-platform-checklist" class="dropdown-link">Selection Checklist</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item nav-dropdown">
+          <button
+            class={`nav-link nav-dropdown-toggle${isActive('/vanta-renewal-options') || isActive('/drata-renewal-options') ? ' nav-link-active' : ''}`}
+            aria-expanded="false"
+            aria-haspopup="true"
+          >
+            Renewal Help
+            <svg width="12" height="8" viewBox="0 0 12 8" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <ul class="dropdown-menu" role="list">
+            <li><a href="/vanta-renewal-options" class="dropdown-link">Vanta Renewal Options</a></li>
+            <li><a href="/drata-renewal-options" class="dropdown-link">Drata Renewal Options</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item">
+          <a href="/blog" class={`nav-link${isActive('/blog') ? ' nav-link-active' : ''}`}>Blog</a>
+        </li>
+
+        <li class="nav-item">
+          <a href="https://CALENDLY_PLACEHOLDER" class="btn btn-primary nav-cta" rel="noopener">Book Consultation</a>
+        </li>
+      </ul>
+
+      <!-- Mobile hamburger -->
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobile-nav">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Mobile nav overlay -->
+  <div class="mobile-nav" id="mobile-nav" aria-hidden="true">
+    <div class="mobile-nav-inner">
+      <div class="mobile-nav-section">
+        <p class="mobile-nav-section-title">Migration Guides</p>
+        <a href="/vanta-to-drata-migration" class="mobile-nav-link">Vanta → Drata</a>
+        <a href="/drata-to-vanta-migration" class="mobile-nav-link">Drata → Vanta</a>
+      </div>
+      <div class="mobile-nav-section">
+        <p class="mobile-nav-section-title">Platform Tools</p>
+        <a href="/migration-assessment" class="mobile-nav-link">Migration Assessment</a>
+        <a href="/migration-cost-calculator" class="mobile-nav-link">Cost Calculator</a>
+        <a href="/vanta-vs-drata-comparison" class="mobile-nav-link">Platform Comparison</a>
+        <a href="/grc-platform-checklist" class="mobile-nav-link">Selection Checklist</a>
+      </div>
+      <div class="mobile-nav-section">
+        <p class="mobile-nav-section-title">Renewal Help</p>
+        <a href="/vanta-renewal-options" class="mobile-nav-link">Vanta Renewal Options</a>
+        <a href="/drata-renewal-options" class="mobile-nav-link">Drata Renewal Options</a>
+      </div>
+      <a href="/blog" class="mobile-nav-link">Blog</a>
+      <a href="https://CALENDLY_PLACEHOLDER" class="btn btn-primary" style="margin-top:1.5rem; width:100%; text-align:center;" rel="noopener">Book Free Consultation</a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #fff;
+    border-bottom: 1px solid var(--color-border);
+    transition: box-shadow 0.2s ease;
+  }
+
+  .site-header.scrolled {
+    box-shadow: var(--shadow-md);
+  }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 68px;
+    gap: var(--space-8);
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  .nav-wordmark {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    letter-spacing: -0.01em;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-item {
+    position: relative;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: var(--radius-md);
+    transition: color 0.15s ease, background-color 0.15s ease;
+    white-space: nowrap;
+    font-family: var(--font-sans);
+  }
+
+  .nav-link:hover {
+    color: var(--color-primary);
+    background-color: var(--color-surface);
+  }
+
+  .nav-link-active {
+    color: var(--color-accent);
+    position: relative;
+  }
+
+  .nav-link-active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: var(--space-3);
+    right: var(--space-3);
+    height: 2px;
+    background-color: var(--color-accent);
+    border-radius: 1px;
+  }
+
+  /* Dropdown */
+  .nav-dropdown:hover .dropdown-menu,
+  .nav-dropdown:focus-within .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    min-width: 220px;
+    background: white;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: var(--space-2);
+    list-style: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+    z-index: 200;
+  }
+
+  .dropdown-link {
+    display: block;
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    transition: background-color 0.1s ease, color 0.1s ease;
+  }
+
+  .dropdown-link:hover {
+    background-color: var(--color-surface);
+    color: var(--color-primary);
+  }
+
+  .nav-cta {
+    padding: 0.5rem 1rem;
+    font-size: var(--text-sm);
+    text-decoration: none;
+  }
+
+  /* Hamburger */
+  .nav-hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: var(--radius-md);
+  }
+
+  .nav-hamburger:hover {
+    background-color: var(--color-surface);
+  }
+
+  .hamburger-bar {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background-color: var(--color-text-primary);
+    border-radius: 1px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  .nav-hamburger[aria-expanded="true"] .hamburger-bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .nav-hamburger[aria-expanded="true"] .hamburger-bar:nth-child(2) {
+    opacity: 0;
+  }
+  .nav-hamburger[aria-expanded="true"] .hamburger-bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* Mobile nav overlay */
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    inset: 68px 0 0 0;
+    background: white;
+    overflow-y: auto;
+    z-index: 99;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .mobile-nav.open {
+    display: block;
+  }
+
+  .mobile-nav-inner {
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .mobile-nav-section {
+    margin-bottom: var(--space-4);
+  }
+
+  .mobile-nav-section-title {
+    font-size: var(--text-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-2);
+  }
+
+  .mobile-nav-link {
+    display: block;
+    padding: var(--space-3) var(--space-2);
+    font-size: var(--text-base);
+    color: var(--color-text-primary);
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .mobile-nav-link:hover {
+    color: var(--color-accent);
+  }
+
+  @media (max-width: 900px) {
+    .nav-links {
+      display: none;
+    }
+
+    .nav-hamburger {
+      display: flex;
+    }
+  }
+</style>
+
+<script>
+  // Sticky shadow on scroll
+  const header = document.getElementById('site-header');
+  if (header) {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        header.classList.toggle('scrolled', !entry.isIntersecting);
+      },
+      { rootMargin: '-1px 0px 0px 0px', threshold: [1] }
+    );
+    const sentinel = document.createElement('div');
+    sentinel.style.cssText = 'position:absolute;top:0;left:0;width:1px;height:1px;pointer-events:none;';
+    document.body.prepend(sentinel);
+    observer.observe(sentinel);
+  }
+
+  // Mobile hamburger toggle
+  const hamburger = document.getElementById('nav-hamburger');
+  const mobileNav = document.getElementById('mobile-nav');
+  if (hamburger && mobileNav) {
+    hamburger.addEventListener('click', () => {
+      const expanded = hamburger.getAttribute('aria-expanded') === 'true';
+      hamburger.setAttribute('aria-expanded', String(!expanded));
+      mobileNav.classList.toggle('open', !expanded);
+      mobileNav.setAttribute('aria-hidden', String(expanded));
+      document.body.style.overflow = expanded ? '' : 'hidden';
+    });
+
+    // Close on link click
+    mobileNav.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.setAttribute('aria-expanded', 'false');
+        mobileNav.classList.remove('open');
+        mobileNav.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      });
+    });
+  }
+</script>

@@ -1,0 +1,311 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import ConsultationCTA from '../components/ui/ConsultationCTA.astro';
+import FAQAccordion from '../components/ui/FAQAccordion.astro';
+
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "GRC Migrate",
+    "url": "https://grcmigrate.com",
+    "description": "Independent consulting for security leaders navigating GRC platform decisions. Migration, selection, and renewal — without vendor bias.",
+    "sameAs": []
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "GRC Migrate",
+    "url": "https://grcmigrate.com",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": { "@type": "EntryPoint", "urlTemplate": "https://grcmigrate.com/blog?q={search_term_string}" },
+      "query-input": "required name=search_term_string"
+    }
+  }
+];
+
+const faqItems = [
+  {
+    question: "How long does a compliance platform migration take?",
+    answer: "<p>Most migrations take between 3 and 14 weeks depending on complexity. A simple migration — one framework, under 50 employees, plenty of runway before your next audit — can be completed in 3 to 4 weeks. Moderate migrations with 2 frameworks and 50–200 employees typically take 5 to 8 weeks. Complex migrations involving 3 or more frameworks, over 200 employees, or proximity to an audit take 10 to 14 weeks.</p><p>The biggest timeline drivers are integration count, evidence storage format, and audit proximity. Use the <a href='/migration-assessment'>free assessment</a> to get a complexity score for your specific situation.</p>"
+  },
+  {
+    question: "Will my audit history transfer to the new platform?",
+    answer: "<p>No — audit history does not transfer between platforms. This is one of the most important things to understand before starting a migration. Each platform maintains its own records of automated test results, evidence submissions, and audit activity.</p><p>Before decommissioning your current platform, export all audit reports, evidence packages, and change logs, and archive them somewhere your auditor can access if needed. Notify your auditor of the platform switch at least 60 days before your next audit.</p>"
+  },
+  {
+    question: "Do I need to reconnect all my integrations?",
+    answer: "<p>Yes, all integrations must be reconnected from scratch on the new platform. Integration-discovered state — the automated data pulled from AWS, GitHub, Okta, and every other connected tool — does not transfer.</p><p>This is consistently the most underestimated part of a migration. Budget at minimum a full business day for reconnection, and expect a 24–48 hour stabilization window after reconnection for automated tests to run and normalize.</p>"
+  },
+  {
+    question: "What's the difference between Vanta and Drata?",
+    answer: "<p>Vanta and Drata are both compliance automation platforms but differ meaningfully. Vanta has a broader integration library (400+) and uses hourly test execution. Drata has approximately 200 integrations and runs daily. Drata offers a more structured guided audit experience through its Audit Hub and uses a proprietary control framework (DCF), while Vanta allows more custom control flexibility.</p><p>Neither is universally better — the right choice depends on your specific framework needs, integration stack, and audit relationship. See our <a href='/vanta-vs-drata-comparison'>full independent comparison</a>.</p>"
+  },
+  {
+    question: "Is GRC Migrate affiliated with Vanta or Drata?",
+    answer: "<p>No. GRC Migrate is fully independent and not affiliated with Vanta, Drata, Secureframe, Sprinto, or any compliance platform vendor. We do not earn referral fees or commissions from platforms for recommending them.</p><p>Our revenue comes from consulting engagements, which means our advice is aligned entirely with your outcome, not with any commercial relationship. We help clients stay on their current platform as often as we help those who switch.</p>"
+  },
+  {
+    question: "When does switching platforms NOT make sense?",
+    answer: "<p>Switching platforms does not make sense when you are within 90 days of your next compliance audit without a documented migration plan. It also rarely makes sense if you have made a large recent investment in custom integrations that would need to be rebuilt, or if your primary driver is a renewal increase under 20% that could be negotiated down.</p><p>The cost of migration — in labor, disruption, and compliance risk — often exceeds the short-term savings from switching, particularly when the timing is wrong.</p>"
+  },
+  {
+    question: "How much does a GRC platform migration cost?",
+    answer: "<p>Migration costs vary significantly by complexity. The primary driver is internal labor: at 1–3 team members spending 40–150 hours total, at a fully-loaded rate of $100–$200/hr, the labor cost alone ranges from $4,000 to $30,000. Add integration rebuild overhead, evidence remediation time, and any external consulting costs.</p><p>The break-even point — when savings from a lower platform cost offset the switching expense — is typically 6 to 12 months. Use our <a href='/migration-cost-calculator'>migration cost calculator</a> to estimate the specific numbers for your situation.</p>"
+  }
+];
+---
+
+<BaseLayout
+  pageTitle="GRC Platform Migration & Selection Consulting | Independent Advice"
+  metaDescription="Independent consulting for security leaders switching GRC platforms, evaluating Vanta vs Drata, or navigating renewal increases. Free 30-minute consultation. Not affiliated with any vendor."
+  canonicalURL="https://grcmigrate.com"
+  schemaMarkup={schema}
+>
+
+  <section class="hero">
+    <div class="container">
+      <div class="hero-inner">
+        <h1 class="hero-heading">GRC Platform Advice Without the Vendor Bias</h1>
+        <p class="hero-subheading">Independent consulting for security and IT leaders switching compliance platforms, evaluating Vanta vs Drata, or deciding what to do after a renewal increase.</p>
+        <div class="hero-ctas">
+          <a href="/migration-assessment" class="btn btn-white">Take the Free Assessment</a>
+          <a href="https://CALENDLY_PLACEHOLDER" class="btn btn-white-outline" rel="noopener">Book a Consultation</a>
+        </div>
+        <ul class="hero-trust" role="list">
+          <li class="hero-trust-item">
+            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8l3.5 3.5L10 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Independent — not affiliated with any vendor
+          </li>
+          <li class="hero-trust-item">
+            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8l3.5 3.5L10 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Free 30-minute consultation
+          </li>
+          <li class="hero-trust-item">
+            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8l3.5 3.5L10 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Used by security leaders at SaaS companies worldwide
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="container">
+      <div class="section-header">
+        <h2>Four situations we specialize in</h2>
+      </div>
+      <div class="grid-2 ways-grid">
+        <div class="card-hover ways-card">
+          <span class="badge badge-blue">Migration</span>
+          <h3>Switching GRC platforms</h3>
+          <p>Moving from Vanta to Drata, Drata to Vanta, or off an enterprise GRC tool like Archer. We map what transfers, what doesn't, and build a phased plan that protects your compliance posture.</p>
+          <a href="/vanta-to-drata-migration" class="ways-link">See migration guides →</a>
+        </div>
+        <div class="card-hover ways-card">
+          <span class="badge badge-green">Selection</span>
+          <h3>Choosing your first (or next) platform</h3>
+          <p>Evaluating Vanta, Drata, Secureframe, Sprinto, or others for the first time — or reconsidering your current tool as your program grows. Independent comparison with no platform affiliation.</p>
+          <a href="/vanta-vs-drata-comparison" class="ways-link">See comparison guide →</a>
+        </div>
+        <div class="card-hover ways-card">
+          <span class="badge badge-amber">Renewal</span>
+          <h3>Navigating a renewal increase</h3>
+          <p>Got a renewal quote higher than expected? We help you evaluate whether to negotiate, stay, or switch — with honest analysis of the real cost of each path.</p>
+          <a href="/vanta-renewal-options" class="ways-link">See renewal options →</a>
+        </div>
+        <div class="card-hover ways-card">
+          <span class="badge badge-red">Scaling</span>
+          <h3>Growing beyond your current platform</h3>
+          <p>Adding frameworks, expanding headcount, or facing enterprise compliance requirements your current tool wasn't built for. Know when to scale up and what the transition looks like.</p>
+          <a href="/signs-your-grc-platform-isnt-scaling" class="ways-link">Read the signs →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Start with the right question</h2>
+        <p class="section-subheading">Two free tools to get clarity before you talk to a vendor or make a decision.</p>
+      </div>
+      <div class="grid-2">
+        <div class="card tools-card">
+          <h3>Migration Readiness Assessment</h3>
+          <p>Answer 8 questions about your current setup. Get an instant complexity score, a personalized summary of what your migration involves, and a clear recommendation.</p>
+          <ul class="checklist">
+            <li>Free and instant</li>
+            <li>No login required</li>
+            <li>Personalized to your situation</li>
+          </ul>
+          <div class="tools-cta-row">
+            <a href="/migration-assessment" class="btn btn-primary">Take the Assessment →</a>
+            <span class="tools-time">Takes about 3 minutes</span>
+          </div>
+        </div>
+        <div class="card tools-card">
+          <h3>Migration Cost Calculator</h3>
+          <p>Estimate the real cost of switching vs. staying — including labor, disruption, and the hidden time cost of integration rebuild. See the break-even point.</p>
+          <ul class="checklist">
+            <li>Live interactive calculator</li>
+            <li>Covers all cost factors</li>
+            <li>Side-by-side comparison</li>
+          </ul>
+          <div class="tools-cta-row">
+            <a href="/migration-cost-calculator" class="btn btn-secondary">Open Calculator →</a>
+            <span class="tools-time">Takes about 2 minutes</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="container">
+      <div class="section-header">
+        <h2>Migration guides</h2>
+        <p class="section-subheading">Step-by-step guides for the most common platform switches. Independent, detailed, and based on real migration experience.</p>
+      </div>
+      <div class="grid-2">
+        <div class="card-hover guide-card">
+          <div class="guide-badges">
+            <span class="badge badge-blue">Migration Guide</span>
+            <span class="badge badge-green">2,500 words</span>
+            <span class="badge badge-blue">Updated 2026</span>
+          </div>
+          <h3>Vanta to Drata Migration Guide</h3>
+          <p>Everything you need to know to migrate your compliance program from Vanta to Drata — what data transfers, what requires manual work, step-by-step process, and what to ask Drata before signing.</p>
+          <a href="/vanta-to-drata-migration" class="guide-link">Read the full guide →</a>
+        </div>
+        <div class="card-hover guide-card">
+          <div class="guide-badges">
+            <span class="badge badge-blue">Migration Guide</span>
+            <span class="badge badge-green">2,500 words</span>
+            <span class="badge badge-blue">Updated 2026</span>
+          </div>
+          <h3>Drata to Vanta Migration Guide</h3>
+          <p>The complete guide to switching from Drata to Vanta — including Vanta's device agent rollout, integration parity check, evidence structure differences, and what your auditor needs to know.</p>
+          <a href="/drata-to-vanta-migration" class="guide-link">Read the full guide →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Why independent advice matters</h2>
+      </div>
+      <div class="grid-3">
+        <div class="independent-col">
+          <h3>No platform commissions</h3>
+          <p>We don't earn referral fees from platforms for recommending them. Our revenue comes from consulting engagements, which means our advice is aligned with your outcome — not any platform's revenue goals.</p>
+        </div>
+        <div class="independent-col">
+          <h3>We've seen migrations go wrong</h3>
+          <p>The most common mistakes aren't technical — they're timing, evidence gaps, and auditor surprises. We've seen enough migrations to know where they break and how to prevent problems that create compliance exposure.</p>
+        </div>
+        <div class="independent-col">
+          <h3>Both sides of the decision</h3>
+          <p>We help clients who end up staying with their current platform as often as we help those who switch. The right answer depends on your situation — timeline, audit proximity, renewal delta — not our preferences.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="container-narrow">
+      <div class="section-header">
+        <h2>Common questions</h2>
+      </div>
+      <FAQAccordion items={faqItems} />
+    </div>
+  </section>
+
+  <ConsultationCTA variant="banner" />
+  <ConsultationCTA variant="floating" />
+
+</BaseLayout>
+
+<style>
+  .hero {
+    background-color: var(--color-primary);
+    padding: var(--space-24) 0;
+  }
+  .hero-inner { max-width: 760px; }
+  .hero-heading {
+    font-size: clamp(2rem, 5vw, var(--text-4xl));
+    font-weight: 800;
+    color: white;
+    line-height: 1.15;
+    margin-bottom: var(--space-6);
+    letter-spacing: -0.02em;
+  }
+  .hero-subheading {
+    font-size: var(--text-xl);
+    font-weight: 400;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.6;
+    margin-bottom: var(--space-8);
+    max-width: 640px;
+  }
+  .hero-ctas {
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-8);
+  }
+  .hero-trust {
+    display: flex;
+    gap: var(--space-6);
+    list-style: none;
+    padding: 0;
+    flex-wrap: wrap;
+  }
+  .hero-trust-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    color: rgba(255,255,255,0.8);
+  }
+  .hero-trust-item svg { color: #00C49A; flex-shrink: 0; }
+  .section-header { margin-bottom: 2.5rem; }
+  .section-header h2 {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    margin-bottom: var(--space-3);
+  }
+  .section-subheading {
+    font-size: var(--text-lg);
+    color: var(--color-text-secondary);
+    max-width: 600px;
+    margin: 0;
+  }
+  .ways-grid { gap: var(--space-6); }
+  .ways-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .ways-card h3 { font-size: var(--text-lg); font-weight: 700; margin: 0; }
+  .ways-card p { color: var(--color-text-secondary); flex: 1; margin: 0; line-height: 1.7; }
+  .ways-link { font-size: var(--text-sm); font-weight: 600; color: var(--color-accent); text-decoration: none; margin-top: auto; }
+  .ways-link:hover { color: var(--color-accent-dark); }
+  .tools-card { display: flex; flex-direction: column; gap: var(--space-4); }
+  .tools-card h3 { font-size: var(--text-xl); font-weight: 700; margin: 0; }
+  .tools-card p { color: var(--color-text-secondary); margin: 0; line-height: 1.7; }
+  .tools-cta-row { display: flex; align-items: center; gap: var(--space-4); flex-wrap: wrap; margin-top: auto; }
+  .tools-time { font-size: var(--text-sm); color: var(--color-text-muted); }
+  .guide-card { display: flex; flex-direction: column; gap: var(--space-4); }
+  .guide-badges { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .guide-card h3 { font-size: var(--text-xl); font-weight: 700; margin: 0; }
+  .guide-card p { color: var(--color-text-secondary); line-height: 1.7; margin: 0; flex: 1; }
+  .guide-link { font-weight: 600; color: var(--color-accent); text-decoration: none; margin-top: auto; }
+  .guide-link:hover { color: var(--color-accent-dark); }
+  .independent-col { display: flex; flex-direction: column; gap: var(--space-3); }
+  .independent-col h3 { font-size: var(--text-lg); font-weight: 700; margin: 0; }
+  .independent-col p { color: var(--color-text-secondary); line-height: 1.7; margin: 0; }
+</style>

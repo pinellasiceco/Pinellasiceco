@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import ConsultationCTA from '../components/ui/ConsultationCTA.astro';
+---
+
+<BaseLayout
+  pageTitle="Book a Free GRC Migration Consultation"
+  metaDescription="Free 30-minute consultation for security and IT leaders evaluating a compliance platform migration or switch. Walk away with a clear recommendation for your situation."
+  canonicalURL="https://grcmigrate.com/consultation"
+>
+
+<div class="consultation-page">
+  <div class="container" style="padding-top:var(--space-12);padding-bottom:var(--space-16)">
+
+    <div class="consult-layout">
+      <div class="consult-main">
+        <h1>Book Your Free 30-Minute Consultation</h1>
+        <p class="consult-lead">Walk away with a clear recommendation — whether that's a migration plan, a negotiation strategy, or a reason to stay put.</p>
+
+        <div class="consult-expect">
+          <h2>What to expect</h2>
+          <ul class="checklist">
+            <li>We review your current platform setup and migration goals before the call</li>
+            <li>We assess complexity, timeline viability, and key risks for your specific situation</li>
+            <li>You leave with a clear recommendation — no commitment or next step required</li>
+          </ul>
+        </div>
+
+        <div class="consult-who">
+          <h2>Who this is for</h2>
+          <p>Security managers, IT directors, CISOs, compliance leads, and founders navigating a GRC platform decision — whether that's a migration, a renewal negotiation, platform selection, or figuring out whether your current tool is still the right one.</p>
+        </div>
+
+        <!-- Calendly embed placeholder -->
+        <div class="calendly-placeholder">
+          <!-- CALENDLY EMBED: Replace this comment block with your Calendly inline embed script when ready.
+               Embed type: inline widget
+               Min-width: 320px
+               Height: 700px
+               Example:
+               <div class="calendly-inline-widget" data-url="https://calendly.com/YOUR_USERNAME/30min" style="min-width:320px;height:700px;"></div>
+               <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+          -->
+          <div style="background:var(--color-surface);border:2px dashed var(--color-border);border-radius:var(--radius-lg);padding:var(--space-12);text-align:center">
+            <p style="color:var(--color-text-muted);font-size:var(--text-sm)">Calendly embed goes here.<br>Replace this block with your Calendly inline widget script.</p>
+            <a href="https://CALENDLY_PLACEHOLDER" class="btn btn-primary" style="margin-top:var(--space-4)" rel="noopener">Open Scheduling Page →</a>
+          </div>
+        </div>
+
+        <p class="consult-email" style="text-align:center;margin-top:var(--space-6);font-size:var(--text-sm);color:var(--color-text-muted)">
+          Prefer to reach out by email first? <a href="mailto:EMAIL_PLACEHOLDER">EMAIL_PLACEHOLDER</a>
+        </p>
+      </div>
+
+      <aside class="consult-sidebar">
+        <div class="card" style="margin-bottom:var(--space-4)">
+          <h3 style="font-weight:700;margin-bottom:var(--space-3)">Before your consultation</h3>
+          <ul class="checklist" style="font-size:var(--text-sm)">
+            <li>Take the <a href="/migration-assessment">free assessment</a> — we'll review your score before the call</li>
+            <li>Note your current annual platform cost and renewal increase if applicable</li>
+            <li>List your top 5 integrations — we'll assess portability</li>
+            <li>Note your next audit date</li>
+          </ul>
+        </div>
+        <div class="card" style="background:rgba(15,76,129,0.04);border-color:var(--color-primary)">
+          <p style="font-size:var(--text-sm);color:var(--color-text-secondary);margin:0">
+            <strong style="color:var(--color-primary)">Independent advice.</strong> GRC Migrate is not affiliated with Vanta, Drata, or any compliance platform. We don't earn commissions for recommending any specific platform.
+          </p>
+        </div>
+      </aside>
+    </div>
+
+  </div>
+</div>
+
+</BaseLayout>
+
+<style>
+  .consultation-page { background-color: var(--color-surface); }
+  .consult-layout { display: grid; grid-template-columns: 1fr 320px; gap: var(--space-12); align-items: start; }
+  @media (max-width: 900px) { .consult-layout { grid-template-columns: 1fr; } }
+  .consult-main h1 { font-size: clamp(1.75rem,4vw,var(--text-3xl)); font-weight: 800; margin-bottom: var(--space-4); }
+  .consult-lead { font-size: var(--text-xl); color: var(--color-text-secondary); margin-bottom: var(--space-8); line-height: 1.6; }
+  .consult-expect, .consult-who { margin-bottom: var(--space-8); }
+  .consult-expect h2, .consult-who h2 { font-size: var(--text-lg); font-weight: 700; margin-bottom: var(--space-4); }
+  .consult-who p { color: var(--color-text-secondary); line-height: 1.7; }
+  .calendly-placeholder { margin-bottom: var(--space-6); }
+</style>

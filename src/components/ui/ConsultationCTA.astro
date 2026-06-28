@@ -1,0 +1,253 @@
+---
+interface Props {
+  variant?: 'inline' | 'banner' | 'sidebar' | 'floating';
+  heading?: string;
+  urgency?: string;
+}
+
+const {
+  variant = 'inline',
+  heading,
+  urgency,
+} = Astro.props;
+---
+
+{variant === 'inline' && (
+  <div class="cta-inline">
+    <h3 class="cta-inline-heading">{heading || 'Not sure if switching is the right move?'}</h3>
+    <p class="cta-inline-body">A free 30-minute consultation maps your exact situation — what data moves, what doesn't, whether your timeline is viable, and what the switch will actually cost in time and disruption.</p>
+    {urgency && <p class="cta-urgency">{urgency}</p>}
+    <div class="cta-inline-actions">
+      <a href="https://CALENDLY_PLACEHOLDER" class="btn btn-primary" rel="noopener">Book Free Consultation →</a>
+      <a href="/migration-assessment" class="cta-secondary-link">Take the free assessment first</a>
+    </div>
+    <p class="cta-trust">Independent advice. Not affiliated with any platform vendor.</p>
+  </div>
+)}
+
+{variant === 'banner' && (
+  <section class="cta-banner">
+    <div class="container">
+      <div class="cta-banner-inner">
+        <div class="cta-banner-text">
+          <h2 class="cta-banner-heading">Ready to stop guessing and get a plan?</h2>
+          <p class="cta-banner-sub">30 minutes. Free. Walk away with clarity on your next move.</p>
+        </div>
+        <div class="cta-banner-actions">
+          <a href="https://CALENDLY_PLACEHOLDER" class="btn btn-white" rel="noopener">Book Free Consultation →</a>
+          <a href="/migration-assessment" class="cta-banner-secondary">Or start with the free assessment →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+)}
+
+{variant === 'sidebar' && (
+  <div class="cta-sidebar">
+    <span class="badge badge-green cta-sidebar-badge">FREE CONSULTATION</span>
+    <h3 class="cta-sidebar-heading">Need a migration plan?</h3>
+    <p class="cta-sidebar-body">30-minute call. Walk away with a clear recommendation.</p>
+    <a href="https://CALENDLY_PLACEHOLDER" class="btn btn-primary cta-sidebar-btn" rel="noopener">Book Now →</a>
+    <div class="cta-sidebar-divider" aria-hidden="true"></div>
+    <a href="/migration-assessment" class="cta-sidebar-secondary">Free assessment →</a>
+  </div>
+)}
+
+{variant === 'floating' && (
+  <div class="cta-floating" aria-label="Book a free consultation">
+    <a href="https://CALENDLY_PLACEHOLDER" class="btn btn-primary cta-floating-btn" rel="noopener">Book Free Call</a>
+  </div>
+)}
+
+<style>
+  /* Inline variant */
+  .cta-inline {
+    border-left: 4px solid var(--color-accent);
+    background-color: rgba(0, 166, 126, 0.05);
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+    padding: var(--space-8);
+    margin: var(--space-8) 0;
+  }
+
+  .cta-inline-heading {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-3);
+  }
+
+  .cta-inline-body {
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-6);
+    line-height: 1.7;
+  }
+
+  .cta-urgency {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-accent-dark);
+    margin-bottom: var(--space-4);
+  }
+
+  .cta-inline-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-4);
+  }
+
+  .cta-secondary-link {
+    font-size: var(--text-sm);
+    color: var(--color-accent);
+    text-decoration: underline;
+    font-weight: 500;
+  }
+
+  .cta-secondary-link:hover {
+    color: var(--color-accent-dark);
+  }
+
+  .cta-trust {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  /* Banner variant */
+  .cta-banner {
+    background-color: var(--color-primary);
+    padding: var(--space-12) 0;
+  }
+
+  .cta-banner-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-8);
+    flex-wrap: wrap;
+  }
+
+  .cta-banner-heading {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: white;
+    margin-bottom: var(--space-2);
+  }
+
+  .cta-banner-sub {
+    color: rgba(255,255,255,0.8);
+    font-size: var(--text-lg);
+    margin: 0;
+  }
+
+  .cta-banner-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-3);
+    flex-shrink: 0;
+  }
+
+  .cta-banner-secondary {
+    color: rgba(255,255,255,0.8);
+    font-size: var(--text-sm);
+    text-decoration: underline;
+    white-space: nowrap;
+  }
+
+  .cta-banner-secondary:hover {
+    color: white;
+  }
+
+  @media (max-width: 640px) {
+    .cta-banner-inner {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .cta-banner-actions {
+      align-items: flex-start;
+      width: 100%;
+    }
+
+    .cta-banner-actions .btn {
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  /* Sidebar variant */
+  .cta-sidebar {
+    background-color: var(--color-surface-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .cta-sidebar-badge {
+    align-self: flex-start;
+    margin-bottom: var(--space-1);
+  }
+
+  .cta-sidebar-heading {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+
+  .cta-sidebar-body {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .cta-sidebar-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .cta-sidebar-divider {
+    border-top: 1px solid var(--color-border);
+    margin: var(--space-1) 0;
+  }
+
+  .cta-sidebar-secondary {
+    font-size: var(--text-sm);
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-align: center;
+    font-weight: 500;
+  }
+
+  .cta-sidebar-secondary:hover {
+    color: var(--color-accent-dark);
+  }
+
+  /* Floating variant — mobile only */
+  .cta-floating {
+    display: none;
+    position: fixed;
+    bottom: var(--space-6);
+    right: var(--space-6);
+    z-index: 50;
+  }
+
+  .cta-floating-btn {
+    border-radius: 999px;
+    box-shadow: var(--shadow-lg);
+    padding: 0.875rem 1.5rem;
+    font-size: var(--text-sm);
+  }
+
+  @media (max-width: 768px) {
+    .cta-floating {
+      display: block;
+    }
+  }
+</style>
