@@ -1,4 +1,4 @@
-const CACHE_NAME='pic-202606271451';
+const CACHE_NAME='pic-202606281457';
 const ASSETS=[new Request('./',{cache:'no-cache'}),new Request('/Pinellasiceco/index.html',{cache:'no-cache'})];
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(ASSETS).catch(()=>{})));
