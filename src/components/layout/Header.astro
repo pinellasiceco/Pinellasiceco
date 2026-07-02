@@ -20,7 +20,7 @@ const isActive = (path: string) => currentPath === path || currentPath.startsWit
       <ul class="nav-links" role="list">
         <li class="nav-item nav-dropdown">
           <button
-            class={`nav-link nav-dropdown-toggle${isActive('/vanta-to-drata-migration') || isActive('/drata-to-vanta-migration') ? ' nav-link-active' : ''}`}
+            class={`nav-link nav-dropdown-toggle${isActive('/vanta-to-drata-migration') || isActive('/drata-to-vanta-migration') || isActive('/archer-to-vanta-migration') || isActive('/rsa-archer-alternatives') ? ' nav-link-active' : ''}`}
             aria-expanded="false"
             aria-haspopup="true"
           >
@@ -30,12 +30,14 @@ const isActive = (path: string) => currentPath === path || currentPath.startsWit
           <ul class="dropdown-menu" role="list">
             <li><a href="/vanta-to-drata-migration" class="dropdown-link">Vanta → Drata</a></li>
             <li><a href="/drata-to-vanta-migration" class="dropdown-link">Drata → Vanta</a></li>
+            <li><a href="/archer-to-vanta-migration" class="dropdown-link">Archer → Vanta</a></li>
+            <li><a href="/rsa-archer-alternatives" class="dropdown-link">RSA Archer Alternatives</a></li>
           </ul>
         </li>
 
         <li class="nav-item nav-dropdown">
           <button
-            class={`nav-link nav-dropdown-toggle${isActive('/migration-assessment') || isActive('/migration-cost-calculator') || isActive('/vanta-vs-drata-comparison') || isActive('/grc-platform-checklist') ? ' nav-link-active' : ''}`}
+            class={`nav-link nav-dropdown-toggle${isActive('/migration-assessment') || isActive('/legacy-migration-assessment') || isActive('/migration-cost-calculator') || isActive('/vanta-vs-drata-comparison') || isActive('/grc-platform-checklist') ? ' nav-link-active' : ''}`}
             aria-expanded="false"
             aria-haspopup="true"
           >
@@ -44,6 +46,7 @@ const isActive = (path: string) => currentPath === path || currentPath.startsWit
           </button>
           <ul class="dropdown-menu" role="list">
             <li><a href="/migration-assessment" class="dropdown-link">Migration Assessment</a></li>
+            <li><a href="/legacy-migration-assessment" class="dropdown-link">Legacy Migration Assessment</a></li>
             <li><a href="/migration-cost-calculator" class="dropdown-link">Cost Calculator</a></li>
             <li><a href="/vanta-vs-drata-comparison" class="dropdown-link">Platform Comparison</a></li>
             <li><a href="/grc-platform-checklist" class="dropdown-link">Selection Checklist</a></li>
@@ -62,6 +65,21 @@ const isActive = (path: string) => currentPath === path || currentPath.startsWit
           <ul class="dropdown-menu" role="list">
             <li><a href="/vanta-renewal-options" class="dropdown-link">Vanta Renewal Options</a></li>
             <li><a href="/drata-renewal-options" class="dropdown-link">Drata Renewal Options</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item nav-dropdown">
+          <button
+            class={`nav-link nav-dropdown-toggle${isActive('/vciso-audit') || isActive('/what-a-vciso-should-deliver') || isActive('/consultation') ? ' nav-link-active' : ''}`}
+            aria-expanded="false"
+            aria-haspopup="true"
+          >
+            Services
+            <svg width="12" height="8" viewBox="0 0 12 8" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <ul class="dropdown-menu" role="list">
+            <li><a href="/vciso-audit" class="dropdown-link">vCISO Audit</a></li>
+            <li><a href="/consultation" class="dropdown-link">Book a Consultation</a></li>
           </ul>
         </li>
 
@@ -90,10 +108,13 @@ const isActive = (path: string) => currentPath === path || currentPath.startsWit
         <p class="mobile-nav-section-title">Migration Guides</p>
         <a href="/vanta-to-drata-migration" class="mobile-nav-link">Vanta → Drata</a>
         <a href="/drata-to-vanta-migration" class="mobile-nav-link">Drata → Vanta</a>
+        <a href="/archer-to-vanta-migration" class="mobile-nav-link">Archer → Vanta</a>
+        <a href="/rsa-archer-alternatives" class="mobile-nav-link">RSA Archer Alternatives</a>
       </div>
       <div class="mobile-nav-section">
         <p class="mobile-nav-section-title">Platform Tools</p>
         <a href="/migration-assessment" class="mobile-nav-link">Migration Assessment</a>
+        <a href="/legacy-migration-assessment" class="mobile-nav-link">Legacy Migration Assessment</a>
         <a href="/migration-cost-calculator" class="mobile-nav-link">Cost Calculator</a>
         <a href="/vanta-vs-drata-comparison" class="mobile-nav-link">Platform Comparison</a>
         <a href="/grc-platform-checklist" class="mobile-nav-link">Selection Checklist</a>
@@ -102,6 +123,11 @@ const isActive = (path: string) => currentPath === path || currentPath.startsWit
         <p class="mobile-nav-section-title">Renewal Help</p>
         <a href="/vanta-renewal-options" class="mobile-nav-link">Vanta Renewal Options</a>
         <a href="/drata-renewal-options" class="mobile-nav-link">Drata Renewal Options</a>
+      </div>
+      <div class="mobile-nav-section">
+        <p class="mobile-nav-section-title">Services</p>
+        <a href="/vciso-audit" class="mobile-nav-link">vCISO Audit</a>
+        <a href="/consultation" class="mobile-nav-link">Book a Consultation</a>
       </div>
       <a href="/blog" class="mobile-nav-link">Blog</a>
       <a href="https://CALENDLY_PLACEHOLDER" class="btn btn-primary" style="margin-top:1.5rem; width:100%; text-align:center;" rel="noopener">Book Free Consultation</a>

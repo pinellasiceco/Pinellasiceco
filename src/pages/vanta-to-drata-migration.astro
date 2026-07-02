@@ -87,6 +87,8 @@ const schema = [
 
           <p>This guide is for security managers, IT directors, and compliance leads who are actively evaluating or planning a move from Vanta to Drata. It covers everything from the initial go/no-go decision through decommissioning Vanta — including what data actually transfers, what you'll need to rebuild manually, and where migrations most commonly go wrong.</p>
 
+          <p class="assessment-crosslink">Migrating from Archer or another legacy system instead? See the <a href="/archer-to-vanta-migration">Archer migration guide →</a></p>
+
           <p>This is independent advice. GRC Migrate is not affiliated with Vanta, Drata, or any compliance platform. If you want a personalized complexity score before diving in, the <a href="/migration-assessment">free migration assessment</a> takes about 3 minutes.</p>
 
           <h2 id="worth-it">Before you start — is the switch worth it?</h2>
@@ -314,6 +316,8 @@ const schema = [
 
 <style>
   .guide-page { padding-bottom: var(--space-16); }
+  .assessment-crosslink { font-size: var(--text-sm); color: var(--color-text-muted); }
+  .assessment-crosslink a { color: var(--color-accent); }
   .guide-header { padding: var(--space-8) 0 var(--space-6); }
   .guide-header h1 {
     font-size: clamp(1.75rem, 4vw, var(--text-3xl));

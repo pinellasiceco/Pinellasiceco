@@ -1,0 +1,341 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import ConsultationCTA from '../components/ui/ConsultationCTA.astro';
+
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Migrate from RSA Archer to Vanta: A Complete Guide (2026)",
+    "description": "Step-by-step guide to migrating your compliance program from RSA Archer to Vanta, including what data transfers, what requires manual work, realistic timelines, and common mistakes to avoid.",
+    "step": [
+      { "@type": "HowToStep", "position": 1, "name": "Inventory your Archer instance", "text": "Document all custom applications, record counts, active workflows, calculated fields, and integration points. If your Archer admin has left, budget discovery time or engage an Archer consultant before estimating scope." },
+      { "@type": "HowToStep", "position": 2, "name": "Decide what deserves to survive", "text": "Most Archer instances contain years of accumulated data — dead controls, inactive risk records, retired vendors. Define active vs. archival before any migration begins. Migration is your chance to shed dead weight." },
+      { "@type": "HowToStep", "position": 3, "name": "Export everything for archive", "text": "Run Archer reports to CSV for all active applications. Export the document repository. Take a full data backup. This is your insurance policy — do not decommission Archer before this is complete and verified." },
+      { "@type": "HowToStep", "position": 4, "name": "Map your Archer control structure to Vanta's framework", "text": "This is the hardest intellectual work of the migration. Your Archer control library is likely custom-built; Vanta uses a standardized framework. Budget real time — 20 to 60 hours depending on your control count and framework coverage." },
+      { "@type": "HowToStep", "position": 5, "name": "Procure Vanta and confirm plan tier", "text": "Confirm the plan tier covers all your required frameworks before signing. Ask about renewal cap language and get it in the contract." },
+      { "@type": "HowToStep", "position": 6, "name": "Set up Vanta foundation", "text": "Select frameworks, connect integrations, and sync personnel from your HRIS. This is Vanta's onboarding sequence — allow a full day for a mature integration stack." },
+      { "@type": "HowToStep", "position": 7, "name": "Wait 24–48 hours for Vanta's automated tests to stabilize", "text": "After integrations connect, Vanta's tests begin running against your environment. Initial failures are normal and mostly resolve within two days. Do not remediate during the stabilization window." },
+      { "@type": "HowToStep", "position": 8, "name": "Import controls with your mapping", "text": "Enter your mapped controls manually or use Vanta's API for large control sets. Reference the control mapping document from Step 4 — this is where that work pays off." },
+      { "@type": "HowToStep", "position": 9, "name": "Migrate policies and rebuild approval workflows", "text": "Upload your policy documents to Vanta. Re-establish approval workflows and reviewer assignments. Archer policy approval history does not transfer." },
+      { "@type": "HowToStep", "position": 10, "name": "Rebuild your risk register", "text": "Vanta uses a simpler qualitative risk model than Archer's. Accept the flattening — trying to recreate Archer's quantitative model in Vanta creates maintenance burden with no audit benefit." },
+      { "@type": "HowToStep", "position": 11, "name": "Import vendors via CSV", "text": "Export vendor records from Archer via report. Import to Vanta using CSV. Review and update vendor risk tiers to match Vanta's model." },
+      { "@type": "HowToStep", "position": 12, "name": "Run parallel for one reporting cycle", "text": "Keep Archer in read-only mode while Vanta proves itself through a full reporting cycle. Do not decommission Archer until you have completed at least one audit cycle or compliance review on Vanta." },
+      { "@type": "HowToStep", "position": 13, "name": "Notify your auditor with a migration summary", "text": "Provide your auditor with the migration timeline, an evidence continuity plan showing how pre-migration Archer records are accessible, and access to Vanta at least 60 days before your next audit." },
+      { "@type": "HowToStep", "position": 14, "name": "Archive and decommission Archer", "text": "Confirm Archer contract termination terms and data retention obligations before initiating shutdown. Some regulated programs require 3–7 years of GRC data retention — confirm your obligations before closing access." }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://grcmigrate.com" },
+      { "@type": "ListItem", "position": 2, "name": "Migration Guides", "item": "https://grcmigrate.com/archer-to-vanta-migration" },
+      { "@type": "ListItem", "position": 3, "name": "Archer to Vanta", "item": "https://grcmigrate.com/archer-to-vanta-migration" }
+    ]
+  }
+];
+---
+
+<BaseLayout
+  pageTitle="How to Migrate from RSA Archer to Vanta: Complete 2026 Guide"
+  metaDescription="Step-by-step guide to migrating from RSA Archer to Vanta. Data export strategies, what transfers, custom field handling, realistic timelines for enterprise GRC migration."
+  canonicalURL="https://grcmigrate.com/archer-to-vanta-migration"
+  schemaMarkup={schema}
+>
+
+<div class="guide-page">
+  <div class="container">
+
+    <nav class="breadcrumb" aria-label="Breadcrumb" style="padding-top:var(--space-6)">
+      <a href="/">Home</a>
+      <span class="breadcrumb-sep" aria-hidden="true">›</span>
+      <span>Migration Guides</span>
+      <span class="breadcrumb-sep" aria-hidden="true">›</span>
+      <span aria-current="page">Archer to Vanta</span>
+    </nav>
+
+    <div class="content-with-sidebar">
+      <article class="guide-content">
+
+        <header class="guide-header">
+          <div class="page-meta">
+            <span class="badge badge-blue">Migration Guide</span>
+            <span>~14 min read</span>
+            <span>Updated July 2026</span>
+          </div>
+          <h1>How to Migrate from RSA Archer to Vanta: A Complete Guide (2026)</h1>
+        </header>
+
+        <nav class="toc" aria-label="Table of contents">
+          <h2>In this guide</h2>
+          <ol>
+            <li><a href="#why-different">Why Archer migrations are different</a></li>
+            <li><a href="#right-fit">Is Vanta the right Archer replacement for you?</a></li>
+            <li><a href="#what-migrates">What can migrate from Archer to Vanta</a></li>
+            <li><a href="#step-by-step">Step-by-step migration process</a></li>
+            <li><a href="#timeline">Realistic timeline and cost</a></li>
+            <li><a href="#mistakes">Common Archer migration mistakes</a></li>
+            <li><a href="#questions">Questions to ask before you commit</a></li>
+          </ol>
+        </nav>
+
+        <div class="prose">
+
+          <p>This guide is for security leaders, compliance managers, and IT directors at organizations running RSA Archer who are evaluating a move to Vanta. You might be facing a renewal, dealing with staff turnover on the Archer admin team, or responding to pressure from finance or leadership to modernize your GRC stack.</p>
+
+          <p>Before we go further, the elephant in the room: Archer migrations are fundamentally harder than migrations between modern compliance automation platforms like Vanta and Drata. Not slightly harder — categorically different. Every Archer instance is a custom-built system shaped by years of configuration decisions, and much of that configuration knowledge lives in people, not documentation. This guide is honest about that. If you want an independent complexity score for your specific situation, start with the <a href="/legacy-migration-assessment">Legacy Migration Assessment</a> — it takes under 5 minutes.</p>
+
+          <h2 id="why-different">Why Archer migrations are different</h2>
+
+          <p>When companies move between Vanta and Drata, they're migrating between two platforms built on the same paradigm: compliance automation with a standardized control framework, continuous testing via integrations, and a relatively fixed data model. The migration is significant, but the paradigms are compatible.</p>
+
+          <p>Archer is a different animal. It's a schema-flexible enterprise GRC platform built on the principle that every organization's risk and compliance program is unique and should be configured accordingly. That's genuinely true — and it's exactly what makes migrating out of Archer so complex.</p>
+
+          <p><strong>Every Archer installation is a custom system.</strong> Your Archer instance has custom applications built for your specific risk taxonomy, custom fields added over years of program evolution, custom workflows built around your internal review and approval processes, and custom reports built for your specific stakeholders. None of this is generic. When you migrate to Vanta, you're not just moving data — you're translating one paradigm (enterprise GRC) into a completely different one (compliance automation). That translation requires judgment calls that no automated migration tool can make.</p>
+
+          <p><strong>The institutional knowledge problem is real.</strong> Most mature Archer instances were built by people who understood both Archer's configuration model and the organization's compliance program deeply. If those people have moved on — which is common after five or more years on a platform — that knowledge is partially or fully lost. Before you estimate your migration scope, you need to honestly assess whether you actually understand what your Archer instance contains and why it was built that way.</p>
+
+          <p><strong>Archer's API has real constraints.</strong> Archer exposes both a REST API and an older GRC API, and the data formats differ between them. Pagination on most endpoints is capped at 1,000 records, which matters when you're extracting large control libraries or risk registers. Large-scale programmatic exports require planning, not just an API call.</p>
+
+          <p><strong>You're not migrating a compliance program — you're translating it.</strong> In a Vanta-to-Drata migration, your controls, policies, and evidence largely survive in recognizable form. In an Archer-to-Vanta migration, Archer's custom applications, calculated fields, and quantitative risk models have no equivalent in Vanta. You're not migrating those objects — you're deciding what they should become in Vanta's model, which requires understanding both systems. This is why the right first phase of any Archer migration is scoping, not execution.</p>
+
+          <h2 id="right-fit">Is Vanta the right Archer replacement for you?</h2>
+
+          <p>Vanta is the right Archer replacement for a specific profile, and it's honest to say so upfront. If your profile doesn't match, picking the wrong destination means doing the migration twice — which is exactly the kind of outcome this guide exists to help you avoid.</p>
+
+          <p><strong>Vanta fits when:</strong> Your compliance program is centered on SOC 2, ISO 27001, HIPAA, or the other frameworks Vanta natively supports. You're a mid-market organization (roughly 50 to 1,000 employees) that wants automated evidence collection and a modern auditor experience. You're willing to adopt Vanta's control framework model rather than maintaining a fully custom control library. Your risk program is relatively straightforward — you need a risk register, qualitative risk ratings, and regular reviews, but not quantitative modeling or complex risk interdependencies.</p>
+
+          <p><strong>Vanta doesn't fit when:</strong> Your program depends on heavy custom risk workflows or quantitative risk scoring models — the kind Archer excels at and Vanta doesn't attempt. You have multi-entity enterprise structures with deep compliance interdependencies across legal entities or subsidiaries. You operate in regulatory regimes Vanta doesn't cover (certain financial services frameworks, government-specific requirements, or highly specialized industry frameworks). Your team's primary value add is deep GRC configuration flexibility rather than compliance automation efficiency.</p>
+
+          <p><strong>Honest alternatives:</strong> <strong>Drata</strong> is similar to Vanta in model and is worth comparing for the same profile. <strong>AuditBoard</strong> is the most natural Archer successor for audit-heavy programs that need enterprise depth without Archer's administrative burden. <strong>LogicGate</strong> preserves much of Archer's configurability philosophy in a modern UI and is worth evaluating when custom workflows matter. <strong>ServiceNow GRC</strong> makes sense when your organization is already deeply invested in the ServiceNow platform and wants to consolidate.</p>
+
+          <p>Not sure which direction fits your program? The <a href="/legacy-migration-assessment">Legacy Migration Assessment</a> is built for this decision — it profiles your current system and gives you a complexity score and recommendation in about 5 minutes.</p>
+
+          <h2 id="what-migrates">What can migrate from Archer to Vanta</h2>
+
+          <p>This is the section most Archer migration projects underestimate. The short version: significantly less transfers than you expect, what does transfer requires substantial re-mapping, and several core Archer capabilities have no Vanta equivalent.</p>
+
+          <h3>What migrates (with effort)</h3>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Data Type</th>
+                <th>Effort Level</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Control library</td>
+                <td><span class="badge badge-red">High</span></td>
+                <td>Requires re-mapping from your custom Archer control structure to Vanta's control framework. This is intellectual work, not data transfer — expect 20–60 hours depending on control count and framework coverage.</td>
+              </tr>
+              <tr>
+                <td>Policies and documents</td>
+                <td><span class="badge badge-amber">Medium</span></td>
+                <td>Export from Archer's document repository and re-upload to Vanta. Approval timestamps and change history don't transfer. Budget time to re-establish approval workflows in Vanta.</td>
+              </tr>
+              <tr>
+                <td>Vendor and third-party records</td>
+                <td><span class="badge badge-amber">Medium</span></td>
+                <td>Export via Archer reports to CSV, then import or manually enter in Vanta's vendor management. Vendor risk tier assignments need to be re-evaluated against Vanta's simpler model.</td>
+              </tr>
+              <tr>
+                <td>Risk register items</td>
+                <td><span class="badge badge-red">Medium-High</span></td>
+                <td>Vanta's risk model is substantially simpler than Archer's. Expect meaningful flattening — complex risk hierarchies, calculated risk scores, and inter-risk dependencies must be redesigned. This is a program decision, not a data migration.</td>
+              </tr>
+              <tr>
+                <td>Personnel records</td>
+                <td><span class="badge badge-amber">Low-Medium</span></td>
+                <td>Usually easier to rebuild from your HRIS integration in Vanta than to migrate from Archer. Vanta's HRIS sync (Workday, BambooHR, etc.) often produces a cleaner result than a data import from Archer.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>What cannot migrate</h3>
+
+          <p><strong>Custom Archer applications and workflows.</strong> Archer's application framework — the ability to build custom record types, relationships, and workflows — has no equivalent concept in Vanta. Custom applications built for your specific risk taxonomy, issue tracking, third-party assessment workflows, or exception management must be redesigned, not migrated. The question isn't how to migrate them; it's what Vanta's native features can replace them with.</p>
+
+          <p><strong>Historical audit trails.</strong> Archer's audit trail is platform-specific. Your complete change history, approval records, and test results exist only in Archer and will not transfer. Export and archive this data before decommissioning — some programs have 5–7 year retention obligations on GRC records.</p>
+
+          <p><strong>Quantitative risk scoring models.</strong> If your program uses quantitative likelihood-times-impact scoring, risk heat maps built on calculated scores, or Monte Carlo-style risk aggregation — those exist only in Archer. Vanta uses a simpler qualitative model. This isn't a flaw in Vanta; it's a different design philosophy. Whether you need quantitative modeling going forward is a program-level decision to make before choosing a destination platform.</p>
+
+          <p><strong>Custom calculated fields and cross-references.</strong> Archer's formula fields, cross-reference fields, and calculated values must be redesigned in Vanta's model. There is no import path for Archer's calculation logic.</p>
+
+          <p><strong>Archer user roles and permission structures.</strong> Archer's permission model is more granular than Vanta's. You'll rebuild your user roles in Vanta's simpler access control model — for most programs, this is straightforward, but programs with complex permission requirements should evaluate whether Vanta's model meets their needs before committing to the migration.</p>
+
+          <h2 id="step-by-step">Step-by-step Archer to Vanta migration process</h2>
+
+          <ol class="step-list">
+            <li>
+              <strong>Inventory your Archer instance.</strong> Document every custom application (name, record count, active users, key relationships), custom fields (especially calculated fields and cross-references), active workflows, scheduled jobs, integration points, and reports used in active compliance operations. If your Archer admin has left and documentation is thin, budget for a discovery phase — 2 to 4 weeks with an Archer consultant — before you can estimate migration scope accurately. Skipping this step is the single most common cause of scope creep on Archer migrations.
+            </li>
+            <li>
+              <strong>Decide what deserves to survive.</strong> Most Archer instances that have been live for 5 or more years carry significant dead data — retired controls from frameworks no longer active, risk records for systems decommissioned years ago, vendors with no active contracts, exceptions that expired and were never closed. Migration is your opportunity to shed this weight. Before mapping anything to Vanta, define what is actively maintained, what is archival, and what is genuinely dead. Only migrate active data.
+            </li>
+            <li>
+              <strong>Export everything for archive before any migration work begins.</strong> Run Archer reports to CSV for every active application. Export the document repository. Take a full database backup if you have access to it. This is your insurance policy — the source of truth you'll reference if questions arise after decommissioning. Do this before doing anything else. Archer data that isn't exported before shutdown is gone.
+            </li>
+            <li>
+              <strong>Map your Archer control structure to Vanta's framework.</strong> This is the hardest intellectual work of the entire migration. Your Archer control library was built around your specific program — Vanta's control framework reflects industry standards. You need to map every active control in Archer to its closest equivalent in Vanta's framework, identify gaps, and make decisions about controls that don't map cleanly. Budget 20 to 60 hours of actual analysis time for this step, depending on your control count. If your compliance team doesn't have deep familiarity with both systems, this is where outside help has the clearest ROI.
+            </li>
+            <li>
+              <strong>Procure Vanta and confirm plan tier fits your framework needs.</strong> Before signing, confirm that the plan tier covers every compliance framework you need. Ask about Vanta's renewal increase history and attempt to negotiate a renewal cap in the contract — it's much easier to get this clause before signing than at renewal. Ask about implementation support availability and what's included.
+            </li>
+            <li>
+              <strong>Set up Vanta foundation.</strong> Complete framework selection, connect all integrations (your cloud infrastructure, identity provider, code repositories, and HR system), and sync personnel from your HRIS. Allow a full business day for this step on a mature integration stack. Don't rush integration setup — incomplete integration configuration is a common source of false test failures in the early weeks.
+            </li>
+            <li>
+              <strong>Wait 24–48 hours for Vanta's automated tests to stabilize.</strong> After integrations connect, Vanta's tests begin running against your environment. Initial failures are normal — most resolve within the first two days as integrations complete their initial sync and tests accumulate enough data to evaluate. Do not begin remediating failures during this window. The distinction between a real finding and a stabilization artifact isn't clear until the window closes.
+            </li>
+            <li>
+              <strong>Import controls using your mapping document.</strong> For smaller control sets (under 100 controls), manual entry is feasible and allows you to review each control as you enter it. For larger control sets, Vanta's API allows programmatic import. Reference your mapping document from Step 4 at every point — this is where that work becomes your migration backbone.
+            </li>
+            <li>
+              <strong>Migrate policies and re-establish approval workflows.</strong> Upload your policy documents to Vanta. Re-establish the reviewer and approver assignments for each policy. If Vanta has a matching template policy, use it to preserve the control and test associations — otherwise upload custom policies directly. Communicate to your policy approvers that they'll need to re-approve policies in the new system; their Archer approval history won't be visible in Vanta.
+            </li>
+            <li>
+              <strong>Rebuild your risk register.</strong> Accept the flattening from Archer's risk model to Vanta's qualitative model. The goal isn't to recreate what Archer had — it's to build a risk register that works in Vanta and passes your auditor's review. Import your prioritized active risk items, assign owners, and set review schedules. Resist the temptation to rebuild Archer's quantitative scoring in Vanta's fields; it creates maintenance burden with no audit benefit.
+            </li>
+            <li>
+              <strong>Import vendors via CSV.</strong> Export vendor records from Archer via report and import them to Vanta using CSV. Review vendor risk tier assignments — Vanta's vendor risk model is simpler than Archer's and risk tier logic will need to be re-evaluated. Budget half a day for a vendor list of 50 or more records.
+            </li>
+            <li>
+              <strong>Run parallel for one reporting cycle.</strong> Keep Archer accessible in read-only mode while Vanta proves itself through a full reporting cycle. This parallel period is your safety net — it allows you to catch gaps, answer auditor questions by referencing Archer data, and build confidence in Vanta's accuracy before committing to a full cutover. Do not decommission Archer until you've completed at least one audit cycle or compliance reporting period on Vanta.
+            </li>
+            <li>
+              <strong>Notify your auditor with a migration summary and evidence continuity plan.</strong> Provide your auditor with: the migration timeline, documentation of how pre-migration Archer records are archived and accessible, and access to Vanta's Audit Hub at least 60 days before your next audit. Some auditors have strong evidence format preferences or established Archer workflows — surfacing this conversation early prevents surprises at audit fieldwork.
+            </li>
+            <li>
+              <strong>Archive and decommission Archer.</strong> Before initiating contract termination, confirm Archer's data retention and export obligations under your contract. Confirm that your archived exports are complete and accessible from a location independent of Archer (not stored inside Archer's system). Coordinate the shutdown timeline with your contract terms — early termination fees vary significantly. Close access only after your audit team has confirmed they have everything they need.
+            </li>
+          </ol>
+
+          <h2 id="timeline">Realistic timeline and cost</h2>
+
+          <p>Archer migrations take longer than migrations between modern platforms. The timeline depends primarily on three factors: how customized your Archer instance is, whether the person who built it is still available, and how complex your control framework coverage is.</p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Profile</th>
+                <th>Description</th>
+                <th>Realistic Timeline</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Focused program</strong></td>
+                <td>1–2 frameworks, minimal custom Archer applications, Archer admin still available, under 200 active controls</td>
+                <td>8–12 weeks</td>
+              </tr>
+              <tr>
+                <td><strong>Standard enterprise</strong></td>
+                <td>Several custom applications, 3+ frameworks, moderate institutional knowledge gaps, 200–500 active controls</td>
+                <td>4–6 months</td>
+              </tr>
+              <tr>
+                <td><strong>Heavily customized</strong></td>
+                <td>10+ custom applications, quantitative risk models, multi-entity program, significant knowledge gaps or admin turnover, 500+ controls</td>
+                <td>6–12 months; phased approach recommended</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p><strong>Cost factors beyond platform licensing:</strong></p>
+          <ul>
+            <li><strong>Archer consultant for discovery and export:</strong> If your Archer admin has left, budget $150–$250/hr for an Archer-certified consultant to help you understand and extract your instance. A discovery phase typically runs 40–80 hours.</li>
+            <li><strong>Internal time:</strong> The control mapping exercise alone can run 20–60 hours of experienced compliance staff time. The full migration for a standard enterprise instance typically requires 80–150 hours of internal labor across all phases.</li>
+            <li><strong>Platform overlap:</strong> Expect to pay for both Archer and Vanta during the parallel running period. For complex programs, this parallel period can run 2–4 months.</li>
+          </ul>
+
+          <p>Use the <a href="/migration-cost-calculator">cost calculator</a> to model the labor and platform costs for your specific timeline scenario.</p>
+
+          <h2 id="mistakes">Common Archer migration mistakes</h2>
+
+          <ol>
+            <li><strong>Trying to recreate Archer's structure in Vanta instead of adopting Vanta's model.</strong> This is the most common mistake on Archer migrations and the most expensive. Teams that spend weeks trying to build Archer's workflow logic or quantitative risk scoring inside Vanta's fields end up with a system that's harder to maintain than either platform and that neither Vanta's support team nor your auditor recognizes as standard. Adopt Vanta's model. Redesign where you need to, rather than translate.</li>
+            <li><strong>Migrating dead data.</strong> Archer instances accumulate. If your program has been on Archer for more than 3 years, a meaningful percentage of the data is probably stale — inactive risks, retired controls, vendors with no active contracts, closed exceptions that never got cleaned up. Migrating all of it into Vanta creates a cluttered, unmaintainable system from day one. The inventory and cleanup pass in Step 2 is not optional.</li>
+            <li><strong>Underestimating the control mapping effort.</strong> Teams consistently underestimate this step — budgeting a day when it takes two weeks. The control mapping is where the paradigm translation actually happens. It requires someone who understands your compliance program deeply, understands Vanta's framework, and can make judgment calls about controls that don't map cleanly. Budget for it accurately or the project will stall at this step.</li>
+            <li><strong>Decommissioning Archer before the first clean audit cycle on Vanta.</strong> The parallel running period feels like overhead. It isn't. Your auditor may have questions during the first Vanta audit that can only be answered by reference to Archer data. Closing Archer access before completing at least one clean audit cycle creates real risk with no meaningful benefit.</li>
+            <li><strong>Not budgeting for the institutional knowledge gap when the Archer admin is gone.</strong> This is often the single most underestimated risk factor on Archer migrations. If the person who built your instance — or the last person who maintained it deeply — has left, you're missing the context to make accurate control mapping decisions, scope estimates, or decommissioning plans. This isn't a blocker, but it does require a discovery investment before anything else. Factor it in from the start.</li>
+          </ol>
+
+          <h2 id="questions">Questions to ask before you commit</h2>
+
+          <p>Before committing to a Vanta contract, get clear answers to these six questions. They surface the real constraints that determine whether the migration is viable on your timeline.</p>
+
+          <ol>
+            <li><strong>Does Vanta's framework coverage meet all your regulatory requirements?</strong> Get the specific list of frameworks Vanta supports and confirm it covers every framework your program currently maintains in Archer. For specialized regulatory requirements, ask Vanta directly whether the framework coverage is complete or partial.</li>
+            <li><strong>What are your data retention obligations for Archer records?</strong> Before you can decommission Archer, you need to know how long you're legally required to retain GRC records. This varies by industry, jurisdiction, and contract. Some programs have 7-year retention requirements. Confirm this with your legal or compliance team before setting a decommissioning date.</li>
+            <li><strong>Is your auditor comfortable with a platform transition mid-program?</strong> Not all auditors handle platform transitions equally. Have the conversation with your auditor before committing to a migration timeline. Understand their evidence format preferences, get their input on the continuity plan, and confirm that Vanta's Audit Hub is a format they're willing to work with.</li>
+            <li><strong>What is the budget for platform overlap during the parallel running period?</strong> You will need to pay for both Archer and Vanta during the parallel period. For complex programs, this can be 2–4 months of dual licensing. Confirm that the budget for overlap is approved before starting.</li>
+            <li><strong>Who owns the control mapping work, and what is their availability?</strong> The control mapping exercise requires a specific combination of compliance program knowledge and time. If your most knowledgeable compliance team member is unavailable for the 4–8 weeks it takes to complete the mapping, the migration will stall at its most critical step. Confirm resourcing before committing to a timeline.</li>
+            <li><strong>What happens to in-flight risk items and open exceptions during the transition?</strong> Active risk items with owners and due dates, open policy exceptions, and in-flight audit findings need a documented transition plan. Who is responsible for each? How will you communicate the platform transition to assigned owners? Resolve this before migration begins, not during it.</li>
+          </ol>
+
+        </div>
+
+        <ConsultationCTA
+          variant="inline"
+          heading="Archer migrations need a real plan."
+          urgency="Independent scoping pays for itself on migrations at this complexity level."
+        />
+
+        <div class="prose">
+          <p>For other migration options, see the <a href="/rsa-archer-alternatives">RSA Archer Alternatives guide</a> for a comparison of Vanta, Drata, AuditBoard, LogicGate, and ServiceNow GRC as Archer replacements. If you're switching between Vanta and Drata instead, the <a href="/vanta-to-drata-migration">Vanta to Drata guide</a> and <a href="/drata-to-vanta-migration">Drata to Vanta guide</a> cover those migrations in detail.</p>
+        </div>
+
+      </article>
+
+      <aside class="sidebar-sticky">
+        <ConsultationCTA variant="sidebar" />
+        <div style="margin-top:var(--space-6)">
+          <h3 style="font-size:var(--text-sm);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-muted);margin-bottom:var(--space-3)">Related</h3>
+          <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:var(--space-2)">
+            <li><a href="/legacy-migration-assessment" style="font-size:var(--text-sm)">Legacy Migration Assessment →</a></li>
+            <li><a href="/rsa-archer-alternatives" style="font-size:var(--text-sm)">Archer Alternatives Guide →</a></li>
+            <li><a href="/migration-cost-calculator" style="font-size:var(--text-sm)">Cost Calculator →</a></li>
+            <li><a href="/vanta-vs-drata-comparison" style="font-size:var(--text-sm)">Vanta vs Drata →</a></li>
+            <li><a href="/consultation" style="font-size:var(--text-sm)">Book Consultation →</a></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+
+  </div>
+</div>
+
+<ConsultationCTA variant="floating" />
+
+</BaseLayout>
+
+<style>
+  .guide-page { padding-bottom: var(--space-16); }
+  .guide-header { padding: var(--space-8) 0 var(--space-6); }
+  .guide-header h1 {
+    font-size: clamp(1.75rem, 4vw, var(--text-3xl));
+    font-weight: 800;
+    line-height: 1.2;
+    margin-top: var(--space-4);
+    letter-spacing: -0.01em;
+  }
+  .step-list {
+    padding-left: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+  .step-list li {
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+  }
+  .step-list li strong {
+    color: var(--color-text-primary);
+    display: block;
+    margin-bottom: var(--space-1);
+  }
+</style>

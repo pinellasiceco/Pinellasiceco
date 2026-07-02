@@ -1,0 +1,401 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import FAQAccordion from '../components/ui/FAQAccordion.astro';
+
+const faqItems = [
+  {
+    question: "Will my vCISO know about the audit?",
+    answer: "That's entirely your call. Many clients share the scorecard openly with their vCISO — it often improves the engagement by giving both parties a concrete standard to work toward together. Good providers welcome it. If you'd prefer to complete the audit confidentially before deciding how to use the findings, that's equally valid. We don't contact your provider."
+  },
+  {
+    question: "What if the verdict is 'consider a change'?",
+    answer: "You receive the specific gaps documented clearly in the scorecard, along with the evidence basis for each finding. What you do with that information is entirely your decision. If you want to renegotiate scope with your current provider, the scorecard gives you concrete grounds. If you want to switch providers, we can suggest a referral process to vetted alternatives — but that's optional and entirely separate from the audit. We have no financial stake in which direction you go."
+  },
+  {
+    question: "Do you need access to our systems?",
+    answer: "Optional read-only access to your compliance platform (Vanta, Drata, or other) significantly strengthens the review — it lets us assess program-health evidence directly rather than relying solely on your description. We work with a read-only guest or auditor account and document exactly what we accessed. The audit can be completed without platform access, but the scorecard will note where direct verification wasn't possible and rely on your intake questionnaire responses for those items."
+  },
+  {
+    question: "How is this different from just using the free checklist?",
+    answer: "The free checklist tells you what should exist. The audit verifies what actually does — with evidence. The checklist is a self-assessment; the audit is an independent assessment. Self-assessments are useful for identifying obvious gaps, but they're not designed to catch the gaps that look covered but aren't (policies that exist but haven't been reviewed in two years, risk registers that are technically present but were last updated before your last framework addition). The written scorecard and readout call also give you a defensible, documented record of your engagement's status at a point in time."
+  }
+];
+
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "vCISO Audit",
+    "description": "An independent $750 review of your vCISO engagement with a written scorecard and clear verdict — on track, gaps to address, or time for a change.",
+    "provider": { "@type": "Organization", "name": "GRC Migrate", "url": "https://grcmigrate.com" },
+    "offers": {
+      "@type": "Offer",
+      "price": "750",
+      "priceCurrency": "USD"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqItems.map(item => ({
+      "@type": "Question",
+      "name": item.question,
+      "acceptedAnswer": { "@type": "Answer", "text": item.answer }
+    }))
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://grcmigrate.com" },
+      { "@type": "ListItem", "position": 2, "name": "Services", "item": "https://grcmigrate.com/vciso-audit" },
+      { "@type": "ListItem", "position": 3, "name": "vCISO Audit", "item": "https://grcmigrate.com/vciso-audit" }
+    ]
+  }
+];
+---
+
+<BaseLayout
+  pageTitle="The vCISO Audit — Independent Review of Your vCISO Engagement | GRC Migrate"
+  metaDescription="Paying $2-5K/month for a vCISO and not sure what you're getting? The vCISO Audit is an independent $750 review with a written scorecard and clear verdict."
+  canonicalURL="https://grcmigrate.com/vciso-audit"
+  schemaMarkup={schema}
+>
+
+<div class="vciso-audit-page">
+  <div class="container">
+
+    <nav class="breadcrumb" aria-label="Breadcrumb" style="padding-top:var(--space-6)">
+      <a href="/">Home</a>
+      <span class="breadcrumb-sep" aria-hidden="true">›</span>
+      <span>Services</span>
+      <span class="breadcrumb-sep" aria-hidden="true">›</span>
+      <span aria-current="page">vCISO Audit</span>
+    </nav>
+
+    <div class="content-with-sidebar">
+      <div class="audit-main">
+
+        <header class="audit-header">
+          <div class="page-meta">
+            <span class="badge badge-blue">Independent Service</span>
+            <span>$750 flat fee</span>
+          </div>
+          <h1>The vCISO Audit</h1>
+          <p class="audit-subheading">An independent review of what your vCISO engagement is actually delivering — with a written scorecard and a clear verdict.</p>
+        </header>
+
+        <section class="prose">
+          <h2 id="who">Who this is for</h2>
+
+          <div class="profile-cards">
+            <div class="profile-card">
+              <p>"We have a vCISO and can't articulate what they've delivered this quarter — and we're not confident our program is where they say it is."</p>
+            </div>
+            <div class="profile-card">
+              <p>"We're being pitched vCISO services and can't compare the proposals — the scope language sounds the same across providers and we don't know what to look for."</p>
+            </div>
+            <div class="profile-card">
+              <p>"Our audit is approaching and we have a nagging concern that the program isn't as ready as our vCISO's status updates suggest."</p>
+            </div>
+          </div>
+
+          <h2 id="deliverables">What you get</h2>
+
+          <ul class="deliverables-list">
+            <li>
+              <div class="deliverable-check" aria-hidden="true">✓</div>
+              <div>
+                <strong>Structured intake review</strong> of your engagement — contract scope, monthly cost, delivery history, and current program state as you understand it.
+              </div>
+            </li>
+            <li>
+              <div class="deliverable-check" aria-hidden="true">✓</div>
+              <div>
+                <strong>Assessment against the independent 25-point vCISO deliverables checklist</strong> — the same checklist published at <a href="/what-a-vciso-should-deliver">what-a-vciso-should-deliver</a>, applied to your actual engagement.
+              </div>
+            </li>
+            <li>
+              <div class="deliverable-check" aria-hidden="true">✓</div>
+              <div>
+                <strong>Optional read-only review</strong> of your Vanta, Drata, or other compliance platform instance for program-health evidence — test pass rates, evidence currency, evidence gaps, outstanding tasks.
+              </div>
+            </li>
+            <li>
+              <div class="deliverable-check" aria-hidden="true">✓</div>
+              <div>
+                <strong>Written scorecard</strong> — what exists, what's missing, what appears overpriced or underscoped for your program's actual needs.
+              </div>
+            </li>
+            <li>
+              <div class="deliverable-check" aria-hidden="true">✓</div>
+              <div>
+                <strong>A clear verdict:</strong> <span class="verdict-on-track">On Track</span> / <span class="verdict-gaps">Gaps to Address</span> / <span class="verdict-change">Consider a Change</span>
+              </div>
+            </li>
+            <li>
+              <div class="deliverable-check" aria-hidden="true">✓</div>
+              <div>
+                <strong>30-minute readout call</strong> to walk through findings, answer questions, and discuss next steps based on the verdict.
+              </div>
+            </li>
+          </ul>
+
+          <h2 id="how">How it works</h2>
+
+          <ol class="step-list">
+            <li>
+              <strong>Request the audit.</strong> Complete the short intake form below. We'll review your request and reply within 1 business day to confirm the audit is the right fit and discuss the intake process.
+            </li>
+            <li>
+              <strong>Intake.</strong> We send a structured questionnaire covering your vCISO engagement scope, monthly cost, contract terms, and delivery history. Optionally, you grant us read-only access to your compliance platform. We work from your documentation — we don't conduct interviews with your vCISO provider.
+            </li>
+            <li>
+              <strong>Scorecard and readout.</strong> Within 5 business days of receiving your completed intake, you receive the written scorecard by email. We then schedule a 30-minute readout call to walk through findings and next steps.
+            </li>
+          </ol>
+
+          <h2 id="pricing">Pricing</h2>
+
+          <div class="pricing-box">
+            <div class="pricing-amount">$750</div>
+            <p>Flat fee. No subscription, no upsell obligation. If the verdict is "On Track" — your vCISO is doing great work — that's a fully successful audit. You'll know exactly what you're paying for and why it's worth it.</p>
+          </div>
+
+          <h2 id="independence">Why independent matters</h2>
+
+          <p>GRC Migrate does not sell vCISO services. We do not receive commissions from vCISO providers. We have no financial stake in the verdict. The scorecard is built to be shared with your vCISO — good providers welcome an independent standard and use it to strengthen the engagement.</p>
+
+          <p>The independence matters most when the verdict is ambiguous. An internal review is limited by the same blind spots that created the gaps. A review from your vCISO's firm has an obvious conflict. An independent review produces findings that can be acted on without those constraints.</p>
+
+        </section>
+
+        <section>
+          <div class="prose" style="margin-bottom:var(--space-6)">
+            <h2 id="faq">Frequently asked questions</h2>
+          </div>
+          <FAQAccordion items={faqItems} />
+        </section>
+
+        <!-- Lead capture form -->
+        <section class="audit-form-section" id="request">
+          <h2 class="audit-form-heading">Request Your vCISO Audit</h2>
+          <p class="audit-form-sub">We'll reply within 1 business day to confirm fit and discuss the intake process. No upfront payment required — payment is arranged after we confirm the audit is right for your situation.</p>
+
+          <form
+            class="audit-form"
+            name="vciso-audit-request"
+            method="POST"
+            data-netlify="true"
+            data-netlify-honeypot="bot-field"
+            id="vciso-audit-form"
+          >
+            <input type="hidden" name="form-name" value="vciso-audit-request" />
+            <input type="text" name="bot-field" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+            <div class="audit-form-grid">
+              <div class="form-group">
+                <label class="form-label" for="full-name">Full Name <span aria-hidden="true">*</span></label>
+                <input class="form-input" type="text" id="full-name" name="full_name" required autocomplete="name" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="work-email">Work Email <span aria-hidden="true">*</span></label>
+                <input class="form-input" type="email" id="work-email" name="email" required autocomplete="email" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="company-name">Company <span aria-hidden="true">*</span></label>
+                <input class="form-input" type="text" id="company-name" name="company_name" required autocomplete="organization" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="company-size">Company Size <span aria-hidden="true">*</span></label>
+                <select class="form-select" id="company-size" name="company_size" required>
+                  <option value="">Select...</option>
+                  <option>1–10</option>
+                  <option>11–50</option>
+                  <option>51–200</option>
+                  <option>201–500</option>
+                  <option>501–1000</option>
+                  <option>1000+</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="phone">Phone <span class="form-hint" style="font-weight:400">(optional)</span></label>
+                <input class="form-input" type="tel" id="phone" name="phone" autocomplete="tel" />
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:var(--space-4)">
+              <p class="form-label" style="margin-bottom:var(--space-3)">Do you currently have a vCISO or are you evaluating providers? <span aria-hidden="true">*</span></p>
+              <div class="radio-stack">
+                <label class="radio-inline"><input type="radio" name="vciso_status" value="Have one now" required> <span>We have a vCISO now and want an independent review</span></label>
+                <label class="radio-inline"><input type="radio" name="vciso_status" value="Evaluating pitches"> <span>We're evaluating vCISO pitches and want an independent standard</span></label>
+                <label class="radio-inline"><input type="radio" name="vciso_status" value="Both"> <span>Both — we have one and are considering a change</span></label>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:var(--space-4)">
+              <label class="form-label" for="vciso-spend">Approximate monthly spend on vCISO services <span class="form-hint" style="font-weight:400">(optional)</span></label>
+              <select class="form-select" id="vciso-spend" name="vciso_monthly_spend">
+                <option value="">Select...</option>
+                <option>Under $2,000/month</option>
+                <option>$2,000–$4,000/month</option>
+                <option>$4,000–$6,000/month</option>
+                <option>$6,000+/month</option>
+                <option>Evaluating — no current spend</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom:var(--space-6)">
+              <label class="form-label" for="prompted">What prompted you to look into this? <span class="form-hint" style="font-weight:400">(optional)</span></label>
+              <textarea class="form-input" id="prompted" name="prompt_reason" rows="3" style="resize:vertical"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary audit-submit">Request the Audit →</button>
+            <p class="audit-fine-print">We'll reply within 1 business day to confirm fit and schedule your intake. Payment is arranged after we confirm the audit is right for your situation — no upfront payment required.</p>
+          </form>
+
+          <div class="audit-form-success" id="form-success" hidden>
+            <div class="success-inner">
+              <div class="success-icon" aria-hidden="true">✓</div>
+              <h3>Request received</h3>
+              <p>We'll review your information and reply within 1 business day to confirm fit and next steps.</p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <aside class="sidebar-sticky">
+        <div class="audit-sidebar-card">
+          <span class="badge badge-blue" style="margin-bottom:var(--space-3)">$750 FLAT FEE</span>
+          <h3 style="font-size:var(--text-lg);font-weight:700;margin-bottom:var(--space-2)">The vCISO Audit</h3>
+          <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:var(--space-2);margin-bottom:var(--space-4)">
+            <li style="font-size:var(--text-sm);color:var(--color-text-secondary)">✓ Written scorecard</li>
+            <li style="font-size:var(--text-sm);color:var(--color-text-secondary)">✓ 25-point independent assessment</li>
+            <li style="font-size:var(--text-sm);color:var(--color-text-secondary)">✓ Optional platform review</li>
+            <li style="font-size:var(--text-sm);color:var(--color-text-secondary)">✓ 30-min readout call</li>
+            <li style="font-size:var(--text-sm);color:var(--color-text-secondary)">✓ Clear verdict</li>
+          </ul>
+          <a href="#request" class="btn btn-primary" style="width:100%;text-align:center">Request Audit →</a>
+        </div>
+
+        <div style="margin-top:var(--space-6)">
+          <h3 style="font-size:var(--text-sm);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-muted);margin-bottom:var(--space-3)">Related</h3>
+          <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:var(--space-2)">
+            <li><a href="/what-a-vciso-should-deliver" style="font-size:var(--text-sm)">vCISO Deliverables Checklist →</a></li>
+            <li><a href="/consultation" style="font-size:var(--text-sm)">Book a Free Consultation →</a></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+
+  </div>
+</div>
+
+</BaseLayout>
+
+<style>
+  .vciso-audit-page { padding-bottom: var(--space-16); }
+  .audit-main { min-width: 0; }
+
+  .audit-header { padding: var(--space-8) 0 var(--space-6); }
+  .audit-header h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-top: var(--space-4);
+    letter-spacing: -0.02em;
+  }
+  .audit-subheading {
+    font-size: var(--text-xl);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    margin-top: var(--space-3);
+    max-width: 560px;
+  }
+
+  .profile-cards { display: flex; flex-direction: column; gap: var(--space-3); margin: var(--space-6) 0; }
+  .profile-card {
+    border-left: 3px solid var(--color-accent);
+    padding: var(--space-4) var(--space-5);
+    background: rgba(0,166,126,0.04);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  }
+  .profile-card p { font-size: var(--text-sm); color: var(--color-text-secondary); line-height: 1.7; margin: 0; font-style: italic; }
+
+  .deliverables-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: var(--space-4); margin: var(--space-6) 0; }
+  .deliverables-list li { display: flex; gap: var(--space-3); align-items: flex-start; font-size: var(--text-sm); color: var(--color-text-secondary); line-height: 1.7; }
+  .deliverable-check { color: var(--color-accent); font-weight: 800; font-size: var(--text-base); flex-shrink: 0; margin-top: 1px; }
+  .deliverables-list strong { color: var(--color-text-primary); }
+
+  .verdict-on-track { color: #10B981; font-weight: 700; }
+  .verdict-gaps { color: #F59E0B; font-weight: 700; }
+  .verdict-change { color: #EF4444; font-weight: 700; }
+
+  .step-list { padding-left: var(--space-6); display: flex; flex-direction: column; gap: var(--space-5); }
+  .step-list li { line-height: 1.7; color: var(--color-text-secondary); }
+  .step-list li strong { color: var(--color-text-primary); display: block; margin-bottom: var(--space-1); }
+
+  .pricing-box {
+    border: 2px solid var(--color-accent);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    background: rgba(0,166,126,0.04);
+    margin: var(--space-4) 0 var(--space-8);
+  }
+  .pricing-amount { font-size: 2.5rem; font-weight: 800; color: var(--color-primary); margin-bottom: var(--space-3); }
+  .pricing-box p { color: var(--color-text-secondary); line-height: 1.7; margin: 0; }
+
+  .audit-form-section {
+    margin-top: var(--space-12);
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--color-border);
+  }
+  .audit-form-heading { font-size: var(--text-2xl); font-weight: 800; margin-bottom: var(--space-2); }
+  .audit-form-sub { color: var(--color-text-secondary); margin-bottom: var(--space-8); line-height: 1.7; max-width: 560px; }
+
+  .audit-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-bottom: var(--space-4); }
+  @media (max-width: 600px) { .audit-form-grid { grid-template-columns: 1fr; } }
+
+  .radio-stack { display: flex; flex-direction: column; gap: var(--space-2); }
+  .radio-inline { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-sm); color: var(--color-text-secondary); cursor: pointer; }
+  .radio-inline input { accent-color: var(--color-accent); width: 16px; height: 16px; flex-shrink: 0; }
+
+  .audit-submit { width: 100%; padding: 0.875rem; font-size: var(--text-base); }
+  .audit-fine-print { text-align: center; font-size: var(--text-xs); color: var(--color-text-muted); margin-top: var(--space-3); line-height: 1.6; }
+
+  .audit-form-success { display: none; }
+  .audit-form-success[hidden] { display: none; }
+  .audit-form-success:not([hidden]) { display: block; }
+  .success-inner {
+    text-align: center;
+    padding: var(--space-10);
+    background: rgba(0,166,126,0.06);
+    border: 1px solid var(--color-accent);
+    border-radius: var(--radius-lg);
+  }
+  .success-icon { font-size: 2rem; color: var(--color-accent); margin-bottom: var(--space-3); }
+  .success-inner h3 { font-size: var(--text-xl); font-weight: 700; margin-bottom: var(--space-2); }
+  .success-inner p { color: var(--color-text-secondary); }
+
+  .audit-sidebar-card {
+    background-color: var(--color-surface-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+  }
+</style>
+
+<script defer>
+document.getElementById('vciso-audit-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const formData = new FormData(this);
+  fetch('/', { method: 'POST', body: formData })
+    .catch(() => {})
+    .finally(() => {
+      this.hidden = true;
+      document.getElementById('form-success').hidden = false;
+      document.getElementById('form-success').scrollIntoView({ behavior: 'smooth' });
+    });
+});
+</script>
