@@ -58,6 +58,13 @@ Head queries this page serves (inferred from index behavior; GSC export will con
 "ice machine cleaning near me" (Clearwater-local), "commercial ice machine cleaning
 pinellas".
 
+#### Tier A live-content extraction status (per-page)
+
+| Page | Extracted from live? | Word count (fetched vs. expected) | Notes |
+|------|---------------------|-----------------------------------|-------|
+| A1 `/ice-machine-cleaning-clearwater-fl-pinellas-ice-co` | **NO — OPERATOR FLAG** | 0 fetched / est. 400–800 expected | Egress policy for this session denies `www.pinellasiceco.com` (proxy CONNECT 403 on every route: curl, WebFetch, archive.org). Per migration rules the body was **not** regenerated. The built page carries the indexed title verbatim + a marked operator-fill body region. **Unblock: either allowlist `pinellasiceco.com` + `web.archive.org` in the environment network policy and re-run the port, or paste the HubSpot page body into the marked region in `src/pages/ice-machine-cleaning-clearwater-fl-pinellas-ice-co.astro`.** |
+| A2 `/` | **NO — OPERATOR FLAG** | 0 fetched | Same blocker. New homepage is built new (operator to record live title/meta/H1 in checklist and confirm the rewrite decision, since homepage content was not retrievable to preserve). |
+
 ### TIER A-ADJACENT — real URLs the business hands out (not ranking assets, but must not break)
 
 | # | URL | Evidence | Treatment |
@@ -99,6 +106,23 @@ No redirect chains: every entry lands directly on a 200. New-site pages are all
 new paths (`/ice-machine-repair` etc.) — they collide with nothing.
 
 ---
+
+## Positioning conflicts flagged at the gate (per site-purpose hierarchy)
+
+The new site leads with REPAIR, then SALES/LEASING; cleaning is a supporting service.
+Conflicts between preserved assets and that positioning, for operator decision:
+
+1. **Logo tagline**: the repo's primary logo (`pic_logo.png`) carries a banner reading
+   "Ice Machine Cleaning & Sanitizing" — cleaning-only framing. The build uses the
+   **untagged stacked variant** (same brand, no tagline) in header/OG. Operator:
+   confirm, or supply a logo with repair/sales-inclusive framing.
+2. **Homepage (A2)**: live homepage content could not be retrieved; if the GSC export
+   shows homepage queries that are cleaning-specific, the repair-first homepage may
+   shift those. Review at sign-off with the export in hand.
+3. **Only ranking page is a cleaning page (A1)**: preserved intact at its URL with its
+   title verbatim — no conflict; noted so the repair-first nav order (which links to
+   it from the Cleaning nav item and service pages, not the hero) is a recognized,
+   deliberate choice.
 
 ## Operator sign-off checklist (hard gate — complete before DNS cutover)
 
