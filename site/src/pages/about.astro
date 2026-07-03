@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+---
+
+<BaseLayout
+  pageTitle="About Pinellas Ice Co — Tampa Bay Ice Machine Service"
+  metaDescription="Pinellas Ice Co: local commercial ice machine repair, sales, leasing, and documented cleaning across Tampa Bay. Data-driven, flat-rate, no contracts."
+>
+  <section class="page-head">
+    <div class="container narrow">
+      <h1>About Pinellas Ice Co</h1>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container narrow">
+      <img
+        src="/images/pinellas-ice-co-logo.webp"
+        alt="Pinellas Ice Co logo"
+        width="320" height="240" loading="eager" decoding="async"
+        style="margin-bottom: var(--space-6)"
+      />
+      <p>
+        Pinellas Ice Co is a local ice machine company serving Tampa Bay —
+        <a href="/ice-machine-repair/">repair</a>,
+        <a href="/commercial-ice-machine-sales/">sales</a>,
+        <a href="/ice-machine-leasing/">leasing</a>, and
+        <a href="/ice-machine-cleaning/">documented cleaning</a> for
+        restaurants, bars, hotels, and healthcare facilities across Pinellas,
+        Hillsborough, and Pasco counties.
+      </p>
+      <p>
+        We started in <a href="/clearwater/">Clearwater</a> doing one thing
+        obsessively well: cleaning and sanitizing commercial ice machines with
+        measured, documented results — ATP readings before and after every
+        job, records a health inspector accepts. That data habit runs deep:
+        we analyzed seven years of Florida DBPR inspection records for
+        Pinellas County, and published
+        <a href="/ice-machine-data/">what we found</a>.
+      </p>
+      <p>
+        The same crew and the same standards now cover the whole job — when a
+        machine is worth fixing we fix it, when it isn't we say so and quote
+        the replacement and the lease side by side. Flat-rate, no contracts,
+        no upsell theater.
+      </p>
+      <ul class="check-list">
+        <li><Icon name="check" size={18} /> <span>Local — based in Pinellas County, serving all of Tampa Bay</span></li>
+        <li><Icon name="check" size={18} /> <span>Documented work — before/after readings, written records</span></li>
+        <li><Icon name="check" size={18} /> <span>Straight answers — repair-or-replace math you can check</span></li>
+      </ul>
+      <p class="mt-6">
+        Talk to us: <a href="tel:+17278556873">(727) 855-6873</a> or the
+        <a href="/contact/">contact page</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

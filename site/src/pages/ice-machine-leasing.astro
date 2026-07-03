@@ -1,0 +1,128 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import TrustStrip from '../components/ui/TrustStrip.astro';
+import LeadForm from '../components/ui/LeadForm.astro';
+import FAQ from '../components/ui/FAQ.astro';
+import { faqSchema, serviceSchema } from '../lib/schema';
+
+const faqs = [
+  {
+    q: 'How much does it cost to lease a commercial ice machine?',
+    a: 'Typical Tampa Bay lease rates run roughly $100–$180/month for a 300–500 lbs/day machine and $180–$300+/month for larger production units, usually with maintenance and cleaning included. The included service is the real value — a $130/month lease that covers repairs beats a $90/month bare lease the first time a pump fails.',
+  },
+  {
+    q: 'Is leasing an ice machine worth it vs. buying?',
+    a: 'Leasing wins when uptime matters more than ownership, when capital is better spent elsewhere, or when you don\'t want repair risk. Buying wins on total cost if you\'ll run the machine 7+ years and can absorb repairs. Break-even is typically in the 2.5–4 year range — the table on this page shows the math.',
+  },
+  {
+    q: 'What happens if a leased machine breaks down?',
+    a: 'That\'s the point of the lease: it\'s our machine and our problem. Repairs, cleanings, and — if it can\'t be fixed fast — replacement are covered. You keep serving drinks.',
+  },
+  {
+    q: 'Is there a long-term contract?',
+    a: 'Lease terms vary by machine and volume — but you\'ll see the term, the monthly rate, and what\'s included in writing before you sign anything. No auto-renewal surprises.',
+  },
+];
+
+const schema = [
+  serviceSchema({
+    name: 'Commercial Ice Machine Leasing',
+    serviceType: 'Ice machine leasing',
+    description: 'Monthly commercial ice machine leasing across Tampa Bay with maintenance included — lease vs. buy math, monthly ranges, and straight terms.',
+    url: 'https://www.pinellasiceco.com/ice-machine-leasing/',
+  }),
+  faqSchema(faqs),
+];
+---
+
+<BaseLayout
+  pageTitle="Ice Machine Leasing Tampa Bay — Monthly Rates & Lease vs Buy | Pinellas Ice Co"
+  metaDescription="Lease a commercial ice machine in Tampa Bay from ~$100–$300/month with service included. Lease vs. buy math, straight terms, fast install. Call (727) 855-6873."
+  schemaMarkup={schema}
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>Ice machine leasing — Tampa Bay</h1>
+      <div class="answer-block">
+        Leasing a commercial ice machine in Tampa Bay typically runs
+        <strong>$100–$300/month</strong> depending on size, with maintenance
+        and cleaning included — no capital outlay, and breakdowns are our
+        problem, not yours. Call
+        <a href="tel:+17278556873"><strong>(727) 855-6873</strong></a> for a
+        monthly quote sized to your business.
+      </div>
+      <div class="hero-ctas">
+        <a href="#quote" class="btn btn-primary btn-lg">Get a monthly quote</a>
+        <a href="tel:+17278556873" class="btn btn-outline btn-lg"><Icon name="phone" size={18} /> (727) 855-6873</a>
+      </div>
+    </div>
+  </section>
+
+  <TrustStrip />
+
+  <section class="section">
+    <div class="container">
+      <span class="eyebrow">Lease vs. buy</span>
+      <h2 class="mb-4">The actual math</h2>
+      <p class="narrow" style="margin-left:0">
+        Example: a 500 lbs/day cuber for a full-service restaurant. Numbers are
+        typical ranges, not quotes — your machine and volume set the real
+        figure.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th></th><th>Buy new</th><th>Lease</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Upfront</td><td>$3,500–$5,000 installed</td><td>$0–$300 setup</td></tr>
+            <tr><td>Monthly</td><td>$0 + repairs as they come</td><td>$130–$180, service included</td></tr>
+            <tr><td>Annual cleanings (2×)</td><td>~$300–$500/yr</td><td>Included</td></tr>
+            <tr><td>A $700 repair in year 3</td><td>Yours</td><td>Covered</td></tr>
+            <tr><td>5-year total (typical)</td><td>~$5,500–$8,500</td><td>~$8,000–$11,000</td></tr>
+            <tr><td>Machine down Friday night</td><td>Your problem, your timeline</td><td>Our problem, priority response</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <ul class="check-list">
+        <li><Icon name="check" size={18} /> <span><strong>Lease</strong> if uptime is everything, capital is tight, or you're opening and cash has better uses.</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>Buy</strong> if you'll run the machine 7+ years and can absorb a repair bill without pain — ownership is cheaper over the machine's life.</span></li>
+        <li><Icon name="check" size={18} /> <span>On the fence? Run both in the <a href="/ice-machine-cost-calculator/">cost calculator</a>.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="grid-2">
+        <div>
+          <span class="eyebrow">What's included</span>
+          <h2 class="mb-4">A lease that covers the annoying parts</h2>
+          <ul class="icon-list">
+            <li><Icon name="truck" size={20} /> <span><strong>Delivery + install</strong> — machine, bin, water filtration, startup.</span></li>
+            <li><Icon name="wrench" size={20} /> <span><strong>Repairs</strong> — parts and labor on covered breakdowns.</span></li>
+            <li><Icon name="droplet" size={20} /> <span><strong>Scheduled cleanings</strong> — the same documented, ATP-tested <a href="/ice-machine-cleaning/">cleaning service</a> we sell standalone.</span></li>
+            <li><Icon name="cube" size={20} /> <span><strong>Swap-out</strong> — if it can't be fixed quickly, the machine gets replaced.</span></li>
+          </ul>
+        </div>
+        <LeadForm segment="lease" page="ice-machine-leasing" heading="Get a monthly lease quote" sub="Business type + rough daily volume → machine size + monthly rate." showUrgency={false} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container narrow">
+      <span class="eyebrow">Leasing FAQs</span>
+      <h2 class="mb-6">Leasing questions</h2>
+      <FAQ items={faqs} />
+      <p class="mt-8">
+        Leasing available across <a href="/tampa/">Tampa</a>,
+        <a href="/st-petersburg/">St. Petersburg</a>,
+        <a href="/clearwater/">Clearwater</a>, and all of
+        <a href="/pinellas-county/">Pinellas County</a>. Prefer to own?
+        See <a href="/commercial-ice-machine-sales/">sales</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

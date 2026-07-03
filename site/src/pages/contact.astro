@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import LeadForm from '../components/ui/LeadForm.astro';
+---
+
+<BaseLayout
+  pageTitle="Contact Pinellas Ice Co — (727) 855-6873"
+  metaDescription="Reach Pinellas Ice Co for commercial ice machine repair, sales, leasing, or cleaning anywhere in Tampa Bay. Call (727) 855-6873 or send the form."
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>Contact us</h1>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <div class="grid-2">
+        <div>
+          <p class="contact-big">
+            <Icon name="phone" size={22} />
+            <a href="tel:+17278556873">(727) 855-6873</a>
+          </p>
+          <p>
+            Calling is fastest — especially for a machine that's down. Tell us
+            the brand and what it's doing.
+          </p>
+          <p>
+            Email: <a href="mailto:service@pinellasiceco.com">service@pinellasiceco.com</a>
+          </p>
+          <h3 class="mt-8 mb-2">Service area</h3>
+          <p>
+            <a href="/tampa/">Tampa</a> · <a href="/st-petersburg/">St. Petersburg</a> ·
+            <a href="/clearwater/">Clearwater</a> ·
+            <a href="/pinellas-county/">all of Pinellas County</a> · Hillsborough ·
+            Pasco
+          </p>
+          <h3 class="mt-8 mb-2">Not sure what you need?</h3>
+          <p>
+            The <a href="/ice-machine-troubleshooting/">troubleshooting guide</a>
+            sorts it out in four questions; the
+            <a href="/ice-machine-cost-calculator/">cost calculator</a> gives
+            instant ranges.
+          </p>
+        </div>
+        <LeadForm segment="general" page="contact" heading="Send us the details" sub="We'll call you back — usually the same business day." />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact-big {
+    display: flex; align-items: center; gap: var(--space-3);
+    font-size: var(--text-2xl); font-weight: 800;
+  }
+  .contact-big a { text-decoration: none; color: var(--navy); }
+  .contact-big svg { color: var(--blue-dark); }
+</style>

@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import LeadForm from '../components/ui/LeadForm.astro';
+import FAQ from '../components/ui/FAQ.astro';
+import { faqSchema } from '../lib/schema';
+
+const faqs = [
+  {
+    q: 'How fast can you get to downtown St. Pete?',
+    a: 'We\'re based in Pinellas County — St. Pete is home turf, not a road trip. Call (727) 855-6873 with the symptom and you\'ll get a realistic window immediately.',
+  },
+  {
+    q: 'Do you work on the beach communities — St. Pete Beach, Treasure Island, Madeira?',
+    a: 'Yes, the full beach corridor. Salt air is brutal on condensers out there — beach machines benefit from more frequent coil cleaning, which we\'ll put on a schedule.',
+  },
+];
+---
+
+<BaseLayout
+  pageTitle="Commercial Ice Machine Repair & Service St. Petersburg, FL | Pinellas Ice Co"
+  metaDescription="Ice machine repair, sales, leasing & cleaning in St. Petersburg, FL — downtown, Central Ave, the beaches. All major brands. Call (727) 855-6873."
+  schemaMarkup={faqSchema(faqs)}
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>Ice machine service in St. Petersburg, FL</h1>
+      <div class="answer-block">
+        Commercial ice machine <a href="/ice-machine-repair/">repair</a>,
+        <a href="/commercial-ice-machine-sales/">sales</a>,
+        <a href="/ice-machine-leasing/">leasing</a>, and
+        <a href="/ice-machine-cleaning/">cleaning</a> across St. Petersburg —
+        downtown to the beaches. Call
+        <a href="tel:+17278556873"><strong>(727) 855-6873</strong></a>.
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="grid-2">
+        <div>
+          <span class="eyebrow">Local</span>
+          <h2 class="mb-4">Home county, south end</h2>
+          <p>
+            St. Pete's restaurant boom is real: the Central Avenue corridor,
+            the EDGE District, Grand Central, and a downtown that added more
+            bars in five years than most Florida cities have in total. Every
+            one of those craft-cocktail programs is an ice-dependent business
+            — and half of them are running machines squeezed into spaces that
+            were never designed for the airflow.
+          </p>
+          <p>
+            We're a Pinellas company; St. Pete calls are home turf. Downtown,
+            the Skyway Marina district, Tyrone, and out the beach corridor —
+            St. Pete Beach, Treasure Island, Madeira Beach.
+          </p>
+          <p>
+            Two local patterns worth knowing: tight-alcove installs overheat
+            (low output, early compressor death — sometimes the fix is
+            ducting, not parts), and beachfront salt air corrodes condenser
+            coils years ahead of inland machines. Both are manageable with
+            the right <a href="/ice-machine-cleaning/">maintenance
+            schedule</a>; both are expensive if ignored.
+          </p>
+          <h3 class="mb-2">Common St. Pete calls</h3>
+          <ul class="check-list">
+            <li><Icon name="check" size={18} /> <span>Cocktail bars needing nugget or specialty ice — <a href="/commercial-ice-machine-sales/">sales + sizing</a> for Scotsman and Hoshizaki specialty units.</span></li>
+            <li><Icon name="check" size={18} /> <span>Beach hotels on corroded condensers — <a href="/ice-machine-repair/">repair</a> with a straight answer on remaining machine life.</span></li>
+            <li><Icon name="check" size={18} /> <span>New openings choosing <a href="/ice-machine-leasing/">lease vs. buy</a> while cash is tight.</span></li>
+          </ul>
+        </div>
+        <LeadForm segment="general" page="st-petersburg" heading="St. Pete service request" sub="Downtown to the beaches — what's going on?" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container narrow">
+      <FAQ items={faqs} />
+      <p class="mt-6">
+        Also serving <a href="/tampa/">Tampa</a>,
+        <a href="/clearwater/">Clearwater</a>, and
+        <a href="/pinellas-county/">Pinellas County</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

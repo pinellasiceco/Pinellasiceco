@@ -1,0 +1,146 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import TrustStrip from '../components/ui/TrustStrip.astro';
+import LeadForm from '../components/ui/LeadForm.astro';
+import FAQ from '../components/ui/FAQ.astro';
+import { faqSchema, serviceSchema } from '../lib/schema';
+
+const faqs = [
+  {
+    q: 'How much does a commercial ice machine cost?',
+    a: 'New machines: roughly $2,000–$4,000 for a 300–500 lbs/day cuber with bin, $4,000–$8,000+ for 600–1,000 lbs/day production units. Good used machines typically run 40–60% of new. Install, water filtration, and delivery add to any of those — ask for the all-in number, which is the one we quote.',
+  },
+  {
+    q: 'What size ice machine does my restaurant need?',
+    a: 'Rough sizing: a full-service restaurant uses about 1.5 lbs of ice per seat per day; a bar about 3 lbs per seat; a hotel about 5 lbs per room. Then add 20% headroom — an undersized machine runs flat-out, fails early, and runs out on your busiest day. The sizing table below has the common cases, or use the <a href="/ice-machine-cost-calculator/">calculator</a>.',
+  },
+  {
+    q: 'Should I buy new or used?',
+    a: 'New: full warranty, known history, highest price. Used: real savings, but only worth it from a source that has actually opened and serviced the machine — a used machine with a tired compressor is not a deal. We sell both and will tell you plainly which makes sense for your volume.',
+  },
+  {
+    q: 'Is it better to lease or buy an ice machine?',
+    a: 'If cash is tight, uptime matters more than ownership, or you don\'t want to own the maintenance risk — lease. If you have the capital and plan to run the machine 7+ years — buying is usually cheaper over its life. The lease-vs-buy math is worked through on the <a href="/ice-machine-leasing/">leasing page</a>.',
+  },
+];
+
+const schema = [
+  serviceSchema({
+    name: 'Commercial Ice Machine Sales',
+    serviceType: 'Ice machine sales',
+    description: 'New and used commercial ice machine sales across Tampa Bay, with sizing guidance by business type and all-in installed quotes.',
+    url: 'https://www.pinellasiceco.com/commercial-ice-machine-sales/',
+  }),
+  faqSchema(faqs),
+];
+---
+
+<BaseLayout
+  pageTitle="Commercial Ice Machine Sales Tampa Bay — New & Used | Pinellas Ice Co"
+  metaDescription="Buy a commercial ice machine in Tampa Bay. New and used Hoshizaki, Manitowoc, Scotsman & Ice-O-Matic, sized to your business, with all-in installed quotes. Call (727) 855-6873."
+  schemaMarkup={schema}
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>Commercial ice machine sales — new &amp; used, Tampa Bay</h1>
+      <div class="answer-block">
+        Buying a commercial ice machine in Tampa Bay? New 300–500 lbs/day
+        machines run roughly <strong>$2,000–$4,000</strong>; larger production
+        units <strong>$4,000–$8,000+</strong>; solid used machines
+        40–60% of new. We size the machine to your business, quote the all-in
+        installed price, and service what we sell. Call
+        <a href="tel:+17278556873"><strong>(727) 855-6873</strong></a>.
+      </div>
+      <div class="hero-ctas">
+        <a href="#quote" class="btn btn-primary btn-lg">Get a sizing + quote</a>
+        <a href="tel:+17278556873" class="btn btn-outline btn-lg"><Icon name="phone" size={18} /> (727) 855-6873</a>
+      </div>
+    </div>
+  </section>
+
+  <TrustStrip />
+
+  <section class="section">
+    <div class="container">
+      <span class="eyebrow">Sizing</span>
+      <h2 class="mb-4">How much ice does your business actually need?</h2>
+      <p class="narrow" style="margin-left:0">
+        Ice machines are rated in pounds of ice per 24 hours. Undersizing is
+        the classic mistake — the machine runs continuously, wears out early,
+        and still runs dry Friday night. Size for your busiest day, then add
+        20%.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Business type</th><th>Rule of thumb</th><th>Typical machine</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Café / coffee shop</td><td>~0.5 lb per customer/day</td><td>150–300 lbs/day</td></tr>
+            <tr><td>Full-service restaurant</td><td>~1.5 lbs per seat/day</td><td>300–600 lbs/day</td></tr>
+            <tr><td>Bar / brewery</td><td>~3 lbs per seat/day</td><td>400–800 lbs/day</td></tr>
+            <tr><td>Quick service / takeout</td><td>~5 oz per drink sold</td><td>300–500 lbs/day</td></tr>
+            <tr><td>Hotel / motel</td><td>~5 lbs per room/day</td><td>500–1,000+ lbs/day</td></tr>
+            <tr><td>Healthcare / senior living</td><td>~10 lbs per bed/day</td><td>600–1,000+ lbs/day</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small muted">
+        Ratings assume 70°F air / 50°F water — Florida summers cut real output
+        10–20%, which is part of why the 20% headroom matters here.
+        Run your case in the <a href="/ice-machine-cost-calculator/">cost calculator</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="grid-2">
+        <div>
+          <span class="eyebrow">New, used, or lease</span>
+          <h2 class="mb-4">Three ways to get a machine</h2>
+          <ul class="icon-list">
+            <li>
+              <Icon name="cube" size={20} />
+              <span><strong>New.</strong> Full manufacturer warranty (typically 3 years
+              parts + labor, 5 on the compressor), known history, current efficiency.
+              Highest upfront cost.</span>
+            </li>
+            <li>
+              <Icon name="check" size={20} />
+              <span><strong>Used / refurbished.</strong> 40–60% of new price. Only buy
+              used from someone who has opened, cleaned, and pressure-tested the machine
+              — and will service it after. We do and we will.</span>
+            </li>
+            <li>
+              <Icon name="dollar" size={20} />
+              <span><strong>Lease.</strong> No capital outlay, service included, machine
+              problems are our problem. Full math on the
+              <a href="/ice-machine-leasing/">leasing page</a>.</span>
+            </li>
+          </ul>
+          <p>
+            Every quote is all-in: machine, delivery, install, water filtration,
+            and startup. No surprise line items.
+          </p>
+        </div>
+        <LeadForm segment="sales" page="commercial-ice-machine-sales" heading="Get sized + quoted" sub="Business type and rough volume — we'll come back with machine options and all-in prices." showUrgency={false} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container narrow">
+      <span class="eyebrow">Sales FAQs</span>
+      <h2 class="mb-6">Buying questions, answered straight</h2>
+      <FAQ items={faqs} />
+      <p class="mt-8">
+        We deliver and install across <a href="/tampa/">Tampa</a>,
+        <a href="/st-petersburg/">St. Petersburg</a>, <a href="/clearwater/">Clearwater</a>,
+        and all of <a href="/pinellas-county/">Pinellas County</a>. Machines we sell:
+        <a href="/brands/">Hoshizaki, Manitowoc, Scotsman, Ice-O-Matic</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

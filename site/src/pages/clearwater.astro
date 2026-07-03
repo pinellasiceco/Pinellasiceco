@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import LeadForm from '../components/ui/LeadForm.astro';
+import FAQ from '../components/ui/FAQ.astro';
+import { faqSchema } from '../lib/schema';
+
+const faqs = [
+  {
+    q: 'Do you offer same-day ice machine cleaning in Clearwater?',
+    a: 'When the schedule allows, yes — Clearwater is where we started doing same-day cleanings. Details on the <a href="/ice-machine-cleaning-clearwater-fl-pinellas-ice-co/">Clearwater cleaning page</a>, or call (727) 855-6873.',
+  },
+  {
+    q: 'Do you cover Clearwater Beach and Island Estates?',
+    a: 'Yes — beach, Island Estates, downtown, Countryside, and everything between. Beach machines fight salt-air corrosion; we\'ll tell you honestly how much life yours has left.',
+  },
+];
+---
+
+<BaseLayout
+  pageTitle="Commercial Ice Machine Repair & Service Clearwater, FL | Pinellas Ice Co"
+  metaDescription="Ice machine repair, sales, leasing & cleaning in Clearwater, FL — the beach, downtown, Countryside, Dunedin & Palm Harbor. Call (727) 855-6873."
+  schemaMarkup={faqSchema(faqs)}
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>Ice machine service in Clearwater, FL</h1>
+      <div class="answer-block">
+        Commercial ice machine <a href="/ice-machine-repair/">repair</a>,
+        <a href="/commercial-ice-machine-sales/">sales</a>,
+        <a href="/ice-machine-leasing/">leasing</a>, and
+        <a href="/ice-machine-cleaning-clearwater-fl-pinellas-ice-co/">cleaning</a>
+        in Clearwater — where this company started. Call
+        <a href="tel:+17278556873"><strong>(727) 855-6873</strong></a>.
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="grid-2">
+        <div>
+          <span class="eyebrow">Local</span>
+          <h2 class="mb-4">Our home base</h2>
+          <p>
+            Clearwater is where Pinellas Ice Co started — cleaning and
+            sanitizing ice machines for the restaurants and bars that feed
+            one of the busiest beaches in America. The beach strip, North
+            Beach hotels, downtown around the new Coachman Park, and the
+            Countryside and US-19 corridor are the routes we know street by
+            street.
+          </p>
+          <p>
+            Beach-side machines here live a hard life: salt air eats
+            condenser coils, sand migrates into airflow paths, and tourist
+            season doubles demand exactly when Florida heat cuts machine
+            output. The difference between a machine that survives that and
+            one that doesn't is boring: regular
+            <a href="/ice-machine-cleaning-clearwater-fl-pinellas-ice-co/">documented
+            cleaning</a> and catching small repairs early.
+          </p>
+          <p>
+            And now we do the whole job in Clearwater — not just cleaning:
+            <a href="/ice-machine-repair/">repair</a> when machines go down,
+            <a href="/commercial-ice-machine-sales/">replacement sizing and
+            sales</a> when they age out, and
+            <a href="/ice-machine-leasing/">leasing</a> for operators who'd
+            rather make ice their vendor's problem.
+          </p>
+          <h3 class="mb-2">Common Clearwater calls</h3>
+          <ul class="check-list">
+            <li><Icon name="check" size={18} /> <span>Pre-inspection cleanings with ATP documentation — <a href="/ice-machine-cleaning-clearwater-fl-pinellas-ice-co/">same-day when available</a>.</span></li>
+            <li><Icon name="check" size={18} /> <span>Beach-corrosion condenser failures — <a href="/ice-machine-repair/">repair</a> or honest end-of-life calls.</span></li>
+            <li><Icon name="check" size={18} /> <span>Dunedin and Palm Harbor restaurants on the same route — same service, same rates.</span></li>
+          </ul>
+        </div>
+        <LeadForm segment="general" page="clearwater" heading="Clearwater service request" sub="Beach to Countryside — what's going on?" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container narrow">
+      <FAQ items={faqs} />
+      <p class="mt-6">
+        Also serving <a href="/tampa/">Tampa</a>,
+        <a href="/st-petersburg/">St. Petersburg</a>, and the rest of
+        <a href="/pinellas-county/">Pinellas County</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

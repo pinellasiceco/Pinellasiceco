@@ -1,0 +1,122 @@
+---
+import Icon from './Icon.astro';
+// One Netlify form ("lead-capture") used site-wide; the hidden `segment`
+// field IS the product — repair|sales|lease|cleaning segmentation drives
+// triage and, later, per-segment buyers. Honeypot on every instance.
+interface Props {
+  segment: 'repair' | 'sales' | 'lease' | 'cleaning' | 'general';
+  page: string;
+  heading?: string;
+  sub?: string;
+  showUrgency?: boolean;
+}
+const { segment, page, heading = 'Get a fast response', sub, showUrgency = segment === 'repair' } = Astro.props;
+const uid = `lf-${page.replace(/[^a-z0-9]/gi, '')}`;
+---
+
+<div class="card lead-card" id="quote">
+  <h3>{heading}</h3>
+  {sub && <p class="small muted">{sub}</p>}
+  <p class="small phone-alt">
+    Fastest: call <a href="tel:+17278556873"><Icon name="phone" size={14} /> (727) 855-6873</a>
+  </p>
+
+  <form
+    class="lead-form"
+    name="lead-capture"
+    method="POST"
+    action="/thank-you/"
+    data-netlify="true"
+    data-netlify-honeypot="bot-field"
+  >
+    <input type="hidden" name="form-name" value="lead-capture" />
+    <input type="hidden" name="segment" value={segment} />
+    <input type="hidden" name="page" value={page} />
+    <p class="visually-hidden" aria-hidden="true">
+      <label>Don't fill this out: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+    </p>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label" for={`${uid}-name`}>Your name</label>
+        <input class="form-input" type="text" id={`${uid}-name`} name="name" required autocomplete="name" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for={`${uid}-business`}>Business name</label>
+        <input class="form-input" type="text" id={`${uid}-business`} name="business" autocomplete="organization" />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label" for={`${uid}-phone`}>Phone</label>
+        <input class="form-input" type="tel" id={`${uid}-phone`} name="phone" required autocomplete="tel" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for={`${uid}-email`}>Email</label>
+        <input class="form-input" type="email" id={`${uid}-email`} name="email" autocomplete="email" />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label" for={`${uid}-city`}>City / area</label>
+        <select class="form-select" id={`${uid}-city`} name="city">
+          <option value="">Select…</option>
+          <option>Tampa</option>
+          <option>St. Petersburg</option>
+          <option>Clearwater</option>
+          <option>Largo</option>
+          <option>Dunedin</option>
+          <option>Palm Harbor</option>
+          <option>Elsewhere in Pinellas County</option>
+          <option>Elsewhere in Hillsborough County</option>
+          <option>Pasco County</option>
+          <option>Other Tampa Bay</option>
+        </select>
+      </div>
+      {showUrgency ? (
+        <div class="form-group">
+          <label class="form-label" for={`${uid}-urgency`}>How urgent?</label>
+          <select class="form-select" id={`${uid}-urgency`} name="urgency">
+            <option value="">Select…</option>
+            <option>Emergency — machine is down now</option>
+            <option>This week</option>
+            <option>Just planning ahead</option>
+          </select>
+        </div>
+      ) : (
+        <div class="form-group">
+          <label class="form-label" for={`${uid}-btype`}>Business type</label>
+          <select class="form-select" id={`${uid}-btype`} name="business_type">
+            <option value="">Select…</option>
+            <option>Restaurant</option>
+            <option>Bar / brewery</option>
+            <option>Hotel / motel</option>
+            <option>Healthcare / senior living</option>
+            <option>Convenience / grocery</option>
+            <option>Office / other</option>
+          </select>
+        </div>
+      )}
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for={`${uid}-message`}>What's going on?</label>
+      <textarea class="form-textarea" id={`${uid}-message`} name="message" placeholder="Machine brand/model if you know it, what it's doing (or what you need), and any timing."></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-lg">Send — we'll get right back to you</button>
+
+    <p class="form-consent">
+      By submitting, you agree that we or a local service partner may contact
+      you about your request.
+    </p>
+  </form>
+</div>
+
+<style>
+  .lead-card h3 { margin-bottom: var(--space-2); }
+  .phone-alt a { font-weight: 700; white-space: nowrap; }
+  .phone-alt svg { display: inline; vertical-align: -2px; }
+</style>

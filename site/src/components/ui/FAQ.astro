@@ -1,0 +1,17 @@
+---
+// Zero-JS FAQ accordion. The page is responsible for emitting matching
+// FAQPage schema via BaseLayout's schemaMarkup (use faqSchema() helper).
+interface Props {
+  items: { q: string; a: string }[];
+}
+const { items } = Astro.props;
+---
+
+<div class="faq">
+  {items.map((item) => (
+    <details class="faq-item">
+      <summary>{item.q}</summary>
+      <div class="faq-body"><p set:html={item.a} /></div>
+    </details>
+  ))}
+</div>

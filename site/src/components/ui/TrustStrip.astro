@@ -1,0 +1,22 @@
+---
+import Icon from './Icon.astro';
+// Trust strip — TRUE, verifiable claims only. Anything the operator has not
+// yet confirmed carries an [OPERATOR: confirm] flag in ops/operator-flags.md
+// and ships in its conservative form here. No invented reviews, counts,
+// stars, or certifications.
+---
+
+<div class="trust-strip" role="list">
+  <span class="trust-item" role="listitem">
+    <Icon name="pin" size={17} /> Local — based in Pinellas County
+  </span>
+  <span class="trust-item" role="listitem">
+    <Icon name="gauge" size={17} /> ATP-tested, documented results
+  </span>
+  <span class="trust-item" role="listitem">
+    <Icon name="dollar" size={17} /> Flat-rate pricing, no contracts
+  </span>
+  <span class="trust-item" role="listitem">
+    <Icon name="truck" size={17} /> Serving all of Tampa Bay
+  </span>
+</div>

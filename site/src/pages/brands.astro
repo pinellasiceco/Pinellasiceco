@@ -1,0 +1,112 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import LeadForm from '../components/ui/LeadForm.astro';
+import FAQ from '../components/ui/FAQ.astro';
+import { faqSchema } from '../lib/schema';
+
+// Manufacturer names appear as styled TEXT only — no manufacturer logo
+// images are reproduced (trademark caution).
+const brands = [
+  {
+    name: 'Hoshizaki',
+    blurb: 'The workhorse of Florida restaurants — stainless evaporators and crescent cubes. We repair, clean, and service Hoshizaki cubers, flakers, and undercounter units, and can quote new Hoshizaki machines sized to your volume.',
+    note: 'Common calls: harvest issues from scale buildup, water valve failures, condenser cleaning in beach-air locations.',
+  },
+  {
+    name: 'Manitowoc',
+    blurb: 'Indigo and NEO series everywhere in Tampa Bay foodservice. Full repair and cleaning service, plus sales of new and used Manitowoc units.',
+    note: 'Common calls: sensor/board diagnostics on Indigo units, slime control in high-yeast environments (pizza, bakery, brewery).',
+  },
+  {
+    name: 'Scotsman',
+    blurb: 'Prodigy cubers and the nugget-ice machines customers ask for by name. Repair, cleaning, and replacement sizing for the full Scotsman line.',
+    note: 'Common calls: Prodigy code diagnostics, nugget-machine auger service, water filtration setups.',
+  },
+  {
+    name: 'Ice-O-Matic',
+    blurb: 'Straightforward, serviceable machines common in QSR and bars. We keep them running and quote like-for-like replacements when they age out.',
+    note: 'Common calls: pump replacements, evaporator deep cleans, end-of-life replace-vs-repair calls.',
+  },
+];
+
+const faqs = [
+  {
+    q: 'Do you service brands not listed here?',
+    a: 'Almost certainly yes — Follett, U-Line, KoldDraft, Vogt, and most other commercial makers. If ice comes out of it in a business, call <a href="tel:+17278556873">(727) 855-6873</a> and ask.',
+  },
+  {
+    q: 'Which ice machine brand is best for a restaurant?',
+    a: 'For most Tampa Bay restaurants it comes down to Hoshizaki vs. Manitowoc, and either is a sound choice — the honest answer is that installation quality, water filtration, and cleaning schedule determine reliability more than the badge does. We\'ll recommend based on your volume, space, and water.',
+  },
+  {
+    q: 'Does using a third-party service void the manufacturer warranty?',
+    a: 'No — proper service with documented maintenance protects your warranty position. What kills warranties is the opposite: missing the manufacturer-required cleanings. Our <a href="/ice-machine-cleaning/">documented cleanings</a> are exactly that paper trail.',
+  },
+];
+---
+
+<BaseLayout
+  pageTitle="Ice Machine Brands We Service — Hoshizaki, Manitowoc, Scotsman, Ice-O-Matic | Pinellas Ice Co"
+  metaDescription="Repair, cleaning, and sales for Hoshizaki, Manitowoc, Scotsman, and Ice-O-Matic commercial ice machines across Tampa Bay. Call (727) 855-6873."
+  schemaMarkup={faqSchema(faqs)}
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>Ice machine brands we service</h1>
+      <div class="answer-block">
+        We repair, clean, sell, and lease all major commercial ice machine
+        brands across Tampa Bay — <strong>Hoshizaki · Manitowoc · Scotsman ·
+        Ice-O-Matic</strong> — plus most others. Brand, model, and symptom to
+        <a href="tel:+17278556873"><strong>(727) 855-6873</strong></a> gets you
+        a fast answer.
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="grid-2">
+        {brands.map((b) => (
+          <div class="card">
+            <p class="brand-name">{b.name}</p>
+            <p>{b.blurb}</p>
+            <p class="small muted">{b.note}</p>
+          </div>
+        ))}
+      </div>
+      <p class="small muted mt-6">
+        All manufacturer names are trademarks of their respective owners, used
+        here to identify the equipment we service. Pinellas Ice Co is an
+        independent service company.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="grid-2">
+        <div>
+          <span class="eyebrow">Brand FAQs</span>
+          <h2 class="mb-6">Brand questions</h2>
+          <FAQ items={faqs} />
+          <p class="mt-6">
+            Need service now? <a href="/ice-machine-repair/">Repair</a> ·
+            <a href="/ice-machine-cleaning/">Cleaning</a> ·
+            <a href="/commercial-ice-machine-sales/">Sales</a> ·
+            <a href="/ice-machine-leasing/">Leasing</a>
+          </p>
+        </div>
+        <LeadForm segment="general" page="brands" heading="Ask about your machine" sub="Brand + model + what it's doing." />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .brand-name {
+    font-size: var(--text-xl); font-weight: 800; color: var(--navy);
+    padding-bottom: var(--space-2); border-bottom: 3px solid var(--blue-light);
+    display: inline-block; margin-bottom: var(--space-3);
+  }
+</style>

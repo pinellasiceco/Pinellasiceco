@@ -1,0 +1,185 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import TrustStrip from '../components/ui/TrustStrip.astro';
+import LeadForm from '../components/ui/LeadForm.astro';
+import FAQ from '../components/ui/FAQ.astro';
+import { faqSchema, serviceSchema } from '../lib/schema';
+
+const faqs = [
+  {
+    q: 'How much does commercial ice machine repair cost in Tampa Bay?',
+    a: 'Most common repairs — sensors, water valves, pumps, cleaning-related failures — land in the $150–$600 range including the service call. Major component failures (compressor, evaporator) run $600–$1,500+, which is when the repair-or-replace question matters. You get a straight answer on that before any work.',
+  },
+  {
+    q: 'My ice machine is running but not making ice. What is it?',
+    a: 'The most common causes, roughly in order: the machine needs a deep clean (scale stops the freeze cycle), a failed water inlet valve, a bad harvest/thermistor sensor, or low refrigerant. A tech can usually isolate it in one visit.',
+  },
+  {
+    q: 'Is it worth repairing a 10-year-old ice machine?',
+    a: 'Usually not, if the repair is major. Past ~8-10 years, compressors and evaporators start failing in sequence — you fix one and the next goes. For an older machine with a big failure, compare the repair quote against <a href="/ice-machine-leasing/">leasing</a> or <a href="/commercial-ice-machine-sales/">replacing</a>; we\'ll give you both numbers.',
+  },
+  {
+    q: 'Do you repair Hoshizaki and Manitowoc machines?',
+    a: 'Yes — Hoshizaki, Manitowoc, Scotsman, Ice-O-Matic, and other major commercial brands. Details on our <a href="/brands/">brands page</a>.',
+  },
+  {
+    q: 'How fast can you get to a machine that is down?',
+    a: 'Call <a href="tel:+17278556873">(727) 855-6873</a> — downed machines get priority. Describe the brand and symptoms and you\'ll get a realistic time window, not a runaround.',
+  },
+];
+
+const schema = [
+  serviceSchema({
+    name: 'Commercial Ice Machine Repair',
+    serviceType: 'Ice machine repair',
+    description: 'Commercial ice machine repair across Tampa Bay: diagnosis and repair of machines that are not making ice, leaking, noisy, or producing low output. All major brands.',
+    url: 'https://www.pinellasiceco.com/ice-machine-repair/',
+  }),
+  faqSchema(faqs),
+];
+---
+
+<BaseLayout
+  pageTitle="Commercial Ice Machine Repair Tampa Bay | Pinellas Ice Co"
+  metaDescription="Commercial ice machine repair in Tampa, St. Petersburg & Clearwater. Not making ice, leaking, or noisy? All major brands — Hoshizaki, Manitowoc, Scotsman, Ice-O-Matic. Call (727) 855-6873."
+  schemaMarkup={schema}
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>Commercial ice machine repair — Tampa Bay</h1>
+      <div class="answer-block">
+        Ice machine down in Tampa, St. Pete, or Clearwater? Call
+        <a href="tel:+17278556873"><strong>(727) 855-6873</strong></a>.
+        We repair all major commercial brands across Pinellas, Hillsborough,
+        and Pasco counties — most common failures are diagnosed in one visit,
+        and you get the repair-or-replace math straight before any work.
+      </div>
+      <div class="hero-ctas">
+        <a href="tel:+17278556873" class="btn btn-urgent btn-lg"><Icon name="phone" size={20} /> Call now — machine down</a>
+        <a href="#quote" class="btn btn-outline btn-lg">Request service online</a>
+      </div>
+    </div>
+  </section>
+
+  <TrustStrip />
+
+  <section class="section">
+    <div class="container">
+      <div class="grid-2">
+        <div>
+          <span class="eyebrow">Symptoms we see every week</span>
+          <h2 class="mb-6">What's your machine doing?</h2>
+          <ul class="icon-list">
+            <li>
+              <Icon name="alert" size={20} />
+              <span><strong>Not making ice at all.</strong> Power and water are on but
+              nothing drops. Usually scale buildup stopping the freeze cycle, a failed
+              water valve, or a bad sensor.</span>
+            </li>
+            <li>
+              <Icon name="droplet" size={20} />
+              <span><strong>Making less ice than it used to.</strong> Low output on hot
+              days is the classic dirty-condenser symptom — airflow and heat rejection,
+              not a broken machine.</span>
+            </li>
+            <li>
+              <Icon name="droplet" size={20} />
+              <span><strong>Leaking water.</strong> Supply line, drain, or pump. Small
+              leak now, floor damage and a health-inspection problem later.</span>
+            </li>
+            <li>
+              <Icon name="alert" size={20} />
+              <span><strong>Loud or grinding noise.</strong> Bearings, fan motor, or pump
+              on the way out. Cheap to fix early, expensive after it takes the compressor
+              with it.</span>
+            </li>
+            <li>
+              <Icon name="alert" size={20} />
+              <span><strong>Cloudy, small, or bad-tasting ice.</strong> Water filtration
+              or sanitation — often a <a href="/ice-machine-cleaning/">deep clean</a>
+              rather than a repair.</span>
+            </li>
+            <li>
+              <Icon name="clock" size={20} />
+              <span><strong>Trips the breaker / shuts itself off.</strong> Electrical or
+              refrigerant-pressure safety cutouts. Stop restarting it and call — repeat
+              hard-starts kill compressors.</span>
+            </li>
+          </ul>
+          <p class="mt-6">
+            Not sure which bucket you're in? The
+            <a href="/ice-machine-troubleshooting/">troubleshooting guide</a> narrows it
+            down in four questions.
+          </p>
+        </div>
+        <LeadForm segment="repair" page="ice-machine-repair" heading="Request repair service" sub="Tell us the brand and what it's doing — we'll come back with a time window and a straight answer." />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <span class="eyebrow">Brands</span>
+      <h2 class="mb-4">All major commercial brands</h2>
+      <p class="narrow" style="margin-left:0">
+        Hoshizaki, Manitowoc, Scotsman, Ice-O-Matic, Follett, and most other
+        commercial makers — cubers, flakers, nugget machines, and undercounter
+        units. Brand-specific notes are on the <a href="/brands/">brands we
+        service</a> page.
+      </p>
+      <div class="grid-4 mt-6">
+        <div class="card center"><strong>Hoshizaki</strong></div>
+        <div class="card center"><strong>Manitowoc</strong></div>
+        <div class="card center"><strong>Scotsman</strong></div>
+        <div class="card center"><strong>Ice-O-Matic</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="grid-2" style="align-items:center">
+        <div>
+          <span class="eyebrow">Repair or replace?</span>
+          <h2>The honest math</h2>
+          <p>
+            A repair quote only means something next to the alternative. Rules of
+            thumb we actually use:
+          </p>
+          <ul class="check-list">
+            <li><Icon name="check" size={18} /> <span>Machine under 7 years old + repair under half of replacement → <strong>repair</strong>.</span></li>
+            <li><Icon name="check" size={18} /> <span>Compressor or evaporator failure past year 8 → get <strong>replacement and lease numbers</strong> before approving the repair.</span></li>
+            <li><Icon name="check" size={18} /> <span>Second major failure in 12 months → the machine is telling you something. <strong>Replace or lease.</strong></span></li>
+          </ul>
+          <p>
+            Run your own numbers in the
+            <a href="/ice-machine-cost-calculator/">cost calculator</a> — machine size,
+            purchase vs. lease vs. repair ranges for your business type.
+          </p>
+        </div>
+        <figure class="site-fig">
+          <img
+            src="/images/commercial-ice-machine-compressor-repair.webp"
+            alt="Commercial ice machine compressor compartment during repair service"
+            width="640" height="235" loading="lazy" decoding="async"
+          />
+          <figcaption>Compressor compartment, mid-service. Catching a failing fan motor early is a $200 fix; catching it late is a new machine.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container narrow">
+      <span class="eyebrow">Repair FAQs</span>
+      <h2 class="mb-6">Commercial ice machine repair questions</h2>
+      <FAQ items={faqs} />
+      <p class="mt-8">
+        Serving <a href="/tampa/">Tampa</a>, <a href="/st-petersburg/">St. Petersburg</a>,
+        <a href="/clearwater/">Clearwater</a>, and all of
+        <a href="/pinellas-county/">Pinellas County</a> plus Hillsborough and Pasco.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,87 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import LeadForm from '../components/ui/LeadForm.astro';
+import FAQ from '../components/ui/FAQ.astro';
+import { faqSchema } from '../lib/schema';
+
+const faqs = [
+  {
+    q: 'Do you charge extra to come across the bay to Tampa?',
+    a: 'No trip surcharge for Tampa — Hillsborough County is standard service area, same flat-rate structure as Pinellas.',
+  },
+  {
+    q: 'Can you handle multiple locations in Tampa?',
+    a: 'Yes — multi-location restaurant and hotel groups are a fit for scheduled route service: same tech cadence, one set of documentation across every location.',
+  },
+];
+---
+
+<BaseLayout
+  pageTitle="Commercial Ice Machine Repair & Service Tampa, FL | Pinellas Ice Co"
+  metaDescription="Ice machine repair, sales, leasing & cleaning in Tampa, FL — Ybor City, Channelside, Westshore, USF area. All major brands. Call (727) 855-6873."
+  schemaMarkup={faqSchema(faqs)}
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>Ice machine service in Tampa, FL</h1>
+      <div class="answer-block">
+        Commercial ice machine <a href="/ice-machine-repair/">repair</a>,
+        <a href="/commercial-ice-machine-sales/">sales</a>,
+        <a href="/ice-machine-leasing/">leasing</a>, and
+        <a href="/ice-machine-cleaning/">cleaning</a> throughout Tampa and
+        Hillsborough County. Call
+        <a href="tel:+17278556873"><strong>(727) 855-6873</strong></a>.
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="grid-2">
+        <div>
+          <span class="eyebrow">Local</span>
+          <h2 class="mb-4">Tampa runs on ice</h2>
+          <p>
+            Between the Ybor City and SoHo bar strips, Channelside and Water
+            Street hotels, Westshore's office caterers, and the stadium-day
+            crush around Raymond James, Tampa hospitality doesn't get to run
+            out of ice. When a machine quits on a 95° August Friday, it's not
+            an inconvenience — it's lost covers.
+          </p>
+          <p>
+            We cross the bay every week. Tampa, Brandon, Westchase, Carrollwood,
+            and the USF corridor are standard territory — no trip surcharge,
+            same flat-rate structure we use in Pinellas.
+          </p>
+          <p>
+            Tampa's specific menace is heat load: rooftop and back-of-house
+            machines running in 90°+ ambient air lose 10–20% of rated output
+            exactly when demand peaks. If your machine "can't keep up in
+            summer," that's often a <a href="/ice-machine-cleaning/">condenser
+            cleaning</a> or a <a href="/commercial-ice-machine-sales/">sizing
+            problem</a>, not a lemon — we'll tell you which.
+          </p>
+          <h3 class="mb-2">Common Tampa calls</h3>
+          <ul class="check-list">
+            <li><Icon name="check" size={18} /> <span>Bar machines undersized for weekend volume — <a href="/ice-machine-leasing/">lease upgrades</a> beat capital purchases mid-season.</span></li>
+            <li><Icon name="check" size={18} /> <span>Hotel machines with slime histories before brand inspections — <a href="/ice-machine-cleaning/">documented ATP-tested cleanings</a>.</span></li>
+            <li><Icon name="check" size={18} /> <span>Downed machines in full-service kitchens — <a href="/ice-machine-repair/">priority repair</a>, straight repair-or-replace math.</span></li>
+          </ul>
+        </div>
+        <LeadForm segment="general" page="tampa" heading="Tampa service request" sub="Repair, machine, lease, or cleaning — tell us the neighborhood and what's going on." />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container narrow">
+      <FAQ items={faqs} />
+      <p class="mt-6">
+        Also serving <a href="/st-petersburg/">St. Petersburg</a>,
+        <a href="/clearwater/">Clearwater</a>, and
+        <a href="/pinellas-county/">Pinellas County</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

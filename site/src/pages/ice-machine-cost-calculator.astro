@@ -1,0 +1,229 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import FAQ from '../components/ui/FAQ.astro';
+import { faqSchema } from '../lib/schema';
+
+// Calculator island: the ONE page with meaningful client JS (vanilla,
+// inline, no framework). Business type + volume -> machine size + purchase /
+// lease / repair ranges -> capture gate for the written estimate.
+
+const faqs = [
+  {
+    q: 'How accurate are these ranges?',
+    a: 'They\'re honest planning ranges for Tampa Bay, based on typical installed prices and lease rates — not quotes. Your machine condition, install complexity, and water situation move the real number, which is why the written estimate exists.',
+  },
+  {
+    q: 'Why does Florida heat matter for sizing?',
+    a: 'Machines are rated at 70°F air / 50°F water. A Tampa Bay back-of-house in summer runs well above that, cutting real output 10–20%. The calculator\'s 20% headroom accounts for it.',
+  },
+];
+---
+
+<BaseLayout
+  pageTitle="Ice Machine Cost Calculator — Buy, Lease & Repair Ranges | Pinellas Ice Co"
+  metaDescription="Free calculator: what size commercial ice machine your business needs and what it costs to buy, lease, or repair in Tampa Bay. Instant ranges, no login."
+  schemaMarkup={faqSchema(faqs)}
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>Ice machine cost calculator</h1>
+      <div class="answer-block">
+        Answer three questions, get the machine size your business needs and
+        real Tampa Bay cost ranges — <strong>purchase, lease, and typical
+        repair</strong> — instantly, no login. Want exact numbers? The written
+        estimate is one form away.
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="grid-2" style="align-items:start">
+        <div class="card" id="calc">
+          <h3 class="mb-4">Your business</h3>
+          <div class="lead-form">
+            <div class="form-group">
+              <label class="form-label" for="calc-type">Business type</label>
+              <select class="form-select" id="calc-type">
+                <option value="restaurant">Full-service restaurant</option>
+                <option value="bar">Bar / brewery</option>
+                <option value="qsr">Quick service / takeout</option>
+                <option value="cafe">Café / coffee shop</option>
+                <option value="hotel">Hotel / motel</option>
+                <option value="healthcare">Healthcare / senior living</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="calc-volume"><span id="calc-volume-label">Seats</span></label>
+              <input class="form-input" type="number" id="calc-volume" value="80" min="1" max="2000" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="calc-goal">What are you weighing?</label>
+              <select class="form-select" id="calc-goal">
+                <option value="buy">Buying a machine</option>
+                <option value="lease">Leasing a machine</option>
+                <option value="repair">Repair vs. replace</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="calc-results" id="calc-results" aria-live="polite">
+            <div class="result-line"><span>Estimated daily ice need</span><strong id="r-need">—</strong></div>
+            <div class="result-line"><span>Machine size (with 20% FL headroom)</span><strong id="r-size">—</strong></div>
+            <div class="result-line"><span>Purchase range (installed)</span><strong id="r-buy">—</strong></div>
+            <div class="result-line"><span>Lease range (monthly, service incl.)</span><strong id="r-lease">—</strong></div>
+            <div class="result-line"><span>Typical repair bill on this class</span><strong id="r-repair">—</strong></div>
+            <p class="small muted" id="r-note" style="margin-top: var(--space-3)"></p>
+          </div>
+        </div>
+
+        <div class="card lead-card">
+          <h3>Get the written estimate</h3>
+          <p class="small muted">
+            The calculator gives ranges; the estimate gives numbers — machine
+            options for your volume, installed price, lease rate, and our
+            honest read on your situation. We'll call you back.
+          </p>
+          <form
+            class="lead-form"
+            name="lead-capture"
+            method="POST"
+            action="/thank-you/"
+            data-netlify="true"
+            data-netlify-honeypot="bot-field"
+          >
+            <input type="hidden" name="form-name" value="lead-capture" />
+            <input type="hidden" name="segment" value="sales" id="gate-segment" />
+            <input type="hidden" name="page" value="ice-machine-cost-calculator" />
+            <input type="hidden" name="calculator_inputs" id="gate-inputs" />
+            <input type="hidden" name="calculator_results" id="gate-results" />
+            <p class="visually-hidden" aria-hidden="true">
+              <label>Don't fill this out: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+            </p>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="gate-name">Your name</label>
+                <input class="form-input" type="text" id="gate-name" name="name" required autocomplete="name" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="gate-business">Business name</label>
+                <input class="form-input" type="text" id="gate-business" name="business" autocomplete="organization" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="gate-phone">Phone</label>
+                <input class="form-input" type="tel" id="gate-phone" name="phone" required autocomplete="tel" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="gate-email">Email</label>
+                <input class="form-input" type="email" id="gate-email" name="email" autocomplete="email" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="gate-city">City / area</label>
+              <select class="form-select" id="gate-city" name="city">
+                <option value="">Select…</option>
+                <option>Tampa</option>
+                <option>St. Petersburg</option>
+                <option>Clearwater</option>
+                <option>Elsewhere in Pinellas County</option>
+                <option>Elsewhere in Hillsborough County</option>
+                <option>Pasco County</option>
+                <option>Other Tampa Bay</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg">Send me the estimate</button>
+            <p class="form-consent">
+              By submitting, you agree that we or a local service partner may
+              contact you about your request.
+            </p>
+          </form>
+        </div>
+      </div>
+
+      <p class="mt-8">
+        Behind the numbers: <a href="/commercial-ice-machine-sales/">sales &amp;
+        sizing guide</a> · <a href="/ice-machine-leasing/">lease vs. buy math</a> ·
+        <a href="/ice-machine-repair/">repair service</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container narrow">
+      <FAQ items={faqs} />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .calc-results { margin-top: var(--space-6); border-top: 1px solid var(--border); padding-top: var(--space-4); }
+  .result-line {
+    display: flex; justify-content: space-between; gap: var(--space-4);
+    padding: var(--space-2) 0; border-bottom: 1px dashed var(--border);
+    font-size: var(--text-sm);
+  }
+  .result-line strong { color: var(--navy); white-space: nowrap; }
+</style>
+
+<script is:inline>
+  (function () {
+    // lbs of ice per unit per day, and what "unit" means per business type
+    var MODELS = {
+      restaurant: { unit: 'Seats', perUnit: 1.5 },
+      bar: { unit: 'Seats', perUnit: 3 },
+      qsr: { unit: 'Drinks sold per day', perUnit: 0.32 },
+      cafe: { unit: 'Customers per day', perUnit: 0.5 },
+      hotel: { unit: 'Rooms', perUnit: 5 },
+      healthcare: { unit: 'Beds', perUnit: 10 },
+    };
+    // machine classes: [minLbs, label, buyLow, buyHigh, leaseLow, leaseHigh, repLow, repHigh]
+    var CLASSES = [
+      [0, '150–300 lbs/day undercounter or small cuber', 1800, 3200, 90, 140, 150, 450],
+      [250, '300–500 lbs/day cuber + bin', 2500, 4500, 110, 180, 200, 600],
+      [480, '500–800 lbs/day cuber + bin', 4000, 6500, 160, 240, 250, 700],
+      [750, '800–1,200 lbs/day production unit', 5500, 9000, 220, 320, 300, 900],
+      [1150, '1,200+ lbs/day — likely multiple machines', 8000, 15000, 300, 500, 400, 1200],
+    ];
+    var $ = function (id) { return document.getElementById(id); };
+    var fmt = function (n) { return '$' + n.toLocaleString('en-US'); };
+
+    function recalc() {
+      var type = $('calc-type').value;
+      var m = MODELS[type];
+      $('calc-volume-label').textContent = m.unit;
+      var vol = parseInt($('calc-volume').value, 10) || 0;
+      var need = Math.round(vol * m.perUnit);
+      var sized = Math.round(need * 1.2);
+      var cls = CLASSES[0];
+      for (var i = 0; i < CLASSES.length; i++) {
+        if (sized >= CLASSES[i][0]) cls = CLASSES[i];
+      }
+      $('r-need').textContent = need + ' lbs/day';
+      $('r-size').textContent = cls[1];
+      $('r-buy').textContent = fmt(cls[2]) + ' – ' + fmt(cls[3]);
+      $('r-lease').textContent = fmt(cls[4]) + ' – ' + fmt(cls[5]) + ' /mo';
+      $('r-repair').textContent = fmt(cls[6]) + ' – ' + fmt(cls[7]);
+
+      var goal = $('calc-goal').value;
+      $('r-note').textContent =
+        goal === 'repair'
+          ? 'Rule of thumb: repair if the machine is under 7 years old and the quote is under half the purchase range above.'
+          : goal === 'lease'
+            ? 'Lease rates shown include maintenance and cleanings — compare against purchase price PLUS ~$300–$500/yr of cleanings.'
+            : 'Purchase range is all-in installed (machine, bin, filtration, startup) for typical installs.';
+
+      var segment = goal === 'repair' ? 'repair' : goal === 'lease' ? 'lease' : 'sales';
+      if ($('gate-segment')) $('gate-segment').value = segment;
+      if ($('gate-inputs')) $('gate-inputs').value = type + ' / ' + vol + ' ' + m.unit + ' / weighing: ' + goal;
+      if ($('gate-results')) $('gate-results').value = need + ' lbs/day need; ' + cls[1] + '; buy ' + fmt(cls[2]) + '-' + fmt(cls[3]) + '; lease ' + fmt(cls[4]) + '-' + fmt(cls[5]) + '/mo';
+    }
+
+    ['calc-type', 'calc-volume', 'calc-goal'].forEach(function (id) {
+      $(id).addEventListener('input', recalc);
+    });
+    recalc();
+  })();
+</script>

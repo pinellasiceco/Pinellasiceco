@@ -1,0 +1,94 @@
+---
+import Icon from '../ui/Icon.astro';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <p class="footer-logo">Pinellas <em>Ice Co</em></p>
+        <p class="small">
+          Commercial ice machine repair, sales, leasing, and cleaning across
+          Tampa Bay — Pinellas, Hillsborough, and Pasco counties.
+        </p>
+        <a href="tel:+17278556873" class="footer-phone">
+          <Icon name="phone" size={16} /> (727) 855-6873
+        </a>
+        <p class="small"><a href="mailto:service@pinellasiceco.com">service@pinellasiceco.com</a></p>
+      </div>
+
+      <nav aria-label="Services">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="/ice-machine-repair/">Ice Machine Repair</a></li>
+          <li><a href="/commercial-ice-machine-sales/">Ice Machine Sales</a></li>
+          <li><a href="/ice-machine-leasing/">Ice Machine Leasing</a></li>
+          <li><a href="/ice-machine-cleaning/">Ice Machine Cleaning</a></li>
+          <li><a href="/ice-machine-cleaning-clearwater-fl-pinellas-ice-co/">Cleaning — Clearwater</a></li>
+          <li><a href="/brands/">Brands We Service</a></li>
+        </ul>
+      </nav>
+
+      <nav aria-label="Service areas">
+        <h4>Service Areas</h4>
+        <ul>
+          <li><a href="/tampa/">Tampa</a></li>
+          <li><a href="/st-petersburg/">St. Petersburg</a></li>
+          <li><a href="/clearwater/">Clearwater</a></li>
+          <li><a href="/pinellas-county/">Pinellas County</a></li>
+        </ul>
+      </nav>
+
+      <nav aria-label="Company">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="/ice-machine-cost-calculator/">Cost Calculator</a></li>
+          <li><a href="/ice-machine-troubleshooting/">Troubleshooting Help</a></li>
+          <li><a href="/ice-machine-data/">Pinellas Ice Machine Data</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="/contact/">Contact</a></li>
+          <li><a href="/privacy/">Privacy</a></li>
+          <li><a href="/terms/">Terms</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <p class="footer-legal small">
+      © {year} Pinellas Ice Co. Serving Tampa, St. Petersburg, Clearwater, and
+      all of Pinellas, Hillsborough, and Pasco counties.
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--navy-deep);
+    color: #C6D4E6;
+    padding: var(--space-12) 0 var(--space-8);
+    margin-top: var(--space-16);
+    font-size: var(--text-sm);
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: var(--space-8);
+    margin-bottom: var(--space-8);
+  }
+  @media (max-width: 860px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .footer-grid { grid-template-columns: 1fr; } }
+
+  .footer-logo { font-weight: 800; font-size: 1.2rem; color: #fff; margin-bottom: var(--space-2); }
+  .footer-logo em { font-style: normal; color: var(--blue-light); }
+  .footer-phone {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    color: #fff; font-weight: 700; text-decoration: none;
+    margin: var(--space-2) 0;
+  }
+  .site-footer h4 { color: #fff; font-size: var(--text-sm); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: var(--space-3); }
+  .site-footer ul { list-style: none; padding: 0; margin: 0; }
+  .site-footer li { margin-bottom: var(--space-2); }
+  .site-footer a { color: #C6D4E6; text-decoration: none; }
+  .site-footer a:hover { color: #fff; text-decoration: underline; }
+  .footer-legal { border-top: 1px solid rgba(198, 212, 230, 0.18); padding-top: var(--space-4); color: #8FA3BD; }
+</style>

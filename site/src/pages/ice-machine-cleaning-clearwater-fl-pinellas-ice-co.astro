@@ -1,0 +1,90 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import LeadForm from '../components/ui/LeadForm.astro';
+import { serviceSchema } from '../lib/schema';
+
+/*
+ * ============================= TIER A PAGE =================================
+ * This is the site's ONLY confirmed ranking URL (preservation ledger A1).
+ * - URL slug: preserved IDENTICALLY (no redirect).
+ * - <title>: preserved VERBATIM as indexed:
+ *     "Ice Machine Cleaning Clearwater, FL | Pinellas Ice Co"
+ * - BODY: the live HubSpot body could NOT be fetched from this build
+ *   environment (egress policy denies www.pinellasiceco.com). Per migration
+ *   rules the ranking copy was NOT reconstructed or regenerated.
+ *
+ * >>> OPERATOR ACTION REQUIRED BEFORE CUTOVER <<<
+ * Paste the live page's H1 + body content (text, headings, lists — verbatim,
+ * HubSpot artifacts removed) into the marked region below, replacing the
+ * interim block. The interim block is a minimal service statement so the URL
+ * is never thin-but-broken, but it is NOT the ranking copy.
+ * ===========================================================================
+ */
+
+const schema = serviceSchema({
+  name: 'Ice Machine Cleaning — Clearwater, FL',
+  serviceType: 'Ice machine cleaning and sanitizing',
+  description: 'Same-day commercial ice machine cleaning in Clearwater, FL with flat-rate pricing and documented, ATP-tested results.',
+  url: 'https://www.pinellasiceco.com/ice-machine-cleaning-clearwater-fl-pinellas-ice-co/',
+});
+---
+
+<BaseLayout
+  pageTitle="Ice Machine Cleaning Clearwater, FL | Pinellas Ice Co"
+  metaDescription="Same-day ice machine cleaning in Clearwater, FL. Flat-rate pricing, no contracts, fast service for restaurants and bars. Serving Clearwater, Dunedin, Palm Harbor, Largo and surrounding Pinellas County."
+  schemaMarkup={schema}
+>
+  <section class="page-head">
+    <div class="container">
+      <!-- OPERATOR: replace this H1 with the live page's exact H1 -->
+      <h1>Ice Machine Cleaning Clearwater, FL</h1>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 0;">
+    <div class="container">
+      <div class="grid-2">
+        <div>
+          <!-- ============================================================
+               OPERATOR-FILL REGION — TIER A BODY (ledger A1)
+               Paste the live HubSpot page body here, verbatim substance,
+               heading structure intact. Delete the interim block below
+               when done. New sections may be APPENDED after the ported
+               copy; the ported copy itself is never rewritten.
+               ============================================================ -->
+
+          <!-- INTERIM BLOCK (not the ranking copy) — delete after paste -->
+          <p>
+            Commercial ice machine cleaning and sanitizing in Clearwater,
+            Florida — serving restaurants, bars, and hospitality across
+            Clearwater and nearby Dunedin, Palm Harbor, Largo, and
+            surrounding Pinellas County.
+          </p>
+          <p>
+            Call <a href="tel:+17278556873"><strong>(727) 855-6873</strong></a>
+            and we'll take care of it, or use the form on this page and
+            we'll call you back.
+          </p>
+          <!-- END INTERIM BLOCK -->
+
+          <!-- ============================================================
+               END OPERATOR-FILL REGION. Content below this line is NEW,
+               appended per Tier A rules (extension allowed).
+               ============================================================ -->
+
+          <div class="mt-8">
+            <h2>More from Pinellas Ice Co</h2>
+            <ul class="check-list">
+              <li><Icon name="check" size={18} /> <span>Machine acting up, not just dirty? <a href="/ice-machine-repair/">Ice machine repair</a> across Tampa Bay.</span></li>
+              <li><Icon name="check" size={18} /> <span>Cleaning service details, ATP testing, and the certification shield: <a href="/ice-machine-cleaning/">ice machine cleaning</a>.</span></li>
+              <li><Icon name="check" size={18} /> <span>What dirty machines cost Pinellas restaurants: <a href="/ice-machine-data/">the inspection data study</a>.</span></li>
+              <li><Icon name="check" size={18} /> <span>Everything we do in Clearwater: <a href="/clearwater/">Clearwater service area</a>.</span></li>
+            </ul>
+          </div>
+        </div>
+        <LeadForm segment="cleaning" page="ice-machine-cleaning-clearwater" heading="Request a Clearwater cleaning" sub="Same-day slots when available — flat-rate, no contracts." showUrgency={false} />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

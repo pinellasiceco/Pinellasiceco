@@ -1,0 +1,86 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import LeadForm from '../components/ui/LeadForm.astro';
+import FAQ from '../components/ui/FAQ.astro';
+import { faqSchema } from '../lib/schema';
+
+const faqs = [
+  {
+    q: 'Which Pinellas County cities do you cover?',
+    a: 'All of them: Clearwater, St. Petersburg, Largo, Pinellas Park, Dunedin, Palm Harbor, Tarpon Springs, Safety Harbor, Oldsmar, Seminole, and the beach communities from Tarpon Springs down to Tierra Verde.',
+  },
+  {
+    q: 'What does the inspection data actually show about Pinellas ice machines?',
+    a: 'Our analysis of seven years of Florida DBPR inspection records shows Pinellas restaurants receive a new ice machine citation on average every month, and unserviced machines average ATP contamination readings roughly 10× a toilet seat. The full methodology and numbers are in the <a href="/ice-machine-data/">data study</a>.',
+  },
+];
+---
+
+<BaseLayout
+  pageTitle="Commercial Ice Machine Repair & Service Pinellas County, FL | Pinellas Ice Co"
+  metaDescription="Ice machine repair, sales, leasing & cleaning across Pinellas County — Largo, Pinellas Park, Dunedin, Palm Harbor, Tarpon Springs & the beaches. Call (727) 855-6873."
+  schemaMarkup={faqSchema(faqs)}
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>Ice machine service across Pinellas County</h1>
+      <div class="answer-block">
+        Commercial ice machine <a href="/ice-machine-repair/">repair</a>,
+        <a href="/commercial-ice-machine-sales/">sales</a>,
+        <a href="/ice-machine-leasing/">leasing</a>, and
+        <a href="/ice-machine-cleaning/">cleaning</a> everywhere in Pinellas
+        County — it's in our name. Call
+        <a href="tel:+17278556873"><strong>(727) 855-6873</strong></a>.
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="grid-2">
+        <div>
+          <span class="eyebrow">Local</span>
+          <h2 class="mb-4">The county is the territory</h2>
+          <p>
+            Pinellas is the densest county in Florida — thousands of licensed
+            food-service businesses packed into a peninsula, every one of them
+            required to serve safe ice. It's also where we've done our
+            homework: we analyzed <strong>seven years of Florida DBPR
+            inspection records</strong> for Pinellas restaurants, and the
+            results are blunt — a new ice machine citation lands somewhere in
+            the county <strong>on average every month</strong>, and the average
+            unserviced machine carries ATP contamination roughly
+            <strong>10× a toilet seat</strong>.
+            (<a href="/ice-machine-data/">Read the full data study.</a>)
+          </p>
+          <p>
+            Largo, Pinellas Park, Seminole, Dunedin, Palm Harbor, Safety
+            Harbor, Oldsmar, Tarpon Springs, and the entire beach chain — all
+            standard service area, along with
+            <a href="/clearwater/">Clearwater</a> and
+            <a href="/st-petersburg/">St. Petersburg</a>, which get their own
+            pages.
+          </p>
+          <h3 class="mb-2">Common county-wide calls</h3>
+          <ul class="check-list">
+            <li><Icon name="check" size={18} /> <span>Machines flagged at inspection — <a href="/ice-machine-cleaning/">documented cleanup</a> with before/after ATP numbers.</span></li>
+            <li><Icon name="check" size={18} /> <span>Aging machines at strip-mall restaurants — <a href="/ice-machine-repair/">repair</a> vs. <a href="/ice-machine-leasing/">lease</a> math, straight.</span></li>
+            <li><Icon name="check" size={18} /> <span>Multi-location groups wanting one vendor across the county — route scheduling, one documentation trail.</span></li>
+          </ul>
+        </div>
+        <LeadForm segment="general" page="pinellas-county" heading="Pinellas County service request" sub="Anywhere in the county — what's going on?" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container narrow">
+      <FAQ items={faqs} />
+      <p class="mt-6">
+        Cross-bay service too: <a href="/tampa/">Tampa</a> and Hillsborough,
+        plus Pasco County.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

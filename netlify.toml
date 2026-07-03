@@ -1,0 +1,73 @@
+# pinellasiceco.com — Astro site lives in site/; the rest of this repo is
+# internal tooling deployed separately to GitHub Pages.
+[build]
+  base = "site"
+  command = "npm run build"
+  publish = "dist"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+  included_files = ["ops/prompts/*.md"]
+
+# ---------------------------------------------------------------------------
+# 301 map — per site/ops/preservation-ledger.md. No chains, no 302s.
+# Tier A URLs are NOT redirected: they resolve 200 at their original paths.
+# ---------------------------------------------------------------------------
+
+# Compliance explorer handed out in partner one-pagers → the ported data page.
+[[redirects]]
+  from = "/explore"
+  to = "/ice-machine-data/"
+  status = 301
+
+# HubSpot system/asset paths die with HubSpot; kill 404 noise in one hop.
+[[redirects]]
+  from = "/hs-fs/*"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/hubfs/*"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/_hcms/*"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/cs/*"
+  to = "/"
+  status = 301
+
+# ---------------------------------------------------------------------------
+# Headers
+# ---------------------------------------------------------------------------
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

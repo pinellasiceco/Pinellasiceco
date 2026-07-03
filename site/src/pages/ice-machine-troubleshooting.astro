@@ -1,0 +1,351 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import { faqSchema } from '../lib/schema';
+
+// The assessment/router pattern (ported from GRC's migration-assessment):
+// one router question -> per-path branch questions -> single capture form
+// with hidden segmentation. The segmentation IS the product: repair-urgent /
+// repair / sales / lease / cleaning leads are different products to
+// different buyers. Vanilla inline JS island; every path ends at the form.
+
+const faqs = [
+  {
+    q: 'Why is my commercial ice machine not making ice?',
+    a: 'Most common causes in order: scale buildup stopping the freeze/harvest cycle (needs a deep clean), a failed water inlet valve, a bad thermistor/harvest sensor, or low refrigerant. Power + water confirmed and still nothing? It\'s one of those four more often than not.',
+  },
+  {
+    q: 'Why is my ice machine making less ice than it used to?',
+    a: 'In Florida: a dirty condenser coil (heat rejection), scale on the evaporator (slow freeze), or ambient heat — machines lose 10–20% of rated output in a hot back-of-house. Clean first, then diagnose.',
+  },
+  {
+    q: 'Why does my ice taste or smell bad?',
+    a: 'Water filtration overdue, sanitizer residue, or biological growth in the machine. Bad-tasting ice is a cleaning problem more often than a mechanical one — and it\'s a health-inspection risk either way.',
+  },
+];
+---
+
+<BaseLayout
+  pageTitle="Ice Machine Troubleshooting — What's Going On With Your Machine? | Pinellas Ice Co"
+  metaDescription="Free ice machine troubleshooting guide: answer a few questions about what your machine is doing and get pointed at the fix — repair, cleaning, or replacement — with Tampa Bay cost ranges."
+  schemaMarkup={faqSchema(faqs)}
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>What's going on with your ice machine?</h1>
+      <div class="answer-block">
+        Answer a few questions and get pointed at the actual fix — quick
+        self-check, repair visit, deep clean, or replacement — with honest
+        cost ranges. Machine completely down?
+        Skip this and call <a href="tel:+17278556873"><strong>(727) 855-6873</strong></a>.
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container narrow">
+      <div class="card" id="router">
+        <!-- Step 0: router -->
+        <div class="ts-step" id="step-router">
+          <h3 class="mb-4">Which sounds like you?</h3>
+          <div class="ts-options">
+            <button class="ts-opt" data-path="repair">🔧 My machine isn't working right</button>
+            <button class="ts-opt" data-path="need">🧊 I need a machine (new, used, or replacing one)</button>
+            <button class="ts-opt" data-path="cleaning">🧼 Cleaning, maintenance, or an inspection issue</button>
+            <button class="ts-opt" data-path="pricing">💵 Just want pricing</button>
+          </div>
+        </div>
+
+        <!-- Branch: repair -->
+        <div class="ts-step" id="branch-repair" hidden>
+          <h3 class="mb-4">What's it doing?</h3>
+          <div class="ts-q" data-q="symptom">
+            <div class="ts-options">
+              <button class="ts-opt" data-v="No ice at all">Running, but no ice at all</button>
+              <button class="ts-opt" data-v="Low output">Making ice, but less than before</button>
+              <button class="ts-opt" data-v="Leaking">Leaking water</button>
+              <button class="ts-opt" data-v="Noisy">Loud / grinding / rattling</button>
+              <button class="ts-opt" data-v="Bad ice">Ice looks or tastes wrong</button>
+              <button class="ts-opt" data-v="Won't stay on">Shuts off / trips the breaker</button>
+            </div>
+          </div>
+          <div class="ts-q" data-q="downtime" hidden>
+            <h4 class="mb-2">Can you serve customers right now?</h4>
+            <div class="ts-options">
+              <button class="ts-opt ts-urgent" data-v="Machine down, business impacted">No — we're buying bagged ice</button>
+              <button class="ts-opt" data-v="Limping along">Sort of — it's limping</button>
+              <button class="ts-opt" data-v="Working but worried">Yes — planning ahead</button>
+            </div>
+          </div>
+          <div class="ts-q" data-q="age" hidden>
+            <h4 class="mb-2">Roughly how old is the machine?</h4>
+            <div class="ts-options">
+              <button class="ts-opt" data-v="Under 5 years">Under 5 years</button>
+              <button class="ts-opt" data-v="5-8 years">5–8 years</button>
+              <button class="ts-opt" data-v="Over 8 years">Over 8 years / not sure</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Branch: need a machine -->
+        <div class="ts-step" id="branch-need" hidden>
+          <h3 class="mb-4">About the machine you need</h3>
+          <div class="ts-q" data-q="why">
+            <div class="ts-options">
+              <button class="ts-opt" data-v="Replacing a dead machine">Replacing one that died</button>
+              <button class="ts-opt" data-v="New location">Opening / new location</button>
+              <button class="ts-opt" data-v="Adding capacity">Adding capacity</button>
+            </div>
+          </div>
+          <div class="ts-q" data-q="ownlease" hidden>
+            <h4 class="mb-2">Own it or lease it?</h4>
+            <div class="ts-options">
+              <button class="ts-opt" data-v="Buy" data-seg="sales">Buy — new or used</button>
+              <button class="ts-opt" data-v="Lease" data-seg="lease">Lease — monthly, service included</button>
+              <button class="ts-opt" data-v="Not sure" data-seg="sales">Show me both</button>
+            </div>
+          </div>
+          <div class="ts-q" data-q="btype" hidden>
+            <h4 class="mb-2">What kind of business?</h4>
+            <div class="ts-options">
+              <button class="ts-opt" data-v="Restaurant">Restaurant</button>
+              <button class="ts-opt" data-v="Bar/brewery">Bar / brewery</button>
+              <button class="ts-opt" data-v="Hotel">Hotel / motel</button>
+              <button class="ts-opt" data-v="Healthcare">Healthcare / senior living</button>
+              <button class="ts-opt" data-v="Other">Something else</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Branch: cleaning -->
+        <div class="ts-step" id="branch-cleaning" hidden>
+          <h3 class="mb-4">About the cleaning</h3>
+          <div class="ts-q" data-q="trigger">
+            <div class="ts-options">
+              <button class="ts-opt" data-v="Inspection coming or failed">Inspection coming up (or didn't go well)</button>
+              <button class="ts-opt" data-v="Visible growth">I can see mold / slime / scale</button>
+              <button class="ts-opt" data-v="Routine">Just overdue for routine service</button>
+            </div>
+          </div>
+          <div class="ts-q" data-q="lastclean" hidden>
+            <h4 class="mb-2">When was it last professionally cleaned?</h4>
+            <div class="ts-options">
+              <button class="ts-opt" data-v="Under 6 months">Within 6 months</button>
+              <button class="ts-opt" data-v="6-12 months">6–12 months ago</button>
+              <button class="ts-opt" data-v="Over a year / never">Over a year / never</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Branch: pricing -->
+        <div class="ts-step" id="branch-pricing" hidden>
+          <h3 class="mb-4">Pricing for what?</h3>
+          <div class="ts-q" data-q="pricefor">
+            <div class="ts-options">
+              <button class="ts-opt" data-v="Repair pricing" data-seg="repair">A repair</button>
+              <button class="ts-opt" data-v="Machine pricing" data-seg="sales">A machine (buy)</button>
+              <button class="ts-opt" data-v="Lease pricing" data-seg="lease">A lease</button>
+              <button class="ts-opt" data-v="Cleaning pricing" data-seg="cleaning">A cleaning</button>
+            </div>
+          </div>
+          <p class="small muted">
+            Want ranges right now without the form? The
+            <a href="/ice-machine-cost-calculator/">cost calculator</a> has them.
+          </p>
+        </div>
+
+        <!-- Verdict + capture -->
+        <div class="ts-step" id="ts-gate" hidden>
+          <div class="ts-verdict card" id="ts-verdict"></div>
+          <h3 class="mb-2 mt-6">Get your answer</h3>
+          <p class="small muted">
+            Your answers above ride along — we'll call you back with the
+            specific next step and the number attached to it.
+          </p>
+          <form
+            class="lead-form"
+            name="lead-capture"
+            method="POST"
+            action="/thank-you/"
+            data-netlify="true"
+            data-netlify-honeypot="bot-field"
+          >
+            <input type="hidden" name="form-name" value="lead-capture" />
+            <input type="hidden" name="segment" value="general" id="ts-segment" />
+            <input type="hidden" name="page" value="ice-machine-troubleshooting" />
+            <input type="hidden" name="branch_answers" id="ts-answers" />
+            <input type="hidden" name="urgency" id="ts-urgency" />
+            <p class="visually-hidden" aria-hidden="true">
+              <label>Don't fill this out: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+            </p>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="ts-name">Your name</label>
+                <input class="form-input" type="text" id="ts-name" name="name" required autocomplete="name" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="ts-business">Business name</label>
+                <input class="form-input" type="text" id="ts-business" name="business" autocomplete="organization" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="ts-phone">Phone</label>
+                <input class="form-input" type="tel" id="ts-phone" name="phone" required autocomplete="tel" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="ts-city">City / area</label>
+                <select class="form-select" id="ts-city" name="city">
+                  <option value="">Select…</option>
+                  <option>Tampa</option>
+                  <option>St. Petersburg</option>
+                  <option>Clearwater</option>
+                  <option>Elsewhere in Pinellas County</option>
+                  <option>Elsewhere in Hillsborough County</option>
+                  <option>Pasco County</option>
+                  <option>Other Tampa Bay</option>
+                </select>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg">Call me back with the answer</button>
+            <p class="form-consent">
+              By submitting, you agree that we or a local service partner may
+              contact you about your request.
+            </p>
+          </form>
+        </div>
+
+        <button class="ts-restart" id="ts-restart" hidden>↺ Start over</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container narrow">
+      <span class="eyebrow">Quick answers</span>
+      <h2 class="mb-6">Common symptoms, likely causes</h2>
+      {faqs.map((item) => (
+        <details class="faq-item">
+          <summary>{item.q}</summary>
+          <div class="faq-body"><p set:html={item.a} /></div>
+        </details>
+      ))}
+      <p class="mt-6">
+        Deeper dives: <a href="/ice-machine-repair/">repair service</a> ·
+        <a href="/ice-machine-cleaning/">cleaning service</a> ·
+        <a href="/ice-machine-cost-calculator/">cost calculator</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .ts-options { display: grid; gap: var(--space-2); margin-bottom: var(--space-4); }
+  .ts-opt {
+    font-family: var(--font-sans); font-size: var(--text-base); font-weight: 600;
+    text-align: left; color: var(--text);
+    background: var(--surface); border: 1.5px solid var(--border-strong);
+    border-radius: var(--radius-md); padding: 0.85rem 1rem; cursor: pointer;
+    transition: border-color 0.12s ease, background 0.12s ease;
+  }
+  .ts-opt:hover { border-color: var(--blue); background: var(--ice); }
+  .ts-opt.selected { border-color: var(--blue-dark); background: var(--ice); }
+  .ts-urgent { border-color: var(--warm); }
+  .ts-verdict { background: var(--ice); border-color: var(--blue-light); }
+  .ts-restart {
+    background: none; border: none; color: var(--text-muted);
+    font-family: var(--font-sans); font-size: var(--text-sm); cursor: pointer;
+    margin-top: var(--space-4); text-decoration: underline;
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var $ = function (s, el) { return (el || document).querySelector(s); };
+    var $$ = function (s, el) { return Array.prototype.slice.call((el || document).querySelectorAll(s)); };
+
+    var answers = [];
+    var path = null;
+    var segment = 'general';
+    var urgency = '';
+
+    var VERDICTS = {
+      repair: function (a) {
+        var urgent = a.some(function (x) { return x.indexOf('down, business impacted') !== -1; });
+        var old = a.some(function (x) { return x.indexOf('Over 8') !== -1; });
+        if (urgent) return '<strong>This reads urgent.</strong> Fastest path: call (727) 855-6873 now. Most "no ice at all" failures are diagnosed in one visit; common repairs run $150–$600.';
+        if (old) return '<strong>Likely repairable — but get the replace math too.</strong> Past 8 years, a big repair on this symptom often loses to replacement or a lease. We\'ll quote both.';
+        return '<strong>Likely a one-visit repair.</strong> This symptom pattern is usually a $150–$600 fix on a machine your age. Worth doing promptly — small failures take compressors with them.';
+      },
+      need: function () {
+        return '<strong>Sizing is the whole game.</strong> We\'ll match machine size to your volume (with Florida-heat headroom) and quote buy and lease side by side — all-in installed, no surprise line items.';
+      },
+      cleaning: function (a) {
+        var inspection = a.some(function (x) { return x.indexOf('Inspection') !== -1; });
+        var never = a.some(function (x) { return x.indexOf('Over a year') !== -1; });
+        if (inspection) return '<strong>Inspection situation — documented cleaning is the move.</strong> Before/after ATP readings and records an inspector accepts. Ice is food in Florida; this is the cheap insurance.';
+        if (never) return '<strong>Overdue — expect a deep clean, not a wipe-down.</strong> A year-plus of scale and growth means disassembly-level cleaning. The good news: the before/after numbers will be dramatic.';
+        return '<strong>Routine service — smart.</strong> Manufacturers require 6-month cleanings to keep warranties valid; Florida water pushes busy machines to quarterly. We\'ll put it on a schedule you don\'t have to think about.';
+      },
+      pricing: function () {
+        return '<strong>Pricing, straight.</strong> Tell us where to reach you and we\'ll send real numbers for your situation — or grab instant ranges in the <a href="/ice-machine-cost-calculator/">cost calculator</a>.';
+      },
+    };
+
+    function showGate() {
+      var v = VERDICTS[path](answers);
+      $('#ts-verdict').innerHTML = v;
+      $('#ts-gate').hidden = false;
+      $('#ts-segment').value = segment;
+      $('#ts-answers').value = path + ': ' + answers.join(' | ');
+      $('#ts-urgency').value = urgency;
+      $('#ts-gate').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function advance(branchEl) {
+      var qs = $$('.ts-q', branchEl);
+      var next = qs.find(function (q) { return q.hidden; });
+      var allAnswered = qs.every(function (q) { return q.dataset.done === '1'; });
+      if (allAnswered) { showGate(); return; }
+      if (next) next.hidden = false;
+    }
+
+    // Router step
+    $$('#step-router .ts-opt').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        path = btn.dataset.path;
+        segment = path === 'repair' ? 'repair' : path === 'cleaning' ? 'cleaning' : path === 'need' ? 'sales' : 'general';
+        $('#step-router').hidden = true;
+        $('#ts-restart').hidden = false;
+        var branch = $('#branch-' + path);
+        branch.hidden = false;
+        // pricing branch: single question then gate
+        advanceInit(branch);
+      });
+    });
+
+    function advanceInit(branch) {
+      var qs = $$('.ts-q', branch);
+      qs.forEach(function (q, i) { q.hidden = i !== 0; });
+      qs.forEach(function (q) {
+        $$('.ts-opt', q).forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            if (q.dataset.done === '1') return;
+            q.dataset.done = '1';
+            btn.classList.add('selected');
+            $$('.ts-opt', q).forEach(function (b) { b.disabled = true; });
+            answers.push(btn.dataset.v);
+            if (btn.dataset.seg) segment = btn.dataset.seg;
+            if (btn.dataset.v.indexOf('down, business impacted') !== -1) {
+              segment = 'repair';
+              urgency = 'URGENT - machine down, business impacted';
+            }
+            advance(branch);
+          });
+        });
+      });
+    }
+
+    $('#ts-restart').addEventListener('click', function () { location.reload(); });
+  })();
+</script>

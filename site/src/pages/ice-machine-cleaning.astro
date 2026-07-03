@@ -1,0 +1,143 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import TrustStrip from '../components/ui/TrustStrip.astro';
+import LeadForm from '../components/ui/LeadForm.astro';
+import FAQ from '../components/ui/FAQ.astro';
+import { faqSchema, serviceSchema } from '../lib/schema';
+
+const faqs = [
+  {
+    q: 'How often should a commercial ice machine be cleaned?',
+    a: 'Manufacturers require cleaning at least every 6 months to keep the warranty valid; Florida\'s heat, humidity, and water push most busy machines to quarterly or even monthly. If you can see scale or dark buildup anywhere ice touches, it\'s overdue.',
+  },
+  {
+    q: 'How much does professional ice machine cleaning cost?',
+    a: 'Our initial clean and test is flat-rate, with before/after ATP readings documented. Most clients move to a recurring schedule after the first visit — recurring service costs less per visit and keeps the machine permanently inspection-ready. Call (727) 855-6873 for current rates.',
+  },
+  {
+    q: 'What is ATP testing?',
+    a: 'ATP (adenosine triphosphate) testing measures organic residue on a surface with a luminometer swab — a number, not an opinion. We test before and after every cleaning so you can see exactly what changed, and keep the records for inspections. Context: analysis of public DBPR data shows the average unserviced Pinellas ice machine reads roughly 10× higher than a toilet seat — see our <a href="/ice-machine-data/">Pinellas ice machine data study</a>.',
+  },
+  {
+    q: 'Can a dirty ice machine fail a health inspection?',
+    a: 'Yes — ice is legally food in Florida. Mold, slime, or scale in the ice machine is a citable violation, and Pinellas restaurants receive ice machine citations on average every month (see the <a href="/ice-machine-data/">data</a>). Documented cleanings are the cheap insurance.',
+  },
+  {
+    q: 'Why is my ice machine growing black or pink slime?',
+    a: 'Airborne yeast and bacteria feed on organics in the machine\'s warm, wet zones — flour, sugar, and beer environments accelerate it. It comes back from spores after a wipe-down; killing it takes a disassembly-level deep clean and sanitize, which is what we do.',
+  },
+];
+
+const schema = [
+  serviceSchema({
+    name: 'Commercial Ice Machine Cleaning',
+    serviceType: 'Ice machine cleaning and sanitizing',
+    description: 'Documented commercial ice machine cleaning and sanitizing across Tampa Bay with before/after ATP testing and inspection-ready records.',
+    url: 'https://www.pinellasiceco.com/ice-machine-cleaning/',
+  }),
+  faqSchema(faqs),
+];
+---
+
+<BaseLayout
+  pageTitle="Commercial Ice Machine Cleaning Tampa Bay | Pinellas Ice Co"
+  metaDescription="Documented commercial ice machine cleaning & sanitizing across Tampa Bay. Before/after ATP testing, inspection-ready records, flat-rate pricing. Call (727) 855-6873."
+  schemaMarkup={schema}
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>Commercial ice machine cleaning — Tampa Bay</h1>
+      <div class="answer-block">
+        Deep cleaning and sanitizing for commercial ice machines across Tampa
+        Bay — with <strong>before/after ATP testing</strong> and documented,
+        inspection-ready results, flat-rate with no contracts. In Clearwater?
+        See our <a href="/ice-machine-cleaning-clearwater-fl-pinellas-ice-co/">Clearwater
+        cleaning service</a>. Call
+        <a href="tel:+17278556873"><strong>(727) 855-6873</strong></a>.
+      </div>
+      <div class="hero-ctas">
+        <a href="#quote" class="btn btn-primary btn-lg">Request a cleaning</a>
+        <a href="tel:+17278556873" class="btn btn-outline btn-lg"><Icon name="phone" size={18} /> (727) 855-6873</a>
+      </div>
+    </div>
+  </section>
+
+  <TrustStrip />
+
+  <section class="section">
+    <div class="container">
+      <div class="grid-2" style="align-items:center">
+        <div>
+          <span class="eyebrow">Why it matters</span>
+          <h2 class="mb-4">Ice is food. Inspectors treat it that way.</h2>
+          <p>
+            Florida health inspectors cite ice machines constantly — mold on
+            the ice grid, slime in the bin, scale in the water system. Our
+            analysis of seven years of public DBPR inspection records shows
+            Pinellas restaurants pick up a new ice machine citation
+            <strong>on average every month</strong>, and the average
+            unserviced machine's ATP reading is roughly
+            <strong>10× a toilet seat</strong>.
+            (<a href="/ice-machine-data/">Full data study.</a>)
+          </p>
+          <p>
+            A real cleaning is not a wipe-down: it's disassembly of the
+            water system, descale, sanitize, and reassembly — with
+            measurements proving it worked.
+          </p>
+        </div>
+        <figure class="site-fig">
+          <img
+            src="/images/ice-machine-evaporator-cleaning-before-after.webp"
+            alt="Ice machine evaporator before and after professional deep cleaning"
+            width="225" height="225" loading="lazy" decoding="async"
+          />
+          <figcaption>Evaporator, before and after a documented deep clean.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="grid-2">
+        <div>
+          <span class="eyebrow">What you get</span>
+          <h2 class="mb-4">Documented, not just "done"</h2>
+          <ul class="icon-list">
+            <li><Icon name="gauge" size={20} /> <span><strong>ATP reading before</strong> — the machine's actual contamination number, measured in front of you.</span></li>
+            <li><Icon name="droplet" size={20} /> <span><strong>Disassembly deep clean</strong> — evaporator, water distribution, pump, bin; descale and food-safe sanitize.</span></li>
+            <li><Icon name="gauge" size={20} /> <span><strong>ATP reading after</strong> — proof the number dropped, documented.</span></li>
+            <li><Icon name="shield" size={20} /> <span><strong>Records you can show an inspector</strong> — clear documentation for compliance and internal accountability.</span></li>
+          </ul>
+          <figure class="site-fig">
+            <img
+              src="/images/sanitized-ice-certification-badge.webp"
+              alt="Pinellas Ice Co Sanitized Ice certification shield with scannable verification QR code"
+              width="240" height="360" loading="lazy" decoding="async"
+            />
+            <figcaption>Certified locations get a verifiable Sanitized Ice shield — scannable proof for staff, inspectors, and customers.</figcaption>
+          </figure>
+        </div>
+        <LeadForm segment="cleaning" page="ice-machine-cleaning" heading="Request a documented cleaning" sub="One machine or a route of them — tell us where and roughly how old the last cleaning is." showUrgency={false} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container narrow">
+      <span class="eyebrow">Cleaning FAQs</span>
+      <h2 class="mb-6">Ice machine cleaning questions</h2>
+      <FAQ items={faqs} />
+      <p class="mt-8">
+        Cleaning service across <a href="/tampa/">Tampa</a>,
+        <a href="/st-petersburg/">St. Petersburg</a>,
+        <a href="/clearwater/">Clearwater</a> (see the
+        <a href="/ice-machine-cleaning-clearwater-fl-pinellas-ice-co/">Clearwater page</a>),
+        and all of <a href="/pinellas-county/">Pinellas County</a>. A machine
+        that's dirty AND broken? Start with <a href="/ice-machine-repair/">repair</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

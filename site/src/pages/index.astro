@@ -1,0 +1,170 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import TrustStrip from '../components/ui/TrustStrip.astro';
+import LeadForm from '../components/ui/LeadForm.astro';
+import FAQ from '../components/ui/FAQ.astro';
+import { faqSchema } from '../lib/schema';
+
+const faqs = [
+  {
+    q: 'Do you service my area?',
+    a: 'We cover all of Tampa Bay: Tampa, St. Petersburg, Clearwater, Largo, Dunedin, Palm Harbor, and the rest of Pinellas, Hillsborough, and Pasco counties. If you are anywhere in the Bay area, call — <a href="tel:+17278556873">(727) 855-6873</a>.',
+  },
+  {
+    q: 'What brands of commercial ice machines do you work on?',
+    a: 'All major commercial brands, including Hoshizaki, Manitowoc, Scotsman, and Ice-O-Matic. See our <a href="/brands/">brands page</a> for details.',
+  },
+  {
+    q: 'My ice machine stopped making ice — how fast can someone look at it?',
+    a: 'Call <a href="tel:+17278556873">(727) 855-6873</a> and describe what the machine is doing. Downed machines are treated as urgent — tell us the brand and what you\'re seeing and we\'ll get you an answer fast. You can also start with the <a href="/ice-machine-troubleshooting/">troubleshooting guide</a>.',
+  },
+  {
+    q: 'Should I repair my ice machine or replace it?',
+    a: 'Rule of thumb: if the machine is under 7 years old and the repair is under half the replacement cost, repair usually wins. Our <a href="/ice-machine-cost-calculator/">cost calculator</a> gives you purchase, lease, and repair ranges for your situation.',
+  },
+  {
+    q: 'Do you sell or lease ice machines, or just fix them?',
+    a: 'Both. We handle <a href="/commercial-ice-machine-sales/">new and used sales</a> and <a href="/ice-machine-leasing/">monthly leasing</a> for restaurants, bars, hotels, and healthcare across Tampa Bay.',
+  },
+];
+---
+
+<BaseLayout
+  pageTitle="Commercial Ice Machine Repair, Sales & Leasing Tampa Bay | Pinellas Ice Co"
+  metaDescription="Commercial ice machine repair, sales, leasing, and cleaning across Tampa Bay — Tampa, St. Petersburg, Clearwater, and all of Pinellas, Hillsborough, and Pasco counties. Call (727) 855-6873."
+  schemaMarkup={faqSchema(faqs)}
+>
+  <section class="hero">
+    <div class="container">
+      <h1>Commercial ice machine repair, sales &amp; leasing — Tampa Bay</h1>
+      <p class="lead">
+        Machine down? Need a machine? We repair, sell, lease, and clean
+        commercial ice machines for restaurants, bars, hotels, and healthcare
+        across Tampa, St. Petersburg, Clearwater, and all of Pinellas,
+        Hillsborough, and Pasco counties.
+      </p>
+      <div class="hero-ctas">
+        <a href="tel:+17278556873" class="btn btn-urgent btn-lg">
+          <Icon name="phone" size={20} /> (727) 855-6873
+        </a>
+        <a href="/ice-machine-repair/" class="btn btn-outline btn-lg">Machine down? Start here</a>
+      </div>
+      <p class="hero-note">Local, flat-rate, no contracts. Tell us what's going on and we'll get right back to you.</p>
+      <svg class="hero-cubes" width="380" height="380" viewBox="0 0 24 24" fill="none" stroke="#6FB4E8" stroke-width="0.6" aria-hidden="true">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16zM3.27 6.96L12 12.01l8.73-5.05M12 22.08V12" />
+      </svg>
+    </div>
+  </section>
+
+  <TrustStrip />
+
+  <section class="section">
+    <div class="container">
+      <span class="eyebrow">What do you need?</span>
+      <h2 class="mb-6">Four ways we help</h2>
+      <div class="grid-2">
+        <a class="card service-card" href="/ice-machine-repair/">
+          <Icon name="wrench" size={28} />
+          <h3>Ice Machine Repair</h3>
+          <p>Not making ice, leaking, noisy, low output — most common failures
+          diagnosed fast. All major brands.</p>
+          <span class="card-cta">Repair service <Icon name="arrow" size={16} /></span>
+        </a>
+        <a class="card service-card" href="/commercial-ice-machine-sales/">
+          <Icon name="cube" size={28} />
+          <h3>Ice Machine Sales</h3>
+          <p>New and used commercial machines, sized to your business — from
+          150 lbs/day café units to 1,000+ lbs/day production.</p>
+          <span class="card-cta">Sales &amp; sizing <Icon name="arrow" size={16} /></span>
+        </a>
+        <a class="card service-card" href="/ice-machine-leasing/">
+          <Icon name="dollar" size={28} />
+          <h3>Ice Machine Leasing</h3>
+          <p>Skip the capital outlay. Monthly leasing with service included —
+          the math on lease vs. buy, straight.</p>
+          <span class="card-cta">Leasing options <Icon name="arrow" size={16} /></span>
+        </a>
+        <a class="card service-card" href="/ice-machine-cleaning/">
+          <Icon name="droplet" size={28} />
+          <h3>Ice Machine Cleaning</h3>
+          <p>Deep cleaning and sanitizing with ATP testing and documented
+          results you can show an inspector.</p>
+          <span class="card-cta">Cleaning service <Icon name="arrow" size={16} /></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="grid-2" style="align-items: center;">
+        <div>
+          <span class="eyebrow">Service area</span>
+          <h2>All of Tampa Bay</h2>
+          <p>
+            Based in Pinellas County, serving both sides of the bay: Tampa,
+            St. Petersburg, Clearwater, Largo, Dunedin, Palm Harbor, and the
+            rest of Pinellas, Hillsborough, and Pasco counties.
+          </p>
+          <ul class="icon-list">
+            <li><Icon name="pin" size={18} /> <span><a href="/tampa/">Tampa</a> — Hillsborough County</span></li>
+            <li><Icon name="pin" size={18} /> <span><a href="/st-petersburg/">St. Petersburg</a> — south Pinellas</span></li>
+            <li><Icon name="pin" size={18} /> <span><a href="/clearwater/">Clearwater</a> — north Pinellas beaches to Countryside</span></li>
+            <li><Icon name="pin" size={18} /> <span><a href="/pinellas-county/">Pinellas County</a> — Largo, Dunedin, Palm Harbor &amp; more</span></li>
+          </ul>
+        </div>
+        <div>
+          <figure class="site-fig">
+            <img
+              src="/images/ice-machine-cleaning-before-after-pinellas.webp"
+              alt="Commercial ice machine interior before and after professional service in Pinellas County"
+              width="1000" height="525" loading="lazy" decoding="async"
+            />
+            <figcaption>Real work: a Pinellas County machine, before and after service.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container narrow">
+      <span class="eyebrow">Not sure what you need?</span>
+      <h2>Answer four questions, get pointed right</h2>
+      <p>
+        The <a href="/ice-machine-troubleshooting/">troubleshooting guide</a> walks
+        through what your machine is doing and tells you whether you're looking
+        at a quick fix, a repair visit, a cleaning, or a replacement — and what
+        each usually costs. Or skip it and use the
+        <a href="/ice-machine-cost-calculator/">cost calculator</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="grid-2">
+        <div>
+          <span class="eyebrow">Common questions</span>
+          <h2 class="mb-6">Straight answers</h2>
+          <FAQ items={faqs} />
+        </div>
+        <LeadForm segment="general" page="home" heading="Tell us what you need" sub="Repair, a new machine, leasing, or cleaning — one form, fast response." />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .service-card {
+    text-decoration: none; color: var(--text);
+    display: flex; flex-direction: column; gap: var(--space-3);
+    transition: box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+  .service-card:hover { box-shadow: var(--shadow-md); border-color: var(--blue-light); color: var(--text); }
+  .service-card svg { color: var(--blue-dark); }
+  .service-card h3 { margin: 0; }
+  .service-card p { color: var(--text-2); margin: 0; flex: 1; }
+  .card-cta { font-weight: 700; color: var(--blue-dark); display: inline-flex; align-items: center; gap: 0.3rem; }
+</style>
