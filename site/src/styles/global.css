@@ -180,8 +180,8 @@ strong { font-weight: 700; }
 .btn-urgent:hover { background: var(--warm-dark); color: #fff; }
 .btn-outline { background: transparent; color: var(--navy); border-color: var(--border-strong); }
 .btn-outline:hover { border-color: var(--navy); }
-.section-navy .btn-outline { color: #fff; border-color: rgba(255,255,255,0.45); }
-.section-navy .btn-outline:hover { border-color: #fff; }
+.section-navy .btn-outline, .hero .btn-outline { color: #fff; border-color: rgba(255,255,255,0.45); }
+.section-navy .btn-outline:hover, .hero .btn-outline:hover { border-color: #fff; color: #fff; }
 .btn-lg { font-size: var(--text-lg); padding: 1rem 1.9rem; }
 .btn svg { flex: none; }
 

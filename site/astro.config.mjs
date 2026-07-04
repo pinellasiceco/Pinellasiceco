@@ -5,6 +5,9 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://www.pinellasiceco.com',
   output: 'static',
+  // compressHTML swallows the newline between text and inline <a> elements,
+  // rendering "Call(727)…" — correctness beats the few KB it saves.
+  compressHTML: false,
   // One canonical URL convention from day one (GRC's trailing-slash lesson):
   // directory build format + trailing slash everywhere. Netlify 301s the
   // slash-less form to the slash form in a single hop.
