@@ -1,0 +1,66 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Icon from '../ui/Icon.astro';
+// Layout for ported "Pinellas Ice Insights" guides. Content is Tier A ported
+// copy — verbatim substance from the live HubSpot blog. Emits BlogPosting
+// schema; CTAs are callback-framed (no booking).
+interface Props {
+  pageTitle: string;
+  metaDescription: string;
+  h1: string;
+  author: string;
+  datePublished: string; // ISO
+  dateDisplay: string;
+  schemaExtra?: object | object[];
+}
+const { pageTitle, metaDescription, h1, author, datePublished, dateDisplay, schemaExtra } = Astro.props;
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: h1,
+  description: metaDescription,
+  author: { '@type': 'Person', name: author },
+  publisher: { '@id': 'https://www.pinellasiceco.com/#business' },
+  datePublished,
+  mainEntityOfPage: new URL(Astro.url.pathname, Astro.site).href,
+};
+const schema = schemaExtra ? [articleSchema, ...(Array.isArray(schemaExtra) ? schemaExtra : [schemaExtra])] : articleSchema;
+---
+
+<BaseLayout pageTitle={pageTitle} metaDescription={metaDescription} schemaMarkup={schema}>
+  <article class="section guide">
+    <div class="container narrow">
+      <h1>{h1}</h1>
+      <p class="byline muted small">{author} · {dateDisplay}</p>
+      <slot />
+
+      <div class="card guide-cta">
+        <h3>Want this handled for you?</h3>
+        <p>
+          Professional, documented ice machine cleaning across Pinellas County
+          — tell us what's going on and we'll call you back.
+        </p>
+        <div class="hero-ctas">
+          <a href="tel:+17278556873" class="btn btn-urgent"><Icon name="phone" size={18} /> Call / Text (727) 855-6873</a>
+          <a href="/contact/" class="btn btn-outline">Request service online</a>
+        </div>
+      </div>
+
+      <p class="mt-8 small">
+        More guides: <a href="/pinellas-ice-insights-ice-machine-cleaning-tips-guides/">Pinellas Ice Insights</a> ·
+        Services: <a href="/ice-machine-cleaning/">cleaning</a> ·
+        <a href="/ice-machine-repair/">repair</a> ·
+        <a href="/ice-machine-cost-calculator/">cost calculator</a>
+      </p>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .guide h1 { font-size: var(--text-3xl); }
+  .byline { margin: var(--space-2) 0 var(--space-6); }
+  .guide :global(h2) { margin-top: var(--space-8); margin-bottom: var(--space-3); }
+  .guide :global(h3) { margin-top: var(--space-6); margin-bottom: var(--space-2); }
+  .guide-cta { margin-top: var(--space-12); background: var(--ice); border-color: var(--blue-light); }
+</style>

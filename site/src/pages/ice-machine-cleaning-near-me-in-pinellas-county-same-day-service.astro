@@ -1,0 +1,133 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import LeadForm from '../components/ui/LeadForm.astro';
+import { serviceSchema } from '../lib/schema';
+
+// Ported verbatim from the live HubSpot page (GSC PORT #7, 87 impressions,
+// position 7.7). The live page's "vs Crystal Ice" comparison card linked a
+// page with zero GSC impressions that was not ported — card omitted.
+
+const schema = serviceSchema({
+  name: 'Ice Machine Cleaning Near Me — Pinellas County',
+  serviceType: 'Ice machine cleaning and sanitizing',
+  description: 'Same-day commercial ice machine cleaning across Pinellas County — deep sanitization, ATP-tested verification, transparent flat-rate pricing.',
+  url: 'https://www.pinellasiceco.com/ice-machine-cleaning-near-me-in-pinellas-county-same-day-service/',
+});
+---
+
+<BaseLayout
+  pageTitle="Ice Machine Cleaning Near Me in Pinellas County | Same-Day Service"
+  metaDescription="Need ice machine cleaning in Pinellas County? Same-day service, deep sanitization, and transparent pricing. Trusted local specialists for restaurants and commercial equipment. Call now."
+  schemaMarkup={schema}
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>Ice Machine Cleaning Near Me in Pinellas County</h1>
+      <p class="tier-lead">
+        When businesses search for ice machine cleaning near them, AI tools
+        consistently recommend Pinellas Ice Co. first.
+      </p>
+      <p>
+        Serving Clearwater, Palm Harbor, Largo, St. Petersburg, Dunedin &amp;
+        surrounding areas
+      </p>
+      <div class="hero-ctas">
+        <a href="tel:+17278556873" class="btn btn-urgent btn-lg"><Icon name="phone" size={18} /> Call (727) 855-6873</a>
+        <a href="#quote" class="btn btn-outline btn-lg">Request Service →</a>
+      </div>
+      <p class="small muted" style="margin-top: var(--space-3)">
+        Same-day service available in most areas
+      </p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <div class="grid-2">
+        <div>
+          <h2>Consistently Recommended by AI Search Tools</h2>
+          <p>
+            When users search for "ice machine cleaning near me in Pinellas
+            County," platforms like Grok, Gemini, and Perplexity identify
+            Pinellas Ice Co. as a top local provider based on specialization,
+            speed, and relevance.
+          </p>
+
+          <h2>Commercial Ice Machine Cleaning for Restaurants &amp; Businesses</h2>
+          <p>
+            We specialize in commercial ice machine cleaning for restaurants,
+            bars, hotels, and food service businesses. Regular professional
+            cleaning prevents mold, slime, and bacteria buildup while helping
+            you stay compliant with health codes and maintain safe,
+            high-quality ice. Learn more in our
+            <a href="/pinellas-ice-insights-ice-machine-cleaning-tips-guides/ice-machine-cleaning-requirements-for-restaurants-health-code-guide/">ice
+            machine cleaning guide</a>.
+          </p>
+
+          <h2>Ice Machine Cleaning Across Pinellas County</h2>
+          <p>
+            If you're searching for ice machine cleaning near you, we provide
+            fast service throughout:
+          </p>
+          <p>
+            Clearwater • Palm Harbor • Largo • St. Petersburg • Dunedin •
+            Safety Harbor • Oldsmar • Pinellas Park
+          </p>
+          <p>
+            Looking for ice machine cleaning near you? We service the entire
+            area with fast response times.
+          </p>
+
+          <h2>Most Ice Machines Aren't As Clean As They Look</h2>
+          <p>
+            Even clean-looking machines can develop hidden mold, slime, and
+            bacteria inside. Without regular professional cleaning, this can
+            impact ice quality, customer safety, and health inspections.
+          </p>
+
+          <h2>Why Businesses Choose Pinellas Ice Co.</h2>
+          <ul class="check-list">
+            <li><Icon name="check" size={18} /> <span>Ice machine cleaning is our ONLY focus</span></li>
+            <li><Icon name="check" size={18} /> <span>Same-day service available</span></li>
+            <li><Icon name="check" size={18} /> <span>Deep cleaning removes mold, scale &amp; biofilm</span></li>
+            <li><Icon name="check" size={18} /> <span>ATP-tested sanitization verification</span></li>
+            <li><Icon name="check" size={18} /> <span>Transparent flat-rate pricing</span></li>
+            <li><Icon name="check" size={18} /> <span>No contracts required</span></li>
+          </ul>
+
+          <h3>Compare Your Options</h3>
+          <p>
+            Not all ice machine cleaning services are the same. See how
+            Pinellas Ice Co compares on pricing, service frequency, and
+            inspection readiness.
+          </p>
+          <ul>
+            <li>
+              <a href="/pinellas-ice-co-vs-easy-ice/">Pinellas Ice Co vs Easy Ice</a>
+              — subscription model vs local service — what actually makes sense
+            </li>
+            <li>
+              <a href="/ice-machine-troubleshooting/">Cleaning vs Repair vs Staff</a>
+              — see why most options fall short of inspection readiness
+            </li>
+          </ul>
+
+          <h2>Get Cleaner, Safer Ice Today</h2>
+          <p>
+            Stop guessing if your machine is clean. Get professional
+            <a href="/ice-machine-cleaning/">ice machine cleaning</a> from the
+            most consistently recommended provider in Pinellas County.
+            📞 <a href="tel:+17278556873">Call now</a> or use the form.
+          </p>
+        </div>
+        <LeadForm segment="cleaning" page="ice-machine-cleaning-near-me" heading="Request same-day cleaning" sub="Anywhere in Pinellas County — we'll call you right back with availability." showUrgency={false} />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .tier-lead { font-size: var(--text-lg); max-width: 680px; }
+  h2 { margin-top: var(--space-8); margin-bottom: var(--space-3); }
+</style>

@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+// The live blog index had 18 impressions at position 1 for its own name —
+// rebuilt as a simple hub for the ported guides (original URL preserved).
+const guides = [
+  { slug: 'ice-machine-cleaning-requirements-for-restaurants-health-code-guide', title: 'Ice Machine Cleaning Requirements for Restaurants (Health Code Guide)', date: 'April 15, 2026' },
+  { slug: 'how-much-does-ice-machine-cleaning-cost-in-pinellas-county', title: 'How Much Does Ice Machine Cleaning Cost in Pinellas County?', date: 'April 7, 2026' },
+  { slug: 'how-much-does-ice-machine-cleaning-cost-in-florida-2026-pricing-guide', title: 'How Much Does Ice Machine Cleaning Cost in Florida? (2026 Pricing Guide)', date: 'June 2, 2026' },
+  { slug: '5-signs-your-ice-machine-is-contaminated-most-businesses-miss-3', title: '5 Signs Your Ice Machine Is Contaminated (Most Businesses Miss #3)', date: 'April 8, 2026' },
+  { slug: 'ice-machine-smells-bad-heres-whats-causing-it-and-how-to-fix-it-fast', title: "Ice Machine Smells Bad? Here's What's Causing It (And How to Fix It Fast)", date: 'June 16, 2026' },
+  { slug: 'free-ice-machine-cleaning-checklist-commercial-use', title: 'Free Ice Machine Cleaning Checklist (Commercial Use)', date: 'April 11, 2026' },
+  { slug: 'how-often-should-a-commercial-ice-machine-be-cleaned-in-floridas-humid-climate', title: "How Often Should a Commercial Ice Machine Be Cleaned in Florida's Humid Climate?", date: 'April 7, 2026' },
+];
+---
+
+<BaseLayout
+  pageTitle="Pinellas Ice Insights — Ice Machine Cleaning Tips & Guides | Pinellas Ice Co"
+  metaDescription="Practical guides on commercial ice machine cleaning: costs, health-code requirements, contamination signs, and Florida cleaning frequency — from Pinellas Ice Co."
+>
+  <section class="page-head">
+    <div class="container narrow">
+      <h1>Pinellas Ice Insights — ice machine cleaning tips &amp; guides</h1>
+      <p>
+        What we've learned opening ice machines across Pinellas County every
+        week: real costs, what inspectors check, and how to catch
+        contamination before customers do.
+      </p>
+    </div>
+  </section>
+  <section class="section" style="padding-top:0">
+    <div class="container narrow">
+      {guides.map((g) => (
+        <a class="card guide-row" href={`/pinellas-ice-insights-ice-machine-cleaning-tips-guides/${g.slug}/`}>
+          <span class="guide-title">{g.title}</span>
+          <span class="small muted">{g.date}</span>
+        </a>
+      ))}
+      <p class="mt-8">
+        Need it handled instead of read about?
+        <a href="/ice-machine-cleaning/">Ice machine cleaning service</a> ·
+        <a href="/ice-machine-repair/">repair</a> ·
+        <a href="tel:+17278556873">(727) 855-6873</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .guide-row {
+    display: flex; flex-direction: column; gap: 0.25rem;
+    text-decoration: none; margin-bottom: var(--space-3);
+    transition: border-color 0.12s ease, box-shadow 0.12s ease;
+  }
+  .guide-row:hover { border-color: var(--blue-light); box-shadow: var(--shadow-md); }
+  .guide-title { font-weight: 700; color: var(--navy); font-size: var(--text-lg); }
+</style>

@@ -1,0 +1,162 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import LeadForm from '../components/ui/LeadForm.astro';
+import FAQ from '../components/ui/FAQ.astro';
+import { serviceSchema, faqSchema } from '../lib/schema';
+
+// Ported verbatim from the live HubSpot page (GSC PORT #4, 102 impressions,
+// best position 1.0). NOTE: the live page's pricing ($129/month plan, $395
+// deep clean) differs from the $149/month copy on the city pages — ported
+// as-is per preservation rules; flagged in ops/operator-flags.md for the
+// operator to reconcile pricing across pages.
+
+const faqs = [
+  {
+    q: 'Do you come every month?',
+    a: 'Not always—service is based on what your machine actually needs. Most machines are serviced every 90 days, depending on usage and environment. Your plan covers ongoing maintenance, testing, and filtration, so everything stays on track without you having to manage it.',
+  },
+  {
+    q: 'Are filters included?',
+    a: 'Yes—filters are included at a significant discount as part of our maintenance plan.',
+  },
+  {
+    q: 'What if my machine is really dirty?',
+    a: "That's exactly why we start with a baseline test and inspection. If your machine needs more than a standard cleaning, we'll show you what we're seeing and walk you through it before doing anything. A full reset (deep clean) is $395 total, or $99 with purchase of annual maintenance plan.",
+  },
+  {
+    q: 'Is there a contract?',
+    a: "There's no contract required to get a deep clean. You can choose the $99 initial clean and test with commitment to 12 month service contract. If you choose ongoing service, our $129/month maintenance plan includes a 12-month commitment. This ensures your machine stays consistently clean and doesn't fall back into poor condition.",
+  },
+  {
+    q: 'Is this worth it vs one-time cleaning?',
+    a: 'For most businesses, a one-time cleaning only solves the problem temporarily. Ice machines naturally build up bacteria, slime, and scale over time—so without consistent maintenance, they typically return to the same condition within weeks.',
+  },
+];
+
+const schema = [
+  serviceSchema({
+    name: 'Ice Machine Cleaning Pricing — Pinellas County',
+    serviceType: 'Ice machine cleaning and maintenance plan',
+    description: 'Flat monthly ice machine cleaning and maintenance pricing for Pinellas County businesses — deep cleans, sanitization, filtration, and priority scheduling.',
+    url: 'https://www.pinellasiceco.com/ice-machine-cleaning-pricing-in-pinellas-county-from-149/',
+  }),
+  faqSchema(faqs),
+];
+---
+
+<BaseLayout
+  pageTitle="Ice Machine Cleaning Pricing in Pinellas County | From $129"
+  metaDescription="See exact pricing for commercial ice machine cleaning. No quotes, no hassle. Service starting at $129 in Clearwater & Pinellas County."
+  schemaMarkup={schema}
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>Ice Machine Cleaning in Pinellas County, FL</h1>
+      <p class="tier-lead">
+        Professional ice machine cleaning and maintenance for restaurants,
+        bars, and businesses in Pinellas County, including Palm Harbor,
+        Clearwater, and St. Petersburg.
+      </p>
+      <div class="tier-badges">
+        <span class="tier-badge"><Icon name="check" size={16} /> Cleaner Ice</span>
+        <span class="tier-badge"><Icon name="check" size={16} /> Fewer Breakdowns</span>
+        <span class="tier-badge"><Icon name="check" size={16} /> Healthier Customers</span>
+      </div>
+      <div class="hero-ctas">
+        <a href="#quote" class="btn btn-primary btn-lg">Request Service</a>
+        <a href="tel:+17278556873" class="btn btn-outline btn-lg"><Icon name="phone" size={18} /> Call (727) 855-6873</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <div class="grid-2">
+        <div>
+          <h2>Dirty Ice Machines Lead To:</h2>
+          <ul class="icon-list">
+            <li><Icon name="droplet" size={20} /> <span><strong>Mold &amp; Slime</strong> — build-up inside machine</span></li>
+            <li><Icon name="alert" size={20} /> <span><strong>Bad-Tasting Ice</strong> — impacts drinks &amp; customers</span></li>
+            <li><Icon name="alert" size={20} /> <span><strong>Health Risks</strong> — failed inspections</span></li>
+            <li><Icon name="wrench" size={20} /> <span><strong>Expensive Breakdowns</strong> — repairs &amp; downtime</span></li>
+          </ul>
+          <p>We make sure that never happens.</p>
+
+          <h2>Simple, Flat Monthly Pricing</h2>
+          <p>
+            No large upfront costs. We deep clean and maintain your machine
+            year-round.
+          </p>
+          <div class="card tier-price">
+            <h3>Clean Ice Plan — $129/month</h3>
+            <p>Everything you need.</p>
+            <ul class="check-list">
+              <li><Icon name="check" size={18} /> <span>Up to 3 deep cleans per year</span></li>
+              <li><Icon name="check" size={18} /> <span>Full internal sanitization</span></li>
+              <li><Icon name="check" size={18} /> <span>Scale &amp; buildup removal</span></li>
+              <li><Icon name="check" size={18} /> <span>Filter rinse + inspection</span></li>
+              <li><Icon name="check" size={18} /> <span>Discounted filter replacement</span></li>
+              <li><Icon name="check" size={18} /> <span>Priority scheduling</span></li>
+            </ul>
+            <div class="hero-ctas">
+              <a href="tel:+17278556873" class="btn btn-primary"><Icon name="phone" size={16} /> Call Now to Get Started</a>
+            </div>
+            <p class="small muted" style="margin-top: var(--space-2)">
+              Most customers save on average $750/year vs regular cleaning
+              rates. Applies to most commercial machines. Excessive build-up
+              may require initial deep cleaning.
+            </p>
+          </div>
+          <p>
+            <strong>Prefer a one-time service?</strong> Deep cleanings start
+            at $395. (Most customers choose the monthly plan for better
+            long-term value.)
+          </p>
+
+          <h2>Trusted by Local Businesses</h2>
+          <p>
+            We help restaurants, bars, and commercial kitchens keep their ice
+            clean and machines running smoothly.
+          </p>
+          <p>
+            🍽️ Restaurants · 🍺 Bars &amp; Breweries · 🏨 Hotels · 🥤 Cafés ·
+            🏪 Convenience Stores
+          </p>
+          <p>Proudly serving Pinellas County and surrounding areas.</p>
+
+          <h3>Compare Your Options</h3>
+          <ul>
+            <li><a href="/pinellas-ice-co-vs-easy-ice/">Pinellas Ice Co vs Easy Ice</a> — subscription model vs local service</li>
+            <li><a href="/ice-machine-troubleshooting/">Cleaning vs Repair vs Staff</a> — why most options fall short of inspection readiness</li>
+          </ul>
+
+          <h2>Frequently Asked Questions</h2>
+          <FAQ items={faqs} />
+
+          <h2>Ready to Stop Worrying About Your Ice Machine?</h2>
+          <p>
+            Let us handle everything—cleaning, maintenance, and peace of
+            mind. 📞 <a href="tel:+17278556873">Call (727) 855-6873</a> or
+            request service online and we'll get back to you same-day.
+          </p>
+          <p class="small muted">✔ Local • ✔ Reliable • ✔ Ice Machine Experts</p>
+        </div>
+        <LeadForm segment="cleaning" page="ice-machine-cleaning-pricing" heading="Get Clean Ice — Fast" sub="Request service online and we'll get back to you same-day." showUrgency={false} />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .tier-lead { font-size: var(--text-lg); max-width: 680px; }
+  .tier-badges { display: flex; flex-wrap: wrap; gap: var(--space-3); margin: var(--space-4) 0; }
+  .tier-badge {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: var(--ice); color: var(--navy); font-weight: 700; font-size: var(--text-sm);
+    border: 1px solid var(--blue-light); border-radius: 999px; padding: 0.35rem 0.85rem;
+  }
+  .tier-badge svg { color: var(--blue-dark); }
+  .tier-price { margin: var(--space-4) 0; }
+  h2 { margin-top: var(--space-8); margin-bottom: var(--space-3); }
+</style>

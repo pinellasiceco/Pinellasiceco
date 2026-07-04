@@ -1,0 +1,169 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import LeadForm from '../components/ui/LeadForm.astro';
+import FAQ from '../components/ui/FAQ.astro';
+import { serviceSchema, faqSchema } from '../lib/schema';
+
+// Ported verbatim from the live HubSpot page (GSC PORT #9, 60 impressions).
+
+const faqs = [
+  {
+    q: 'Do you service restaurants in Downtown Dunedin?',
+    a: 'Yes, we regularly service businesses throughout Downtown Dunedin and surrounding areas.',
+  },
+  {
+    q: 'How long does cleaning take?',
+    a: 'Most cleanings are completed within 1–2 hours depending on the machine.',
+  },
+  {
+    q: 'Will this remove mold and slime?',
+    a: 'Yes, our process is designed to eliminate buildup and fully sanitize the machine.',
+  },
+];
+
+const schema = [
+  serviceSchema({
+    name: 'Ice Machine Cleaning — Dunedin, FL',
+    serviceType: 'Ice machine cleaning and sanitizing',
+    description: 'Ice machine cleaning in Dunedin, FL for breweries, restaurants, and bars — $99 initial clean & test with verified results.',
+    url: 'https://www.pinellasiceco.com/ice-machine-cleaning-dunedin-fl-pinellas-ice-co/',
+  }),
+  faqSchema(faqs),
+];
+---
+
+<BaseLayout
+  pageTitle="Ice Machine Cleaning Dunedin, FL | Pinellas Ice Co"
+  metaDescription="Ice machine cleaning in Dunedin, FL for restaurants, bars, and local businesses. Flat-rate pricing, and fast service."
+  schemaMarkup={schema}
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>Ice Machine Cleaning in Dunedin, FL <br /><span class="tier-sub">Start with a $99 Clean &amp; Test</span></h1>
+      <p class="tier-lead">
+        Serving breweries, restaurants, and bars near Downtown Dunedin, Main
+        Street, the Pinellas Trail, and Edgewater Drive. Learn more about our
+        <a href="/ice-machine-cleaning/">ice machine cleaning services</a>.
+      </p>
+      <div class="tier-badges">
+        <span class="tier-badge"><Icon name="dollar" size={16} /> $99 Initial Clean &amp; Test</span>
+        <span class="tier-badge"><Icon name="truck" size={16} /> Serving Dunedin Weekly</span>
+        <span class="tier-badge"><Icon name="droplet" size={16} /> Ideal for Breweries &amp; Restaurants</span>
+      </div>
+      <div class="hero-ctas">
+        <a href="#quote" class="btn btn-primary btn-lg">Request Your Ice Machine Cleaning →</a>
+        <a href="tel:+17278556873" class="btn btn-outline btn-lg"><Icon name="phone" size={18} /> Call (727) 855-6873</a>
+      </div>
+      <p class="small muted" style="margin-top: var(--space-3)">
+        Takes 30 seconds to request. Most Dunedin clients switch to monthly
+        maintenance after the first visit.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <div class="grid-2">
+        <div>
+          <p>
+            If your machine hasn't been recently cleaned and tested, there's
+            a high chance it would fail a sanitation test — impacting drink
+            quality and consistency.
+          </p>
+
+          <h2>Why Ice Quality Matters in Dunedin</h2>
+          <p>
+            In a city known for breweries and craft-focused restaurants, ice
+            directly impacts taste and presentation. Regular professional
+            cleaning is critical.
+          </p>
+          <ul>
+            <li>Contaminated ice affects flavor and clarity</li>
+            <li>Buildup creates odor and visual issues</li>
+            <li>Inconsistent output disrupts service flow</li>
+          </ul>
+          <p>
+            Most machines fail sanitation testing without consistent
+            maintenance.
+          </p>
+
+          <h2>Built for Quality-Focused Operators</h2>
+          <p>We don't just clean — we verify with measurable results.</p>
+          <div class="tier-features">
+            <div>
+              <h3>ATP Testing</h3>
+              <p>Measured sanitation levels before and after cleaning.</p>
+            </div>
+            <div>
+              <h3>Certified Clean</h3>
+              <p>Verification you can rely on for quality control.</p>
+            </div>
+            <div>
+              <h3>Documentation</h3>
+              <p>Clear records for operational standards.</p>
+            </div>
+          </div>
+          <p>
+            <strong>Keep Your Ice Quality Consistent</strong> —
+            <a href="#quote">Request Your Ice Machine Cleaning →</a>
+          </p>
+
+          <h2>One-Time Cleaning vs Ongoing Maintenance</h2>
+          <p>
+            Clean ice requires consistency. Ongoing maintenance plans prevent
+            issues from returning.
+          </p>
+          <div class="tier-compare">
+            <div>
+              <h3>One-Time Cleaning</h3>
+              <p>Short-term improvement. Quality declines.</p>
+            </div>
+            <div>
+              <h3>$149/Month Service</h3>
+              <p>Ongoing cleaning, filtration, testing, and certification.</p>
+            </div>
+          </div>
+
+          <h2>Keep Your Ice Clean. Keep Your Quality High.</h2>
+          <p>
+            Request your $99 clean and get verified, documented results.
+            Check availability and get your machine cleaned as soon as today.
+          </p>
+          <p>
+            Serving Dunedin and nearby areas including Palm Harbor,
+            Clearwater, Tarpon Springs, and surrounding Pinellas County.
+          </p>
+
+          <h2>Frequently asked questions</h2>
+          <FAQ items={faqs} />
+
+          <div class="mt-8">
+            <h2>More from Pinellas Ice Co</h2>
+            <ul class="check-list">
+              <li><Icon name="check" size={18} /> <span>Machine acting up, not just dirty? <a href="/ice-machine-repair/">Ice machine repair</a> across Tampa Bay.</span></li>
+              <li><Icon name="check" size={18} /> <span>Nearby: <a href="/ice-machine-cleaning-clearwater-fl-pinellas-ice-co/">Clearwater cleaning</a> and the <a href="/clearwater/">Clearwater service area</a>.</span></li>
+              <li><Icon name="check" size={18} /> <span>Need a machine? <a href="/commercial-ice-machine-sales/">Sales</a> and <a href="/ice-machine-leasing/">leasing</a>.</span></li>
+            </ul>
+          </div>
+        </div>
+        <LeadForm segment="cleaning" page="ice-machine-cleaning-dunedin" heading="Request Your $99 Clean & Test" sub="Same-day service when available — most Dunedin clients switch to monthly after the first visit." showUrgency={false} />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .tier-sub { display: inline-block; font-size: var(--text-xl); font-weight: 700; color: var(--blue-dark); margin-top: var(--space-2); }
+  .tier-lead { font-size: var(--text-lg); max-width: 680px; }
+  .tier-badges { display: flex; flex-wrap: wrap; gap: var(--space-3); margin: var(--space-4) 0; }
+  .tier-badge {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: var(--ice); color: var(--navy); font-weight: 700; font-size: var(--text-sm);
+    border: 1px solid var(--blue-light); border-radius: 999px; padding: 0.35rem 0.85rem;
+  }
+  .tier-badge svg { color: var(--blue-dark); }
+  .tier-features, .tier-compare { display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin: var(--space-4) 0; }
+  .tier-features h3, .tier-compare h3 { margin-bottom: var(--space-1); }
+  h2 { margin-top: var(--space-8); margin-bottom: var(--space-3); }
+</style>

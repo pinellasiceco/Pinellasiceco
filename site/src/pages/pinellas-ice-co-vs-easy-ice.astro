@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import LeadForm from '../components/ui/LeadForm.astro';
+
+// Ported verbatim from the live HubSpot page (GSC PORT #10, 51 impressions,
+// position 6.2).
+---
+
+<BaseLayout
+  pageTitle="Pinellas Ice Co vs Easy Ice | Local Service vs Leasing Comparison"
+  metaDescription="Compare Pinellas Ice Co vs Easy Ice. See the difference between local service and national leasing, including response time, ownership, and inspection readiness."
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>Pinellas Ice Co vs Easy Ice</h1>
+      <p class="tier-lead">One is a national subscription. One is a local relationship.</p>
+      <p>
+        <strong>Important:</strong> Easy Ice is not a cleaning company. They
+        are a machine leasing company that includes service.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <div class="grid-2">
+        <div>
+          <h2>Side-by-Side Breakdown</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Category</th><th>Pinellas Ice Co</th><th>Easy Ice</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Business Model</td><td>Service provider</td><td>Equipment leasing</td></tr>
+                <tr><td>Ownership</td><td>You own your machine</td><td>They own the machine</td></tr>
+                <tr><td>Support</td><td>Direct contact</td><td>Call center</td></tr>
+                <tr><td>Technicians</td><td>Same person every visit</td><td>Third-party network</td></tr>
+                <tr><td>Compliance Focus</td><td>Primary service</td><td>Secondary</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2>This Is the Real Difference</h2>
+          <p>Easy Ice is built to manage equipment at scale.</p>
+          <p>Pinellas Ice Co is built to keep your location inspection-ready.</p>
+          <div class="tier-compare">
+            <div>
+              <h3>Easy Ice Experience</h3>
+              <ul>
+                <li>You call a support line</li>
+                <li>They dispatch a contractor</li>
+                <li>You wait in queue</li>
+                <li>Different techs each visit</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Pinellas Ice Co</h3>
+              <ul>
+                <li>You call or text directly</li>
+                <li>Immediate response</li>
+                <li>Same technician every time</li>
+                <li>Local accountability</li>
+              </ul>
+            </div>
+          </div>
+          <p>
+            Want to see what actually matters during inspections?
+          </p>
+          <ul>
+            <li><a href="/ice-machine-cleaning/">What ATP testing proves</a></li>
+            <li><a href="/pinellas-ice-insights-ice-machine-cleaning-tips-guides/ice-machine-cleaning-requirements-for-restaurants-health-code-guide/">What inspectors actually check</a></li>
+          </ul>
+
+          <h2>Why Local Wins Here</h2>
+          <p>When something goes wrong, speed matters.</p>
+          <p>Not next week. Not when dispatch gets to you.</p>
+          <p>
+            Same-day response from someone who already knows your machine.
+          </p>
+
+          <h2>When your machine goes down… who are you calling?</h2>
+          <p>
+            A national support line? Or someone who already knows your
+            equipment?
+          </p>
+          <p>
+            Prefer to own your machine outright? We also do
+            <a href="/commercial-ice-machine-sales/">sales</a> and — if
+            leasing genuinely fits — <a href="/ice-machine-leasing/">local
+            leasing with service included</a>.
+          </p>
+        </div>
+        <LeadForm segment="cleaning" page="vs-easy-ice" heading="Work Directly With a Local Specialist" sub="Call or text (727) 855-6873, or tell us what's going on and we'll call you back." showUrgency={false} />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .tier-lead { font-size: var(--text-lg); max-width: 680px; }
+  .tier-compare { display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin: var(--space-4) 0; }
+  h2 { margin-top: var(--space-8); margin-bottom: var(--space-3); }
+</style>

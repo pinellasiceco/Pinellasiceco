@@ -1,8 +1,23 @@
 # Preservation Ledger — pinellasiceco.com migration (HubSpot CMS → Astro/Netlify)
 
-**Status: GSC-VERIFIED (export received 2026-07-04) — operator sign-off on the
-redirect map + port list is the remaining gate before DNS cutover.**
-Date compiled: 2026-07-03; revised 2026-07-04 against the real GSC export.
+**Status: GSC-VERIFIED + PORTS COMPLETE — all 12 PORT candidates fetched from
+the live site (network access granted 2026-07-04) and rebuilt at their
+original slugs with verbatim titles, meta descriptions, H1s, and body
+substance. Remaining gate: operator sign-off on the redirect map + the
+soft flags in operator-flags.md.**
+Date compiled: 2026-07-03; revised 2026-07-04 (GSC export, then live-site port).
+
+**Ports completed (200 at original slug, content verbatim):** St. Pete city
+page, Dunedin city page, near-me/same-day page, pricing-from-149 page,
+vs-easy-ice comparison, and 7 "Pinellas Ice Insights" guides (cost-pinellas,
+health-code requirements, 5-signs, cost-florida-2026, smells-bad, checklist,
+frequency-humid-climate) + a rebuilt guides index at the original blog-index
+URL. The Clearwater Tier A page was verified against the live page
+(title/meta/H1/body/FAQ all match; meta corrected to live verbatim).
+Still 301 (not ported, low equity): largo + palm-harbor city pages, FAQ page,
+about/contact pages, pricing-from-199, maintenance-plan-149/month,
+vs-repair-vs-staff, sanitation-verification, compliance-report,
+inspection-risks, and 5 minor blog posts — all single-hop per the map.
 
 ## MASTER TABLE — every URL with impressions (GSC last-3-months, param variants consolidated)
 

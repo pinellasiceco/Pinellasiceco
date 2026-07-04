@@ -20,17 +20,8 @@
 # each redirect below simply gets deleted when its page is ported.
 # ---------------------------------------------------------------------------
 
-# --- City cleaning pages (PORT-CANDIDATEs; interim → closest intent) ---
-[[redirects]]
-  from = "/ice-machine-cleaning-st.-petersburg-fl-pinellas-ice-co"
-  to = "/st-petersburg/"
-  status = 301
-
-[[redirects]]
-  from = "/ice-machine-cleaning-dunedin-fl-pinellas-ice-co"
-  to = "/ice-machine-cleaning/"
-  status = 301
-
+# --- City cleaning pages ---
+# St. Pete, Dunedin: PORTED — 200 at original slugs, no redirect.
 [[redirects]]
   from = "/ice-machine-cleaning-largo-fl-pinellas-ice-co"
   to = "/ice-machine-cleaning/"
@@ -41,28 +32,26 @@
   to = "/ice-machine-cleaning/"
   status = 301
 
-# --- Pricing / plan pages (PORT-CANDIDATE: from-149) ---
+# Hub page linked from live city-page H1s (zero GSC impressions).
 [[redirects]]
-  from = "/ice-machine-cleaning-pricing-in-pinellas-county-from-149"
-  to = "/ice-machine-cleaning-clearwater-fl-pinellas-ice-co/"
+  from = "/ice-machine-cleaning-in-pinellas-county"
+  to = "/ice-machine-cleaning/"
   status = 301
 
+# --- Pricing / plan pages ---
+# from-149: PORTED — 200 at original slug.
 [[redirects]]
   from = "/ice-machine-cleaning-pricing-in-pinellas-county-from-199"
-  to = "/ice-machine-cleaning-clearwater-fl-pinellas-ice-co/"
+  to = "/ice-machine-cleaning-pricing-in-pinellas-county-from-149/"
   status = 301
 
 [[redirects]]
   from = "/ice-machine-maintenance-plan-in-pinellas-county-149/*"
-  to = "/ice-machine-cleaning/"
+  to = "/ice-machine-cleaning-pricing-in-pinellas-county-from-149/"
   status = 301
 
 # --- Service / company pages ---
-[[redirects]]
-  from = "/ice-machine-cleaning-near-me-in-pinellas-county-same-day-service"
-  to = "/ice-machine-cleaning/"
-  status = 301
-
+# near-me-same-day and vs-easy-ice: PORTED — 200 at original slugs.
 [[redirects]]
   from = "/ice-machine-cleaning-faq-pinellas-ice-co"
   to = "/ice-machine-cleaning/"
@@ -78,9 +67,10 @@
   to = "/contact/"
   status = 301
 
+# Linked from the live near-me page; zero GSC impressions, not ported.
 [[redirects]]
-  from = "/pinellas-ice-co-vs-easy-ice"
-  to = "/about/"
+  from = "/pinellas-ice-co-vs-crystal-ice"
+  to = "/pinellas-ice-co-vs-easy-ice/"
   status = 301
 
 [[redirects]]
@@ -129,19 +119,12 @@
   to = "/st-petersburg/"
   status = 301
 
-# Catch-all: every other guide is cleaning-topic (costs, requirements,
-# contamination signs, smells/taste, checklist, frequency, step-by-step).
-# PORT-CANDIDATEs per ledger: cost-in-pinellas-county (205 imp),
-# requirements-health-code-guide (140), 5-signs-contaminated (100),
-# florida-2026-pricing-guide (97), smells-bad-fast (81), checklist (42),
-# frequency-humid-climate (32, linked from the Tier A page).
+# Catch-all for remaining guides (tastes-bad, step-by-step, smells-bad
+# duplicate, palm-harbor local, restaurant-owners checklist — all ≤40 imp).
+# The 7 PORTED guides + the rebuilt index are static files at their original
+# paths, which take precedence over this non-forced redirect.
 [[redirects]]
   from = "/pinellas-ice-insights-ice-machine-cleaning-tips-guides/*"
-  to = "/ice-machine-cleaning/"
-  status = 301
-
-[[redirects]]
-  from = "/pinellas-ice-insights-ice-machine-cleaning-tips-guides"
   to = "/ice-machine-cleaning/"
   status = 301
 

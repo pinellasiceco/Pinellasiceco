@@ -65,3 +65,11 @@ Ordered by priority. Nothing here blocks the *build*; items 1–3 block
 14. Calculator + leasing/sales price ranges are typical-market planning
     ranges — sanity-check them against your actual pricing so the site
     never quotes below what you'd charge.
+15. **Pricing inconsistency ported from the live site**: the pricing page
+    (`/ice-machine-cleaning-pricing-in-pinellas-county-from-149`) says
+    **$129/month** ("Clean Ice Plan", deep clean $395) while the city pages
+    (Clearwater/St. Pete/Dunedin) say **$149/Month Service**. Both ported
+    verbatim per preservation rules. Decide the real number and say the
+    word — it's a one-line edit per page. (Also note the pricing page's
+    slug says "from-149" while its title says "From $129" — that's the
+    live site's own history; the slug must stay.)

@@ -1,0 +1,179 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import LeadForm from '../components/ui/LeadForm.astro';
+import FAQ from '../components/ui/FAQ.astro';
+import { serviceSchema, faqSchema } from '../lib/schema';
+
+// Ported verbatim from the live HubSpot page (GSC PORT #1 — the site's
+// highest-impression content page, 242 impressions). Slug preserved
+// identically, including the dot in "st.-petersburg". Booking CTAs
+// reconciled to callback/form framing.
+
+const faqs = [
+  {
+    q: 'Can a dirty ice machine affect taste or appearance?',
+    a: 'Yes, buildup inside the machine can impact both the clarity and taste of ice.',
+  },
+  {
+    q: 'Do you clean machines in busy restaurants?',
+    a: 'Yes, our service is designed for high-demand environments and commercial kitchens.',
+  },
+  {
+    q: 'Will cleaning help prevent breakdowns?',
+    a: 'Regular cleaning can reduce strain on components and help prevent performance issues.',
+  },
+];
+
+const schema = [
+  serviceSchema({
+    name: 'Ice Machine Cleaning — St. Petersburg, FL',
+    serviceType: 'Ice machine cleaning and sanitizing',
+    description: 'Same-day ice machine cleaning in St. Petersburg, FL — $99 initial clean & test with ATP verification for restaurants, bars, and hotels.',
+    url: 'https://www.pinellasiceco.com/ice-machine-cleaning-st.-petersburg-fl-pinellas-ice-co/',
+  }),
+  faqSchema(faqs),
+];
+---
+
+<BaseLayout
+  pageTitle="Ice Machine Cleaning St. Petersburg, FL | Pinellas Ice Co"
+  metaDescription="Same-day ice machine cleaning in St. Petersburg, FL. Flat-rate pricing, and fast service for restaurants and bars."
+  schemaMarkup={schema}
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>Ice Machine Cleaning in St. Petersburg, FL <br /><span class="tier-sub">Start with a $99 Clean &amp; Test</span></h1>
+      <p class="tier-lead">
+        Serving restaurants, bars, and hotels across Downtown St. Petersburg,
+        Central Ave, Beach Drive, the Edge District, Grand Central District,
+        and areas surrounding Tropicana Field. Learn more about our
+        <a href="/ice-machine-cleaning/">ice machine cleaning services</a>.
+      </p>
+      <div class="tier-badges">
+        <span class="tier-badge"><Icon name="dollar" size={16} /> $99 Initial Clean &amp; Test</span>
+        <span class="tier-badge"><Icon name="truck" size={16} /> Serving St. Pete Weekly</span>
+        <span class="tier-badge"><Icon name="cube" size={16} /> Bars • Restaurants • Hotels</span>
+        <span class="tier-badge"><Icon name="shield" size={16} /> Inspection-Focused Service</span>
+      </div>
+      <div class="hero-ctas">
+        <a href="#quote" class="btn btn-primary btn-lg">Request Your Ice Machine Cleaning →</a>
+        <a href="tel:+17278556873" class="btn btn-outline btn-lg"><Icon name="phone" size={18} /> Call (727) 855-6873</a>
+      </div>
+      <p class="small muted" style="margin-top: var(--space-3)">
+        Takes 30 seconds to request. Most St. Pete clients switch to monthly
+        service after the first visit.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <div class="grid-2">
+        <div>
+          <p>
+            In high-volume St. Pete kitchens and bars, ice machines build
+            contamination fast — most would fail a sanitation test without
+            regular cleaning and testing.
+          </p>
+
+          <h2>Why Ice Machines Fail in St. Petersburg</h2>
+          <p>
+            Between humidity, constant use, and customer volume, machines
+            require consistent <a href="/ice-machine-cleaning/">professional
+            cleaning</a>.
+          </p>
+          <p>
+            With heavy foot traffic and event-driven volume, machines here
+            build contamination faster than most operators expect. Learn the
+            warning signs in
+            <a href="/pinellas-ice-insights-ice-machine-cleaning-tips-guides/5-signs-your-ice-machine-is-contaminated-most-businesses-miss-3/">this guide</a>.
+          </p>
+          <ul>
+            <li>Mold and slime buildup from humidity</li>
+            <li>High daily output increases contamination risk</li>
+            <li>Health inspections and customer expectations are unforgiving</li>
+          </ul>
+          <p>
+            If it's not regularly cleaned and tested, it becomes a liability.
+          </p>
+
+          <h2>More Than a Cleaning — A Verified System</h2>
+          <p>We don't just clean — we prove it with measurable verification.</p>
+          <div class="tier-features">
+            <div>
+              <h3>ATP Testing</h3>
+              <p>Measured sanitation levels before and after service.</p>
+            </div>
+            <div>
+              <h3>Certified Clean Status</h3>
+              <p>Verification you can rely on during inspections.</p>
+            </div>
+            <div>
+              <h3>Documentation</h3>
+              <p>Proof of service for compliance needs.</p>
+            </div>
+          </div>
+          <p>
+            <strong>Stay Inspection-Ready Year Round</strong> —
+            <a href="#quote">Request Your Ice Machine Cleaning →</a>
+          </p>
+
+          <h2>One-Time Cleaning vs Ongoing Protection</h2>
+          <p>
+            One-time cleaning fixes the surface. Ongoing maintenance plans
+            keep your machine consistently clean.
+          </p>
+          <div class="tier-compare">
+            <div>
+              <h3>One-Time Cleaning</h3>
+              <p>Short-term improvement. Issues return quickly.</p>
+            </div>
+            <div>
+              <h3>$149/Month Service</h3>
+              <p>Routine cleaning, filtration, testing, and certification.</p>
+            </div>
+          </div>
+
+          <h2>Don't Let Your Ice Machine Be the Weak Link</h2>
+          <p>
+            Request your $99 clean and get verified, documented results.
+            Check availability and get your machine cleaned as soon as today.
+          </p>
+          <p>
+            Serving Clearwater and nearby areas including Dunedin, Palm
+            Harbor, Largo, and surrounding Pinellas County.
+          </p>
+
+          <h2>Frequently asked questions</h2>
+          <FAQ items={faqs} />
+
+          <div class="mt-8">
+            <h2>More from Pinellas Ice Co</h2>
+            <ul class="check-list">
+              <li><Icon name="check" size={18} /> <span>Machine acting up, not just dirty? <a href="/ice-machine-repair/">Ice machine repair</a> across Tampa Bay.</span></li>
+              <li><Icon name="check" size={18} /> <span>Everything we do in St. Pete: <a href="/st-petersburg/">St. Petersburg service area</a> — repair, sales, leasing, cleaning.</span></li>
+              <li><Icon name="check" size={18} /> <span>Need a machine instead? <a href="/commercial-ice-machine-sales/">Sales</a> and <a href="/ice-machine-leasing/">leasing</a>, sized to your volume.</span></li>
+            </ul>
+          </div>
+        </div>
+        <LeadForm segment="cleaning" page="ice-machine-cleaning-st-petersburg" heading="Request Your $99 Clean & Test" sub="Same-day service when available — most St. Pete clients switch to monthly after the first visit." showUrgency={false} />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .tier-sub { display: inline-block; font-size: var(--text-xl); font-weight: 700; color: var(--blue-dark); margin-top: var(--space-2); }
+  .tier-lead { font-size: var(--text-lg); max-width: 680px; }
+  .tier-badges { display: flex; flex-wrap: wrap; gap: var(--space-3); margin: var(--space-4) 0; }
+  .tier-badge {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: var(--ice); color: var(--navy); font-weight: 700; font-size: var(--text-sm);
+    border: 1px solid var(--blue-light); border-radius: 999px; padding: 0.35rem 0.85rem;
+  }
+  .tier-badge svg { color: var(--blue-dark); }
+  .tier-features, .tier-compare { display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin: var(--space-4) 0; }
+  .tier-features h3, .tier-compare h3 { margin-bottom: var(--space-1); }
+  h2 { margin-top: var(--space-8); margin-bottom: var(--space-3); }
+</style>
