@@ -1,0 +1,32 @@
+---
+import Icon from './Icon.astro';
+// Visible service-area block for money pages — proximity signal for
+// near-me intent. Response-reality line: [OPERATOR: confirm the ~45-minute
+// figure] — ships as an approximation ("about"), not a promise.
+---
+
+<div class="sa-block">
+  <div class="sa-head">
+    <Icon name="pin" size={20} />
+    <strong>Based in Pinellas County — most of Tampa Bay is within about a 45-minute drive.</strong>
+  </div>
+  <p class="sa-cities">
+    <a href="/tampa/">Tampa</a> · <a href="/st-petersburg/">St. Petersburg</a> ·
+    <a href="/clearwater/">Clearwater</a> · Largo · Dunedin · Palm Harbor ·
+    Brandon · Pinellas Park · Safety Harbor · Oldsmar · Tarpon Springs ·
+    <a href="/pinellas-county/">all of Pinellas</a>, Hillsborough &amp; Pasco counties
+  </p>
+</div>
+
+<style>
+  .sa-block {
+    background: var(--ice);
+    border: 1px solid var(--blue-light);
+    border-radius: var(--radius-md);
+    padding: var(--space-4) var(--space-6);
+    margin: var(--space-6) 0;
+  }
+  .sa-head { display: flex; gap: var(--space-2); align-items: flex-start; color: var(--navy); }
+  .sa-head svg { flex: none; margin-top: 3px; color: var(--blue-dark); }
+  .sa-cities { font-size: var(--text-sm); color: var(--text-2); margin: var(--space-2) 0 0 1.75rem; }
+</style>

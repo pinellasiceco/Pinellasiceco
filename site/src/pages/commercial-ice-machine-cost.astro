@@ -1,0 +1,104 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import Neutrality from '../components/ui/Neutrality.astro';
+import LibraryCapture from '../components/ui/LibraryCapture.astro';
+import FAQ from '../components/ui/FAQ.astro';
+import { faqSchema } from '../lib/schema';
+
+// Market-price transparency: ranges are Tampa Bay market-sourced planning
+// bands, never fabricated precision. [OPERATOR: confirm ranges.]
+
+const faqs = [
+  {
+    q: 'How much does a commercial ice machine cost installed?',
+    a: 'Tampa Bay reality: $2,000–$4,000 all-in for a 300–500 lbs/day cuber with bin; $4,000–$8,000+ for 600–1,000 lbs/day production machines. "All-in" is the number that matters — machine, delivery, install, water filtration, startup.',
+  },
+  {
+    q: 'What does installation add to the price?',
+    a: 'Typically $300–$800 for a straightforward replacement (water, drain, and power already in place), more if lines need to be run or the machine needs remote condensing. Anyone quoting a bare machine price without asking about your install is hiding this line item.',
+  },
+  {
+    q: 'Are cheap online prices real?',
+    a: 'The machine price usually is — freight-damaged risk, no install, no filtration, no startup, and no one local when it fails under warranty are what the discount buys. See "when the alternatives beat us" below for when it\'s still the right call.',
+  },
+  {
+    q: 'How long do commercial ice machines last?',
+    a: 'Well-maintained: 8–12 years in Tampa Bay (heat and water shorten the national average here). Skipped cleanings and beach-air placements can cut that in half — factor maintenance into the real cost of ownership.',
+  },
+];
+---
+
+<BaseLayout
+  pageTitle="Commercial Ice Machine Cost — What Tampa Bay Businesses Actually Pay | Pinellas Ice Co"
+  metaDescription="Real commercial ice machine costs in Tampa Bay: $2,000–$4,000 installed for standard cubers, $4,000–$8,000+ for production units — plus install reality and when NOT to buy from us."
+  schemaMarkup={faqSchema(faqs)}
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>Commercial ice machine cost: what Tampa Bay businesses actually pay</h1>
+      <div class="answer-block">
+        Real numbers: a standard <strong>300–500 lbs/day cuber lands at
+        $2,000–$4,000 installed</strong> in Tampa Bay; production machines
+        (600–1,000+ lbs/day) run <strong>$4,000–$8,000+</strong>; good used
+        machines 40–60% of new. Always compare <strong>all-in installed</strong>
+        prices — bare machine quotes hide $300–$800 of install reality.
+      </div>
+      <Neutrality />
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container narrow">
+      <h2>Purchase ranges by size class</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Size class</th><th>Fits</th><th>New, installed</th><th>Used, installed</th></tr></thead>
+          <tbody>
+            <tr><td>150–300 lbs/day</td><td>cafés, small offices</td><td>$1,800–$3,200</td><td>$1,000–$1,900</td></tr>
+            <tr><td>300–500 lbs/day</td><td>restaurants, taprooms</td><td>$2,500–$4,500</td><td>$1,400–$2,700</td></tr>
+            <tr><td>500–800 lbs/day</td><td>busy restaurants, bars</td><td>$4,000–$6,500</td><td>$2,200–$3,900</td></tr>
+            <tr><td>800–1,200 lbs/day</td><td>hotels, healthcare, venues</td><td>$5,500–$9,000</td><td>$3,000–$5,400</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small muted">
+        Tampa Bay planning bands, mid-2026, cube machines with bins. Nugget
+        and specialty ice run 15–30% above cube at the same capacity. Which
+        size class you're in: <a href="/what-size-ice-machine-does-a-restaurant-need/">restaurant</a> ·
+        <a href="/what-size-ice-machine-does-a-bar-need/">bar</a> ·
+        <a href="/what-size-ice-machine-does-a-hotel-need/">hotel</a> ·
+        <a href="/ice-machine-for-healthcare-facilities/">healthcare</a> ·
+        <a href="/ice-machine-for-office-or-school/">office/school</a>.
+      </p>
+
+      <h2>The costs that aren't on the sticker</h2>
+      <ul class="check-list">
+        <li><Icon name="check" size={18} /> <span><strong>Install:</strong> $300–$800 typical; more for new water/drain runs or remote condensers.</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>Water filtration:</strong> $150–$400 up front, and it's not optional here — Tampa Bay water is hard, and scale is the #1 machine killer.</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>Maintenance:</strong> ~$300–$500/year of professional cleanings to keep the warranty valid and the machine alive in Florida conditions.</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>The Florida sizing premium:</strong> sizing up ~20% for heat costs a few hundred dollars once; undersizing costs bagged ice forever.</span></li>
+      </ul>
+
+      <h2>When the alternatives beat us</h2>
+      <p>
+        Honesty is the product, so: <strong>buying online direct genuinely
+        makes sense</strong> if you have in-house refrigeration talent, can
+        handle freight inspection, and are comfortable being your own
+        warranty coordinator — the discount is real if you never need local
+        help. <strong>A national subscription genuinely makes sense</strong>
+        if you're a multi-state operator who wants one vendor and one invoice
+        everywhere, and you're willing to pay the bundle premium for it (the
+        math is in <a href="/lease-vs-buy-vs-subscription-ice-machine/">lease
+        vs buy vs subscription</a>). Where we win: sized-for-Florida guidance,
+        an all-in installed price with no surprises, and someone local who
+        answers when the machine acts up.
+      </p>
+
+      <h2>Cost FAQs</h2>
+      <FAQ items={faqs} />
+    </div>
+  </section>
+
+  <LibraryCapture segment="sales" page="commercial-ice-machine-cost" businessType="business" />
+</BaseLayout>

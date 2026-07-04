@@ -1,0 +1,99 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import Neutrality from '../components/ui/Neutrality.astro';
+import LibraryCapture from '../components/ui/LibraryCapture.astro';
+import FAQ from '../components/ui/FAQ.astro';
+import { faqSchema } from '../lib/schema';
+
+const faqs = [
+  {
+    q: 'How many pounds of ice does a restaurant use per day?',
+    a: 'Plan on roughly 1.5 lbs per seat per day for a full-service restaurant, more if you run a busy bar program or serve a lot of iced drinks. An 80-seat restaurant lands around 120 lbs/day of actual use — which means a bigger machine than 120 lbs, because ratings assume lab conditions.',
+  },
+  {
+    q: 'Why do Florida restaurants need to size up?',
+    a: 'Machines are rated at 70°F air and 50°F water. A Tampa Bay kitchen in August runs well above that, and hot ambient air cuts real output 10–20%. Sizing to the sticker rating is how restaurants end up buying bagged ice every Friday in summer.',
+  },
+  {
+    q: 'Do you serve restaurants in downtown St. Pete and Ybor?',
+    a: 'Yes — the Central Avenue and EDGE District corridors in St. Pete and Ybor City nightlife spots in Tampa are core territory. Based in Pinellas, most of Tampa Bay is within about a 45-minute drive.',
+  },
+  {
+    q: 'What happens if I undersize the machine?',
+    a: 'It runs continuously (shortening its life), still runs out on your busiest night, and you end up paying restaurant-supply prices for bagged ice. Undersizing costs more than the size upgrade would have.',
+  },
+];
+---
+
+<BaseLayout
+  pageTitle="What Size Ice Machine Does a Restaurant Need? (Florida Sizing Guide) | Pinellas Ice Co"
+  metaDescription="Restaurant ice machine sizing: ~1.5 lbs per seat per day, plus the Florida-heat adjustment most sizing guides skip. Real math, Tampa Bay ranges, no pressure."
+  schemaMarkup={faqSchema(faqs)}
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>What size ice machine does a restaurant need?</h1>
+      <div class="answer-block">
+        Rule of thumb: <strong>about 1.5 lbs of ice per seat per day</strong>,
+        then add 20% for Florida heat. An 80-seat full-service restaurant
+        needs roughly 120 lbs/day of real production — which in Tampa Bay
+        means buying a machine <strong>rated 300–400 lbs/day</strong>, because
+        ratings assume 70°F air your kitchen doesn't have.
+      </div>
+      <Neutrality />
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container narrow">
+      <h2>The actual math</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Restaurant</th><th>Daily ice need</th><th>Machine to buy (FL-adjusted)</th></tr></thead>
+          <tbody>
+            <tr><td>40-seat café / lunch spot</td><td>~60 lbs/day</td><td>150–250 lbs/day rated</td></tr>
+            <tr><td>80-seat full service</td><td>~120 lbs/day</td><td>300–400 lbs/day rated</td></tr>
+            <tr><td>120-seat full service + bar</td><td>~250 lbs/day</td><td>450–600 lbs/day rated</td></tr>
+            <tr><td>200-seat, event-heavy</td><td>~400+ lbs/day</td><td>650–900 lbs/day rated</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small muted">
+        Ranges assume cube ice and a busy-day baseline. Heavy bar programs:
+        use the <a href="/what-size-ice-machine-does-a-bar-need/">bar sizing
+        guide</a> for the drink-driven math instead.
+      </p>
+
+      <h2>The Florida adjustment (this is the part that bites)</h2>
+      <p>
+        Every manufacturer rates machines at 70°F air / 50°F water. A Tampa
+        Bay back-of-house in July runs 85–95°F next to the fryer line, and
+        our groundwater runs warm. Real-world output drops 10–20% exactly
+        when demand peaks — beach season. We size every quote up for it,
+        because the alternative is your GM buying bagged ice out of petty
+        cash every weekend from June to September. Downtown St. Pete
+        restaurants with tight alcove installs get hit hardest: heat has
+        nowhere to go, and the machine chokes on its own exhaust.
+      </p>
+
+      <h2>Three more decisions that change the answer</h2>
+      <ul class="check-list">
+        <li><Icon name="check" size={18} /> <span><strong>Bin size ≠ machine size.</strong> The bin buffers your rush. A machine that makes 400 lbs/day with a 200-lb bin dies at Friday dinner if your rush pulls 100 lbs in two hours.</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>Ice type matters:</strong> cube for drinks and general service; nugget if you're beverage-forward. See <a href="/nugget-vs-cube-vs-flake-ice/">nugget vs cube vs flake</a>.</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>Budget:</strong> the size class sets the price band — see <a href="/commercial-ice-machine-cost/">what commercial ice machines cost</a> and whether <a href="/lease-vs-buy-vs-subscription-ice-machine/">leasing beats buying</a> for your situation.</span></li>
+      </ul>
+
+      <p>
+        Want the number for your exact seat count and layout? Run the
+        <a href="/ice-machine-cost-calculator/">calculator</a> or skip
+        straight to the quote below.
+      </p>
+
+      <h2>Restaurant sizing FAQs</h2>
+      <FAQ items={faqs} />
+    </div>
+  </section>
+
+  <LibraryCapture segment="sales" page="sizing-restaurant" businessType="restaurant" />
+</BaseLayout>

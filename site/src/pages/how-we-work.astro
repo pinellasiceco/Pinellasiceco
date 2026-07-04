@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import ServiceAreaBlock from '../components/ui/ServiceAreaBlock.astro';
+import LeadForm from '../components/ui/LeadForm.astro';
+
+// The method page — the tenure counter. Incumbents have "since 1992";
+// we have visible method and radical straightness. Linked from every
+// capture form's "here's exactly what happens next" microcopy.
+---
+
+<BaseLayout
+  pageTitle="How We Work — The Sizing Method, What Happens Next, What We Don't Do | Pinellas Ice Co"
+  metaDescription="Our method, visible: the Florida-heat sizing math we use, exactly what happens after you submit, and what we don't do — no pressure, no inventory to push, no brand quotas."
+>
+  <section class="page-head">
+    <div class="container narrow">
+      <h1>How we work</h1>
+      <div class="answer-block">
+        No mystery: <strong>you call or submit → we call back and ask a few
+        questions → we size it with the Florida-heat math below → you get
+        straight numbers</strong> you can hold us to. Here's each piece,
+        visible.
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container narrow">
+      <h2>The sizing method (the actual math)</h2>
+      <p>We use the same arithmetic on every quote, and it's not secret:</p>
+      <ul class="check-list">
+        <li><Icon name="check" size={18} /> <span><strong>Demand:</strong> your business type sets the base — ~1.5 lbs/seat/day restaurants, ~3 lbs/seat bars, ~5 lbs/room hotels, ~10 lbs/bed healthcare. (Full guides: <a href="/what-size-ice-machine-does-a-restaurant-need/">restaurant</a> · <a href="/what-size-ice-machine-does-a-bar-need/">bar</a> · <a href="/what-size-ice-machine-does-a-hotel-need/">hotel</a> · <a href="/ice-machine-for-healthcare-facilities/">healthcare</a> · <a href="/ice-machine-for-office-or-school/">office/school</a>.)</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>The Florida adjustment:</strong> manufacturers rate machines at 70°F air / 50°F water; your kitchen in August isn't that. We size up ~20% because rated output isn't real output here. This single step is most of why our quotes differ from national scripts.</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>Placement reality:</strong> hot alcoves, rooftop condensers, and beach salt air each change the machine (or its life expectancy) — we ask about placement because it changes the answer, not to pad the visit.</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>The bin check:</strong> production per day and bin size per rush are different problems; both get sized.</span></li>
+      </ul>
+
+      <h2>What happens after you submit</h2>
+      <ul class="icon-list">
+        <li><Icon name="phone" size={20} /> <span><strong>We call you back</strong> — a person, usually the same business day. No drip campaign, no "one of our partners will reach out."</span></li>
+        <li><Icon name="gauge" size={20} /> <span><strong>We size it</strong> — the questions above, five minutes, honest about what we'd pick in your seat.</span></li>
+        <li><Icon name="dollar" size={20} /> <span><strong>You get straight numbers</strong> — all-in installed for purchase, monthly for lease, both when you're weighing them. Ranges you saw on this site are the ranges we quote inside.</span></li>
+      </ul>
+
+      <h2>What we don't do</h2>
+      <ul class="check-list">
+        <li><Icon name="check" size={18} /> <span><strong>No pressure.</strong> Quotes don't expire in 24 hours and nobody calls you five times.</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>No inventory to push.</strong> We don't have a warehouse of last year's models that need to move — sizing comes first, the machine follows.</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>No brand quotas.</strong> Hoshizaki, Manitowoc, Scotsman, Ice-O-Matic — whichever fits and quotes best that month (<a href="/hoshizaki-vs-manitowoc/">our honest comparison</a>).</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>No fake trade-in theater</strong> — the old machine is worth what it's worth (<a href="/replacing-a-commercial-ice-machine/">that math here</a>).</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>No pretending we're always the answer.</strong> Every cost page on this site has a "when the alternatives beat us" section, and we mean them.</span></li>
+      </ul>
+
+      <h2>Where we work</h2>
+      <ServiceAreaBlock />
+
+      <div class="grid-2 mt-8">
+        <div>
+          <h2>Test the method</h2>
+          <p>
+            The fastest way to know if we're what this page says: give us a
+            sizing problem and grade the answer.
+          </p>
+        </div>
+        <LeadForm segment="general" page="how-we-work" heading="Give us a sizing problem" sub="Business type + rough volume. Grade the callback." showUrgency={false} ctaLabel="Test us" />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

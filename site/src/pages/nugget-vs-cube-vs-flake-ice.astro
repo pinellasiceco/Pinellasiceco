@@ -1,0 +1,100 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import Neutrality from '../components/ui/Neutrality.astro';
+import LibraryCapture from '../components/ui/LibraryCapture.astro';
+import FAQ from '../components/ui/FAQ.astro';
+import { faqSchema } from '../lib/schema';
+
+const faqs = [
+  {
+    q: 'What is nugget ice best for?',
+    a: 'Beverage-forward businesses and healthcare: it\'s chewable, absorbs drink flavor, and customers actively prefer it — the "good ice" people ask for by name. Tampa Bay smoothie shops, sodas-and-subs concepts, and clinics are the classic fits.',
+  },
+  {
+    q: 'Why do seafood operations use flake ice?',
+    a: 'Flake molds around product without bruising it and cools fast — which is why fresh-catch display, marina fish houses, and charter boats run on it. On the Tampa Bay waterfront it\'s not optional: display integrity and food-safety temps both depend on it.',
+  },
+  {
+    q: 'Can one machine make different ice types?',
+    a: 'No — the evaporator design determines the ice. Businesses needing two types (a bar program + a raw bar, say) run two machines, which is why sizing each correctly matters twice.',
+  },
+  {
+    q: 'Is nugget ice more expensive?',
+    a: 'Machines run 15–30% above cube at the same capacity, and nugget mechanisms (augers) carry more moving parts to maintain. Price it in — customers noticing your ice is part of what you\'re buying.',
+  },
+];
+---
+
+<BaseLayout
+  pageTitle="Nugget vs Cube vs Flake Ice — Which Type for Your Business? | Pinellas Ice Co"
+  metaDescription="Cube for drinks, nugget for beverage-forward and healthcare, flake for seafood and display — the honest fit guide for Tampa Bay businesses, from beach bars to fish houses."
+  schemaMarkup={faqSchema(faqs)}
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>Nugget vs cube vs flake: which ice type fits your business?</h1>
+      <div class="answer-block">
+        Short version: <strong>cube</strong> for drinks and general service,
+        <strong>nugget</strong> when the ice itself is part of the experience
+        (or the patient population needs chewable),
+        <strong>flake</strong> for seafood display and anything that needs
+        molding around product. The machine type is a bigger decision than
+        the brand — it changes the machine, the price, and the maintenance.
+      </div>
+      <Neutrality />
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container narrow">
+      <h2>The fit table</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Type</th><th>Best for</th><th>Watch out for</th><th>Cost vs cube</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Cube</strong> (full/half dice, crescent)</td><td>Bars, restaurants, hotels, offices — the default</td><td>Nothing structural — it's the baseline</td><td>—</td></tr>
+            <tr><td><strong>Nugget</strong> (chewable)</td><td>Beverage-forward concepts, healthcare, schools/athletics</td><td>Auger maintenance; melts faster in coolers</td><td>+15–30%</td></tr>
+            <tr><td><strong>Flake</strong></td><td>Seafood display, raw bars, produce, therapy</td><td>Not a drink ice; melts fastest</td><td>+10–20%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>The waterfront case for flake (very Tampa Bay)</h2>
+      <p>
+        From the Clearwater and John's Pass fish houses to raw bars and the
+        charter fleet, flake ice is working equipment on this coast: it packs
+        around fresh catch without bruising, holds display temperature, and
+        drains clean. If your business touches fresh seafood — dockside
+        retail, a raw bar program, a market case — the flake machine isn't a
+        nice-to-have, it's the food-safety infrastructure. Marina and
+        charter operations sizing an ice supply for boats need volume math
+        we're happy to run honestly (sometimes the answer is "buy bagged
+        from the fish house next door" — depends on your volume).
+      </p>
+
+      <h2>The nugget case: breweries, beach bars, and clinics</h2>
+      <p>
+        Nugget earned its cult for a reason — drinks stay cold, the ice
+        chews soft, and customers notice. Tampa Bay's beach bars and
+        smoothie/QSR concepts use it as a differentiator; healthcare
+        (<a href="/ice-machine-for-healthcare-facilities/">sizing guide</a>)
+        requires it for patient safety. Brewery taprooms mostly stay cube —
+        taproom ice is service ice — unless there's a cocktail program
+        attached.
+      </p>
+
+      <h2>Choosing without regret</h2>
+      <ul class="check-list">
+        <li><Icon name="check" size={18} /> <span>Pick the type by what the ice <strong>does</strong> — display, drinks, or chew — not by what a showroom pushed.</span></li>
+        <li><Icon name="check" size={18} /> <span>Two jobs = two machines. Size each with the <a href="/ice-machine-cost-calculator/">calculator</a>.</span></li>
+        <li><Icon name="check" size={18} /> <span>Nugget/flake carry more mechanism — keep the <a href="/ice-machine-cleaning/">maintenance schedule</a> honest, especially in Florida heat.</span></li>
+      </ul>
+
+      <h2>Ice type FAQs</h2>
+      <FAQ items={faqs} />
+    </div>
+  </section>
+
+  <LibraryCapture segment="sales" page="ice-types" businessType="business" />
+</BaseLayout>

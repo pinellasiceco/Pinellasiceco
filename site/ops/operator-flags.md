@@ -1,7 +1,29 @@
 # Operator flags — every [OPERATOR: confirm] item in one list
 
 Ordered by priority. Nothing here blocks the *build*; items 1–3 block
-*cutover*.
+*cutover*. Per operator direction 2026-07-04: decisions are TABLED for the
+next session unless they block deploy — none of the open items below block
+deploy; conservative defaults ship in the meantime.
+
+## Sales-first expansion confirmations (tabled — new)
+
+20. **The independence claim** (`Neutrality.astro`, on every library page +
+    sales hub): "not tied to any manufacturer, any leasing program, or any
+    national chain… don't carry inventory we need to move." Confirm true as
+    worded — it constrains future dealer deals. Contradiction scan of the
+    whole site: clean.
+21. **Market price ranges** on /commercial-ice-machine-cost/,
+    /ice-machine-lease-cost/, /lease-vs-buy-vs-subscription-ice-machine/,
+    /used-vs-new-commercial-ice-machine/ and the calculator — Tampa Bay
+    planning bands, mid-2026. Sanity-check against real quotes.
+22. **Dealer status** — brand+geo is built as SECTIONS (sales hub, city
+    pages, brands page). Standalone "Hoshizaki dealer St. Pete"-type pages
+    only if real dealer relationships exist to make them honest.
+23. **~45-minute response-drive line** (ServiceAreaBlock, on money pages +
+    /how-we-work/) — ships as "about a 45-minute drive"; confirm.
+24. **Phone area code** — RESOLVED: (727) confirmed by operator 2026-07-04.
+
+
 
 ## Blocks cutover
 

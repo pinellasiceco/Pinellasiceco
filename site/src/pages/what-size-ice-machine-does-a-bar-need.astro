@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import Neutrality from '../components/ui/Neutrality.astro';
+import LibraryCapture from '../components/ui/LibraryCapture.astro';
+import FAQ from '../components/ui/FAQ.astro';
+import { faqSchema } from '../lib/schema';
+
+const faqs = [
+  {
+    q: 'How much ice does a bar use per night?',
+    a: 'Figure roughly 3 lbs per seat per day as a baseline, or work from drinks: about 0.5 lb of ice per cocktail once you count the shake ice, the serve ice, and the well. A 60-seat bar doing weekend volume burns 180–250 lbs on a good night.',
+  },
+  {
+    q: 'What kind of ice do craft cocktail bars need?',
+    a: 'Most Tampa Bay cocktail programs run standard cube for shaking and serving, and some add a nugget or specialty machine for signature drinks. The trade-offs are in our <a href="/nugget-vs-cube-vs-flake-ice/">ice type guide</a>.',
+  },
+  {
+    q: 'Do you cover the beach bars — Clearwater Beach, St. Pete Beach?',
+    a: 'Yes — the beach corridors are core territory, and beach machines have a specific problem: salt air corrodes condensers early. We factor placement and airflow into every beach-bar quote.',
+  },
+  {
+    q: 'Can one machine handle a brewery taproom?',
+    a: 'Usually yes — taprooms pull less ice than cocktail bars unless there\'s a full bar program. Dunedin and St. Pete brewery taprooms typically land in the 200–400 lbs/day class, sized up for Florida heat.',
+  },
+];
+---
+
+<BaseLayout
+  pageTitle="What Size Ice Machine Does a Bar Need? (Florida Sizing Guide) | Pinellas Ice Co"
+  metaDescription="Bar ice machine sizing: ~3 lbs per seat per day (double a restaurant), drink-based math, and the Florida-heat adjustment. Real Tampa Bay numbers, no pressure."
+  schemaMarkup={faqSchema(faqs)}
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>What size ice machine does a bar need?</h1>
+      <div class="answer-block">
+        Bars burn roughly <strong>3 lbs of ice per seat per day</strong> —
+        double a restaurant — because every drink is an iced drink and the
+        shake ice goes down the drain. A 60-seat Tampa Bay bar should be
+        looking at a machine <strong>rated 400–600 lbs/day</strong> after the
+        Florida-heat adjustment.
+      </div>
+      <Neutrality />
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container narrow">
+      <h2>The math, two ways</h2>
+      <p><strong>By seats</strong> (fast): seats × 3 lbs, then add 20% for Florida heat.</p>
+      <p><strong>By drinks</strong> (more honest for high-volume spots): drinks
+      per night × 0.5 lb. A bar pouring 400 drinks on Friday needs ~200 lbs
+      that night alone — and the machine has to rebuild the bin before
+      Saturday.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Bar</th><th>Busy-night ice</th><th>Machine to buy (FL-adjusted)</th></tr></thead>
+          <tbody>
+            <tr><td>Neighborhood bar, 40 seats</td><td>~120 lbs</td><td>300–400 lbs/day rated</td></tr>
+            <tr><td>Cocktail bar, 60 seats</td><td>~200 lbs</td><td>400–600 lbs/day rated</td></tr>
+            <tr><td>Beach bar / high volume</td><td>~300+ lbs</td><td>600–800 lbs/day rated</td></tr>
+            <tr><td>Brewery taproom</td><td>~80–150 lbs</td><td>200–400 lbs/day rated</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Why beach bars are the hardest case</h2>
+      <p>
+        The Clearwater Beach and St. Pete Beach strips combine every sizing
+        stress at once: tourist-season volume spikes, outdoor heat pulling
+        machine output down 10–20%, and salt air quietly eating the condenser
+        coil. If your machine sits anywhere the gulf breeze reaches, plan for
+        more frequent coil cleaning and expect a shorter machine life — we
+        factor both into beach quotes rather than pretending the sticker
+        rating applies.
+      </p>
+
+      <h2>Craft brewery corner</h2>
+      <p>
+        Tampa Bay's brewery scene — Dunedin's Main Street cluster, St. Pete's
+        EDGE District, Ybor — mostly needs less ice than owners expect
+        (taprooms aren't cocktail bars) but cleaner ice than they've got:
+        yeast-heavy environments grow slime in ice machines fast. Size to the
+        table above, and keep the machine on a real
+        <a href="/ice-machine-cleaning/">cleaning schedule</a>.
+      </p>
+
+      <p>
+        Price bands by size class: <a href="/commercial-ice-machine-cost/">what
+        commercial ice machines cost</a> · monthly option:
+        <a href="/ice-machine-lease-cost/">lease cost guide</a> · run your
+        numbers: <a href="/ice-machine-cost-calculator/">calculator</a>.
+      </p>
+
+      <h2>Bar sizing FAQs</h2>
+      <FAQ items={faqs} />
+    </div>
+  </section>
+
+  <LibraryCapture segment="sales" page="sizing-bar" businessType="bar" />
+</BaseLayout>

@@ -1,0 +1,97 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import Neutrality from '../components/ui/Neutrality.astro';
+import LibraryCapture from '../components/ui/LibraryCapture.astro';
+import FAQ from '../components/ui/FAQ.astro';
+import { faqSchema } from '../lib/schema';
+
+const faqs = [
+  {
+    q: 'How much ice does a hotel need per room?',
+    a: 'Plan roughly 5 lbs per room per day for guest floors, then add banquet/restaurant/pool-bar demand separately. A 100-room property needs ~500 lbs/day for guests alone.',
+  },
+  {
+    q: 'One big machine or one per floor?',
+    a: 'Guest experience usually wins with per-floor or per-wing dispensers (guests won\'t ride elevators for ice), with a larger back-of-house machine feeding F&B. We\'ll spec both patterns with real numbers so you can compare.',
+  },
+  {
+    q: 'How fast can you get to a Clearwater Beach hotel?',
+    a: 'We\'re based in Pinellas County — the beach corridor is home territory, typically well within a 45-minute response drive.',
+  },
+  {
+    q: 'What about the pool bar machine?',
+    a: 'Outdoor and semi-outdoor machines take the full Florida-heat penalty plus salt air on the beach. Size the pool bar unit a class up and put the condenser somewhere shaded and ventilated — this is the machine that dies first at every gulf-front property.',
+  },
+];
+---
+
+<BaseLayout
+  pageTitle="What Size Ice Machine Does a Hotel Need? (Per-Room Math) | Pinellas Ice Co"
+  metaDescription="Hotel ice machine sizing: ~5 lbs per room per day plus F&B demand, per-floor vs central layouts, and Florida-heat reality for beach properties. Tampa Bay guide."
+  schemaMarkup={faqSchema(faqs)}
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>What size ice machine does a hotel need?</h1>
+      <div class="answer-block">
+        Hotel baseline: <strong>about 5 lbs of ice per room per day</strong>
+        for guest use — a 100-room property needs ~500 lbs/day before the
+        restaurant, banquets, or pool bar take theirs. In Tampa Bay, size the
+        total up 20% for heat, and treat gulf-front machines as a special
+        case.
+      </div>
+      <Neutrality />
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container narrow">
+      <h2>The math by property</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Property</th><th>Guest demand</th><th>Total machine capacity (FL-adjusted)</th></tr></thead>
+          <tbody>
+            <tr><td>60-room limited service</td><td>~300 lbs/day</td><td>400–500 lbs/day rated</td></tr>
+            <tr><td>100-room + breakfast</td><td>~500 lbs/day</td><td>650–800 lbs/day rated</td></tr>
+            <tr><td>150-room full service + banquets</td><td>~750 lbs/day + F&amp;B</td><td>1,000+ lbs/day across machines</td></tr>
+            <tr><td>Beach resort w/ pool bar</td><td>varies + outdoor units</td><td>spec per zone — see below</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Layout beats capacity</h2>
+      <p>
+        Hotels rarely fail on total pounds — they fail on placement. Guests
+        won't ride an elevator for ice, housekeeping won't haul it, and the
+        banquet team needs volume in one place at 5pm. The pattern that works:
+        per-floor (or per-wing) dispenser machines sized to their rooms, plus
+        one production machine near F&amp;B. We quote the whole layout, not
+        just a machine.
+      </p>
+
+      <h2>The gulf-front reality</h2>
+      <p>
+        Clearwater Beach and St. Pete Beach properties lose machines young,
+        and it's almost always the same autopsy: an outdoor or breezeway
+        machine taking 90°+ ambient heat and salt air simultaneously. Rated
+        output drops up to 20% in the heat; the salt corrodes the condenser
+        on top of it. Shade, ventilation, more frequent coil cleaning, and a
+        size class of headroom are the difference between a 10-year machine
+        and a 4-year machine at the beach.
+      </p>
+
+      <p>
+        Budget planning: <a href="/commercial-ice-machine-cost/">purchase
+        ranges</a> · <a href="/lease-vs-buy-vs-subscription-ice-machine/">lease
+        vs buy vs subscription for multi-machine properties</a> ·
+        <a href="/ice-machine-cost-calculator/">calculator</a>.
+      </p>
+
+      <h2>Hotel sizing FAQs</h2>
+      <FAQ items={faqs} />
+    </div>
+  </section>
+
+  <LibraryCapture segment="sales" page="sizing-hotel" businessType="hotel" />
+</BaseLayout>

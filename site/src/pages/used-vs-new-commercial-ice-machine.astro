@@ -1,0 +1,98 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import Neutrality from '../components/ui/Neutrality.astro';
+import LibraryCapture from '../components/ui/LibraryCapture.astro';
+import FAQ from '../components/ui/FAQ.astro';
+import { faqSchema } from '../lib/schema';
+
+const faqs = [
+  {
+    q: 'How much does a used commercial ice machine cost?',
+    a: 'Typically 40–60% of new: a used 300–500 lbs/day cuber runs $1,400–$2,700 installed in Tampa Bay vs $2,500–$4,500 new. The discount is real when the machine\'s history is real.',
+  },
+  {
+    q: 'How old is too old for a used ice machine?',
+    a: 'Past ~6 years, you\'re buying the back half of the machine\'s life — compressors and evaporators start failing in sequence around year 8–10 in Florida conditions. Under 4 years with documented maintenance is the sweet spot.',
+  },
+  {
+    q: 'What should I inspect before buying used?',
+    a: 'Evaporator plate condition (nickel plating intact, no corrosion), compressor start behavior, water system scale, condenser coil (especially on machines that lived near the coast), and the cleaning history. No history = assume the worst.',
+  },
+  {
+    q: 'Do used machines come with any warranty?',
+    a: 'Manufacturer warranties rarely transfer. What matters is whether the seller stands behind it — we warranty the used machines we sell because we\'ve opened, cleaned, and pressure-tested them. A used machine "as-is" from a stranger is a coin flip.',
+  },
+];
+---
+
+<BaseLayout
+  pageTitle="Used vs New Commercial Ice Machine — When Used Makes Sense | Pinellas Ice Co"
+  metaDescription="Used commercial ice machines cost 40–60% of new — worth it when the history is real. What to inspect, when to buy new, and the warranty reality. Tampa Bay guide."
+  schemaMarkup={faqSchema(faqs)}
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>Used vs new commercial ice machine: when used makes sense</h1>
+      <div class="answer-block">
+        A good used machine costs <strong>40–60% of new</strong> and is a
+        genuinely smart buy — <strong>if</strong> it's under ~5 years old,
+        has a documented cleaning history, and someone has actually opened
+        and tested it. A cheap used machine with a tired compressor is the
+        most expensive machine you can buy.
+      </div>
+      <Neutrality />
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container narrow">
+      <h2>The decision in one table</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th></th><th>Buy new</th><th>Buy used (verified)</th></tr></thead>
+          <tbody>
+            <tr><td>Price (300–500 lbs class, installed)</td><td>$2,500–$4,500</td><td>$1,400–$2,700</td></tr>
+            <tr><td>Warranty</td><td>3 yr parts/labor, 5 yr compressor typical</td><td>Seller's warranty only — ask</td></tr>
+            <tr><td>Expected remaining life (FL)</td><td>8–12 years</td><td>4–8 years, condition-dependent</td></tr>
+            <tr><td>Risk</td><td>Low</td><td>All in the machine's history</td></tr>
+            <tr><td>Best for</td><td>Long-hold operators, high-volume duty</td><td>Tight budgets, backup machines, shorter horizons</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>The Florida inspection list (what we check before we'd sell it)</h2>
+      <ul class="check-list">
+        <li><Icon name="check" size={18} /> <span><strong>Evaporator plating</strong> — flaking nickel ends machines; it's the most expensive component after the compressor.</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>Coastal history</strong> — a machine that lived near the gulf carries condenser corrosion you can't always see. Ask where it worked.</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>Scale load</strong> — Tampa Bay's hard water scales water systems; heavy scale means the machine ran hot and stressed for years.</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>Compressor draw</strong> — measured, not "it turns on."</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>Cleaning records</strong> — no documented cleanings in Florida = assume internal biofilm and scale.</span></li>
+      </ul>
+
+      <h2>When the alternatives beat us</h2>
+      <p>
+        <strong>Buying used direct</strong> (auction, closing restaurant,
+        marketplace) genuinely makes sense if you can inspect competently,
+        haul and install yourself, and absorb a bad outcome — the prices are
+        lower than any dealer can match because nobody stands behind the
+        machine. <strong>Buying new</strong> beats used entirely when the
+        machine is mission-critical and downtime costs more than the
+        discount saves. We sell both new and verified used; the guidance
+        above is the same guidance we'd give if we sold neither.
+      </p>
+
+      <p>
+        Related: <a href="/commercial-ice-machine-cost/">full cost guide</a> ·
+        <a href="/replacing-a-commercial-ice-machine/">replacing a machine —
+        what to do with the old one</a> ·
+        <a href="/ice-machine-cost-calculator/">calculator</a>.
+      </p>
+
+      <h2>Used vs new FAQs</h2>
+      <FAQ items={faqs} />
+    </div>
+  </section>
+
+  <LibraryCapture segment="sales" page="used-vs-new" businessType="business" />
+</BaseLayout>

@@ -1,0 +1,91 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import Neutrality from '../components/ui/Neutrality.astro';
+import LibraryCapture from '../components/ui/LibraryCapture.astro';
+import FAQ from '../components/ui/FAQ.astro';
+import { faqSchema } from '../lib/schema';
+
+const faqs = [
+  {
+    q: 'Which is more reliable, Hoshizaki or Manitowoc?',
+    a: 'Both are top-tier when maintained; neither survives neglect. In Tampa Bay conditions, water treatment and cleaning schedule predict lifespan better than the badge does. Hoshizaki\'s stainless evaporator is the more forgiving design under hard-water neglect; Manitowoc\'s diagnostics make problems easier to catch early.',
+  },
+  {
+    q: 'Is Hoshizaki more expensive than Manitowoc?',
+    a: 'Typically 5–15% more at comparable capacity, driven by the stainless evaporator construction. Whether that premium pays back depends on your water and maintenance discipline — in hard-water Tampa Bay with spotty maintenance, it often does.',
+  },
+  {
+    q: 'Which has better parts availability in Tampa Bay?',
+    a: 'Both are fully supported here — parts for either are a day away, and every competent local tech works on both. Parts availability is not a deciding factor between these two in this market.',
+  },
+  {
+    q: 'What about the cube shapes?',
+    a: 'Hoshizaki makes crescent cubes (slide out of glasses less, pack differently); Manitowoc makes true half-dice/dice (bartender favorite for shaking and display). Bars with strong drink programs sometimes decide on this alone.',
+  },
+];
+---
+
+<BaseLayout
+  pageTitle="Hoshizaki vs Manitowoc — An Honest Comparison for Florida | Pinellas Ice Co"
+  metaDescription="Hoshizaki vs Manitowoc, spec-grounded and brand-neutral: evaporator design, diagnostics, cube shape, price gap, and which fits Tampa Bay water and heat."
+  schemaMarkup={faqSchema(faqs)}
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>Hoshizaki vs Manitowoc: an honest comparison for Florida</h1>
+      <div class="answer-block">
+        The honest answer: <strong>both are excellent, and the badge matters
+        less than your water treatment and cleaning schedule.</strong>
+        Hoshizaki's stainless-evaporator design is more forgiving of Tampa
+        Bay's hard water; Manitowoc's diagnostics and serviceability make
+        problems cheaper to catch. We install and service both, and we don't
+        carry a quota for either.
+      </div>
+      <Neutrality />
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container narrow">
+      <h2>Spec-level differences that actually matter</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th></th><th>Hoshizaki</th><th>Manitowoc</th></tr></thead>
+          <tbody>
+            <tr><td>Evaporator</td><td>Stainless steel — corrosion-resistant, forgiving under scale</td><td>Nickel-plated copper — efficient, needs disciplined descaling</td></tr>
+            <tr><td>Cube</td><td>Crescent</td><td>Dice / half-dice</td></tr>
+            <tr><td>Diagnostics</td><td>Basic indicator codes</td><td>Strong onboard diagnostics (Indigo/NEO)</td></tr>
+            <tr><td>Serviceability</td><td>Fewer failures, simpler design</td><td>Easier field diagnosis, common parts</td></tr>
+            <tr><td>Price at capacity</td><td>~5–15% higher</td><td>Baseline</td></tr>
+            <tr><td>Warranty (typical)</td><td>3 yr parts/labor, 5 yr compressor+evap</td><td>3 yr parts/labor, 5 yr compressor</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>The Tampa Bay tiebreakers</h2>
+      <ul class="check-list">
+        <li><Icon name="check" size={18} /> <span><strong>Hard water + imperfect maintenance</strong> → Hoshizaki's stainless evaporator forgives what our water does to neglected machines.</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>Multi-unit operators with service contracts</strong> → Manitowoc's diagnostics cut trip time; the maintenance discipline is handled anyway.</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>Cocktail programs</strong> → decide on cube shape, not brand mythology. Try both cubes in your glassware.</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>Budget-first</strong> → a well-maintained Manitowoc outlives a neglected Hoshizaki. Spend the difference on the <a href="/ice-machine-cleaning/">cleaning schedule</a>.</span></li>
+      </ul>
+
+      <h2>What we'd actually tell you on the phone</h2>
+      <p>
+        Pick capacity first (<a href="/what-size-ice-machine-does-a-restaurant-need/">sizing
+        guides</a>), ice type second
+        (<a href="/nugget-vs-cube-vs-flake-ice/">nugget vs cube vs flake</a>),
+        and brand last — then buy whichever of the two quotes better that
+        month, because both are winners at the right price. Scotsman and
+        Ice-O-Matic belong in the same conversation at the right capacity;
+        the honest shortlist is rarely one brand long.
+      </p>
+
+      <h2>Hoshizaki vs Manitowoc FAQs</h2>
+      <FAQ items={faqs} />
+    </div>
+  </section>
+
+  <LibraryCapture segment="sales" page="hoshizaki-vs-manitowoc" businessType="business" />
+</BaseLayout>

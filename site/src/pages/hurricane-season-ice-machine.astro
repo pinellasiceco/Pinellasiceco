@@ -1,0 +1,99 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import Neutrality from '../components/ui/Neutrality.astro';
+import LeadForm from '../components/ui/LeadForm.astro';
+import FAQ from '../components/ui/FAQ.astro';
+import { faqSchema } from '../lib/schema';
+
+const faqs = [
+  {
+    q: 'Should I turn my ice machine off before a hurricane?',
+    a: 'Yes — planned shutdown beats a power cut. Turn the machine off, empty and sanitize the bin, shut the water supply, and leave the bin door propped open so it dries instead of growing mold while you\'re closed.',
+  },
+  {
+    q: 'Why do power outages kill ice machine compressors?',
+    a: 'Two ways: the outage itself is harmless, but the RESTORATION isn\'t — surges and brownouts on the way back up hard-start compressors repeatedly. And repeated manual restarts against pressure (flipping it on and off while the grid flickers) is the classic post-storm compressor killer. Wait for stable power.',
+  },
+  {
+    q: 'What should I check before restarting after an outage?',
+    a: 'Stable power (no flickering), water supply on and clear (post-storm municipal water can carry sediment — check your filter), bin sanitized (everything in it during the outage melted warm — that\'s food-safety waste), then one clean start. If it trips, clicks, or hums without starting — stop and call; repeated restart attempts do the damage.',
+  },
+  {
+    q: 'Is post-storm ice machine damage covered by insurance?',
+    a: 'Often, under equipment breakdown or spoilage riders — but only with documentation. Photograph the machine state, keep the outage timeline, and get a professional inspection report. We provide written post-storm inspection findings for claims.',
+  },
+];
+---
+
+<BaseLayout
+  pageTitle="Hurricane Season and Your Ice Machine — Shutdown, Restart & Recovery | Pinellas Ice Co"
+  metaDescription="Florida hurricane prep for commercial ice machines: proper shutdown, why post-outage restarts kill compressors, restart checklist, and when storm season means replacement."
+  schemaMarkup={faqSchema(faqs)}
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>Hurricane season and your ice machine</h1>
+      <div class="answer-block">
+        The storm rarely kills the machine — <strong>the restart does.</strong>
+        Shut down properly before the storm (off, drained, sanitized, bin
+        door open), and after the outage <strong>wait for stable power and
+        run the checklist below</strong> before restarting. Repeated
+        hard-starts against flickering power is how Tampa Bay loses
+        compressors every season.
+      </div>
+      <Neutrality />
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container narrow">
+      <h2>Before the storm: the 10-minute shutdown</h2>
+      <ul class="check-list">
+        <li><Icon name="check" size={18} /> <span>Power off at the machine AND the breaker (protects against restoration surges)</span></li>
+        <li><Icon name="check" size={18} /> <span>Water supply off</span></li>
+        <li><Icon name="check" size={18} /> <span>Empty the bin — bag what you can use, dump the rest</span></li>
+        <li><Icon name="check" size={18} /> <span>Quick sanitize wipe, then prop the bin door open so it dries (a sealed warm bin grows mold in 48 hours of Florida August)</span></li>
+        <li><Icon name="check" size={18} /> <span>Outdoor/rooftop condensers: clear loose debris around them; secure access panels</span></li>
+      </ul>
+
+      <h2>After the storm: the restart checklist</h2>
+      <ul class="check-list">
+        <li><Icon name="check" size={18} /> <span><strong>Wait for stable power</strong> — no flickering, no brownout dimming. The grid's first hour back is the compressor-killer.</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>Check water first</strong> — boil-water notices and sediment happen after storms; a clogged filter starves the machine. Look at the filter before you trust the ice.</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>Sanitize the bin</strong> before making ice you'll serve</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>One clean start.</strong> If it clicks, hums, trips the breaker, or starts and stops — <a href="/ice-machine-repair/">stop and call (727) 855-6873</a>. Every additional restart attempt is another hammer blow to the compressor.</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>Flooded or salt-sprayed machines:</strong> don't energize at all until inspected — storm-surge water in electrics is a total-loss risk you can make worse.</span></li>
+      </ul>
+
+      <h2>When storm season is replacement season</h2>
+      <p>
+        Every summer, marginal machines across Tampa Bay take an outage they
+        don't come back from. If yours was already showing
+        <a href="/ice-machine-repair/">aging signs</a> — low output on hot
+        days, a second repair in twelve months — the post-storm failure isn't
+        bad luck, it's the schedule. The honest move is the
+        <a href="/replacing-a-commercial-ice-machine/">replacement math</a>
+        before August instead of a compressor autopsy after: see
+        <a href="/commercial-ice-machine-cost/">what machines cost</a> or get
+        the quote below with haul-away included.
+      </p>
+
+      <div class="grid-2 mt-8">
+        <div>
+          <h2>Post-storm inspection or pre-season replacement</h2>
+          <p>
+            Machine acting strange after an outage, or limping toward another
+            summer? We inspect, document (insurance-ready findings), and give
+            you the repair-or-replace numbers straight.
+          </p>
+          <p class="small muted"><a href="/how-we-work/">Here's exactly what happens next →</a></p>
+        </div>
+        <LeadForm segment="repair" page="hurricane-season" heading="Post-storm inspection / replacement quote" sub="Tell us what happened and what the machine is doing now." ctaLabel="Request my callback" />
+      </div>
+
+      <h2 class="mt-8">Hurricane season FAQs</h2>
+      <FAQ items={faqs} />
+    </div>
+  </section>
+</BaseLayout>

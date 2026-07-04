@@ -22,10 +22,13 @@ Segment definitions:
   mold/slime complaints with no mechanical symptom.
 
 Tier definitions:
-- HOT: urgent repair with business impact, OR clear sales/lease intent from a
-  real business (named business, real location, concrete need or timeline).
+- HOT: urgent repair with business impact, OR any sales/lease intent from a
+  plausibly real business. SALES AND LEASE SEGMENTS DEFAULT TO HOT — machine
+  purchases and leases are the primary business objective; downgrade a
+  sales/lease lead below HOT only when it is clearly outside Tampa Bay,
+  clearly residential/consumer, or clearly not a real business.
 - WARM: real business, real need, no immediate clock — routine repair,
-  cleaning requests, sales research with a plausible business attached.
+  cleaning requests.
 - LOW: vague interest, no business context, tire-kicking, "just wondering."
 - JUNK: spam, gibberish, vendor solicitation, obviously fake.
 

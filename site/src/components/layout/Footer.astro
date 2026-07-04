@@ -21,12 +21,25 @@ const year = new Date().getFullYear();
       <nav aria-label="Services">
         <h4>Services</h4>
         <ul>
-          <li><a href="/ice-machine-repair/">Ice Machine Repair</a></li>
           <li><a href="/commercial-ice-machine-sales/">Ice Machine Sales</a></li>
           <li><a href="/ice-machine-leasing/">Ice Machine Leasing</a></li>
+          <li><a href="/ice-machine-repair/">Ice Machine Repair</a></li>
           <li><a href="/ice-machine-cleaning/">Ice Machine Cleaning</a></li>
           <li><a href="/ice-machine-cleaning-clearwater-fl-pinellas-ice-co/">Cleaning — Clearwater</a></li>
           <li><a href="/brands/">Brands We Service</a></li>
+        </ul>
+      </nav>
+
+      <nav aria-label="Buying guides">
+        <h4>Buying Guides</h4>
+        <ul>
+          <li><a href="/what-size-ice-machine-does-a-restaurant-need/">Restaurant Sizing</a></li>
+          <li><a href="/what-size-ice-machine-does-a-bar-need/">Bar Sizing</a></li>
+          <li><a href="/what-size-ice-machine-does-a-hotel-need/">Hotel Sizing</a></li>
+          <li><a href="/commercial-ice-machine-cost/">What Machines Cost</a></li>
+          <li><a href="/lease-vs-buy-vs-subscription-ice-machine/">Lease vs Buy vs Subscription</a></li>
+          <li><a href="/hoshizaki-vs-manitowoc/">Hoshizaki vs Manitowoc</a></li>
+          <li><a href="/how-we-work/">How We Work</a></li>
         </ul>
       </nav>
 
@@ -71,8 +84,8 @@ const year = new Date().getFullYear();
   }
   .footer-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
-    gap: var(--space-8);
+    grid-template-columns: 1.6fr 1fr 1.2fr 1fr 1fr;
+    gap: var(--space-6);
     margin-bottom: var(--space-8);
   }
   @media (max-width: 860px) { .footer-grid { grid-template-columns: 1fr 1fr; } }

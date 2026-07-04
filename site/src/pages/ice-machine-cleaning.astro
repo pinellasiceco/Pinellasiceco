@@ -6,6 +6,7 @@ import LeadForm from '../components/ui/LeadForm.astro';
 import FAQ from '../components/ui/FAQ.astro';
 import HowItWorks from '../components/ui/HowItWorks.astro';
 import Reviews from '../components/ui/Reviews.astro';
+import ServiceAreaBlock from '../components/ui/ServiceAreaBlock.astro';
 import { faqSchema, serviceSchema } from '../lib/schema';
 
 const faqs = [
@@ -142,6 +143,7 @@ const schema = [
   <section class="section">
     <div class="container narrow">
       <Reviews />
+      <ServiceAreaBlock />
       <span class="eyebrow">Cleaning FAQs</span>
       <h2 class="mb-6">Ice machine cleaning questions</h2>
       <FAQ items={faqs} />

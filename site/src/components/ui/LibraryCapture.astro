@@ -1,0 +1,38 @@
+---
+import LeadForm from './LeadForm.astro';
+// The Decision Library's standard closing capture frame. Every library page
+// ends with this — same framing, segment set per page intent.
+interface Props {
+  segment: 'sales' | 'lease';
+  page: string;
+  businessType?: string; // "restaurant", "bar", "hotel" — personalizes the frame
+}
+const { segment, page, businessType = 'business' } = Astro.props;
+---
+
+<section class="section section-alt" id="library-capture">
+  <div class="container">
+    <div class="grid-2" style="align-items:center">
+      <div>
+        <span class="eyebrow">No pressure, no runaround</span>
+        <h2>Get a straight quote for your {businessType}</h2>
+        <p>
+          Sized for Florida heat, priced in real ranges, no national-chain
+          runaround. We'll call you back, ask a couple of questions, and give
+          you numbers you can hold us to.
+        </p>
+        <p class="small muted">
+          <a href="/how-we-work/">Here's exactly what happens next →</a>
+        </p>
+      </div>
+      <LeadForm
+        segment={segment}
+        page={page}
+        heading={`Straight quote — ${businessType}`}
+        sub="Sized for Florida heat. No pressure, no obligation."
+        showUrgency={false}
+        ctaLabel="Get my straight quote"
+      />
+    </div>
+  </div>
+</section>

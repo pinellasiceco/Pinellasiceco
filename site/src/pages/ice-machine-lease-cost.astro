@@ -1,0 +1,97 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import Neutrality from '../components/ui/Neutrality.astro';
+import LibraryCapture from '../components/ui/LibraryCapture.astro';
+import FAQ from '../components/ui/FAQ.astro';
+import { faqSchema } from '../lib/schema';
+
+// [OPERATOR: confirm ranges] — Tampa Bay market-sourced planning bands.
+
+const faqs = [
+  {
+    q: 'How much does it cost to lease a commercial ice machine?',
+    a: 'Tampa Bay planning bands: $100–$180/month for a 300–500 lbs/day machine, $180–$300+/month for production sizes — with maintenance and cleanings included in a service lease. Bare equipment leases run less but leave you owning every repair.',
+  },
+  {
+    q: 'What\'s usually included in an ice machine lease?',
+    a: 'A real service lease covers the machine, install, repairs, scheduled cleanings, and swap-out if it can\'t be fixed fast. Always get the inclusion list in writing — "lease" spans everything from bare metal to all-inclusive.',
+  },
+  {
+    q: 'Is there a minimum term?',
+    a: 'Typically 12–36 months in this market. Shorter terms price higher per month; national subscriptions run longer with the bundle priced in — the 36-month comparison is in our <a href="/lease-vs-buy-vs-subscription-ice-machine/">three-way math</a>.',
+  },
+  {
+    q: 'Lease or buy — which is cheaper long-term?',
+    a: 'Buying wins on pure cost if you run the machine 7+ years and can absorb repairs. Leasing wins on uptime, cash flow, and never owning a breakdown. Rule of thumb: break-even sits around year 3.',
+  },
+];
+---
+
+<BaseLayout
+  pageTitle="Ice Machine Lease Cost — Tampa Bay Monthly Rates | Pinellas Ice Co"
+  metaDescription="What ice machine leasing actually costs in Tampa Bay: $100–$180/month standard sizes, $180–$300+ production, what's included, and when leasing beats buying."
+  schemaMarkup={faqSchema(faqs)}
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>Ice machine lease cost: Tampa Bay monthly rates</h1>
+      <div class="answer-block">
+        Tampa Bay reality: <strong>$100–$180/month</strong> leases a
+        300–500 lbs/day machine with service included;
+        <strong>$180–$300+/month</strong> for production sizes. The spread
+        between a cheap lease and a good one is what's included — repairs
+        and cleanings in, or on you.
+      </div>
+      <Neutrality />
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container narrow">
+      <h2>Monthly bands by size class</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Size class</th><th>Bare equipment lease</th><th>Service lease (repairs + cleanings in)</th></tr></thead>
+          <tbody>
+            <tr><td>150–300 lbs/day</td><td>$70–$110/mo</td><td>$90–$140/mo</td></tr>
+            <tr><td>300–500 lbs/day</td><td>$90–$140/mo</td><td>$110–$180/mo</td></tr>
+            <tr><td>500–800 lbs/day</td><td>$130–$200/mo</td><td>$160–$240/mo</td></tr>
+            <tr><td>800+ lbs/day</td><td>$180–$280/mo</td><td>$220–$320/mo</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small muted">
+        Planning bands, Tampa Bay, mid-2026. National all-inclusive
+        subscriptions typically price above the service-lease band — what
+        the bundle buys and when it's worth it:
+        <a href="/lease-vs-buy-vs-subscription-ice-machine/">the three-way math</a>.
+      </p>
+
+      <h2>What moves your number inside the band</h2>
+      <ul class="check-list">
+        <li><Icon name="check" size={18} /> <span><strong>Term</strong> — 36 months prices lower than 12.</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>Ice type</strong> — nugget and specialty machines lease 15–30% above cube.</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>Environment</strong> — beach placements (salt air) and hot alcoves add service risk, which shows up in the rate or the exclusions. Ask.</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>What "included" means</strong> — get repairs, cleanings, filters, and swap-out terms in writing.</span></li>
+      </ul>
+
+      <h2>When the alternatives beat us</h2>
+      <p>
+        <strong>Buying beats leasing</strong> if you have the capital, plan
+        to hold the machine 7+ years, and don't mind owning repair risk —
+        ownership is cheaper over the machine's life
+        (<a href="/commercial-ice-machine-cost/">purchase ranges here</a>).
+        <strong>A national subscription beats a local lease</strong> if
+        you're standardizing dozens of locations across states. For one to a
+        handful of Tampa Bay locations, local service leasing usually wins
+        on response time and total cost — that's the honest shape of it.
+      </p>
+
+      <h2>Lease cost FAQs</h2>
+      <FAQ items={faqs} />
+    </div>
+  </section>
+
+  <LibraryCapture segment="lease" page="ice-machine-lease-cost" businessType="business" />
+</BaseLayout>

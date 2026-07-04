@@ -6,6 +6,8 @@ import LeadForm from '../components/ui/LeadForm.astro';
 import FAQ from '../components/ui/FAQ.astro';
 import HowItWorks from '../components/ui/HowItWorks.astro';
 import Reviews from '../components/ui/Reviews.astro';
+import Neutrality from '../components/ui/Neutrality.astro';
+import ServiceAreaBlock from '../components/ui/ServiceAreaBlock.astro';
 import { faqSchema, serviceSchema } from '../lib/schema';
 
 const faqs = [
@@ -71,6 +73,7 @@ const schema = [
         installed price, and service what we sell. Call
         <a href="tel:+17278556873"><strong>(727) 855-6873</strong></a>.
       </div>
+      <Neutrality />
       <HowItWorks finalStep="Delivered, installed, and making ice — with a quote you approved first" />
     </div>
   </section>
@@ -103,8 +106,30 @@ const schema = [
       <p class="small muted">
         Ratings assume 70°F air / 50°F water — Florida summers cut real output
         10–20%, which is part of why the 20% headroom matters here.
-        Run your case in the <a href="/ice-machine-cost-calculator/">cost calculator</a>.
+        Run your case in the <a href="/ice-machine-cost-calculator/">cost calculator</a>,
+        or go deep in the sizing guides:
+        <a href="/what-size-ice-machine-does-a-restaurant-need/">restaurant</a> ·
+        <a href="/what-size-ice-machine-does-a-bar-need/">bar</a> ·
+        <a href="/what-size-ice-machine-does-a-hotel-need/">hotel</a> ·
+        <a href="/ice-machine-for-healthcare-facilities/">healthcare</a> ·
+        <a href="/ice-machine-for-office-or-school/">office/school</a>.
       </p>
+
+      <div class="mt-8">
+        <h3 class="mb-2">Hoshizaki, Manitowoc, Scotsman &amp; Ice-O-Matic — sized and installed across Tampa Bay</h3>
+        <p>
+          We quote across brands — no quotas, no house line to push
+          (<a href="/hoshizaki-vs-manitowoc/">our honest Hoshizaki vs
+          Manitowoc comparison</a> is how we actually talk about them).
+          Whether you're near a Hoshizaki-heavy restaurant row in St. Pete or
+          replacing a Manitowoc in a Clearwater Beach hotel, the machine is
+          chosen by capacity, ice type
+          (<a href="/nugget-vs-cube-vs-flake-ice/">nugget vs cube vs flake</a>),
+          and that month's pricing — in that order.
+        </p>
+      </div>
+
+      <ServiceAreaBlock />
     </div>
   </section>
 

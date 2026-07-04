@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import Neutrality from '../components/ui/Neutrality.astro';
+import LibraryCapture from '../components/ui/LibraryCapture.astro';
+import FAQ from '../components/ui/FAQ.astro';
+import { faqSchema } from '../lib/schema';
+
+const faqs = [
+  {
+    q: 'What size ice machine does an office breakroom need?',
+    a: 'Figure about 1 lb per person per day in Florida (iced drinks are a year-round habit here). A 50-person office lands around 50–75 lbs/day of use — a 150 lbs/day rated undercounter or small modular machine covers it with headroom.',
+  },
+  {
+    q: 'Undercounter or full-size machine for an office?',
+    a: 'Under ~40 people, an undercounter unit usually wins: smaller footprint, plugs into the breakroom, easier install. Above that, a small modular machine with a bin is cheaper per pound of ice and lasts longer under load.',
+  },
+  {
+    q: 'What about schools and athletic programs?',
+    a: 'Athletics changes everything — training rooms and Florida outdoor sports burn ice for coolers and injury care. A school with a serious athletic program should size like a healthcare facility (nugget ice, high volume), not a breakroom.',
+  },
+  {
+    q: 'Is leasing worth it at office scale?',
+    a: 'Often, yes — small-machine leases run cheap, service is included, and nobody on staff has to own maintenance. The math is in the <a href="/ice-machine-lease-cost/">lease cost guide</a>.',
+  },
+];
+---
+
+<BaseLayout
+  pageTitle="Ice Machines for Offices & Schools — Sizing Guide | Pinellas Ice Co"
+  metaDescription="Office breakroom and school ice machine sizing: ~1 lb per person per day in Florida, undercounter vs modular, and the athletics exception. Tampa Bay guide."
+  schemaMarkup={faqSchema(faqs)}
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>Ice machines for offices &amp; schools: sizing guide</h1>
+      <div class="answer-block">
+        Breakroom baseline: <strong>about 1 lb of ice per person per day</strong>
+        in Florida. A 50-person Tampa Bay office is covered by a
+        <strong>150 lbs/day rated</strong> machine; schools with athletic
+        programs are a different animal and should size like healthcare.
+      </div>
+      <Neutrality />
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container narrow">
+      <h2>The quick table</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Setting</th><th>Daily need</th><th>Machine (FL-adjusted)</th></tr></thead>
+          <tbody>
+            <tr><td>Office, up to 25 people</td><td>~25 lbs</td><td>80–100 lbs/day undercounter</td></tr>
+            <tr><td>Office, 50 people</td><td>~50–75 lbs</td><td>150 lbs/day rated</td></tr>
+            <tr><td>Office, 100+ / multi-floor</td><td>~100–150 lbs</td><td>250–300 lbs/day modular + bin</td></tr>
+            <tr><td>School w/ athletics</td><td>300+ lbs in season</td><td>400+ lbs/day, nugget preferred</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>The Florida difference for offices</h2>
+      <p>
+        In most of the country, office ice is a nice-to-have. In Tampa Bay,
+        iced drinks are a twelve-month habit and the breakroom machine works
+        summer duty that would surprise a northern facilities manager. The
+        1 lb/person figure already reflects that — and if the machine lives
+        in a warm storage room instead of the conditioned breakroom, apply
+        the same 20% heat penalty every commercial machine here takes.
+      </p>
+
+      <h2>The athletics exception</h2>
+      <p>
+        Fall practice season in Florida means ice for coolers, injury care,
+        and heat management — a training room can out-consume the entire
+        cafeteria. Schools and sports facilities should spec chewable nugget
+        ice (safer, preferred by trainers) and real volume; the
+        <a href="/ice-machine-for-healthcare-facilities/">healthcare guide's</a>
+        sizing logic applies.
+      </p>
+
+      <p>
+        Budget: <a href="/commercial-ice-machine-cost/">purchase ranges</a> ·
+        <a href="/ice-machine-lease-cost/">lease cost</a> ·
+        <a href="/ice-machine-cost-calculator/">calculator</a>.
+      </p>
+
+      <h2>Office &amp; school FAQs</h2>
+      <FAQ items={faqs} />
+    </div>
+  </section>
+
+  <LibraryCapture segment="sales" page="sizing-office-school" businessType="office or school" />
+</BaseLayout>

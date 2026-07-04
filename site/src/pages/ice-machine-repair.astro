@@ -6,6 +6,7 @@ import LeadForm from '../components/ui/LeadForm.astro';
 import FAQ from '../components/ui/FAQ.astro';
 import HowItWorks from '../components/ui/HowItWorks.astro';
 import Reviews from '../components/ui/Reviews.astro';
+import ServiceAreaBlock from '../components/ui/ServiceAreaBlock.astro';
 import { faqSchema, serviceSchema } from '../lib/schema';
 
 const faqs = [
@@ -166,11 +167,19 @@ const schema = [
             <li><Icon name="check" size={18} /> <span>Machine under 7 years old + repair under half of replacement → <strong>repair</strong>.</span></li>
             <li><Icon name="check" size={18} /> <span>Compressor or evaporator failure past year 8 → get <strong>replacement and lease numbers</strong> before approving the repair.</span></li>
             <li><Icon name="check" size={18} /> <span>Second major failure in 12 months → the machine is telling you something. <strong>Replace or lease.</strong></span></li>
+            <li><Icon name="check" size={18} /> <span>Struggled through last summer → replace <strong>before</strong> this one; Florida heat finishes marginal machines (<a href="/hurricane-season-ice-machine/">storm-season guide</a>).</span></li>
           </ul>
           <p>
-            Run your own numbers in the
-            <a href="/ice-machine-cost-calculator/">cost calculator</a> — machine size,
-            purchase vs. lease vs. repair ranges for your business type.
+            If it's replacement: size it right
+            (<a href="/what-size-ice-machine-does-a-restaurant-need/">restaurant</a> ·
+            <a href="/what-size-ice-machine-does-a-bar-need/">bar</a> ·
+            <a href="/what-size-ice-machine-does-a-hotel-need/">hotel</a>),
+            check <a href="/used-vs-new-commercial-ice-machine/">used vs new</a>
+            and <a href="/lease-vs-buy-vs-subscription-ice-machine/">lease vs
+            buy</a>, and we <a href="/replacing-a-commercial-ice-machine/">haul
+            the old one away</a>. Or run the
+            <a href="/ice-machine-cost-calculator/">calculator</a> for all the
+            ranges at once.
           </p>
         </div>
         <figure class="site-fig">
@@ -188,6 +197,7 @@ const schema = [
   <section class="section section-alt">
     <div class="container narrow">
       <Reviews />
+      <ServiceAreaBlock />
       <span class="eyebrow">Repair FAQs</span>
       <h2 class="mb-6">Commercial ice machine repair questions</h2>
       <FAQ items={faqs} />

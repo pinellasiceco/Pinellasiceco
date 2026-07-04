@@ -1,0 +1,116 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import Neutrality from '../components/ui/Neutrality.astro';
+import LeadForm from '../components/ui/LeadForm.astro';
+import FAQ from '../components/ui/FAQ.astro';
+import { faqSchema } from '../lib/schema';
+
+// Lane 2 — the leasing-neutrality page. Pure arithmetic and fit guidance;
+// no competitor names, no disparagement. This page IS the positioning
+// statement: the neutral local expert.
+// [OPERATOR: confirm ranges] — 36-month figures are Tampa Bay planning
+// bands for a standard 500 lbs/day cuber class.
+
+const faqs = [
+  {
+    q: 'What does an ice machine subscription actually cost over 3 years?',
+    a: 'All-inclusive subscriptions for a standard-size machine typically run $200–$350/month in this market — $7,200–$12,600 over 36 months. That buys real convenience: machine, installs, repairs, cleanings, and swap-outs in one invoice. The math below shows what the same 36 months costs the other two ways.',
+  },
+  {
+    q: 'Is buying always cheapest?',
+    a: 'Over a long horizon with a maintained machine, usually — but not always meaningfully. Buying concentrates risk (you own the $900 repair year) while lease/subscription spread it. If a surprise four-figure repair would genuinely hurt, the spread has real value beyond the arithmetic.',
+  },
+  {
+    q: 'Can I switch models later?',
+    a: 'Buying → leasing: yes, anytime (your old machine even has trade value if young — see the replacement guide). Subscription → owning: check your agreement\'s term and buyout language before signing; that clause is where the flexibility lives or dies.',
+  },
+  {
+    q: 'Which one do you sell?',
+    a: 'All three shapes: we sell machines, we lease machines with service included, and if a national subscription fits your situation we\'ll tell you that too — we\'d rather be the people who gave you straight math than win one mis-fit deal.',
+  },
+];
+---
+
+<BaseLayout
+  pageTitle="Lease vs Buy vs Subscription — The Honest Ice Machine Math | Pinellas Ice Co"
+  metaDescription="The three-way ice machine math over 36 months: buying (capex + maintenance reality), traditional lease, and all-inclusive subscription — fairly priced, with honest fit guidance."
+  schemaMarkup={faqSchema(faqs)}
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>Lease vs buy vs subscription: the honest ice machine math</h1>
+      <div class="answer-block">
+        Over 36 months for a standard restaurant-class machine:
+        <strong>buying runs ~$4,500–$7,000 all-in</strong> (machine +
+        maintenance + repair risk), <strong>a service lease ~$4,000–$6,500</strong>
+        (predictable, covered), and <strong>an all-inclusive subscription
+        ~$7,200–$12,600</strong> (maximum convenience, priced accordingly).
+        None of these is wrong — they fit different businesses, and the fit
+        guide is below the table.
+      </div>
+      <Neutrality />
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container narrow">
+      <h2>The 36-month table (500 lbs/day class)</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th></th><th>Buy</th><th>Service lease</th><th>All-inclusive subscription</th></tr></thead>
+          <tbody>
+            <tr><td>Upfront</td><td>$2,500–$4,500 installed</td><td>$0–$300 setup</td><td>$0 typical</td></tr>
+            <tr><td>Monthly</td><td>$0</td><td>$110–$180</td><td>$200–$350</td></tr>
+            <tr><td>Cleanings (Florida-required)</td><td>+$300–$500/yr</td><td>included</td><td>included</td></tr>
+            <tr><td>Repairs</td><td>yours — budget $200–$400/yr avg, lumpy</td><td>included</td><td>included</td></tr>
+            <tr><td>Machine dies</td><td>your problem + capex again</td><td>swap-out</td><td>swap-out</td></tr>
+            <tr><td><strong>36-month total</strong></td><td><strong>~$4,500–$7,000</strong></td><td><strong>~$4,000–$6,500</strong></td><td><strong>~$7,200–$12,600</strong></td></tr>
+            <tr><td>After 36 months</td><td>you own a machine with years left</td><td>keep paying or buy out</td><td>keep paying</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small muted">
+        Planning bands, Tampa Bay, mid-2026. The buy column's honesty
+        depends on actually doing the maintenance — a neglected owned
+        machine costs more than any column here.
+      </p>
+
+      <h2>Who each model fits</h2>
+      <ul class="check-list">
+        <li><Icon name="check" size={18} /> <span><strong>Subscriptions fit:</strong> multi-location operators standardizing across regions, businesses that want exactly one vendor and one invoice for everything ice, and anyone who values never thinking about the machine at a known premium. That's a legitimate purchase.</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>Buying fits:</strong> established operators with capital, a 7+ year horizon, and maintenance discipline — ownership is the cheapest seat over the machine's full life, and the machine has residual value after the table ends.</span></li>
+        <li><Icon name="check" size={18} /> <span><strong>Service leasing fits:</strong> most single-and-few-location Tampa Bay businesses — near-subscription convenience at a local price, with someone accountable who's 45 minutes away rather than a call center.</span></li>
+      </ul>
+
+      <h2>The three questions that decide it</h2>
+      <p>
+        <strong>1. Would a surprise $900 repair hurt?</strong> If yes, spread
+        the risk (lease or subscription). <strong>2. Will you still run this
+        location in 5 years?</strong> If yes, buying's residual value starts
+        to matter. <strong>3. How many locations?</strong> One to a handful
+        local — lease or buy locally; dozens across states — the national
+        bundle earns its premium. Related math:
+        <a href="/commercial-ice-machine-cost/">purchase costs</a> ·
+        <a href="/ice-machine-lease-cost/">lease costs</a> ·
+        <a href="/used-vs-new-commercial-ice-machine/">used vs new</a>.
+      </p>
+
+      <div class="grid-2 mt-8">
+        <div>
+          <h2>Run your numbers with us</h2>
+          <p>
+            Bring your seat count or volume and your horizon — we'll put your
+            actual figures in all three columns and tell you which one we'd
+            pick in your seat. Even when the answer isn't us.
+          </p>
+          <p class="small muted"><a href="/how-we-work/">Here's exactly what happens next →</a></p>
+        </div>
+        <LeadForm segment="lease" page="lease-vs-buy-vs-subscription" heading="Run your numbers with us" sub="Your volume + your horizon → the three-way math with your actual figures." showUrgency={false} ctaLabel="Run my numbers" />
+      </div>
+
+      <h2 class="mt-8">Three-way FAQs</h2>
+      <FAQ items={faqs} />
+    </div>
+  </section>
+</BaseLayout>

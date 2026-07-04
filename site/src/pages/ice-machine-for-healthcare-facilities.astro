@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import Neutrality from '../components/ui/Neutrality.astro';
+import LibraryCapture from '../components/ui/LibraryCapture.astro';
+import FAQ from '../components/ui/FAQ.astro';
+import { faqSchema } from '../lib/schema';
+
+const faqs = [
+  {
+    q: 'How much ice does a healthcare facility need per bed?',
+    a: 'Plan roughly 10 lbs per bed per day — patient hydration, therapy use, food service, and staff add up fast. A 60-bed facility needs ~600 lbs/day of real capacity.',
+  },
+  {
+    q: 'What ice type do clinics and senior living facilities use?',
+    a: 'Nugget (chewable) ice is the healthcare standard — soft, safe for patients with swallowing concerns, and preferred for therapy coolers. See <a href="/nugget-vs-cube-vs-flake-ice/">the ice type guide</a>.',
+  },
+  {
+    q: 'Does ice count as food for infection-control purposes?',
+    a: 'Yes — ice is food under Florida rules, and healthcare inspections treat ice machines as food-contact equipment with higher stakes than restaurants. Documented cleaning with measured (ATP) verification is the standard we recommend and provide.',
+  },
+  {
+    q: 'Do you serve facilities across Pinellas and Hillsborough?',
+    a: 'Yes — clinics, senior living, surgery centers, and therapy practices across Tampa Bay. Based in Pinellas; most facilities are within about a 45-minute drive.',
+  },
+];
+---
+
+<BaseLayout
+  pageTitle="Ice Machines for Healthcare Facilities — Sizing & Requirements | Pinellas Ice Co"
+  metaDescription="Healthcare ice machine guide: ~10 lbs per bed per day, why nugget ice is the clinical standard, and the sanitation documentation facilities actually need. Tampa Bay."
+  schemaMarkup={faqSchema(faqs)}
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>Ice machines for healthcare facilities: sizing &amp; requirements</h1>
+      <div class="answer-block">
+        Healthcare sizing: <strong>about 10 lbs per bed per day</strong> —
+        double the hospitality rate — and the machine type matters more than
+        anywhere else: <strong>nugget (chewable) ice</strong> is the clinical
+        standard, and sanitation documentation is non-negotiable. A 60-bed
+        Tampa Bay facility should spec <strong>700+ lbs/day rated</strong>
+        after the Florida-heat adjustment.
+      </div>
+      <Neutrality />
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container narrow">
+      <h2>Why healthcare ice demand runs so high</h2>
+      <ul class="check-list">
+        <li><Icon name="check" size={18} /> <span>Patient hydration — pitchers refilled around the clock, not just at meals</span></li>
+        <li><Icon name="check" size={18} /> <span>Therapy and recovery — ice packs, post-op cooling, PT clinics</span></li>
+        <li><Icon name="check" size={18} /> <span>Dietary/food service on top of floor demand</span></li>
+        <li><Icon name="check" size={18} /> <span>24/7 operation — no overnight window for the bin to rebuild</span></li>
+      </ul>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Facility</th><th>Daily need</th><th>Machine capacity (FL-adjusted)</th></tr></thead>
+          <tbody>
+            <tr><td>Outpatient clinic / PT practice</td><td>~50–150 lbs</td><td>200–300 lbs/day rated</td></tr>
+            <tr><td>Surgery center</td><td>~200–300 lbs</td><td>400–500 lbs/day rated</td></tr>
+            <tr><td>60-bed senior living</td><td>~600 lbs</td><td>700–900 lbs/day rated</td></tr>
+            <tr><td>Large SNF / multi-wing</td><td>~1,000+ lbs</td><td>multiple machines, per wing</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>The sanitation bar is higher here</h2>
+      <p>
+        Ice is food under Florida rules everywhere — but in healthcare the
+        population consuming it is exactly the population least able to
+        tolerate contamination. Machines in clinical settings need scheduled,
+        documented deep cleaning with measurable verification, not a
+        wipe-down log. That's the standard we run:
+        <a href="/ice-machine-cleaning/">ATP-tested, before/after documented
+        cleanings</a> that survive an infection-control review.
+      </p>
+
+      <h2>Dispensers, not bins, on patient floors</h2>
+      <p>
+        Open bins and scoops are a contamination vector; touchless or
+        push-dispense nugget machines are the pattern for patient-accessible
+        placements. We'll spec dispenser units for floors and a production
+        machine for dietary, sized as one system.
+      </p>
+
+      <p>
+        Budget: <a href="/commercial-ice-machine-cost/">purchase ranges</a> ·
+        many facilities prefer <a href="/lease-vs-buy-vs-subscription-ice-machine/">leasing
+        with service included</a> for single-vendor accountability ·
+        <a href="/ice-machine-cost-calculator/">calculator</a>.
+      </p>
+
+      <h2>Healthcare FAQs</h2>
+      <FAQ items={faqs} />
+    </div>
+  </section>
+
+  <LibraryCapture segment="sales" page="sizing-healthcare" businessType="facility" />
+</BaseLayout>

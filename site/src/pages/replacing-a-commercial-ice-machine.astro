@@ -1,0 +1,107 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import Neutrality from '../components/ui/Neutrality.astro';
+import LeadForm from '../components/ui/LeadForm.astro';
+import FAQ from '../components/ui/FAQ.astro';
+import { faqSchema } from '../lib/schema';
+
+const faqs = [
+  {
+    q: 'Is my old ice machine worth anything as a trade-in?',
+    a: 'Honest answer: under 5 years old and working — yes, typically a few hundred dollars to low four figures against a replacement. Past 8 years or with a major component failure, its value is mostly scrap metal and parts; expect haul-away rather than trade value. Anyone quoting generous trade-in on a dead 10-year-old machine is discounting the new machine and calling it a trade.',
+  },
+  {
+    q: 'How do I dispose of a commercial ice machine in Tampa Bay?',
+    a: 'It\'s regulated equipment — the refrigerant must be recovered by an EPA-certified tech before scrapping. Pinellas and Hillsborough county facilities take appliances with refrigerant recovered; scrap dealers pay modestly for the stainless. Easiest path: have the installer haul it away at replacement (we include haul-away in replacement quotes).',
+  },
+  {
+    q: 'When is the best time to replace an ice machine in Florida?',
+    a: 'Spring, before the heat. Summer is when marginal machines die (heat cuts output exactly when demand peaks), when service calendars are fullest, and when you can least afford downtime. If your machine limped through last summer, replace it before this one.',
+  },
+  {
+    q: 'Should I repair or replace?',
+    a: 'The working rule: under 7 years old and the repair under half of replacement cost → repair. Past 8 years with a compressor or evaporator failure → replace; those failures come in sequence. Full math on the <a href="/ice-machine-repair/">repair page</a>.',
+  },
+];
+---
+
+<BaseLayout
+  pageTitle="Replacing a Commercial Ice Machine — Trade-In, Disposal & Timing | Pinellas Ice Co"
+  metaDescription="Replacing a commercial ice machine in Tampa Bay: what the old one is honestly worth, refrigerant-legal disposal, and why spring beats summer. Replacement quotes include haul-away."
+  schemaMarkup={faqSchema(faqs)}
+>
+  <section class="page-head">
+    <div class="container">
+      <h1>Replacing a commercial ice machine: what to do with the old one</h1>
+      <div class="answer-block">
+        Three questions decide it: <strong>is the old machine worth anything</strong>
+        (under 5 years and running: some; past 8: scrap),
+        <strong>how do you legally get rid of it</strong> (refrigerant must be
+        recovered first — or let the installer haul it), and
+        <strong>when</strong> (replace in spring; Florida summer is when
+        machines die and calendars fill).
+      </div>
+      <Neutrality />
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container narrow">
+      <h2>Trade-in value, honestly</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Old machine</th><th>Realistic value</th><th>Best path</th></tr></thead>
+          <tbody>
+            <tr><td>&lt;5 yrs, working, maintained</td><td>a few hundred $ – low four figures</td><td>Trade against replacement, or sell outright</td></tr>
+            <tr><td>5–8 yrs, working</td><td>modest — condition-dependent</td><td>Trade or keep as backup unit</td></tr>
+            <tr><td>8+ yrs or major failure</td><td>parts/scrap value only</td><td>Haul-away with the install</td></tr>
+            <tr><td>Beach-corroded (any age)</td><td>usually scrap</td><td>Haul-away; salt damage kills resale</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Disposal is regulated (and easy to get right)</h2>
+      <p>
+        Ice machines hold refrigerant, and venting it is a federal violation —
+        recovery by an EPA-certified tech comes first, then the carcass can go
+        to county appliance recycling (Pinellas and Hillsborough both take
+        appliances with refrigerant recovered) or a scrap dealer for the
+        stainless. Or skip the logistics entirely: <strong>our replacement
+        quotes include haul-away</strong>, refrigerant recovery done properly,
+        old machine gone the same visit the new one starts making ice.
+      </p>
+
+      <h2>Time it around Florida summer</h2>
+      <p>
+        The machine that "mostly keeps up" in March fails in August — heat
+        cuts output 10–20% right as demand peaks, and every service calendar
+        in Tampa Bay is fullest exactly then. Spring replacement means you
+        choose the machine calmly (<a href="/commercial-ice-machine-cost/">cost
+        guide</a>, <a href="/used-vs-new-commercial-ice-machine/">used vs
+        new</a>, <a href="/lease-vs-buy-vs-subscription-ice-machine/">lease vs
+        buy</a>) instead of taking whatever anyone can deliver fastest during
+        an emergency.
+        Sizing the replacement: start with your
+        <a href="/what-size-ice-machine-does-a-restaurant-need/">business-type
+        guide</a> — and size up if the old machine ever ran out.
+      </p>
+
+      <div class="grid-2 mt-8">
+        <div>
+          <h2>Get replacement pricing — haul-away included</h2>
+          <p>
+            Tell us what's dying and what it serves. You'll get the
+            replacement options, the all-in installed price with haul-away,
+            and an honest read on whether the old machine is worth anything.
+          </p>
+          <p class="small muted"><a href="/how-we-work/">Here's exactly what happens next →</a></p>
+        </div>
+        <LeadForm segment="sales" page="replacing-ice-machine" heading="Replacement quote + haul-away" sub="Old machine's brand/age and your business type — we'll handle the rest." showUrgency={false} ctaLabel="Get replacement pricing" />
+      </div>
+
+      <h2 class="mt-8">Replacement FAQs</h2>
+      <FAQ items={faqs} />
+    </div>
+  </section>
+</BaseLayout>

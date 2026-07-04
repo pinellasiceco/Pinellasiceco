@@ -2,7 +2,25 @@
 import BaseLayout from '../components/layout/BaseLayout.astro';
 import Icon from '../components/ui/Icon.astro';
 import FAQ from '../components/ui/FAQ.astro';
+import Neutrality from '../components/ui/Neutrality.astro';
 import { faqSchema } from '../lib/schema';
+
+// Decision Library hub: the calculator + the index of every library page.
+const library = [
+  { href: '/what-size-ice-machine-does-a-restaurant-need/', label: 'What size ice machine does a restaurant need?' },
+  { href: '/what-size-ice-machine-does-a-bar-need/', label: 'What size ice machine does a bar need?' },
+  { href: '/what-size-ice-machine-does-a-hotel-need/', label: 'What size ice machine does a hotel need?' },
+  { href: '/ice-machine-for-healthcare-facilities/', label: 'Ice machines for healthcare facilities' },
+  { href: '/ice-machine-for-office-or-school/', label: 'Ice machines for offices & schools' },
+  { href: '/commercial-ice-machine-cost/', label: 'Commercial ice machine cost — what Tampa Bay pays' },
+  { href: '/ice-machine-lease-cost/', label: 'Ice machine lease cost — monthly rates' },
+  { href: '/lease-vs-buy-vs-subscription-ice-machine/', label: 'Lease vs buy vs subscription — the three-way math' },
+  { href: '/used-vs-new-commercial-ice-machine/', label: 'Used vs new — when used makes sense' },
+  { href: '/hoshizaki-vs-manitowoc/', label: 'Hoshizaki vs Manitowoc — honest comparison' },
+  { href: '/nugget-vs-cube-vs-flake-ice/', label: 'Nugget vs cube vs flake — which ice type' },
+  { href: '/replacing-a-commercial-ice-machine/', label: 'Replacing a machine — trade-in & haul-away' },
+  { href: '/hurricane-season-ice-machine/', label: 'Hurricane season and your ice machine' },
+];
 
 // Calculator island: the ONE page with meaningful client JS (vanilla,
 // inline, no framework). Business type + volume -> machine size + purchase /
@@ -30,10 +48,11 @@ const faqs = [
       <h1>Ice machine cost calculator</h1>
       <div class="answer-block">
         Answer three questions, get the machine size your business needs and
-        real Tampa Bay cost ranges — <strong>purchase, lease, and typical
+        real Tampa Bay cost ranges — <strong>new, used, lease, and typical
         repair</strong> — instantly, no login. Want exact numbers? The written
         estimate is one form away.
       </div>
+      <Neutrality />
     </div>
   </section>
 
@@ -61,7 +80,8 @@ const faqs = [
             <div class="form-group">
               <label class="form-label" for="calc-goal">What are you weighing?</label>
               <select class="form-select" id="calc-goal">
-                <option value="buy">Buying a machine</option>
+                <option value="buy">Buying new</option>
+                <option value="used">Buying used</option>
                 <option value="lease">Leasing a machine</option>
                 <option value="repair">Repair vs. replace</option>
               </select>
@@ -71,8 +91,9 @@ const faqs = [
           <div class="calc-results" id="calc-results" aria-live="polite">
             <div class="result-line"><span>Estimated daily ice need</span><strong id="r-need">—</strong></div>
             <div class="result-line"><span>Machine size (with 20% FL headroom)</span><strong id="r-size">—</strong></div>
-            <div class="result-line"><span>Purchase range (installed)</span><strong id="r-buy">—</strong></div>
-            <div class="result-line"><span>Lease range (monthly, service incl.)</span><strong id="r-lease">—</strong></div>
+            <div class="result-line"><span>New, installed</span><strong id="r-buy">—</strong></div>
+            <div class="result-line"><span>Used (verified), installed</span><strong id="r-used">—</strong></div>
+            <div class="result-line"><span>Lease (monthly, service incl.)</span><strong id="r-lease">—</strong></div>
             <div class="result-line"><span>Typical repair bill on this class</span><strong id="r-repair">—</strong></div>
             <p class="small muted" id="r-note" style="margin-top: var(--space-3)"></p>
           </div>
@@ -143,11 +164,20 @@ const faqs = [
         </div>
       </div>
 
-      <p class="mt-8">
-        Behind the numbers: <a href="/commercial-ice-machine-sales/">sales &amp;
-        sizing guide</a> · <a href="/ice-machine-leasing/">lease vs. buy math</a> ·
-        <a href="/ice-machine-repair/">repair service</a>
-      </p>
+      <div class="mt-8">
+        <span class="eyebrow">The Decision Library</span>
+        <h2 class="mb-4">Behind the numbers — every guide</h2>
+        <ul class="lib-index">
+          {library.map((g) => <li><a href={g.href}>{g.label}</a></li>)}
+        </ul>
+        <p class="small muted">
+          Plus the services themselves:
+          <a href="/commercial-ice-machine-sales/">sales</a> ·
+          <a href="/ice-machine-leasing/">leasing</a> ·
+          <a href="/ice-machine-repair/">repair</a> ·
+          <a href="/how-we-work/">how we work</a>
+        </p>
+      </div>
     </div>
   </section>
 
@@ -166,6 +196,9 @@ const faqs = [
     font-size: var(--text-sm);
   }
   .result-line strong { color: var(--navy); white-space: nowrap; }
+  .lib-index { list-style: none; padding: 0; columns: 2; column-gap: var(--space-8); }
+  .lib-index li { margin-bottom: var(--space-2); break-inside: avoid; }
+  @media (max-width: 640px) { .lib-index { columns: 1; } }
 </style>
 
 <script is:inline>
@@ -204,6 +237,7 @@ const faqs = [
       $('r-need').textContent = need + ' lbs/day';
       $('r-size').textContent = cls[1];
       $('r-buy').textContent = fmt(cls[2]) + ' – ' + fmt(cls[3]);
+      $('r-used').textContent = fmt(Math.round(cls[2] * 0.55 / 50) * 50) + ' – ' + fmt(Math.round(cls[3] * 0.6 / 50) * 50);
       $('r-lease').textContent = fmt(cls[4]) + ' – ' + fmt(cls[5]) + ' /mo';
       $('r-repair').textContent = fmt(cls[6]) + ' – ' + fmt(cls[7]);
 
@@ -213,12 +247,14 @@ const faqs = [
           ? 'Rule of thumb: repair if the machine is under 7 years old and the quote is under half the purchase range above.'
           : goal === 'lease'
             ? 'Lease rates shown include maintenance and cleanings — compare against purchase price PLUS ~$300–$500/yr of cleanings.'
-            : 'Purchase range is all-in installed (machine, bin, filtration, startup) for typical installs.';
+            : goal === 'used'
+              ? 'Used range assumes a verified machine (opened, tested, warrantied) — history is everything; see the used-vs-new guide below.'
+              : 'Purchase range is all-in installed (machine, bin, filtration, startup) for typical installs.';
 
       var segment = goal === 'repair' ? 'repair' : goal === 'lease' ? 'lease' : 'sales';
       if ($('gate-segment')) $('gate-segment').value = segment;
       if ($('gate-inputs')) $('gate-inputs').value = type + ' / ' + vol + ' ' + m.unit + ' / weighing: ' + goal;
-      if ($('gate-results')) $('gate-results').value = need + ' lbs/day need; ' + cls[1] + '; buy ' + fmt(cls[2]) + '-' + fmt(cls[3]) + '; lease ' + fmt(cls[4]) + '-' + fmt(cls[5]) + '/mo';
+      if ($('gate-results')) $('gate-results').value = need + ' lbs/day need; ' + cls[1] + '; new ' + fmt(cls[2]) + '-' + fmt(cls[3]) + '; lease ' + fmt(cls[4]) + '-' + fmt(cls[5]) + '/mo';
     }
 
     ['calc-type', 'calc-volume', 'calc-goal'].forEach(function (id) {

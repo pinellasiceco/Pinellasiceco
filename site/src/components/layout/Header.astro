@@ -5,13 +5,14 @@ import { PHONE_HREF, PHONE_DISPLAY } from '../../config';
 // Desktop shows the response line under the number. Nav order mirrors the
 // site-purpose hierarchy: repair first, sales/leasing second, cleaning
 // supporting. CSS-only mobile menu (checkbox toggle, zero JS).
+// Sales-first ordering per the sales-first expansion directive.
 const nav = [
-  { href: '/ice-machine-repair/', label: 'Repair' },
   { href: '/commercial-ice-machine-sales/', label: 'Sales' },
   { href: '/ice-machine-leasing/', label: 'Leasing' },
+  { href: '/ice-machine-repair/', label: 'Repair' },
   { href: '/ice-machine-cleaning/', label: 'Cleaning' },
+  { href: '/ice-machine-cost-calculator/', label: 'Pricing & Sizing' },
   { href: '/brands/', label: 'Brands' },
-  { href: '/ice-machine-cost-calculator/', label: 'Pricing' },
 ];
 ---
 

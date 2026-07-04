@@ -6,6 +6,7 @@ import LeadForm from '../components/ui/LeadForm.astro';
 import FAQ from '../components/ui/FAQ.astro';
 import HowItWorks from '../components/ui/HowItWorks.astro';
 import Reviews from '../components/ui/Reviews.astro';
+import ServiceAreaBlock from '../components/ui/ServiceAreaBlock.astro';
 import { faqSchema, serviceSchema } from '../lib/schema';
 
 const faqs = [
@@ -102,7 +103,7 @@ const schema = [
       <ul class="check-list">
         <li><Icon name="check" size={18} /> <span><strong>Lease</strong> if uptime is everything, capital is tight, or you're opening and cash has better uses.</span></li>
         <li><Icon name="check" size={18} /> <span><strong>Buy</strong> if you'll run the machine 7+ years and can absorb a repair bill without pain — ownership is cheaper over the machine's life.</span></li>
-        <li><Icon name="check" size={18} /> <span>On the fence? Run both in the <a href="/ice-machine-cost-calculator/">cost calculator</a>.</span></li>
+        <li><Icon name="check" size={18} /> <span>On the fence? Run both in the <a href="/ice-machine-cost-calculator/">cost calculator</a> — or see the full <a href="/lease-vs-buy-vs-subscription-ice-machine/">lease vs buy vs subscription three-way math</a>, including where national subscriptions genuinely fit.</span></li>
       </ul>
     </div>
   </section>
@@ -128,6 +129,7 @@ const schema = [
   <section class="section">
     <div class="container narrow">
       <Reviews />
+      <ServiceAreaBlock />
       <span class="eyebrow">Leasing FAQs</span>
       <h2 class="mb-6">Leasing questions</h2>
       <FAQ items={faqs} />
