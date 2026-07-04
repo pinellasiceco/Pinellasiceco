@@ -62,8 +62,25 @@ pinellas".
 
 | Page | Extracted from live? | Word count (fetched vs. expected) | Notes |
 |------|---------------------|-----------------------------------|-------|
-| A1 `/ice-machine-cleaning-clearwater-fl-pinellas-ice-co` | **NO — OPERATOR FLAG** | 0 fetched / est. 400–800 expected | Egress policy for this session denies `www.pinellasiceco.com` (proxy CONNECT 403 on every route: curl, WebFetch, archive.org). Per migration rules the body was **not** regenerated. The built page carries the indexed title verbatim + a marked operator-fill body region. **Unblock: either allowlist `pinellasiceco.com` + `web.archive.org` in the environment network policy and re-run the port, or paste the HubSpot page body into the marked region in `src/pages/ice-machine-cleaning-clearwater-fl-pinellas-ice-co.astro`.** |
-| A2 `/` | **NO — OPERATOR FLAG** | 0 fetched | Same blocker. New homepage is built new (operator to record live title/meta/H1 in checklist and confirm the rewrite decision, since homepage content was not retrievable to preserve). |
+| A1 `/ice-machine-cleaning-clearwater-fl-pinellas-ice-co` | **YES — operator paste, 2026-07-04** | ~430 words fetched / 400–800 expected ✓ | Body supplied by operator (live-site copy/paste; direct fetch remains blocked by egress policy). Ported verbatim substance + heading structure into the page. Booking CTAs reconciled to callback/form (conversion surface, not ranking copy). **Two gaps remain:** (1) the three FAQ accordion ANSWERS were collapsed in the paste — questions preserved in a marked comment, answers must be pasted, never invented; (2) the page links twice to a "Florida cleaning frequency guide" — URL unknown, links point at `/ice-machine-cleaning/` until the slug is supplied. |
+| A2 `/` | **NO — OPERATOR FLAG** | 0 fetched | Blocked host. New homepage is built new (operator to record live title/meta/H1 in checklist and confirm the rewrite decision, since homepage content was not retrievable to preserve). |
+
+#### Live-site structure discovered via the A1 paste (2026-07-04)
+
+The live page's navigation reveals pages not visible in the search index —
+slugs unknown until the HubSpot export. Provisional closest-intent 301
+targets (finalize with real slugs before cutover):
+
+| Live page (nav label) | Provisional 301 target | Note |
+|----------------------|------------------------|------|
+| Services | `/ice-machine-cleaning/` | live site is cleaning-centric |
+| Pricing | `/ice-machine-cleaning-clearwater-fl-pinellas-ice-co/` | the $99/$149 pricing copy lives there now |
+| FAQ | `/ice-machine-cleaning/` | FAQ block on the new page |
+| About Us | `/about/` | |
+| Contact Us | `/contact/` | |
+| Service Area | `/pinellas-county/` | |
+| Cleaning Tips / "Florida cleaning frequency guide" | **evaluate before redirecting** | linked twice from the Tier A page — may have its own queries; port as Tier B if the GSC export shows impressions |
+| Terms & Conditions | `/terms/` | |
 
 ### TIER A-ADJACENT — real URLs the business hands out (not ranking assets, but must not break)
 

@@ -6,26 +6,29 @@ import { serviceSchema } from '../lib/schema';
 
 /*
  * ============================= TIER A PAGE =================================
- * This is the site's ONLY confirmed ranking URL (preservation ledger A1).
+ * The site's ONLY confirmed ranking URL (preservation ledger A1).
  * - URL slug: preserved IDENTICALLY (no redirect).
- * - <title>: preserved VERBATIM as indexed:
- *     "Ice Machine Cleaning Clearwater, FL | Pinellas Ice Co"
- * - BODY: the live HubSpot body could NOT be fetched from this build
- *   environment (egress policy denies www.pinellasiceco.com). Per migration
- *   rules the ranking copy was NOT reconstructed or regenerated.
+ * - <title>: preserved VERBATIM as indexed.
+ * - BODY: ported from the live HubSpot page, supplied by the operator
+ *   2026-07-04. Substance and heading structure preserved verbatim;
+ *   HubSpot chrome (nav/footer) stripped; booking CTAs reconciled to
+ *   callback/form framing per no-booking scope (conversion surface, not
+ *   ranking copy).
  *
- * >>> OPERATOR ACTION REQUIRED BEFORE CUTOVER <<<
- * Paste the live page's H1 + body content (text, headings, lists — verbatim,
- * HubSpot artifacts removed) into the marked region below, replacing the
- * interim block. The interim block is a minimal service statement so the URL
- * is never thin-but-broken, but it is NOT the ranking copy.
+ * REMAINING OPERATOR ITEMS (see ops/operator-flags.md):
+ * - FAQ answers: the live page's three FAQ items were collapsed accordions;
+ *   only the questions were captured. Paste the answers into the marked
+ *   section below — do not invent them.
+ * - The live page links twice to a "Florida cleaning frequency guide"
+ *   (the Cleaning Tips page?). Its URL is needed for the redirect map /
+ *   possible port; links below point at /ice-machine-cleaning/ until then.
  * ===========================================================================
  */
 
 const schema = serviceSchema({
   name: 'Ice Machine Cleaning — Clearwater, FL',
   serviceType: 'Ice machine cleaning and sanitizing',
-  description: 'Same-day commercial ice machine cleaning in Clearwater, FL with flat-rate pricing and documented, ATP-tested results.',
+  description: 'Ice machine cleaning in Clearwater, FL — $99 initial clean & test with ATP verification, serving high-volume restaurants, bars, and hotels.',
   url: 'https://www.pinellasiceco.com/ice-machine-cleaning-clearwater-fl-pinellas-ice-co/',
 });
 ---
@@ -35,56 +38,181 @@ const schema = serviceSchema({
   metaDescription="Same-day ice machine cleaning in Clearwater, FL. Flat-rate pricing, no contracts, fast service for restaurants and bars. Serving Clearwater, Dunedin, Palm Harbor, Largo and surrounding Pinellas County."
   schemaMarkup={schema}
 >
+  <!-- ====================== PORTED TIER A BODY (verbatim substance) ====================== -->
   <section class="page-head">
     <div class="container">
-      <!-- OPERATOR: replace this H1 with the live page's exact H1 -->
-      <h1>Ice Machine Cleaning Clearwater, FL</h1>
+      <h1>Ice Machine Cleaning in Clearwater, FL</h1>
+      <p class="tier-sub">Start with a $99 Clean &amp; Test</p>
+      <p class="tier-lead">
+        Serving restaurants, bars, and hotels near Clearwater Beach, Mandalay
+        Ave, and Gulf to Bay Blvd. Built for high-volume operations that
+        can't afford downtime or failed inspections. Learn recommended
+        cleaning intervals in our
+        <a href="/ice-machine-cleaning/">Florida cleaning frequency guide</a>.
+      </p>
+      <div class="tier-badges">
+        <span class="tier-badge"><Icon name="dollar" size={16} /> $99 Initial Clean &amp; Test</span>
+        <span class="tier-badge"><Icon name="truck" size={16} /> Serving Clearwater Weekly</span>
+        <span class="tier-badge"><Icon name="gauge" size={16} /> High-Volume Specialists</span>
+      </div>
+      <div class="hero-ctas">
+        <a href="#quote" class="btn btn-primary btn-lg">Request Your $99 Clean →</a>
+        <a href="tel:+17278556873" class="btn btn-outline btn-lg"><Icon name="phone" size={18} /> Call (727) 855-6873</a>
+      </div>
+      <p class="small muted" style="margin-top: var(--space-3)">
+        Takes 30 seconds to request. Most Clearwater clients switch to monthly
+        after first visit.
+      </p>
     </div>
   </section>
 
-  <section class="section" style="padding-top: 0;">
+  <section class="section" style="padding-top:0">
     <div class="container">
       <div class="grid-2">
         <div>
-          <!-- ============================================================
-               OPERATOR-FILL REGION — TIER A BODY (ledger A1)
-               Paste the live HubSpot page body here, verbatim substance,
-               heading structure intact. Delete the interim block below
-               when done. New sections may be APPENDED after the ported
-               copy; the ported copy itself is never rewritten.
-               ============================================================ -->
-
-          <!-- INTERIM BLOCK (not the ranking copy) — delete after paste -->
           <p>
-            Commercial ice machine cleaning and sanitizing in Clearwater,
-            Florida — serving restaurants, bars, and hospitality across
-            Clearwater and nearby Dunedin, Palm Harbor, Largo, and
-            surrounding Pinellas County.
+            If your machine hasn't been professionally cleaned and tested
+            recently, there's a high chance it would fail a sanitation test
+            today—especially in high-volume Clearwater environments.
+            <a href="/ice-machine-cleaning/">See how often cleaning is
+            actually required in Florida conditions</a>.
+          </p>
+
+          <h2>Why Clearwater Ice Machines Get Dirty Faster</h2>
+          <p>
+            Coastal humidity, constant demand, and high staff usage create
+            the perfect environment for contamination— especially in
+            beachside restaurants, bars, and hotels.
+          </p>
+          <ul>
+            <li>Ice bins are opened constantly during peak hours</li>
+            <li>Warm, humid air accelerates mold and bacteria growth</li>
+            <li>Heavy usage overwhelms filtration systems</li>
+          </ul>
+          <p>
+            Most high-volume machines fail sanitation testing without
+            routine service.
+          </p>
+
+          <h2>Most Companies Clean. We Prove It's Clean.</h2>
+          <p>
+            Every service includes verification, documentation, and
+            certification—not just a surface clean.
+          </p>
+          <div class="tier-features">
+            <div>
+              <h3>ATP Testing</h3>
+              <p>Measured sanitation levels before and after cleaning.</p>
+            </div>
+            <div>
+              <h3>Certified Clean</h3>
+              <p>Verification you can show inspectors or ownership.</p>
+            </div>
+            <div>
+              <h3>Documentation</h3>
+              <p>Clear records for compliance and internal accountability.</p>
+            </div>
+          </div>
+          <p>
+            <strong>Get Your Machine Tested This Week</strong> —
+            <a href="#quote">Request Your $99 Clean →</a>
+          </p>
+
+          <h2>One-Time Cleaning vs Ongoing Maintenance</h2>
+          <p>
+            In high-volume environments, ice machines don't stay clean for
+            long.
+          </p>
+          <div class="tier-compare">
+            <div>
+              <h3>One-Time Cleaning</h3>
+              <p>Short-term fix. Buildup returns quickly under heavy use.</p>
+            </div>
+            <div>
+              <h3>$149/Month Service</h3>
+              <p>Ongoing cleaning, filtration, ATP testing, and certification.</p>
+            </div>
+          </div>
+          <p>Most Clearwater clients switch to monthly after their first visit.</p>
+
+          <h2>What to Expect</h2>
+          <ul>
+            <li>Service takes 45–60 minutes</li>
+            <li>Minimal disruption to staff or service</li>
+            <li>Before &amp; after ATP test results</li>
+            <li>Clear recommendation if deeper cleaning is needed</li>
+          </ul>
+
+          <h2>Simple, Transparent Pricing</h2>
+          <div class="card tier-price">
+            <h3>$99 Initial Clean &amp; Test</h3>
+            <ul class="check-list">
+              <li><Icon name="check" size={18} /> <span>Full cleaning</span></li>
+              <li><Icon name="check" size={18} /> <span>ATP testing</span></li>
+              <li><Icon name="check" size={18} /> <span>Condition report</span></li>
+              <li><Icon name="check" size={18} /> <span>Compliance documentation</span></li>
+            </ul>
+            <p class="small muted">Applied toward deep clean if required</p>
+            <div class="hero-ctas">
+              <a href="#quote" class="btn btn-primary">Request Your $99 Clean →</a>
+              <a href="tel:+17278556873" class="btn btn-outline"><Icon name="phone" size={16} /> Call (727) 855-6873</a>
+            </div>
+            <p class="small muted" style="margin-top: var(--space-2)">Limited availability during peak season</p>
+          </div>
+
+          <h2>Keep Your Ice Safe During Peak Volume</h2>
+          <p>
+            Request your $99 clean today and get verified, documented
+            results. Check availability and get your machine cleaned as soon
+            as today.
           </p>
           <p>
-            Call <a href="tel:+17278556873"><strong>(727) 855-6873</strong></a>
-            and we'll take care of it, or use the form on this page and
-            we'll call you back.
+            Serving Clearwater and nearby areas including Dunedin, Palm
+            Harbor, Largo, and surrounding Pinellas County.
           </p>
-          <!-- END INTERIM BLOCK -->
 
-          <!-- ============================================================
-               END OPERATOR-FILL REGION. Content below this line is NEW,
-               appended per Tier A rules (extension allowed).
-               ============================================================ -->
+          <!-- ==================================================================
+               FAQ SECTION — OPERATOR FILL (do not invent answers)
+               The live page has three FAQ accordions; only the questions were
+               captured. Paste each live answer, then uncomment. Add matching
+               FAQPage schema via faqSchema() once answers are real.
+               Questions on the live page:
+                 1. Is this service required for health inspections?
+                 2. Do you work with high-volume commercial machines?
+                 3. Does cleaning improve ice quality?
+          ================================================================== -->
+
+          <!-- ====================== END PORTED TIER A BODY ====================== -->
 
           <div class="mt-8">
             <h2>More from Pinellas Ice Co</h2>
             <ul class="check-list">
               <li><Icon name="check" size={18} /> <span>Machine acting up, not just dirty? <a href="/ice-machine-repair/">Ice machine repair</a> across Tampa Bay.</span></li>
-              <li><Icon name="check" size={18} /> <span>Cleaning service details, ATP testing, and the certification shield: <a href="/ice-machine-cleaning/">ice machine cleaning</a>.</span></li>
+              <li><Icon name="check" size={18} /> <span>Cleaning service details and ATP testing across the Bay: <a href="/ice-machine-cleaning/">ice machine cleaning</a>.</span></li>
               <li><Icon name="check" size={18} /> <span>What dirty machines cost Pinellas restaurants: <a href="/ice-machine-data/">the inspection data study</a>.</span></li>
               <li><Icon name="check" size={18} /> <span>Everything we do in Clearwater: <a href="/clearwater/">Clearwater service area</a>.</span></li>
             </ul>
           </div>
         </div>
-        <LeadForm segment="cleaning" page="ice-machine-cleaning-clearwater" heading="Request a Clearwater cleaning" sub="Same-day slots when available — flat-rate, no contracts." showUrgency={false} />
+
+        <LeadForm segment="cleaning" page="ice-machine-cleaning-clearwater" heading="Request Your $99 Clean & Test" sub="Same-day service when available — most Clearwater clients switch to monthly after the first visit." showUrgency={false} />
       </div>
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .tier-sub { font-size: var(--text-xl); font-weight: 700; color: var(--blue-dark); margin: var(--space-2) 0 var(--space-4); }
+  .tier-lead { font-size: var(--text-lg); max-width: 680px; }
+  .tier-badges { display: flex; flex-wrap: wrap; gap: var(--space-3); margin: var(--space-4) 0; }
+  .tier-badge {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: var(--ice); color: var(--navy); font-weight: 700; font-size: var(--text-sm);
+    border: 1px solid var(--blue-light); border-radius: 999px; padding: 0.35rem 0.85rem;
+  }
+  .tier-badge svg { color: var(--blue-dark); }
+  .tier-features, .tier-compare { display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin: var(--space-4) 0; }
+  .tier-features h3, .tier-compare h3 { margin-bottom: var(--space-1); }
+  .tier-price { margin: var(--space-4) 0; }
+  h2 { margin-top: var(--space-8); margin-bottom: var(--space-3); }
+</style>

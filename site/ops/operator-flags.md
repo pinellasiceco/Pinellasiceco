@@ -5,16 +5,24 @@ Ordered by priority. Nothing here blocks the *build*; items 1–3 block
 
 ## Blocks cutover
 
-1. **Tier A body paste** — copy the live HubSpot body of
-   `/ice-machine-cleaning-clearwater-fl-pinellas-ice-co` into the marked
-   region of `site/src/pages/ice-machine-cleaning-clearwater-fl-pinellas-ice-co.astro`
-   (H1 too). The build ships an interim block that is NOT the ranking copy.
-   Alternative: allowlist `pinellasiceco.com` (and ideally `web.archive.org`)
-   in this environment's network policy and have the session port it.
+1. ~~**Tier A body paste**~~ **DONE 2026-07-04** (operator paste, ported).
+   Two follow-ups remain:
+   - **1a. FAQ answers** — the live page's three FAQ accordions were
+     collapsed in the paste. Open each on the live page and paste the
+     answers into the marked comment in
+     `site/src/pages/ice-machine-cleaning-clearwater-fl-pinellas-ice-co.astro`.
+     Questions: "Is this service required for health inspections?" /
+     "Do you work with high-volume commercial machines?" /
+     "Does cleaning improve ice quality?"
+   - **1b. "Florida cleaning frequency guide" URL** — the Tier A page links
+     to it twice (also the "Cleaning Tips" nav item?). Supply its URL: it
+     needs a redirect-map entry and, if it has impressions in GSC, a Tier B
+     port of its own.
 2. **GSC export** (Performance → Pages + Queries, full history) — diff
    against `preservation-ledger.md`; classify any URL it reveals.
-3. **HubSpot page list export** — same: any published page not in the ledger
-   gets a 301 target before cutover.
+3. **HubSpot page list export** — now known to include at least: Services,
+   Pricing, FAQ, About Us, Contact Us, Service Area, Cleaning Tips, Terms.
+   Slugs needed to finalize the 301 map (provisional targets in the ledger).
 
 ## Trust strip + claims (shipped in conservative form — confirm or correct)
 
