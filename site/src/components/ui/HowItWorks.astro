@@ -1,0 +1,57 @@
+---
+import Icon from './Icon.astro';
+import { PHONE_DISPLAY } from '../../config';
+// 3-step how-it-works strip — scannable, consistent placement on money pages.
+interface Props {
+  finalStep?: string;
+}
+const { finalStep = 'Fixed fast — with a straight answer on cost first' } = Astro.props;
+---
+
+<div class="hiw" role="list">
+  <div class="hiw-step" role="listitem">
+    <span class="hiw-num"><Icon name="phone" size={20} /></span>
+    <div>
+      <strong>1. Call or submit</strong>
+      <p>{PHONE_DISPLAY} — or 60 seconds on the form.</p>
+    </div>
+  </div>
+  <span class="hiw-arrow" aria-hidden="true"><Icon name="arrow" size={18} /></span>
+  <div class="hiw-step" role="listitem">
+    <span class="hiw-num"><Icon name="gauge" size={20} /></span>
+    <div>
+      <strong>2. We diagnose</strong>
+      <p>Brand, symptoms, and location — you get a time window and a real number.</p>
+    </div>
+  </div>
+  <span class="hiw-arrow" aria-hidden="true"><Icon name="arrow" size={18} /></span>
+  <div class="hiw-step" role="listitem">
+    <span class="hiw-num"><Icon name="check" size={20} /></span>
+    <div>
+      <strong>3. Back in business</strong>
+      <p>{finalStep}</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .hiw {
+    display: flex; align-items: stretch; gap: var(--space-3);
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: var(--space-4) var(--space-6);
+    margin: var(--space-6) 0;
+  }
+  .hiw-step { display: flex; gap: var(--space-3); flex: 1; align-items: flex-start; }
+  .hiw-num {
+    flex: none; width: 42px; height: 42px; border-radius: 50%;
+    background: var(--ice); color: var(--blue-dark);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .hiw-step strong { color: var(--navy); display: block; margin-bottom: 2px; }
+  .hiw-step p { font-size: var(--text-sm); color: var(--text-2); margin: 0; }
+  .hiw-arrow { align-self: center; color: var(--border-strong); flex: none; }
+  @media (max-width: 767px) {
+    .hiw { flex-direction: column; }
+    .hiw-arrow { display: none; }
+  }
+</style>

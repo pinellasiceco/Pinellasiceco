@@ -26,6 +26,22 @@ Ordered by priority. Nothing here blocks the *build*; items 1–3 block
    ZERO impressions (not in GSC) that still exists and gets handed out in
    emails/GBP. Low stakes now; the GSC export covered everything that ranks.
 
+## Conversion-revamp confirmations (new)
+
+16. **Response-time promise** — every form now carries: "No obligation. We
+    call back fast — usually within the hour during business hours." The
+    header says "Fast callbacks · same-day service when available."
+    Confirm both or edit `RESPONSE_LINE` in `src/config.ts` (one place).
+17. **GA4 measurement ID** — set `GA4_ID` in `src/config.ts` to enable
+    call-click + lead-form-submit tracking (ships with analytics OFF and
+    zero analytics JS until set).
+18. **Google reviews** — the review component is built and shipped EMPTY
+    (`src/components/ui/Reviews.astro`). Paste real GBP reviews into its
+    array to light it up on home + all four money pages. Fabrication
+    forbidden; it renders nothing until real reviews exist.
+19. **"Licensed & Insured"** now leads the trust strip — sourced from your
+    own live-site footer. Confirm it's current.
+
 ## Trust strip + claims (shipped in conservative form — confirm or correct)
 
 4. "Flat-rate pricing, no contracts" — shown sitewide (true per the cached

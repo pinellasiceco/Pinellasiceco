@@ -1,0 +1,67 @@
+---
+import Icon from '../ui/Icon.astro';
+import { PHONE_HREF, PHONE_DISPLAY } from '../../config';
+// Persistent bottom call bar, mobile only (<768px). CSS-first: fixed
+// position (no CLS — body gets matching padding via global.css). "Get a
+// Quote" targets the on-page form (#quote) and falls back to /contact/ on
+// pages without one via a tiny inline check-free approach: pages without a
+// #quote anchor simply scroll nowhere, so the href is set per-page via the
+// data attribute pattern below — default anchor works on all money pages.
+---
+
+<div class="sticky-call-bar" role="complementary" aria-label="Quick contact">
+  <a href={PHONE_HREF} class="scb-call" data-track="call_click" data-loc="sticky-bar">
+    <Icon name="phone" size={18} />
+    <span>Call {PHONE_DISPLAY}</span>
+  </a>
+  <a href="#quote" class="scb-quote" data-track="quote_jump" data-loc="sticky-bar">
+    Get a Quote
+  </a>
+</div>
+
+<script is:inline>
+  // Pages without an on-page form (privacy, terms, about): send the quote
+  // button to the contact form instead of a dead anchor.
+  (function () {
+    if (!document.getElementById('quote')) {
+      var q = document.querySelector('.scb-quote');
+      if (q) q.setAttribute('href', '/contact/#quote');
+    }
+  })();
+</script>
+
+<style>
+  .sticky-call-bar {
+    display: none;
+  }
+  @media (max-width: 767px) {
+    .sticky-call-bar {
+      display: flex;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      gap: 1px;
+      background: var(--border-strong);
+      box-shadow: 0 -4px 16px rgba(14, 28, 58, 0.18);
+      padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+    .scb-call, .scb-quote {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      padding: 0.95rem 0.5rem;
+      font-weight: 800;
+      font-size: 1rem;
+      text-decoration: none;
+      line-height: 1.1;
+    }
+    .scb-call { background: var(--warm); color: #fff; flex: 1.4; }
+    .scb-call:hover { background: var(--warm-dark); color: #fff; }
+    .scb-quote { background: var(--navy); color: #fff; }
+    .scb-quote:hover { background: var(--navy-deep); color: #fff; }
+  }
+</style>

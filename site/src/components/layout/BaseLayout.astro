@@ -1,6 +1,8 @@
 ---
 import Header from './Header.astro';
 import Footer from './Footer.astro';
+import StickyCallBar from './StickyCallBar.astro';
+import { PHONE_TEL, GA4_ID } from '../../config';
 import '../../styles/global.css';
 
 interface Props {
@@ -21,9 +23,6 @@ const rawCanonical = canonicalURL || new URL(Astro.url.pathname, Astro.site).hre
 const canonical = rawCanonical.endsWith('/') ? rawCanonical : `${rawCanonical}/`;
 const ogImageFull = new URL(ogImage || '/og-default.png', Astro.site).href;
 
-export const PHONE_DISPLAY = '(727) 855-6873';
-export const PHONE_TEL = '+17278556873';
-
 // LocalBusiness entity — emitted once on every page. NAP must match the
 // Google Business Profile exactly. [OPERATOR: confirm] street address +
 // hours are omitted until confirmed (service-area business).
@@ -33,7 +32,7 @@ const businessSchema = {
   "@id": "https://www.pinellasiceco.com/#business",
   "name": "Pinellas Ice Co",
   "url": "https://www.pinellasiceco.com/",
-  "telephone": "+17278556873",
+  "telephone": PHONE_TEL,
   "email": "service@pinellasiceco.com",
   "image": "https://www.pinellasiceco.com/images/pinellas-ice-co-logo.webp",
   "logo": "https://www.pinellasiceco.com/images/pinellas-ice-co-logo.webp",
@@ -97,5 +96,44 @@ const businessSchema = {
     <slot />
   </main>
   <Footer />
+  <StickyCallBar />
+
+  {GA4_ID && (
+    <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`}></script>
+  )}
+  {GA4_ID && (
+    <script is:inline define:vars={{ GA4_ID }}>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', GA4_ID);
+
+      // Phone-side telemetry: every tel: click fires call_click with the
+      // page path and the element's location tag (sticky-bar / header /
+      // body). Lead forms fire lead_form_submit with the segment field —
+      // this is what separates phone demand from form demand per page.
+      document.addEventListener('click', function (e) {
+        var a = e.target && e.target.closest ? e.target.closest('a[href^="tel:"]') : null;
+        if (a) {
+          gtag('event', 'call_click', {
+            page_path: location.pathname,
+            link_location: a.dataset.loc || (a.closest('header') ? 'header' : a.closest('footer') ? 'footer' : 'body'),
+          });
+        }
+      });
+      document.addEventListener('submit', function (e) {
+        var f = e.target;
+        if (f && f.name === 'lead-capture') {
+          var seg = f.querySelector('input[name="segment"]');
+          var urg = f.querySelector('[name="urgency"]');
+          gtag('event', 'lead_form_submit', {
+            page_path: location.pathname,
+            segment: seg ? seg.value : 'unknown',
+            urgency: urg && urg.value ? urg.value : undefined,
+          });
+        }
+      });
+    </script>
+  )}
 </body>
 </html>

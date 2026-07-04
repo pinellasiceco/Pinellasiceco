@@ -1,12 +1,16 @@
 ---
 import Icon from './Icon.astro';
-// Trust strip — TRUE, verifiable claims only. Anything the operator has not
-// yet confirmed carries an [OPERATOR: confirm] flag in ops/operator-flags.md
-// and ships in its conservative form here. No invented reviews, counts,
-// stars, or certifications.
+// Trust strip — TRUE, verifiable claims only.
+// "Licensed & Insured" is confirmed: it appears in the live site's own
+// footer. Remaining softer claims ship in conservative form and are listed
+// in ops/operator-flags.md. NEVER add reviews, star ratings, technician
+// counts, or certifications here without operator-supplied facts.
 ---
 
 <div class="trust-strip" role="list">
+  <span class="trust-item" role="listitem">
+    <Icon name="shield" size={17} /> Licensed &amp; Insured
+  </span>
   <span class="trust-item" role="listitem">
     <Icon name="pin" size={17} /> Local — based in Pinellas County
   </span>

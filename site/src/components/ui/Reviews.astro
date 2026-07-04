@@ -1,0 +1,48 @@
+---
+/*
+ * Social-proof slot — SHIPPED EMPTY on purpose.
+ *
+ * [OPERATOR: connect real reviews] — paste real Google reviews into the
+ * `reviews` array below (text, author, date as they appear on the Google
+ * Business Profile). While the array is empty this component renders
+ * NOTHING: no placeholder stars, no invented counts, no fake quotes.
+ * Fabricated social proof is forbidden.
+ *
+ * When populated, consider adding Review/AggregateRating schema ONLY if the
+ * reviews are verifiably on the GBP (Google's guidelines require the rating
+ * to exist off-site).
+ */
+interface Review {
+  text: string;
+  author: string;
+  meta?: string; // e.g. "Restaurant owner, Clearwater · March 2026"
+}
+const reviews: Review[] = [
+  // [OPERATOR: connect real reviews] — example shape:
+  // { text: '…verbatim review text…', author: 'First L.', meta: 'Clearwater · via Google' },
+];
+---
+
+{reviews.length > 0 && (
+  <section class="reviews">
+    <span class="eyebrow">What customers say</span>
+    <div class="reviews-grid">
+      {reviews.map((r) => (
+        <blockquote class="card review">
+          <p>"{r.text}"</p>
+          <footer>
+            <strong>{r.author}</strong>
+            {r.meta && <span class="small muted"> — {r.meta}</span>}
+          </footer>
+        </blockquote>
+      ))}
+    </div>
+  </section>
+)}
+
+<style>
+  .reviews { margin: var(--space-8) 0; }
+  .reviews-grid { display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .review p { font-size: var(--text-base); color: var(--text-2); }
+  .review footer { margin-top: var(--space-2); }
+</style>

@@ -4,6 +4,8 @@ import Icon from '../components/ui/Icon.astro';
 import TrustStrip from '../components/ui/TrustStrip.astro';
 import LeadForm from '../components/ui/LeadForm.astro';
 import FAQ from '../components/ui/FAQ.astro';
+import HowItWorks from '../components/ui/HowItWorks.astro';
+import Reviews from '../components/ui/Reviews.astro';
 import { faqSchema, serviceSchema } from '../lib/schema';
 
 const faqs = [
@@ -40,11 +42,28 @@ const schema = [
   pageTitle="Ice Machine Leasing Tampa Bay — Monthly Rates & Lease vs Buy | Pinellas Ice Co"
   metaDescription="Lease a commercial ice machine in Tampa Bay from ~$100–$300/month with service included. Lease vs. buy math, straight terms, fast install. Call (727) 855-6873."
   schemaMarkup={schema}
+  ogImage="/og/og-leasing.png"
 >
-  <section class="page-head">
+  <section class="hero hero-photo" style="--hero-img: url('/images/hero-commercial-bar-tampa-bay.webp')">
     <div class="container">
-      <h1>Ice machine leasing — Tampa Bay</h1>
-      <div class="answer-block">
+      <h1>Never worry about ice again — ice machine leasing with service included, Tampa Bay</h1>
+      <p class="lead">
+        One monthly rate covers the machine, the cleanings, and the repairs —
+        breakdowns become our problem, not yours.
+      </p>
+      <div class="hero-ctas">
+        <a href="#quote" class="btn btn-primary btn-lg">Get my monthly rate</a>
+        <a href="tel:+17278556873" class="btn btn-outline btn-lg" data-loc="hero"><Icon name="phone" size={18} /> (727) 855-6873</a>
+      </div>
+      <p class="hero-brands">Lease <strong>Hoshizaki · Manitowoc · Scotsman · Ice-O-Matic</strong> &amp; more</p>
+    </div>
+  </section>
+
+  <TrustStrip />
+
+  <section class="section" style="padding-bottom: 0">
+    <div class="container">
+      <div class="answer-block" style="margin-top: 0">
         Leasing a commercial ice machine in Tampa Bay typically runs
         <strong>$100–$300/month</strong> depending on size, with maintenance
         and cleaning included — no capital outlay, and breakdowns are our
@@ -52,14 +71,9 @@ const schema = [
         <a href="tel:+17278556873"><strong>(727) 855-6873</strong></a> for a
         monthly quote sized to your business.
       </div>
-      <div class="hero-ctas">
-        <a href="#quote" class="btn btn-primary btn-lg">Get a monthly quote</a>
-        <a href="tel:+17278556873" class="btn btn-outline btn-lg"><Icon name="phone" size={18} /> (727) 855-6873</a>
-      </div>
+      <HowItWorks finalStep="Installed and making ice — one monthly rate, service included" />
     </div>
   </section>
-
-  <TrustStrip />
 
   <section class="section">
     <div class="container">
@@ -106,13 +120,14 @@ const schema = [
             <li><Icon name="cube" size={20} /> <span><strong>Swap-out</strong> — if it can't be fixed quickly, the machine gets replaced.</span></li>
           </ul>
         </div>
-        <LeadForm segment="lease" page="ice-machine-leasing" heading="Get a monthly lease quote" sub="Business type + rough daily volume → machine size + monthly rate." showUrgency={false} />
+        <LeadForm segment="lease" page="ice-machine-leasing" heading="Get my monthly rate" sub="Business type + rough daily volume → machine size + monthly rate." showUrgency={false} ctaLabel="Get my lease quote" />
       </div>
     </div>
   </section>
 
   <section class="section">
     <div class="container narrow">
+      <Reviews />
       <span class="eyebrow">Leasing FAQs</span>
       <h2 class="mb-6">Leasing questions</h2>
       <FAQ items={faqs} />

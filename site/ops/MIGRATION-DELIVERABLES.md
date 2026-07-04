@@ -178,7 +178,21 @@ would need its own Google OAuth credentials against a pinellasiceco
 calendar, a `/book` page, and booking-form triage wiring. Nothing in this
 build blocks it; nothing in this build depends on it.
 
-## 11. Operator watch instructions
+## 11. Conversion instrumentation (added in the conversion revamp)
+
+Set `GA4_ID` in `src/config.ts` (flag #17) and every page reports:
+
+| Event | Fires when | Parameters |
+|-------|-----------|------------|
+| `call_click` | any tel: link is tapped/clicked | `page_path`, `link_location` (sticky-bar / header / hero / form-card / footer / body) |
+| `lead_form_submit` | any lead-capture form submits | `page_path`, `segment` (repair/sales/lease/cleaning/general), `urgency` when present |
+
+Together these separate phone demand from form demand per page — the
+phone-side half of the sensor. With `GA4_ID` empty the site ships zero
+analytics JS. The sticky mobile call bar, header phone, and hero CTAs are
+all tagged with `data-loc` so GA4 shows which surface converts.
+
+## 12. Operator watch instructions
 
 GSC daily for the first week (the one exception to the weekly-cadence rule),
 then weekly. Leads arrive as tiered emails to `OPERATOR_EMAIL`

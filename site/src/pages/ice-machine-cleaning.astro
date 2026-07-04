@@ -4,6 +4,8 @@ import Icon from '../components/ui/Icon.astro';
 import TrustStrip from '../components/ui/TrustStrip.astro';
 import LeadForm from '../components/ui/LeadForm.astro';
 import FAQ from '../components/ui/FAQ.astro';
+import HowItWorks from '../components/ui/HowItWorks.astro';
+import Reviews from '../components/ui/Reviews.astro';
 import { faqSchema, serviceSchema } from '../lib/schema';
 
 const faqs = [
@@ -44,11 +46,28 @@ const schema = [
   pageTitle="Commercial Ice Machine Cleaning Tampa Bay | Pinellas Ice Co"
   metaDescription="Documented commercial ice machine cleaning & sanitizing across Tampa Bay. Before/after ATP testing, inspection-ready records, flat-rate pricing. Call (727) 855-6873."
   schemaMarkup={schema}
+  ogImage="/og/og-cleaning.png"
 >
-  <section class="page-head">
+  <section class="hero hero-photo" style="--hero-img: url('/images/hero-ice-machine-service-tampa-bay.webp')">
     <div class="container">
-      <h1>Commercial ice machine cleaning — Tampa Bay</h1>
-      <div class="answer-block">
+      <h1>Pass every inspection — documented commercial ice machine cleaning, Tampa Bay</h1>
+      <p class="lead">
+        Deep cleaning and sanitizing with before/after ATP numbers — records
+        you can hand an inspector, flat-rate with no contracts.
+      </p>
+      <div class="hero-ctas">
+        <a href="#quote" class="btn btn-primary btn-lg">Request a cleaning</a>
+        <a href="tel:+17278556873" class="btn btn-urgent btn-lg" data-loc="hero"><Icon name="phone" size={18} /> (727) 855-6873</a>
+      </div>
+      <p class="hero-brands">All brands, all machines — <strong>Hoshizaki · Manitowoc · Scotsman · Ice-O-Matic</strong> &amp; more</p>
+    </div>
+  </section>
+
+  <TrustStrip />
+
+  <section class="section" style="padding-bottom: 0">
+    <div class="container">
+      <div class="answer-block" style="margin-top: 0">
         Deep cleaning and sanitizing for commercial ice machines across Tampa
         Bay — with <strong>before/after ATP testing</strong> and documented,
         inspection-ready results, flat-rate with no contracts. In Clearwater?
@@ -56,14 +75,9 @@ const schema = [
         cleaning service</a>. Call
         <a href="tel:+17278556873"><strong>(727) 855-6873</strong></a>.
       </div>
-      <div class="hero-ctas">
-        <a href="#quote" class="btn btn-primary btn-lg">Request a cleaning</a>
-        <a href="tel:+17278556873" class="btn btn-outline btn-lg"><Icon name="phone" size={18} /> (727) 855-6873</a>
-      </div>
+      <HowItWorks finalStep="Cleaned, sanitized, and documented — ATP numbers before and after" />
     </div>
   </section>
-
-  <TrustStrip />
 
   <section class="section">
     <div class="container">
@@ -127,6 +141,7 @@ const schema = [
 
   <section class="section">
     <div class="container narrow">
+      <Reviews />
       <span class="eyebrow">Cleaning FAQs</span>
       <h2 class="mb-6">Ice machine cleaning questions</h2>
       <FAQ items={faqs} />

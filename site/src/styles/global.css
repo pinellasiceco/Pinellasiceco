@@ -111,6 +111,12 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Mobile: reserve space for the fixed sticky call bar (prevents the footer
+   being covered; the bar itself overlays, so no CLS). */
+@media (max-width: 767px) {
+  body { padding-bottom: 58px; }
+}
+
 h1, h2, h3, h4 { line-height: 1.22; color: var(--navy); font-weight: 800; }
 h1 { font-size: var(--text-hero); letter-spacing: -0.015em; }
 h2 { font-size: var(--text-3xl); letter-spacing: -0.01em; }
@@ -174,9 +180,9 @@ strong { font-weight: 700; }
   text-decoration: none;
   transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
-.btn-primary { background: var(--blue-dark); color: #fff; }
+.btn-primary { background: var(--blue-dark); color: #fff; box-shadow: 0 2px 0 rgba(14,28,58,0.25); }
 .btn-primary:hover { background: var(--navy); color: #fff; }
-.btn-urgent { background: var(--warm); color: #fff; }
+.btn-urgent { background: var(--warm); color: #fff; box-shadow: 0 2px 0 rgba(122,58,10,0.35); }
 .btn-urgent:hover { background: var(--warm-dark); color: #fff; }
 .btn-outline { background: transparent; color: var(--navy); border-color: var(--border-strong); }
 .btn-outline:hover { border-color: var(--navy); }
@@ -217,6 +223,27 @@ strong { font-weight: 700; }
   position: relative;
   overflow: hidden;
 }
+
+/* Photo heroes: real-equipment imagery on DESKTOP ONLY (media-queried
+   background — mobile never downloads it, keeping LCP text-first).
+   Pages set --hero-img inline. The duotone is baked into the asset. */
+@media (min-width: 768px) {
+  .hero.hero-photo {
+    background-image:
+      linear-gradient(100deg, rgba(14, 28, 58, 0.92) 0%, rgba(14, 28, 58, 0.72) 45%, rgba(14, 28, 58, 0.25) 100%),
+      var(--hero-img);
+    background-size: cover;
+    background-position: center right;
+  }
+}
+
+.hero-brands {
+  font-size: var(--text-sm);
+  color: #A9BDD8;
+  margin-top: var(--space-4);
+  font-weight: 600;
+}
+.hero-brands strong { color: #D7E3F2; }
 .hero h1 { color: #fff; margin-bottom: var(--space-4); }
 .hero p.lead { font-size: var(--text-lg); color: #D7E3F2; max-width: 620px; }
 .hero .hero-cubes {

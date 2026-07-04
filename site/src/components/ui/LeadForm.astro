@@ -1,16 +1,30 @@
 ---
 import Icon from './Icon.astro';
+import { PHONE_HREF, PHONE_DISPLAY, RESPONSE_LINE } from '../../config';
 // One Netlify form ("lead-capture") used site-wide; the hidden `segment`
 // field IS the product — repair|sales|lease|cleaning segmentation drives
 // triage and, later, per-segment buyers. Honeypot on every instance.
+//
+// FORM COMPRESSION DOCTRINE: required = name + phone. Business, city,
+// email, message are optional (triage works from whatever arrives; the
+// callback fills gaps). Repair forms carry the urgency selector — it feeds
+// triage tiers directly.
 interface Props {
   segment: 'repair' | 'sales' | 'lease' | 'cleaning' | 'general';
   page: string;
   heading?: string;
   sub?: string;
   showUrgency?: boolean;
+  ctaLabel?: string;
 }
-const { segment, page, heading = 'Get a fast response', sub, showUrgency = segment === 'repair' } = Astro.props;
+const {
+  segment,
+  page,
+  heading = 'Get a fast callback',
+  sub,
+  showUrgency = segment === 'repair',
+  ctaLabel = segment === 'repair' ? 'Request my callback' : 'Send — get my quote',
+} = Astro.props;
 const uid = `lf-${page.replace(/[^a-z0-9]/gi, '')}`;
 ---
 
@@ -18,7 +32,7 @@ const uid = `lf-${page.replace(/[^a-z0-9]/gi, '')}`;
   <h3>{heading}</h3>
   {sub && <p class="small muted">{sub}</p>}
   <p class="small phone-alt">
-    Fastest: call <a href="tel:+17278556873"><Icon name="phone" size={14} /> (727) 855-6873</a>
+    Fastest: call <a href={PHONE_HREF} data-loc="form-card"><Icon name="phone" size={14} /> {PHONE_DISPLAY}</a>
   </p>
 
   <form
@@ -42,72 +56,79 @@ const uid = `lf-${page.replace(/[^a-z0-9]/gi, '')}`;
         <input class="form-input" type="text" id={`${uid}-name`} name="name" required autocomplete="name" />
       </div>
       <div class="form-group">
-        <label class="form-label" for={`${uid}-business`}>Business name</label>
-        <input class="form-input" type="text" id={`${uid}-business`} name="business" autocomplete="organization" />
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
         <label class="form-label" for={`${uid}-phone`}>Phone</label>
         <input class="form-input" type="tel" id={`${uid}-phone`} name="phone" required autocomplete="tel" />
       </div>
-      <div class="form-group">
-        <label class="form-label" for={`${uid}-email`}>Email</label>
-        <input class="form-input" type="email" id={`${uid}-email`} name="email" autocomplete="email" />
-      </div>
     </div>
 
-    <div class="form-row">
+    {showUrgency && (
       <div class="form-group">
-        <label class="form-label" for={`${uid}-city`}>City / area</label>
-        <select class="form-select" id={`${uid}-city`} name="city">
+        <label class="form-label" for={`${uid}-urgency`}>How urgent is it?</label>
+        <select class="form-select" id={`${uid}-urgency`} name="urgency">
           <option value="">Select…</option>
-          <option>Tampa</option>
-          <option>St. Petersburg</option>
-          <option>Clearwater</option>
-          <option>Largo</option>
-          <option>Dunedin</option>
-          <option>Palm Harbor</option>
-          <option>Elsewhere in Pinellas County</option>
-          <option>Elsewhere in Hillsborough County</option>
-          <option>Pasco County</option>
-          <option>Other Tampa Bay</option>
+          <option>Machine is down now</option>
+          <option>Working but struggling</option>
+          <option>Planning ahead</option>
         </select>
       </div>
-      {showUrgency ? (
-        <div class="form-group">
-          <label class="form-label" for={`${uid}-urgency`}>How urgent?</label>
-          <select class="form-select" id={`${uid}-urgency`} name="urgency">
-            <option value="">Select…</option>
-            <option>Emergency — machine is down now</option>
-            <option>This week</option>
-            <option>Just planning ahead</option>
-          </select>
-        </div>
-      ) : (
-        <div class="form-group">
-          <label class="form-label" for={`${uid}-btype`}>Business type</label>
-          <select class="form-select" id={`${uid}-btype`} name="business_type">
-            <option value="">Select…</option>
-            <option>Restaurant</option>
-            <option>Bar / brewery</option>
-            <option>Hotel / motel</option>
-            <option>Healthcare / senior living</option>
-            <option>Convenience / grocery</option>
-            <option>Office / other</option>
-          </select>
-        </div>
-      )}
-    </div>
+    )}
 
     <div class="form-group">
-      <label class="form-label" for={`${uid}-message`}>What's going on?</label>
-      <textarea class="form-textarea" id={`${uid}-message`} name="message" placeholder="Machine brand/model if you know it, what it's doing (or what you need), and any timing."></textarea>
+      <label class="form-label" for={`${uid}-message`}>What's going on? <span class="opt">(optional)</span></label>
+      <textarea class="form-textarea" id={`${uid}-message`} name="message" placeholder="Brand/model if you know it, what it's doing (or what you need), and where you are."></textarea>
     </div>
 
-    <button type="submit" class="btn btn-primary btn-lg">Send — we'll get right back to you</button>
+    <details class="form-more">
+      <summary>Add business details <span class="opt">(optional)</span></summary>
+      <div class="form-row" style="margin-top: var(--space-3)">
+        <div class="form-group">
+          <label class="form-label" for={`${uid}-business`}>Business name</label>
+          <input class="form-input" type="text" id={`${uid}-business`} name="business" autocomplete="organization" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for={`${uid}-email`}>Email</label>
+          <input class="form-input" type="email" id={`${uid}-email`} name="email" autocomplete="email" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for={`${uid}-city`}>City / area</label>
+          <select class="form-select" id={`${uid}-city`} name="city">
+            <option value="">Select…</option>
+            <option>Tampa</option>
+            <option>St. Petersburg</option>
+            <option>Clearwater</option>
+            <option>Largo</option>
+            <option>Dunedin</option>
+            <option>Palm Harbor</option>
+            <option>Elsewhere in Pinellas County</option>
+            <option>Elsewhere in Hillsborough County</option>
+            <option>Pasco County</option>
+            <option>Other Tampa Bay</option>
+          </select>
+        </div>
+        {!showUrgency && (
+          <div class="form-group">
+            <label class="form-label" for={`${uid}-btype`}>Business type</label>
+            <select class="form-select" id={`${uid}-btype`} name="business_type">
+              <option value="">Select…</option>
+              <option>Restaurant</option>
+              <option>Bar / brewery</option>
+              <option>Hotel / motel</option>
+              <option>Healthcare / senior living</option>
+              <option>Convenience / grocery</option>
+              <option>Office / other</option>
+            </select>
+          </div>
+        )}
+      </div>
+    </details>
 
+    <button type="submit" class="btn btn-primary btn-lg">{ctaLabel}</button>
+
+    <p class="form-risk small">
+      <strong>No obligation.</strong> {RESPONSE_LINE}
+    </p>
     <p class="form-consent">
       By submitting, you agree that we or a local service partner may contact
       you about your request.
@@ -119,4 +140,13 @@ const uid = `lf-${page.replace(/[^a-z0-9]/gi, '')}`;
   .lead-card h3 { margin-bottom: var(--space-2); }
   .phone-alt a { font-weight: 700; white-space: nowrap; }
   .phone-alt svg { display: inline; vertical-align: -2px; }
+  .opt { font-weight: 400; color: var(--text-muted); font-size: var(--text-xs); }
+  .form-more summary {
+    cursor: pointer; font-size: var(--text-sm); font-weight: 700; color: var(--blue-dark);
+    list-style: none;
+  }
+  .form-more summary::-webkit-details-marker { display: none; }
+  .form-more summary::before { content: '+ '; }
+  .form-more[open] summary::before { content: '– '; }
+  .form-risk { color: var(--text-2); margin: 0; }
 </style>

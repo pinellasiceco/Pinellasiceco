@@ -4,6 +4,8 @@ import Icon from '../components/ui/Icon.astro';
 import TrustStrip from '../components/ui/TrustStrip.astro';
 import LeadForm from '../components/ui/LeadForm.astro';
 import FAQ from '../components/ui/FAQ.astro';
+import HowItWorks from '../components/ui/HowItWorks.astro';
+import Reviews from '../components/ui/Reviews.astro';
 import { faqSchema } from '../lib/schema';
 
 const faqs = [
@@ -34,10 +36,11 @@ const faqs = [
   pageTitle="Commercial Ice Machine Repair, Sales & Leasing Tampa Bay | Pinellas Ice Co"
   metaDescription="Commercial ice machine repair, sales, leasing, and cleaning across Tampa Bay — Tampa, St. Petersburg, Clearwater, and all of Pinellas, Hillsborough, and Pasco counties. Call (727) 855-6873."
   schemaMarkup={faqSchema(faqs)}
+  ogImage="/og/og-home.png"
 >
-  <section class="hero">
+  <section class="hero hero-photo" style="--hero-img: url('/images/hero-ice-machine-service-tampa-bay.webp')">
     <div class="container">
-      <h1>Commercial ice machine repair, sales &amp; leasing — Tampa Bay</h1>
+      <h1>Ice machine problems, solved today — repair, sales &amp; leasing across Tampa Bay</h1>
       <p class="lead">
         Machine down? Need a machine? We repair, sell, lease, and clean
         commercial ice machines for restaurants, bars, hotels, and healthcare
@@ -45,19 +48,23 @@ const faqs = [
         Hillsborough, and Pasco counties.
       </p>
       <div class="hero-ctas">
-        <a href="tel:+17278556873" class="btn btn-urgent btn-lg">
-          <Icon name="phone" size={20} /> (727) 855-6873
+        <a href="tel:+17278556873" class="btn btn-urgent btn-lg" data-loc="hero">
+          <Icon name="phone" size={20} /> Call (727) 855-6873
         </a>
         <a href="/ice-machine-repair/" class="btn btn-outline btn-lg">Machine down? Start here</a>
       </div>
       <p class="hero-note">Local, flat-rate, no contracts. Tell us what's going on and we'll get right back to you.</p>
-      <svg class="hero-cubes" width="380" height="380" viewBox="0 0 24 24" fill="none" stroke="#6FB4E8" stroke-width="0.6" aria-hidden="true">
-        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16zM3.27 6.96L12 12.01l8.73-5.05M12 22.08V12" />
-      </svg>
+      <p class="hero-brands">Servicing <strong>Hoshizaki · Manitowoc · Scotsman · Ice-O-Matic</strong> &amp; more</p>
     </div>
   </section>
 
   <TrustStrip />
+
+  <section class="section" style="padding-bottom: 0">
+    <div class="container">
+      <HowItWorks />
+    </div>
+  </section>
 
   <section class="section">
     <div class="container">
@@ -144,13 +151,14 @@ const faqs = [
 
   <section class="section section-alt">
     <div class="container">
+      <Reviews />
       <div class="grid-2">
         <div>
           <span class="eyebrow">Common questions</span>
           <h2 class="mb-6">Straight answers</h2>
           <FAQ items={faqs} />
         </div>
-        <LeadForm segment="general" page="home" heading="Tell us what you need" sub="Repair, a new machine, leasing, or cleaning — one form, fast response." />
+        <LeadForm segment="general" page="home" heading="Tell us what you need" sub="Repair, a new machine, leasing, or cleaning — one form, fast callback." />
       </div>
     </div>
   </section>

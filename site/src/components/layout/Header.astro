@@ -1,8 +1,10 @@
 ---
 import Icon from '../ui/Icon.astro';
+import { PHONE_HREF, PHONE_DISPLAY } from '../../config';
 // Phone click-to-call is in the header on EVERY page — the one non-negotiable.
-// Nav order mirrors the site-purpose hierarchy: repair first, sales/leasing
-// second, cleaning supporting. CSS-only mobile menu (checkbox toggle, zero JS).
+// Desktop shows the response line under the number. Nav order mirrors the
+// site-purpose hierarchy: repair first, sales/leasing second, cleaning
+// supporting. CSS-only mobile menu (checkbox toggle, zero JS).
 const nav = [
   { href: '/ice-machine-repair/', label: 'Repair' },
   { href: '/commercial-ice-machine-sales/', label: 'Sales' },
@@ -34,10 +36,13 @@ const nav = [
       <a href="/ice-machine-troubleshooting/" class="nav-help">Get Help</a>
     </nav>
 
-    <a href="tel:+17278556873" class="btn btn-urgent header-phone">
-      <Icon name="phone" size={18} />
-      <span>(727) 855-6873</span>
-    </a>
+    <div class="header-call">
+      <a href={PHONE_HREF} class="btn btn-urgent header-phone" data-loc="header">
+        <Icon name="phone" size={18} />
+        <span>{PHONE_DISPLAY}</span>
+      </a>
+      <span class="header-response">Fast callbacks · same-day service when available</span>
+    </div>
   </div>
 </header>
 
@@ -70,7 +75,10 @@ const nav = [
     color: var(--blue-dark); border: 1.5px solid var(--blue-dark);
     border-radius: var(--radius-sm); padding: 0.35rem 0.7rem;
   }
+  .header-call { display: flex; flex-direction: column; align-items: center; gap: 2px; flex: none; }
   .header-phone { flex: none; padding: 0.6rem 1rem; font-size: var(--text-sm); }
+  .header-response { font-size: 0.68rem; color: var(--text-muted); font-weight: 600; letter-spacing: 0.01em; }
+  @media (max-width: 920px) { .header-response { display: none; } }
 
   .nav-toggle { display: none; }
   .nav-toggle-label { display: none; }
