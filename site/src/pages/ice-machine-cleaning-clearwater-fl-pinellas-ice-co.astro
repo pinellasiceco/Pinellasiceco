@@ -2,7 +2,24 @@
 import BaseLayout from '../components/layout/BaseLayout.astro';
 import Icon from '../components/ui/Icon.astro';
 import LeadForm from '../components/ui/LeadForm.astro';
-import { serviceSchema } from '../lib/schema';
+import FAQ from '../components/ui/FAQ.astro';
+import { serviceSchema, faqSchema } from '../lib/schema';
+
+// Live-page FAQ, operator-supplied 2026-07-04 — verbatim.
+const faqs = [
+  {
+    q: 'Is this service required for health inspections?',
+    a: 'Routine cleaning helps meet sanitation standards and reduces the risk of inspection issues.',
+  },
+  {
+    q: 'Do you work with high-volume commercial machines?',
+    a: 'Yes, we handle machines used in busy restaurant and hospitality environments.',
+  },
+  {
+    q: 'Does cleaning improve ice quality?',
+    a: 'Yes, it can improve clarity, taste, and overall sanitation of the ice.',
+  },
+];
 
 /*
  * ============================= TIER A PAGE =================================
@@ -25,12 +42,15 @@ import { serviceSchema } from '../lib/schema';
  * ===========================================================================
  */
 
-const schema = serviceSchema({
-  name: 'Ice Machine Cleaning — Clearwater, FL',
-  serviceType: 'Ice machine cleaning and sanitizing',
-  description: 'Ice machine cleaning in Clearwater, FL — $99 initial clean & test with ATP verification, serving high-volume restaurants, bars, and hotels.',
-  url: 'https://www.pinellasiceco.com/ice-machine-cleaning-clearwater-fl-pinellas-ice-co/',
-});
+const schema = [
+  serviceSchema({
+    name: 'Ice Machine Cleaning — Clearwater, FL',
+    serviceType: 'Ice machine cleaning and sanitizing',
+    description: 'Ice machine cleaning in Clearwater, FL — $99 initial clean & test with ATP verification, serving high-volume restaurants, bars, and hotels.',
+    url: 'https://www.pinellasiceco.com/ice-machine-cleaning-clearwater-fl-pinellas-ice-co/',
+  }),
+  faqSchema(faqs),
+];
 ---
 
 <BaseLayout
@@ -171,16 +191,8 @@ const schema = serviceSchema({
             Harbor, Largo, and surrounding Pinellas County.
           </p>
 
-          <!-- ==================================================================
-               FAQ SECTION — OPERATOR FILL (do not invent answers)
-               The live page has three FAQ accordions; only the questions were
-               captured. Paste each live answer, then uncomment. Add matching
-               FAQPage schema via faqSchema() once answers are real.
-               Questions on the live page:
-                 1. Is this service required for health inspections?
-                 2. Do you work with high-volume commercial machines?
-                 3. Does cleaning improve ice quality?
-          ================================================================== -->
+          <h2>Frequently asked questions</h2>
+          <FAQ items={faqs} />
 
           <!-- ====================== END PORTED TIER A BODY ====================== -->
 

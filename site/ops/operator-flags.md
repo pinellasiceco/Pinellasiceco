@@ -5,24 +5,26 @@ Ordered by priority. Nothing here blocks the *build*; items 1–3 block
 
 ## Blocks cutover
 
-1. ~~**Tier A body paste**~~ **DONE 2026-07-04** (operator paste, ported).
-   Two follow-ups remain:
-   - **1a. FAQ answers** — the live page's three FAQ accordions were
-     collapsed in the paste. Open each on the live page and paste the
-     answers into the marked comment in
-     `site/src/pages/ice-machine-cleaning-clearwater-fl-pinellas-ice-co.astro`.
-     Questions: "Is this service required for health inspections?" /
-     "Do you work with high-volume commercial machines?" /
-     "Does cleaning improve ice quality?"
-   - **1b. "Florida cleaning frequency guide" URL** — the Tier A page links
-     to it twice (also the "Cleaning Tips" nav item?). Supply its URL: it
-     needs a redirect-map entry and, if it has impressions in GSC, a Tier B
-     port of its own.
-2. **GSC export** (Performance → Pages + Queries, full history) — diff
-   against `preservation-ledger.md`; classify any URL it reveals.
-3. **HubSpot page list export** — now known to include at least: Services,
-   Pricing, FAQ, About Us, Contact Us, Service Area, Cleaning Tips, Terms.
-   Slugs needed to finalize the 301 map (provisional targets in the ledger).
+1. ~~**Tier A body paste**~~ **DONE 2026-07-04** (operator paste, ported —
+   including FAQ answers with FAQPage schema). The "frequency guide" URL is
+   now known from GSC (`…/how-often-should-a-commercial-ice-machine-be-cleaned-in-floridas-humid-climate`)
+   and covered by the redirect map; the Tier A page's guide links point at
+   `/ice-machine-cleaning/` until that guide is ported (PORT #12).
+2. ~~**GSC export**~~ **DONE 2026-07-04** — full classification in the
+   ledger MASTER TABLE (37 URLs, 30 clicks / 1,405 impressions). Every URL
+   has a shipped disposition: KEEP-200, final 301, or PORT (interim 301).
+3. **Redirect-map + port-list sign-off** — review the MASTER TABLE
+   dispositions and the PORT priority list (#1–#12). The map is complete
+   and shipped; cutover can proceed on interim 301s, but every page ported
+   BEFORE cutover preserves more equity (301s leak a little; a 200 at the
+   same slug leaks none).
+   **Fastest way to port the 12 candidates: allowlist `pinellasiceco.com`
+   in this environment's network policy and say the word — the content gets
+   fetched and ported at the original slugs in one pass. Manual
+   alternative: paste pages one at a time like the Clearwater page.**
+4. **HubSpot page list export** — one residual use: catching any page with
+   ZERO impressions (not in GSC) that still exists and gets handed out in
+   emails/GBP. Low stakes now; the GSC export covered everything that ranks.
 
 ## Trust strip + claims (shipped in conservative form — confirm or correct)
 

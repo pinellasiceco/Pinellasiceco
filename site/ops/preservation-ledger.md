@@ -1,7 +1,62 @@
 # Preservation Ledger — pinellasiceco.com migration (HubSpot CMS → Astro/Netlify)
 
-**Status: PROVISIONAL — operator sign-off required before DNS cutover (the hard gate).**
-Date compiled: 2026-07-03
+**Status: GSC-VERIFIED (export received 2026-07-04) — operator sign-off on the
+redirect map + port list is the remaining gate before DNS cutover.**
+Date compiled: 2026-07-03; revised 2026-07-04 against the real GSC export.
+
+## MASTER TABLE — every URL with impressions (GSC last-3-months, param variants consolidated)
+
+Totals: 30 clicks / 1,405 impressions across 37 clean URLs. Best position
+per URL shown. Disposition legend:
+**KEEP-200** = same path serves on the new site;
+**301** = redirected to closest intent (final);
+**PORT** = interim 301 shipped, ledger recommends porting the content to its
+original slug (priority order below).
+
+| # | URL | Clk | Imp | Pos | Disposition |
+|---|-----|-----|-----|-----|-------------|
+| 1 | `/` | 13 | 385 | 15.2 | **KEEP-200** — rebuilt repair-first (approved via purpose-hierarchy directive) |
+| 2 | `/ice-machine-cleaning-st.-petersburg-fl-pinellas-ice-co` | 2 | 242 | 18.0 | **PORT #1** (interim 301 → `/st-petersburg/`) — highest-impression content page; also catches "ice machine sales st petersburg fl" (87 imp) |
+| 3 | `/pinellas-ice-insights…/how-much-does-ice-machine-cleaning-cost-in-pinellas-county` | 1 | 205 | 12.0 | **PORT #2** (interim 301 → `/ice-machine-cleaning/`) — the cleaning-cost guide |
+| 4 | `/ice-machine-cleaning-clearwater-fl-pinellas-ice-co` | 5 | 149 | 7.5 | **KEEP-200 — PORTED** (title verbatim, body + FAQ live copy) ✅ |
+| 5 | `/pinellas-ice-insights…/ice-machine-cleaning-requirements-for-restaurants-health-code-guide` | 0 | 140 | 6.2 | **PORT #3** (interim 301 → `/ice-machine-cleaning/`) — pos 6, real asset |
+| 6 | `/ice-machine-cleaning-pricing-in-pinellas-county-from-149` | 2 | 102 | 1.0 | **PORT #4** (interim 301 → Tier A Clearwater page, which carries the $99/$149 copy) |
+| 7 | `/pinellas-ice-insights…/5-signs-your-ice-machine-is-contaminated-most-businesses-miss-3` | 0 | 100 | 8.9 | **PORT #5** (interim 301 → `/ice-machine-cleaning/`) |
+| 8 | `/pinellas-ice-insights…/how-much-does-ice-machine-cleaning-cost-in-florida-2026-pricing-guide` | 1 | 97 | 12.7 | **PORT #6** (interim 301 → `/ice-machine-cleaning/`) |
+| 9 | `/ice-machine-cleaning-near-me-in-pinellas-county-same-day-service` | 0 | 87 | 7.7 | **PORT #7** (interim 301 → `/ice-machine-cleaning/`) |
+| 10 | `/pinellas-ice-insights…/ice-machine-smells-bad-heres-whats-causing-it-and-how-to-fix-it-fast` | 1 | 81 | 10.0 | **PORT #8** (interim 301 → `/ice-machine-cleaning/`) |
+| 11 | `/about-pinellas-ice-co-ice-machine-cleaning-pinellas-county` | 1 | 64 | 12.0 | **301 → `/about/`** (intent match) |
+| 12 | `/ice-machine-cleaning-dunedin-fl-pinellas-ice-co` | 0 | 60 | 11.3 | **PORT #9** (interim 301 → `/ice-machine-cleaning/`) |
+| 13 | `/ice-machine-cleaning-faq-pinellas-ice-co` | 0 | 59 | 1.0 | **301 → `/ice-machine-cleaning/`** (FAQ block there) |
+| 14 | `/ice-machine-cleaning-pricing-in-pinellas-county-from-199` | 0 | 58 | 21.6 | **301 → Tier A Clearwater page** (superseded pricing variant) |
+| 15 | `/pinellas-ice-co-vs-easy-ice` | 0 | 51 | 6.2 | **PORT #10** (interim 301 → `/about/`) — competitor comparison, pos 6 |
+| 16 | `/ice-machine-maintenance-plan-in-pinellas-county-149/month` | 0 | 51 | 14.9 | **301 → `/ice-machine-cleaning/`** ($149/mo copy lives on Tier A page) |
+| 17 | `/contact-ice-machine-cleaning-service-pinellas-county` | 0 | 49 | 1.0 | **301 → `/contact/`** |
+| 18 | `/pinellas-ice-insights…/free-ice-machine-cleaning-checklist-commercial-use` | 3 | 42 | 12.1 | **PORT #11** (interim 301 → `/ice-machine-cleaning/`) — 3 clicks, lead magnet |
+| 19 | `/pinellas-ice-insights…/why-ice-machine-tastes-bad-pinellas-county` | 0 | 40 | 6.5 | 301 → `/ice-machine-cleaning/` (port optional) |
+| 20 | `/ice-machine-cleaning-vs-repair-vs-staff` | 0 | 34 | 9.7 | **301 → `/ice-machine-troubleshooting/`** (decision-guide intent) |
+| 21 | `/pinellas-ice-insights…/how-often-should-a-commercial-ice-machine-be-cleaned-in-floridas-humid-climate` | 0 | 32 | 7.4 | **PORT #12** (interim 301 → `/ice-machine-cleaning/`) — the "frequency guide" the Tier A page links to |
+| 22 | `/sanitation-verification/` | 0 | 30 | 6.6 | 301 → `/ice-machine-cleaning/` (verification content is there + cert shield) |
+| 23 | `/pinellas-ice-insights…/what-happens-during-a-professional-ice-machine-cleaning-step-by-step` | 0 | 29 | 6.4 | 301 → `/ice-machine-cleaning/` (port optional) |
+| 24 | `/ice-machine-cleaning-largo-fl-pinellas-ice-co` | 1 | 24 | 13.6 | 301 → `/ice-machine-cleaning/` (port optional) |
+| 25 | `/ice-machine-compliance-report` | 0 | 20 | 10.1 | **301 → `/ice-machine-data/`** (compliance-data intent) |
+| 26 | `/ice-machine-inspection-risks` | 0 | 19 | 6.0 | **301 → `/ice-machine-data/`** |
+| 27 | `/pinellas-ice-insights-ice-machine-cleaning-tips-guides` (blog index) | 0 | 18 | 1.0 | 301 → `/ice-machine-cleaning/` |
+| 28 | `/ice-machine-cleaning-palm-harbor-fl-pinellas-ice-co` | 0 | 11 | 3.5 | 301 → `/ice-machine-cleaning/` (port optional — pos 3.5 on tiny volume) |
+| 29 | `/terms` | 0 | 8 | 5.6 | **KEEP-200** (new terms page, same path) ✅ |
+| 30–37 | remaining blog posts ≤8 imp each (smells-bad duplicate, st-pete/palm-harbor local posts, not-making-ice ×2, checklist-restaurant-owners) | 0 | ~27 | — | 301s: not-making-ice → `/ice-machine-repair/`; st-pete post → `/st-petersburg/`; rest → `/ice-machine-cleaning/` |
+
+**Parameter variants** (`?hsLang=en`, `?hs_amp=true` — ~40 impressions across
+9 URLs): consolidate automatically; redirects apply regardless of query
+string, and KEEP-200 pages carry param-stripping canonicals. AMP disappears
+(241 AMP impressions fold into canonical pages — expected net-positive).
+
+**Query insight for the port list:** repair/sales demand is already visible —
+"ice machine sales st petersburg fl" (87 imp), "ice machine repair in
+pinellas park" (58), "restaurant ice machine st petersburg fl" (54), repair
+queries for Clearwater/St. Pete/Dunedin — currently landing on cleaning pages
+at positions 25–98. The new repair/sales/leasing pages target exactly this
+demand; expect these queries to migrate to the money pages.
 
 ## How this ledger was built (and what it could not see)
 
